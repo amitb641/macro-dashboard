@@ -1606,7 +1606,11 @@ const CPI_CATS = [
 ];
 
 // ── WAGES ────────────────────────────────────────────
-const WAGE_ANNUAL = {"labels":["2018","2019","2020","2021","2022","2023","2024","2025"],"nominal":[3.5,3.0,5.4,4.9,4.9,4.1,4.1,3.7],"real":[null,null,null,null,null,null,null,null]};
+const WAGE_ANNUAL = {
+  labels:["2019","2020","2021","2022","2023","2024","2025"],
+  nominal:[3.3,   7.9,  4.7,   5.1,   4.3,   3.9,   3.3],
+  real:   [0.9,   5.0, -2.4,  -2.1,   0.8,   1.1,   0.7]
+};
 const WAGE_SECTORS = [
   {s:"Airline Pilots & Crew",      color:"#0984E3", w21:3.2, w22:7.8, w23:9.4, w24:5.2, w25:4.1, hr24:89.5},
   {s:"Information/Tech",           color:"#20C997", w21:5.8, w22:5.5, w23:4.1, w24:3.6, w25:2.8, hr24:56.8},
@@ -1630,7 +1634,12 @@ const WAGE_SECTORS = [
 ];
 
 // ── JOBS ─────────────────────────────────────────────
-const JOBS_ANNUAL = {"labels":["2018","2019","2020","2021","2022","2023","2024","2025"],"data":[2286,1985,-9246,7268,4526,2515,1459,116]};
+const JOBS_ANNUAL = {
+  labels:["2019","2020","2021","2022","2023","2024","2025","2026F"],
+  data:  [2108, -9306,  6744,  4819,  3026,  2000,   181,   1000],
+  low:   [null,  null,  null,  null,  null,  null,  null,    800],
+  high:  [null,  null,  null,  null,  null,  null,  null,   1200]
+};
 const JOBS_SECTORS = [
   {s:"Healthcare & Social Asst.", color:"#FF4757", j21:521,  j22:757,  j23:653,  j24:630,  j25:680},
   {s:"Leisure & Hospitality",     color:"#FF9F43", j21:1566, j22:1313, j23:530,  j24:266,  j25:90},
@@ -2543,7 +2552,11 @@ function buildBanksTab(){
 // ════════════════════════════════════════════════════
 // OIL MARKETS DATA
 // ════════════════════════════════════════════════════
-const OIL_ANNUAL = {"labels":["2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"],"wti":[94.9,94.0,98.0,93.2,48.7,43.3,50.8,65.2,57.0,39.2,68.1,94.9,77.6,76.6,65.4]};
+const OIL_ANNUAL = {
+  labels:["1990","1995","2000","2005","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025"],
+  wti:   [24.5,  17.0,  30.4,  56.6,  99.6,  61.7,  79.4,  95.1,  94.0,  97.9,  93.2,  48.8,  43.3,  50.9,  64.9,  57.0,  41.5,  68.2,  94.5,  77.6,  76.9,  70.2],
+  brent: [23.7,  17.0,  28.5,  54.6,  97.7,  61.5,  79.6,  111.3, 111.7, 108.7, 98.9,  52.4,  43.6,  54.2,  71.3,  64.3,  41.8,  70.9,  100.9, 82.6,  80.0,  74.0]
+};
 // Source: EIA annual averages through 2025
 const OIL_MONTHLY = {
   labels:["Jan'22","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",
@@ -3392,145 +3405,6 @@ document.querySelectorAll(".nav-btn").forEach(btn=>{
   });
 });
 
-// Init default tab
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
-  buildFCTab();
-}));
-</script>
-
-
-<!-- ══ DATA DICTIONARY & SOURCES ══ -->
-<div class="tab-panel" id="tab-dict">
-  <div class="fc-note">
-    <strong>📖 Sources, Definitions &amp; Dashboard Guide</strong> — All data sourced from U.S. federal agencies, central bank surveys, financial regulators, and publicly reported bank earnings. Forecast figures are consensus or institution-specific estimates published Jan–Feb 2026. Dashboard current as of March 2026.
-  </div>
-
-  <!-- TAB INDEX -->
-  <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">Dashboard Tab Index</div>
-    <div class="panel-sub">12 tabs · what each covers · key metrics · data source</div>
-    <div class="dtable-wrap"><table class="dtable" style="width:100%">
-      <thead><tr>
-        <th style="text-align:left;min-width:140px">Tab</th>
-        <th style="text-align:left;min-width:200px">What it covers</th>
-        <th style="text-align:left;min-width:220px">Key metrics shown</th>
-        <th style="text-align:left">Primary source</th>
-        <th style="text-align:left;min-width:80px">As of</th>
-      </tr></thead>
-      <tbody>
-        <tr><td><strong>🔭 Outlook</strong></td><td>2026 macro scenarios, recession probabilities, institutional forecasts, risk factors</td><td>GDP growth range, recession prob, Fed path, key risks</td><td>GS · JPM · Deloitte · EY · RSM · MS</td><td>Feb 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
-        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS Current Employment Statistics (CES)</td><td>Feb 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates</td><td>U-3 rate, U-6 rate, sector unemployment YoY</td><td>BLS Current Population Survey (CPS)</td><td>Feb 2026</td></tr>
-        <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
-        <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots</td><td>Fed H.15 · FOMC SEP Dec 2025</td><td>Mar 2026</td></tr>
-        <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td>FRED ICE BofA · NY Fed HHDC · Bank earnings</td><td>Q4 2025</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>Big 5 bank earnings — net income, NII, ROTCE, CET1, 2026 NII guidance</td><td>Net income, NII, ROTCE %, CET1 %, 2026 NII guide</td><td>Q4 2025 earnings releases (Jan 2026)</td><td>Q4 2025</td></tr>
-        <tr><td><strong>🏠 Housing</strong></td><td>Home prices, mortgage rates, housing starts, affordability, metro table</td><td>HPI YoY, 30yr mortgage rate, starts, affordability index</td><td>Case-Shiller · FHFA · Census · Freddie Mac · NAR</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>🛢️ Oil</strong></td><td>WTI/Brent prices, U.S. production, 2026 price outlook from 7 institutions</td><td>WTI/Brent $/bbl, U.S. mb/d, 2026 price range</td><td>EIA STEO Feb 2026 · GS · JPM · IEA · OPEC</td><td>Feb 2026</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-
-  <!-- DEFINITIONS -->
-  <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">Key Definitions</div>
-    <div class="panel-sub">Common terms used across dashboard tabs</div>
-    <div class="two-up" style="margin-top:12px">
-<div class="dtable-wrap">
-      <table class="dtable">
-        <thead><tr><th style="text-align:left">Term</th><th style="text-align:left">Definition</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Real GDP</strong></td><td>Inflation-adjusted output. PCE deflator applied to strip price effects. BEA NIPA 1.1.1.</td></tr>
-          <tr><td><strong>Core CPI / PCE</strong></td><td>Excludes volatile food &amp; energy. Fed targets 2% core PCE. Jan 2026: Core CPI 3.3%, Core PCE 2.8%.</td></tr>
-          <tr><td><strong>U-3 vs U-6</strong></td><td>U-3 = headline unemployment. U-6 adds marginally attached + involuntary part-time. Jan 2026: U-3 4.0%, U-6 8.0%.</td></tr>
-          <tr><td><strong>AHE</strong></td><td>Average Hourly Earnings — mean hourly wage of all private nonfarm workers. Jan 2026: $37.22, +4.1% YoY.</td></tr>
-          <tr><td><strong>2Y–10Y Spread</strong></td><td>10yr minus 2yr Treasury. Negative = inverted (recession signal). Record 793-day inversion ended mid-2025; now ~+25bp.</td></tr>
-          <tr><td><strong>OAS</strong></td><td>Option-Adjusted Spread — bond yield premium over Treasuries. IG ~85bp, HY ~305bp (near cycle tights).</td></tr>
-          <tr><td><strong>NCO Rate</strong></td><td>Net Charge-Offs annualized ÷ avg loan balances. Card specialists structurally higher than diversified banks.</td></tr>
-          <tr><td><strong>NIM</strong></td><td>Net Interest Margin = NII ÷ earning assets. Expanded during rate hike cycle; compressing as cuts begin.</td></tr>
-        </tbody>
-      </table>
-      <table class="dtable">
-        <thead><tr><th style="text-align:left">Term</th><th style="text-align:left">Definition</th></tr></thead>
-        <tbody>
-          <tr><td><strong>CET1</strong></td><td>Common Equity Tier 1 ratio — core capital ÷ risk-weighted assets. Regulatory minimum 4.5% + buffers. Big banks: 11–14%.</td></tr>
-          <tr><td><strong>ROTCE</strong></td><td>Return on Tangible Common Equity — net income ÷ tangible book. Key bank profitability benchmark. JPM 2025: 20%.</td></tr>
-          <tr><td><strong>SLOOS</strong></td><td>Senior Loan Officer Opinion Survey. Fed quarterly. Net % tightening. Q4 2025: ~2% (near neutral).</td></tr>
-          <tr><td><strong>HPI</strong></td><td>House Price Index. Case-Shiller uses repeat-sales methodology. FHFA covers conforming loans only.</td></tr>
-          <tr><td><strong>Lock-in Effect</strong></td><td>~85% of mortgage holders have sub-5% rates — reluctant to sell and face 6.6%+ replacement rate.</td></tr>
-          <tr><td><strong>WTI / Brent</strong></td><td>West Texas Intermediate (U.S. benchmark) and Brent (global). Spread typically $2–5/bbl. 2025 avg: WTI $70.2, Brent $74.0.</td></tr>
-          <tr><td><strong>BEA / BLS / EIA</strong></td><td>Bureau of Economic Analysis / Bureau of Labor Statistics / Energy Information Administration — primary federal data agencies.</td></tr>
-          <tr><td><strong>2026F</strong></td><td>2026 forecast — consensus midpoint unless institution-specific. Subject to revision. Tariff uncertainty = primary risk.</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- FORECAST INSTITUTIONS -->
-  <div class="panel">
-    <div class="panel-title">🔭 Forecast Institutions — Methodology Notes</div>
-    <div class="panel-sub">All forecasts as of Jan–Feb 2026 · ordered by 2026 GDP outlook high to low</div>
-    <table class="dtable" style="width:100%">
-      <thead><tr>
-        <th style="text-align:left">Institution</th>
-        <th style="text-align:right">GDP 2026F</th>
-        <th style="text-align:right">Rec. Prob.</th>
-        <th style="text-align:left">Key assumptions</th>
-        <th style="text-align:left">Published</th>
-      </tr></thead>
-      <tbody>
-        <tr><td><strong>Goldman Sachs GIR</strong></td><td style="text-align:right;color:#0D7A4A">+2.6%</td><td style="text-align:right">20%</td><td>Tax cuts offset tariff drag H2 2026; most bullish on inflation declining</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>RSM US</strong></td><td style="text-align:right;color:#0D7A4A">+2.2%</td><td style="text-align:right">30%</td><td>AI &amp; deregulation tailwinds; SMB optimism post-election; rec prob cut from 40%</td><td>Feb 2026</td></tr>
-        <tr><td><strong>EY-Parthenon</strong></td><td style="text-align:right;color:#1A56DB">+2.0%</td><td style="text-align:right">25%</td><td>Solid private demand; govt shutdown rebound H1 2026; upside +2.4% if AI capex holds</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>Morgan Stanley</strong></td><td style="text-align:right;color:#1A56DB">+2.0%</td><td style="text-align:right">30%</td><td>Stagflation tail risk; tariffs + immigration = supply shock; FOMC pause if PCE &gt;3%</td><td>Jan 2026</td></tr>
-        <tr><td><strong>Deloitte (base)</strong></td><td style="text-align:right;color:#B45309">+1.9%</td><td style="text-align:right">25%</td><td>Tariff pass-through hits consumers; AI bubble risk; bear: +0.5%</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>JP Morgan</strong></td><td style="text-align:right;color:#B45309">+1.8%</td><td style="text-align:right">30%</td><td>Low-hire low-fire labor base; wages converging to 3.5%; 2× Fed cuts assumed</td><td>Jan 2026</td></tr>
-        <tr><td><strong>IBRC / Stanford SIEPR</strong></td><td style="text-align:right;color:#B45309">+1.8%</td><td style="text-align:right">30–35%</td><td>Stagflation biggest concern; SCOTUS IEEPA tariff ruling = key wildcard</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>Blue Chip Consensus</strong></td><td style="text-align:right;color:#1A56DB">+2.1%</td><td style="text-align:right">~25%</td><td>Survey of 50+ forecasters; range 1.8–2.4%; tariff uncertainty main headwind</td><td>Feb 2026</td></tr>
-      </tbody>
-    </table>
-    <p class="src">All data sourced from publicly available government releases, regulatory filings, bank earnings press releases, and published institutional research. No proprietary data used. Forecasts represent views of cited institutions only. Historical data subject to revision by source agencies.</p>
-  </div>
-</div>
-
-
-
-<!-- ══ AI AGENT PROCESS ══ -->
-
-
-
-<!-- ══ DATA STATUS ══ -->
-<div class="tab-panel" id="tab-stack"></div>
-
-<script>
-// ── Data status definitions ───────────────────────────────────────────
-// type: "live"    = FRED API, refreshes every page load + 15min
-//       "daily"   = updates same day of each release via daily GitHub Actions cron
-//       "monthly" = agent.py runs 1st of each month
-//       "quarterly"= manual update after earnings / govt releases
-//       "manual"  = ad-hoc, no schedule
-
-
-// Signal thresholds for AI agent tab
-const SIGNAL_THRESHOLDS = [
-  {name:"HY OAS",         watch:"450bp",  alert:"500bp"},
-  {name:"IG OAS",         watch:"120bp",  alert:"160bp"},
-  {name:"10Y Treasury",   watch:"4.5%",   alert:"5.0%"},
-  {name:"2/10 Spread",    watch:"−10bp",  alert:"−50bp"},
-  {name:"CPI YoY",        watch:"3.0%",   alert:"3.5%"},
-  {name:"Core CPI",       watch:"3.0%",   alert:"3.5%"},
-  {name:"Unemployment",   watch:"4.5%",   alert:"5.0%"},
-  {name:"NFP MoM",        watch:"75K",    alert:"25K"},
-  {name:"WTI Crude",      watch:"$85",    alert:"$95"},
-  {name:"30Y Mortgage",   watch:"7.0%",   alert:"7.5%"},
-  {name:"Saving Rate",    watch:"3.5%",   alert:"2.0%"},
-  {name:"Fed Funds",      watch:"5.5%",   alert:"6.0%"},
-  {name:"Wages YoY",      watch:"5.0%",   alert:"5.5%"},
-];
 function buildStackTab(){
   if(builtTabs && builtTabs["stack"]) return;
   if(builtTabs) builtTabs["stack"] = true;
@@ -4145,9 +4019,148 @@ function buildStackTab(){
 </div>`;
 }
 
-if(typeof builtTabs !== "undefined") builtTabs["stack"] = false;
-
+// Init default tab
+requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  buildFCTab();
+}));
 </script>
+
+
+<!-- ══ DATA DICTIONARY & SOURCES ══ -->
+<div class="tab-panel" id="tab-dict">
+  <div class="fc-note">
+    <strong>📖 Sources, Definitions &amp; Dashboard Guide</strong> — All data sourced from U.S. federal agencies, central bank surveys, financial regulators, and publicly reported bank earnings. Forecast figures are consensus or institution-specific estimates published Jan–Feb 2026. Dashboard current as of March 2026.
+  </div>
+
+  <!-- TAB INDEX -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">Dashboard Tab Index</div>
+    <div class="panel-sub">12 tabs · what each covers · key metrics · data source</div>
+    <div class="dtable-wrap"><table class="dtable" style="width:100%">
+      <thead><tr>
+        <th style="text-align:left;min-width:140px">Tab</th>
+        <th style="text-align:left;min-width:200px">What it covers</th>
+        <th style="text-align:left;min-width:220px">Key metrics shown</th>
+        <th style="text-align:left">Primary source</th>
+        <th style="text-align:left;min-width:80px">As of</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>🔭 Outlook</strong></td><td>2026 macro scenarios, recession probabilities, institutional forecasts, risk factors</td><td>GDP growth range, recession prob, Fed path, key risks</td><td>GS · JPM · Deloitte · EY · RSM · MS</td><td>Feb 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
+        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS Current Employment Statistics (CES)</td><td>Feb 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates</td><td>U-3 rate, U-6 rate, sector unemployment YoY</td><td>BLS Current Population Survey (CPS)</td><td>Feb 2026</td></tr>
+        <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
+        <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots</td><td>Fed H.15 · FOMC SEP Dec 2025</td><td>Mar 2026</td></tr>
+        <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td>FRED ICE BofA · NY Fed HHDC · Bank earnings</td><td>Q4 2025</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>Big 5 bank earnings — net income, NII, ROTCE, CET1, 2026 NII guidance</td><td>Net income, NII, ROTCE %, CET1 %, 2026 NII guide</td><td>Q4 2025 earnings releases (Jan 2026)</td><td>Q4 2025</td></tr>
+        <tr><td><strong>🏠 Housing</strong></td><td>Home prices, mortgage rates, housing starts, affordability, metro table</td><td>HPI YoY, 30yr mortgage rate, starts, affordability index</td><td>Case-Shiller · FHFA · Census · Freddie Mac · NAR</td><td>Jan 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>🛢️ Oil</strong></td><td>WTI/Brent prices, U.S. production, 2026 price outlook from 7 institutions</td><td>WTI/Brent $/bbl, U.S. mb/d, 2026 price range</td><td>EIA STEO Feb 2026 · GS · JPM · IEA · OPEC</td><td>Feb 2026</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- DEFINITIONS -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">Key Definitions</div>
+    <div class="panel-sub">Common terms used across dashboard tabs</div>
+    <div class="two-up" style="margin-top:12px">
+<div class="dtable-wrap">
+      <table class="dtable">
+        <thead><tr><th style="text-align:left">Term</th><th style="text-align:left">Definition</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Real GDP</strong></td><td>Inflation-adjusted output. PCE deflator applied to strip price effects. BEA NIPA 1.1.1.</td></tr>
+          <tr><td><strong>Core CPI / PCE</strong></td><td>Excludes volatile food &amp; energy. Fed targets 2% core PCE. Jan 2026: Core CPI 3.3%, Core PCE 2.8%.</td></tr>
+          <tr><td><strong>U-3 vs U-6</strong></td><td>U-3 = headline unemployment. U-6 adds marginally attached + involuntary part-time. Jan 2026: U-3 4.0%, U-6 8.0%.</td></tr>
+          <tr><td><strong>AHE</strong></td><td>Average Hourly Earnings — mean hourly wage of all private nonfarm workers. Jan 2026: $37.22, +4.1% YoY.</td></tr>
+          <tr><td><strong>2Y–10Y Spread</strong></td><td>10yr minus 2yr Treasury. Negative = inverted (recession signal). Record 793-day inversion ended mid-2025; now ~+25bp.</td></tr>
+          <tr><td><strong>OAS</strong></td><td>Option-Adjusted Spread — bond yield premium over Treasuries. IG ~85bp, HY ~305bp (near cycle tights).</td></tr>
+          <tr><td><strong>NCO Rate</strong></td><td>Net Charge-Offs annualized ÷ avg loan balances. Card specialists structurally higher than diversified banks.</td></tr>
+          <tr><td><strong>NIM</strong></td><td>Net Interest Margin = NII ÷ earning assets. Expanded during rate hike cycle; compressing as cuts begin.</td></tr>
+        </tbody>
+      </table>
+      <table class="dtable">
+        <thead><tr><th style="text-align:left">Term</th><th style="text-align:left">Definition</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CET1</strong></td><td>Common Equity Tier 1 ratio — core capital ÷ risk-weighted assets. Regulatory minimum 4.5% + buffers. Big banks: 11–14%.</td></tr>
+          <tr><td><strong>ROTCE</strong></td><td>Return on Tangible Common Equity — net income ÷ tangible book. Key bank profitability benchmark. JPM 2025: 20%.</td></tr>
+          <tr><td><strong>SLOOS</strong></td><td>Senior Loan Officer Opinion Survey. Fed quarterly. Net % tightening. Q4 2025: ~2% (near neutral).</td></tr>
+          <tr><td><strong>HPI</strong></td><td>House Price Index. Case-Shiller uses repeat-sales methodology. FHFA covers conforming loans only.</td></tr>
+          <tr><td><strong>Lock-in Effect</strong></td><td>~85% of mortgage holders have sub-5% rates — reluctant to sell and face 6.6%+ replacement rate.</td></tr>
+          <tr><td><strong>WTI / Brent</strong></td><td>West Texas Intermediate (U.S. benchmark) and Brent (global). Spread typically $2–5/bbl. 2025 avg: WTI $70.2, Brent $74.0.</td></tr>
+          <tr><td><strong>BEA / BLS / EIA</strong></td><td>Bureau of Economic Analysis / Bureau of Labor Statistics / Energy Information Administration — primary federal data agencies.</td></tr>
+          <tr><td><strong>2026F</strong></td><td>2026 forecast — consensus midpoint unless institution-specific. Subject to revision. Tariff uncertainty = primary risk.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FORECAST INSTITUTIONS -->
+  <div class="panel">
+    <div class="panel-title">🔭 Forecast Institutions — Methodology Notes</div>
+    <div class="panel-sub">All forecasts as of Jan–Feb 2026 · ordered by 2026 GDP outlook high to low</div>
+    <table class="dtable" style="width:100%">
+      <thead><tr>
+        <th style="text-align:left">Institution</th>
+        <th style="text-align:right">GDP 2026F</th>
+        <th style="text-align:right">Rec. Prob.</th>
+        <th style="text-align:left">Key assumptions</th>
+        <th style="text-align:left">Published</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Goldman Sachs GIR</strong></td><td style="text-align:right;color:#0D7A4A">+2.6%</td><td style="text-align:right">20%</td><td>Tax cuts offset tariff drag H2 2026; most bullish on inflation declining</td><td>Jan 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>RSM US</strong></td><td style="text-align:right;color:#0D7A4A">+2.2%</td><td style="text-align:right">30%</td><td>AI &amp; deregulation tailwinds; SMB optimism post-election; rec prob cut from 40%</td><td>Feb 2026</td></tr>
+        <tr><td><strong>EY-Parthenon</strong></td><td style="text-align:right;color:#1A56DB">+2.0%</td><td style="text-align:right">25%</td><td>Solid private demand; govt shutdown rebound H1 2026; upside +2.4% if AI capex holds</td><td>Jan 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>Morgan Stanley</strong></td><td style="text-align:right;color:#1A56DB">+2.0%</td><td style="text-align:right">30%</td><td>Stagflation tail risk; tariffs + immigration = supply shock; FOMC pause if PCE &gt;3%</td><td>Jan 2026</td></tr>
+        <tr><td><strong>Deloitte (base)</strong></td><td style="text-align:right;color:#B45309">+1.9%</td><td style="text-align:right">25%</td><td>Tariff pass-through hits consumers; AI bubble risk; bear: +0.5%</td><td>Jan 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>JP Morgan</strong></td><td style="text-align:right;color:#B45309">+1.8%</td><td style="text-align:right">30%</td><td>Low-hire low-fire labor base; wages converging to 3.5%; 2× Fed cuts assumed</td><td>Jan 2026</td></tr>
+        <tr><td><strong>IBRC / Stanford SIEPR</strong></td><td style="text-align:right;color:#B45309">+1.8%</td><td style="text-align:right">30–35%</td><td>Stagflation biggest concern; SCOTUS IEEPA tariff ruling = key wildcard</td><td>Jan 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>Blue Chip Consensus</strong></td><td style="text-align:right;color:#1A56DB">+2.1%</td><td style="text-align:right">~25%</td><td>Survey of 50+ forecasters; range 1.8–2.4%; tariff uncertainty main headwind</td><td>Feb 2026</td></tr>
+      </tbody>
+    </table>
+    <p class="src">All data sourced from publicly available government releases, regulatory filings, bank earnings press releases, and published institutional research. No proprietary data used. Forecasts represent views of cited institutions only. Historical data subject to revision by source agencies.</p>
+  </div>
+</div>
+
+
+
+<!-- ══ AI AGENT PROCESS ══ -->
+
+
+
+<!-- ══ DATA STATUS ══ -->
+</div>
+<div class="tab-panel" id="tab-stack"></div>
+
+<script>
+// ── Data status definitions ───────────────────────────────────────────
+// type: "live"    = FRED API, refreshes every page load + 15min
+//       "daily"   = updates same day of each release via daily GitHub Actions cron
+//       "monthly" = agent.py runs 1st of each month
+//       "quarterly"= manual update after earnings / govt releases
+//       "manual"  = ad-hoc, no schedule
+
+
+// Signal thresholds for AI agent tab
+const SIGNAL_THRESHOLDS = [
+  {name:"HY OAS",         watch:"450bp",  alert:"500bp"},
+  {name:"IG OAS",         watch:"120bp",  alert:"160bp"},
+  {name:"10Y Treasury",   watch:"4.5%",   alert:"5.0%"},
+  {name:"2/10 Spread",    watch:"−10bp",  alert:"−50bp"},
+  {name:"CPI YoY",        watch:"3.0%",   alert:"3.5%"},
+  {name:"Core CPI",       watch:"3.0%",   alert:"3.5%"},
+  {name:"Unemployment",   watch:"4.5%",   alert:"5.0%"},
+  {name:"NFP MoM",        watch:"75K",    alert:"25K"},
+  {name:"WTI Crude",      watch:"$85",    alert:"$95"},
+  {name:"30Y Mortgage",   watch:"7.0%",   alert:"7.5%"},
+  {name:"Saving Rate",    watch:"3.5%",   alert:"2.0%"},
+  {name:"Fed Funds",      watch:"5.5%",   alert:"6.0%"},
+  {name:"Wages YoY",      watch:"5.0%",   alert:"5.5%"},
+];
+
+
 
 </script>
 </body>
