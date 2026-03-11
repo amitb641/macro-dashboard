@@ -1,0 +1,40 @@
+name: Monthly Dashboard Update
+
+on:
+  schedule:
+    - cron: '0 14 1 * *'
+  workflow_dispatch:
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests python-dateutil
+
+      - name: Fetch latest data & update dashboard
+        env:
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+          BEA_API_KEY:  ${{ secrets.BEA_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          EIA_API_KEY:  ${{ secrets.EIA_API_KEY }}
+        run: python scripts/update_dashboard.py
+
+      - name: Commit updated dashboard
+        run: |
+          git config user.name  "dashboard-bot"
+          git config user.email "dashboard-bot@users.noreply.github.com"
+          git add macro_dashboard_v6.html data/last_update.json
+          git diff --staged --quiet || git commit -m "📊 Auto-update: $(date +'%B %Y') data refresh"
+          git push
