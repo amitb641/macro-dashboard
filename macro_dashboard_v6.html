@@ -5,296 +5,386 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>U.S. Macro Dashboard</title>
 <script>
+// ══════════════════════════════════════════════════════════════════════
+// SVG CHART ENGINE — works on ALL devices, no CDN, no canvas sizing bugs
+// Replaces Chart.js. Uses SVG viewBox so dimensions never matter.
+// Supports: line, bar, horizontal bar, stacked bar, dual-axis
+// ══════════════════════════════════════════════════════════════════════
 (function(){
-"use strict";
-function pC(c){if(!c)return"rgba(74,114,232,0.75)";if(typeof c==="string"&&(c.startsWith("rgba")||c.startsWith("rgb")||c.startsWith("#")))return c;return"#4a72e8";}
-function aC(i){return["#1A56DB","#0D7A4A","#C0392B","#B45309","#6D28D9","#0E7490","#D97706","#DC2626","#2563EB","#059669"][i%10];}
+'use strict';
 
-// Nice round tick values — avoids 10000000.2% style garbage
-function niceNum(range,round){
-  const exp=Math.floor(Math.log10(range)),f=range/Math.pow(10,exp);
+const COLORS = ["#1A56DB","#0D7A4A","#C0392B","#B45309","#6D28D9","#0E7490","#D97706","#DC2626","#2563EB","#059669"];
+function aC(i){ return COLORS[i % COLORS.length]; }
+function pC(c){ if(!c) return COLORS[0]; if(typeof c==='string') return c; if(Array.isArray(c)) return c[0]||COLORS[0]; return COLORS[0]; }
+
+function niceNum(range, round){
+  if(range===0) return 1;
+  const exp = Math.floor(Math.log10(Math.abs(range)));
+  const f = range / Math.pow(10, exp);
   let nf;
-  if(round){nf=f<1.5?1:f<3?2:f<7?5:10;}
-  else{nf=f<=1?1:f<=2?2:f<=5?5:10;}
-  return nf*Math.pow(10,exp);
+  if(round){ nf = f<1.5?1:f<3?2:f<7?5:10; }
+  else { nf = f<=1?1:f<=2?2:f<=5?5:10; }
+  return nf * Math.pow(10, exp);
 }
-function niceTicks(mn,mx,target){
-  target=target||5;
-  const range=niceNum(mx-mn,false);
-  const step=niceNum(range/(target-1),true);
-  const lo=Math.floor(mn/step)*step,hi=Math.ceil(mx/step)*step;
-  const ticks=[];
-  for(let v=lo;v<=hi+step*0.5;v+=step) ticks.push(+v.toPrecision(10));
+
+function niceTicks(mn, mx, target){
+  target = target || 5;
+  if(mn === mx){ mn -= 1; mx += 1; }
+  const range = niceNum(mx - mn, false);
+  const step = niceNum(range / (target - 1), true);
+  const lo = Math.floor(mn / step) * step;
+  const hi = Math.ceil(mx / step) * step;
+  const ticks = [];
+  for(let v = lo; v <= hi + step * 0.5; v += step) ticks.push(parseFloat(v.toPrecision(8)));
   return ticks;
 }
 
-class MC{
-  constructor(ctx,cfg){this.ctx=ctx;this.cfg=cfg;this._render();}
-  destroy(){const c=this.ctx.canvas;c.width=c.width;}
-  _isMini(){// mini chart = small height wrapper
-    const c=this.ctx.canvas;
-    const p=c.parentElement;return p&&(p.offsetHeight||p.clientHeight||0)<100;}
-  _sz(){
-    const c=this.ctx.canvas;
-    const p=c.parentElement;
-    // Use parentElement dimensions — reliable even before first paint
-    const W=p?(p.offsetWidth||p.clientWidth||p.getBoundingClientRect().width||300):640;
-    const H=p?(p.offsetHeight||p.clientHeight||p.getBoundingClientRect().height||260):260;
-    c.width=Math.max(W,10);c.height=Math.max(H,10);
-    return{W:c.width,H:c.height};
+function fmt(v, cb){
+  if(cb) return cb(v);
+  if(v === null || v === undefined || !isFinite(v)) return '';
+  const abs = Math.abs(v);
+  if(abs === 0) return '0';
+  if(abs >= 1000) return (v/1000).toFixed(1) + 'K';
+  if(Number.isInteger(v) || abs >= 10) return v.toFixed(0);
+  return v.toFixed(1);
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── SVG builder helpers ───────────────────────────────────────────────
+function el(tag, attrs, children){
+  const a = Object.entries(attrs||{}).map(([k,v])=>`${k}="${esc(String(v))}"`).join(' ');
+  if(children === null || children === undefined) return `<${tag} ${a}/>`;
+  return `<${tag} ${a}>${children}</${tag}>`;
+}
+
+// ── Main chart class ──────────────────────────────────────────────────
+class SChart {
+  constructor(canvas, cfg){
+    this.canvas = canvas; // the original canvas element
+    this.cfg = cfg;
+    this._svg = null;
+    this._render();
   }
+
   _render(){
-    const t=this.cfg.type,ds=this.cfg.data.datasets,opts=this.cfg.options||{};
-    if(t==="line"||ds.every(d=>(d.type||t)==="line"))this._line();
-    else if(t==="bar"&&opts.indexAxis==="y")this._barH();
-    else this._bar();
+    const cfg = this.cfg;
+    const t = cfg.type;
+    const opts = cfg.options || {};
+    const iH = opts.indexAxis === 'y';
+    let svg;
+    if(t === 'line' || (t === 'bar' && cfg.data.datasets.every(d=>(d.type||t)==='line'))){
+      svg = this._line(cfg);
+    } else if(t === 'bar' && iH){
+      svg = this._barH(cfg);
+    } else {
+      svg = this._bar(cfg);
+    }
+    // Replace canvas with inline SVG directly in parent
+    const wrap = this.canvas.parentElement;
+    if(!wrap) return;
+    // Remove old canvas, insert SVG
+    wrap.removeChild(this.canvas);
+    wrap.innerHTML = svg;
+    this._div = wrap;
+    // Make sure wrap fills its container
+    wrap.style.cssText = 'width:100%;height:100%;display:block;';
+    this.canvas = null;
   }
-  _pd(mini){
-    // mini charts: no y-axis labels, just bars with x labels
-    if(mini) return{t:4,r:4,b:22,l:4};
-    return{t:28,r:72,b:48,l:52};
-  }
-  _d(mini){const{W,H}=this._sz(),p=this._pd(mini);return{W,H,x0:p.l,y0:p.t,iw:Math.max(W-p.l-p.r,10),ih:Math.max(H-p.t-p.b,10)};}
-  _rng(vals,f){
-    const valid=vals.filter(v=>v!=null&&isFinite(v));
-    if(!valid.length)return{min:f?.min??-1,max:f?.max??1};
-    const mn=Math.min(...valid),mx=Math.max(...valid);
-    if(f?.min!=null&&f?.max!=null)return{min:f.min,max:f.max};
-    const tks=niceTicks(mn,mx,5);
-    return{min:f?.min??tks[0],max:f?.max??tks[tks.length-1]};
-  }
-  _fmt(v,cb){
-    if(cb)return cb(v);
-    if(!isFinite(v))return"";
-    // show clean numbers: integers stay, decimals to 1 place max
-    const abs=Math.abs(v);
-    if(abs===0)return"0";
-    if(abs>=1000)return(v/1000).toFixed(1)+"K";
-    if(Number.isInteger(v)||abs>=10)return v.toFixed(0);
-    return v.toFixed(1);
-  }
-  _grid(ctx,d,r,labels,sc,isY2){
-    const cb=isY2?(sc?.y2?.ticks?.callback||null):(sc?.y?.ticks?.callback||null);
-    const allVals=[r.min,r.max].filter(v=>v!=null&&isFinite(v));
-    const tks=niceTicks(r.min,r.max,5).filter(v=>v>=r.min-1e-9&&v<=r.max+1e-9);
-    ctx.lineWidth=1;
-    tks.forEach(v=>{
-      const yp=d.y0+d.ih*(1-(v-r.min)/(r.max-r.min));
-      if(yp<d.y0-1||yp>d.y0+d.ih+1)return;
-      ctx.strokeStyle="#EEF1F7";ctx.beginPath();ctx.moveTo(d.x0,yp);ctx.lineTo(d.x0+d.iw,yp);ctx.stroke();
-      ctx.fillStyle=isY2?"#6D28D9":"#94A3B8";ctx.font="10px 'DM Mono',monospace";
-      ctx.textAlign=isY2?"left":"right";
-      ctx.fillText(this._fmt(v,cb),isY2?d.x0+d.iw+4:d.x0-3,yp+3.5);
+
+  destroy(){ if(this._div) this._div.innerHTML=''; } // clear SVG on destroy
+  resize(){} // no-op — SVG scales automatically via viewBox
+
+  // ── Line chart ───────────────────────────────────────────────────────
+  _line(cfg){
+    const data = cfg.data, opts = cfg.options||{}, sc = opts.scales||{};
+    const W=600, H=240, pL=58, pR=70, pT=28, pB=44;
+    const iw=W-pL-pR, ih=H-pT-pB;
+
+    // Primary y range
+    const priV = data.datasets.filter(d=>d.yAxisID!=='y2').flatMap(d=>d.data.filter(v=>v!=null&&isFinite(v)));
+    const allP = priV.length ? priV : [0,1];
+    let yMn = sc.y&&sc.y.min!=null ? sc.y.min : Math.min(...allP);
+    let yMx = sc.y&&sc.y.max!=null ? sc.y.max : Math.max(...allP);
+    const yTks = niceTicks(yMn, yMx, 5);
+    yMn = yTks[0]; yMx = yTks[yTks.length-1];
+
+    // Secondary y2 range
+    const secDS = data.datasets.filter(d=>d.yAxisID==='y2');
+    let y2Mn=0,y2Mx=1,y2Tks=[];
+    if(secDS.length){
+      const sv = secDS.flatMap(d=>d.data.filter(v=>v!=null&&isFinite(v)));
+      y2Mn = sc.y2&&sc.y2.min!=null ? sc.y2.min : (sv.length?Math.min(...sv):0);
+      y2Mx = sc.y2&&sc.y2.max!=null ? sc.y2.max : (sv.length?Math.max(...sv):1);
+      y2Tks = niceTicks(y2Mn, y2Mx, 5);
+      y2Mn = y2Tks[0]; y2Mx = y2Tks[y2Tks.length-1];
+    }
+
+    const toX = i => pL + (data.labels.length<2 ? iw/2 : iw*i/(data.labels.length-1));
+    const toY = (v,mn,mx) => pT + ih*(1-(v-mn)/(mx-mn));
+
+    let out = '';
+
+    // Grid lines + y-axis labels
+    const yCb = sc.y&&sc.y.ticks&&sc.y.ticks.callback;
+    yTks.forEach(v=>{
+      const y = toY(v,yMn,yMx);
+      out += `<line x1="${pL}" y1="${y.toFixed(1)}" x2="${pL+iw}" y2="${y.toFixed(1)}" stroke="#EEF1F7" stroke-width="1"/>`;
+      out += `<text x="${pL-5}" y="${(y+3.5).toFixed(1)}" text-anchor="end" fill="#94A3B8" font-size="10" font-family="DM Mono,monospace">${esc(fmt(v,yCb))}</text>`;
     });
-    if(labels&&labels.length){
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
-      const maxShow=Math.floor(d.iw/28);
-      const step=Math.max(1,Math.ceil(labels.length/maxShow));
-      labels.forEach((lb,i)=>{
-        if(i%step!==0&&i!==labels.length-1)return;
-        ctx.fillText((lb+'').replace(/\\n.*/,''),d.x0+d.iw*(labels.length===1?0.5:i/(labels.length-1)),d.y0+d.ih+14);
+
+    // y2 axis labels
+    if(secDS.length){
+      const y2Cb = sc.y2&&sc.y2.ticks&&sc.y2.ticks.callback;
+      y2Tks.forEach(v=>{
+        const y = toY(v,y2Mn,y2Mx);
+        out += `<text x="${pL+iw+5}" y="${(y+3.5).toFixed(1)}" text-anchor="start" fill="#6D28D9" font-size="10" font-family="DM Mono,monospace">${esc(fmt(v,y2Cb))}</text>`;
       });
     }
-  }
-  _leg(ctx,d,datasets){
-    const items=datasets.filter(ds=>ds.label);if(!items.length)return;
-    ctx.font="9px 'Courier New',monospace";ctx.textAlign="left";
-    const tw=items.reduce((a,ds)=>a+ctx.measureText(ds.label).width+18,0);
-    let lx=(d.x0+d.iw/2)-Math.min(tw,d.iw)/2,ly=8;
-    items.forEach(ds=>{
-      let c=ds.borderColor||ds.backgroundColor||"#4a72e8";
-      if(Array.isArray(c))c=c[0];
-      ctx.fillStyle=pC(c);ctx.fillRect(lx,ly,10,7);
-      ctx.fillStyle="#334E68";ctx.fillText(ds.label,lx+13,ly+7);
-      lx+=ctx.measureText(ds.label).width+18;
+
+    // x-axis labels
+    const nL = data.labels.length;
+    const step = Math.max(1, Math.ceil(nL/10));
+    data.labels.forEach((lb,i)=>{
+      if(i%step!==0 && i!==nL-1) return;
+      out += `<text x="${toX(i).toFixed(1)}" y="${H-pB+16}" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="DM Mono,monospace">${esc(String(lb).split('\n')[0])}</text>`;
     });
-  }
-  _rr(ctx,x,y,w,h,r,col){
-    if(!isFinite(x)||!isFinite(y)||!isFinite(w)||!isFinite(h))return;
-    w=Math.max(w,1);h=Math.max(h,1);r=Math.min(r||0,w/2,h/2,4);
-    ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
-    ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
-    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
-    ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
-    ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
-    ctx.fillStyle=pC(col);ctx.fill();
-  }
-  _line(){
-    const cfg=this.cfg,data=cfg.data,opts=cfg.options||{},ctx=this.ctx;
-    const mini=this._isMini(),d=this._d(mini),sc=opts.scales||{};
-    const priV=data.datasets.filter(ds=>ds.yAxisID!=="y2").flatMap(ds=>ds.data.filter(v=>v!=null&&isFinite(v)));
-    const r=this._rng(priV,{min:sc.y?.min,max:sc.y?.max});
-    const secDS=data.datasets.filter(ds=>ds.yAxisID==="y2");
-    let r2=null;if(secDS.length){const sv=secDS.flatMap(ds=>ds.data.filter(v=>v!=null&&isFinite(v)));r2=this._rng(sv,{min:sc.y2?.min,max:sc.y2?.max});}
-    ctx.clearRect(0,0,d.W,d.H);
-    if(!mini){this._grid(ctx,d,r,data.labels,sc,false);if(r2)this._grid(ctx,d,r2,[],sc,true);}
-    else{// mini: just draw x labels
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
-      data.labels.forEach((lb,i)=>{ctx.fillText((lb+'').replace(/\\n.*/,''),d.x0+d.iw*(data.labels.length===1?0.5:i/(data.labels.length-1)),d.y0+d.ih+14);});
-    }
+
+    // Datasets
     data.datasets.forEach((ds,di)=>{
-      const col=ds.borderColor||aC(di),isY2=ds.yAxisID==="y2",rv=isY2?r2:r;
-      if(!rv)return;
-      const pts=ds.data.map((v,i)=>{
-        if(v==null||!isFinite(v))return null;
-        return{x:d.x0+d.iw*(data.labels.length===1?0.5:i/(data.labels.length-1)),y:d.y0+d.ih*(1-(v-rv.min)/(rv.max-rv.min))};
-      });
-      if(ds.fill&&ds.backgroundColor){const vp=pts.filter(p=>p);if(vp.length>1){ctx.beginPath();ctx.moveTo(vp[0].x,d.y0+d.ih);vp.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(vp[vp.length-1].x,d.y0+d.ih);ctx.closePath();ctx.fillStyle=pC(ds.backgroundColor);ctx.fill();}}
-      ctx.beginPath();ctx.strokeStyle=pC(col);ctx.lineWidth=ds.borderWidth||2;if(ds.borderDash)ctx.setLineDash(ds.borderDash);else ctx.setLineDash([]);
-      let st=false;pts.forEach(p=>{if(!p){st=false;return;}if(!st){ctx.moveTo(p.x,p.y);st=true;}else ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);
-      const pr=mini?0:(ds.pointRadius??3);if(pr>0)pts.forEach(p=>{if(!p)return;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,Math.PI*2);ctx.fillStyle=pC(col);ctx.fill();});
+      const col = pC(ds.borderColor||aC(di));
+      const isY2 = ds.yAxisID==='y2';
+      const mn = isY2?y2Mn:yMn, mx = isY2?y2Mx:yMx;
+      const pts = ds.data.map((v,i)=>v!=null&&isFinite(v)?{x:toX(i),y:toY(v,mn,mx)}:null);
+      const valid = pts.filter(p=>p);
+
+      // Fill area
+      if(ds.fill && ds.backgroundColor && valid.length>1){
+        const fillCol = pC(ds.backgroundColor);
+        let path = `M${valid[0].x.toFixed(1)},${(pT+ih).toFixed(1)}`;
+        valid.forEach(p=>{ path+=` L${p.x.toFixed(1)},${p.y.toFixed(1)}`; });
+        path += ` L${valid[valid.length-1].x.toFixed(1)},${(pT+ih).toFixed(1)} Z`;
+        out += `<path d="${path}" fill="${fillCol}" opacity="0.5"/>`;
+      }
+
+      // Line
+      if(valid.length>1){
+        let d=''; let started=false;
+        pts.forEach(p=>{
+          if(!p){started=false;return;}
+          d += started?` L${p.x.toFixed(1)},${p.y.toFixed(1)}`:`M${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+          started=true;
+        });
+        const dash = ds.borderDash ? `stroke-dasharray="${ds.borderDash.join(',')}"` : '';
+        out += `<path d="${d}" fill="none" stroke="${col}" stroke-width="${ds.borderWidth||2}" ${dash}/>`;
+      }
+
+      // Points
+      const pr = ds.pointRadius!=null ? ds.pointRadius : 3;
+      if(pr>0) pts.forEach(p=>{ if(!p)return; out+=`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${pr}" fill="${col}"/>`; });
     });
-    // DATA LABELS on line charts (non-mini) — show every other value, always show last
-    if(!mini){
-      data.datasets.forEach((ds,di)=>{
-        if(ds.datalabels===false)return;
-        const col=ds.borderColor||aC(di),isY2=ds.yAxisID==="y2",rv=isY2?r2:r;
-        if(!rv)return;
-        const cb=(isY2?(opts.scales?.y2?.ticks?.callback):(opts.scales?.y?.ticks?.callback))||null;
-        const pts=ds.data.map((v,i)=>v==null||!isFinite(v)?null:{
-          v,x:d.x0+d.iw*(data.labels.length===1?0.5:i/(data.labels.length-1)),
-          y:d.y0+d.ih*(1-(v-rv.min)/(rv.max-rv.min))
-        });
-        const visible=pts.map((p,i)=>({p,i,show:false}));
-        // show first, last, and every ~4th to avoid crowding
-        const step=Math.max(1,Math.floor(pts.length/6));
-        visible.forEach((item,i)=>{
-          if(i===0||i===pts.length-1||i%step===0)item.show=true;
-        });
-        visible.forEach(({p,show})=>{
-          if(!p||!show)return;
-          const lbl=this._fmt(p.v,cb);
-          ctx.font="bold 9px 'DM Mono',monospace";
-          const tw=ctx.measureText(lbl).width;
-          const lx=Math.max(d.x0+2,Math.min(p.x-tw/2,d.x0+d.iw-tw-2));
-          const ly=p.y>d.y0+12?p.y-6:p.y+13;
-          // pill bg
-          ctx.fillStyle="rgba(255,255,255,0.88)";
-          ctx.beginPath();ctx.roundRect(lx-3,ly-9,tw+6,13,3);ctx.fill();
-          ctx.fillStyle=pC(col);
-          ctx.textAlign="left";
-          ctx.fillText(lbl,lx,ly);
-        });
-      });
-    }
-    if(!mini)this._leg(ctx,d,data.datasets);
+
+    // Legend
+    out += this._legend(data.datasets, W, pL, iw);
+
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;max-width:100%">${out}</svg>`;
   }
-  _bar(){
-    const cfg=this.cfg,data=cfg.data,opts=cfg.options||{},ctx=this.ctx;
-    const mini=this._isMini(),d=this._d(mini),sc=opts.scales||{};
-    const stacked=sc.y?.stacked||sc.x?.stacked;
-    const barDS=data.datasets.filter(ds=>(ds.type||cfg.type)==="bar");
-    const lineDS=data.datasets.filter(ds=>ds.type==="line");
+
+  // ── Bar chart ────────────────────────────────────────────────────────
+  _bar(cfg){
+    const data = cfg.data, opts = cfg.options||{}, sc = opts.scales||{};
+    const W=600, H=240, pL=58, pR=70, pT=28, pB=44;
+    const iw=W-pL-pR, ih=H-pT-pB;
+
+    const stacked = (sc.y&&sc.y.stacked)||(sc.x&&sc.x.stacked);
+    const barDS = data.datasets.filter(d=>(d.type||cfg.type)==='bar');
+    const lineDS = data.datasets.filter(d=>d.type==='line');
+
     let allV=[];
-    if(stacked){data.labels.forEach((_,i)=>{let p=0,n=0;barDS.forEach(ds=>{const v=ds.data[i]||0;v>=0?p+=v:n+=v;});allV.push(p,n);});}
-    else barDS.forEach(ds=>ds.data.forEach(v=>{if(v!=null&&isFinite(v))allV.push(v);}));
-    lineDS.filter(ds=>ds.yAxisID!=="y2").forEach(ds=>ds.data.forEach(v=>{if(v!=null&&isFinite(v))allV.push(v);}));
-    if(!allV.length)allV=[0,1];
-    const r=this._rng(allV,{min:sc.y?.min,max:sc.y?.max});if(r.min>0)r.min=0;if(r.max<0)r.max=0;
-    if(r.min===r.max){r.min-=1;r.max+=1;}
-    const secLD=lineDS.filter(ds=>ds.yAxisID==="y2");
-    let r2=null;if(secLD.length){const sv=secLD.flatMap(ds=>ds.data.filter(v=>v!=null&&isFinite(v)));r2=this._rng(sv,{min:sc.y2?.min,max:sc.y2?.max});}
-    ctx.clearRect(0,0,d.W,d.H);
-    if(!mini){this._grid(ctx,d,r,data.labels,sc,false);if(r2)this._grid(ctx,d,r2,[],sc,true);}
-    else{// mini bar: just x-axis labels, no y axis
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
-      const nG2=data.labels.length,gW2=d.iw/nG2;
-      data.labels.forEach((lb,i)=>{ctx.fillText(lb,d.x0+gW2*i+gW2/2,d.y0+d.ih+14);});
-    }
-    const nG=data.labels.length,gW=d.iw/Math.max(nG,1),gap=mini?gW*0.1:gW*0.12;
-    const toY=v=>d.y0+d.ih*(1-(v-r.min)/(r.max-r.min)),zY=toY(0);
     if(stacked){
-      data.labels.forEach((_,gi)=>{
-        const cx=d.x0+gW*gi+gW/2,bw=gW-gap*2;let pT=zY,nB=zY;
-        barDS.forEach((ds,di)=>{const v=ds.data[gi]||0,col=Array.isArray(ds.backgroundColor)?ds.backgroundColor[gi]:(ds.backgroundColor||aC(di)),h=Math.abs(toY(v)-zY);if(v>=0){this._rr(ctx,cx-bw/2,pT-h,bw,h,ds.borderRadius||0,col);pT-=h;}else{this._rr(ctx,cx-bw/2,nB,bw,h,ds.borderRadius||0,col);nB+=h;}});
+      data.labels.forEach((_,i)=>{
+        let p=0,n=0;
+        barDS.forEach(d=>{const v=d.data[i]||0; v>=0?p+=v:n+=v;});
+        allV.push(p,n);
       });
     } else {
-      const nB=Math.max(barDS.length,1),bW=(gW-gap*2)/nB;
-      barDS.forEach((ds,di)=>{ds.data.forEach((v,gi)=>{
-        if(v==null||!isFinite(v))return;
-        const cx=d.x0+gW*gi+gap+bW*di+bW/2,col=Array.isArray(ds.backgroundColor)?ds.backgroundColor[gi]:(ds.backgroundColor||aC(di));
-        const y=v>=0?toY(v):zY,h=Math.abs(toY(v)-zY);
-        this._rr(ctx,cx-bW/2,y,bW,h,mini?2:(ds.borderRadius||0),col);
-        if(!mini&&ds.borderWidth&&ds.borderColor){const bc=Array.isArray(ds.borderColor)?ds.borderColor[gi]:ds.borderColor;ctx.strokeStyle=pC(bc);ctx.lineWidth=ds.borderWidth;ctx.strokeRect(cx-bW/2,y,bW,Math.max(h,1));}
-      });});
+      barDS.forEach(d=>d.data.forEach(v=>{if(v!=null&&isFinite(v))allV.push(v);}));
     }
-    if(!mini){
-      lineDS.forEach((ds,di)=>{
-        const isY2=ds.yAxisID==="y2",rv=isY2?r2:r,col=ds.borderColor||aC(barDS.length+di);
-        if(!rv)return;
-        const pts=ds.data.map((v,i)=>v==null||!isFinite(v)?null:{x:d.x0+gW*i+gW/2,y:rv?d.y0+d.ih*(1-(v-rv.min)/(rv.max-rv.min)):toY(v)});
-        ctx.beginPath();ctx.strokeStyle=pC(col);ctx.lineWidth=ds.borderWidth||2;if(ds.borderDash)ctx.setLineDash(ds.borderDash);else ctx.setLineDash([]);
-        let st=false;pts.forEach(p=>{if(!p){st=false;return;}if(!st){ctx.moveTo(p.x,p.y);st=true;}else ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);
-        const pr=ds.pointRadius??3;if(pr>0)pts.forEach(p=>{if(!p)return;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,Math.PI*2);ctx.fillStyle=pC(col);ctx.fill();});
+    lineDS.filter(d=>d.yAxisID!=='y2').forEach(d=>d.data.forEach(v=>{if(v!=null&&isFinite(v))allV.push(v);}));
+    if(!allV.length) allV=[0,1];
+
+    let yMn = sc.y&&sc.y.min!=null ? sc.y.min : Math.min(...allV,0);
+    let yMx = sc.y&&sc.y.max!=null ? sc.y.max : Math.max(...allV);
+    if(yMn===yMx){yMn-=1;yMx+=1;}
+    const yTks = niceTicks(yMn,yMx,5);
+    yMn=yTks[0]; yMx=yTks[yTks.length-1];
+
+    const secLD = lineDS.filter(d=>d.yAxisID==='y2');
+    let y2Mn=0,y2Mx=1,y2Tks=[];
+    if(secLD.length){
+      const sv=secLD.flatMap(d=>d.data.filter(v=>v!=null&&isFinite(v)));
+      y2Mn=sc.y2&&sc.y2.min!=null?sc.y2.min:(sv.length?Math.min(...sv):0);
+      y2Mx=sc.y2&&sc.y2.max!=null?sc.y2.max:(sv.length?Math.max(...sv):1);
+      y2Tks=niceTicks(y2Mn,y2Mx,5);
+      y2Mn=y2Tks[0]; y2Mx=y2Tks[y2Tks.length-1];
+    }
+
+    const toY = (v,mn,mx) => pT+ih*(1-(v-mn)/(mx-mn));
+    const zY = toY(0,yMn,yMx);
+    const nG = data.labels.length;
+    const gW = iw/Math.max(nG,1);
+    const gap = gW*0.1;
+
+    let out='';
+
+    // Grid + y labels
+    const yCb = sc.y&&sc.y.ticks&&sc.y.ticks.callback;
+    yTks.forEach(v=>{
+      const y=toY(v,yMn,yMx);
+      out+=`<line x1="${pL}" y1="${y.toFixed(1)}" x2="${pL+iw}" y2="${y.toFixed(1)}" stroke="#EEF1F7" stroke-width="1"/>`;
+      out+=`<text x="${pL-5}" y="${(y+3.5).toFixed(1)}" text-anchor="end" fill="#94A3B8" font-size="10" font-family="DM Mono,monospace">${esc(fmt(v,yCb))}</text>`;
+    });
+
+    if(secLD.length){
+      const y2Cb=sc.y2&&sc.y2.ticks&&sc.y2.ticks.callback;
+      y2Tks.forEach(v=>{
+        const y=toY(v,y2Mn,y2Mx);
+        out+=`<text x="${pL+iw+5}" y="${(y+3.5).toFixed(1)}" text-anchor="start" fill="#6D28D9" font-size="10" font-family="DM Mono,monospace">${esc(fmt(v,y2Cb))}</text>`;
       });
-      // DATA LABELS on bar charts — value above/below each bar
-      const nG_dl=data.labels.length,gW_dl=d.iw/Math.max(nG_dl,1),gap_dl=mini?gW_dl*0.1:gW_dl*0.12;
-      const stacked_dl=opts.scales?.y?.stacked||opts.scales?.x?.stacked;
-      const barDS_dl=data.datasets.filter(ds=>(ds.type||this.cfg.type)==="bar");
-      if(!mini&&!stacked_dl){
-        const nB_dl=Math.max(barDS_dl.length,1),bW_dl=(gW_dl-gap_dl*2)/nB_dl;
-        const toY_dl=v=>d.y0+d.ih*(1-(v-r.min)/(r.max-r.min)),zY_dl=toY_dl(0);
-        barDS_dl.forEach((ds,di)=>{
-          if(ds.datalabels===false)return;
-          const sc_dl=this.cfg.options?.scales||{};
-          const isY2_dl=ds.yAxisID==="y2";
-          const cb_dl=(isY2_dl?sc_dl.y2?.ticks?.callback:sc_dl.y?.ticks?.callback)||null;
-          ds.data.forEach((v,gi)=>{
-            if(v==null||!isFinite(v))return;
-            const cx_dl=d.x0+gW_dl*gi+gap_dl+bW_dl*di+bW_dl/2;
-            const lbl=this._fmt(v,cb_dl);
-            ctx.font="bold 9px 'DM Mono',monospace";
-            ctx.textAlign="center";
-            const barY=v>=0?toY_dl(v):zY_dl,barH=Math.abs(toY_dl(v)-zY_dl);
-            // position: above positive bars (or at zero line for tiny bars), below negative bars
-            const labelY = v>=0 ? Math.min(barY, zY_dl)-5 : Math.max(barY+barH, zY_dl)+11;
-            {
-              const tw=ctx.measureText(lbl).width;
-              ctx.fillStyle="rgba(255,255,255,0.88)";
-              ctx.beginPath();ctx.roundRect(cx_dl-tw/2-2,labelY-9,tw+4,12,2);ctx.fill();
-              const col=Array.isArray(ds.backgroundColor)?ds.backgroundColor[gi]:(ds.backgroundColor||aC(di));
-              ctx.fillStyle=pC(col);
-              ctx.fillText(lbl,cx_dl,labelY);
-            }
-          });
+    }
+
+    // x labels
+    const xStep = Math.max(1,Math.ceil(nG/10));
+    data.labels.forEach((lb,i)=>{
+      if(i%xStep!==0 && i!==nG-1) return;
+      const cx=pL+gW*i+gW/2;
+      out+=`<text x="${cx.toFixed(1)}" y="${H-pB+16}" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="DM Mono,monospace">${esc(String(lb))}</text>`;
+    });
+
+    // Bars
+    if(stacked){
+      data.labels.forEach((_,gi)=>{
+        const cx=pL+gW*gi+gW/2, bw=gW-gap*2;
+        let pTop=zY, nBot=zY;
+        barDS.forEach((ds,di)=>{
+          const v=ds.data[gi]||0;
+          const col=Array.isArray(ds.backgroundColor)?pC(ds.backgroundColor[gi]):pC(ds.backgroundColor||aC(di));
+          const h=Math.abs(toY(v,yMn,yMx)-zY);
+          if(v>=0){ out+=`<rect x="${(cx-bw/2).toFixed(1)}" y="${(pTop-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${col}" rx="2"/>`; pTop-=h; }
+          else { out+=`<rect x="${(cx-bw/2).toFixed(1)}" y="${nBot.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${col}" rx="2"/>`; nBot+=h; }
         });
-      }
-      this._leg(ctx,d,data.datasets);
+      });
+    } else {
+      const nB=Math.max(barDS.length,1), bW=(gW-gap*2)/nB;
+      barDS.forEach((ds,di)=>{
+        ds.data.forEach((v,gi)=>{
+          if(v==null||!isFinite(v)) return;
+          const col=Array.isArray(ds.backgroundColor)?pC(ds.backgroundColor[gi]):pC(ds.backgroundColor||aC(di));
+          const cx=pL+gW*gi+gap+bW*di+bW/2;
+          const y=v>=0?toY(v,yMn,yMx):zY, h=Math.abs(toY(v,yMn,yMx)-zY);
+          if(h<0.5) return;
+          out+=`<rect x="${(cx-bW/2).toFixed(1)}" y="${y.toFixed(1)}" width="${bW.toFixed(1)}" height="${Math.max(h,1).toFixed(1)}" fill="${col}" rx="2"/>`;
+        });
+      });
     }
-  }
-  _barH(){
-    const cfg=this.cfg,data=cfg.data,opts=cfg.options||{},ctx=this.ctx;
-    const{W,H}=this._sz();const pL=160,pR=58,pT=26,pB=30,iw=W-pL-pR,ih=H-pT-pB;
-    const allV=data.datasets.flatMap(ds=>ds.data.filter(v=>v!=null&&isFinite(v)));
-    const sc=opts.scales||{};
-    const r=this._rng(allV.length?allV:[0,1],{min:sc.x?.min??0,max:sc.x?.max});if(r.min>0)r.min=0;
-    if(r.min===r.max){r.max=r.min+1;}
-    ctx.clearRect(0,0,W,H);
-    const tks=niceTicks(r.min,r.max,5).filter(v=>v>=r.min-1e-9&&v<=r.max+1e-9);
-    tks.forEach(v=>{
-      const xp=pL+iw*((v-r.min)/(r.max-r.min));
-      if(!isFinite(xp))return;
-      ctx.strokeStyle="#dde2ee";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xp,pT);ctx.lineTo(xp,pT+ih);ctx.stroke();
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
-      ctx.fillText(this._fmt(v,sc.x?.ticks?.callback||null),xp,pT+ih+14);
+
+    // Overlay line datasets
+    lineDS.forEach((ds,di)=>{
+      const isY2=ds.yAxisID==='y2', mn=isY2?y2Mn:yMn, mx=isY2?y2Mx:yMx;
+      const col=pC(ds.borderColor||aC(barDS.length+di));
+      const pts=ds.data.map((v,i)=>v!=null&&isFinite(v)?{x:pL+gW*i+gW/2,y:toY(v,mn,mx)}:null);
+      let d=''; let started=false;
+      pts.forEach(p=>{
+        if(!p){started=false;return;}
+        d+=started?` L${p.x.toFixed(1)},${p.y.toFixed(1)}`:`M${p.x.toFixed(1)},${p.y.toFixed(1)}`;
+        started=true;
+      });
+      if(d) out+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="${ds.borderWidth||2}"/>`;
+      const pr=ds.pointRadius!=null?ds.pointRadius:4;
+      if(pr>0) pts.forEach(p=>{if(!p)return; out+=`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${pr}" fill="${col}"/>`; });
     });
-    const nG=data.labels.length,nB=data.datasets.length,gH=ih/Math.max(nG,1),gap=gH*0.1,bH=(gH-gap*2)/Math.max(nB,1),toX=v=>pL+iw*((v-r.min)/(r.max-r.min)),zX=toX(0);
+
+    out += this._legend(data.datasets, W, pL, iw);
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;max-width:100%">${out}</svg>`;
+  }
+
+  // ── Horizontal bar chart ─────────────────────────────────────────────
+  _barH(cfg){
+    const data = cfg.data, opts = cfg.options||{}, sc = opts.scales||{};
+    const nG = data.labels.length;
+    const W=600, H=Math.max(180, nG*32+60), pL=150, pR=60, pT=24, pB=36;
+    const iw=W-pL-pR, ih=H-pT-pB;
+
+    const allV=data.datasets.flatMap(d=>d.data.filter(v=>v!=null&&isFinite(v)));
+    let xMn=sc.x&&sc.x.min!=null?sc.x.min:Math.min(...allV,0);
+    let xMx=sc.x&&sc.x.max!=null?sc.x.max:Math.max(...allV);
+    if(xMn===xMx){xMx=xMn+1;}
+    const xTks=niceTicks(xMn,xMx,5);
+    xMn=xTks[0]; xMx=xTks[xTks.length-1];
+
+    const toX=v=>pL+iw*((v-xMn)/(xMx-xMn));
+    const zX=toX(0);
+    const gH=ih/Math.max(nG,1), gap=gH*0.1;
+    const nB=Math.max(data.datasets.length,1), bH=(gH-gap*2)/nB;
+
+    let out='';
+    // Grid + x labels
+    const xCb=sc.x&&sc.x.ticks&&sc.x.ticks.callback;
+    xTks.forEach(v=>{
+      const x=toX(v);
+      out+=`<line x1="${x.toFixed(1)}" y1="${pT}" x2="${x.toFixed(1)}" y2="${pT+ih}" stroke="#EEF1F7" stroke-width="1"/>`;
+      out+=`<text x="${x.toFixed(1)}" y="${H-pB+16}" text-anchor="middle" fill="#94A3B8" font-size="10" font-family="DM Mono,monospace">${esc(fmt(v,xCb))}</text>`;
+    });
+
+    // y labels + bars
     data.labels.forEach((lb,gi)=>{
-      const cy=pT+gH*gi+gH/2;ctx.fillStyle="#334E68";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="right";
-      ctx.fillText(lb.length>24?lb.substring(0,22)+"…":lb,pL-4,cy+(bH*(nB-1)/2)+(nB===1?4:0));
+      const cy=pT+gH*gi+gH/2;
+      const lbl=String(lb).length>20?String(lb).slice(0,18)+'…':String(lb);
+      out+=`<text x="${pL-6}" y="${(cy+4).toFixed(1)}" text-anchor="end" fill="#334E68" font-size="10" font-family="DM Mono,monospace">${esc(lbl)}</text>`;
       data.datasets.forEach((ds,di)=>{
-        const v=ds.data[gi];if(v==null||!isFinite(v))return;
-        const col=Array.isArray(ds.backgroundColor)?ds.backgroundColor[gi]:(ds.backgroundColor||aC(di));
-        const y=pT+gH*gi+gap+bH*di,x=v>=0?zX:toX(v),w=Math.abs(toX(v)-zX);
-        this._rr(ctx,x,y,w,bH,ds.borderRadius||0,col);
+        const v=ds.data[gi]; if(v==null||!isFinite(v)) return;
+        const col=Array.isArray(ds.backgroundColor)?pC(ds.backgroundColor[gi]):pC(ds.backgroundColor||aC(di));
+        const y=pT+gH*gi+gap+bH*di;
+        const x=v>=0?zX:toX(v), w=Math.abs(toX(v)-zX);
+        if(w<0.5) return;
+        out+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(w,1).toFixed(1)}" height="${bH.toFixed(1)}" fill="${col}" rx="2"/>`;
       });
     });
-    this._leg(ctx,{x0:pL,y0:pT,iw,ih},data.datasets);
+
+    out += this._legend(data.datasets, W, pL, iw);
+    return `<svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:visible;max-width:100%">${out}</svg>`;
+  }
+
+  // ── Legend ───────────────────────────────────────────────────────────
+  _legend(datasets, W, pL, iw){
+    const items = datasets.filter(d=>d.label);
+    if(!items.length) return '';
+    const itemW = Math.min(iw/items.length, 150);
+    let out='';
+    items.forEach((ds,i)=>{
+      const col=pC(ds.borderColor||ds.backgroundColor||aC(i));
+      const x=pL + i*itemW;
+      out+=`<rect x="${x}" y="4" width="10" height="8" fill="${col}" rx="1"/>`;
+      out+=`<text x="${x+13}" y="12" fill="#334E68" font-size="9" font-family="DM Mono,monospace">${esc(ds.label)}</text>`;
+    });
+    return out;
   }
 }
-window.Chart=function(ctx,cfg){return new MC(ctx,cfg);};
-window.Chart.defaults={color:"#94A3B8",borderColor:"#E2E8F0"};
+
+// ── Global Chart shim — same API as Chart.js ──────────────────────────
+window._chartInstances = [];
+window.Chart = function(ctx, cfg){
+  // ctx can be canvas element or 2d context
+  const canvas = ctx && ctx.canvas ? ctx.canvas : ctx;
+  const inst = new SChart(canvas, cfg);
+  window._chartInstances.push(inst);
+  return inst;
+};
+window.Chart.defaults = { color:'#5a6a8a', borderColor:'#dde2ee' };
+window.Chart.register = function(){};
+
 })();
+
 </script>
 
 <style>
@@ -390,6 +480,7 @@ h1 span{color:var(--accent)}
 .ch320{position:relative;height:320px}
 .ch260{position:relative;height:260px}
 .ch200{position:relative;height:200px}
+.ch-inline{position:relative}
 
 /* GRID LAYOUTS */
 .two-up{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -397,7 +488,7 @@ h1 span{color:var(--accent)}
 /* ── GLOBAL OVERFLOW PROTECTION ── */
 *,*::before,*::after{box-sizing:border-box}
 body{overflow-x:hidden}
-.tab-panel{max-width:100%;overflow-x:hidden}
+.tab-panel{max-width:100%}
 .panel{min-width:0;word-break:break-word;overflow-wrap:break-word}
 .panel-sub{word-break:break-word;overflow-wrap:break-word}
 .two-up > *{min-width:0}
@@ -434,41 +525,62 @@ body{overflow-x:hidden}
   .metric-row{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 }
 
-/* Large phone — 768px */
+/* Tablet — 768px */
 @media(max-width:768px){
-  .two-up{grid-template-columns:1fr}
+  .two-up{grid-template-columns:1fr!important}
   .download-btn{display:none!important}
-  body{padding:16px 12px 40px}
+  body{padding:16px 10px 40px}
   .panel{padding:14px}
-  .ch400{height:260px}
-  .ch320{height:240px}
-  .ch300{height:220px}
-  .ch260{height:200px}
-  .ch200{height:160px}
+  .ch400{height:240px!important}
+  .ch320{height:220px!important}
+  .ch300{height:200px!important}
+  .ch260{height:185px!important}
+  .ch200{height:160px!important}
+  .ch-inline{height:220px!important}
   .sector-grid{grid-template-columns:1fr}
   .kpi-strip{gap:8px}
   .kpi{flex:1 1 calc(50% - 8px)}
   h1{font-size:clamp(18px,5vw,28px)}
   .metric-row{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-  .nav-btn{padding:5px 10px;font-size:10.5px}
+  .nav{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:8px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{white-space:nowrap;padding:5px 10px;font-size:10.5px;flex-shrink:0}
+  .stk-flow{grid-template-columns:1fr!important}
+  .stk-stats{grid-template-columns:1fr 1fr!important}
+  .ma-agents{grid-template-columns:1fr 1fr!important}
+  .ma-sources{flex-wrap:wrap}
+  .ma-source{max-width:none!important;flex:1 1 calc(50% - 6px)}
 }
 
 /* Phone — 480px */
 @media(max-width:480px){
-  body{padding:12px 10px 30px}
-  .panel{padding:12px}
-  .ch400{height:220px}
-  .ch320{height:200px}
-  .ch300{height:190px}
-  .ch260{height:170px}
-  .ch200{height:140px}
+  body{padding:10px 8px 30px}
+  .panel{padding:11px}
+  .ch400{height:200px!important}
+  .ch320{height:185px!important}
+  .ch300{height:170px!important}
+  .ch260{height:155px!important}
+  .ch200{height:130px!important}
+  .ch-inline{height:185px!important}
   .kpi{flex:1 1 calc(50% - 8px)}
   .kpi-val{font-size:16px}
   .m-val{font-size:16px}
   .metric-row{grid-template-columns:1fr 1fr}
-  .dtable th,.dtable td{white-space:normal;word-break:break-word}
-  .nav-btn{font-size:10px;padding:4px 8px}
-  .fc-note{font-size:10.5px;padding:12px}
+  .dtable th,.dtable td{white-space:normal;word-break:break-word;font-size:10px;padding:5px 7px}
+  .nav{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:8px;scrollbar-width:none;gap:3px}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{white-space:nowrap;font-size:9.5px;padding:4px 8px;flex-shrink:0}
+  .fc-note{font-size:10.5px;padding:10px}
+  .stk-flow{grid-template-columns:1fr!important}
+  .stk-stats{grid-template-columns:1fr!important}
+  .stk-node{border-right:none!important;border-bottom:1px solid var(--border)}
+  .ma-agents{grid-template-columns:1fr!important}
+  .ma-sources{flex-direction:column}
+  .ma-source{max-width:none!important}
+  .ma-outputs{flex-direction:column!important}
+  .fc-grid{grid-template-columns:1fr!important}
+  h1{font-size:18px}
+  .panel-title{font-size:12px}
 }
 
 /* FORECAST */
@@ -647,35 +759,37 @@ h1 span { color: var(--accent) !important; }
 
 /* ── NAV TABS ── */
 .nav {
-  border-bottom: 2px solid var(--border) !important;
-  padding-bottom: 0 !important;
-  margin-bottom: 24px !important;
-  gap: 4px !important;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+  gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
 }
 .nav-btn {
-  font-family: 'DM Sans', sans-serif !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0 !important;
-  color: var(--muted) !important;
-  padding: 8px 16px 10px !important;
-  border-radius: 0 !important;
-  border: none !important;
-  border-bottom: 2px solid transparent !important;
-  margin-bottom: -2px !important;
-  background: none !important;
-  transition: color .15s ease, border-color .15s ease !important;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: all .15s ease;
+  white-space: nowrap;
 }
 .nav-btn:hover:not(.active) {
-  color: var(--text2) !important;
-  background: transparent !important;
-  border-bottom-color: var(--bord2) !important;
+  color: var(--text2);
+  border-color: var(--border);
+  background: var(--bg2);
 }
 .nav-btn.active {
-  color: var(--accent) !important;
-  background: none !important;
-  border-bottom: 2px solid var(--accent) !important;
-  font-weight: 600 !important;
+  background: #EBF2FF;
+  border-color: rgba(26,86,219,.25);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(26,86,219,.12);
 }
 
 /* ── PANELS / CARDS ── */
@@ -965,8 +1079,8 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes tabFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shimmerLight {
@@ -980,8 +1094,8 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
 .kpi:nth-child(4) { animation-delay: .16s !important; }
 .kpi:nth-child(5) { animation-delay: .20s !important; }
 .kpi:nth-child(6) { animation-delay: .24s !important; }
-/* Tab panel animation */
-.tab-panel.active { animation: tabFadeIn .3s ease both !important; }
+/* Tab panel animation — opacity only, no transform (transform breaks getBoundingClientRect) */
+.tab-panel.active { animation: tabFadeIn .15s ease both !important; }
 /* Panel stagger */
 .panel { animation: kpiFadeUp .35s ease both !important; }
 .panel:nth-child(2) { animation-delay: .07s !important; }
@@ -1044,7 +1158,7 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
 </head>
 <body>
 
-<div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Data through Feb 2026</div>
+<div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Fetching live data...</div>
 <h1>U.S. <span>Macro</span> Dashboard</h1>
 <p class="subtitle">Growth · Labor · Inflation · Financial Conditions · Credit · Housing · Energy — 2025 actuals · 2026 outlook</p>
 
@@ -1114,7 +1228,7 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
     <div class="panel">
       <div class="panel-title">Unemployment by Sector — 2025 vs 2024 (%)</div>
       <div class="panel-sub">2025 rate vs 2024 rate · BLS CPS · seasonally adjusted</div>
-      <div style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
     </div>
   </div>
   <div class="panel">
@@ -1160,7 +1274,7 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
     <div class="panel">
       <div class="panel-title">Avg Hourly Earnings by Sector — 2025 vs 2024</div>
       <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3</div>
-      <div style="position:relative;height:420px"><canvas id="c-wage-bar"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar"></canvas></div>
     </div>
   </div>
   <div class="panel">
@@ -1183,7 +1297,7 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
     <div class="panel">
       <div class="panel-title">Job Gains by Sector — 2025 vs 2024 (thousands)</div>
       <div class="panel-sub">Annual net change in payroll employment · BLS CES · → indicates sub-sector</div>
-      <div style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
     </div>
   </div>
   <div class="panel">
@@ -1341,7 +1455,7 @@ div[style*="background:#fff8e6;border:1px solid #c0701040"] {
         <span style="font-size:10px">⚡</span>
         <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#C0392B;letter-spacing:.05em">ACTIVE SUPPLY SHOCK — Strait of Hormuz · Mar 2026</span>
       </div>
-      <div class="panel-title">Oil Price Pulse — The Hormuz Spike ⚡</div>
+      <div class="panel-title">March 2026 — Daily Closes (Live)</div>
       <div class="panel-sub">WTI daily closes · Mar 5–10 2026 · EIA / CME · <span style="color:#C0392B;font-weight:600">$72 → $119 → $84 in 5 sessions</span></div>
       <div id="oil-pulse-widget" style="padding:4px 0"></div>
     </div>
@@ -1724,8 +1838,7 @@ const FC_SECTORS = [
 // ════════════════════════════════════════════════════
 // CHART GLOBALS
 // ════════════════════════════════════════════════════
-Chart.defaults.color = "#5a6a8a";
-Chart.defaults.borderColor = "#dde2ee";
+// Chart.defaults set in _initDashboard after CDN loads
 const TT = {backgroundColor:"#ffffff",borderColor:"#dde2ee",borderWidth:1,padding:10,titleColor:"#1a2035",bodyColor:"#3d4f6e"};
 function pct(v){ return (v >= 0 ? "+" : "") + v + "%" }
 function colorVal(v, hi="#1a9e4a", lo="#d03030"){ return v < 0 ? lo : hi }
@@ -1915,7 +2028,10 @@ function buildGDPTable(){
   });
   document.getElementById("gdp-tbl").innerHTML=h+"</tbody>";
 }
-buildSectorCards(); buildGDPTable();
+function buildGDPTab(){
+  if(builtTabs.gdp) return; builtTabs.gdp=1;
+  buildGroupFilters(); buildSectorCards(); buildGDPTable();
+}
 function setSortBy(val,btn){
   sortBy=val;
   ["share","g25","g24","g23"].forEach(id=>{
@@ -2783,8 +2899,8 @@ function buildOilTab(){
   if(builtTabs.oil) return; builtTabs.oil=1;
 
   document.getElementById("oil-metrics").innerHTML = [
-    {lbl:"WTI Mar 10 2026",      val:"~$84",  sub:"⚡ Pulling back from $119 peak · Hormuz crisis easing · CME",               col:"#C0392B"},
-    {lbl:"Brent Mar 10 2026",    val:"~$94",  sub:"⚡ EIA forecasts $95/bbl through Q2 2026 · EIA STEO Mar 10",                col:"#92400E"},
+    {lbl:"WTI — Latest",      val:"~$84",  sub:"⚡ Pulling back from $119 peak · Hormuz crisis easing · CME",               col:"#C0392B"},
+    {lbl:"Brent — Latest",    val:"~$94",  sub:"⚡ EIA forecasts $95/bbl through Q2 2026 · EIA STEO Mar 10",                col:"#92400E"},
     {lbl:"Weekly gain (Mar 3–7)",val:"+35.6%",sub:"⚡ Biggest weekly gain in WTI futures history since 1983 · $67→$90.9 · CNBC",col:"#C0392B"},
     {lbl:"WTI 2025 Annual Avg",  val:"$70.2", sub:"Pre-crisis baseline · EIA annual avg",                                       col:"#94A3B8"},
     {lbl:"Gas burden — Feb 2026",val:"~2.4%", sub:"Gasoline as % of disposable income · pre-crisis est. · ~3.2% at $90+ WTI · BLS/EIA", col:"#B45309"},
@@ -2827,98 +2943,142 @@ function buildOilTab(){
       }}
   });
 
-  // ── Section 2: Oil Price Pulse — Hormuz Crisis ──
-  const OIL_PULSE = {
-    // Daily WTI closes Mar 5–10 2026 — the Hormuz spike and reversal
-    days: [
-      {dt:"Wed Mar 5",  wti:72.4, note:"⚡ U.S.-Israel strikes Iran · Strait of Hormuz near-shutdown · WTI +7.9% single session"},
-      {dt:"Thu Mar 6",  wti:81.3, note:"⚡ Iraq shuts 1.5M bpd · Kuwait declares force majeure · WTI +12.3% — biggest 1-day gain since 2022"},
-      {dt:"Fri Mar 7",  wti:90.9, note:"⚡ WTI +35.6% on the week — biggest weekly gain in futures history (since 1983) · G7 emergency meeting called"},
-      {dt:"Sun Mar 9",  wti:119.0,note:"⚡ Brent hits $127 intraday — near $120 overnight · G7 announces coordinated SPR release · Qatar warns $150/bbl possible"},
-      {dt:"Mon Mar 10", wti:84.0, note:"⚡ WTI −29% · ceasefire signals + SPR release trigger violent reversal · EIA forecasts $95/bbl through Q2"},
-    ]
-  };
-  const pulse = OIL_PULSE.days;
-  const pMin = Math.min(...pulse.map(d=>d.wti)) - 1.5;
-  const pMax = Math.max(...pulse.map(d=>d.wti)) + 1.5;
-  const pRange = pMax - pMin;
-  const startPrice = pulse[0].wti;
-  const endPrice = pulse[pulse.length-1].wti;
-  const totalChg = endPrice - startPrice;
-  const totalChgPct = (totalChg / startPrice * 100).toFixed(1);
-  const chgCol = totalChg >= 0 ? "#0D7A4A" : "#C0392B";
-  const chgSign = totalChg >= 0 ? "+" : "";
+  // ── Section 2: Current Month — Daily Oil Price Chart ──
+  (function buildDailyOilChart() {
+    const d = OIL_DAILY;
+    const container = document.getElementById("oil-pulse-widget");
+    if (!container) return;
 
-  // Mini sparkline as inline SVG
-  const svgW = 340, svgH = 72, padL = 6, padR = 6, padT = 8, padB = 8;
-  const xStep = (svgW - padL - padR) / (pulse.length - 1);
-  const pts = pulse.map((d,i) => {
-    const x = padL + i * xStep;
-    const y = padT + (1 - (d.wti - pMin) / pRange) * (svgH - padT - padB);
-    return {x, y, ...d};
-  });
-  const pathD = pts.map((p,i) => (i===0?"M":"L") + p.x.toFixed(1)+","+p.y.toFixed(1)).join(" ");
-  const areaD = pathD + ` L${pts[pts.length-1].x.toFixed(1)},${(svgH-padB)} L${padL},${(svgH-padB)} Z`;
+    // Filter out nulls for chart, keep labels
+    const validIdx = d.wti.map((v,i) => v !== null ? i : -1).filter(i => i >= 0);
+    const labels   = validIdx.map(i => d.labels[i]);
+    const wtiVals  = validIdx.map(i => d.wti[i]);
+    const brentVals= validIdx.map(i => d.brent[i]);
 
-  let svgDots = pts.filter(p=>p.note).map(p=>
-    `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="#1A56DB" stroke="white" stroke-width="1.5"/>`
-  ).join("");
+    if (!labels.length) { container.innerHTML = '<div style="padding:20px;color:#94A3B8;font-size:12px">No daily data yet — pipeline will populate on next run.</div>'; return; }
 
-  // X axis labels
-  let svgLabels = pts.map((p,i)=> i%2===0 ?
-    `<text x="${p.x.toFixed(1)}" y="${svgH}" text-anchor="middle" font-size="7" fill="#94A3B8" font-family="DM Mono,monospace">${p.dt}</text>` : ""
-  ).join("");
+    // Compute summary stats
+    const wtiLast   = wtiVals[wtiVals.length - 1];
+    const wtiFirst  = wtiVals[0];
+    const wtiHigh   = Math.max(...wtiVals);
+    const wtiLow    = Math.min(...wtiVals);
+    const wtiMtd    = wtiLast - wtiFirst;
+    const wtiMtdPct = (wtiMtd / wtiFirst * 100).toFixed(1);
+    const wtiChgCol = wtiMtd >= 0 ? '#0D7A4A' : '#C0392B';
+    const wtiSign   = wtiMtd >= 0 ? '+' : '';
+    const brentLast = brentVals[brentVals.length - 1];
 
-  const sparkSVG = `<svg width="100%" viewBox="0 0 ${svgW} ${svgH+4}" style="display:block;overflow:visible">
-    <defs><linearGradient id="pgrd" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="${totalChg>=0?"#0D7A4A":"#C0392B"}" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="${totalChg>=0?"#0D7A4A":"#C0392B"}" stop-opacity="0.01"/>
-    </linearGradient></defs>
-    <path d="${areaD}" fill="url(#pgrd)"/>
-    <path d="${pathD}" fill="none" stroke="${totalChg>=0?"#0D7A4A":"#C0392B"}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    ${svgDots}
-    ${svgLabels}
-  </svg>`;
-
-  // Header KPIs
-  const pulseHeader = `
-    <div style="display:flex;align-items:flex-end;gap:20px;margin-bottom:10px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:2px">WTI Mon Mar 10</div>
-        <div style="font-family:'Instrument Serif',serif;font-size:32px;color:#B45309;line-height:1">$${endPrice.toFixed(1)}<span style="font-size:14px;color:#94A3B8">/bbl</span></div>
+    // Header strip
+    container.innerHTML = `
+      <div id="oil-daily-header" style="display:flex;gap:0;margin-bottom:14px;flex-wrap:wrap">
+        <div style="flex:1;min-width:120px;padding:12px 16px;background:#FFFBEB;border:1px solid rgba(180,83,9,.15);border-radius:8px;margin-right:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#92400E;margin-bottom:3px">WTI — Latest</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:28px;color:#B45309;line-height:1">\$${wtiLast.toFixed(1)}<span style="font-size:12px;color:#94A3B8">/bbl</span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:${wtiChgCol};margin-top:2px">${wtiSign}\$${Math.abs(wtiMtd).toFixed(1)} (${wtiSign}${wtiMtdPct}%) MTD</div>
+        </div>
+        <div style="flex:1;min-width:120px;padding:12px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px;margin-right:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:3px">Brent — Latest</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:28px;color:#1A56DB;line-height:1">\$${brentLast.toFixed(1)}<span style="font-size:12px;color:#94A3B8">/bbl</span></div>
+          <div style="font-size:10px;color:#64748B;margin-top:2px">Spread: \$${(brentLast - wtiLast).toFixed(1)}</div>
+        </div>
+        <div style="flex:1;min-width:120px;padding:12px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:5px">${d.month} Range</div>
+          <div style="font-family:'DM Mono',monospace;font-size:12px;color:#334E68;line-height:1.8">
+            <span style="color:#0D7A4A">▲ \$${wtiHigh.toFixed(1)}</span> High<br>
+            <span style="color:#C0392B">▼ \$${wtiLow.toFixed(1)}</span> Low<br>
+            <span style="color:#64748B">${labels.length} sessions</span>
+          </div>
+        </div>
       </div>
-      <div>
-        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:2px">Crisis Change (Mar 5→10)</div>
-        <div style="font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:${chgCol}">${chgSign}$${Math.abs(totalChg).toFixed(1)} <span style="font-size:13px">(${chgSign}${totalChgPct}%)</span></div>
-      </div>
-      <div style="margin-left:auto">
-        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:2px">Range</div>
-        <div style="font-family:'DM Mono',monospace;font-size:12px;color:#64748B">$${Math.min(...pulse.map(d=>d.wti)).toFixed(1)} – $${Math.max(...pulse.map(d=>d.wti)).toFixed(1)}</div>
-      </div>
-    </div>`;
+      <canvas id="c-oil-daily" style="height:160px;width:100%"></canvas>
+      <div style="font-size:9px;color:#94A3B8;font-family:'DM Mono',monospace;margin-top:6px;text-align:right">
+        ${d.month} daily closes · EIA / FRED · Updated: ${d.updated}
+      </div>`;
 
-  // Sparkline
-  const pulseSpark = `<div style="margin-bottom:12px">${sparkSVG}</div>`;
+    // Build daily chart — clean, uncluttered
+    // Key design choices for "not too busy":
+    //  • No data point dots (pointRadius:0) — line only
+    //  • Hover dots only (pointHoverRadius:4)
+    //  • Every other label shown via tick callback
+    //  • Thin grid lines, no borders
+    //  • Fill under WTI with soft gradient
+    //  • Max 22 sessions (one month) fits cleanly
 
-  // Headlines
-  const pulseHeadlines = pulse.filter(d=>d.note).map(d=>{
-    const dayChg = pulse.indexOf(d)>0 ? d.wti - pulse[pulse.indexOf(d)-1].wti : 0;
-    const hCol = dayChg>=0?"#0D7A4A":"#C0392B";
-    const hSign = dayChg>=0?"+":"";
-    return `<div style="display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border)">
-      <div style="flex-shrink:0;text-align:right;min-width:52px">
-        <div style="font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#94A3B8">${d.dt}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:${hCol}">${hSign}$${Math.abs(dayChg).toFixed(1)}</div>
-      </div>
-      <div style="font-size:10.5px;color:var(--text2);line-height:1.45;padding-top:1px">${d.note}</div>
-    </div>`;
-  }).join("");
-
-  document.getElementById("oil-pulse-widget").innerHTML =
-    pulseHeader + pulseSpark +
-    `<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;margin-bottom:4px">📰 Market-moving headlines</div>` +
-    pulseHeadlines +
-    `<div style="font-size:9px;color:var(--muted);margin-top:8px">Sources: EIA STEO Mar 10 · CME Group · CNBC · CNN Business · Reuters · Bloomberg · <span style="color:#C0392B;font-weight:700">⚡</span> = crisis event · prices are daily closes / intraday estimates</div>`;
+    new Chart(document.getElementById('c-oil-daily').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'WTI',
+            data: wtiVals,
+            borderColor: '#B45309',
+            backgroundColor: 'rgba(180,83,9,.07)',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: '#B45309',
+            tension: 0.3,
+            fill: true,
+          },
+          {
+            label: 'Brent',
+            data: brentVals,
+            borderColor: '#1A56DB',
+            backgroundColor: 'transparent',
+            borderWidth: 1.5,
+            borderDash: [4, 3],
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: '#1A56DB',
+            tension: 0.3,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            labels: { color: '#334E68', font: { size: 11 }, boxWidth: 12, boxHeight: 2 },
+          },
+          tooltip: {
+            ...TT,
+            callbacks: {
+              title: items => items[0].label,
+              label: c => ` ${c.dataset.label}: $${c.raw.toFixed(1)}/bbl`,
+            },
+          },
+        },
+        scales: {
+          x: {
+            grid: { color: '#EEF1F7', drawTicks: false },
+            border: { display: false },
+            ticks: {
+              color: '#94A3B8',
+              font: { size: 9 },
+              maxRotation: 0,
+              // Show label only every other session to avoid crowding
+              callback(val, i) {
+                return i % 2 === 0 ? labels[i] : '';
+              },
+            },
+          },
+          y: {
+            grid: { color: '#EEF1F7' },
+            border: { display: false },
+            ticks: {
+              color: '#94A3B8',
+              font: { size: 10 },
+              callback: v => '$' + v,
+            },
+          },
+        },
+      },
+    });
+  })();
 
   // ── Transmission chain ──
   // ── Unified Oil Impact Chain ──
@@ -3379,29 +3539,31 @@ function buildCorpTab_REMOVED(){
 }
 
 // ════════════════════════════════════════════════════
-// TAB SWITCHING — EXPANDED
+// TAB SWITCHING
 // ════════════════════════════════════════════════════
 document.querySelectorAll(".nav-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  btn.addEventListener("click", function(){
+    document.querySelectorAll(".nav-btn").forEach(function(b){ b.classList.remove("active"); });
+    document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
     btn.classList.add("active");
-    const t=btn.dataset.tab;
-    document.getElementById("tab-"+t).classList.add("active");
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      if(t==="unemp")   buildUnempTab();
-      if(t==="cpi")     buildCPITab();
-      if(t==="wages")   buildWagesTab();
-      if(t==="jobs")    buildJobsTab();
-      if(t==="pce")     buildPCETab();
-      if(t==="banks")   buildBanksTab();
-      if(t==="fc")      buildFCTab();
-      if(t==="oil")     buildOilTab();
-      if(t==="credit")  buildCreditTab();
-      if(t==="housing") buildHousingTab();
-      if(t==="yield")   buildYieldTab();
-      if(t==="stack")   buildStackTab();
-    }));
+    var t = btn.dataset.tab;
+    var panel = document.getElementById("tab-" + t);
+    if(!panel) return;
+    panel.classList.add("active");
+    // Build tab content on first visit (SVG renders instantly, no sizing needed)
+    if(t==="fc")      buildFCTab();
+    if(t==="gdp")     buildGDPTab();
+    if(t==="unemp")   buildUnempTab();
+    if(t==="cpi")     buildCPITab();
+    if(t==="wages")   buildWagesTab();
+    if(t==="jobs")    buildJobsTab();
+    if(t==="pce")     buildPCETab();
+    if(t==="banks")   buildBanksTab();
+    if(t==="oil")     buildOilTab();
+    if(t==="credit")  buildCreditTab();
+    if(t==="housing") buildHousingTab();
+    if(t==="yield")   buildYieldTab();
+    if(t==="stack")   buildStackTab();
   });
 });
 
@@ -3734,7 +3896,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: 1st of every month, 9am ET</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
@@ -4019,10 +4181,20 @@ function buildStackTab(){
 </div>`;
 }
 
-// Init default tab
-requestAnimationFrame(()=>requestAnimationFrame(()=>{
+// ── Safe init: wait for Chart.js CDN + DOM to be fully ready ──────────
+function _initDashboard(){
+  // SVG engine is inline — no CDN wait needed. Build default tab immediately.
   buildFCTab();
-}));
+}
+
+// Chart.js handles window resize natively via ResizeObserver
+
+// Fire when DOM is ready
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', _initDashboard);
+} else {
+  _initDashboard();
+}
 </script>
 
 
@@ -4162,6 +4334,296 @@ const SIGNAL_THRESHOLDS = [
 
 
 
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+// LIVE DATA ENGINE v2 — Comprehensive real-time browser updates
+// Fetches 20+ FRED series on page load. No server needed.
+// FRED API supports CORS — works directly from browser.
+// ══════════════════════════════════════════════════════════════════════
+(function(){
+'use strict';
+
+var FRED_KEY  = 'YOUR_FRED_API_KEY_HERE'; // injected by GitHub Actions
+var FRED_BASE = 'https://api.stlouisfed.org/fred/series/observations';
+
+// ── All series to fetch live ──────────────────────────────────────────
+var SERIES = [
+  // [seriesId, kpiKey, label, format, yoy?]
+  // format: 'pct1','pct2','bp','dollar','k','yoy_pct','mom_k'
+  {id:'FEDFUNDS',   key:'fed',    label:'Fed Funds Rate',    fmt:'pct2'                },
+  {id:'DGS10',      key:'t10',    label:'10Y Treasury',      fmt:'pct2'                },
+  {id:'DGS2',       key:'t2',     label:'2Y Treasury',       fmt:'pct2'                },
+  {id:'DGS5',       key:'t5',     label:'5Y Treasury',       fmt:'pct2'                },
+  {id:'DGS30',      key:'t30',    label:'30Y Treasury',      fmt:'pct2'                },
+  {id:'BAMLC0A0CM', key:'ig',     label:'IG Credit Spread',  fmt:'bp'                  },
+  {id:'BAMLH0A0HYM2',key:'hy',   label:'HY Credit Spread',  fmt:'bp'                  },
+  {id:'UNRATE',     key:'unemp',  label:'Unemployment Rate', fmt:'pct1'                },
+  {id:'U6RATE',     key:'u6',     label:'U-6 Underemploy.',  fmt:'pct1'                },
+  {id:'CPIAUCSL',   key:'cpi',    label:'CPI YoY',           fmt:'yoy_pct', yoy:true   },
+  {id:'CPILFESL',   key:'core',   label:'Core CPI YoY',      fmt:'yoy_pct', yoy:true   },
+  {id:'PCEPI',      key:'pce',    label:'PCE YoY',           fmt:'yoy_pct', yoy:true   },
+  {id:'PCEPILFE',   key:'corepce',label:'Core PCE YoY',      fmt:'yoy_pct', yoy:true   },
+  {id:'AHETPI',     key:'wages',  label:'Wage Growth YoY',   fmt:'yoy_pct', yoy:true   },
+  {id:'PAYEMS',     key:'nfp',    label:'Nonfarm Payrolls',  fmt:'mom_k'               },
+  {id:'MORTGAGE30US',key:'mtg30', label:'30Y Mortgage',      fmt:'pct2'                },
+  {id:'MORTGAGE15US',key:'mtg15', label:'15Y Mortgage',      fmt:'pct2'                },
+  {id:'PSAVERT',    key:'save',   label:'Personal Saving Rate',fmt:'pct1'              },
+  {id:'DCOILWTICO', key:'wti',    label:'WTI Crude Oil',     fmt:'dollar'              },
+  {id:'DCOILBRENTEU',key:'brent', label:'Brent Crude Oil',   fmt:'dollar'              },
+  {id:'CSUSHPISA',  key:'cs',     label:'Case-Shiller HPI',  fmt:'yoy_pct', yoy:true   },
+  {id:'HOUST',      key:'starts', label:'Housing Starts',    fmt:'k'                   },
+  {id:'DRCCLACBS',  key:'ccdelinq',label:'CC Delinquency',   fmt:'pct2'               },
+];
+
+// ── Format value ──────────────────────────────────────────────────────
+function fmtLive(v, prev, yearAgo, fmt) {
+  if(v === null) return {val:'N/A', sub:'Data unavailable', col:'#94A3B8'};
+  var chg = (prev !== null) ? v - prev : 0;
+  var arrow = chg > 0.01 ? '▲' : chg < -0.01 ? '▼' : '→';
+
+  if(fmt === 'pct1' || fmt === 'pct2') {
+    var dec = fmt==='pct2' ? 2 : 1;
+    var col = '#334E68'; // neutral for rates
+    return {
+      val: v.toFixed(dec) + '%',
+      sub: arrow + ' ' + Math.abs(chg).toFixed(dec) + 'pp vs prior',
+      col: col
+    };
+  }
+  if(fmt === 'bp') {
+    var col2 = v < 100 ? '#0D7A4A' : v > 300 ? '#C0392B' : '#B45309';
+    return {
+      val: Math.round(v) + 'bp',
+      sub: (chg >= 0 ? '+' : '') + Math.round(chg) + 'bp vs prior · ' + (v < 150 ? 'Tight' : v > 400 ? 'Wide' : 'Moderate'),
+      col: col2
+    };
+  }
+  if(fmt === 'yoy_pct') {
+    var yoyVal = (yearAgo && yearAgo !== 0) ? ((v - yearAgo) / Math.abs(yearAgo) * 100) : chg;
+    var yoyRnd = Math.round(yoyVal * 10) / 10;
+    var col3 = '#334E68';
+    // For inflation: higher = worse (red); for wages/housing: higher = good
+    return {
+      val: (yoyRnd >= 0 ? '+' : '') + yoyRnd + '% YoY',
+      sub: 'Index: ' + v.toFixed(1),
+      col: col3
+    };
+  }
+  if(fmt === 'mom_k') {
+    var mom = (prev !== null) ? Math.round(v - prev) : 0;
+    var col4 = mom > 150 ? '#0D7A4A' : mom > 50 ? '#1A56DB' : '#C0392B';
+    return {
+      val: (mom >= 0 ? '+' : '') + mom + 'K',
+      sub: 'MoM change · Total: ' + (v/1000).toFixed(1) + 'M',
+      col: col4
+    };
+  }
+  if(fmt === 'dollar') {
+    var col5 = '#B45309';
+    return {
+      val: '$' + v.toFixed(1),
+      sub: (chg >= 0 ? '+' : '') + '$' + Math.abs(chg).toFixed(1) + ' vs prior',
+      col: col5
+    };
+  }
+  if(fmt === 'k') {
+    return {
+      val: Math.round(v) + 'K',
+      sub: (chg >= 0 ? '+' : '') + Math.round(chg) + 'K vs prior',
+      col: '#334E68'
+    };
+  }
+  return {val: v.toFixed(1), sub: '', col: '#334E68'};
+}
+
+// ── Fetch one FRED series ─────────────────────────────────────────────
+function fetchOne(s, done) {
+  if(FRED_KEY === 'YOUR_FRED_API_KEY_HERE') { done(s, null, null, null, null); return; }
+  var limit = s.yoy ? 14 : 3;
+  var url = FRED_BASE +
+    '?series_id=' + s.id +
+    '&api_key=' + FRED_KEY +
+    '&file_type=json&sort_order=desc&limit=' + limit;
+  fetch(url)
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(data){
+      var obs = (data.observations||[]).filter(function(o){ return o.value !== '.'; });
+      if(!obs.length){ done(s, null, null, null, null); return; }
+      var latest  = parseFloat(obs[0].value);
+      var prior   = obs.length > 1 ? parseFloat(obs[1].value) : null;
+      var yearAgo = obs.length > 12 ? parseFloat(obs[12].value) : null;
+      done(s, latest, prior, yearAgo, obs[0].date);
+    })
+    .catch(function(){ done(s, null, null, null, null); });
+}
+
+// ── Live KPI panel ────────────────────────────────────────────────────
+var liveData = {};
+var totalFetches = 0;
+var doneFetches = 0;
+
+function renderLivePanel() {
+  var panel = document.getElementById('live-panel');
+  if(!panel) return;
+
+  var html = SERIES.map(function(s) {
+    var d = liveData[s.key];
+    var val  = d ? d.val  : '—';
+    var sub  = d ? d.sub  : 'Loading...';
+    var col  = d ? d.col  : '#94A3B8';
+    var dot  = d ? '<span class="ldot"></span>' : '<span class="ldot loading"></span>';
+    return '<div class="lkpi">' +
+      '<div class="lkpi-lbl">' + dot + s.label + '</div>' +
+      '<div class="lkpi-val" style="color:' + col + '">' + val + '</div>' +
+      '<div class="lkpi-sub">' + sub + '</div>' +
+      '</div>';
+  }).join('');
+
+  panel.innerHTML = html;
+}
+
+function setStatus(msg, type) {
+  var bar = document.getElementById('live-bar');
+  if(!bar) return;
+  var cols = {loading:'#1A56DB', ok:'#0D7A4A', error:'#C0392B', warn:'#B45309', idle:'#64748B'};
+  bar.style.background = cols[type] || '#64748B';
+  bar.innerHTML = msg;
+}
+
+// ── Main fetch ────────────────────────────────────────────────────────
+function fetchAll() {
+  if(FRED_KEY === 'YOUR_FRED_API_KEY_HERE') {
+    setStatus('⚠ FRED API key not set — add FRED_API_KEY to GitHub Secrets to enable live data', 'warn');
+    return;
+  }
+  doneFetches = 0;
+  totalFetches = SERIES.length;
+  setStatus('<span class="spin">⟳</span> Fetching live data from FRED (' + totalFetches + ' series)...', 'loading');
+
+  SERIES.forEach(function(s) {
+    fetchOne(s, function(s, val, prior, yearAgo, date) {
+      doneFetches++;
+      if(val !== null) {
+        liveData[s.key] = fmtLive(val, prior, yearAgo, s.fmt);
+        liveData[s.key].date = date;
+        liveData[s.key].raw  = val;
+      }
+      renderLivePanel();
+      if(doneFetches === totalFetches) {
+        var ok = Object.keys(liveData).length;
+        var failed = totalFetches - ok;
+        var now = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        // Inject daily oil data into OIL_DAILY global for the chart
+        if (liveData.wti && liveData.brent) {
+          var today = new Date();
+          var dayLabel = today.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+          // Append today's reading to OIL_DAILY if not already present
+          if (typeof OIL_DAILY !== 'undefined') {
+            var lastLabel = OIL_DAILY.labels[OIL_DAILY.labels.length - 1];
+            if (lastLabel !== dayLabel) {
+              OIL_DAILY.labels.push(dayLabel);
+              OIL_DAILY.wti.push(liveData.wti.raw);
+              OIL_DAILY.brent.push(liveData.brent.raw);
+            } else {
+              // Update last entry with fresh value
+              OIL_DAILY.wti[OIL_DAILY.wti.length - 1]     = liveData.wti.raw;
+              OIL_DAILY.brent[OIL_DAILY.brent.length - 1] = liveData.brent.raw;
+            }
+            OIL_DAILY.updated = now;
+            OIL_DAILY.month   = today.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+          }
+        }
+        if(failed === 0) {
+          setStatus('✅ Live — ' + ok + '/' + totalFetches + ' series · FRED API · ' + now +
+            ' &nbsp;<button onclick="fetchAll()" style="background:rgba(255,255,255,.2);border:none;color:white;' +
+            'padding:2px 10px;border-radius:10px;cursor:pointer;font-size:11px">↺ Refresh</button>', 'ok');
+        } else {
+          setStatus('⚠ ' + ok + '/' + totalFetches + ' series live · ' + failed + ' failed · ' + now, 'warn');
+        }
+        // Update eyebrow
+        var eyebrow = document.querySelector('.eyebrow');
+        if(eyebrow) {
+          var d = new Date();
+          eyebrow.textContent = 'BEA · BLS · FRED — Live browser data · ' +
+            d.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) +
+            ' ' + d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+        }
+      }
+    });
+  });
+}
+
+// ── Inject live panel into page ───────────────────────────────────────
+function init() {
+  // Status bar
+  var h1 = document.querySelector('h1');
+  if(!h1) return;
+  var bar = document.createElement('div');
+  bar.id = 'live-bar';
+  bar.style.cssText = 'font-size:11px;font-family:"DM Mono",monospace;color:#fff;' +
+    'background:#64748B;padding:6px 14px;border-radius:6px;margin:8px 0;' +
+    'display:flex;align-items:center;gap:8px;flex-wrap:wrap;';
+  bar.textContent = '⏳ Initializing...';
+  h1.insertAdjacentElement('afterend', bar);
+
+  // Live KPI panel (above existing KPI strip)
+  var staticStrip = document.getElementById('kpi-strip');
+  if(staticStrip) {
+    // Section header
+    var hdr = document.createElement('div');
+    hdr.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:.08em;' +
+      'color:#94A3B8;text-transform:uppercase;margin:16px 0 8px;';
+    hdr.textContent = '⚡ Live Market Data';
+    staticStrip.parentNode.insertBefore(hdr, staticStrip);
+
+    var panel = document.createElement('div');
+    panel.id = 'live-panel';
+    panel.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));' +
+      'gap:8px;margin-bottom:16px;';
+    staticStrip.parentNode.insertBefore(panel, staticStrip);
+
+    // Separator
+    var sep = document.createElement('div');
+    sep.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:.08em;' +
+      'color:#94A3B8;text-transform:uppercase;margin:4px 0 8px;';
+    sep.textContent = '📋 Dashboard KPIs';
+    staticStrip.parentNode.insertBefore(sep, staticStrip);
+  }
+
+  // Inject styles
+  var st = document.createElement('style');
+  st.textContent = [
+    '.lkpi{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;',
+    'border-top:2px solid #e2e8f0;}',
+    '.lkpi-lbl{font-size:10px;font-weight:600;color:#64748B;letter-spacing:.04em;',
+    'margin-bottom:4px;display:flex;align-items:center;gap:5px;}',
+    '.lkpi-val{font-size:18px;font-family:"Instrument Serif",serif;font-weight:600;',
+    'line-height:1.2;margin-bottom:2px;}',
+    '.lkpi-sub{font-size:9.5px;color:#94A3B8;font-family:"DM Mono",monospace;}',
+    '.ldot{width:6px;height:6px;border-radius:50%;background:#0D7A4A;flex-shrink:0;',
+    'animation:lpulse 2s ease-in-out infinite;}',
+    '.ldot.loading{background:#94A3B8;animation:none;}',
+    '@keyframes lpulse{0%,100%{opacity:1}50%{opacity:.3}}',
+    '.spin{display:inline-block;animation:lspin 1s linear infinite;}',
+    '@keyframes lspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}',
+    '@media(max-width:480px){#live-panel{grid-template-columns:repeat(2,1fr);}}',
+  ].join('');
+  document.head.appendChild(st);
+
+  // Render placeholders, then fetch
+  renderLivePanel();
+  fetchAll();
+}
+
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+})();
 </script>
 </body>
 </html>
