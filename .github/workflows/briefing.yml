@@ -1,0 +1,91 @@
+# briefing.yml
+# Orchestrates all 5 agents daily at 7am ET.
+# Agent 3 (Claude AI) only runs when there is meaningful new data to analyze.
+# Manual trigger also available.
+
+name: Daily Macro Update
+
+on:
+  schedule:
+    - cron: '0 12 * * 1-5'   # Mon–Fri 12:00 UTC = 7am ET
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      # ── Agent 1: Collector ──────────────────────────────────────────
+      - name: Agent 1 — Collector
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+          EIA_API_KEY:  ${{ secrets.EIA_API_KEY }}
+        run: python scripts/collector.py
+
+      # ── Agent 2: Analyzer ───────────────────────────────────────────
+      - name: Agent 2 — Analyzer
+        run: python scripts/analyzer.py
+
+      # ── Agent 3: Analyst — only on 1st of month or if FORCE_AI=true ─
+      # Daily runs patch HTML directly; full AI commentary monthly.
+      - name: Agent 3 — Analyst (claude-sonnet-4-6)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_AI: ${{ github.event.inputs.force_ai || 'false' }}
+        run: |
+          DAY=$(date -u +'%d')
+          if [ "$DAY" = "01" ] || [ "$FORCE_AI" = "true" ]; then
+            echo "Running Agent 3 (1st of month or forced)"
+            python scripts/briefing_agent.py
+          else
+            echo "Skipping Agent 3 — daily patch only"
+          fi
+
+      # ── Agent 4: Renderer ───────────────────────────────────────────
+      - name: Agent 4 — Renderer
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python scripts/renderer.py
+
+      # ── Agent 5: Publisher ──────────────────────────────────────────
+      - name: Agent 5 — Publisher (email on 1st of month only)
+        env:
+          GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
+          EMAIL_FROM:  ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:    ${{ secrets.EMAIL_TO }}
+        run: |
+          DAY=$(date -u +'%d')
+          if [ "$DAY" = "01" ]; then
+            python scripts/publisher.py
+          else
+            python scripts/publisher.py --snapshot-only
+          fi
+
+      # ── Commit & push ───────────────────────────────────────────────
+      - name: Commit and push
+        run: |
+          git config user.name  "briefing-bot"
+          git config user.email "briefing-bot@users.noreply.github.com"
+          git add macro_dashboard_v6.html data/
+          if git diff --staged --quiet; then
+            echo "No changes — data unchanged"
+          else
+            git commit -m "📊 Daily update: $(date -u +'%Y-%m-%d')"
+            git push
+          fi
