@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+"""
+Agent 2 — ANALYZER
+Diffs raw_data.json vs prior snapshot.json.
+Scores signal changes, flags surprises, tags directional deltas.
+No LLM used. Output: data/signals.json
+"""
+
+import json, datetime, sys
+from pathlib import Path
+
+ROOT      = Path(__file__).parent.parent
+RAW_FILE  = ROOT / 'data' / 'raw_data.json'
+SNAP_FILE = ROOT / 'data' / 'snapshot.json'
+OUT_FILE  = ROOT / 'data' / 'signals.json'
+
+# Flag if MoM/period change exceeds these thresholds
+THRESHOLDS = {
+    'ffr':        0.25,   # pp — full 25bp Fed move
+    'dgs10':      0.20,   # pp — 20bp yield move
+    'ig_oas':     15,     # bp
+    'hy_oas':     50,     # bp
+    'unrate':     0.2,    # pp
+    'cpi_yoy':    0.2,    # pp
+    'pce_yoy':    0.2,    # pp
+    'nfp_mom':    75,     # 000s payrolls
+    'wti':        3.0,    # $/bbl
+    'mortgage30': 0.15,   # pp
+    'wages_yoy':  0.3,    # pp
+    'cs_hpi_yoy': 1.0,    # pp
+}
+
+# Absolute level alerts
+LEVEL_ALERTS = {
+    'ig_oas':     {'watch': 120,  'alert': 160},
+    'hy_oas':     {'watch': 400,  'alert': 500},
+    'dgs10':      {'watch': 4.5,  'alert': 5.0},
+    'unrate':     {'watch': 4.5,  'alert': 5.0},
+    'cpi_yoy':    {'watch': 3.0,  'alert': 3.5},
+    'core_pce_yoy': {'watch': 2.8, 'alert': 3.2},
+    'wti':        {'watch': 85,   'alert': 95},
+    'mortgage30': {'watch': 7.0,  'alert': 7.5},
+    'cc_delinq':  {'watch': 9.5,  'alert': 11.0},
+}
+
+
+def yoy(series):
+    """YoY % change from list of {date,value} newest-first."""
+    if not series or len(series) < 13: return None
+    v, v0 = series[0]['value'], series[12]['value']
+    return round((v - v0) / abs(v0) * 100, 2) if v0 else None
+
+
+def latest(x):
+    if not x: return None
+    if isinstance(x, dict):  return x.get('value')
+    if isinstance(x, list):  return x[0]['value'] if x else None
+    return None
+
+
+def level_alert(key, val):
+    if key not in LEVEL_ALERTS or val is None: return None
+    lvl = LEVEL_ALERTS[key]
+    if val >= lvl.get('alert', 9e9): return 'alert'
+    if val >= lvl.get('watch',  9e9): return 'watch'
+    return None
+
+
+def make_signal(val, snap_val, threshold):
+    delta = round(val - snap_val, 4) if (val is not None and snap_val is not None) else None
+    flagged = delta is not None and abs(delta) >= threshold
+    direction = ('rising' if delta > 0 else 'falling') if flagged else 'stable'
+    return {'value': val, 'delta': delta, 'direction': direction, 'flagged': flagged}
+
+
+def analyze():
+    print('[Agent 2 — Analyzer] Starting...')
+
+    if not RAW_FILE.exists():
+        print('ERROR: raw_data.json missing — run collector.py first'); sys.exit(1)
+
+    raw  = json.loads(RAW_FILE.read_text())
+    data = raw.get('data', {})
+
+    snap_vals = {}
+    if SNAP_FILE.exists():
+        snap = json.loads(SNAP_FILE.read_text())
+        snap_vals = snap.get('values', {})
+        print(f'  Prior snapshot: {snap.get("saved_at","?")}')
+    else:
+        print('  No prior snapshot — first run')
+
+    # ── Derive current values ─────────────────────────────────────────
+    v = {}
+    v['ffr']          = latest(data.get('ffr'))
+    v['dgs2']         = latest(data.get('dgs2'))
+    v['dgs5']         = latest(data.get('dgs5'))
+    v['dgs10']        = latest(data.get('dgs10'))
+    v['dgs30']        = latest(data.get('dgs30'))
+    v['ig_oas']       = latest(data.get('ig_oas'))
+    v['hy_oas']       = latest(data.get('hy_oas'))
+
+    unrate = data.get('unrate', [])
+    v['unrate']       = unrate[0]['value'] if unrate else None
+    v['u6rate']       = latest(data.get('u6rate')) if not isinstance(data.get('u6rate'), list) else (data['u6rate'][0]['value'] if data.get('u6rate') else None)
+
+    payems = data.get('payems', [])
+    v['nfp_level']    = payems[0]['value'] if payems else None
+    v['nfp_mom']      = round(payems[0]['value'] - payems[1]['value']) if len(payems) >= 2 else None
+
+    v['wages_yoy']    = yoy(data.get('ahetpi', []))
+    v['cpi_yoy']      = yoy(data.get('cpi_all', []))
+    v['core_cpi_yoy'] = yoy(data.get('cpi_core', []))
+    v['pce_yoy']      = yoy(data.get('pce', []))
+    v['core_pce_yoy'] = yoy(data.get('pce_core', []))
+
+    psavert = data.get('psavert', [])
+    v['saving_rate']  = psavert[0]['value'] if psavert else None
+
+    mtg = data.get('mortgage30', [])
+    v['mortgage30']   = mtg[0]['value'] if mtg else None
+
+    starts = data.get('houst', [])
+    v['housing_starts'] = starts[0]['value'] if starts else None
+
+    v['cs_hpi_yoy']   = yoy(data.get('cs_hpi', []))
+
+    wti = data.get('wti_eia') or data.get('wti_fred', [])
+    v['wti']          = wti[0]['value'] if wti else None
+    brent = data.get('brent_eia') or data.get('brent_fred', [])
+    v['brent']        = brent[0]['value'] if brent else None
+
+    gdp_q = data.get('gdp_growth', [])
+    v['gdp_growth_q'] = gdp_q[0]['value'] if gdp_q else None
+
+    cc = data.get('cc_delinq', [])
+    v['cc_delinq']    = cc[0]['value'] if cc else None
+
+    # 10Y-2Y spread in bp
+    if v['dgs10'] and v['dgs2']:
+        v['spread_10_2_bp'] = round((v['dgs10'] - v['dgs2']) * 100)
+    else:
+        v['spread_10_2_bp'] = None
+
+    # ── Build signals ─────────────────────────────────────────────────
+    sigs = {}
+    for key, thresh in THRESHOLDS.items():
+        sigs[key] = make_signal(v.get(key), snap_vals.get(key), thresh)
+        sigs[key]['alert'] = level_alert(key, v.get(key))
+
+    # Extra signals without thresholds
+    for key in ['dgs2', 'dgs5', 'dgs30', 'spread_10_2_bp', 'core_cpi_yoy',
+                'core_pce_yoy', 'u6rate', 'saving_rate', 'housing_starts',
+                'brent', 'gdp_growth_q', 'cc_delinq']:
+        if key not in sigs:
+            sigs[key] = make_signal(v.get(key), snap_vals.get(key), 9e9)
+            sigs[key]['alert'] = level_alert(key, v.get(key))
+
+    # ── Score overall risk ────────────────────────────────────────────
+    alert_n = sum(1 for s in sigs.values() if s.get('alert') == 'alert')
+    watch_n = sum(1 for s in sigs.values() if s.get('alert') == 'watch')
+    flag_n  = sum(1 for s in sigs.values() if s.get('flagged'))
+
+    risk = ('HIGH'     if alert_n >= 3 else
+            'ELEVATED' if alert_n >= 1 or watch_n >= 3 else
+            'MODERATE' if watch_n >= 1 or flag_n >= 3 else
+            'LOW')
+
+    # ── Build change headlines (for Agent 3 prompt) ───────────────────
+    headlines = []
+    for key, s in sigs.items():
+        if s.get('flagged') and s['value'] is not None:
+            d = s['delta']
+            arrow = '▲' if d > 0 else '▼'
+            alert_tag = f' [{s["alert"].upper()}]' if s.get('alert') else ''
+            headlines.append({
+                'key':   key,
+                'line':  f'{key}: {s["value"]:.2f} ({arrow}{abs(d):.2f} vs prior){alert_tag}',
+                'alert': s.get('alert'),
+            })
+
+    print(f'  Risk: {risk} | alerts={alert_n} watches={watch_n} flagged={flag_n}')
+    print(f'  Change headlines: {len(headlines)}')
+
+    out = {
+        'analyzed_at':   datetime.datetime.utcnow().isoformat() + 'Z',
+        'risk_level':    risk,
+        'alert_count':   alert_n,
+        'watch_count':   watch_n,
+        'flagged_count': flag_n,
+        'values':        v,
+        'signals':       sigs,
+        'headlines':     headlines,
+        'raw_errors':    raw.get('errors', []),
+    }
+
+    OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OUT_FILE.write_text(json.dumps(out, indent=2, default=str))
+    print(f'[Agent 2] Done → data/signals.json')
+    return True
+
+
+if __name__ == '__main__':
+    sys.exit(0 if analyze() else 1)
