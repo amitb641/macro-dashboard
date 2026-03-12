@@ -26,7 +26,6 @@ EMAIL_TO          = os.environ.get('EMAIL_TO', '')
 ROOT      = Path(__file__).parent.parent
 SIG_FILE  = ROOT / 'data' / 'signals.json'
 ANA_FILE  = ROOT / 'data' / 'analysis.json'
-SNAP_FILE = ROOT / 'data' / 'snapshot.json'
 LOG_FILE  = ROOT / 'data' / 'last_update.json'
 
 DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/macro_dashboard_v6.html'
@@ -34,20 +33,13 @@ DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/macro_dashboard_v6.h
 
 # ── Snapshot (Agent 2 memory) ─────────────────────────────────────────
 
-def save_snapshot(sig):
-    snap = {
-        'saved_at':   datetime.datetime.utcnow().isoformat() + 'Z',
-        'risk_level': sig.get('risk_level'),
-        'values':     sig.get('values', {}),
-    }
-    SNAP_FILE.parent.mkdir(parents=True, exist_ok=True)
-    SNAP_FILE.write_text(json.dumps(snap, indent=2, default=str))
-    print(f'  ✅ snapshot.json saved — Agent 2 baseline for next run')
+# save_snapshot merged into save_log — single last_update.json file
 
 
 # ── Run log ───────────────────────────────────────────────────────────
 
 def save_log(sig, ana):
+    """Single file for both run log AND Agent 2 snapshot memory."""
     log = {
         'run_date':      datetime.date.today().isoformat(),
         'completed_at':  datetime.datetime.utcnow().isoformat() + 'Z',
@@ -59,10 +51,12 @@ def save_log(sig, ana):
         'key_values': {k: sig.get('values', {}).get(k) for k in
                        ['ffr','dgs10','dgs2','ig_oas','hy_oas','unrate',
                         'cpi_yoy','core_pce_yoy','wti','mortgage30']},
+        # Agent 2 reads this to diff signals on next run
+        'values': sig.get('values', {}),
     }
     LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     LOG_FILE.write_text(json.dumps(log, indent=2, default=str))
-    print(f'  ✅ last_update.json saved')
+    print(f'  ✅ last_update.json saved (run log + Agent 2 snapshot)')
 
 
 # ── Email HTML ────────────────────────────────────────────────────────
@@ -225,7 +219,6 @@ def publish(snapshot_only=False):
     sig = json.loads(SIG_FILE.read_text())
     ana = json.loads(ANA_FILE.read_text()) if ANA_FILE.exists() else None
 
-    save_snapshot(sig)
     save_log(sig, ana)
 
     if not snapshot_only:

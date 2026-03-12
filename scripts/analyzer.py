@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT      = Path(__file__).parent.parent
 RAW_FILE  = ROOT / 'data' / 'raw_data.json'
-SNAP_FILE = ROOT / 'data' / 'snapshot.json'
+SNAP_FILE = ROOT / 'data' / 'last_update.json'
 OUT_FILE  = ROOT / 'data' / 'signals.json'
 
 # Flag if MoM/period change exceeds these thresholds
@@ -85,10 +85,11 @@ def analyze():
     snap_vals = {}
     if SNAP_FILE.exists():
         snap = json.loads(SNAP_FILE.read_text())
+        # last_update.json stores prior values under 'values' key
         snap_vals = snap.get('values', {})
-        print(f'  Prior snapshot: {snap.get("saved_at","?")}')
+        print(f'  Prior snapshot: {snap.get("completed_at", snap.get("saved_at", "?"))}')
     else:
-        print('  No prior snapshot — first run')
+        print('  No prior data — first run, no signal deltas available')
 
     # ── Derive current values ─────────────────────────────────────────
     v = {}
