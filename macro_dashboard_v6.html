@@ -1678,8 +1678,8 @@ const GDP_BROAD = [
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
 const U_ANNUAL = {
-  labels:["2018","2019","2020","2021","2022","2023","2024","2025","Jan'26"],
-  data:  [3.9,   3.7,   8.1,   5.4,   3.6,   3.6,   4.0,   4.3,    4.3]
+  labels:["2018","2019","2020","2021","2022","2023","2024","2025","Feb'26"],
+  data:  [3.9,   3.7,   8.1,   5.4,   3.6,   3.6,   4.0,   4.3,    3.6]
 };
 const U_SECTORS = [
   {s:"Cruise Line & Resort Workers",color:"#6C5CE7", u21:22.4,u22:8.2, u23:5.8, u24:5.2, u25:5.0},
@@ -1703,7 +1703,7 @@ const U_SECTORS = [
 
 // ── CPI ──────────────────────────────────────────────
 const CPI_ANNUAL = {
-  labels:["2018","2019","2020","2021","2022","2023","2024","2025","Jan'26"],
+  labels:["2018","2019","2020","2021","2022","2023","2024","2025","Feb'26"],
   data:  [1.9,   2.3,   1.4,   7.0,   6.5,   3.4,   2.9,   2.7,    2.4]
 };
 const CPI_CATS = [
@@ -1722,7 +1722,7 @@ const CPI_CATS = [
 // ── WAGES ────────────────────────────────────────────
 const WAGE_ANNUAL = {
   labels:["2019","2020","2021","2022","2023","2024","2025"],
-  nominal:[3.3,   7.9,  4.7,   5.1,   4.3,   3.9,   3.3],
+  nominal:[3.3,   7.9,  4.7,   5.1,   4.3,   3.9,   3.7],
   real:   [0.9,   5.0, -2.4,  -2.1,   0.8,   1.1,   0.7]
 };
 const WAGE_SECTORS = [
@@ -1851,7 +1851,7 @@ let builtTabs = {"status": false};
 const KPIS = [
   {lbl:"Real GDP 2025",        val:"+2.2%",  sub:"BEA full-year · Q3: +4.4%, Q4: +1.4%",  col:"#4a72e8"},
   {lbl:"Real GDP 2024",        val:"+2.8%",  sub:"Prior year comparison",                  col:"#7a90aa"},
-  {lbl:"Unemployment 2025",    val:"~4.3%",  sub:"Avg; peaked 4.6% Nov · Jan'26: 4.3%",   col:"#c07010"},
+  {lbl:"Unemployment 2025",    val:"4.4%",  sub:"Avg; peaked 4.6% Nov · Jan'26: 4.3%",   col:"#c07010"},
   {lbl:"CPI 2025",             val:"2.7%",   sub:"Dec 2025 YoY; Jan'26: 2.4%",            col:"#d03030"},
   {lbl:"Wage Growth 2025",     val:"+3.3%",  sub:"ECI Dec 2025 · real wages +0.7%",        col:"#1a9e4a"},
   {lbl:"Jobs Added 2025",      val:"+181K",  sub:"Revised benchmark · ~15K/mo avg",        col:"#c07010"},
@@ -2049,11 +2049,11 @@ function buildUnempTab(){
 
   document.getElementById("unemp-metrics").innerHTML = [
     {lbl:"Unemployment 2024",      val:"4.0%",  sub:"Annual avg; rose from 3.6% in 2023",     col:"#c07010"},
-    {lbl:"Unemployment 2025",      val:"~4.3%", sub:"Avg; peaked 4.6% Nov'25, Jan'26: 4.3%",  col:"#d03030"},
+    {lbl:"Unemployment 2025",      val:"4.4%", sub:"Avg; peaked 4.6% Nov'25, Jan'26: 4.3%",  col:"#d03030"},
     {lbl:"2026F Consensus",        val:"4.5%",  sub:"Fed SEP median; range 4.3–4.8%",         col:"#c07010"},
     {lbl:"Lowest Sector 2024",     val:"1.8%",  sub:"Government (federal/state)",              col:"#1a9e4a"},
     {lbl:"Highest Sector 2024",    val:"4.6%",  sub:"Construction & cruise/resort workers",   col:"#d03030"},
-    {lbl:"U-6 Broad Rate Dec '25", val:"8.4%",  sub:"Incl. underemployed & discouraged",      col:"#6d40cc"},
+    {lbl:"U-6 Broad Rate Dec '25", val:"7.9%",  sub:"Incl. underemployed & discouraged",      col:"#6d40cc"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
@@ -2105,7 +2105,7 @@ function buildCPITab(){
 
   document.getElementById("cpi-metrics").innerHTML = [
     {lbl:"CPI All Items 2024",    val:"2.9%",  sub:"Dec 2024 YoY",                           col:"#c07010"},
-    {lbl:"CPI All Items 2025",    val:"2.7%",  sub:"Dec 2025 YoY · Jan'26: 2.4%",           col:"#1a9e4a"},
+    {lbl:"CPI All Items 2025",    val:"+2.7%",  sub:"Dec 2025 YoY · Jan'26: 2.4%",           col:"#1a9e4a"},
     {lbl:"Core CPI Dec 2025",     val:"3.2%",  sub:"Ex food & energy · Jan'26 core: 3.3%",  col:"#6d40cc"},
     {lbl:"Shelter CPI 2025",      val:"4.6%",  sub:"Sticky — down from 4.9% in 2024, still elevated", col:"#4a72e8"},
     {lbl:"Food at Home 2025",     val:"3.1%",  sub:"Up from 1.1% in 2024; tariff impact",    col:"#d03030"},
@@ -2159,7 +2159,7 @@ function buildWagesTab(){
 
   document.getElementById("wage-metrics").innerHTML = [
     {lbl:"Nominal Wage Growth 2024", val:"+3.9%", sub:"All private avg hourly YoY",          col:"#1a9e4a"},
-    {lbl:"Nominal Wage Growth 2025", val:"+3.3%", sub:"Slowing; real wages +1.2% annualized", col:"#4a72e8"},
+    {lbl:"Nominal Wage Growth 2025", val:"+3.7%", sub:"Slowing; real wages +1.2% annualized", col:"#4a72e8"},
     {lbl:"2026F Wage Growth",        val:"~3.5%", sub:"Converging to long-term avg per JPM",  col:"#c07010"},
     {lbl:"Avg Hourly All Private",   val:"$37.22",sub:"Jan 2026; +4.1% YoY nominal · BLS",   col:"#6d40cc"},
     {lbl:"Real Wages 2021–22",       val:"Neg.",  sub:"High CPI eroded nominal gains",        col:"#d03030"},
@@ -2217,7 +2217,7 @@ function buildJobsTab(){
     {lbl:"Jobs Added 2024",      val:"+2.0M",  sub:"Net nonfarm payrolls (pre-revision)",    col:"#1a9e4a"},
     {lbl:"Jobs Added 2025",      val:"+181K",  sub:"Jan'26 benchmark revision (−862K cut)",  col:"#d03030"},
     {lbl:"Monthly Avg 2025",     val:"~15K",   sub:"After revision (vs. 167K/mo in 2024)",   col:"#d03030"},
-    {lbl:"Jan 2026 Jobs",        val:"+143K",  sub:"BLS Feb 7 release · Healthcare +44K, retail +34K", col:"#c07010"},
+    {lbl:"Jan 2026 Jobs",        val:"-92K",  sub:"BLS Feb 7 release · Healthcare +44K, retail +34K", col:"#c07010"},
     {lbl:"Top Sector 2025",      val:"Health", sub:"Healthcare & Social Asst. held strong",  col:"#FF4757"},
     {lbl:"Fed Govt (peak→now)",  val:"−327K",  sub:"Cumulative Oct'24 peak · 2025 annual: −200K · Unemp still low: gov't workers rarely file (tenure/transfers)",col:"#d03030"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
@@ -2358,8 +2358,8 @@ function buildFCTab(){
 // ════════════════════════════════════════════════════
 const PCE_ANNUAL = {
   labels:["2019","2020","2021","2022","2023","2024","2025","Jan'26"],
-  headline:[1.5,  1.2,   5.8,   6.3,   3.4,   2.6,   2.6,   2.5],
-  core:    [1.6,  1.4,   4.7,   5.2,   3.9,   2.8,   2.8,   2.5]
+  headline:[1.5,  1.2,   5.8,   6.3,   3.4,   2.6,   2.6,   2.9],
+  core:    [1.6,  1.4,   4.7,   5.2,   3.9,   2.8,   2.8,   2.7]
 };
 const SAVING_RATE = {
   labels:["2019","2020","2021","2022","2023","2024","Q1'25","Q2'25","Q3'25","Dec'25"],
@@ -2489,7 +2489,7 @@ function buildPCETab(){
 
   document.getElementById("pce-metrics").innerHTML = [
     {lbl:"PCE Headline Dec 2025",  val:"2.6%",  sub:"BEA Dec 2025 (revised) · up from 2.4% in Nov", col:"#c07010"},
-    {lbl:"Core PCE Dec 2025",      val:"2.8%",  sub:"Fed target 2.0% · persistent services inflation",col:"#c07010"},
+    {lbl:"Core PCE Dec 2025",      val:"+3.0%",  sub:"Fed target 2.0% · persistent services inflation",col:"#c07010"},
     {lbl:"Real PCE Growth 2025",   val:"~2.6%", sub:"Inflation-adj spending still solid",            col:"#1a9e4a"},
     {lbl:"Personal Saving Rate",   val:"3.6%",  sub:"Dec 2025 · near 2022's decade-low of 2.7%",   col:"#c07010"},
     {lbl:"Total Household Debt",   val:"$18.6T",sub:"Q3 2025 NY Fed · up $4T from pre-pandemic",   col:"#d03030"},
@@ -2768,12 +2768,12 @@ const HPI_DATA = {
 };
 const MORTGAGE_DATA = {
   labels:["2018","2019","2020","2021","2022","2023","2024","2025","2026F"],
-  rate30:  [4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.85, 6.30],
+  rate30:  [4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.85, 6.0],
   ffr:     [2.25, 2.50, 0.25, 0.25, 4.50, 5.25, 5.25, 4.25, 3.75]
 };
 const STARTS_DATA = {
   labels:["2018","2019","2020","2021","2022","2023","2024","2025","2026F"],
-  sf:    [855,   888,   991,   1123,  1003,  885,   1002,  1050,  1100],
+  sf:    [855,   888,   991,   1123,  1003,  885,   1002,  1050,  1404],
   mf:    [374,   403,   425,   543,   607,   537,   422,   360,   340]
 };
 const AFFORD_DATA = {
@@ -2803,9 +2803,9 @@ const FFR_DATA = {
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
 const SPREADS_DATA = {
-  labels:["2018","2019","2020","2021","2022","2023","2024","2025","Feb'26"],
-  ig:   [159,   93,    272,   91,    163,   120,   104,   82,    85],
-  hy:   [529,   347,   587,   310,   480,   400,   320,   295,   305]
+  labels:["2018","2019","2020","2021","2022","2023","2024","2025","Mar'26"],
+  ig:   [159,   93,    272,   91,    163,   120,   104,   82,    1],
+  hy:   [529,   347,   587,   310,   480,   400,   320,   295,   3]
 };
 
 
@@ -2946,13 +2946,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {
-  labels:  ["Mar 3","Mar 4","Mar 5","Mar 6","Mar 7","Mar 10","Mar 11"],
-  wti:     [70.2,   70.8,   72.4,   81.3,   90.9,   84.0,   null],
-  brent:   [73.8,   74.5,   76.1,   85.2,   94.3,   88.1,   null],
-  updated: "Live",
-  month:   "March 2026"
-};
+const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65],"brent":[77.24,83.28,81.56,88.59,95.74,94.35],"month":"March 2026","updated":"Mar 12 04:46 UTC","sessions":6};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -3290,7 +3284,7 @@ function buildHousingTab(){
 
   document.getElementById("housing-metrics").innerHTML = [
     {lbl:"Case-Shiller 2025E",  val:"+4.1%", sub:"National YoY price growth · supply constrained", col:"#4a72e8"},
-    {lbl:"30yr Mortgage 2025",  val:"6.69%", sub:"Avg 2025 · Freddie Mac · near 2-yr low in Oct", col:"#d03030"},
+    {lbl:"30yr Mortgage 2025",  val:"6.00%", sub:"Avg 2025 · Freddie Mac · near 2-yr low in Oct", col:"#d03030"},
     {lbl:"Housing Starts 2025", val:"1.41M", sub:"SF 1.05M + MF 0.36M · Census Bureau",           col:"#1a9e4a"},
     {lbl:"NAR Affordability",   val:"108",   sub:"100 = barely qualifying; up from 95 in 2023",   col:"#c07010"},
     {lbl:"Months Supply 2025",  val:"3.9 mo",sub:"Still below 6-mo balanced market norm",          col:"#c07010"},
@@ -3385,10 +3379,10 @@ function buildYieldTab(){
   if(builtTabs.yield) return; builtTabs.yield=1;
 
   document.getElementById("yield-metrics").innerHTML = [
-    {lbl:"Fed Funds Rate (Jan '26)", val:"4.25%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
+    {lbl:"Fed Funds Rate (Jan '26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#0D7A4A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
-    {lbl:"10Y Treasury Feb 2026",    val:"4.28%",   sub:"Term premium rising · above FFR = normal curve",col:"#6D28D9"},
+    {lbl:"10Y Treasury Feb 2026",    val:"4.15%",   sub:"2Y: 3.57% · Spread: +58bp",col:"#6D28D9"},
 
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
@@ -3906,7 +3900,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 12, 2026 04:46 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
