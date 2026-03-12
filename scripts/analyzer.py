@@ -126,9 +126,9 @@ def analyze():
 
     v['cs_hpi_yoy']   = yoy(data.get('cs_hpi', []))
 
-    wti = data.get('wti_eia') or data.get('wti_fred', [])
+    wti = data.get('wti_daily', [])
     v['wti']          = wti[0]['value'] if wti else None
-    brent = data.get('brent_eia') or data.get('brent_fred', [])
+    brent = data.get('brent_daily', [])
     v['brent']        = brent[0]['value'] if brent else None
 
     gdp_q = data.get('gdp_growth', [])
