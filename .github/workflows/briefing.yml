@@ -36,7 +36,8 @@ jobs:
           echo "FRED key set:   ${{ secrets.FRED_API_KEY != '' }}"
           echo "BLS key set:    ${{ secrets.BLS_API_KEY != '' }}"
           echo "EIA key set:    ${{ secrets.EIA_API_KEY != '' }}"
-          echo "Claude key set: ${{ secrets.ANTHROPIC_API_KEY != '' }}"
+          echo "Claude key set:  ${{ secrets.ANTHROPIC_API_KEY != '' }}"
+          echo "Resend key set:  ${{ secrets.RESEND_API_KEY != '' }}"
           ls scripts/
           ls data/ || echo "data/ missing"
 
@@ -70,16 +71,10 @@ jobs:
 
       - name: Agent 5 — Publisher
         env:
-          GMAIL_TOKEN: ${{ secrets.GMAIL_TOKEN }}
-          EMAIL_FROM:  ${{ secrets.EMAIL_FROM }}
-          EMAIL_TO:    ${{ secrets.EMAIL_TO }}
-        run: |
-          DAY=$(date -u +'%d')
-          if [ "$DAY" = "01" ]; then
-            python scripts/publisher.py
-          else
-            python scripts/publisher.py --snapshot-only
-          fi
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM:     ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:       ${{ secrets.EMAIL_TO }}
+        run: python scripts/publisher.py
 
       - name: Commit and push
         run: |
