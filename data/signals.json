@@ -1,0 +1,206 @@
+{
+  "analyzed_at": "2026-03-12T06:20:38.216179Z",
+  "risk_level": "MODERATE",
+  "alert_count": 0,
+  "watch_count": 1,
+  "flagged_count": 0,
+  "values": {
+    "ffr": 3.64,
+    "dgs2": 3.57,
+    "dgs5": 3.73,
+    "dgs10": 4.15,
+    "dgs30": 4.78,
+    "ig_oas": 0.84,
+    "hy_oas": 3.06,
+    "unrate": 4.4,
+    "u6rate": 7.9,
+    "nfp_level": 158466.0,
+    "nfp_mom": -92,
+    "wages_yoy": 3.69,
+    "cpi_yoy": 2.66,
+    "core_cpi_yoy": 2.73,
+    "pce_yoy": 2.9,
+    "core_pce_yoy": 3.0,
+    "saving_rate": 3.6,
+    "mortgage30": 6.0,
+    "housing_starts": 1404.0,
+    "cs_hpi_yoy": 1.3,
+    "wti": null,
+    "brent": null,
+    "gdp_growth_q": 1.4,
+    "cc_delinq": 2.94,
+    "spread_10_2_bp": 58
+  },
+  "signals": {
+    "ffr": {
+      "value": 3.64,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs10": {
+      "value": 4.15,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "ig_oas": {
+      "value": 0.84,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "hy_oas": {
+      "value": 3.06,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "unrate": {
+      "value": 4.4,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cpi_yoy": {
+      "value": 2.66,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "pce_yoy": {
+      "value": 2.9,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "nfp_mom": {
+      "value": -92,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "wti": {
+      "value": null,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "mortgage30": {
+      "value": 6.0,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "wages_yoy": {
+      "value": 3.69,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cs_hpi_yoy": {
+      "value": 1.3,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs2": {
+      "value": 3.57,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs5": {
+      "value": 3.73,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs30": {
+      "value": 4.78,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "spread_10_2_bp": {
+      "value": 58,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "core_cpi_yoy": {
+      "value": 2.73,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "core_pce_yoy": {
+      "value": 3.0,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "watch"
+    },
+    "u6rate": {
+      "value": 7.9,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "saving_rate": {
+      "value": 3.6,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "housing_starts": {
+      "value": 1404.0,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "brent": {
+      "value": null,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "gdp_growth_q": {
+      "value": 1.4,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cc_delinq": {
+      "value": 2.94,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    }
+  },
+  "headlines": [],
+  "raw_errors": []
+}
