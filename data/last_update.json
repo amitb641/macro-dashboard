@@ -1,32 +1,11 @@
 {
-  "last_updated": "2026-03-11",
-  "updated_at_utc": "2026-03-11T05:25:06.464442Z",
-  "series_updated": [
-    "JOBS_ANNUAL",
-    "WAGE_ANNUAL",
-    "FFR_ANNUAL",
-    "MORTGAGE_ANNUAL",
-    "HPI_YOY",
-    "OIL_ANNUAL_NEW"
-  ],
-  "log": [
-    "\ud83d\ude80 Dashboard update starting \u2014 2026-03-11",
-    "   BLS: \u2705 | BEA: \u2705 | FRED: \u2705 | EIA: \u2705",
-    "\n\ud83d\udcca Fetching CPI from BLS...",
-    "  \u274c BLS fetch failed: could not convert string to float: '-'",
-    "\n\ud83d\udc77 Fetching Unemployment from BLS...",
-    "  \u274c BLS fetch failed: could not convert string to float: '-'",
-    "\n\ud83d\udcbc Fetching Jobs from BLS...",
-    "\n\ud83d\udcb5 Fetching Wages from BLS...",
-    "\n\ud83c\udfe6 Fetching Fed Funds Rate from FRED...",
-    "\n\ud83c\udfe0 Fetching Mortgage Rate from FRED...",
-    "\n\ud83c\udfe1 Fetching HPI from FRED...",
-    "\n\u26fd Fetching WTI Oil from EIA...",
-    "\n\ud83d\udcdd Patching macro_dashboard_v6.html...",
-    "  \u2705 Patched JOBS_ANNUAL",
-    "  \u2705 Patched WAGE_ANNUAL",
-    "  \u2705 Patched OIL_ANNUAL",
-    "  \u2705 Updated timestamp to March 2026",
-    "  \u2705 Saved macro_dashboard_v6.html"
-  ]
+  "run_date": "init",
+  "completed_at": "init",
+  "risk_level": null,
+  "alert_count": 0,
+  "flagged_count": 0,
+  "risk_posture": null,
+  "macro_regime": null,
+  "key_values": {},
+  "values": {}
 }
