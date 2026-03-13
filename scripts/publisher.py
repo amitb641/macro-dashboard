@@ -28,7 +28,7 @@ ANA_FILE      = ROOT / 'data' / 'analysis.json'
 LOG_FILE      = ROOT / 'data' / 'last_update.json'
 HTML_FILE     = ROOT / 'index.html'
 
-DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/index.html'
+DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/'
 
 
 # ── Snapshot / run log ────────────────────────────────────────────────
