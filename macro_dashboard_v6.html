@@ -3559,17 +3559,13 @@ function buildCreditTab(){
   new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
     type:"bar",
     data:{labels:CREDIT_SLOOS.labels,datasets:[
-      {label:"Consumer Standards",data:CREDIT_SLOOS.consumer,backgroundColor:"#d0303077",borderRadius:3,yAxisID:"y"},
-      {label:"C&I Standards",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4a72e877",borderRadius:3,yAxisID:"y"},
-      {label:"Card 90+ DPD %",   data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#d03030",backgroundColor:"transparent",borderWidth:2.5,pointRadius:0,tension:0.3,yAxisID:"y1",borderDash:[6,3]},
+      {label:"Consumer Standards",data:CREDIT_SLOOS.consumer,backgroundColor:"#d0303077",borderRadius:3,datalabels:false},
+      {label:"C&I Standards",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4a72e877",borderRadius:3,datalabels:false},
+      {label:"Card 90+ DPD %",   data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#d03030",backgroundColor:"transparent",borderWidth:2.5,pointRadius:0,tension:0.3,yAxisID:"y2",borderDash:[6,3],datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
-        tooltip:{...TT,callbacks:{label:c=>{const v=c.raw;if(v==null)return null;return c.dataset.yAxisID==="y1"?`${c.dataset.label}: ${v}%`:`${c.dataset.label}: ${v>0?"+":""}${v}%`}}},
-        datalabels:{display:false}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:9},maxRotation:45,autoSkip:false,callback:function(v,i){return i%4===0?this.getLabelForValue(v):""}},border:{display:false}},
-              y:{position:"left",grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>0?"+":"")+v+"%"},title:{display:true,text:"Net % Tightening",color:"#5a6a8a",font:{size:10}},border:{display:false}},
-              y1:{position:"right",grid:{display:false},ticks:{color:"#d03030",callback:v=>v+"%"},title:{display:true,text:"Card 90+ DPD %",color:"#d03030",font:{size:10}},min:0,max:16,border:{display:false}}}}
+      scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
+              y2:{min:0,max:16,ticks:{callback:v=>v+"%"}}}}
   });
 
   new Chart(document.getElementById("c-credit-growth").getContext("2d"),{
