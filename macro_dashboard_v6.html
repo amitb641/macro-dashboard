@@ -145,7 +145,7 @@ class MC{
       let st=false;pts.forEach(p=>{if(!p){st=false;return;}if(!st){ctx.moveTo(p.x,p.y);st=true;}else ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);
       const pr=mini?0:(ds.pointRadius??3);if(pr>0)pts.forEach(p=>{if(!p)return;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,Math.PI*2);ctx.fillStyle=pC(col);ctx.fill();});
     });
-    // DATA LABELS on line charts (non-mini) — show every other value, always show last
+    // DATA LABELS on line charts (non-mini) — peaks, troughs & last only
     if(!mini){
       data.datasets.forEach((ds,di)=>{
         if(ds.datalabels===false)return;
@@ -156,12 +156,19 @@ class MC{
           v,x:d.x0+d.iw*(data.labels.length===1?0.5:i/(data.labels.length-1)),
           y:d.y0+d.ih*(1-(v-rv.min)/(rv.max-rv.min))
         });
+        const vals=pts.filter(p=>p).map(p=>p.v);
+        const maxV=Math.max(...vals),minV=Math.min(...vals);
         const visible=pts.map((p,i)=>({p,i,show:false}));
-        // show first, last, and every ~4th to avoid crowding
-        const step=Math.max(1,Math.floor(pts.length/6));
+        // show first, last, peak & trough
         visible.forEach((item,i)=>{
-          if(i===0||i===pts.length-1||i%step===0)item.show=true;
+          if(!item.p)return;
+          if(item.p.v===maxV||item.p.v===minV)item.show=true;
         });
+        // always show first & last non-null
+        const firstIdx=visible.findIndex(v=>v.p);
+        const lastIdx=visible.length-1-[...visible].reverse().findIndex(v=>v.p);
+        if(firstIdx>=0)visible[firstIdx].show=true;
+        if(lastIdx>=0)visible[lastIdx].show=true;
         visible.forEach(({p,show})=>{
           if(!p||!show)return;
           const lbl=this._fmt(p.v,cb);
@@ -228,7 +235,7 @@ class MC{
         let st=false;pts.forEach(p=>{if(!p){st=false;return;}if(!st){ctx.moveTo(p.x,p.y);st=true;}else ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);
         const pr=ds.pointRadius??3;if(pr>0)pts.forEach(p=>{if(!p)return;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,Math.PI*2);ctx.fillStyle=pC(col);ctx.fill();});
       });
-      // DATA LABELS on bar charts — value above/below each bar
+      // DATA LABELS on bar charts — peaks, troughs & last only
       const nG_dl=data.labels.length,gW_dl=d.iw/Math.max(nG_dl,1),gap_dl=mini?gW_dl*0.1:gW_dl*0.12;
       const stacked_dl=opts.scales?.y?.stacked||opts.scales?.x?.stacked;
       const barDS_dl=data.datasets.filter(ds=>(ds.type||this.cfg.type)==="bar");
@@ -240,8 +247,17 @@ class MC{
           const sc_dl=this.cfg.options?.scales||{};
           const isY2_dl=ds.yAxisID==="y2";
           const cb_dl=(isY2_dl?sc_dl.y2?.ticks?.callback:sc_dl.y?.ticks?.callback)||null;
+          // Find peaks, troughs & last index for smart labeling
+          const vals=ds.data.filter(v=>v!=null&&isFinite(v));
+          const maxV=Math.max(...vals),minV=Math.min(...vals);
+          const showIdx=new Set();
+          ds.data.forEach((v,i)=>{if(v!=null&&isFinite(v)){if(v===maxV||v===minV)showIdx.add(i);}});
+          // always show last non-null
+          for(let i=ds.data.length-1;i>=0;i--){if(ds.data[i]!=null&&isFinite(ds.data[i])){showIdx.add(i);break;}}
+          // always show first non-null
+          for(let i=0;i<ds.data.length;i++){if(ds.data[i]!=null&&isFinite(ds.data[i])){showIdx.add(i);break;}}
           ds.data.forEach((v,gi)=>{
-            if(v==null||!isFinite(v))return;
+            if(v==null||!isFinite(v)||!showIdx.has(gi))return;
             const cx_dl=d.x0+gW_dl*gi+gap_dl+bW_dl*di+bW_dl/2;
             const lbl=this._fmt(v,cb_dl);
             ctx.font="bold 9px 'DM Mono',monospace";
