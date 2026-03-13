@@ -26,6 +26,7 @@ ROOT          = Path(__file__).parent.parent
 SIG_FILE      = ROOT / 'data' / 'signals.json'
 ANA_FILE      = ROOT / 'data' / 'analysis.json'
 LOG_FILE      = ROOT / 'data' / 'last_update.json'
+CHANGELOG     = ROOT / 'data' / 'changelog.json'
 HTML_FILE     = ROOT / 'index.html'
 
 DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/'
@@ -110,6 +111,43 @@ def build_headlines(sig, prev_log):
     # Sort: movers first, then stable
     headlines.sort(key=lambda x: (0 if x['moved'] else 1, x['label']))
     return headlines
+
+
+# ── Dashboard changelog (recent enhancements) ────────────────────────
+
+def load_changelog(days=7):
+    """Load changelog entries from the last N days."""
+    if not CHANGELOG.exists():
+        return []
+    try:
+        entries = json.loads(CHANGELOG.read_text())
+        cutoff = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
+        return [e for e in entries if e.get('date', '') >= cutoff]
+    except Exception:
+        return []
+
+
+def _changelog_html():
+    """Build HTML block for recent dashboard enhancements."""
+    recent = load_changelog(days=7)
+    if not recent:
+        return ''
+    items_html = ''
+    for entry in recent:
+        for item in entry.get('items', []):
+            items_html += (
+                f'<li style="padding:3px 0;font-size:11px;color:#475569;line-height:1.5">'
+                f'<span style="color:#1A56DB;font-weight:600">✦</span> {item}</li>'
+            )
+    if not items_html:
+        return ''
+    return (
+        f'<!-- DASHBOARD UPDATES -->'
+        f'<h2 style="font-size:12px;font-weight:700;color:#1E293B;margin:0 0 10px;'
+        f'text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #f1f5f9;'
+        f'padding-bottom:6px">🆕 What\'s New on the Dashboard</h2>'
+        f'<ul style="margin:0 0 20px;padding-left:18px;list-style:none">{items_html}</ul>'
+    )
 
 
 # ── Email body ────────────────────────────────────────────────────────
@@ -248,6 +286,8 @@ def build_email(sig, ana, today_str, prev_log):
     <div style="margin-bottom:20px">{flag_html}</div>
 
     {"<!-- TAB ANALYSIS (monthly AI run) --><h2 style='font-size:12px;font-weight:700;color:#1E293B;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #f1f5f9;padding-bottom:6px'>🔍 AI Tab Analysis</h2><div style='margin-bottom:20px'>" + tab_html + "</div>" if tab_html else ""}
+
+    {_changelog_html()}
 
     <!-- CTA -->
     <div style="text-align:center;padding:16px 0 8px">
