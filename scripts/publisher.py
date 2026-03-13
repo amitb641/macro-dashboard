@@ -26,7 +26,6 @@ ROOT          = Path(__file__).parent.parent
 SIG_FILE      = ROOT / 'data' / 'signals.json'
 ANA_FILE      = ROOT / 'data' / 'analysis.json'
 LOG_FILE      = ROOT / 'data' / 'last_update.json'
-CHANGELOG     = ROOT / 'data' / 'changelog.json'
 HTML_FILE     = ROOT / 'index.html'
 
 DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/'
@@ -113,34 +112,102 @@ def build_headlines(sig, prev_log):
     return headlines
 
 
-# ── Dashboard changelog (recent enhancements) ────────────────────────
+# ── Dashboard changelog (auto-generated from git) ────────────────────
+
+import subprocess
+
+# Skip commits that are purely data/pipeline/housekeeping or intermediate iterations
+_SKIP_PATTERNS = re.compile(
+    r'(publish daily snapshot|daily update|merge pull request|merge branch|'
+    r'bump version|update raw_data|update signals|update last_update|'
+    r'delete |create |add files via upload|rename |seed |extend all|'
+    r'fix dashboard url|fix oas|changelog|what.s new|'
+    r'offset |normalize |standardize|move .* to .* axis|change .* to black)',
+    re.IGNORECASE,
+)
+
+# Only include commits that describe meaningful user-facing changes
+_INCLUDE_PATTERNS = re.compile(
+    r'(add |new |improve|fix |enhance|overlay|signal chain|correlation|recession prob|'
+    r'card dpd|delinquency|chart|visual)',
+    re.IGNORECASE,
+)
+
+# Map technical terms → business-friendly language
+_BIZ_MAP = [
+    (re.compile(r'\bSLOOS\b', re.I),           'lending standards (SLOOS)'),
+    (re.compile(r'\bDPD\b', re.I),              'delinquency'),
+    (re.compile(r'\by.?axis\b', re.I),          'chart scale'),
+    (re.compile(r'\bopacity\b', re.I),          'visual clarity'),
+    (re.compile(r'\bcorrelation\b', re.I),      'relationship analysis'),
+    (re.compile(r'\bbidirectional\b', re.I),    'two-way'),
+    (re.compile(r'\bnormalize\b', re.I),        'standardize for comparison'),
+    (re.compile(r'\boverlay\b', re.I),          'added to chart'),
+    (re.compile(r'\brecession prob\b', re.I),   'recession probability'),
+    (re.compile(r'\bbadge[s]?\b', re.I),        'insight indicator(s)'),
+    (re.compile(r'\bdataset[s]?\b', re.I),      'data series'),
+    (re.compile(r'\bfootnote\b', re.I),         'explanatory note'),
+]
+
+
+def _bizify(msg):
+    """Convert a git commit subject line into business-friendly language."""
+    # Take only the first line (subject)
+    line = msg.strip().split('\n')[0]
+    # Remove conventional commit prefixes
+    line = re.sub(r'^(fix|feat|chore|refactor|style|docs|perf)\s*[:(]\s*', '', line, flags=re.I)
+    # Apply business language mappings
+    for pat, repl in _BIZ_MAP:
+        line = pat.sub(repl, line)
+    # Capitalize first letter
+    if line:
+        line = line[0].upper() + line[1:]
+    return line
+
 
 def load_changelog(days=7):
-    """Load changelog entries from the last N days."""
-    if not CHANGELOG.exists():
-        return []
+    """Auto-generate changelog from git commits in the last N days.
+    Filters out data-only commits and rewrites messages for business audience."""
+    since = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
     try:
-        entries = json.loads(CHANGELOG.read_text())
-        cutoff = (datetime.date.today() - datetime.timedelta(days=days)).isoformat()
-        return [e for e in entries if e.get('date', '') >= cutoff]
+        result = subprocess.run(
+            ['git', 'log', f'--since={since}', '--pretty=format:%s', '--no-merges',
+             '--', 'index.html'],
+            capture_output=True, text=True, cwd=str(ROOT), timeout=10,
+        )
+        if result.returncode != 0:
+            return []
     except Exception:
         return []
 
+    items = []
+    seen = set()
+    for line in result.stdout.strip().split('\n'):
+        if not line or _SKIP_PATTERNS.search(line) or not _INCLUDE_PATTERNS.search(line):
+            continue
+        biz = _bizify(line)
+        # Deduplicate similar messages
+        key = re.sub(r'[^a-z0-9]', '', biz.lower())[:40]
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append(biz)
+        if len(items) >= 5:
+            break
+    return items
+
 
 def _changelog_html():
-    """Build HTML block for recent dashboard enhancements."""
-    recent = load_changelog(days=7)
-    if not recent:
+    """Build HTML block for recent dashboard enhancements from git history."""
+    items = load_changelog(days=7)
+    if not items:
         return ''
     items_html = ''
-    for entry in recent:
-        for item in entry.get('items', []):
-            items_html += (
-                f'<li style="padding:3px 0;font-size:11px;color:#475569;line-height:1.5">'
-                f'<span style="color:#1A56DB;font-weight:600">✦</span> {item}</li>'
-            )
-    if not items_html:
-        return ''
+    for item in items:
+        items_html += (
+            f'<li style="padding:3px 0;font-size:11px;color:#475569;line-height:1.5">'
+            f'<span style="color:#1A56DB;font-weight:600">✦</span> {item}</li>'
+        )
     return (
         f'<!-- DASHBOARD UPDATES -->'
         f'<h2 style="font-size:12px;font-weight:700;color:#1E293B;margin:0 0 10px;'
