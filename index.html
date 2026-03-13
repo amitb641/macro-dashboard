@@ -1834,8 +1834,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Senior Loan Officer Survey (SLOOS) — Tightening Standards %</div>
       <div class="panel-sub">Net % of banks tightening consumer & C&I lending standards · Fed · NY Fed Recession Prob. overlay</div>
+      <div id="sloos-corr-badge" style="margin-bottom:6px;font-size:11px;color:#3d4f6e;font-weight:500"></div>
       <div class="ch260"><canvas id="c-credit-sloos"></canvas></div>
-      <div id="sloos-corr-badge" style="margin-top:6px;font-size:11px;color:#3d4f6e;font-weight:500"></div>
       <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
       <details style="margin-top:6px;font-size:10px;color:#7a90aa">
         <summary style="cursor:pointer;font-weight:600;color:#5a6a8a">📐 Correlation methodology</summary>
@@ -3577,10 +3577,12 @@ function buildCreditTab(){
       {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#E8637Acc",borderRadius:3,datalabels:false},
       {label:"C&I Tightening",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4A72E8cc",borderRadius:3,datalabels:false},
       {label:"Recession Prob. %",data:CREDIT_SLOOS.recession_prob,type:"line",borderColor:"#000000",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:false,borderDash:[6,3],datalabels:false},
+      {label:"Card 90+ DPD %",data:CREDIT_SLOOS.card_dq,type:"line",borderColor:"#C0392B",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y3",fill:false,borderDash:[4,2],datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
-              y2:{position:"right",min:0,max:60,grid:{display:false},ticks:{color:"#333",callback:v=>v+"%"},title:{display:true,text:"Recession Prob.",color:"#333",font:{size:10}}}}}
+              y2:{position:"right",min:0,max:80,grid:{display:false},ticks:{color:"#333",callback:v=>v+"%"},title:{display:true,text:"Recession Prob.",color:"#333",font:{size:10}}},
+              y3:{position:"right",min:0,max:16,grid:{display:false},ticks:{color:"#C0392B",callback:v=>v+"%"},title:{display:true,text:"Card DPD %",color:"#C0392B",font:{size:10}}}}}
   });
 
   // ── SLOOS ↔ Recession Probability Cross-Correlation Analysis ──────────────
