@@ -3572,19 +3572,15 @@ function buildCreditTab(){
     data:{labels:CREDIT_SLOOS.labels,datasets:[
       {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#E8637Acc",borderRadius:3,datalabels:false},
       {label:"C&I Tightening",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4A72E8cc",borderRadius:3,datalabels:false},
-      {label:"Card 90+ DPD %",    data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#C0392B55",backgroundColor:"#C0392B08",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:true,datalabels:false},
-      {label:"All Product 90+ DPD %",data:CREDIT_SLOOS.all_dq,type:"line",borderColor:"#1A9E4A55",backgroundColor:"#1A9E4A08",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:true,borderDash:[4,2],datalabels:false},
-      {label:"Recession Prob. %",data:CREDIT_SLOOS.recession_prob,type:"line",borderColor:"#000000",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y3",fill:false,borderDash:[6,3],datalabels:false},
+      {label:"Recession Prob. %",data:CREDIT_SLOOS.recession_prob,type:"line",borderColor:"#000000",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:false,borderDash:[6,3],datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
-              y2:{min:0,max:16,ticks:{callback:v=>v+"%"}},
-              y3:{position:"right",min:0,max:60,grid:{display:false},ticks:{color:"#333",callback:v=>v+"%"},title:{display:true,text:"Recession Prob.",color:"#333",font:{size:10}}}}}
+              y2:{position:"right",min:0,max:60,grid:{display:false},ticks:{color:"#333",callback:v=>v+"%"},title:{display:true,text:"Recession Prob.",color:"#333",font:{size:10}}}}}
   });
 
-  // ── SLOOS ↔ Delinquency Cross-Correlation Analysis ──────────────
+  // ── SLOOS ↔ Recession Probability Cross-Correlation Analysis ──────────────
   (function(){
-    // Pearson correlation coefficient
     function pearson(x, y) {
       const n = x.length;
       if (n < 3) return null;
@@ -3597,82 +3593,74 @@ function buildCreditTab(){
       return dx2&&dy2 ? num/Math.sqrt(dx2*dy2) : null;
     }
 
-    // Extract paired non-null values at given lag
-    // lag>0 means tightening LEADS delinquency by `lag` periods
-    function pairedAtLag(tightening, delinquency, lag) {
+    function pairedAtLag(tightening, target, lag) {
       const x=[], y=[];
       for (let i=0; i<tightening.length-lag; i++) {
-        const t=tightening[i], d=delinquency[i+lag];
-        if (t!=null && isFinite(t) && d!=null && isFinite(d)) {
-          x.push(t); y.push(d);
-        }
+        const t=tightening[i], d=target[i+lag];
+        if (t!=null && isFinite(t) && d!=null && isFinite(d)) { x.push(t); y.push(d); }
       }
       return {x, y};
     }
 
-    // Compute cross-correlations at lags 0–8 (each period ≈ 2 quarters for early data, 1 quarter for recent)
-    const tight = CREDIT_SLOOS.consumer; // consumer tightening as signal
-    const cardDQ = CREDIT_SLOOS.card_dq;
-    const allDQ  = CREDIT_SLOOS.all_dq;
+    const tight = CREDIT_SLOOS.consumer;
+    const ciTight = CREDIT_SLOOS.ci;
+    const recProb = CREDIT_SLOOS.recession_prob;
     const maxLag = 8;
 
-    let bestCardLag=0, bestCardR=0, bestAllLag=0, bestAllR=0;
-    const cardCorrs=[], allCorrs=[];
+    let bestConsLag=0, bestConsR=0, bestCILag=0, bestCIR=0;
+    const consCorrs=[], ciCorrs=[];
 
     for (let lag=0; lag<=maxLag; lag++) {
-      const cp = pairedAtLag(tight, cardDQ, lag);
-      const ap = pairedAtLag(tight, allDQ, lag);
+      const cp = pairedAtLag(tight, recProb, lag);
+      const cip = pairedAtLag(ciTight, recProb, lag);
       const cr = pearson(cp.x, cp.y);
-      const ar = pearson(ap.x, ap.y);
-      cardCorrs.push({lag, r:cr, n:cp.x.length});
-      allCorrs.push({lag, r:ar, n:ap.x.length});
-      if (cr!=null && Math.abs(cr) > Math.abs(bestCardR)) { bestCardR=cr; bestCardLag=lag; }
-      if (ar!=null && Math.abs(ar) > Math.abs(bestAllR))  { bestAllR=ar;  bestAllLag=lag; }
+      const cir = pearson(cip.x, cip.y);
+      consCorrs.push({lag, r:cr, n:cp.x.length});
+      ciCorrs.push({lag, r:cir, n:cip.x.length});
+      if (cr!=null && Math.abs(cr) > Math.abs(bestConsR)) { bestConsR=cr; bestConsLag=lag; }
+      if (cir!=null && Math.abs(cir) > Math.abs(bestCIR)) { bestCIR=cir; bestCILag=lag; }
     }
 
-    // Convert lag periods to approximate quarters (semi-annual=2Q, quarterly=1Q, avg ~1.5Q)
     const lagToQ = lag => Math.round(lag * 1.5);
 
-    // Badge
     const badge = document.getElementById("sloos-corr-badge");
     if (badge) {
-      const cardQ = lagToQ(bestCardLag);
-      const allQ  = lagToQ(bestAllLag);
-      const cardDir = bestCardR > 0 ? "positive" : "inverse";
-      const allDir  = bestAllR > 0  ? "positive" : "inverse";
+      const consQ = lagToQ(bestConsLag);
+      const ciQ   = lagToQ(bestCILag);
+      const consDir = bestConsR > 0 ? "positive" : "inverse";
+      const ciDir   = bestCIR > 0  ? "positive" : "inverse";
       badge.innerHTML =
-        `<span style="background:#C0392B11;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
-        `Card DPD: r=${bestCardR.toFixed(2)} · tightening leads by ~${cardQ}Q (${cardDir})</span>` +
-        `<span style="background:#1A9E4A11;color:#1A9E4A;border:1px solid #1A9E4A33;border-radius:10px;padding:3px 10px">` +
-        `All Product: r=${bestAllR.toFixed(2)} · tightening leads by ~${allQ}Q (${allDir})</span>`;
+        `<span style="background:#E8637A15;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
+        `Consumer Tightening → Recession Prob: r=${bestConsR.toFixed(2)} · leads by ~${consQ}Q (${consDir})</span>` +
+        `<span style="background:#4A72E815;color:#1A56DB;border:1px solid #1A56DB33;border-radius:10px;padding:3px 10px">` +
+        `C&I Tightening → Recession Prob: r=${bestCIR.toFixed(2)} · leads by ~${ciQ}Q (${ciDir})</span>`;
     }
 
-    // Detail panel
     const detail = document.getElementById("sloos-corr-detail");
     if (detail) {
-      let html = `<strong>Cross-correlation: Consumer Tightening → Delinquency at various lags</strong><br>`;
+      let html = `<strong>Cross-correlation: SLOOS Tightening → NY Fed Recession Probability at various lags</strong><br>`;
       html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
-      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Card DPD r</th><th>All DPD r</th><th>n</th></tr>`;
+      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Consumer r</th><th>C&I r</th><th>n</th></tr>`;
       for (let i=0; i<=maxLag; i++) {
-        const isCardBest = i===bestCardLag;
-        const isAllBest  = i===bestAllLag;
-        const bg = (isCardBest||isAllBest) ? "background:#f0f7ff;" : "";
+        const isConsBest = i===bestConsLag;
+        const isCIBest   = i===bestCILag;
+        const bg = (isConsBest||isCIBest) ? "background:#f0f7ff;" : "";
         html += `<tr style="${bg}border-bottom:1px solid #eef1f7">`;
         html += `<td style="padding:2px 8px">${i}${i===0?" (concurrent)":""}</td>`;
         html += `<td style="text-align:center">~${lagToQ(i)}Q</td>`;
-        html += `<td style="text-align:center;${isCardBest?"font-weight:700;color:#C0392B":""}">${cardCorrs[i].r!=null?cardCorrs[i].r.toFixed(3):"—"}</td>`;
-        html += `<td style="text-align:center;${isAllBest?"font-weight:700;color:#1A9E4A":""}">${allCorrs[i].r!=null?allCorrs[i].r.toFixed(3):"—"}</td>`;
-        html += `<td style="text-align:center;color:#94a3b8">${cardCorrs[i].n}</td>`;
+        html += `<td style="text-align:center;${isConsBest?"font-weight:700;color:#C0392B":""}">${consCorrs[i].r!=null?consCorrs[i].r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;${isCIBest?"font-weight:700;color:#1A56DB":""}">${ciCorrs[i].r!=null?ciCorrs[i].r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;color:#94a3b8">${consCorrs[i].n}</td>`;
         html += `</tr>`;
       }
       html += `</table>`;
-      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation between Consumer Tightening (net % banks tightening) and 90+ day delinquency at lags 0–${maxLag} periods. `;
+      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation between SLOOS tightening (net % banks tightening) and NY Fed recession probability at lags 0–${maxLag} periods. `;
       html += `Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025), so lag-to-quarter mapping is approximate (~1.5Q/period). `;
-      html += `Positive r = tightening and losses move together; the lag with highest |r| indicates the lead time.</p>`;
-      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> Banks tighten lending standards in response to early stress signals. `;
-      html += `Delinquencies peak several quarters later as tighter credit restricts refinancing options for stressed borrowers. `;
-      html += `This creates a predictable leading-indicator relationship where SLOOS tightening signals future credit losses.</p>`;
-    detail.innerHTML = html;
+      html += `Positive r = tightening and recession risk move together; the lag with highest |r| indicates the lead time.</p>`;
+      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> When banks tighten lending standards, recession probability tends to rise several quarters later. `;
+      html += `This reflects the credit channel of monetary policy — tighter credit constrains economic activity, eventually raising recession risk. `;
+      html += `SLOOS tightening serves as a leading indicator of elevated recession probability.</p>`;
+      detail.innerHTML = html;
     }
   })();
 
