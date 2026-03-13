@@ -1931,7 +1931,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-sub">Loan-to-deposit ratio &amp; wholesale funding reliance · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
     <div class="ch260"><canvas id="c-bank-funding"></canvas></div>
     <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
-    <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Wholesale = securitization (ABS) + FHLB + commercial paper + unsecured debt. L/D ratio = loan-to-deposit ratio; &gt;100% means loans exceed deposits, requiring wholesale funding. Rate sensitivity = estimated NII impact of +100bp rate shock.</p>
+    <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Wholesale = securitization (ABS) + FHLB + commercial paper + unsecured debt. Deposits &amp; Total Loans = bank-wide figures ($B). L/D ratio = bank-wide loan-to-deposit ratio (total loans / total deposits); &gt;100% means loans exceed deposits, requiring wholesale funding. Dep. Fund % &amp; Wholesale % = card portfolio funding mix. Rate sensitivity = estimated NII impact of +100bp rate shock.</p>
   </div>
 
   <!-- Row 4: Fed rate impact explainer -->
@@ -3923,15 +3923,15 @@ function buildYieldTab(){
   // ── Bank Card Funding Mix ─────────────────────────────────────────
   try{(function(){
     var BF = [
-      {s:"JPM",  d:82, w:18, ltd:58, abs:8,  nim:2.62, rs:"Low",      dep:2400, loan:210, n:"Largest deposit base in US; card portfolio well-funded internally"},
-      {s:"BAC",  d:80, w:20, ltd:55, abs:9,  nim:2.36, rs:"Low",      dep:1900, loan:102, n:"Strong retail deposit franchise; moderate securitization use"},
-      {s:"CITI", d:68, w:32, ltd:65, abs:15, nim:2.48, rs:"Moderate",  dep:1310, loan:164, n:"Global franchise; higher wholesale reliance vs domestic peers"},
-      {s:"COF",  d:85, w:15, ltd:92, abs:7,  nim:6.73, rs:"Low",      dep:310,  loan:156, n:"Online deposits fund most cards; highest NIM among large issuers"},
-      {s:"DFS",  d:78, w:22, ltd:88, abs:12, nim:5.82, rs:"Low-Mod",  dep:87,   loan:102, n:"Direct-to-consumer deposits; some ABS issuance for diversification"},
-      {s:"AXP",  d:60, w:40, ltd:78, abs:22, nim:3.42, rs:"Moderate",  dep:135,  loan:126, n:"Charge card model; higher market funding via ABS + unsecured debt"},
-      {s:"BCS",  d:55, w:45, ltd:90, abs:28, nim:7.85, rs:"Moderate",  dep:42,   loan:38,  n:"US online savings deposits + ABS program; parent backstop for wholesale"},
-      {s:"SYF",  d:72, w:28, ltd:95, abs:18, nim:7.15, rs:"Moderate",  dep:75,   loan:82,  n:"Private label cards; high-yield deposits + significant ABS program"},
-      {s:"BFH",  d:45, w:55, ltd:98, abs:35, nim:8.20, rs:"High",      dep:7,    loan:18,  n:"Most rate-sensitive; heavy ABS reliance; highest cost of funds"},
+      {s:"JPM",  d:82, w:18, ltd:58, abs:8,  nim:2.62, rs:"Low",      dep:2400, loan:1390, n:"Largest deposit base in US; card portfolio well-funded internally"},
+      {s:"BAC",  d:80, w:20, ltd:55, abs:9,  nim:2.36, rs:"Low",      dep:1900, loan:1050, n:"Strong retail deposit franchise; moderate securitization use"},
+      {s:"CITI", d:68, w:32, ltd:65, abs:15, nim:2.48, rs:"Moderate",  dep:1310, loan:852,  n:"Global franchise; higher wholesale reliance vs domestic peers"},
+      {s:"COF",  d:85, w:15, ltd:92, abs:7,  nim:6.73, rs:"Low",      dep:310,  loan:285,  n:"Online deposits fund most cards; highest NIM among large issuers"},
+      {s:"DFS",  d:78, w:22, ltd:88, abs:12, nim:5.82, rs:"Low-Mod",  dep:87,   loan:77,   n:"Direct-to-consumer deposits; some ABS issuance for diversification"},
+      {s:"AXP",  d:60, w:40, ltd:78, abs:22, nim:3.42, rs:"Moderate",  dep:135,  loan:105,  n:"Charge card model; higher market funding via ABS + unsecured debt"},
+      {s:"BCS",  d:55, w:45, ltd:90, abs:28, nim:7.85, rs:"Moderate",  dep:42,   loan:38,   n:"US online savings deposits + ABS program; parent backstop for wholesale"},
+      {s:"SYF",  d:72, w:28, ltd:95, abs:18, nim:7.15, rs:"Moderate",  dep:75,   loan:71,   n:"Private label cards; high-yield deposits + significant ABS program"},
+      {s:"BFH",  d:45, w:55, ltd:98, abs:35, nim:8.20, rs:"High",      dep:7,    loan:17,   n:"Most rate-sensitive; heavy ABS reliance; highest cost of funds"},
     ];
     var el=document.getElementById("c-bank-funding");
     if(el){
@@ -3952,7 +3952,7 @@ function buildYieldTab(){
     var tbl=document.getElementById("bank-funding-tbl");
     if(tbl){
       var sc={"Low":"#0D7A4A","Low-Mod":"#B45309","Moderate":"#B45309","High":"#C0392B"};
-      var html='<thead><tr><th>Issuer</th><th>Retail Dep.</th><th>Card Loans</th><th>Deposits %</th><th>Wholesale %</th><th>ABS</th><th>L/D Ratio</th><th>NIM</th><th>Rate Sens.</th><th>Insight</th></tr></thead><tbody>';
+      var html='<thead><tr><th>Issuer</th><th>Deposits</th><th>Total Loans</th><th>Dep. Fund %</th><th>Wholesale %</th><th>ABS</th><th>L/D (Bank)</th><th>NIM</th><th>Rate Sens.</th><th>Insight</th></tr></thead><tbody>';
       for(var i=0;i<BF.length;i++){
         var b=BF[i],c=sc[b.rs]||"#334E68";
         html+='<tr>'
