@@ -2,8 +2,8 @@
 """
 Agent 4 — RENDERER  (renderer.py)
 Reads raw_data.json + analysis.json.
-Patches macro_dashboard_v6.html: chart arrays, KPIs, tab commentary.
-No LLM. Output: macro_dashboard_v6.html (updated in-place).
+Patches index.html: chart arrays, KPIs, tab commentary.
+No LLM. Output: index.html (updated in-place).
 """
 
 import os, re, json, datetime, sys
@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 ROOT      = Path(__file__).parent.parent
-HTML_FILE = ROOT / 'macro_dashboard_v6.html'
+HTML_FILE = ROOT / 'index.html'
 RAW_FILE  = ROOT / 'data' / 'raw_data.json'
 SIG_FILE  = ROOT / 'data' / 'signals.json'
 ANA_FILE  = ROOT / 'data' / 'analysis.json'
