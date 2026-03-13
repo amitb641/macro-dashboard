@@ -1835,6 +1835,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Senior Loan Officer Survey (SLOOS) — Tightening Standards %</div>
       <div class="panel-sub">Net % of banks tightening consumer & C&I lending standards · Fed</div>
       <div class="ch260"><canvas id="c-credit-sloos"></canvas></div>
+      <div id="sloos-corr-badge" style="margin-top:6px;font-size:11px;color:#3d4f6e;font-weight:500"></div>
+      <details style="margin-top:6px;font-size:10px;color:#7a90aa">
+        <summary style="cursor:pointer;font-weight:600;color:#5a6a8a">📐 Correlation methodology</summary>
+        <div id="sloos-corr-detail" style="margin-top:6px;line-height:1.6"></div>
+      </details>
     </div>
     <div class="panel">
       <div class="panel-title">Consumer Credit Growth — Revolving vs Non-Revolving YoY %</div>
@@ -3569,6 +3574,100 @@ function buildCreditTab(){
       scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
               y2:{min:0,max:16,ticks:{callback:v=>v+"%"}}}}
   });
+
+  // ── SLOOS ↔ Delinquency Cross-Correlation Analysis ──────────────
+  (function(){
+    // Pearson correlation coefficient
+    function pearson(x, y) {
+      const n = x.length;
+      if (n < 3) return null;
+      const mx = x.reduce((a,b)=>a+b,0)/n, my = y.reduce((a,b)=>a+b,0)/n;
+      let num=0, dx2=0, dy2=0;
+      for (let i=0; i<n; i++) {
+        const dx=x[i]-mx, dy=y[i]-my;
+        num+=dx*dy; dx2+=dx*dx; dy2+=dy*dy;
+      }
+      return dx2&&dy2 ? num/Math.sqrt(dx2*dy2) : null;
+    }
+
+    // Extract paired non-null values at given lag
+    // lag>0 means tightening LEADS delinquency by `lag` periods
+    function pairedAtLag(tightening, delinquency, lag) {
+      const x=[], y=[];
+      for (let i=0; i<tightening.length-lag; i++) {
+        const t=tightening[i], d=delinquency[i+lag];
+        if (t!=null && isFinite(t) && d!=null && isFinite(d)) {
+          x.push(t); y.push(d);
+        }
+      }
+      return {x, y};
+    }
+
+    // Compute cross-correlations at lags 0–8 (each period ≈ 2 quarters for early data, 1 quarter for recent)
+    const tight = CREDIT_SLOOS.consumer; // consumer tightening as signal
+    const cardDQ = CREDIT_SLOOS.card_dq;
+    const allDQ  = CREDIT_SLOOS.all_dq;
+    const maxLag = 8;
+
+    let bestCardLag=0, bestCardR=0, bestAllLag=0, bestAllR=0;
+    const cardCorrs=[], allCorrs=[];
+
+    for (let lag=0; lag<=maxLag; lag++) {
+      const cp = pairedAtLag(tight, cardDQ, lag);
+      const ap = pairedAtLag(tight, allDQ, lag);
+      const cr = pearson(cp.x, cp.y);
+      const ar = pearson(ap.x, ap.y);
+      cardCorrs.push({lag, r:cr, n:cp.x.length});
+      allCorrs.push({lag, r:ar, n:ap.x.length});
+      if (cr!=null && Math.abs(cr) > Math.abs(bestCardR)) { bestCardR=cr; bestCardLag=lag; }
+      if (ar!=null && Math.abs(ar) > Math.abs(bestAllR))  { bestAllR=ar;  bestAllLag=lag; }
+    }
+
+    // Convert lag periods to approximate quarters (semi-annual=2Q, quarterly=1Q, avg ~1.5Q)
+    const lagToQ = lag => Math.round(lag * 1.5);
+
+    // Badge
+    const badge = document.getElementById("sloos-corr-badge");
+    if (badge) {
+      const cardQ = lagToQ(bestCardLag);
+      const allQ  = lagToQ(bestAllLag);
+      const cardDir = bestCardR > 0 ? "positive" : "inverse";
+      const allDir  = bestAllR > 0  ? "positive" : "inverse";
+      badge.innerHTML =
+        `<span style="background:#C0392B11;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
+        `Card DPD: r=${bestCardR.toFixed(2)} · tightening leads by ~${cardQ}Q (${cardDir})</span>` +
+        `<span style="background:#1A9E4A11;color:#1A9E4A;border:1px solid #1A9E4A33;border-radius:10px;padding:3px 10px">` +
+        `All Product: r=${bestAllR.toFixed(2)} · tightening leads by ~${allQ}Q (${allDir})</span>`;
+    }
+
+    // Detail panel
+    const detail = document.getElementById("sloos-corr-detail");
+    if (detail) {
+      let html = `<strong>Cross-correlation: Consumer Tightening → Delinquency at various lags</strong><br>`;
+      html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
+      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Card DPD r</th><th>All DPD r</th><th>n</th></tr>`;
+      for (let i=0; i<=maxLag; i++) {
+        const isCardBest = i===bestCardLag;
+        const isAllBest  = i===bestAllLag;
+        const bg = (isCardBest||isAllBest) ? "background:#f0f7ff;" : "";
+        html += `<tr style="${bg}border-bottom:1px solid #eef1f7">`;
+        html += `<td style="padding:2px 8px">${i}${i===0?" (concurrent)":""}</td>`;
+        html += `<td style="text-align:center">~${lagToQ(i)}Q</td>`;
+        html += `<td style="text-align:center;${isCardBest?"font-weight:700;color:#C0392B":""}">${cardCorrs[i].r!=null?cardCorrs[i].r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;${isAllBest?"font-weight:700;color:#1A9E4A":""}">${allCorrs[i].r!=null?allCorrs[i].r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;color:#94a3b8">${cardCorrs[i].n}</td>`;
+        html += `</tr>`;
+      }
+      html += `</table>`;
+      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation between Consumer Tightening (net % banks tightening) and 90+ day delinquency at lags 0–${maxLag} periods. `;
+      html += `Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025), so lag-to-quarter mapping is approximate (~1.5Q/period). `;
+      html += `Positive r = tightening and losses move together; the lag with highest |r| indicates the lead time.</p>`;
+      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> Banks tighten lending standards in response to early stress signals. `;
+      html += `Delinquencies peak several quarters later as tighter credit restricts refinancing options for stressed borrowers. `;
+      html += `This creates a predictable leading-indicator relationship where SLOOS tightening signals future credit losses.</p>`;
+    detail.innerHTML = html;
+    }
+  })();
 
   new Chart(document.getElementById("c-credit-growth").getContext("2d"),{
     type:"bar",
