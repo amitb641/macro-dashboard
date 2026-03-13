@@ -1931,7 +1931,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-sub">Loan-to-deposit ratio &amp; wholesale funding reliance · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
     <div class="ch260"><canvas id="c-bank-funding"></canvas></div>
     <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
-    <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Wholesale = securitization (ABS) + FHLB + commercial paper + unsecured debt. Rate sensitivity = estimated NII impact of +100bp rate shock.</p>
+    <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Wholesale = securitization (ABS) + FHLB + commercial paper + unsecured debt. L/D ratio = loan-to-deposit ratio; &gt;100% means loans exceed deposits, requiring wholesale funding. Rate sensitivity = estimated NII impact of +100bp rate shock.</p>
   </div>
 
   <!-- Row 4: Fed rate impact explainer -->
@@ -3929,6 +3929,7 @@ function buildYieldTab(){
       {s:"COF",  d:85, w:15, ltd:92, abs:7,  nim:6.73, rs:"Low",      n:"Online deposits fund most cards; highest NIM among large issuers"},
       {s:"DFS",  d:78, w:22, ltd:88, abs:12, nim:5.82, rs:"Low-Mod",  n:"Direct-to-consumer deposits; some ABS issuance for diversification"},
       {s:"AXP",  d:60, w:40, ltd:78, abs:22, nim:3.42, rs:"Moderate",  n:"Charge card model; higher market funding via ABS + unsecured debt"},
+      {s:"BCS",  d:38, w:62, ltd:105,abs:40, nim:7.85, rs:"High",      n:"US cards funded mainly via ABS + parent wholesale; no US retail deposits"},
       {s:"SYF",  d:72, w:28, ltd:95, abs:18, nim:7.15, rs:"Moderate",  n:"Private label cards; high-yield deposits + significant ABS program"},
       {s:"BFH",  d:45, w:55, ltd:98, abs:35, nim:8.20, rs:"High",      n:"Most rate-sensitive; heavy ABS reliance; highest cost of funds"},
     ];
