@@ -3063,7 +3063,7 @@ const HPI_DATA = {
 };
 const MORTGAGE_DATA = {
   labels:["2018","2019","2020","2021","2022","2023","2024","2025","2026F"],
-  rate30:  [4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.85, 6.0],
+  rate30:  [4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.85, 6.11],
   ffr:     [2.25, 2.50, 0.25, 0.25, 4.50, 5.25, 5.25, 4.25, 3.75]
 };
 const STARTS_DATA = {
@@ -3669,7 +3669,7 @@ function buildHousingTab(){
 
   document.getElementById("housing-metrics").innerHTML = [
     {lbl:"Case-Shiller 2025E",  val:"+4.1%", sub:"National YoY price growth · supply constrained", col:"#4a72e8"},
-    {lbl:"30yr Mortgage Mar'26",  val:"6.00%", sub:"Avg 2025 · Freddie Mac · near 2-yr low in Oct", col:"#d03030"},
+    {lbl:"30yr Mortgage Mar'26",  val:"6.11%", sub:"Avg 2025 · Freddie Mac · near 2-yr low in Oct", col:"#d03030"},
     {lbl:"Housing Starts 2025", val:"1.41M", sub:"SF 1.05M + MF 0.36M · Census Bureau",           col:"#1a9e4a"},
     {lbl:"NAR Affordability",   val:"108",   sub:"100 = barely qualifying; up from 95 in 2023",   col:"#c07010"},
     {lbl:"Months Supply 2025",  val:"3.9 mo",sub:"Still below 6-mo balanced market norm",          col:"#c07010"},
@@ -3767,7 +3767,7 @@ function buildYieldTab(){
     {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#0D7A4A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
-    {lbl:"10Y Treasury Mar'26",    val:"4.15%",   sub:"2Y: 3.57% · Spread: +58bp",col:"#6D28D9"},
+    {lbl:"10Y Treasury Mar'26",    val:"4.21%",   sub:"2Y: 3.64% · Spread: +57bp",col:"#6D28D9"},
 
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
@@ -4285,7 +4285,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 12, 2026 12:53 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 13, 2026 04:10 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
