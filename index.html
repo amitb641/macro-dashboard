@@ -166,9 +166,11 @@ class MC{
         });
         // always show first & last non-null
         const firstIdx=visible.findIndex(v=>v.p);
-        const lastIdx=visible.length-1-[...visible].reverse().findIndex(v=>v.p);
+        if(firstIdx<0)return; // skip datasets with no data points
+        const lastRevIdx=[...visible].reverse().findIndex(v=>v.p);
+        const lastIdx=lastRevIdx>=0?visible.length-1-lastRevIdx:-1;
         if(firstIdx>=0)visible[firstIdx].show=true;
-        if(lastIdx>=0)visible[lastIdx].show=true;
+        if(lastIdx>=0&&lastIdx<visible.length)visible[lastIdx].show=true;
         visible.forEach(({p,show})=>{
           if(!p||!show)return;
           const lbl=this._fmt(p.v,cb);
@@ -3884,8 +3886,8 @@ function buildYieldTab(){
     type:"line",
     data:{labels:FFR_DATA.labels,datasets:[
       {label:"Actual Fed Funds",   data:FFR_DATA.actual, borderColor:"#1A56DB",backgroundColor:"rgba(26,86,219,.08)",borderWidth:2.5,pointRadius:5,tension:0.2,fill:true},
-      {label:"GS / MS Forecast",   data:FFR_DATA.dots.map(function(v,i){return i>=11&&i!==12?v:null;}),  borderColor:"#0D7A4A",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[6,3]},
-      {label:"JPM Forecast",       data:FFR_DATA.dots.map(function(v,i){return i===12||i===10?v:null;}), borderColor:"#B45309",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[3,3]},
+      {label:"GS / MS Forecast",   data:FFR_DATA.dots.map(function(v,i){return i===25||i===26||i===28?v:null;}),  borderColor:"#0D7A4A",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[6,3]},
+      {label:"JPM Forecast",       data:FFR_DATA.dots.map(function(v,i){return i===25||i===27?v:null;}), borderColor:"#B45309",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[3,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{
