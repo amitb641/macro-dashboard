@@ -3879,44 +3879,47 @@ function buildYieldTab(){
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
   // ── Fed Funds Rate chart ──────────────────────────────────────────
+  try{
   new Chart(document.getElementById("c-ffr").getContext("2d"),{
     type:"line",
     data:{labels:FFR_DATA.labels,datasets:[
       {label:"Actual Fed Funds",   data:FFR_DATA.actual, borderColor:"#1A56DB",backgroundColor:"rgba(26,86,219,.08)",borderWidth:2.5,pointRadius:5,tension:0.2,fill:true},
-      {label:"GS / MS Forecast",   data:FFR_DATA.dots.map((v,i)=>i>=11&&i!==12?v:null),  borderColor:"#0D7A4A",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[6,3]},
-      {label:"JPM Forecast",       data:FFR_DATA.dots.map((v,i)=>i===12||i===10?v:null), borderColor:"#B45309",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[3,3]},
+      {label:"GS / MS Forecast",   data:FFR_DATA.dots.map(function(v,i){return i>=11&&i!==12?v:null;}),  borderColor:"#0D7A4A",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[6,3]},
+      {label:"JPM Forecast",       data:FFR_DATA.dots.map(function(v,i){return i===12||i===10?v:null;}), borderColor:"#B45309",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[3,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
-        y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:v=>v+"%"},min:0,max:6.5,border:{display:false}}
+        y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%";}},min:0,max:6.5,border:{display:false}}
       }}
   });
+  }catch(e){console.error("FFR chart error:",e);}
 
 
   // ── Rate history table ─────────────────────────────────────────────
-  const hd=["Year","Fed Funds","Action","NIM Trend","GS","JPM","MS","Note"];
-  let h=`<thead><tr>${hd.map(x=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
-  const actionColor={Hiking:"#C0392B",Peak:"#C0392B",Emergency:"#C0392B",Cutting:"#0D7A4A","On hold":"#B45309",Liftoff:"#B45309"};
-  YIELD_TABLE.forEach(r=>{
-    const isF=r.yr.includes("F");
-    const ac=actionColor[r.action]||"#334E68";
-    h+=`<tr${isF?' style="background:var(--bg2)"':""}>
-      <td style="font-weight:${isF?700:500}">${r.yr}</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:600;color:#1A56DB">${r.ffr}</td>
-      <td><span style="font-size:10px;font-weight:700;background:${ac}18;color:${ac};border:1px solid ${ac}33;border-radius:4px;padding:2px 7px">${r.action}</span></td>
-      <td style="color:#334E68">${r.nim_trend}</td>
-      <td style="color:#0D7A4A;font-family:'DM Mono',monospace">${r.gs||"—"}</td>
-      <td style="color:#B45309;font-family:'DM Mono',monospace">${r.jpm||"—"}</td>
-      <td style="color:#6D28D9;font-family:'DM Mono',monospace">${r.ms||"—"}</td>
-      <td style="color:#7A8FA8;font-size:11px;white-space:normal">${r.note}</td>
-    </tr>`;
+  try{
+  var yHd=["Year","Fed Funds","Action","NIM Trend","GS","JPM","MS","Note"];
+  var yH='<thead><tr>'+yHd.map(function(x){return '<th style="text-align:left">'+x+'</th>';}).join("")+'</tr></thead><tbody>';
+  var acMap={Hiking:"#C0392B",Peak:"#C0392B",Emergency:"#C0392B",Cutting:"#0D7A4A","On hold":"#B45309",Liftoff:"#B45309"};
+  YIELD_TABLE.forEach(function(r){
+    var isF=r.yr.indexOf("F")>=0;
+    var ac=acMap[r.action]||"#334E68";
+    yH+='<tr'+(isF?' style="background:var(--bg2)"':'')+'>'
+      +'<td style="font-weight:'+(isF?700:500)+'">'+r.yr+'</td>'
+      +'<td style="font-weight:600;color:#1A56DB">'+r.ffr+'</td>'
+      +'<td><span style="font-size:10px;font-weight:700;background:'+ac+'18;color:'+ac+';border:1px solid '+ac+'33;border-radius:4px;padding:2px 7px">'+r.action+'</span></td>'
+      +'<td style="color:#334E68">'+r.nim_trend+'</td>'
+      +'<td style="color:#0D7A4A">'+(r.gs||"—")+'</td>'
+      +'<td style="color:#B45309">'+(r.jpm||"—")+'</td>'
+      +'<td style="color:#6D28D9">'+(r.ms||"—")+'</td>'
+      +'<td style="color:#7A8FA8;font-size:11px">'+r.note+'</td>'
+      +'</tr>';
   });
-  document.getElementById("yield-tbl").innerHTML=h+"</tbody>";
+  document.getElementById("yield-tbl").innerHTML=yH+"</tbody>";
+  }catch(e){console.error("Yield table error:",e);document.getElementById("yield-tbl").innerHTML='<tr><td colspan="8" style="color:red">Error: '+e.message+'</td></tr>';}
 
   // ── Bank Card Funding Mix ─────────────────────────────────────────
-  (function(){
+  try{(function(){
     var BF = [
       {s:"JPM",  d:82, w:18, ltd:58, abs:8,  nim:2.62, rs:"Low",      n:"Largest deposit base in US; card portfolio well-funded internally"},
       {s:"BAC",  d:80, w:20, ltd:55, abs:9,  nim:2.36, rs:"Low",      n:"Strong retail deposit franchise; moderate securitization use"},
@@ -3962,7 +3965,7 @@ function buildYieldTab(){
       }
       tbl.innerHTML=html+'</tbody>';
     }
-  })();
+  })();}catch(e){console.error("Bank funding error:",e);var bfEl=document.getElementById("bank-funding-tbl");if(bfEl)bfEl.innerHTML='<tr><td colspan="8" style="color:red">Error: '+e.message+'</td></tr>';}
 
   // ── Fed Rate Impact Explainer ──────────────────────────────────────
   document.getElementById("yield-explainer").innerHTML = `
