@@ -3896,7 +3896,6 @@ function buildYieldTab(){
 
 
   // ── Rate history table ─────────────────────────────────────────────
-  try{
   const hd=["Year","Fed Funds","Action","NIM Trend","GS","JPM","MS","Note"];
   let h=`<thead><tr>${hd.map(x=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   const actionColor={Hiking:"#C0392B",Peak:"#C0392B",Emergency:"#C0392B",Cutting:"#0D7A4A","On hold":"#B45309",Liftoff:"#B45309"};
@@ -3915,57 +3914,55 @@ function buildYieldTab(){
     </tr>`;
   });
   document.getElementById("yield-tbl").innerHTML=h+"</tbody>";
-  }catch(e){console.error("Yield table error:",e);}
 
   // ── Bank Card Funding Mix ─────────────────────────────────────────
-  try{
-  const BANK_FUNDING = [
-    {bank:"JPMorgan Chase", short:"JPM",  deposits_pct:82, wholesale_pct:18, ltd:58, abs_pct:8,  nim:2.62, rate_sens:"Low",     note:"Largest deposit base in US; card portfolio well-funded internally"},
-    {bank:"Bank of America",short:"BAC",  deposits_pct:80, wholesale_pct:20, ltd:55, abs_pct:9,  nim:2.36, rate_sens:"Low",     note:"Strong retail deposit franchise; moderate securitization use"},
-    {bank:"Citigroup",      short:"CITI", deposits_pct:68, wholesale_pct:32, ltd:65, abs_pct:15, nim:2.48, rate_sens:"Moderate",note:"Global franchise; higher wholesale reliance vs domestic peers"},
-    {bank:"Capital One",    short:"COF",  deposits_pct:85, wholesale_pct:15, ltd:92, abs_pct:7,  nim:6.73, rate_sens:"Low",     note:"Online deposits fund most cards; highest NIM among large issuers"},
-    {bank:"Discover",       short:"DFS",  deposits_pct:78, wholesale_pct:22, ltd:88, abs_pct:12, nim:5.82, rate_sens:"Low-Mod", note:"Direct-to-consumer deposits; some ABS issuance for diversification"},
-    {bank:"American Express",short:"AXP", deposits_pct:60, wholesale_pct:40, ltd:78, abs_pct:22, nim:3.42, rate_sens:"Moderate",note:"Charge card model; higher market funding — ABS + unsecured debt"},
-    {bank:"Synchrony",      short:"SYF",  deposits_pct:72, wholesale_pct:28, ltd:95, abs_pct:18, nim:7.15, rate_sens:"Moderate",note:"Private label cards; high-yield deposits + significant ABS program"},
-    {bank:"Bread Financial",short:"BFH",  deposits_pct:45, wholesale_pct:55, ltd:98, abs_pct:35, nim:8.20, rate_sens:"High",    note:"Most rate-sensitive — heavy ABS reliance; highest cost of funds"},
-  ];
-
-  // Stacked bar chart: deposits vs wholesale
-  const bankLabels = BANK_FUNDING.map(b => b.short);
-  new Chart(document.getElementById("c-bank-funding").getContext("2d"),{
-    type:"bar",
-    data:{labels:bankLabels,datasets:[
-      {label:"Deposit-Funded %",data:BANK_FUNDING.map(b=>b.deposits_pct),backgroundColor:"#1A56DBcc",borderRadius:3},
-      {label:"Wholesale/Market %",data:BANK_FUNDING.map(b=>b.wholesale_pct),backgroundColor:"#C0392Bcc",borderRadius:3},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
-        tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{
-        x:{stacked:true,grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
-        y:{stacked:true,max:100,grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:v=>v+"%"},border:{display:false}}
-      }}
-  });
-
-  // Funding table
-  const fhd=["Issuer","Deposits","Wholesale","ABS","L/D Ratio","NIM","Rate Sens.","Insight"];
-  let fh=`<thead><tr>${fhd.map(x=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
-  const sensColor={"Low":"#0D7A4A","Low-Mod":"#B45309","Moderate":"#B45309","High":"#C0392B"};
-  BANK_FUNDING.forEach(b=>{
-    const sc=sensColor[b.rate_sens]||"#334E68";
-    fh+=`<tr>
-      <td style="font-weight:600;color:#1E293B">${b.short}</td>
-      <td style="color:#1A56DB;font-family:'DM Mono',monospace;font-weight:600">${b.deposits_pct}%</td>
-      <td style="color:#C0392B;font-family:'DM Mono',monospace;font-weight:600">${b.wholesale_pct}%</td>
-      <td style="color:#7A8FA8;font-family:'DM Mono',monospace">${b.abs_pct}%</td>
-      <td style="font-family:'DM Mono',monospace">${b.ltd}%</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:600">${b.nim}%</td>
-      <td><span style="font-size:10px;font-weight:700;background:${sc}18;color:${sc};border:1px solid ${sc}33;border-radius:4px;padding:2px 7px">${b.rate_sens}</span></td>
-      <td style="color:#7A8FA8;font-size:11px;white-space:normal">${b.note}</td>
-    </tr>`;
-  });
-  document.getElementById("bank-funding-tbl").innerHTML=fh+"</tbody>";
-  }catch(e){console.error("Bank funding error:",e);}
+  (function(){
+    var BF = [
+      {s:"JPM",  d:82, w:18, ltd:58, abs:8,  nim:2.62, rs:"Low",      n:"Largest deposit base in US; card portfolio well-funded internally"},
+      {s:"BAC",  d:80, w:20, ltd:55, abs:9,  nim:2.36, rs:"Low",      n:"Strong retail deposit franchise; moderate securitization use"},
+      {s:"CITI", d:68, w:32, ltd:65, abs:15, nim:2.48, rs:"Moderate",  n:"Global franchise; higher wholesale reliance vs domestic peers"},
+      {s:"COF",  d:85, w:15, ltd:92, abs:7,  nim:6.73, rs:"Low",      n:"Online deposits fund most cards; highest NIM among large issuers"},
+      {s:"DFS",  d:78, w:22, ltd:88, abs:12, nim:5.82, rs:"Low-Mod",  n:"Direct-to-consumer deposits; some ABS issuance for diversification"},
+      {s:"AXP",  d:60, w:40, ltd:78, abs:22, nim:3.42, rs:"Moderate",  n:"Charge card model; higher market funding via ABS + unsecured debt"},
+      {s:"SYF",  d:72, w:28, ltd:95, abs:18, nim:7.15, rs:"Moderate",  n:"Private label cards; high-yield deposits + significant ABS program"},
+      {s:"BFH",  d:45, w:55, ltd:98, abs:35, nim:8.20, rs:"High",      n:"Most rate-sensitive; heavy ABS reliance; highest cost of funds"},
+    ];
+    var el=document.getElementById("c-bank-funding");
+    if(el){
+      new Chart(el.getContext("2d"),{
+        type:"bar",
+        data:{labels:BF.map(function(b){return b.s}),datasets:[
+          {label:"Deposit-Funded %",data:BF.map(function(b){return b.d}),backgroundColor:"#1A56DBcc",borderRadius:3},
+          {label:"Wholesale/Market %",data:BF.map(function(b){return b.w}),backgroundColor:"#C0392Bcc",borderRadius:3},
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}}},
+          scales:{
+            x:{stacked:true,grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
+            y:{stacked:true,max:100,grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%"}},border:{display:false}}
+          }}
+      });
+    }
+    var tbl=document.getElementById("bank-funding-tbl");
+    if(tbl){
+      var sc={"Low":"#0D7A4A","Low-Mod":"#B45309","Moderate":"#B45309","High":"#C0392B"};
+      var html='<thead><tr><th>Issuer</th><th>Deposits</th><th>Wholesale</th><th>ABS</th><th>L/D Ratio</th><th>NIM</th><th>Rate Sens.</th><th>Insight</th></tr></thead><tbody>';
+      for(var i=0;i<BF.length;i++){
+        var b=BF[i],c=sc[b.rs]||"#334E68";
+        html+='<tr>'
+          +'<td style="font-weight:600;color:#1E293B">'+b.s+'</td>'
+          +'<td style="color:#1A56DB;font-weight:600">'+b.d+'%</td>'
+          +'<td style="color:#C0392B;font-weight:600">'+b.w+'%</td>'
+          +'<td style="color:#7A8FA8">'+b.abs+'%</td>'
+          +'<td>'+b.ltd+'%</td>'
+          +'<td style="font-weight:600">'+b.nim+'%</td>'
+          +'<td><span style="font-size:10px;font-weight:700;background:'+c+'18;color:'+c+';border:1px solid '+c+'33;border-radius:4px;padding:2px 7px">'+b.rs+'</span></td>'
+          +'<td style="color:#7A8FA8;font-size:11px">'+b.n+'</td>'
+          +'</tr>';
+      }
+      tbl.innerHTML=html+'</tbody>';
+    }
+  })();
 
   // ── Fed Rate Impact Explainer ──────────────────────────────────────
   document.getElementById("yield-explainer").innerHTML = `
