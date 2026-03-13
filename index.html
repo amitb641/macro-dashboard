@@ -1927,12 +1927,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Card Issuer Funding Mix — Deposits vs Market Borrowing</div>
     <div class="panel-sub">Loan-to-deposit ratio &amp; wholesale funding reliance · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
-    <div class="grid2">
-      <div class="ch260"><canvas id="c-bank-funding"></canvas></div>
-      <div>
-        <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
-      </div>
-    </div>
+    <div class="ch260"><canvas id="c-bank-funding"></canvas></div>
+    <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
     <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Wholesale = securitization (ABS) + FHLB + commercial paper + unsecured debt. Rate sensitivity = estimated NII impact of +100bp rate shock.</p>
   </div>
 
@@ -3900,6 +3896,7 @@ function buildYieldTab(){
 
 
   // ── Rate history table ─────────────────────────────────────────────
+  try{
   const hd=["Year","Fed Funds","Action","NIM Trend","GS","JPM","MS","Note"];
   let h=`<thead><tr>${hd.map(x=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   const actionColor={Hiking:"#C0392B",Peak:"#C0392B",Emergency:"#C0392B",Cutting:"#0D7A4A","On hold":"#B45309",Liftoff:"#B45309"};
@@ -3918,8 +3915,10 @@ function buildYieldTab(){
     </tr>`;
   });
   document.getElementById("yield-tbl").innerHTML=h+"</tbody>";
+  }catch(e){console.error("Yield table error:",e);}
 
   // ── Bank Card Funding Mix ─────────────────────────────────────────
+  try{
   const BANK_FUNDING = [
     {bank:"JPMorgan Chase", short:"JPM",  deposits_pct:82, wholesale_pct:18, ltd:58, abs_pct:8,  nim:2.62, rate_sens:"Low",     note:"Largest deposit base in US; card portfolio well-funded internally"},
     {bank:"Bank of America",short:"BAC",  deposits_pct:80, wholesale_pct:20, ltd:55, abs_pct:9,  nim:2.36, rate_sens:"Low",     note:"Strong retail deposit franchise; moderate securitization use"},
@@ -3966,6 +3965,7 @@ function buildYieldTab(){
     </tr>`;
   });
   document.getElementById("bank-funding-tbl").innerHTML=fh+"</tbody>";
+  }catch(e){console.error("Bank funding error:",e);}
 
   // ── Fed Rate Impact Explainer ──────────────────────────────────────
   document.getElementById("yield-explainer").innerHTML = `
