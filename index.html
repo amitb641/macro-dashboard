@@ -1836,7 +1836,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-sub">Net % of banks tightening consumer & C&I lending standards · Fed · NY Fed Recession Prob. overlay</div>
       <div class="ch260"><canvas id="c-credit-sloos"></canvas></div>
       <div id="sloos-corr-badge" style="margin-top:6px;font-size:11px;color:#3d4f6e;font-weight:500"></div>
-      <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model based on Treasury 10Y–3M yield spread — a quantitative, backward-looking probability derived from the yield curve. This differs from the Recession Prob. on the Outlook tab, which reflects forward-looking consensus estimates from Wall Street firms (Goldman, JPM, Morgan Stanley, etc.) for 2026.</p>
+      <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
       <details style="margin-top:6px;font-size:10px;color:#7a90aa">
         <summary style="cursor:pointer;font-weight:600;color:#5a6a8a">📐 Correlation methodology</summary>
         <div id="sloos-corr-detail" style="margin-top:6px;line-height:1.6"></div>
@@ -3016,10 +3016,14 @@ const CREDIT_SLOOS = {
   ci:       [15, 35,  57,  37,  18,  -3,  -5,  -13, -13, -5,  -5,  -3,  0,  5,  5,  20,  55,  73,  67,  17,  -5,  -12, -15, -11, -5,  0,  0,  0,  -3,  0,  0,  3,  8,  10,  0,  -2,  -5,  -5,  2,  5,  70,  -20, -28, -20, 20,  38,  46,  30,  20,  14,  10,  6,  4,  0,  -2],
   card_dq:  [null,null,null,null,null,null,9.5, 9.5, 8.7, 8.7, 8.0, 8.0, 7.5, 7.5, 8.2, 8.2, 10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0, 9.0, 8.0, 8.0, 7.3, 7.3, 6.8, 6.8, 6.5, 6.5, 6.0, 6.0, 5.5, 5.5, 5.9, 5.9, 9.1, 9.1, 6.8, 6.8, 4.0, 4.0, 6.4, 6.4, 8.6, 9.2, 9.8, 10.1, 10.0, 9.8, 9.8],
   all_dq:   [null,null,null,null,null,null,3.8, 3.8, 3.4, 3.4, 2.8, 2.8, 2.7, 2.7, 3.2, 3.2, 4.6, 4.6, 6.8, 6.8, 6.5, 6.5, 5.2, 5.2, 4.0, 4.0, 3.5, 3.5, 3.0, 3.0, 2.8, 2.8, 2.7, 2.7, 2.5, 2.5, 2.4, 2.4, 2.4, 2.4, 4.3, 4.3, 2.2, 2.2, 1.6, 1.6, 2.4, 2.4, 3.0, 3.2, 3.4, 3.5, 3.5, 3.4, 3.4],
-  /* NY Fed Recession Probability (%) — based on Treasury 10Y-3M spread model, quarterly avg
-     Source: Federal Reserve Bank of New York, same model referenced in Recession Prob. outlook table
-     Labels align 1:1 with CREDIT_SLOOS.labels: Q1'00 through Q4'25 */
-  recession_prob:[18,12,27,40,22,15,12,8,5,3,3,4,6,7,10,15,25,40,50,38,20,4,2,3,5,8,10,10,6,5,3,4,6,8,6,5,4,6,15,25,30,10,4,3,5,8,25,40,55,52,45,40,32,28,25]
+  /* NY Fed Recession Probability (%) — 12-month-ahead, Treasury 10Y-3M spread model
+     Source: NY Fed (prob_rec.pdf), quarterly avg of monthly readings
+     Yield curve inverts → prob rises → SLOOS tightening follows 2-4Q later
+     2001: inverted mid-2000, prob peaked ~40% Q3'00, tightening peaked Q1'01
+     2008: inverted 2006, prob peaked ~40% Q3'07, tightening peaked Q3'08
+     2020: inverted May-2019, prob hit 33% Q3'19, tightening spiked Q1'20
+     2023: deep inversion 2022-23, prob >70% Q3'23, tightening peaked Q1'23 */
+  recession_prob:[30,40,30,20,10,7,5,4,3,2,2,3,4,8,15,35,40,35,10,2,1,1,1,2,4,6,8,7,5,4,3,3,4,5,4,3,3,5,20,33,28,5,2,1,2,6,40,66,71,58,50,38,28,22,19]
 };
 const CREDIT_GROWTH = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "revolving":[8.0, 9.4, 3.9, 4.0, 2.8, 3.8, 10.5, 6.7, 5.6, -5.2, -8.9, -4.5, 0.5, 1.2, 3.2, 2.8, 3.4, 5.8, 4.8, 3.9, -7.4, -1.0, 13.9, 11.7, 6.0, -1.6], "nonrevolving":[10.2, 11.6, 9.4, 6.5, 6.4, 6.0, 5.1, 4.2, 4.2, -0.2, 1.7, 12.3, 7.0, 8.2, 8.2, 7.6, 3.3, 5.9, 5.0, 5.0, 3.5, 7.0, 6.7, 2.9, 0.3, 1.0]};
 const CREDIT_DEBT_TABLE = [
@@ -3602,6 +3606,17 @@ function buildCreditTab(){
       return {x, y};
     }
 
+    // Bidirectional lag: positive lag = A leads B, negative lag = B leads A
+    function biPairedAtLag(a, b, lag) {
+      const x=[], y=[];
+      const start = Math.max(0, -lag), end = Math.min(a.length, b.length - lag);
+      for (let i=start; i<end; i++) {
+        const va=a[i], vb=b[i+lag];
+        if (va!=null && isFinite(va) && vb!=null && isFinite(vb)) { x.push(va); y.push(vb); }
+      }
+      return {x, y};
+    }
+
     const tight = CREDIT_SLOOS.consumer;
     const ciTight = CREDIT_SLOOS.ci;
     const recProb = CREDIT_SLOOS.recession_prob;
@@ -3609,28 +3624,30 @@ function buildCreditTab(){
     const allDQ  = CREDIT_SLOOS.all_dq;
     const maxLag = 8;
 
-    // SLOOS → Recession Prob correlations
+    // 1) Recession Prob ↔ SLOOS: check both directions (negative lag = recession prob leads tightening)
     let bestConsLag=0, bestConsR=0, bestCILag=0, bestCIR=0;
-    const consCorrs=[], ciCorrs=[];
+    const consCorrs=[];
 
-    for (let lag=0; lag<=maxLag; lag++) {
-      const cp = pairedAtLag(tight, recProb, lag);
-      const cip = pairedAtLag(ciTight, recProb, lag);
+    for (let lag=-maxLag; lag<=maxLag; lag++) {
+      const cp = biPairedAtLag(tight, recProb, lag);
       const cr = pearson(cp.x, cp.y);
-      const cir = pearson(cip.x, cip.y);
       consCorrs.push({lag, r:cr, n:cp.x.length});
-      ciCorrs.push({lag, r:cir, n:cip.x.length});
       if (cr!=null && Math.abs(cr) > Math.abs(bestConsR)) { bestConsR=cr; bestConsLag=lag; }
+    }
+    // C&I best lag
+    for (let lag=-maxLag; lag<=maxLag; lag++) {
+      const cip = biPairedAtLag(ciTight, recProb, lag);
+      const cir = pearson(cip.x, cip.y);
       if (cir!=null && Math.abs(cir) > Math.abs(bestCIR)) { bestCIR=cir; bestCILag=lag; }
     }
 
-    // Recession Prob → DPD correlations
+    // 2) Recession Prob → DPD correlations (positive lag only — recession prob leads DPD)
     let bestRecCardLag=0, bestRecCardR=0, bestRecAllLag=0, bestRecAllR=0;
     const recCardCorrs=[], recAllCorrs=[];
 
     for (let lag=0; lag<=maxLag; lag++) {
-      const rcp = pairedAtLag(recProb, cardDQ, lag);
-      const rap = pairedAtLag(recProb, allDQ, lag);
+      const rcp = biPairedAtLag(recProb, cardDQ, lag);
+      const rap = biPairedAtLag(recProb, allDQ, lag);
       const rcr = pearson(rcp.x, rcp.y);
       const rar = pearson(rap.x, rap.y);
       recCardCorrs.push({lag, r:rcr, n:rcp.x.length});
@@ -3639,48 +3656,55 @@ function buildCreditTab(){
       if (rar!=null && Math.abs(rar) > Math.abs(bestRecAllR))  { bestRecAllR=rar;  bestRecAllLag=lag; }
     }
 
-    const lagToQ = lag => Math.round(lag * 1.5);
+    const lagToQ = lag => Math.round(Math.abs(lag) * 1.5);
+
+    // Helper: describe lead/lag relationship
+    function descLag(bestLag, aName, bName) {
+      const q = lagToQ(bestLag);
+      if (bestLag > 0) return `${aName} leads ${bName} by ~${q}Q`;
+      if (bestLag < 0) return `${bName} leads ${aName} by ~${q}Q`;
+      return `concurrent`;
+    }
 
     const badge = document.getElementById("sloos-corr-badge");
     if (badge) {
-      const consQ = lagToQ(bestConsLag);
-      const ciQ   = lagToQ(bestCILag);
+      const consDesc = descLag(bestConsLag, "Tightening", "Recession Prob");
+      const ciDesc   = descLag(bestCILag, "Tightening", "Recession Prob");
       const recCardQ = lagToQ(bestRecCardLag);
       const recAllQ  = lagToQ(bestRecAllLag);
-      const consDir = bestConsR > 0 ? "positive" : "inverse";
-      const ciDir   = bestCIR > 0  ? "positive" : "inverse";
-      const recCardDir = bestRecCardR > 0 ? "positive" : "inverse";
-      const recAllDir  = bestRecAllR > 0  ? "positive" : "inverse";
       badge.innerHTML =
-        `<span style="background:#E8637A15;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
-        `Consumer Tightening → Recession Prob: r=${bestConsR.toFixed(2)} · leads by ~${consQ}Q (${consDir})</span>` +
-        `<span style="background:#4A72E815;color:#1A56DB;border:1px solid #1A56DB33;border-radius:10px;padding:3px 10px">` +
-        `C&I Tightening → Recession Prob: r=${bestCIR.toFixed(2)} · leads by ~${ciQ}Q (${ciDir})</span>` +
-        `<br style="margin:4px 0"><span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px">` +
-        `Recession Prob → Card DPD: r=${bestRecCardR.toFixed(2)} · leads by ~${recCardQ}Q (${recCardDir})</span>` +
+        `<span style="background:#00000008;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px;font-weight:600">` +
+        `Signal chain: Yield Curve (Recession Prob) → SLOOS Tightening → Credit Losses</span>` +
+        `<br><span style="display:inline-block;margin-top:6px;background:#E8637A15;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
+        `Consumer Tightening ↔ Recession Prob: r=${bestConsR.toFixed(2)} · ${consDesc}</span>` +
+        `<span style="display:inline-block;margin-top:6px;background:#4A72E815;color:#1A56DB;border:1px solid #1A56DB33;border-radius:10px;padding:3px 10px">` +
+        `C&I Tightening ↔ Recession Prob: r=${bestCIR.toFixed(2)} · ${ciDesc}</span>` +
+        `<br><span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px">` +
+        `Recession Prob → Card DPD: r=${bestRecCardR.toFixed(2)} · leads by ~${recCardQ}Q</span>` +
         `<span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px">` +
-        `Recession Prob → All Product DPD: r=${bestRecAllR.toFixed(2)} · leads by ~${recAllQ}Q (${recAllDir})</span>`;
+        `Recession Prob → All Product DPD: r=${bestRecAllR.toFixed(2)} · leads by ~${recAllQ}Q</span>`;
     }
 
     const detail = document.getElementById("sloos-corr-detail");
     if (detail) {
-      let html = `<strong>Cross-correlation: SLOOS Tightening → NY Fed Recession Probability at various lags</strong><br>`;
+      let html = `<strong>Cross-correlation: Consumer Tightening ↔ Recession Probability (bidirectional lags)</strong><br>`;
       html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
-      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Consumer r</th><th>C&I r</th><th>n</th></tr>`;
-      for (let i=0; i<=maxLag; i++) {
-        const isConsBest = i===bestConsLag;
-        const isCIBest   = i===bestCILag;
-        const bg = (isConsBest||isCIBest) ? "background:#f0f7ff;" : "";
+      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag</th><th>Direction</th><th>~Quarters</th><th>r</th><th>n</th></tr>`;
+      for (let i=0; i<consCorrs.length; i++) {
+        const c = consCorrs[i];
+        const isBest = c.lag===bestConsLag;
+        const bg = isBest ? "background:#f0f7ff;" : "";
+        const dir = c.lag > 0 ? "Tightening leads" : c.lag < 0 ? "Recession Prob leads" : "Concurrent";
         html += `<tr style="${bg}border-bottom:1px solid #eef1f7">`;
-        html += `<td style="padding:2px 8px">${i}${i===0?" (concurrent)":""}</td>`;
-        html += `<td style="text-align:center">~${lagToQ(i)}Q</td>`;
-        html += `<td style="text-align:center;${isConsBest?"font-weight:700;color:#C0392B":""}">${consCorrs[i].r!=null?consCorrs[i].r.toFixed(3):"—"}</td>`;
-        html += `<td style="text-align:center;${isCIBest?"font-weight:700;color:#1A56DB":""}">${ciCorrs[i].r!=null?ciCorrs[i].r.toFixed(3):"—"}</td>`;
-        html += `<td style="text-align:center;color:#94a3b8">${consCorrs[i].n}</td>`;
+        html += `<td style="padding:2px 8px">${c.lag}</td>`;
+        html += `<td style="padding:2px 8px;font-size:9px">${dir}</td>`;
+        html += `<td style="text-align:center">~${lagToQ(c.lag)}Q</td>`;
+        html += `<td style="text-align:center;${isBest?"font-weight:700;color:#C0392B":""}">${c.r!=null?c.r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;color:#94a3b8">${c.n}</td>`;
         html += `</tr>`;
       }
       html += `</table>`;
-      html += `<br><strong>Cross-correlation: Recession Probability → Credit Delinquency (DPD) at various lags</strong><br>`;
+      html += `<br><strong>Cross-correlation: Recession Probability → Credit Delinquency (DPD)</strong><br>`;
       html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
       html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Card DPD r</th><th>All Product DPD r</th><th>n</th></tr>`;
       for (let i=0; i<=maxLag; i++) {
@@ -3696,13 +3720,12 @@ function buildCreditTab(){
         html += `</tr>`;
       }
       html += `</table>`;
-      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags 0–${maxLag} periods. `;
-      html += `Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025), so lag-to-quarter mapping is approximate (~1.5Q/period). `;
-      html += `Positive r = variables move together; the lag with highest |r| indicates the lead time.</p>`;
-      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> The chain runs: <strong>SLOOS Tightening → Recession Probability → Credit Losses (DPD)</strong>. `;
-      html += `Banks tighten lending standards early in the cycle, recession probability rises as tighter credit constrains activity, `;
-      html += `and delinquencies follow as borrowers lose access to refinancing. This three-stage cascade makes recession probability `;
-      html += `a powerful intermediate signal — it captures the macro stress that ultimately drives credit losses.</p>`;
+      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags -${maxLag} to +${maxLag} periods (bidirectional for SLOOS ↔ Recession Prob, positive-only for Recession Prob → DPD). `;
+      html += `Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025). Positive r = variables move together.</p>`;
+      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> The signal chain runs: <strong>Yield Curve (Recession Prob) → SLOOS Tightening → Credit Losses (DPD)</strong>. `;
+      html += `The yield curve inverts first, driving recession probability higher. Banks then tighten lending standards in response (SLOOS lags recession prob). `;
+      html += `Finally, tighter credit leads to rising delinquencies as borrowers lose refinancing options. `;
+      html += `This three-stage cascade shows recession probability is both a leading indicator of bank behavior AND a predictor of credit losses.</p>`;
       detail.innerHTML = html;
     }
   })();
