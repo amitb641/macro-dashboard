@@ -101,12 +101,11 @@ def build_headlines(sig, prev_log):
                 'value': cur_str, 'change': chg_str, 'moved': True,
             })
         else:
-            # Include key metrics even if unchanged
-            if key in ('ffr', 'dgs10', 'unrate', 'cpi_yoy', 'wti'):
-                headlines.append({
-                    'emoji': emoji, 'label': label,
-                    'value': cur_str, 'change': '—', 'moved': False,
-                })
+            # Include all metrics even if unchanged — always show full snapshot
+            headlines.append({
+                'emoji': emoji, 'label': label,
+                'value': cur_str, 'change': '—', 'moved': False,
+            })
 
     # Sort: movers first, then stable
     headlines.sort(key=lambda x: (0 if x['moved'] else 1, x['label']))
@@ -147,21 +146,20 @@ def build_email(sig, ana, today_str, prev_log):
     moved     = [h for h in headlines if h['moved']]
     stable    = [h for h in headlines if not h['moved']]
 
-    def hl_row(h):
+    def hl_row(h, highlight=False):
         chg_col = '#0D7A4A' if h['change'].startswith('+') else '#C0392B' if h['change'].startswith('-') else '#94A3B8'
+        bg = 'background:#FFFBEB;' if highlight else ''
+        weight = 'font-weight:700;' if highlight else ''
         return (
-            f'<tr>'
-            f'<td style="padding:5px 10px;font-size:13px;width:24px">{h["emoji"]}</td>'
-            f'<td style="padding:5px 10px;font-size:12px;color:#334E68;width:140px">{h["label"]}</td>'
-            f'<td style="padding:5px 10px;font-size:12px;font-weight:700;color:#1E293B">{h["value"]}</td>'
-            f'<td style="padding:5px 10px;font-size:11px;font-weight:700;color:{chg_col}">{h["change"]}</td>'
+            f'<tr style="{bg}">'
+            f'<td style="padding:6px 10px;font-size:13px;width:24px">{h["emoji"]}</td>'
+            f'<td style="padding:6px 10px;font-size:12px;color:#334E68;width:140px;{weight}">{h["label"]}</td>'
+            f'<td style="padding:6px 10px;font-size:13px;font-weight:700;color:#1E293B">{h["value"]}</td>'
+            f'<td style="padding:6px 10px;font-size:12px;font-weight:700;color:{chg_col}">{h["change"]}</td>'
             f'</tr>'
         )
 
-    movers_html = ''.join(hl_row(h) for h in moved) if moved else (
-        '<tr><td colspan="4" style="padding:10px;font-size:12px;color:#94A3B8">'
-        'No significant moves vs prior session.</td></tr>'
-    )
+    movers_html = ''.join(hl_row(h, highlight=True) for h in moved)
     stable_html = ''.join(hl_row(h) for h in stable)
 
     # ── Signal flags ─────────────────────────────────────────────────
@@ -210,23 +208,20 @@ def build_email(sig, ana, today_str, prev_log):
 
   <div style="padding:24px 28px">
 
-    <!-- TODAY'S MOVERS -->
+    <!-- KEY HEADLINES -->
     <h2 style="font-size:12px;font-weight:700;color:#1E293B;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid #1A56DB;padding-bottom:6px">
-      📰 Today's Market Moves
+      📰 Key Headlines &amp; Market Snapshot
     </h2>
-    <table style="width:100%;border-collapse:collapse;margin-bottom:6px;background:#F8FAFF;border-radius:8px">
+    {"<p style='font-size:11px;color:#B45309;font-weight:600;margin:0 0 8px'>⚡ " + str(len(moved)) + " metric(s) moved since prior session — highlighted below</p>" if moved else "<p style='font-size:11px;color:#94A3B8;margin:0 0 8px'>No significant moves vs prior session</p>"}
+    <table style="width:100%;border-collapse:collapse;margin-bottom:20px;background:#F8FAFF;border-radius:8px">
+      <tr style="border-bottom:2px solid #E2E8F0">
+        <th style="padding:6px 10px;font-size:10px;color:#94A3B8;text-align:left" colspan="2">Metric</th>
+        <th style="padding:6px 10px;font-size:10px;color:#94A3B8;text-align:left">Value</th>
+        <th style="padding:6px 10px;font-size:10px;color:#94A3B8;text-align:left">Change</th>
+      </tr>
       {movers_html}
+      {stable_html}
     </table>
-
-    <!-- STABLE KEY RATES -->
-    <details style="margin-bottom:20px">
-      <summary style="font-size:11px;color:#94A3B8;cursor:pointer;padding:4px 0">
-        Show all key rates ({len(stable)} unchanged)
-      </summary>
-      <table style="width:100%;border-collapse:collapse;margin-top:6px">
-        {stable_html}
-      </table>
-    </details>
 
     <!-- FULL SNAPSHOT TABLE -->
     <h2 style="font-size:12px;font-weight:700;color:#1E293B;margin:0 0 10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #f1f5f9;padding-bottom:6px">
