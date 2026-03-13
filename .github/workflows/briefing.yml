@@ -81,7 +81,7 @@ jobs:
           git config user.name  "briefing-bot"
           git config user.email "briefing-bot@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add macro_dashboard_v6.html data/
+          git add index.html data/
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

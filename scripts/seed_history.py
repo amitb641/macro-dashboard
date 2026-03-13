@@ -7,7 +7,7 @@ import re, json, sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-HTML_FILE = ROOT / 'macro_dashboard_v6.html'
+HTML_FILE = ROOT / 'index.html'
 
 applied = []
 

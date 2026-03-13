@@ -26,9 +26,9 @@ ROOT          = Path(__file__).parent.parent
 SIG_FILE      = ROOT / 'data' / 'signals.json'
 ANA_FILE      = ROOT / 'data' / 'analysis.json'
 LOG_FILE      = ROOT / 'data' / 'last_update.json'
-HTML_FILE     = ROOT / 'macro_dashboard_v6.html'
+HTML_FILE     = ROOT / 'index.html'
 
-DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/macro_dashboard_v6.html'
+DASHBOARD_URL = 'https://amitb641.github.io/macro-dashboard/index.html'
 
 
 # ── Snapshot / run log ────────────────────────────────────────────────

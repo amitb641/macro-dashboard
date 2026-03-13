@@ -1,5 +1,5 @@
 U.S. Macro Dashboard
-Live: https://amitb641.github.io/macro-dashboard/macro_dashboard_v6.html
+Live: https://amitb641.github.io/macro-dashboard/
 Schedule
 Mon–Fri 7am ET: data refresh (Agents 1+2+4+5)
 1st of month: AI commentary (Agent 3) + email
