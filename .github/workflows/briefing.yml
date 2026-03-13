@@ -2,7 +2,7 @@ name: Daily Macro Update
 
 on:
   schedule:
-    - cron: '0 12 * * 1-5'   # Mon–Fri 12:00 UTC = 7am ET
+    - cron: '0 11 * * 1-5'   # Mon–Fri 11:00 UTC = 7am EDT / 6am EST
   workflow_dispatch:
     inputs:
       force_ai:
