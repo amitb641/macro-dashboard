@@ -193,11 +193,12 @@ def collect():
     data['mortgage15']  = fred_obs('MORTGAGE15US', 6)
 
     # ── Monthly: labor, inflation, housing, GDP ───────────────────────
+    # Pull 320 observations (~26 years) to build charts from 2000
     print('  [Monthly] Labor...')
-    data['unrate']      = fred_obs('UNRATE',     14)
+    data['unrate']      = fred_obs('UNRATE',     320)
     data['u6rate']      = fred_obs('U6RATE',     14)
-    data['payems']      = fred_obs('PAYEMS',      4)
-    data['ahetpi']      = fred_obs('AHETPI',     14)
+    data['payems']      = fred_obs('PAYEMS',     320)
+    data['ahetpi']      = fred_obs('AHETPI',     320)
     data['jolts']       = fv('JTSJOL')
     data['bls_sectors'] = bls_fetch([
         'CES0000000001','CES2000000001','CES3000000001',
@@ -205,22 +206,43 @@ def collect():
     ])
 
     print('  [Monthly] Inflation...')
-    data['cpi_all']     = fred_obs('CPIAUCSL',  14)
-    data['cpi_core']    = fred_obs('CPILFESL',  14)
-    data['pce']         = fred_obs('PCEPI',     14)
-    data['pce_core']    = fred_obs('PCEPILFE',  14)
-    data['psavert']     = fred_obs('PSAVERT',    6)
+    data['cpi_all']     = fred_obs('CPIAUCSL',  320)
+    data['cpi_core']    = fred_obs('CPILFESL',  320)
+    data['pce']         = fred_obs('PCEPI',     320)
+    data['pce_core']    = fred_obs('PCEPILFE',  320)
+    data['psavert']     = fred_obs('PSAVERT',   320)
 
     print('  [Monthly] Housing...')
-    data['houst']       = fred_obs('HOUST',      6)
-    data['permit']      = fred_obs('PERMIT',      6)
-    data['cs_hpi']      = fred_obs('CSUSHPISA', 14)
+    data['houst']       = fred_obs('HOUST',      320)
+    data['houst1f']     = fred_obs('HOUST1F',    320)
+    data['permit']      = fred_obs('PERMIT',     320)
+    data['cs_hpi']      = fred_obs('CSUSHPISA',  320)
 
     print('  [Quarterly] GDP + Credit...')
     data['gdpc1']       = fred_obs('GDPC1',  12)
     data['gdp_growth']  = fred_obs('A191RL1Q225SBEA', 12)
     data['cc_delinq']   = fred_obs('DRCCLACBS',  12)
     data['mtg_delinq']  = fred_obs('DRSFRMACBS', 12)
+
+    # ── Annual history for chart rebuilding (from 2000) ──────────────
+    print('  [History] Annual chart series...')
+    data['fedfunds_annual']   = fred_obs('FEDFUNDS', 30, freq='a')
+    data['mortgage30_annual'] = fred_obs('MORTGAGE30US', 30, freq='a')
+    data['ig_oas_annual']     = fred_obs('BAMLC0A0CM', 30, freq='a')
+    data['hy_oas_annual']     = fred_obs('BAMLH0A0HYM2', 30, freq='a')
+    data['wti_annual']        = fred_obs('DCOILWTICO', 30, freq='a')
+    data['brent_annual']      = fred_obs('DCOILBRENTEU', 30, freq='a')
+    data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
+    data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
+    data['umcsent_annual']    = fred_obs('UMCSENT', 30, freq='a')
+    data['cpiengsl']          = fred_obs('CPIENGSL', 320)
+    data['revolsl_annual']    = fred_obs('REVOLSL', 30, freq='a')
+    data['nonrevsl_annual']   = fred_obs('NONREVSL', 30, freq='a')
+
+    # Monthly oil for OIL_MONTHLY chart (from 2000)
+    print('  [History] Monthly oil prices...')
+    data['wti_monthly']       = fred_obs('DCOILWTICO', 320, freq='m')
+    data['brent_monthly']     = fred_obs('DCOILBRENTEU', 320, freq='m')
 
     # ── Package ───────────────────────────────────────────────────────
     n_ok = sum(1 for v in data.values() if v)
