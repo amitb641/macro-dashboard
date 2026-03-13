@@ -98,8 +98,11 @@ def analyze():
     v['dgs5']         = latest(data.get('dgs5'))
     v['dgs10']        = latest(data.get('dgs10'))
     v['dgs30']        = latest(data.get('dgs30'))
-    v['ig_oas']       = latest(data.get('ig_oas'))
-    v['hy_oas']       = latest(data.get('hy_oas'))
+    # FRED OAS series return percentage points (e.g. 0.88 = 88bp); convert to bp
+    _ig_raw = latest(data.get('ig_oas'))
+    _hy_raw = latest(data.get('hy_oas'))
+    v['ig_oas']       = round(_ig_raw * 100) if _ig_raw is not None else None
+    v['hy_oas']       = round(_hy_raw * 100) if _hy_raw is not None else None
 
     unrate = data.get('unrate', [])
     v['unrate']       = unrate[0]['value'] if unrate else None
