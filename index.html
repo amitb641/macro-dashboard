@@ -1928,10 +1928,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Row 3: Bank Card Funding Mix -->
   <div class="panel">
     <div class="panel-title">Card Issuer Funding Mix — Deposits vs Market Borrowing</div>
-    <div class="panel-sub">Loan-to-deposit ratio &amp; wholesale funding reliance · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
+    <div class="panel-sub">Bank-wide deposits vs total loans · L/D ratio · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
     <div class="ch260"><canvas id="c-bank-funding"></canvas></div>
     <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
-    <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Wholesale = securitization (ABS) + FHLB + commercial paper + unsecured debt. Deposits &amp; Total Loans = bank-wide figures ($B). L/D ratio = bank-wide loan-to-deposit ratio (total loans / total deposits); &gt;100% means loans exceed deposits, requiring wholesale funding. Dep. Fund % &amp; Wholesale % = card portfolio funding mix. Rate sensitivity = estimated NII impact of +100bp rate shock. Tickers: JPM = JPMorgan Chase; BAC = Bank of America; CITI = Citigroup; COF = Capital One; DFS = Discover Financial; AXP = American Express; BCS = Barclays; SYF = Synchrony Financial; BFH = Bread Financial.</p>
+    <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Deposits &amp; Total Loans = bank-wide figures ($B). L/D ratio = total loans / total deposits; &gt;100% means loans exceed deposits, requiring wholesale funding. Rate sensitivity = estimated NII impact of +100bp rate shock. Tickers: JPM = JPMorgan Chase; BAC = Bank of America; CITI = Citigroup; COF = Capital One; DFS = Discover Financial; AXP = American Express; BCS = Barclays; SYF = Synchrony Financial; BFH = Bread Financial.</p>
   </div>
 
   <!-- Row 4: Fed rate impact explainer -->
@@ -3923,46 +3923,44 @@ function buildYieldTab(){
   // ── Bank Card Funding Mix ─────────────────────────────────────────
   try{(function(){
     var BF = [
-      {s:"JPM",  d:82, w:18, ltd:58, abs:8,  nim:2.62, rs:"Low",      dep:2400, loan:1390, n:"Largest deposit base in US; card portfolio well-funded internally"},
-      {s:"BAC",  d:80, w:20, ltd:55, abs:9,  nim:2.36, rs:"Low",      dep:1900, loan:1050, n:"Strong retail deposit franchise; moderate securitization use"},
-      {s:"CITI", d:68, w:32, ltd:65, abs:15, nim:2.48, rs:"Moderate",  dep:1310, loan:852,  n:"Global franchise; higher wholesale reliance vs domestic peers"},
-      {s:"COF",  d:85, w:15, ltd:92, abs:7,  nim:6.73, rs:"Low",      dep:310,  loan:285,  n:"Online deposits fund most cards; highest NIM among large issuers"},
-      {s:"DFS",  d:78, w:22, ltd:88, abs:12, nim:5.82, rs:"Low-Mod",  dep:87,   loan:77,   n:"Direct-to-consumer deposits; some ABS issuance for diversification"},
-      {s:"AXP",  d:60, w:40, ltd:78, abs:22, nim:3.42, rs:"Moderate",  dep:135,  loan:105,  n:"Charge card model; higher market funding via ABS + unsecured debt"},
-      {s:"BCS",  d:55, w:45, ltd:90, abs:28, nim:7.85, rs:"Moderate",  dep:42,   loan:38,   n:"US online savings deposits + ABS program; parent backstop for wholesale"},
-      {s:"SYF",  d:72, w:28, ltd:95, abs:18, nim:7.15, rs:"Moderate",  dep:75,   loan:71,   n:"Private label cards; high-yield deposits + significant ABS program"},
-      {s:"BFH",  d:45, w:55, ltd:98, abs:35, nim:8.20, rs:"High",      dep:7,    loan:17,   n:"Most rate-sensitive; heavy ABS reliance; highest cost of funds"},
+      {s:"JPM",  dep:2400, loan:1390, nim:2.62, rs:"Low",      n:"Largest deposit base in US; card portfolio well-funded internally"},
+      {s:"BAC",  dep:1900, loan:1050, nim:2.36, rs:"Low",      n:"Strong retail deposit franchise; moderate securitization use"},
+      {s:"CITI", dep:1310, loan:852,  nim:2.48, rs:"Moderate",  n:"Global franchise; higher wholesale reliance vs domestic peers"},
+      {s:"COF",  dep:310,  loan:285,  nim:6.73, rs:"Low",      n:"Online deposits fund most cards; highest NIM among large issuers"},
+      {s:"DFS",  dep:87,   loan:77,   nim:5.82, rs:"Low-Mod",  n:"Direct-to-consumer deposits; some ABS issuance for diversification"},
+      {s:"AXP",  dep:135,  loan:105,  nim:3.42, rs:"Moderate",  n:"Charge card model; higher market funding via ABS + unsecured debt"},
+      {s:"BCS",  dep:42,   loan:38,   nim:7.85, rs:"Moderate",  n:"US online savings deposits + ABS program; parent backstop for wholesale"},
+      {s:"SYF",  dep:75,   loan:71,   nim:7.15, rs:"Moderate",  n:"Private label cards; high-yield deposits + significant ABS program"},
+      {s:"BFH",  dep:7,    loan:17,   nim:8.20, rs:"High",      n:"Most rate-sensitive; heavy ABS reliance; highest cost of funds"},
     ];
     var el=document.getElementById("c-bank-funding");
     if(el){
       new Chart(el.getContext("2d"),{
         type:"bar",
         data:{labels:BF.map(function(b){return b.s}),datasets:[
-          {label:"Deposit-Funded %",data:BF.map(function(b){return b.d}),backgroundColor:"#1A56DBcc",borderRadius:3},
-          {label:"Wholesale/Market %",data:BF.map(function(b){return b.w}),backgroundColor:"#C0392Bcc",borderRadius:3},
+          {label:"Deposits ($B)",data:BF.map(function(b){return b.dep}),backgroundColor:"#1A56DBcc",borderRadius:3},
+          {label:"Total Loans ($B)",data:BF.map(function(b){return b.loan}),backgroundColor:"#B45309cc",borderRadius:3},
         ]},
         options:{responsive:true,maintainAspectRatio:false,
           plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}}},
           scales:{
-            x:{stacked:true,grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
-            y:{stacked:true,max:100,grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%"}},border:{display:false}}
+            x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
+            y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return "$"+v+"B"}},border:{display:false}}
           }}
       });
     }
     var tbl=document.getElementById("bank-funding-tbl");
     if(tbl){
       var sc={"Low":"#0D7A4A","Low-Mod":"#B45309","Moderate":"#B45309","High":"#C0392B"};
-      var html='<thead><tr><th>Issuer</th><th>Deposits</th><th>Total Loans</th><th>Dep. Fund %</th><th>Wholesale %</th><th>ABS</th><th>L/D (Bank)</th><th>NIM</th><th>Rate Sens.</th><th>Insight</th></tr></thead><tbody>';
+      var html='<thead><tr><th>Issuer</th><th>Deposits</th><th>Total Loans</th><th>L/D Ratio</th><th>NIM</th><th>Rate Sens.</th><th>Insight</th></tr></thead><tbody>';
       for(var i=0;i<BF.length;i++){
         var b=BF[i],c=sc[b.rs]||"#334E68";
+        var ltd=Math.round(b.loan/b.dep*100);
         html+='<tr>'
           +'<td style="font-weight:600;color:#1E293B">'+b.s+'</td>'
-          +'<td style="color:#0D7A4A;font-weight:600">$'+b.dep+'B</td>'
-          +'<td style="color:#6D28D9;font-weight:600">$'+b.loan+'B</td>'
-          +'<td style="color:#1A56DB;font-weight:600">'+b.d+'%</td>'
-          +'<td style="color:#C0392B;font-weight:600">'+b.w+'%</td>'
-          +'<td style="color:#7A8FA8">'+b.abs+'%</td>'
-          +'<td>'+b.ltd+'%</td>'
+          +'<td style="color:#1A56DB;font-weight:600">$'+b.dep+'B</td>'
+          +'<td style="color:#B45309;font-weight:600">$'+b.loan+'B</td>'
+          +'<td style="font-weight:600">'+(ltd>100?'<span style="color:#C0392B">'+ltd+'%</span>':ltd+'%')+'</td>'
           +'<td style="font-weight:600">'+b.nim+'%</td>'
           +'<td><span style="font-size:10px;font-weight:700;background:'+c+'18;color:'+c+';border:1px solid '+c+'33;border-radius:4px;padding:2px 7px">'+b.rs+'</span></td>'
           +'<td style="color:#7A8FA8;font-size:11px">'+b.n+'</td>'
@@ -3970,7 +3968,7 @@ function buildYieldTab(){
       }
       tbl.innerHTML=html+'</tbody>';
     }
-  })();}catch(e){console.error("Bank funding error:",e);var bfEl=document.getElementById("bank-funding-tbl");if(bfEl)bfEl.innerHTML='<tr><td colspan="10" style="color:red">Error: '+e.message+'</td></tr>';}
+  })();}catch(e){console.error("Bank funding error:",e);var bfEl=document.getElementById("bank-funding-tbl");if(bfEl)bfEl.innerHTML='<tr><td colspan="7" style="color:red">Error: '+e.message+'</td></tr>';}
 
   // ── Fed Rate Impact Explainer ──────────────────────────────────────
   document.getElementById("yield-explainer").innerHTML = `
