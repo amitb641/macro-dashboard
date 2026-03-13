@@ -88,3 +88,20 @@ jobs:
             git commit -m "📊 Daily update: $(date -u +'%Y-%m-%d')"
             git push
           fi
+
+      - name: Deploy to public site repo
+        run: |
+          SITE_REPO="amitb641/macro-dashboard-site"
+          git clone --depth 1 https://x-access-token:${{ secrets.DEPLOY_PAT }}@github.com/${SITE_REPO}.git /tmp/site
+          cp index.html /tmp/site/
+          cp -n .nojekyll /tmp/site/ 2>/dev/null || true
+          cd /tmp/site
+          git config user.name  "briefing-bot"
+          git config user.email "briefing-bot@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to deploy"
+          else
+            git commit -m "📊 Daily update: $(date -u +'%Y-%m-%d')"
+            git push
+          fi
