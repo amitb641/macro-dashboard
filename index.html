@@ -3605,8 +3605,11 @@ function buildCreditTab(){
     const tight = CREDIT_SLOOS.consumer;
     const ciTight = CREDIT_SLOOS.ci;
     const recProb = CREDIT_SLOOS.recession_prob;
+    const cardDQ = CREDIT_SLOOS.card_dq;
+    const allDQ  = CREDIT_SLOOS.all_dq;
     const maxLag = 8;
 
+    // SLOOS → Recession Prob correlations
     let bestConsLag=0, bestConsR=0, bestCILag=0, bestCIR=0;
     const consCorrs=[], ciCorrs=[];
 
@@ -3621,19 +3624,42 @@ function buildCreditTab(){
       if (cir!=null && Math.abs(cir) > Math.abs(bestCIR)) { bestCIR=cir; bestCILag=lag; }
     }
 
+    // Recession Prob → DPD correlations
+    let bestRecCardLag=0, bestRecCardR=0, bestRecAllLag=0, bestRecAllR=0;
+    const recCardCorrs=[], recAllCorrs=[];
+
+    for (let lag=0; lag<=maxLag; lag++) {
+      const rcp = pairedAtLag(recProb, cardDQ, lag);
+      const rap = pairedAtLag(recProb, allDQ, lag);
+      const rcr = pearson(rcp.x, rcp.y);
+      const rar = pearson(rap.x, rap.y);
+      recCardCorrs.push({lag, r:rcr, n:rcp.x.length});
+      recAllCorrs.push({lag, r:rar, n:rap.x.length});
+      if (rcr!=null && Math.abs(rcr) > Math.abs(bestRecCardR)) { bestRecCardR=rcr; bestRecCardLag=lag; }
+      if (rar!=null && Math.abs(rar) > Math.abs(bestRecAllR))  { bestRecAllR=rar;  bestRecAllLag=lag; }
+    }
+
     const lagToQ = lag => Math.round(lag * 1.5);
 
     const badge = document.getElementById("sloos-corr-badge");
     if (badge) {
       const consQ = lagToQ(bestConsLag);
       const ciQ   = lagToQ(bestCILag);
+      const recCardQ = lagToQ(bestRecCardLag);
+      const recAllQ  = lagToQ(bestRecAllLag);
       const consDir = bestConsR > 0 ? "positive" : "inverse";
       const ciDir   = bestCIR > 0  ? "positive" : "inverse";
+      const recCardDir = bestRecCardR > 0 ? "positive" : "inverse";
+      const recAllDir  = bestRecAllR > 0  ? "positive" : "inverse";
       badge.innerHTML =
         `<span style="background:#E8637A15;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
         `Consumer Tightening → Recession Prob: r=${bestConsR.toFixed(2)} · leads by ~${consQ}Q (${consDir})</span>` +
         `<span style="background:#4A72E815;color:#1A56DB;border:1px solid #1A56DB33;border-radius:10px;padding:3px 10px">` +
-        `C&I Tightening → Recession Prob: r=${bestCIR.toFixed(2)} · leads by ~${ciQ}Q (${ciDir})</span>`;
+        `C&I Tightening → Recession Prob: r=${bestCIR.toFixed(2)} · leads by ~${ciQ}Q (${ciDir})</span>` +
+        `<br style="margin:4px 0"><span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px">` +
+        `Recession Prob → Card DPD: r=${bestRecCardR.toFixed(2)} · leads by ~${recCardQ}Q (${recCardDir})</span>` +
+        `<span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px">` +
+        `Recession Prob → All Product DPD: r=${bestRecAllR.toFixed(2)} · leads by ~${recAllQ}Q (${recAllDir})</span>`;
     }
 
     const detail = document.getElementById("sloos-corr-detail");
@@ -3654,12 +3680,29 @@ function buildCreditTab(){
         html += `</tr>`;
       }
       html += `</table>`;
-      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation between SLOOS tightening (net % banks tightening) and NY Fed recession probability at lags 0–${maxLag} periods. `;
+      html += `<br><strong>Cross-correlation: Recession Probability → Credit Delinquency (DPD) at various lags</strong><br>`;
+      html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
+      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Card DPD r</th><th>All Product DPD r</th><th>n</th></tr>`;
+      for (let i=0; i<=maxLag; i++) {
+        const isCardBest = i===bestRecCardLag;
+        const isAllBest  = i===bestRecAllLag;
+        const bg = (isCardBest||isAllBest) ? "background:#f0f7ff;" : "";
+        html += `<tr style="${bg}border-bottom:1px solid #eef1f7">`;
+        html += `<td style="padding:2px 8px">${i}${i===0?" (concurrent)":""}</td>`;
+        html += `<td style="text-align:center">~${lagToQ(i)}Q</td>`;
+        html += `<td style="text-align:center;${isCardBest?"font-weight:700;color:#333":""}">${recCardCorrs[i].r!=null?recCardCorrs[i].r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;${isAllBest?"font-weight:700;color:#333":""}">${recAllCorrs[i].r!=null?recAllCorrs[i].r.toFixed(3):"—"}</td>`;
+        html += `<td style="text-align:center;color:#94a3b8">${recCardCorrs[i].n}</td>`;
+        html += `</tr>`;
+      }
+      html += `</table>`;
+      html += `<p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags 0–${maxLag} periods. `;
       html += `Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025), so lag-to-quarter mapping is approximate (~1.5Q/period). `;
-      html += `Positive r = tightening and recession risk move together; the lag with highest |r| indicates the lead time.</p>`;
-      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> When banks tighten lending standards, recession probability tends to rise several quarters later. `;
-      html += `This reflects the credit channel of monetary policy — tighter credit constrains economic activity, eventually raising recession risk. `;
-      html += `SLOOS tightening serves as a leading indicator of elevated recession probability.</p>`;
+      html += `Positive r = variables move together; the lag with highest |r| indicates the lead time.</p>`;
+      html += `<p style="margin:4px 0"><strong>Interpretation:</strong> The chain runs: <strong>SLOOS Tightening → Recession Probability → Credit Losses (DPD)</strong>. `;
+      html += `Banks tighten lending standards early in the cycle, recession probability rises as tighter credit constrains activity, `;
+      html += `and delinquencies follow as borrowers lose access to refinancing. This three-stage cascade makes recession probability `;
+      html += `a powerful intermediate signal — it captures the macro stress that ultimately drives credit losses.</p>`;
       detail.innerHTML = html;
     }
   })();
