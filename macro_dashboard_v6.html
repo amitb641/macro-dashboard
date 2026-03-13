@@ -3008,7 +3008,8 @@ const CREDIT_SLOOS = {
   labels:["Q1'00","Q3'00","Q1'01","Q3'01","Q1'02","Q3'02","Q1'03","Q3'03","Q1'04","Q3'04","Q1'05","Q3'05","Q1'06","Q3'06","Q1'07","Q3'07","Q1'08","Q3'08","Q1'09","Q3'09","Q1'10","Q3'10","Q1'11","Q3'11","Q1'12","Q3'12","Q1'13","Q3'13","Q1'14","Q3'14","Q1'15","Q3'15","Q1'16","Q3'16","Q1'17","Q3'17","Q1'18","Q3'18","Q1'19","Q3'19","Q1'20","Q3'20","Q1'21","Q3'21","Q1'22","Q3'22","Q1'23","Q3'23","Q1'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"],
   consumer:[5,  15,  32,  25,  10,  0,  -5,  -10, -10, -5,  0,  -5,  -5,  0,  10,  15,  45,  60,  55,  20,  0,  -10, -10, -5,  0,  0,  0,  -5,  -5,  0,  0,  0,  5,  5,  0,  -5,  0,  -5,  5,  8,  62,  -15, -22, -18, 18,  32,  44,  28,  22,  18,  14,  10,  6,  4,  2],
   ci:       [15, 35,  57,  37,  18,  -3,  -5,  -13, -13, -5,  -5,  -3,  0,  5,  5,  20,  55,  73,  67,  17,  -5,  -12, -15, -11, -5,  0,  0,  0,  -3,  0,  0,  3,  8,  10,  0,  -2,  -5,  -5,  2,  5,  70,  -20, -28, -20, 20,  38,  46,  30,  20,  14,  10,  6,  4,  0,  -2],
-  card_dq:  [null,null,null,null,null,null,9.5, 9.5, 8.7, 8.7, 8.0, 8.0, 7.5, 7.5, 8.2, 8.2, 10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0, 9.0, 8.0, 8.0, 7.3, 7.3, 6.8, 6.8, 6.5, 6.5, 6.0, 6.0, 5.5, 5.5, 5.9, 5.9, 9.1, 9.1, 6.8, 6.8, 4.0, 4.0, 6.4, 6.4, 8.6, 9.2, 9.8, 10.1, 10.0, 9.8, 9.8]
+  card_dq:  [null,null,null,null,null,null,9.5, 9.5, 8.7, 8.7, 8.0, 8.0, 7.5, 7.5, 8.2, 8.2, 10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0, 9.0, 8.0, 8.0, 7.3, 7.3, 6.8, 6.8, 6.5, 6.5, 6.0, 6.0, 5.5, 5.5, 5.9, 5.9, 9.1, 9.1, 6.8, 6.8, 4.0, 4.0, 6.4, 6.4, 8.6, 9.2, 9.8, 10.1, 10.0, 9.8, 9.8],
+  all_dq:   [null,null,null,null,null,null,3.8, 3.8, 3.4, 3.4, 2.8, 2.8, 2.7, 2.7, 3.2, 3.2, 4.6, 4.6, 6.8, 6.8, 6.5, 6.5, 5.2, 5.2, 4.0, 4.0, 3.5, 3.5, 3.0, 3.0, 2.8, 2.8, 2.7, 2.7, 2.5, 2.5, 2.4, 2.4, 2.4, 2.4, 4.3, 4.3, 2.2, 2.2, 1.6, 1.6, 2.4, 2.4, 3.0, 3.2, 3.4, 3.5, 3.5, 3.4, 3.4]
 };
 const CREDIT_GROWTH = {"labels":["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "revolving":[9.8, -0.8, 3.6, 5.8, 4.7, 7.6, 9.4, -1.7, -9.2, -7.0, 0.5, 4.4, 1.6, 3.1, 6.2, 5.4, 5.6, 3.8, 3.2, -11.4, 3.8, 14.2, 11.4, 4.8, 2.1], "nonrevolving":[6.2, 4.6, 3.8, 5.0, 4.5, 5.1, 6.9, 2.0, 0.2, 1.0, 4.4, 5.8, 7.4, 7.0, 7.6, 5.5, 4.8, 5.2, 5.4, 3.2, 8.9, 6.8, 4.2, 2.4, 1.8]};
 const CREDIT_DEBT_TABLE = [
@@ -3559,9 +3560,10 @@ function buildCreditTab(){
   new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
     type:"bar",
     data:{labels:CREDIT_SLOOS.labels,datasets:[
-      {label:"Consumer Standards",data:CREDIT_SLOOS.consumer,backgroundColor:"#d0303077",borderRadius:3,datalabels:false},
-      {label:"C&I Standards",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4a72e877",borderRadius:3,datalabels:false},
-      {label:"Card 90+ DPD %",   data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#d03030",backgroundColor:"transparent",borderWidth:2.5,pointRadius:0,tension:0.3,yAxisID:"y2",borderDash:[6,3],datalabels:false},
+      {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#F4978666",borderRadius:3,datalabels:false},
+      {label:"C&I Tightening",     data:CREDIT_SLOOS.ci,      backgroundColor:"#8DB4E666",borderRadius:3,datalabels:false},
+      {label:"Card 90+ DPD %",    data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#C0392B",backgroundColor:"transparent",borderWidth:2.5,pointRadius:0,tension:0.3,yAxisID:"y2",datalabels:false},
+      {label:"All Product 90+ DPD %",data:CREDIT_SLOOS.all_dq,type:"line",borderColor:"#1A9E4A",backgroundColor:"transparent",borderWidth:2,pointRadius:0,tension:0.3,yAxisID:"y2",borderDash:[6,3],datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
