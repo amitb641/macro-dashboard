@@ -3034,9 +3034,9 @@ const HPI_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "200
 const MORTGAGE_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026F"], "rate30":[8.05, 6.97, 6.54, 5.83, 5.84, 5.87, 6.41, 6.34, 6.03, 5.04, 4.69, 4.45, 3.66, 3.98, 4.17, 3.85, 3.65, 3.99, 4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.85, 6.0], "ffr":[6.24, 3.88, 1.67, 1.13, 1.35, 3.22, 4.97, 5.02, 1.92, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.39, 1.0, 1.83, 2.16, 0.36, 0.08, 1.68, 5.33, 5.33, 4.58, 3.75]};
 const STARTS_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "sf":[1231, 1273, 1359, 1499, 1611, 1716, 1465, 1046, 622, 445, 471, 431, 535, 618, 648, 715, 782, 849, 876, 888, 991, 1123, 1006, 947, 998, 1036], "mf":[338, 329, 346, 349, 345, 353, 336, 309, 284, 109, 116, 178, 245, 307, 355, 397, 393, 364, 374, 403, 425, 543, 547, 460, 360, 340]};
 const AFFORD_DATA = {
-  labels:["2019","2020","2021","2022","2023","2024","2025E"],
-  index: [159,   168,   148,   102,   95,    103,   108],
-  supply:[3.2,   3.0,   1.9,   2.6,   3.4,   3.7,   3.9]
+  labels:["2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025E"],
+  index: [127,   133,   142,   148,   140,   120,   107,   112,   139,   172,   174,   186,   194,   178,   164,   162,   160,   153,   147,   159,   168,   148,   102,   95,    103,   108],
+  supply:[4.0,   4.2,   4.5,   4.3,   4.3,   4.5,   6.5,   8.9,   10.4,  8.0,   8.6,   7.3,   5.9,   4.9,   5.1,   4.8,   4.6,   3.9,   3.8,   3.2,   3.0,   1.9,   2.6,   3.4,   3.7,   3.9]
 };
 const HOUSING_METROS = [
   {city:"Miami, FL",       y24:"+8.1%", y25:"+5.2%", med:"$650K", note:"International demand resilient; insurance costs rising"},
@@ -3565,10 +3565,10 @@ function buildCreditTab(){
   new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
     type:"bar",
     data:{labels:CREDIT_SLOOS.labels,datasets:[
-      {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#E8637Acc",borderRadius:3,datalabels:false},
-      {label:"C&I Tightening",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4A72E8cc",borderRadius:3,datalabels:false},
-      {label:"Card 90+ DPD %",    data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#C0392B22",backgroundColor:"#C0392B08",borderWidth:1,pointRadius:0,tension:0.4,yAxisID:"y2",fill:true,datalabels:false},
-      {label:"All Product 90+ DPD %",data:CREDIT_SLOOS.all_dq,type:"line",borderColor:"#1A9E4A22",backgroundColor:"#1A9E4A08",borderWidth:1,pointRadius:0,tension:0.4,yAxisID:"y2",fill:true,borderDash:[4,2],datalabels:false},
+      {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#E8637A55",borderRadius:3,datalabels:false},
+      {label:"C&I Tightening",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4A72E855",borderRadius:3,datalabels:false},
+      {label:"Card 90+ DPD %",    data:CREDIT_SLOOS.card_dq,  type:"line",borderColor:"#C0392B55",backgroundColor:"#C0392B08",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:true,datalabels:false},
+      {label:"All Product 90+ DPD %",data:CREDIT_SLOOS.all_dq,type:"line",borderColor:"#1A9E4A55",backgroundColor:"#1A9E4A08",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:true,borderDash:[4,2],datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
@@ -3758,8 +3758,8 @@ function buildHousingTab(){
       plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
       scales:{
         x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-        y:{grid:{color:"#dde2ee"},ticks:{color:"#4a72e8"},min:80,border:{display:false}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#c07010",callback:v=>v+" mo"},min:0,max:8,border:{display:false}}
+        y:{grid:{color:"#dde2ee"},ticks:{color:"#4a72e8"},min:0,border:{display:false}},
+        y2:{position:"right",grid:{display:false},ticks:{color:"#c07010",callback:v=>v+" mo"},min:0,max:12,border:{display:false}}
       }}
   });
 
