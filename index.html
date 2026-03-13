@@ -1920,7 +1920,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Row 2: Rate history table -->
   <div class="panel">
     <div class="panel-title">Fed Rate Cycle History &amp; Wall St Forecasts</div>
-    <div class="panel-sub">FOMC rate path 2018–2026F · bank NIM trend · GS / JPM / MS targets</div>
+    <div class="panel-sub">FOMC rate path 2018–2026F · bank NIM cycle · card issuer yield · GS / JPM / MS targets</div>
     <div class="dtable-wrap"><table class="dtable" id="yield-tbl"></table></div>
     <p class="src">Sources: Federal Reserve H.15; FOMC December 2025 SEP; ICE BofA US Corporate &amp; High Yield indices; Goldman Sachs, JPMorgan, Morgan Stanley rate forecasts Jan 2026.</p>
   </div>
@@ -3900,7 +3900,7 @@ function buildYieldTab(){
 
   // ── Rate history table ─────────────────────────────────────────────
   try{
-  var yHd=["Year","Fed Funds","Action","NIM Trend","GS","JPM","MS","Note"];
+  var yHd=["Year","Fed Funds","Action","NIM Cycle","GS","JPM","MS","Note"];
   var yH='<thead><tr>'+yHd.map(function(x){return '<th style="text-align:left">'+x+'</th>';}).join("")+'</tr></thead><tbody>';
   var acMap={Hiking:"#C0392B",Peak:"#C0392B",Emergency:"#C0392B",Cutting:"#0D7A4A","On hold":"#B45309",Liftoff:"#B45309"};
   YIELD_TABLE.forEach(function(r){
@@ -4148,6 +4148,7 @@ function buildStackTab(){
     ["📈 Fed Rates",  "2Y / 5Y / 10Y / 30Y Yields",    "FRED Treasury series","Monthly",    "Mar 2026",  "Agent pulls monthly avgs"],
     ["📈 Fed Rates",  "Fed Funds Rate",                 "FRED DFF",            "Monthly",    "Mar 2026",  "Current: 4.25–4.50%"],
     ["📈 Fed Rates",  "FOMC Dot Plot Forecasts",        "Federal Reserve SEP", "Quarterly",  "Dec 2025",  "Next SEP: Mar 19 2026"],
+    ["📈 Fed Rates",  "Card Issuer Funding & Yield",    "FDIC · Earnings",     "Quarterly",  "Q4 2025",   "COF/DFS/SYF/BFH disclose card yield"],
     ["🔗 Credit",     "IG / HY Credit Spreads",         "FRED ICE BofA",       "Monthly",    "Mar 2026",  "Agent pulls monthly avgs"],
     ["🔗 Credit",     "Card Delinquency 90+ DPD",       "NY Fed HHDC",         "Quarterly",  "Q4 2025",   "Manual — NY Fed Excel download"],
     ["🔗 Credit",     "NCO Rates — Card & Banks",       "Bank earnings",       "Quarterly",  "Q4 2025",   "Manual — from press releases"],
@@ -4775,7 +4776,7 @@ if(document.readyState === 'loading'){
         <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots</td><td>Fed H.15 · FOMC SEP Dec 2025</td><td>Mar 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path, card issuer funding &amp; yield</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots, card yield %</td><td>Fed H.15 · FOMC SEP Dec 2025 · FDIC · Earnings</td><td>Mar 2026</td></tr>
         <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td>FRED ICE BofA · NY Fed HHDC · Bank earnings</td><td>Q4 2025</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>Big 5 bank earnings — net income, NII, ROTCE, CET1, 2026 NII guidance</td><td>Net income, NII, ROTCE %, CET1 %, 2026 NII guide</td><td>Q4 2025 earnings releases (Jan 2026)</td><td>Q4 2025</td></tr>
         <tr><td><strong>🏠 Housing</strong></td><td>Home prices, mortgage rates, housing starts, affordability, metro table</td><td>HPI YoY, 30yr mortgage rate, starts, affordability index</td><td>Case-Shiller · FHFA · Census · Freddie Mac · NAR</td><td>Jan 2026</td></tr>
@@ -4802,6 +4803,7 @@ if(document.readyState === 'loading'){
           <tr><td><strong>OAS</strong></td><td>Option-Adjusted Spread — bond yield premium over Treasuries. IG ~85bp, HY ~305bp (near cycle tights).</td></tr>
           <tr><td><strong>NCO Rate</strong></td><td>Net Charge-Offs annualized ÷ avg loan balances. Card specialists structurally higher than diversified banks.</td></tr>
           <tr><td><strong>NIM</strong></td><td>Net Interest Margin = NII ÷ earning assets. Expanded during rate hike cycle; compressing as cuts begin.</td></tr>
+          <tr><td><strong>Card Yield</strong></td><td>Interest yield on card loan portfolio. Disclosed by card-heavy issuers (COF 19.8%, DFS 21.1%, SYF 25.3%, BFH 28.9%). Diversified banks (JPM, BAC, CITI) report blended NIM only.</td></tr>
         </tbody>
       </table>
       <table class="dtable">
