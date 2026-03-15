@@ -3096,8 +3096,8 @@ const LEVERAGE_DATA = {
 };
 const MATWALL_DATA = {
   labels:["2025","2026","2027","2028","2029","2030+"],
-  ig:    [420,   580,   640,   710,   680,   88],
-  hy:    [180,   240,   310,   380,   290,   309]
+  ig:    [420,   580,   640,   710,   680,   91],
+  hy:    [180,   240,   310,   380,   290,   317]
 };
 const PRIVCREDIT_DATA = {
   labels:["2019","2020","2021","2022","2023","2024","2025","2026F"],
@@ -3876,7 +3876,7 @@ function buildYieldTab(){
     {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#0D7A4A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
-    {lbl:"10Y Treasury Mar'26",    val:"4.21%",   sub:"2Y: 3.64% · Spread: +57bp",col:"#6D28D9"},
+    {lbl:"10Y Treasury Mar'26",    val:"4.27%",   sub:"2Y: 3.76% · Spread: +51bp",col:"#6D28D9"},
 
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
@@ -4448,7 +4448,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 13, 2026 12:53 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 15, 2026 04:12 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
