@@ -17,7 +17,7 @@ Monthly series (latest available):
   BLS:  sector payrolls
 """
 
-import os, json, datetime, sys
+import os, json, datetime, sys, time
 from pathlib import Path
 
 try:
@@ -38,20 +38,32 @@ errors = []
 # ── FRED ──────────────────────────────────────────────────────────────
 
 def fred_obs(series_id, limit=14, freq=None):
-    """Return list of {date,value} newest first, no missing values."""
+    """Return list of {date,value} newest first, no missing values.
+    Retries up to 3 times with exponential backoff on 5xx errors."""
     if not FRED_KEY:
         errors.append(f'FRED key missing — skipped {series_id}'); return []
     params = {'series_id': series_id, 'api_key': FRED_KEY,
               'file_type': 'json', 'sort_order': 'desc', 'limit': limit}
     if freq: params['frequency'] = freq
-    try:
-        r = requests.get('https://api.stlouisfed.org/fred/series/observations',
-                         params=params, timeout=15)
-        r.raise_for_status()
-        return [{'date': o['date'], 'value': float(o['value'])}
-                for o in r.json().get('observations', []) if o['value'] != '.']
-    except Exception as e:
-        errors.append(f'FRED {series_id}: {e}'); return []
+    last_err = None
+    for attempt in range(4):  # 0, 1, 2, 3
+        try:
+            r = requests.get('https://api.stlouisfed.org/fred/series/observations',
+                             params=params, timeout=15)
+            r.raise_for_status()
+            return [{'date': o['date'], 'value': float(o['value'])}
+                    for o in r.json().get('observations', []) if o['value'] != '.']
+        except requests.exceptions.HTTPError as e:
+            last_err = e
+            if r.status_code >= 500 and attempt < 3:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print(f'    ↻ FRED {series_id}: {r.status_code}, retry {attempt+1}/3 in {wait}s')
+                time.sleep(wait)
+                continue
+            break
+        except Exception as e:
+            last_err = e; break
+    errors.append(f'FRED {series_id}: {last_err}'); return []
 
 def fv(sid, limit=14):
     d = fred_obs(sid, limit); return d[0] if d else None
@@ -263,6 +275,19 @@ def collect():
     data['wti_monthly']       = fred_obs('DCOILWTICO', 320, freq='m')
     data['brent_monthly']     = fred_obs('DCOILBRENTEU', 320, freq='m')
 
+    # ── Carry forward: fill failed series from prior run ─────────────
+    try:
+        prior = json.loads(OUT_FILE.read_text()).get('data', {}) if OUT_FILE.exists() else {}
+    except (json.JSONDecodeError, OSError):
+        prior = {}
+    carried = 0
+    for key in data:
+        if not data[key] and key in prior and prior[key]:
+            data[key] = prior[key]
+            carried += 1
+    if carried:
+        print(f'  ℹ  Carried forward {carried} series from prior run')
+
     # ── Package ───────────────────────────────────────────────────────
     n_ok = sum(1 for v in data.values() if v)
     OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -273,7 +298,8 @@ def collect():
 
     print(f'[Agent 1] Done: {n_ok}/{len(data)} series, {len(errors)} errors')
     for e in errors: print(f'  ⚠  {e}')
-    return len(errors) == 0
+    # Succeed if we have data for most series (allow some FRED failures)
+    return n_ok >= len(data) * 0.6
 
 
 if __name__ == '__main__':
