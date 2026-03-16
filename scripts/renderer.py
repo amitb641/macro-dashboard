@@ -212,18 +212,21 @@ def rebuild_charts(html, data):
         ccsa_sorted = sorted(ccsa, key=lambda x: x['date']) if ccsa else []
         ccsa_by_date = {o['date']: o['value'] for o in ccsa_sorted}
         labels, initial, continued = [], [], []
+        prev_month = None
         for obs in icsa_sorted:
             yr = int(obs['date'][:4])
             if yr >= 2020:  # Show from 2020 to capture COVID spike + recovery
                 d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+                cur_month = (d.year, d.month)
                 # Label: "Jan'20" for first week of each month, blank otherwise
-                if not labels or d.strftime('%b') != datetime.datetime.strptime(
-                        icsa_sorted[icsa_sorted.index(obs) - 1]['date'], '%Y-%m-%d').strftime('%b'):
+                if cur_month != prev_month:
                     labels.append(d.strftime("%b'%y"))
                 else:
                     labels.append('')
+                prev_month = cur_month
                 initial.append(round(obs['value']))
-                continued.append(round(ccsa_by_date.get(obs['date'], 0)))
+                cc_val = ccsa_by_date.get(obs['date'])
+                continued.append(round(cc_val) if cc_val is not None else None)
         if labels:
             html = _inject_const(html, 'CLAIMS_WEEKLY', {
                 'labels': labels, 'initial': initial, 'continued': continued})
