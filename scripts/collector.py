@@ -9,6 +9,9 @@ Daily series (refresh every run):
   FRED: yields, spreads, oil, mortgage
   EIA:  WTI + Brent daily spot
 
+Weekly series (refresh Thursdays only):
+  FRED: initial jobless claims (ICSA), continued claims (CCSA)
+
 Monthly series (latest available):
   FRED: unemployment, CPI, PCE, wages, saving rate, housing, GDP
   BLS:  sector payrolls
@@ -194,6 +197,22 @@ def collect():
 
     # ── Monthly: labor, inflation, housing, GDP ───────────────────────
     # Pull 320 observations (~26 years) to build charts from 2000
+    # ── Weekly: jobless claims (DOL releases Thursdays) ───────────────
+    # Only fetch fresh on Thursdays; carry forward prior data on other days
+    if datetime.date.today().weekday() == 3:  # Thursday
+        print('  [Weekly] Jobless Claims (Thursday refresh)...')
+        data['icsa']    = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
+        data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
+    else:
+        print('  [Weekly] Jobless Claims (carry forward — not Thursday)')
+        try:
+            prior = json.loads(OUT_FILE.read_text()).get('data', {}) if OUT_FILE.exists() else {}
+        except (json.JSONDecodeError, OSError):
+            prior = {}
+            errors.append('ICSA carry-forward: could not read prior raw_data.json')
+        data['icsa']    = prior.get('icsa', [])
+        data['ccsa']    = prior.get('ccsa', [])
+
     print('  [Monthly] Labor...')
     data['unrate']      = fred_obs('UNRATE',     320)
     data['u6rate']      = fred_obs('U6RATE',     14)

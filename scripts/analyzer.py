@@ -28,6 +28,7 @@ THRESHOLDS = {
     'mortgage30': 0.15,   # pp
     'wages_yoy':  0.3,    # pp
     'cs_hpi_yoy': 1.0,    # pp
+    'icsa':       30000,  # weekly initial claims swing
 }
 
 # Absolute level alerts
@@ -41,6 +42,7 @@ LEVEL_ALERTS = {
     'wti':        {'watch': 85,   'alert': 95},
     'mortgage30': {'watch': 7.0,  'alert': 7.5},
     'cc_delinq':  {'watch': 9.5,  'alert': 11.0},
+    'icsa':       {'watch': 250000, 'alert': 300000},
 }
 
 
@@ -112,6 +114,11 @@ def analyze():
     v['nfp_level']    = payems[0]['value'] if payems else None
     v['nfp_mom']      = round(payems[0]['value'] - payems[1]['value']) if len(payems) >= 2 else None
 
+    icsa = data.get('icsa', [])
+    v['icsa']         = icsa[0]['value'] if icsa else None
+    ccsa = data.get('ccsa', [])
+    v['ccsa']         = ccsa[0]['value'] if ccsa else None
+
     v['wages_yoy']    = yoy(data.get('ahetpi', []))
     v['cpi_yoy']      = yoy(data.get('cpi_all', []))
     v['core_cpi_yoy'] = yoy(data.get('cpi_core', []))
@@ -155,7 +162,7 @@ def analyze():
     # Extra signals without thresholds
     for key in ['dgs2', 'dgs5', 'dgs30', 'spread_10_2_bp', 'core_cpi_yoy',
                 'core_pce_yoy', 'u6rate', 'saving_rate', 'housing_starts',
-                'brent', 'gdp_growth_q', 'cc_delinq']:
+                'brent', 'gdp_growth_q', 'cc_delinq', 'ccsa']:
         if key not in sigs:
             sigs[key] = make_signal(v.get(key), snap_vals.get(key), 9e9)
             sigs[key]['alert'] = level_alert(key, v.get(key))

@@ -1586,6 +1586,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
+  <div class="panel">
+    <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
+    <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
+    <div class="ch260"><canvas id="c-claims-line"></canvas></div>
+    <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
+  </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
@@ -2091,6 +2097,9 @@ const JOBS_SECTORS = [
   {s:"Mining & Energy",           color:"#FCC419", j21:29,   j22:79,   j23:14,   j24:5,    j25:-10},
 ];
 
+// ── WEEKLY JOBLESS CLAIMS ────────────────────────────
+const CLAIMS_WEEKLY = {"labels":["Jan'20","","","","Feb'20","","","","Mar'20","","","","Apr'20","","","","May'20","","","","Jun'20","","","","Jul'20","","","","Aug'20","","","","Sep'20","","","","Oct'20","","","","Nov'20","","","","Dec'20","","",""], "initial":[215000,223000,217000,282000,3307000,6867000,6615000,5237000,4442000,3846000,2914000,2126000,1566000,1413000,1327000,1310000,1186000,1106000,893000,884000,857000,826000,787000,711000,709000,711000,751000,758000,778000,742000,787000,892000,853000,862000,787000,716000,892000,898000,873000,832000,712000,781000,790000,825000,892000,873000,837000,787000], "continued":[1793000,1733000,1690000,3029000,7446000,11912000,16806000,22377000,23012000,21052000,19371000,17770000,16090000,14709000,13684000,12640000,11979000,11343000,10672000,10100000,9584000,9019000,8535000,7946000,7548000,7183000,6897000,6509000,6206000,5936000,5647000,5296000,5032000,4782000,4494000,4216000,3981000,3751000,3581000,3415000,3256000,3105000,2979000,2841000,2740000,2650000,2550000,2460000]};
+
 // ── FORECAST ─────────────────────────────────────────
 const FC_MACRO = {
   labels:["Real GDP %","Unemployment %","CPI Inflation %","Wage Growth %","Fed Funds Rate %"],
@@ -2530,7 +2539,32 @@ function buildJobsTab(){
     {lbl:"Feb'26 Jobs",        val:"-92K",  sub:"BLS Feb 7 release · Healthcare +44K, retail +34K", col:"#c07010"},
     {lbl:"Top Sector 2025",      val:"Health", sub:"Healthcare & Social Asst. held strong",  col:"#FF4757"},
     {lbl:"Fed Govt (peak→now)",  val:"−327K",  sub:"Cumulative Oct'24 peak · 2025 annual: −200K · Unemp still low: gov't workers rarely file (tenure/transfers)",col:"#d03030"},
+    {lbl:"Initial Claims",        val:"221K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+
+  // ── Weekly Jobless Claims chart ─────────────────────
+  if(typeof CLAIMS_WEEKLY !== 'undefined' && CLAIMS_WEEKLY.initial){
+    const clLabels = CLAIMS_WEEKLY.labels;
+    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);  // convert to thousands
+    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
+    new Chart(document.getElementById("c-claims-line").getContext("2d"),{
+      type:"line",
+      data:{labels:clLabels,datasets:[
+        {label:"Initial Claims (K)",data:clInitial,borderColor:"#7c3aed",backgroundColor:"#7c3aed22",
+         borderWidth:1.5,pointRadius:0,tension:0.3,fill:true,yAxisID:"y"},
+        {label:"Continued Claims (K)",data:clContinued,borderColor:"#e8590c",backgroundColor:"transparent",
+         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2"},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+          tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:"#5a6a8a",maxRotation:45,autoSkip:true,maxTicksLimit:24},border:{display:false}},
+          y:{position:"left",title:{display:true,text:"Initial Claims (thousands)",color:"#7c3aed"},grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
+          y2:{position:"right",title:{display:true,text:"Continued Claims (thousands)",color:"#e8590c"},grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}}
+        }}
+    });
+  }
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
     type:"bar",
@@ -4120,6 +4154,8 @@ function buildStackTab(){
     ["📊 GDP",        "2026 GDP Forecasts",             "GS · JPM · Deloitte", "Quarterly",  "Feb 2026",  "Update after each quarterly revision"],
     ["📋 Jobs",       "Nonfarm Payrolls",               "BLS CES",             "Monthly",    "Feb 2026",  "1st Friday · agent auto-pulls"],
     ["📋 Jobs",       "Payrolls by Sector",             "BLS CES",             "Annual",     "Jan 2026",  "Jan benchmark: −862K applied"],
+    ["📋 Jobs",       "Initial Jobless Claims (ICSA)",  "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
+    ["📋 Jobs",       "Continued Claims (CCSA)",        "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
     ["👷 Unemp",      "U-3 Unemployment Rate",          "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "U-6 Underemployment",            "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Manual — no sector API"],
@@ -4157,6 +4193,7 @@ function buildStackTab(){
   ];
 
   const cadenceColor = {
+    "Weekly":    {color:"#0E7490", bg:"#ECFEFF", border:"rgba(14,116,144,.2)"},
     "Monthly":   {color:"#1A56DB", bg:"#EBF2FF", border:"rgba(26,86,219,.2)"},
     "Quarterly": {color:"#B45309", bg:"#FEF3C7", border:"rgba(180,83,9,.2)"},
     "Annual":    {color:"#6D28D9", bg:"#F3F0FF", border:"rgba(109,40,217,.2)"},
@@ -4292,7 +4329,7 @@ function buildStackTab(){
     <div class="stk-content">
       <div class="stk-overline">Architecture · Data · Deployment</div>
       <div class="stk-h1">How the <em>Dashboard Works</em></div>
-      <div class="stk-lead">An automated pipeline collects 38 macro series from 7 government APIs, reasons with Claude AI, and renders this dashboard monthly — unattended, in under 3 minutes.</div>
+      <div class="stk-lead">An automated pipeline collects 40 macro series from 7 government APIs (including weekly jobless claims), reasons with Claude AI, and renders this dashboard — unattended, in under 3 minutes.</div>
       <div class="stk-pills">
         <span class="stk-pill" style="color:#1A56DB;border-color:rgba(26,86,219,.25);background:#EBF2FF">Claude Sonnet 4.6</span>
         <span class="stk-pill" style="color:#6D28D9;border-color:rgba(109,40,217,.25);background:#F3F0FF">GitHub Actions</span>
@@ -4479,7 +4516,7 @@ function buildStackTab(){
     <!-- DOWN ARROW -->
     <div class="ma-vconn">
       <div class="ma-vline"></div>
-      <div class="ma-vconn-lbl">38 series → Agent 1</div>
+      <div class="ma-vconn-lbl">40 series → Agent 1</div>
     </div>
 
     <!-- 5 AGENTS -->
@@ -4496,7 +4533,7 @@ function buildStackTab(){
           <span class="ma-badge-nollm">No LLM</span>
         </div>
         <div class="ma-agent-body">
-          <div class="ma-agent-desc">Pulls all 38 series via public APIs. Normalises units, applies seasonal adjustment flags, timestamps each datapoint.</div>
+          <div class="ma-agent-desc">Pulls all 40 series via public APIs (incl. weekly jobless claims on Thursdays). Normalises units, applies seasonal adjustment flags, timestamps each datapoint.</div>
           <div class="ma-agent-io">
             <div class="ma-agent-in">IN: API keys + series IDs</div>
             <div class="ma-agent-out">OUT: raw_data.json</div>
@@ -4630,7 +4667,7 @@ function buildStackTab(){
       <div class="stk-node-icon">🌐</div>
       <div class="stk-node-num">Stage 1</div>
       <div class="stk-node-name">Collect</div>
-      <div class="stk-node-sub">Pull 38 series from government APIs</div>
+      <div class="stk-node-sub">Pull 40 series from government APIs</div>
       <div class="stk-node-tags">
         <span class="stk-node-tag">BLS API</span>
         <span class="stk-node-tag">BEA API</span>
@@ -4687,7 +4724,7 @@ function buildStackTab(){
   <!-- STATS -->
   <div class="stk-stats">
     <div class="stk-stat">
-      <div class="stk-stat-val blue">38</div>
+      <div class="stk-stat-val blue">40</div>
       <div class="stk-stat-lbl">Data series tracked</div>
     </div>
     <div class="stk-stat">
@@ -4701,9 +4738,12 @@ function buildStackTab(){
   </div>
 
   <!-- DATA STATUS TABLE -->
-  <div class="stk-section-title">Data sources &amp; freshness — 38 series across 12 tabs</div>
+  <div class="stk-section-title">Data sources &amp; freshness — 40 series across 12 tabs</div>
   <div class="fc-note" style="margin-bottom:14px">
     <strong>Update cadence:</strong>
+    <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#0E7490;background:#ECFEFF;border:1px solid rgba(14,116,144,.2)">Weekly</span> agent pulls on Thursdays (DOL release)
+    </span>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
       <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#1A56DB;background:#EBF2FF;border:1px solid rgba(26,86,219,.2)">Monthly</span> agent.py auto-pulls via API
     </span>
@@ -4759,7 +4799,7 @@ if(document.readyState === 'loading'){
       <tbody>
         <tr><td><strong>🔭 Outlook</strong></td><td>2026 macro scenarios, recession probabilities, institutional forecasts, risk factors</td><td>GDP growth range, recession prob, Fed path, key risks</td><td>GS · JPM · Deloitte · EY · RSM · MS</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
-        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS Current Employment Statistics (CES)</td><td>Feb 2026</td></tr>
+        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, weekly initial &amp; continued jobless claims, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, weekly claims, annual avg</td><td>BLS CES · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates</td><td>U-3 rate, U-6 rate, sector unemployment YoY</td><td>BLS Current Population Survey (CPS)</td><td>Feb 2026</td></tr>
         <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
@@ -4787,6 +4827,8 @@ if(document.readyState === 'loading'){
           <tr><td><strong>Core CPI / PCE</strong></td><td>Excludes volatile food &amp; energy. Fed targets 2% core PCE. Jan 2026: Core CPI 3.3%, Core PCE 2.8%.</td></tr>
           <tr><td><strong>U-3 vs U-6</strong></td><td>U-3 = headline unemployment. U-6 adds marginally attached + involuntary part-time. Jan 2026: U-3 4.0%, U-6 8.0%.</td></tr>
           <tr><td><strong>AHE</strong></td><td>Average Hourly Earnings — mean hourly wage of all private nonfarm workers. Jan 2026: $37.22, +4.1% YoY.</td></tr>
+          <tr><td><strong>Initial Claims (ICSA)</strong></td><td>Weekly count of new unemployment insurance filings. Released Thursdays by DOL. SA. Below ~250K = healthy labor market. Spikes signal layoffs.</td></tr>
+          <tr><td><strong>Continued Claims (CCSA)</strong></td><td>Weekly count of ongoing unemployment insurance recipients. Lags initial claims by 1 week. Rising continued claims = harder re-employment.</td></tr>
           <tr><td><strong>2Y–10Y Spread</strong></td><td>10yr minus 2yr Treasury. Negative = inverted (recession signal). Record 793-day inversion ended mid-2025; now ~+25bp.</td></tr>
           <tr><td><strong>OAS</strong></td><td>Option-Adjusted Spread — bond yield premium over Treasuries. IG ~85bp, HY ~305bp (near cycle tights).</td></tr>
           <tr><td><strong>NCO Rate</strong></td><td>Net Charge-Offs annualized ÷ avg loan balances. Card specialists structurally higher than diversified banks.</td></tr>
