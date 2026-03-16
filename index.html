@@ -2560,8 +2560,8 @@ function buildJobsTab(){
           tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
         scales:{
           x:{grid:{display:false},ticks:{color:"#5a6a8a",maxRotation:45,autoSkip:true,maxTicksLimit:24},border:{display:false}},
-          y:{position:"left",title:{display:true,text:"Initial (K)",color:"#7c3aed"},grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"K"},border:{display:false}},
-          y2:{position:"right",title:{display:true,text:"Continued (K)",color:"#e8590c"},grid:{display:false},ticks:{color:"#5a6a8a",callback:v=>v+"K"},border:{display:false}}
+          y:{position:"left",title:{display:true,text:"Initial Claims (thousands)",color:"#7c3aed"},grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
+          y2:{position:"right",title:{display:true,text:"Continued Claims (thousands)",color:"#e8590c"},grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}}
         }}
     });
   }
