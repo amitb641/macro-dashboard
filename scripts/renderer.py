@@ -203,6 +203,31 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'JOBS_ANNUAL', {
                 'labels': labels, 'data': values, 'low': low, 'high': high})
 
+    # ── CLAIMS_WEEKLY ────────────────────────────────────────────────
+    icsa = data.get('icsa', [])
+    ccsa = data.get('ccsa', [])
+    if len(icsa) >= 52:
+        # Weekly data newest-first; reverse to oldest-first
+        icsa_sorted = sorted(icsa, key=lambda x: x['date'])
+        ccsa_sorted = sorted(ccsa, key=lambda x: x['date']) if ccsa else []
+        ccsa_by_date = {o['date']: o['value'] for o in ccsa_sorted}
+        labels, initial, continued = [], [], []
+        for obs in icsa_sorted:
+            yr = int(obs['date'][:4])
+            if yr >= 2020:  # Show from 2020 to capture COVID spike + recovery
+                d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+                # Label: "Jan'20" for first week of each month, blank otherwise
+                if not labels or d.strftime('%b') != datetime.datetime.strptime(
+                        icsa_sorted[icsa_sorted.index(obs) - 1]['date'], '%Y-%m-%d').strftime('%b'):
+                    labels.append(d.strftime("%b'%y"))
+                else:
+                    labels.append('')
+                initial.append(round(obs['value']))
+                continued.append(round(ccsa_by_date.get(obs['date'], 0)))
+        if labels:
+            html = _inject_const(html, 'CLAIMS_WEEKLY', {
+                'labels': labels, 'initial': initial, 'continued': continued})
+
     # ── SAVING_RATE ───────────────────────────────────────────────────
     psavert = data.get('psavert', [])
     if len(psavert) >= 60:
@@ -699,6 +724,13 @@ def render_labor(html, data, vals, tabs):
         wages_date = ahetpi_s[0].get('date','') if ahetpi_s else ''
         wages_lbl = f"Nominal Wage Growth {month_label(wages_date)}" if wages_date else 'Nominal Wage Growth'
         html = patch_kpi_full(html, 'Nominal Wage Growth 2025', wages_lbl, f'{wages:+.1f}%')
+
+    icsa_val = vals.get('icsa')
+    if icsa_val is not None:
+        icsa_s = data.get('icsa', [])
+        icsa_date = icsa_s[0].get('date', '') if icsa_s else ''
+        icsa_lbl = f"Initial Claims {month_label(icsa_date)}" if icsa_date else 'Initial Claims'
+        html = patch_kpi_full(html, 'Initial Claims', icsa_lbl, f'{icsa_val/1000:.0f}K')
 
     for tab in ('jobs', 'unemp', 'wages'):
         txt = tabs.get(tab, '')
