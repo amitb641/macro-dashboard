@@ -1835,7 +1835,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Senior Loan Officer Survey (SLOOS) — Tightening Standards %</div>
-      <div class="panel-sub">Net % of banks tightening consumer & C&I lending standards · Fed · NY Fed Recession Prob. overlay</div>
+      <div class="panel-sub">Net % of banks tightening consumer lending standards · Fed · NY Fed Recession Prob. overlay</div>
       <div id="sloos-corr-badge" style="margin-bottom:6px;font-size:11px;color:#3d4f6e;font-weight:500"></div>
       <div class="ch260"><canvas id="c-credit-sloos"></canvas></div>
       <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
@@ -3586,7 +3586,6 @@ function buildCreditTab(){
     type:"bar",
     data:{labels:CREDIT_SLOOS.labels,datasets:[
       {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#E8637Acc",borderRadius:3,datalabels:false},
-      {label:"C&I Tightening",     data:CREDIT_SLOOS.ci,      backgroundColor:"#4A72E8cc",borderRadius:3,datalabels:false},
       {label:"Recession Prob. %",data:CREDIT_SLOOS.recession_prob,type:"line",borderColor:"#000000",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y",fill:false,borderDash:[6,3],datalabels:false},
       {label:"Card 90+ DPD %",data:CREDIT_SLOOS.card_dq,type:"line",borderColor:"#C0392B",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:false,borderDash:[4,2],datalabels:false},
     ]},
@@ -3630,14 +3629,13 @@ function buildCreditTab(){
     }
 
     const tight = CREDIT_SLOOS.consumer;
-    const ciTight = CREDIT_SLOOS.ci;
     const recProb = CREDIT_SLOOS.recession_prob;
     const cardDQ = CREDIT_SLOOS.card_dq;
     const allDQ  = CREDIT_SLOOS.all_dq;
     const maxLag = 8;
 
     // 1) Recession Prob ↔ SLOOS: check both directions (negative lag = recession prob leads tightening)
-    let bestConsLag=0, bestConsR=0, bestCILag=0, bestCIR=0;
+    let bestConsLag=0, bestConsR=0;
     const consCorrs=[];
 
     for (let lag=-maxLag; lag<=maxLag; lag++) {
@@ -3646,13 +3644,6 @@ function buildCreditTab(){
       consCorrs.push({lag, r:cr, n:cp.x.length});
       if (cr!=null && Math.abs(cr) > Math.abs(bestConsR)) { bestConsR=cr; bestConsLag=lag; }
     }
-    // C&I best lag
-    for (let lag=-maxLag; lag<=maxLag; lag++) {
-      const cip = biPairedAtLag(ciTight, recProb, lag);
-      const cir = pearson(cip.x, cip.y);
-      if (cir!=null && Math.abs(cir) > Math.abs(bestCIR)) { bestCIR=cir; bestCILag=lag; }
-    }
-
     // 2) Recession Prob → DPD correlations (positive lag only — recession prob leads DPD)
     let bestRecCardLag=0, bestRecCardR=0, bestRecAllLag=0, bestRecAllR=0;
     const recCardCorrs=[], recAllCorrs=[];
@@ -3681,7 +3672,6 @@ function buildCreditTab(){
     const badge = document.getElementById("sloos-corr-badge");
     if (badge) {
       const consDesc = descLag(bestConsLag, "Tightening", "Recession Prob");
-      const ciDesc   = descLag(bestCILag, "Tightening", "Recession Prob");
       const recCardQ = lagToQ(bestRecCardLag);
       const recAllQ  = lagToQ(bestRecAllLag);
       badge.innerHTML =
@@ -3689,8 +3679,6 @@ function buildCreditTab(){
         `Signal chain: Yield Curve (Recession Prob) → SLOOS Tightening → Credit Losses</span>` +
         `<br><span style="display:inline-block;margin-top:6px;background:#E8637A15;color:#C0392B;border:1px solid #C0392B33;border-radius:10px;padding:3px 10px;margin-right:8px">` +
         `Consumer Tightening ↔ Recession Prob: r=${bestConsR.toFixed(2)} · ${consDesc}</span>` +
-        `<span style="display:inline-block;margin-top:6px;background:#4A72E815;color:#1A56DB;border:1px solid #1A56DB33;border-radius:10px;padding:3px 10px">` +
-        `C&I Tightening ↔ Recession Prob: r=${bestCIR.toFixed(2)} · ${ciDesc}</span>` +
         `<br><span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px">` +
         `Recession Prob → Card DPD: r=${bestRecCardR.toFixed(2)} · leads by ~${recCardQ}Q</span>` +
         `<span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px">` +
