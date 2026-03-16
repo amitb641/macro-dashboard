@@ -227,6 +227,10 @@ def rebuild_charts(html, data):
                 initial.append(round(obs['value']))
                 cc_val = ccsa_by_date.get(obs['date'])
                 continued.append(round(cc_val) if cc_val is not None else None)
+        # Ensure last data point always has a visible label (latest week)
+        if labels and not labels[-1]:
+            d = datetime.datetime.strptime(icsa_sorted[-1]['date'], '%Y-%m-%d')
+            labels[-1] = d.strftime("%b'%y")
         if labels:
             html = _inject_const(html, 'CLAIMS_WEEKLY', {
                 'labels': labels, 'initial': initial, 'continued': continued})
