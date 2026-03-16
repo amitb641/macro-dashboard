@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>Consumer Analytics Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   CONSUMER ANALYTICS DASHBOARD — STUNNING VISUAL THEME
+   Dark glassmorphism · Animated trends · Pattern movement
+═══════════════════════════════════════════════════════════ */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg: #0a0e1a;
+  --bg2: #111827;
+  --bg3: #1e293b;
+  --surface: rgba(17,24,39,0.7);
+  --surface2: rgba(30,41,59,0.5);
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-border-hover: rgba(255,255,255,0.15);
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --accent: #3b82f6;
+  --accent2: #6366f1;
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,0.1);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.1);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.1);
+  --cyan: #06b6d4;
+  --purple: #8b5cf6;
+  --pink: #ec4899;
+  --glow-blue: 0 0 30px rgba(59,130,246,0.15);
+  --glow-green: 0 0 30px rgba(16,185,129,0.12);
+  --glow-red: 0 0 30px rgba(239,68,68,0.12);
+}
+
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #334155 transparent; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 20%, rgba(59,130,246,0.08), transparent),
+    radial-gradient(ellipse 600px 500px at 80% 80%, rgba(139,92,246,0.06), transparent),
+    radial-gradient(ellipse 400px 400px at 50% 50%, rgba(6,182,212,0.04), transparent);
+  animation: bgPulse 12s ease-in-out infinite alternate;
+}
+@keyframes bgPulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.05); }
+}
+
+/* ── GRID PATTERN OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black, transparent);
+}
+
+.main { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; padding: 32px 28px 60px; }
+
+/* ── HEADER ── */
+.header { margin-bottom: 36px; position: relative; }
+
+.header-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.2); border-radius: 20px;
+  padding: 4px 14px; margin-bottom: 14px;
+  animation: fadeSlideDown 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+.header-badge .pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%,100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+  50% { opacity: 0.7; transform: scale(1.3); box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+
+h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800; letter-spacing: -0.03em;
+  line-height: 1.1; margin-bottom: 8px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #94a3b8 50%, #f1f5f9 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 4s ease-in-out infinite, fadeSlideDown 0.7s 0.1s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes shimmerText {
+  0%   { background-position: 200% 200%; }
+  100% { background-position: -200% -200%; }
+}
+h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.subtitle {
+  font-size: 13px; color: var(--text3); font-weight: 400;
+  animation: fadeSlideDown 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── KPI STRIP ── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px; margin-bottom: 32px;
+}
+
+.kpi {
+  background: var(--surface);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px; padding: 20px;
+  position: relative; overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  opacity: 0; animation: cardReveal 0.6s cubic-bezier(0.16,1,0.3,1) both;
+}
+.kpi:nth-child(1) { animation-delay: 0.1s; }
+.kpi:nth-child(2) { animation-delay: 0.15s; }
+.kpi:nth-child(3) { animation-delay: 0.2s; }
+.kpi:nth-child(4) { animation-delay: 0.25s; }
+.kpi:nth-child(5) { animation-delay: 0.3s; }
+.kpi:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.kpi::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.kpi:hover::before { opacity: 1; }
+.kpi:hover {
+  border-color: var(--glass-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-blue);
+}
+
+.kpi-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text3); margin-bottom: 10px;
+}
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px; font-weight: 700; line-height: 1;
+  margin-bottom: 6px;
+}
+.kpi-delta {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 6px;
+}
+.kpi-delta.up { color: var(--green); background: var(--green-bg); }
+.kpi-delta.down { color: var(--red); background: var(--red-bg); }
+.kpi-delta.warn { color: var(--amber); background: var(--amber-bg); }
+
+.kpi-spark {
+  position: absolute; bottom: 0; right: 0;
+  width: 100px; height: 40px; opacity: 0.4;
+}
+
+/* ── TREND ARROWS ── */
+@keyframes bounceUp {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+.arrow-up { display: inline-block; animation: bounceUp 1.5s ease-in-out infinite; }
+.arrow-down { display: inline-block; animation: bounceDown 1.5s ease-in-out infinite; }
+
+/* ── SECTION HEADERS ── */
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin: 36px 0 18px; position: relative;
+}
+.section-header::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--glass-border), transparent);
+}
+.section-tag {
+  position: relative; z-index: 1;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--accent);
+  background: var(--bg); padding: 4px 14px;
+  border: 1px solid rgba(59,130,246,0.2); border-radius: 4px;
+}
+.section-title {
+  position: relative; z-index: 1;
+  font-size: 18px; font-weight: 700; color: var(--text);
+  background: var(--bg); padding-right: 16px;
+}
+
+/* ── PANELS (Glassmorphism) ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+.panel {
+  background: var(--surface);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px; padding: 24px;
+  position: relative; overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.panel:hover {
+  border-color: var(--glass-border-hover);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+}
+/* Animated corner accent */
+.panel::after {
+  content: '';
+  position: absolute; top: -1px; right: -1px;
+  width: 60px; height: 60px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.15), transparent 70%);
+  border-radius: 0 16px 0 40px;
+  opacity: 0; transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.panel:hover::after { opacity: 1; }
+
+.panel-title {
+  font-size: 14px; font-weight: 600; color: var(--text);
+  margin-bottom: 4px; display: flex; align-items: center; gap: 8px;
+}
+.panel-sub {
+  font-size: 11px; color: var(--text3); margin-bottom: 18px;
+}
+
+/* ── CHART CONTAINER ── */
+.chart-wrap {
+  position: relative; width: 100%;
+  border-radius: 12px; overflow: hidden;
+}
+.ch260 { height: 260px; }
+.ch300 { height: 300px; }
+.ch200 { height: 200px; }
+.ch180 { height: 180px; }
+
+.chart-wrap canvas {
+  display: block; width: 100% !important; height: 100% !important;
+  border-radius: 8px;
+}
+
+/* ── TREND FLOW WIDGET ── */
+.trend-flow {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface2); border-radius: 10px;
+  margin-top: 14px; overflow: hidden; position: relative;
+}
+.trend-flow::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 200%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.04), transparent);
+  animation: flowSweep 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes flowSweep {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(50%); }
+}
+.trend-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-right: 1px solid var(--glass-border);
+  white-space: nowrap; font-size: 11px;
+}
+.trend-item:last-child { border-right: none; }
+.trend-label { color: var(--text3); font-size: 10px; font-weight: 500; }
+.trend-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 12px; }
+
+/* ── PATTERN INDICATOR ── */
+.pattern-indicator {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 10px;
+  background: var(--surface2); margin-top: 12px;
+  font-size: 11px;
+}
+.pattern-dots {
+  display: flex; gap: 3px;
+}
+.pattern-dot {
+  width: 4px; height: 16px; border-radius: 2px;
+  animation: patternPulse 2s ease-in-out infinite;
+}
+@keyframes patternPulse {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+  50%      { transform: scaleY(1); opacity: 1; }
+}
+.pattern-dot:nth-child(1) { animation-delay: 0s; background: var(--accent); }
+.pattern-dot:nth-child(2) { animation-delay: 0.15s; background: var(--purple); }
+.pattern-dot:nth-child(3) { animation-delay: 0.3s; background: var(--cyan); }
+.pattern-dot:nth-child(4) { animation-delay: 0.45s; background: var(--green); }
+.pattern-dot:nth-child(5) { animation-delay: 0.6s; background: var(--accent); }
+.pattern-dot:nth-child(6) { animation-delay: 0.75s; background: var(--purple); }
+.pattern-dot:nth-child(7) { animation-delay: 0.9s; background: var(--pink); }
+
+/* ── TABLES ── */
+.dtable-wrap { overflow-x: auto; border-radius: 12px; }
+.dtable { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dtable th {
+  padding: 10px 14px; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text3); border-bottom: 1px solid var(--glass-border);
+  background: rgba(30,41,59,0.5); text-align: left;
+}
+.dtable th:not(:first-child) { text-align: right; }
+.dtable td {
+  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--text2); transition: all 0.2s ease;
+}
+.dtable td:first-child { color: var(--text); font-weight: 500; }
+.dtable td:not(:first-child) { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.dtable tbody tr { transition: all 0.2s ease; }
+.dtable tbody tr:hover {
+  background: rgba(59,130,246,0.05);
+  transform: scale(1.002);
+}
+.dtable tbody tr:hover td { color: var(--text); }
+
+/* ── HEATMAP CELL COLORS ── */
+.heat-high { color: var(--red) !important; background: var(--red-bg); }
+.heat-mid  { color: var(--amber) !important; background: var(--amber-bg); }
+.heat-low  { color: var(--green) !important; background: var(--green-bg); }
+
+/* ── STRESS GAUGE ── */
+.gauge-row { display: flex; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+.gauge {
+  flex: 1; min-width: 180px;
+  background: var(--surface); border: 1px solid var(--glass-border);
+  border-radius: 14px; padding: 18px; text-align: center;
+  transition: all 0.3s ease;
+}
+.gauge:hover { border-color: var(--glass-border-hover); box-shadow: var(--glow-blue); }
+.gauge-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+.gauge-bar-wrap { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-bottom: 8px; position: relative; }
+.gauge-bar {
+  height: 100%; border-radius: 4px;
+  transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+  position: relative;
+}
+.gauge-bar::after {
+  content: '';
+  position: absolute; top: 0; right: 0; width: 20px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+  border-radius: 0 4px 4px 0;
+  animation: gaugeShimmer 2s ease-in-out infinite;
+}
+@keyframes gaugeShimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+.gauge-val { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; }
+.gauge-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+/* ── INSIGHT CARDS ── */
+.insight-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.insight {
+  background: var(--surface); border: 1px solid var(--glass-border);
+  border-radius: 14px; padding: 18px;
+  border-left: 3px solid var(--accent);
+  transition: all 0.3s ease;
+}
+.insight:hover { border-color: var(--glass-border-hover); transform: translateY(-2px); box-shadow: var(--glow-blue); }
+.insight-icon { font-size: 20px; margin-bottom: 8px; }
+.insight-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.insight-body { font-size: 11px; color: var(--text2); line-height: 1.6; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 40px; padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+  font-size: 10px; color: var(--text3); line-height: 1.6;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .main { padding: 20px 16px 40px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .kpi-strip { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  .gauge-row { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .main { padding: 14px 10px 30px; }
+  .kpi-strip { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi { padding: 14px; }
+  .kpi-value { font-size: 22px; }
+  h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="main">
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-badge"><span class="pulse"></span> LIVE DATA</div>
+  <h1><em>Consumer</em> Analytics Dashboard</h1>
+  <p class="subtitle">Spending health, debt stress, inflation impact, and consumer behavior patterns — Real-time signals from BEA, BLS, NY Fed, and FRED</p>
+</div>
+
+<!-- ── TREND FLOW BAR ── -->
+<div class="trend-flow reveal">
+  <div class="pattern-dots">
+    <div class="pattern-dot"></div><div class="pattern-dot"></div><div class="pattern-dot"></div>
+    <div class="pattern-dot"></div><div class="pattern-dot"></div><div class="pattern-dot"></div>
+    <div class="pattern-dot"></div>
+  </div>
+  <div class="trend-item"><span class="trend-label">Core PCE</span><span class="trend-val" style="color:var(--amber)">3.06%</span></div>
+  <div class="trend-item"><span class="trend-label">CPI YoY</span><span class="trend-val" style="color:var(--green)">2.66%</span></div>
+  <div class="trend-item"><span class="trend-label">Save Rate</span><span class="trend-val" style="color:var(--red)">4.5%</span></div>
+  <div class="trend-item"><span class="trend-label">Card Delinq</span><span class="trend-val" style="color:var(--red)">2.94%</span></div>
+  <div class="trend-item"><span class="trend-label">Wages YoY</span><span class="trend-val" style="color:var(--green)">3.69%</span></div>
+  <div class="trend-item"><span class="trend-label">Unemp</span><span class="trend-val">4.4%</span></div>
+</div>
+
+<!-- ── KPI STRIP ── -->
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-label">Core PCE Inflation</div>
+    <div class="kpi-value" style="color:var(--amber)">3.06%</div>
+    <div class="kpi-delta warn"><span class="arrow-up">&#9650;</span> Above 2% target for 48mo</div>
+    <canvas class="kpi-spark" id="spark-pce"></canvas>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Personal Saving Rate</div>
+    <div class="kpi-value" style="color:var(--red)">4.5%</div>
+    <div class="kpi-delta down"><span class="arrow-down">&#9660;</span> Below 7-8% pre-pandemic norm</div>
+    <canvas class="kpi-spark" id="spark-save"></canvas>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Card Delinquency 90+</div>
+    <div class="kpi-value" style="color:var(--red)">2.94%</div>
+    <div class="kpi-delta down"><span class="arrow-up">&#9650;</span> Rising from 1.7% in 2022</div>
+    <canvas class="kpi-spark" id="spark-delinq"></canvas>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Wage Growth (Nom.)</div>
+    <div class="kpi-value" style="color:var(--green)">3.69%</div>
+    <div class="kpi-delta up"><span class="arrow-up">&#9650;</span> Real wages positive</div>
+    <canvas class="kpi-spark" id="spark-wages"></canvas>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">CPI Inflation YoY</div>
+    <div class="kpi-value" style="color:var(--cyan)">2.66%</div>
+    <div class="kpi-delta up"><span class="arrow-down">&#9660;</span> Down from 9.1% Jun '22 peak</div>
+    <canvas class="kpi-spark" id="spark-cpi"></canvas>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">30Y Mortgage Rate</div>
+    <div class="kpi-value">6.11%</div>
+    <div class="kpi-delta warn"><span>&#8212;</span> Lock-in effect persists</div>
+    <canvas class="kpi-spark" id="spark-mtg"></canvas>
+  </div>
+</div>
+
+<!-- ══ CONSUMER STRESS GAUGES ══ -->
+<div class="section-header reveal">
+  <span class="section-tag">STRESS SIGNALS</span>
+</div>
+
+<div class="gauge-row reveal">
+  <div class="gauge">
+    <div class="gauge-label">Overall Consumer Stress</div>
+    <div class="gauge-bar-wrap"><div class="gauge-bar" id="g-overall" style="width:0%;background:linear-gradient(90deg,var(--green),var(--amber))"></div></div>
+    <div class="gauge-val" style="color:var(--amber)">MODERATE</div>
+    <div class="gauge-sub">Bifurcated: top 40% healthy, bottom 40% stressed</div>
+  </div>
+  <div class="gauge">
+    <div class="gauge-label">Credit Card Stress</div>
+    <div class="gauge-bar-wrap"><div class="gauge-bar" id="g-card" style="width:0%;background:linear-gradient(90deg,var(--amber),var(--red))"></div></div>
+    <div class="gauge-val" style="color:var(--red)">ELEVATED</div>
+    <div class="gauge-sub">90+ DPD at 11.3% — highest since 2010</div>
+  </div>
+  <div class="gauge">
+    <div class="gauge-label">Savings Buffer</div>
+    <div class="gauge-bar-wrap"><div class="gauge-bar" id="g-save" style="width:0%;background:linear-gradient(90deg,var(--red),var(--amber))"></div></div>
+    <div class="gauge-val" style="color:var(--amber)">THIN</div>
+    <div class="gauge-sub">Excess pandemic savings exhausted for bottom quintiles</div>
+  </div>
+  <div class="gauge">
+    <div class="gauge-label">Mortgage Affordability</div>
+    <div class="gauge-bar-wrap"><div class="gauge-bar" id="g-afford" style="width:0%;background:linear-gradient(90deg,var(--red),var(--red))"></div></div>
+    <div class="gauge-val" style="color:var(--red)">SEVERE</div>
+    <div class="gauge-sub">43% of income needed for median home — historic worst</div>
+  </div>
+</div>
+
+<!-- ══ INFLATION CHARTS ══ -->
+<div class="section-header reveal">
+  <span class="section-tag">INFLATION</span>
+  <span class="section-title">Price Pressure on Consumers</span>
+</div>
+
+<div class="grid-2 reveal">
+  <div class="panel">
+    <div class="panel-title">PCE Price Index — Headline vs Core</div>
+    <div class="panel-sub">Fed's preferred inflation gauge — annual YoY % — 2% target line</div>
+    <div class="chart-wrap ch260"><canvas id="c-pce"></canvas></div>
+    <div class="pattern-indicator">
+      <div class="pattern-dots">
+        <div class="pattern-dot"></div><div class="pattern-dot"></div><div class="pattern-dot"></div>
+        <div class="pattern-dot"></div><div class="pattern-dot"></div>
+      </div>
+      <span style="color:var(--text3)">Pattern: Disinflation stalling above target — Core PCE stuck 2.6-3.1%</span>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">CPI by Category — Where Inflation Hits Consumers</div>
+    <div class="panel-sub">Dec-to-Dec YoY % — Shelter & Insurance driving core stickiness</div>
+    <div class="chart-wrap ch260"><canvas id="c-cpi-cat"></canvas></div>
+    <div class="pattern-indicator">
+      <div class="pattern-dots">
+        <div class="pattern-dot"></div><div class="pattern-dot"></div><div class="pattern-dot"></div>
+        <div class="pattern-dot"></div><div class="pattern-dot"></div>
+      </div>
+      <span style="color:var(--text3)">Pattern: Services inflation sticky, goods deflating — bifurcated pressure</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SPENDING & SAVINGS ══ -->
+<div class="section-header reveal">
+  <span class="section-tag">SPENDING</span>
+  <span class="section-title">Consumer Spending & Savings Health</span>
+</div>
+
+<div class="grid-2 reveal">
+  <div class="panel">
+    <div class="panel-title">Personal Saving Rate — Monthly</div>
+    <div class="panel-sub">% of disposable income — Pre-pandemic norm: 7-9%</div>
+    <div class="chart-wrap ch260"><canvas id="c-saving"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Real Consumer Spending Growth</div>
+    <div class="panel-sub">Inflation-adjusted PCE by category — 2023 vs 2024 vs 2025</div>
+    <div class="chart-wrap ch260"><canvas id="c-spend"></canvas></div>
+  </div>
+</div>
+
+<!-- ══ DEBT & DELINQUENCIES ══ -->
+<div class="section-header reveal">
+  <span class="section-tag">DEBT</span>
+  <span class="section-title">Household Debt & Credit Stress</span>
+</div>
+
+<div class="grid-2 reveal">
+  <div class="panel">
+    <div class="panel-title">Delinquency Rates by Loan Type</div>
+    <div class="panel-sub">Credit card, mortgage, auto — quarterly · Federal Reserve / NY Fed</div>
+    <div class="chart-wrap ch260"><canvas id="c-delinq"></canvas></div>
+    <div class="pattern-indicator">
+      <div class="pattern-dots">
+        <div class="pattern-dot"></div><div class="pattern-dot"></div><div class="pattern-dot"></div>
+        <div class="pattern-dot"></div><div class="pattern-dot"></div>
+      </div>
+      <span style="color:var(--text3)">Trend: Card delinquencies accelerating; mortgage stable due to lock-in rates</span>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Consumer Debt Composition</div>
+    <div class="panel-sub">Revolving (card) vs Non-revolving (auto/student) — $B · Fed Reserve</div>
+    <div class="chart-wrap ch260"><canvas id="c-debt"></canvas></div>
+  </div>
+</div>
+
+<!-- ══ CONSUMER HEALTH TABLE ══ -->
+<div class="section-header reveal">
+  <span class="section-tag">DASHBOARD</span>
+  <span class="section-title">Consumer Health Scorecard</span>
+</div>
+
+<div class="panel reveal">
+  <div class="panel-title">Consumer Health Metrics — Annual Snapshot</div>
+  <div class="panel-sub">BEA, NY Fed, Federal Reserve Board — 2021-2025</div>
+  <div class="dtable-wrap">
+    <table class="dtable" id="health-tbl">
+      <thead><tr>
+        <th>Metric</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>Trend</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Core PCE YoY %</td><td>4.9</td><td>5.2</td><td>3.5</td><td>2.8</td><td class="heat-mid">2.6</td><td><span style="color:var(--green)">&#9660; Disinflating</span></td></tr>
+        <tr><td>CPI YoY % (Dec)</td><td>7.0</td><td>6.5</td><td>3.4</td><td>2.9</td><td class="heat-low">2.7</td><td><span style="color:var(--green)">&#9660; Approaching target</span></td></tr>
+        <tr><td>Personal Saving Rate %</td><td>11.8</td><td>3.3</td><td>5.2</td><td>4.7</td><td class="heat-mid">4.1</td><td><span style="color:var(--red)">&#9660; Below norm</span></td></tr>
+        <tr><td>Household Debt $T</td><td>15.6</td><td>16.5</td><td>17.1</td><td>17.7</td><td class="heat-mid">18.0</td><td><span style="color:var(--amber)">&#9650; Growing</span></td></tr>
+        <tr><td>Card Delinq 90+ DPD %</td><td>1.6</td><td>1.7</td><td>2.1</td><td>2.6</td><td class="heat-high">2.94</td><td><span style="color:var(--red)">&#9650; Accelerating</span></td></tr>
+        <tr><td>Auto Delinq 90+ DPD %</td><td>1.3</td><td>1.6</td><td>2.0</td><td>2.3</td><td class="heat-mid">2.2</td><td><span style="color:var(--amber)">&#8212; Plateauing</span></td></tr>
+        <tr><td>Mortgage Delinq %</td><td>2.1</td><td>1.8</td><td>1.7</td><td>1.8</td><td class="heat-low">1.78</td><td><span style="color:var(--green)">&#8212; Stable</span></td></tr>
+        <tr><td>Wage Growth Nom. %</td><td>4.7</td><td>5.9</td><td>4.3</td><td>3.9</td><td class="heat-low">3.3</td><td><span style="color:var(--green)">&#9660; Normalizing</span></td></tr>
+        <tr><td>Real Wage Growth %</td><td>-2.3</td><td>-0.6</td><td>0.9</td><td>1.0</td><td class="heat-low">0.7</td><td><span style="color:var(--green)">&#9650; Positive</span></td></tr>
+        <tr><td>Unemployment U-3 %</td><td>5.4</td><td>3.6</td><td>3.6</td><td>4.0</td><td>4.3</td><td><span style="color:var(--amber)">&#9650; Softening</span></td></tr>
+        <tr><td>Consumer Sentiment (UMich)</td><td>76.5</td><td>59.5</td><td>69.7</td><td>65.8</td><td class="heat-mid">57.6</td><td><span style="color:var(--red)">&#9660; Pessimistic</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ INSIGHTS ══ -->
+<div class="section-header reveal">
+  <span class="section-tag">INSIGHTS</span>
+  <span class="section-title">Key Consumer Patterns</span>
+</div>
+
+<div class="insight-grid reveal">
+  <div class="insight" style="border-left-color:var(--red)">
+    <div class="insight-icon">&#x1F4B3;</div>
+    <div class="insight-title">Credit Card Stress Accelerating</div>
+    <div class="insight-body">Card 90+ DPD at 2.94% — highest since 2010 recovery. Subprime segment at 11.3%. Bottom-two income quintiles exhausted pandemic savings by mid-2024. Revolving debt hit $1.3T.</div>
+  </div>
+  <div class="insight" style="border-left-color:var(--amber)">
+    <div class="insight-icon">&#x1F3E0;</div>
+    <div class="insight-title">Housing Affordability at Historic Worst</div>
+    <div class="insight-body">Median household needs 43% of gross income for median home at 6.11% rates. Lock-in effect: 65% of mortgages below 4%. Existing sales at 30-year low. New builds filling gap with rate buy-downs.</div>
+  </div>
+  <div class="insight" style="border-left-color:var(--green)">
+    <div class="insight-icon">&#x1F4B0;</div>
+    <div class="insight-title">Real Wages Finally Positive</div>
+    <div class="insight-body">Nominal AHE +3.3% YoY with CPI at 2.7% = real wage growth of +0.7% annualized. First sustained positive real wages since 2020. Supports consumption but below +1.5% of the 2010s expansion.</div>
+  </div>
+  <div class="insight" style="border-left-color:var(--purple)">
+    <div class="insight-icon">&#x1F4CA;</div>
+    <div class="insight-title">Consumer Bifurcation Deepening</div>
+    <div class="insight-body">Top 40% (asset owners, equity beneficiaries) spending robustly. Bottom 40% cutting discretionary. Luxury and value retail outperform; mid-market squeezed. Two-speed consumer economy.</div>
+  </div>
+  <div class="insight" style="border-left-color:var(--cyan)">
+    <div class="insight-icon">&#x26FD;</div>
+    <div class="insight-title">Oil Shock Threatens Budgets</div>
+    <div class="insight-body">WTI at $94.65 (Mar 2026 Hormuz crisis). A $10/bbl rise adds ~$0.25/gal at pumps. Bottom quintile spends 8-10% of income on gas vs 2-3% for top quintile — regressive inflation pressure.</div>
+  </div>
+  <div class="insight" style="border-left-color:var(--amber)">
+    <div class="insight-icon">&#x1F4C9;</div>
+    <div class="insight-title">Savings Buffer Critically Thin</div>
+    <div class="insight-body">Personal saving rate 4.5% vs 7-8% pre-pandemic norm. Excess pandemic savings ($2.1T peak) fully depleted. Any employment shock hits consumers with minimal runway.</div>
+  </div>
+</div>
+
+<div class="footer">
+  Sources: BEA Personal Income & Outlays Dec 2025 (Feb 20, 2026); NY Fed Household Debt & Credit Q3 2025; Federal Reserve Financial Stability Report Nov 2025; BLS CPI Jan 2026; BLS CES Wage Data; FRED Series: PSAVERT, DRCCLACBS, DRSFRMACBS, REVOLSL, NONREVSL, CPIAUCSL, PCEPILFE. Dashboard current as of March 2026.
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ANIMATED CANVAS CHART ENGINE — Consumer Dashboard
+// ═══════════════════════════════════════════════════════════════
+(function(){
+"use strict";
+
+function drawAnimatedLine(canvasId, labels, datasets, opts = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const parent = canvas.parentElement;
+
+  function sz() {
+    canvas.width = parent.offsetWidth || 400;
+    canvas.height = parent.offsetHeight || 260;
+    return { W: canvas.width, H: canvas.height };
+  }
+
+  const pad = { t: 30, r: 14, b: 36, l: 52 };
+  const dur = 900;
+
+  function render(progress) {
+    const { W, H } = sz();
+    const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+    ctx.clearRect(0, 0, W, H);
+
+    // Compute range
+    let allV = datasets.flatMap(d => d.data.filter(v => v != null && isFinite(v)));
+    if (opts.min != null) allV.push(opts.min);
+    if (opts.max != null) allV.push(opts.max);
+    let mn = Math.min(...allV), mx = Math.max(...allV);
+    if (mn === mx) { mn -= 1; mx += 1; }
+    const range = mx - mn;
+    mn -= range * 0.05; mx += range * 0.05;
+
+    // Grid
+    const ticks = 5;
+    const step = (mx - mn) / ticks;
+    ctx.font = "10px 'JetBrains Mono', monospace";
+    for (let i = 0; i <= ticks; i++) {
+      const v = mn + step * i;
+      const y = pad.t + ih * (1 - (v - mn) / (mx - mn));
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + iw, y); ctx.stroke();
+      ctx.fillStyle = '#64748b';
+      ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(1), pad.l - 6, y + 3);
+    }
+
+    // X labels
+    ctx.fillStyle = '#64748b'; ctx.textAlign = 'center';
+    const maxLbl = Math.floor(iw / 40);
+    const lblStep = Math.max(1, Math.ceil(labels.length / maxLbl));
+    labels.forEach((l, i) => {
+      if (i % lblStep !== 0 && i !== labels.length - 1) return;
+      const x = pad.l + iw * (labels.length === 1 ? 0.5 : i / (labels.length - 1));
+      ctx.fillText(l, x, pad.t + ih + 16);
+    });
+
+    // Target line
+    if (opts.targetLine != null) {
+      const ty = pad.t + ih * (1 - (opts.targetLine - mn) / (mx - mn));
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = 'rgba(239,68,68,0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad.l, ty); ctx.lineTo(pad.l + iw, ty); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(239,68,68,0.6)';
+      ctx.textAlign = 'left';
+      ctx.fillText(opts.targetLabel || opts.targetLine + '%', pad.l + iw + 3, ty + 3);
+    }
+
+    // Datasets
+    datasets.forEach(ds => {
+      const pts = ds.data.map((v, i) => {
+        if (v == null || !isFinite(v)) return null;
+        const baseY = pad.t + ih;
+        const targetY = pad.t + ih * (1 - (v - mn) / (mx - mn));
+        return {
+          x: pad.l + iw * (labels.length === 1 ? 0.5 : i / (labels.length - 1)),
+          y: baseY + (targetY - baseY) * progress
+        };
+      });
+
+      // Fill
+      if (ds.fill) {
+        const vp = pts.filter(p => p);
+        if (vp.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(vp[0].x, pad.t + ih);
+          vp.forEach(p => ctx.lineTo(p.x, p.y));
+          ctx.lineTo(vp[vp.length - 1].x, pad.t + ih);
+          ctx.closePath();
+          ctx.fillStyle = ds.fillColor || 'rgba(59,130,246,0.08)';
+          ctx.globalAlpha = progress;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
+      // Line
+      ctx.beginPath();
+      ctx.strokeStyle = ds.color || '#3b82f6';
+      ctx.lineWidth = ds.width || 2;
+      if (ds.dash) ctx.setLineDash(ds.dash);
+      let started = false;
+      pts.forEach(p => {
+        if (!p) { started = false; return; }
+        if (!started) { ctx.moveTo(p.x, p.y); started = true; }
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Points
+      if (progress > 0.8) {
+        const ptAlpha = (progress - 0.8) / 0.2;
+        pts.forEach((p, i) => {
+          if (!p) return;
+          // Show first, last, max, min
+          const vals = ds.data.filter(v => v != null);
+          const isKey = i === 0 || i === ds.data.length - 1 || ds.data[i] === Math.max(...vals) || ds.data[i] === Math.min(...vals);
+          if (!isKey && pts.length > 10) return;
+          ctx.globalAlpha = ptAlpha;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = ds.color || '#3b82f6';
+          ctx.fill();
+          // Glow
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+          ctx.fillStyle = (ds.color || '#3b82f6') + '20';
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+      }
+
+      // Data labels on last point
+      if (progress > 0.9) {
+        const lastPt = [...pts].reverse().find(p => p);
+        const lastVal = [...ds.data].reverse().find(v => v != null);
+        if (lastPt && lastVal != null) {
+          ctx.globalAlpha = (progress - 0.9) / 0.1;
+          ctx.font = "bold 10px 'JetBrains Mono', monospace";
+          ctx.fillStyle = ds.color || '#3b82f6';
+          ctx.textAlign = 'left';
+          ctx.fillText(lastVal.toFixed(1), lastPt.x + 6, lastPt.y - 4);
+          ctx.globalAlpha = 1;
+        }
+      }
+    });
+
+    // Legend
+    ctx.font = "10px 'Inter', sans-serif";
+    let lx = pad.l;
+    datasets.forEach(ds => {
+      if (!ds.label) return;
+      ctx.fillStyle = ds.color || '#3b82f6';
+      ctx.fillRect(lx, 8, 14, 3);
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'left';
+      ctx.fillText(ds.label, lx + 18, 13);
+      lx += ctx.measureText(ds.label).width + 36;
+    });
+  }
+
+  // Animate
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      obs.unobserve(canvas);
+      const start = performance.now();
+      const ease = t => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2) / 2;
+      (function step(now) {
+        const p = Math.min((now - start) / dur, 1);
+        render(ease(p));
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  }, { threshold: 0.15 });
+  obs.observe(canvas);
+}
+
+function drawAnimatedBar(canvasId, labels, datasets, opts = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const parent = canvas.parentElement;
+  const dur = 800;
+
+  function sz() {
+    canvas.width = parent.offsetWidth || 400;
+    canvas.height = parent.offsetHeight || 260;
+    return { W: canvas.width, H: canvas.height };
+  }
+
+  const pad = opts.horizontal ? { t: 24, r: 50, b: 36, l: 140 } : { t: 24, r: 14, b: 36, l: 52 };
+
+  function render(progress) {
+    const { W, H } = sz();
+    const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+    ctx.clearRect(0, 0, W, H);
+
+    let allV = datasets.flatMap(d => d.data.filter(v => v != null && isFinite(v)));
+    if (!allV.length) allV = [0, 1];
+    let mn = Math.min(0, ...allV), mx = Math.max(0, ...allV);
+    if (mn === mx) { mn -= 1; mx += 1; }
+
+    if (opts.horizontal) {
+      // Horizontal bars
+      const nG = labels.length, gH = ih / Math.max(nG, 1), gap = gH * 0.15;
+      const nB = datasets.length, bH = (gH - gap * 2) / Math.max(nB, 1);
+      const toX = v => pad.l + iw * ((v - mn) / (mx - mn)), zX = toX(0);
+
+      // Grid
+      const ticks = 5, step = (mx - mn) / ticks;
+      for (let i = 0; i <= ticks; i++) {
+        const v = mn + step * i;
+        const x = toX(v);
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + ih); ctx.stroke();
+        ctx.fillStyle = '#64748b'; ctx.font = "10px 'JetBrains Mono',monospace"; ctx.textAlign = 'center';
+        ctx.fillText(v.toFixed(1), x, pad.t + ih + 14);
+      }
+
+      // Bars
+      labels.forEach((lb, gi) => {
+        ctx.fillStyle = '#94a3b8'; ctx.font = "11px 'Inter',sans-serif"; ctx.textAlign = 'right';
+        const cy = pad.t + gH * gi + gH / 2;
+        ctx.fillText(lb.length > 20 ? lb.slice(0, 18) + '...' : lb, pad.l - 8, cy + 4);
+        datasets.forEach((ds, di) => {
+          const v = ds.data[gi]; if (v == null) return;
+          const col = Array.isArray(ds.colors) ? ds.colors[gi] : (ds.color || '#3b82f6');
+          const y = pad.t + gH * gi + gap + bH * di;
+          const fullW = Math.abs(toX(v) - zX), w = fullW * progress;
+          const x = v >= 0 ? zX : zX - w;
+          ctx.fillStyle = col;
+          ctx.beginPath();
+          ctx.roundRect(x, y, Math.max(w, 1), bH, 4);
+          ctx.fill();
+          // Value label
+          if (progress > 0.8) {
+            ctx.globalAlpha = (progress - 0.8) / 0.2;
+            ctx.fillStyle = '#e2e8f0';
+            ctx.font = "bold 10px 'JetBrains Mono',monospace";
+            ctx.textAlign = v >= 0 ? 'left' : 'right';
+            ctx.fillText(v.toFixed(1), v >= 0 ? zX + w + 4 : zX - w - 4, y + bH / 2 + 4);
+            ctx.globalAlpha = 1;
+          }
+        });
+      });
+    } else {
+      // Vertical bars
+      const nG = labels.length, gW = iw / Math.max(nG, 1), gap = gW * 0.12;
+      const nB = datasets.length, bW = (gW - gap * 2) / Math.max(nB, 1);
+      const toY = v => pad.t + ih * (1 - (v - mn) / (mx - mn)), zY = toY(0);
+
+      // Grid
+      const ticks = 5, step = (mx - mn) / ticks;
+      for (let i = 0; i <= ticks; i++) {
+        const v = mn + step * i;
+        const y = toY(v);
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + iw, y); ctx.stroke();
+        ctx.fillStyle = '#64748b'; ctx.font = "10px 'JetBrains Mono',monospace"; ctx.textAlign = 'right';
+        ctx.fillText(v.toFixed(1), pad.l - 6, y + 3);
+      }
+
+      // X labels
+      ctx.fillStyle = '#64748b'; ctx.textAlign = 'center'; ctx.font = "10px 'JetBrains Mono',monospace";
+      labels.forEach((l, i) => {
+        ctx.fillText(l, pad.l + gW * i + gW / 2, pad.t + ih + 16);
+      });
+
+      // Bars
+      datasets.forEach((ds, di) => {
+        ds.data.forEach((v, gi) => {
+          if (v == null || !isFinite(v)) return;
+          const col = Array.isArray(ds.colors) ? ds.colors[gi] : (ds.color || '#3b82f6');
+          const cx = pad.l + gW * gi + gap + bW * di + bW / 2;
+          const fullH = Math.abs(toY(v) - zY), h = fullH * progress;
+          const y = v >= 0 ? zY - h : zY;
+          ctx.fillStyle = col;
+          ctx.beginPath();
+          ctx.roundRect(cx - bW / 2, y, bW, Math.max(h, 1), [4, 4, 0, 0]);
+          ctx.fill();
+        });
+      });
+
+      // Legend
+      ctx.font = "10px 'Inter',sans-serif";
+      let lx = pad.l;
+      datasets.forEach(ds => {
+        if (!ds.label) return;
+        ctx.fillStyle = ds.color || '#3b82f6';
+        ctx.fillRect(lx, 6, 12, 3);
+        ctx.fillStyle = '#94a3b8'; ctx.textAlign = 'left';
+        ctx.fillText(ds.label, lx + 16, 11);
+        lx += ctx.measureText(ds.label).width + 30;
+      });
+    }
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      obs.unobserve(canvas);
+      const start = performance.now();
+      const ease = t => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2) / 2;
+      (function step(now) {
+        const p = Math.min((now - start) / dur, 1);
+        render(ease(p));
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  }, { threshold: 0.15 });
+  obs.observe(canvas);
+}
+
+// ── SPARKLINE RENDERER ──
+function drawSparkline(canvasId, data, color) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = 100; canvas.height = 40;
+  const mn = Math.min(...data), mx = Math.max(...data);
+  const rng = mx - mn || 1;
+  const dur = 600;
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      obs.unobserve(canvas);
+      const start = performance.now();
+      (function step(now) {
+        const p = Math.min((now - start) / dur, 1);
+        const n = Math.floor(data.length * p);
+        ctx.clearRect(0, 0, 100, 40);
+        ctx.beginPath();
+        ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+        for (let i = 0; i <= n; i++) {
+          const x = (i / (data.length - 1)) * 100;
+          const y = 38 - ((data[i] - mn) / rng) * 34;
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        // Gradient fill
+        if (n > 0) {
+          ctx.lineTo((n / (data.length - 1)) * 100, 40);
+          ctx.lineTo(0, 40);
+          ctx.closePath();
+          ctx.fillStyle = color.replace(')', ',0.08)').replace('rgb', 'rgba');
+          ctx.fill();
+        }
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  }, { threshold: 0.3 });
+  obs.observe(canvas);
+}
+
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER ALL CHARTS
+// ═══════════════════════════════════════════════════════════════
+
+// PCE Chart
+drawAnimatedLine('c-pce',
+  ['2018','2019','2020','2021','2022','2023','2024','2025'],
+  [
+    { label: 'Headline PCE', data: [2.0, 1.5, 1.3, 5.8, 6.3, 2.6, 2.5, 2.5], color: '#3b82f6', width: 2.5, fill: true, fillColor: 'rgba(59,130,246,0.06)' },
+    { label: 'Core PCE', data: [1.9, 1.7, 1.4, 4.9, 5.2, 3.5, 2.8, 2.6], color: '#8b5cf6', width: 2.5, fill: true, fillColor: 'rgba(139,92,246,0.05)' },
+  ],
+  { targetLine: 2.0, targetLabel: '2% Target' }
+);
+
+// CPI by Category
+drawAnimatedBar('c-cpi-cat',
+  ['Shelter', 'Auto Insurance', 'Food Away', 'Medical', 'Apparel', 'Used Cars', 'Energy'],
+  [
+    { label: '2025', data: [4.8, 14.0, 3.2, 2.8, 0.2, -3.5, -0.8], color: '#3b82f6',
+      colors: ['#ef4444','#ef4444','#f59e0b','#f59e0b','#64748b','#10b981','#10b981'] },
+  ]
+);
+
+// Saving Rate
+drawAnimatedLine('c-saving',
+  ['2018','2019','2020','2021','2022','2023','2024','2025'],
+  [
+    { label: 'Saving Rate', data: [7.6, 7.5, 16.8, 11.8, 3.3, 5.2, 4.7, 4.1], color: '#06b6d4', width: 2.5, fill: true, fillColor: 'rgba(6,182,212,0.07)' },
+  ],
+  { targetLine: 7.5, targetLabel: 'Pre-COVID Norm' }
+);
+
+// Real Spending by Category
+drawAnimatedBar('c-spend',
+  ['Durable Goods', 'Nondurable Goods', 'Services', 'Healthcare', 'Recreation'],
+  [
+    { label: '2023', data: [4.2, 0.8, 2.2, 3.1, 2.5], color: '#64748b' },
+    { label: '2024', data: [2.8, 1.2, 2.5, 2.8, 3.0], color: '#6366f1' },
+    { label: '2025', data: [1.5, 0.5, 2.8, 3.2, 2.1], color: '#3b82f6' },
+  ]
+);
+
+// Delinquency Rates
+drawAnimatedLine('c-delinq',
+  ['2019','2020','2021','2022','2023','2024','2025'],
+  [
+    { label: 'Credit Card', data: [2.3, 2.0, 1.6, 1.7, 2.1, 2.6, 2.94], color: '#ef4444', width: 2.5, fill: true, fillColor: 'rgba(239,68,68,0.06)' },
+    { label: 'Auto Loan', data: [2.0, 1.8, 1.3, 1.6, 2.0, 2.3, 2.2], color: '#f59e0b', width: 2 },
+    { label: 'Mortgage', data: [1.9, 2.1, 2.1, 1.8, 1.7, 1.8, 1.78], color: '#10b981', width: 2 },
+  ]
+);
+
+// Debt Composition
+drawAnimatedBar('c-debt',
+  ['2020','2021','2022','2023','2024','2025'],
+  [
+    { label: 'Revolving ($B)', data: [974, 996, 1060, 1130, 1210, 1307], color: '#ef4444' },
+    { label: 'Non-Revolving ($B)', data: [3150, 3250, 3400, 3530, 3640, 3736], color: '#3b82f6' },
+  ]
+);
+
+// KPI Sparklines
+drawSparkline('spark-pce', [1.9, 1.7, 1.4, 4.9, 5.2, 3.5, 2.8, 2.6, 3.06], 'rgb(245,158,11)');
+drawSparkline('spark-save', [7.6, 7.5, 16.8, 11.8, 3.3, 5.2, 4.7, 4.1, 4.5], 'rgb(239,68,68)');
+drawSparkline('spark-delinq', [2.3, 2.0, 1.6, 1.7, 2.1, 2.6, 2.94], 'rgb(239,68,68)');
+drawSparkline('spark-wages', [3.0, 3.3, 3.5, 4.7, 5.9, 4.3, 3.9, 3.3, 3.69], 'rgb(16,185,129)');
+drawSparkline('spark-cpi', [2.4, 1.8, 1.2, 7.0, 6.5, 3.4, 2.9, 2.7, 2.66], 'rgb(6,182,212)');
+drawSparkline('spark-mtg', [4.5, 3.9, 3.1, 2.9, 5.3, 6.8, 6.7, 6.5, 6.11], 'rgb(148,163,184)');
+
+
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// SCROLL REVEAL + GAUGE ANIMATION
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const revObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('visible');
+      revObs.unobserve(entry.target);
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  revealEls.forEach(el => revObs.observe(el));
+
+  // Gauge animation
+  const gauges = [
+    { id: 'g-overall', target: 55 },
+    { id: 'g-card', target: 72 },
+    { id: 'g-save', target: 38 },
+    { id: 'g-afford', target: 86 },
+  ];
+  const gaugeObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const g = gauges.find(g => g.id === el.id);
+      if (g) setTimeout(() => { el.style.width = g.target + '%'; }, 200);
+      gaugeObs.unobserve(el);
+    });
+  }, { threshold: 0.3 });
+  gauges.forEach(g => {
+    const el = document.getElementById(g.id);
+    if (el) gaugeObs.observe(el);
+  });
+
+  // Animated number counter for KPI values
+  document.querySelectorAll('.kpi-value').forEach(el => {
+    const numObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        numObs.unobserve(el);
+        const text = el.textContent.trim();
+        const num = parseFloat(text.replace(/[^0-9.\-]/g, ''));
+        if (isNaN(num)) return;
+        const suffix = text.replace(/[0-9.\-]/g, '');
+        const decimals = (text.split('.')[1] || '').replace(/[^0-9]/g, '').length;
+        const dur = 900, start = performance.now();
+        const ease = t => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2;
+        (function step(now) {
+          const p = Math.min((now - start) / dur, 1);
+          el.textContent = (num * ease(p)).toFixed(decimals) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        })(performance.now());
+      });
+    }, { threshold: 0.5 });
+    numObs.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
