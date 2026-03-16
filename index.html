@@ -2421,14 +2421,7 @@ function buildUnempTab(){
     const clLabels = CLAIMS_WEEKLY.labels;
     const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);
     const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
-    // Ensure the last label is always visible (show latest week)
-    if(clLabels.length>0){
-      const lastIdx=clLabels.length-1;
-      if(!clLabels[lastIdx]){
-        // Find most recent non-empty label and use its date pattern to derive last week
-        for(let i=lastIdx;i>=0;i--){if(clLabels[i]){clLabels[lastIdx]=clLabels[i];break;}}
-      }
-    }
+    // The renderer always sets the last label to the latest week's date (e.g. "8 Mar'26")
     new Chart(document.getElementById("c-claims-line").getContext("2d"),{
       type:"line",
       data:{labels:clLabels,datasets:[
@@ -4812,8 +4805,8 @@ if(document.readyState === 'loading'){
       <tbody>
         <tr><td><strong>🔭 Outlook</strong></td><td>2026 macro scenarios, recession probabilities, institutional forecasts, risk factors</td><td>GDP growth range, recession prob, Fed path, key risks</td><td>GS · JPM · Deloitte · EY · RSM · MS</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
-        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, weekly initial &amp; continued jobless claims, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, weekly claims, annual avg</td><td>BLS CES · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates</td><td>U-3 rate, U-6 rate, sector unemployment YoY</td><td>BLS Current Population Survey (CPS)</td><td>Feb 2026</td></tr>
+        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS CES</td><td>Mar 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates, weekly initial &amp; continued jobless claims</td><td>U-3 rate, U-6 rate, sector unemployment YoY, weekly claims</td><td>BLS CPS · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
         <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
