@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-03-16T06:04:04.097449Z",
+  "analyzed_at": "2026-03-16T16:08:17.197594Z",
   "risk_level": "MODERATE",
   "alert_count": 0,
   "watch_count": 2,
@@ -10,12 +10,14 @@
     "dgs5": 3.88,
     "dgs10": 4.27,
     "dgs30": 4.88,
-    "ig_oas": 91,
-    "hy_oas": 317,
+    "ig_oas": 93,
+    "hy_oas": 328,
     "unrate": 4.4,
     "u6rate": 7.9,
     "nfp_level": 158466.0,
     "nfp_mom": -92,
+    "icsa": null,
+    "ccsa": null,
     "wages_yoy": 3.69,
     "cpi_yoy": 2.66,
     "core_cpi_yoy": 2.73,
@@ -47,14 +49,14 @@
       "alert": null
     },
     "ig_oas": {
-      "value": 91,
+      "value": 93,
       "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 317,
+      "value": 328,
       "delta": 0,
       "direction": "stable",
       "flagged": false,
@@ -112,6 +114,13 @@
     "cs_hpi_yoy": {
       "value": 1.3,
       "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "icsa": {
+      "value": null,
+      "delta": null,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -196,6 +205,13 @@
     "cc_delinq": {
       "value": 2.94,
       "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "ccsa": {
+      "value": null,
+      "delta": null,
       "direction": "stable",
       "flagged": false,
       "alert": null
