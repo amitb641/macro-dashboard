@@ -414,8 +414,14 @@ def rebuild_charts(html, data):
 
 def patch_array_last(html, js_key, new_val, precision=2):
     fmt = str(round(new_val, precision)) if new_val is not None else 'null'
-    pattern = rf'(\b{re.escape(js_key)}:\s*\[[^\]]*,\s*)[\d\.\-]+((\s*)\])'
+    # Match both unquoted JS keys (key: [...]) and quoted JSON keys ("key":[...])
+    # First try: replace last numeric value before ]
+    pattern = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+((\s*)\])'
     new_html, n = re.subn(pattern, rf'\g<1>{fmt}\g<3>]', html, count=1, flags=re.DOTALL)
+    if not n:
+        # Second try: last numeric value before trailing nulls and ]
+        pattern2 = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+(\s*,\s*(?:null\s*,?\s*)*\])'
+        new_html, n = re.subn(pattern2, rf'\g<1>{fmt}\2', html, count=1, flags=re.DOTALL)
     if n: applied.append(f'{js_key}[-1]={fmt}')
     else: errors.append(f'patch_array_last: {js_key} not found')
     return new_html
@@ -436,11 +442,19 @@ def patch_kpi(html, label, val, sub=None):
 
 def patch_kpi_full(html, old_label, new_label, val, sub=None):
     """Update both the label text AND value of a KPI card in one pass."""
-    # First rename the label key in the JS object
+    # Extract base prefix (e.g. "Core PCE" from "Core PCE Dec 2025")
+    # Try exact match first, then fuzzy match on base prefix
     pat = rf'(\{{lbl:"){re.escape(old_label)}(")'
     new_html, n = re.subn(pat, rf'\g<1>{new_label}\2', html)
+    if not n:
+        # Fuzzy: match any label starting with the same base words
+        # e.g. "Core PCE Dec 2025" base = "Core PCE" matches "Core PCE Dec'25"
+        base = re.split(r'\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{4})', old_label)[0].strip()
+        if base and len(base) > 3:
+            fuzzy_pat = rf'(\{{lbl:"){re.escape(base)}[^"]*(")'
+            new_html, n = re.subn(fuzzy_pat, rf'\g<1>{new_label}\2', html, count=1)
     if n:
-        applied.append(f'kpi.rename "{old_label}" → "{new_label}"')
+        applied.append(f'kpi.rename → "{new_label}"')
     # Then patch the value using the new label
     return patch_kpi(new_html, new_label, val, sub)
 
@@ -458,14 +472,22 @@ def patch_var_last_label(html, var_name, new_label):
     idx = html.find(f'const {var_name} =')
     if idx < 0: idx = html.find(f'let {var_name} =')
     if idx < 0: errors.append(f'patch_var_last_label: {var_name} not found'); return html
-    chunk = html[idx: idx + 700]
+    # Use larger chunk to handle both compact JSON and formatted JS
+    chunk = html[idx: idx + 2000]
+    # Match both "labels": [...] (JSON) and labels: [...] (JS)
     new_chunk = re.sub(
-        r'(labels:\s*\[[^\]]*,\s*)"[^"]*"(\s*\])',
+        r'("?labels"?:\s*\[[^\]]*,\s*)"[^"]*"(\s*\])',
         rf'\1"{new_label}"\2', chunk, count=1, flags=re.DOTALL
     )
-    if new_chunk == chunk: errors.append(f'labels not found in {var_name}')
-    else: applied.append(f'{var_name}.labels[-1]={new_label}')
-    return html[:idx] + new_chunk + html[idx + 700:]
+    if new_chunk == chunk:
+        # Check if the label is already correct (not an error)
+        if f'"{new_label}"]' in chunk or f"'{new_label}']" in chunk:
+            applied.append(f'{var_name}.labels[-1] already={new_label}')
+        else:
+            errors.append(f'labels not found in {var_name}')
+    else:
+        applied.append(f'{var_name}.labels[-1]={new_label}')
+    return html[:idx] + new_chunk + html[idx + 2000:]
 
 
 
@@ -476,8 +498,9 @@ def month_label(date_str):
 
 def inject_oil_daily(html, oil_daily):
     new_data = json.dumps(oil_daily, separators=(',', ':'))
+    # Match both single-line {...}; and multi-line {...\n};
     new_html, n = re.subn(
-        r'(const OIL_DAILY\s*=\s*)\{.*?\n\}(\s*;)',
+        r'(const OIL_DAILY\s*=\s*)\{[^;]*\}(\s*;)',
         lambda m: m.group(1) + new_data + m.group(2),
         html, count=1, flags=re.DOTALL
     )
@@ -635,7 +658,7 @@ def render_spreads(html, data, vals, tabs):
     if ig is not None:
         label = datetime.date.today().strftime("%b'%y")
         html = re.sub(
-            r'(SPREADS_DATA\s*=\s*\{[^}]*?labels:\s*\[[^\]]*,\s*)"[^"]+"',
+            r'(SPREADS_DATA\s*=\s*\{[^}]*?"?labels"?:\s*\[[^\]]*,\s*)"[^"]+"',
             rf'\1"{label}"', html, count=1, flags=re.DOTALL
         )
 
