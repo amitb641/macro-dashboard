@@ -194,9 +194,17 @@ def collect():
 
     # ── Monthly: labor, inflation, housing, GDP ───────────────────────
     # Pull 320 observations (~26 years) to build charts from 2000
-    print('  [Weekly] Jobless Claims...')
-    data['icsa']        = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
-    data['ccsa']        = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
+    # ── Weekly: jobless claims (DOL releases Thursdays) ───────────────
+    # Only fetch fresh on Thursdays; carry forward prior data on other days
+    if datetime.date.today().weekday() == 3:  # Thursday
+        print('  [Weekly] Jobless Claims (Thursday refresh)...')
+        data['icsa']    = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
+        data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
+    else:
+        print('  [Weekly] Jobless Claims (carry forward — not Thursday)')
+        prior = json.loads(OUT_FILE.read_text()).get('data', {}) if OUT_FILE.exists() else {}
+        data['icsa']    = prior.get('icsa', [])
+        data['ccsa']    = prior.get('ccsa', [])
 
     print('  [Monthly] Labor...')
     data['unrate']      = fred_obs('UNRATE',     320)
