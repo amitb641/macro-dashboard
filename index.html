@@ -1509,6 +1509,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="dtable-wrap"><table class="dtable" id="unemp-tbl"></table></div>
     <p class="src">Source: BLS CPS Table A-14 (unemployed by industry). Annual averages from BLS CPS. Jan 2026 overall rate: 4.3%. Note: Leisure & Hospitality and Construction carry highest cyclical unemployment. Information/Tech unemployment has risen with 2023–24 tech layoffs.</p>
   </div>
+  <div class="panel">
+    <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
+    <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
+    <div class="ch260"><canvas id="c-claims-line"></canvas></div>
+    <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
+  </div>
 
 </div>
 
@@ -1586,12 +1592,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
-  <div class="panel">
-    <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
-    <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
-    <div class="ch260"><canvas id="c-claims-line"></canvas></div>
-    <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
-  </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
@@ -2373,6 +2373,7 @@ function buildUnempTab(){
     {lbl:"Lowest Sector 2024",     val:"1.8%",  sub:"Government (federal/state)",              col:"#1a9e4a"},
     {lbl:"Highest Sector 2024",    val:"4.6%",  sub:"Construction & cruise/resort workers",   col:"#d03030"},
     {lbl:"U-6 Broad Rate Feb'26", val:"7.9%",  sub:"Incl. underemployed & discouraged",      col:"#6d40cc"},
+    {lbl:"Initial Claims",        val:"221K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
@@ -2414,6 +2415,43 @@ function buildUnempTab(){
   });
   h+=`<tr><td>Overall (BLS)</td><td>3.6%</td><td>3.6%</td><td style="color:#B45309">4.0%</td><td style="color:#B45309">~4.3%</td><td>${trendPill("↑ Rising")}</td></tr>`;
   document.getElementById("unemp-tbl").innerHTML=h+"</tbody>";
+
+  // ── Weekly Jobless Claims chart ─────────────────────
+  if(typeof CLAIMS_WEEKLY !== 'undefined' && CLAIMS_WEEKLY.initial){
+    const clLabels = CLAIMS_WEEKLY.labels;
+    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);
+    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
+    // Ensure the last label is always visible (show latest week)
+    if(clLabels.length>0){
+      const lastIdx=clLabels.length-1;
+      if(!clLabels[lastIdx]){
+        // Find most recent non-empty label and use its date pattern to derive last week
+        for(let i=lastIdx;i>=0;i--){if(clLabels[i]){clLabels[lastIdx]=clLabels[i];break;}}
+      }
+    }
+    new Chart(document.getElementById("c-claims-line").getContext("2d"),{
+      type:"line",
+      data:{labels:clLabels,datasets:[
+        {label:"Initial Claims (K)",data:clInitial,borderColor:"#7c3aed",backgroundColor:"#7c3aed22",
+         borderWidth:1.5,pointRadius:0,tension:0.3,fill:true,yAxisID:"y"},
+        {label:"Continued Claims (K)",data:clContinued,borderColor:"#e8590c",backgroundColor:"transparent",
+         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2"},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+          tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:"#5a6a8a",maxRotation:45,autoSkip:true,maxTicksLimit:24,
+            includeBounds:true},border:{display:false},afterBuildTicks:function(axis){
+              // Force the last tick to always be visible
+              if(axis.ticks.length>0){const last=clLabels.length-1;
+                if(!axis.ticks.find(t=>t.value===last))axis.ticks.push({value:last});}
+            }},
+          y:{position:"left",title:{display:true,text:"Initial Claims (thousands)",color:"#7c3aed"},grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
+          y2:{position:"right",title:{display:true,text:"Continued Claims (thousands)",color:"#e8590c"},grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}}
+        }}
+    });
+  }
 }
 
 // ════════════════════════════════════════════════════
@@ -2539,32 +2577,7 @@ function buildJobsTab(){
     {lbl:"Feb'26 Jobs",        val:"-92K",  sub:"BLS Feb 7 release · Healthcare +44K, retail +34K", col:"#c07010"},
     {lbl:"Top Sector 2025",      val:"Health", sub:"Healthcare & Social Asst. held strong",  col:"#FF4757"},
     {lbl:"Fed Govt (peak→now)",  val:"−327K",  sub:"Cumulative Oct'24 peak · 2025 annual: −200K · Unemp still low: gov't workers rarely file (tenure/transfers)",col:"#d03030"},
-    {lbl:"Initial Claims",        val:"221K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
-
-  // ── Weekly Jobless Claims chart ─────────────────────
-  if(typeof CLAIMS_WEEKLY !== 'undefined' && CLAIMS_WEEKLY.initial){
-    const clLabels = CLAIMS_WEEKLY.labels;
-    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);  // convert to thousands
-    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
-    new Chart(document.getElementById("c-claims-line").getContext("2d"),{
-      type:"line",
-      data:{labels:clLabels,datasets:[
-        {label:"Initial Claims (K)",data:clInitial,borderColor:"#7c3aed",backgroundColor:"#7c3aed22",
-         borderWidth:1.5,pointRadius:0,tension:0.3,fill:true,yAxisID:"y"},
-        {label:"Continued Claims (K)",data:clContinued,borderColor:"#e8590c",backgroundColor:"transparent",
-         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2"},
-      ]},
-      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
-        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
-          tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
-        scales:{
-          x:{grid:{display:false},ticks:{color:"#5a6a8a",maxRotation:45,autoSkip:true,maxTicksLimit:24},border:{display:false}},
-          y:{position:"left",title:{display:true,text:"Initial Claims (thousands)",color:"#7c3aed"},grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
-          y2:{position:"right",title:{display:true,text:"Continued Claims (thousands)",color:"#e8590c"},grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}}
-        }}
-    });
-  }
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
     type:"bar",
@@ -4473,7 +4486,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 16, 2026 16:08 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 16, 2026 16:18 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
