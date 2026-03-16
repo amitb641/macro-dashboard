@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-03-16T06:29:09.359005Z",
+  "collected_at": "2026-03-16T14:42:21.711001Z",
   "series_count": 50,
   "error_count": 0,
   "errors": [],
@@ -481,14 +481,18 @@
       }
     ],
     "ig_oas": {
-      "date": "2026-03-12",
-      "value": 0.91
+      "date": "2026-03-13",
+      "value": 0.93
     },
     "hy_oas": {
-      "date": "2026-03-12",
-      "value": 3.17
+      "date": "2026-03-13",
+      "value": 3.28
     },
     "ig_hist": [
+      {
+        "date": "2026-03-13",
+        "value": 0.93
+      },
       {
         "date": "2026-03-12",
         "value": 0.91
@@ -716,13 +720,13 @@
       {
         "date": "2025-12-24",
         "value": 0.79
-      },
-      {
-        "date": "2025-12-23",
-        "value": 0.79
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-03-13",
+        "value": 3.28
+      },
       {
         "date": "2026-03-12",
         "value": 3.17
@@ -950,10 +954,6 @@
       {
         "date": "2025-12-24",
         "value": 2.84
-      },
-      {
-        "date": "2025-12-23",
-        "value": 2.83
       }
     ],
     "wti_daily": [
@@ -1274,7 +1274,7 @@
         "WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 16 06:29 UTC",
+      "updated": "Mar 16 14:42 UTC",
       "sessions": 6
     },
     "mortgage30": [
