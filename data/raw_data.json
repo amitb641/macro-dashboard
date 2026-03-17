@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-03-16T16:07:54.689929Z",
+  "collected_at": "2026-03-17T13:01:18.495733Z",
   "series_count": 50,
   "error_count": 0,
   "errors": [],
@@ -9,26 +9,30 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-03-12",
+      "date": "2026-03-13",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-03-12",
-      "value": 3.76
+      "date": "2026-03-13",
+      "value": 3.73
     },
     "dgs5": {
-      "date": "2026-03-12",
-      "value": 3.88
+      "date": "2026-03-13",
+      "value": 3.87
     },
     "dgs10": {
-      "date": "2026-03-12",
-      "value": 4.27
+      "date": "2026-03-13",
+      "value": 4.28
     },
     "dgs30": {
-      "date": "2026-03-12",
-      "value": 4.88
+      "date": "2026-03-13",
+      "value": 4.9
     },
     "dgs10_hist": [
+      {
+        "date": "2026-03-13",
+        "value": 4.28
+      },
       {
         "date": "2026-03-12",
         "value": 4.27
@@ -248,13 +252,13 @@
       {
         "date": "2025-12-22",
         "value": 4.17
-      },
-      {
-        "date": "2025-12-19",
-        "value": 4.16
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-03-13",
+        "value": 3.73
+      },
       {
         "date": "2026-03-12",
         "value": 3.76
@@ -474,10 +478,6 @@
       {
         "date": "2025-12-22",
         "value": 3.44
-      },
-      {
-        "date": "2025-12-19",
-        "value": 3.48
       }
     ],
     "ig_oas": {
@@ -1274,7 +1274,7 @@
         "WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 16 16:08 UTC",
+      "updated": "Mar 17 13:01 UTC",
       "sessions": 6
     },
     "mortgage30": [
