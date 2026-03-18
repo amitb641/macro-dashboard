@@ -3248,7 +3248,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":[],"wti":[],"brent":[],"notes":[],"month":"March 2026","updated":"Mar 18 02:12 UTC","sessions":0};
+const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65],"brent":[77.24,83.28,81.56,88.59,95.74,94.35],"notes":[null,"WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines","WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines"],"month":"March 2026","updated":"Mar 17 13:01 UTC","sessions":6};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -3910,7 +3910,7 @@ function buildYieldTab(){
     {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#0D7A4A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
-    {lbl:"10Y Treasury Mar'26",    val:"4.27%",   sub:"2Y: 3.76% · Spread: +51bp",col:"#6D28D9"},
+    {lbl:"10Y Treasury Mar'26",    val:"4.28%",   sub:"2Y: 3.73% · Spread: +55bp",col:"#6D28D9"},
 
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
@@ -4485,7 +4485,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 18, 2026 02:23 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 17, 2026 13:01 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>

@@ -1,86 +1,38 @@
 {
-  "collected_at": "2026-03-18T02:13:31.629787Z",
-  "series_count": 52,
-  "error_count": 51,
-  "errors": [
-    "FRED key missing \u2014 skipped FEDFUNDS",
-    "FRED key missing \u2014 skipped DFF",
-    "FRED key missing \u2014 skipped DGS2",
-    "FRED key missing \u2014 skipped DGS5",
-    "FRED key missing \u2014 skipped DGS10",
-    "FRED key missing \u2014 skipped DGS30",
-    "FRED key missing \u2014 skipped DGS10",
-    "FRED key missing \u2014 skipped DGS2",
-    "FRED key missing \u2014 skipped BAMLC0A0CM",
-    "FRED key missing \u2014 skipped BAMLH0A0HYM2",
-    "FRED key missing \u2014 skipped BAMLC0A0CM",
-    "FRED key missing \u2014 skipped BAMLH0A0HYM2",
-    "FRED key missing \u2014 skipped DCOILWTICO",
-    "FRED key missing \u2014 skipped DCOILBRENTEU",
-    "FRED key missing \u2014 skipped MORTGAGE30US",
-    "FRED key missing \u2014 skipped MORTGAGE15US",
-    "FRED key missing \u2014 skipped ICSA",
-    "FRED key missing \u2014 skipped CCSA",
-    "FRED key missing \u2014 skipped UNRATE",
-    "FRED key missing \u2014 skipped U6RATE",
-    "FRED key missing \u2014 skipped PAYEMS",
-    "FRED key missing \u2014 skipped AHETPI",
-    "FRED key missing \u2014 skipped JTSJOL",
-    "BLS key missing",
-    "FRED key missing \u2014 skipped CPIAUCSL",
-    "FRED key missing \u2014 skipped CPILFESL",
-    "FRED key missing \u2014 skipped PCEPI",
-    "FRED key missing \u2014 skipped PCEPILFE",
-    "FRED key missing \u2014 skipped PSAVERT",
-    "FRED key missing \u2014 skipped HOUST",
-    "FRED key missing \u2014 skipped HOUST1F",
-    "FRED key missing \u2014 skipped PERMIT",
-    "FRED key missing \u2014 skipped CSUSHPISA",
-    "FRED key missing \u2014 skipped GDPC1",
-    "FRED key missing \u2014 skipped A191RL1Q225SBEA",
-    "FRED key missing \u2014 skipped DRCCLACBS",
-    "FRED key missing \u2014 skipped DRSFRMACBS",
-    "FRED key missing \u2014 skipped FEDFUNDS",
-    "FRED key missing \u2014 skipped MORTGAGE30US",
-    "FRED key missing \u2014 skipped BAMLC0A0CM",
-    "FRED key missing \u2014 skipped BAMLH0A0HYM2",
-    "FRED key missing \u2014 skipped DCOILWTICO",
-    "FRED key missing \u2014 skipped DCOILBRENTEU",
-    "FRED key missing \u2014 skipped GDPC1",
-    "FRED key missing \u2014 skipped GDP",
-    "FRED key missing \u2014 skipped UMCSENT",
-    "FRED key missing \u2014 skipped CPIENGSL",
-    "FRED key missing \u2014 skipped REVOLSL",
-    "FRED key missing \u2014 skipped NONREVSL",
-    "FRED key missing \u2014 skipped DCOILWTICO",
-    "FRED key missing \u2014 skipped DCOILBRENTEU"
-  ],
+  "collected_at": "2026-03-17T13:01:18.495733Z",
+  "series_count": 50,
+  "error_count": 0,
+  "errors": [],
   "data": {
     "ffr": {
       "date": "2026-02-01",
       "value": 3.64
     },
     "dff": {
-      "date": "2026-03-12",
+      "date": "2026-03-13",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-03-12",
-      "value": 3.76
+      "date": "2026-03-13",
+      "value": 3.73
     },
     "dgs5": {
-      "date": "2026-03-12",
-      "value": 3.88
+      "date": "2026-03-13",
+      "value": 3.87
     },
     "dgs10": {
-      "date": "2026-03-12",
-      "value": 4.27
+      "date": "2026-03-13",
+      "value": 4.28
     },
     "dgs30": {
-      "date": "2026-03-12",
-      "value": 4.88
+      "date": "2026-03-13",
+      "value": 4.9
     },
     "dgs10_hist": [
+      {
+        "date": "2026-03-13",
+        "value": 4.28
+      },
       {
         "date": "2026-03-12",
         "value": 4.27
@@ -300,13 +252,13 @@
       {
         "date": "2025-12-22",
         "value": 4.17
-      },
-      {
-        "date": "2025-12-19",
-        "value": 4.16
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-03-13",
+        "value": 3.73
+      },
       {
         "date": "2026-03-12",
         "value": 3.76
@@ -526,10 +478,6 @@
       {
         "date": "2025-12-22",
         "value": 3.44
-      },
-      {
-        "date": "2025-12-19",
-        "value": 3.48
       }
     ],
     "ig_oas": {
@@ -1298,8 +1246,8 @@
       "brent": [],
       "notes": [],
       "month": "March 2026",
-      "updated": "Mar 18 02:12 UTC",
-      "sessions": 0
+      "updated": "Mar 17 13:01 UTC",
+      "sessions": 6
     },
     "mortgage30": [
       {
