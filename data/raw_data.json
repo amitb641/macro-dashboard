@@ -1,6 +1,6 @@
 {
-  "collected_at": "2026-03-17T13:01:18.495733Z",
-  "series_count": 50,
+  "collected_at": "2026-03-18T13:00:51.605581Z",
+  "series_count": 52,
   "error_count": 0,
   "errors": [],
   "data": {
@@ -9,26 +9,30 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-03-13",
+      "date": "2026-03-16",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-03-13",
-      "value": 3.73
+      "date": "2026-03-16",
+      "value": 3.68
     },
     "dgs5": {
-      "date": "2026-03-13",
-      "value": 3.87
+      "date": "2026-03-16",
+      "value": 3.8
     },
     "dgs10": {
-      "date": "2026-03-13",
-      "value": 4.28
+      "date": "2026-03-16",
+      "value": 4.23
     },
     "dgs30": {
-      "date": "2026-03-13",
-      "value": 4.9
+      "date": "2026-03-16",
+      "value": 4.86
     },
     "dgs10_hist": [
+      {
+        "date": "2026-03-16",
+        "value": 4.23
+      },
       {
         "date": "2026-03-13",
         "value": 4.28
@@ -248,13 +252,13 @@
       {
         "date": "2025-12-23",
         "value": 4.18
-      },
-      {
-        "date": "2025-12-22",
-        "value": 4.17
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-03-16",
+        "value": 3.68
+      },
       {
         "date": "2026-03-13",
         "value": 3.73
@@ -474,21 +478,21 @@
       {
         "date": "2025-12-23",
         "value": 3.48
-      },
-      {
-        "date": "2025-12-22",
-        "value": 3.44
       }
     ],
     "ig_oas": {
-      "date": "2026-03-13",
-      "value": 0.93
+      "date": "2026-03-16",
+      "value": 0.94
     },
     "hy_oas": {
-      "date": "2026-03-13",
-      "value": 3.28
+      "date": "2026-03-16",
+      "value": 3.27
     },
     "ig_hist": [
+      {
+        "date": "2026-03-16",
+        "value": 0.94
+      },
       {
         "date": "2026-03-13",
         "value": 0.93
@@ -716,13 +720,13 @@
       {
         "date": "2025-12-26",
         "value": 0.79
-      },
-      {
-        "date": "2025-12-24",
-        "value": 0.79
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-03-16",
+        "value": 3.27
+      },
       {
         "date": "2026-03-13",
         "value": 3.28
@@ -950,10 +954,6 @@
       {
         "date": "2025-12-26",
         "value": 2.86
-      },
-      {
-        "date": "2025-12-24",
-        "value": 2.84
       }
     ],
     "wti_daily": [
@@ -1241,12 +1241,40 @@
       }
     ],
     "oil_daily_chart": {
-      "labels": [],
-      "wti": [],
-      "brent": [],
-      "notes": [],
+      "labels": [
+        "Mar 2",
+        "Mar 3",
+        "Mar 4",
+        "Mar 5",
+        "Mar 6",
+        "Mar 9"
+      ],
+      "wti": [
+        71.13,
+        74.48,
+        74.58,
+        80.88,
+        90.77,
+        94.65
+      ],
+      "brent": [
+        77.24,
+        83.28,
+        81.56,
+        88.59,
+        95.74,
+        94.35
+      ],
+      "notes": [
+        null,
+        "WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines"
+      ],
       "month": "March 2026",
-      "updated": "Mar 17 13:01 UTC",
+      "updated": "Mar 18 13:01 UTC",
       "sessions": 6
     },
     "mortgage30": [

@@ -2184,7 +2184,7 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.7%", "col":"#d03030", "delta":-0.17, "chg":"-0.2pp", "sub":"Prior: 2.8% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.27%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.76% \u00b7 Spread: +51bp"}, {"lbl":"Initial Claims Mar'26", "val":"218K", "col":"#c07010", "delta":-9549, "chg":"-10K", "sub":"Prior wk: 227K (Mar'26)"}];
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.7%", "col":"#d03030", "delta":-0.17, "chg":"-0.2pp", "sub":"Prior: 2.8% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.23%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.68% \u00b7 Spread: +55bp"}, {"lbl":"Initial Claims Mar'26", "val":"218K", "col":"#c07010", "delta":-9549, "chg":"-10K", "sub":"Prior wk: 227K (Mar'26)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const d = k.delta ? `<span class="kpi-delta ${k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat'}">${k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→'} ${k.chg||''}</span>` : '';
   return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
@@ -3121,7 +3121,7 @@ const HOUSING_METROS = [
 const FFR_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "GS 26F", "JPM 26F", "MS 26F"], "actual":[6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 3.64, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.21, 3.25, 3.75, 3.25]};
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
-const SPREADS_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Mar'26"], "ig":[2, 2, 2, 1, 1, 1, 1, 1, 4, 4, 2, 2, 2, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 93], "hy":[6, 8, 9, 6, 4, 4, 3, 4, 10, 12, 6, 6, 6, 5, 4, 5, 6, 4, 4, 4, 6, 3, 4, 4, 3, 3, 328]};
+const SPREADS_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Mar'26"], "ig":[2, 2, 2, 1, 1, 1, 1, 1, 4, 4, 2, 2, 2, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 94], "hy":[6, 8, 9, 6, 4, 4, 3, 4, 10, 12, 6, 6, 6, 5, 4, 5, 6, 4, 4, 4, 6, 3, 4, 4, 3, 3, 327]};
 
 
 
@@ -3248,7 +3248,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65],"brent":[77.24,83.28,81.56,88.59,95.74,94.35],"notes":[null,"WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines","WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines"],"month":"March 2026","updated":"Mar 17 13:01 UTC","sessions":6};
+const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65],"brent":[77.24,83.28,81.56,88.59,95.74,94.35],"notes":[null,"WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines","WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines"],"month":"March 2026","updated":"Mar 18 13:01 UTC","sessions":6};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -3910,7 +3910,7 @@ function buildYieldTab(){
     {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#0D7A4A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
-    {lbl:"10Y Treasury Mar'26",    val:"4.28%",   sub:"2Y: 3.73% · Spread: +55bp",col:"#6D28D9"},
+    {lbl:"10Y Treasury Mar'26",    val:"4.23%",   sub:"2Y: 3.68% · Spread: +55bp",col:"#6D28D9"},
 
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
@@ -4485,7 +4485,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 17, 2026 13:01 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 18, 2026 13:01 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
