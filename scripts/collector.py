@@ -237,7 +237,6 @@ def collect():
     data['payems']      = fred_obs('PAYEMS',     320)
     data['ahetpi']      = fred_obs('AHETPI',     320)
     data['jolts']       = fv('JTSJOL')
-    data['atl_wage_tracker'] = fred_obs('FRBATLWGT3MMAUMHWGO', 30)  # Atlanta Fed Wage Growth Tracker 3M avg
     data['umcsent']     = fred_obs('UMCSENT',    30)   # UMich Consumer Sentiment (monthly)
     data['bls_sectors'] = bls_fetch([
         'CES0000000001','CES2000000001','CES3000000001',

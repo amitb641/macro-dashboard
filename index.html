@@ -1566,16 +1566,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BLS CPI-U. Feb 2026 = +2.4% YoY; Jan 2026 = +2.4%; Dec 2025 = +2.7%. Oct–Nov 2025 data unavailable (gov't shutdown). Core CPI Feb 2026: +2.5%.</p>
     </div>
   </div>
-  <div class="panel">
-    <div class="panel-title">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average (FRED Interactive)</div>
-    <div class="panel-sub">Wages are a key driver of services inflation · <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Fed targets wage growth ~3% for 2% inflation</div>
-    <div class="fred-embed">
-      <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UM&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
-        title="Atlanta Fed Wage Growth Tracker - FRED Chart"></iframe>
-    </div>
-    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Federal Reserve Bank of Atlanta. 3-month moving average of median hourly wage growth. Wages above ~3.5% are inconsistent with the Fed's 2% inflation target — a key reason why the Fed remains cautious on rate cuts.</p>
-  </div>
-
 </div>
 
 <!-- ══ WAGES ══ -->
@@ -1590,6 +1580,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
 
   <div class="metric-row" id="wage-metrics"></div>
+  <div class="panel">
+    <div class="panel-title">Household Debt Service Ratio — TDSP</div>
+    <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Wages vs. debt burden context</div>
+    <div class="ch260"><canvas id="c-wage-tdsp"></canvas></div>
+    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Fed Reserve Board. Rising wages offset by rising debt service costs. When TDSP rises faster than wages, consumer stress increases.</p>
+  </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Nominal vs Real Wage Growth — All Private</div>
@@ -1608,23 +1604,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-sub">Avg hourly earnings YoY % · BLS CES Table B-3 · Note: real wages were negative in 2021–22 despite high nominal gains (peak CPI)</div>
     <div class="dtable-wrap"><table class="dtable" id="wage-tbl"></table></div>
     <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal earnings YoY. Real wages (CPI-adjusted) turned positive in 2023–24. Jan 2026: all-private avg $37.17/hr, +3.7% YoY nominal.</p>
-  </div>
-  <div class="two-up">
-    <div class="panel">
-      <div class="panel-title">Atlanta Fed Wage Growth Tracker — 3M Moving Avg (FRED)</div>
-      <div class="panel-sub">Median hourly wage growth · <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a></div>
-      <div class="fred-embed">
-        <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UM&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
-          title="Atlanta Fed Wage Growth Tracker - FRED Chart"></iframe>
-      </div>
-      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Atlanta Fed. 3M moving avg of median wage growth. Wages &gt;3.5% are inconsistent with 2% inflation.</p>
-    </div>
-    <div class="panel">
-      <div class="panel-title">Household Debt Service Ratio — TDSP</div>
-      <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Wages vs. debt burden context</div>
-      <div class="ch260"><canvas id="c-wage-tdsp"></canvas></div>
-      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Fed Reserve Board. Rising wages offset by rising debt service costs. When TDSP rises faster than wages, consumer stress increases.</p>
-    </div>
   </div>
 </div>
 
@@ -2602,19 +2581,14 @@ function buildCPITab(){
 function buildWagesTab(){
   if(builtTabs.wages) return; builtTabs.wages=1;
 
-  // ATL Wage Tracker 3M metric (from KPI data if available)
-  const atlWageKpi = KPIS.find(k=>k.lbl.includes("ATL 3M"));
-  const atlVal = atlWageKpi ? atlWageKpi.val : "+3.7%";
-  const atlSub = atlWageKpi ? atlWageKpi.sub : "Atlanta Fed 3M avg";
   // TDSP metric (from KPI data if available)
   const tdspKpi = KPIS.find(k=>k.lbl.includes("Debt Service"));
   const tdspVal = tdspKpi ? tdspKpi.val : "~9.8%";
   const tdspSub = tdspKpi ? tdspKpi.sub : "% of disposable income";
 
   document.getElementById("wage-metrics").innerHTML = [
-    {lbl:"ATL Fed Wage Tracker (3M)", val:atlVal,  sub:atlSub,                                  col:"#1a9e4a"},
-    {lbl:"Nominal Wage Growth Feb'26", val:"+3.7%", sub:"BLS AHE · Slowing; real wages +1.2%",  col:"#4a72e8"},
     {lbl:"Debt Service Ratio (TDSP)", val:tdspVal,  sub:tdspSub,                                col:"#c07010"},
+    {lbl:"Nominal Wage Growth Feb'26", val:"+3.7%", sub:"BLS AHE · Slowing; real wages +1.2%",  col:"#4a72e8"},
     {lbl:"Avg Hourly All Private",   val:"$37.22",sub:"Jan 2026; +4.1% YoY nominal · BLS",     col:"#6d40cc"},
     {lbl:"Real Wages 2025",          val:"+1.2%", sub:"Annualized · CPI-adj · +0.6% LT avg",   col:"#1a9e4a"},
     {lbl:"2026F Wage Growth",        val:"~3.5%", sub:"Converging to long-term avg per JPM",    col:"#c07010"},
@@ -4352,7 +4326,6 @@ function buildStackTab(){
     ["💳 PCE",        "Consumer Credit (G.19)",         "Fed / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls ~5 wks after month"],
     ["💳 PCE",        "UMich Consumer Sentiment",       "FRED UMCSENT",        "Monthly",    "Mar 2026",  "Agent auto-pulls · sca.isr.umich.edu"],
     ["💳 PCE",        "Debt Service Ratio (TDSP)",      "FRED TDSP",           "Quarterly",  "Q3 2025",   "Agent auto-pulls · Fed Reserve Board"],
-    ["💵 Wages",      "Atlanta Fed Wage Tracker (3M)",  "FRED FRBATLWGT3MMAUMHWGO","Monthly","Feb 2026",  "Agent auto-pulls · frbatlanta.org"],
     ["📋 Jobs",       "ADP National Employment Report", "adpemploymentreport.com","Monthly", "Feb 2026",  "Manual — no public API"],
     ["📈 Fed Rates",  "2Y / 5Y / 10Y / 30Y Yields",    "FRED Treasury series","Monthly",    "Mar 2026",  "Agent pulls monthly avgs"],
     ["📈 Fed Rates",  "Fed Funds Rate",                 "FRED DFF",            "Monthly",    "Mar 2026",  "Current: 4.25–4.50%"],
@@ -5012,7 +4985,6 @@ if(document.readyState === 'loading'){
           <tr><td><strong>Core CPI / PCE</strong></td><td>Excludes volatile food &amp; energy. Fed targets 2% core PCE. Feb 2026: Core CPI 2.5%, Core PCE 3.1%.</td></tr>
           <tr><td><strong>U-3 vs U-6</strong></td><td>U-3 = headline unemployment. U-6 adds marginally attached + involuntary part-time. Jan 2026: U-3 4.0%, U-6 8.0%.</td></tr>
           <tr><td><strong>AHE</strong></td><td>Average Hourly Earnings — mean hourly wage of all private nonfarm workers. Jan 2026: $37.22, +4.1% YoY.</td></tr>
-          <tr><td><strong>ATL Wage Tracker</strong></td><td>Atlanta Fed Wage Growth Tracker — 3-month moving average of median hourly wage growth, unweighted. FRED: FRBATLWGT3MMAUMHWGO. More stable than BLS AHE.</td></tr>
           <tr><td><strong>UMCSENT</strong></td><td>University of Michigan Index of Consumer Sentiment — monthly survey of consumer confidence. Pre-pandemic avg ~95. 2022 low: 50. Source: sca.isr.umich.edu.</td></tr>
           <tr><td><strong>TDSP</strong></td><td>Household Debt Service Ratio — debt payments as % of disposable income. Fed Reserve Board. Includes mortgage + consumer. 2007 peak: ~13.2%. Current: ~9.8%.</td></tr>
           <tr><td><strong>ADP Report</strong></td><td>ADP National Employment Report — private payroll estimate from ADP payroll processing data. Released 2 days before BLS. Source: adpemploymentreport.com. Often diverges from BLS.</td></tr>
