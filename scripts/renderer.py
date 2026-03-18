@@ -127,7 +127,7 @@ def rebuild_charts(html, data):
         if labels:
             html = _inject_const(html, 'U_ANNUAL', {'labels': labels, 'data': values})
 
-    # ── CPI_ANNUAL ────────────────────────────────────────────────────
+    # ── CPI_ANNUAL (with 3-month moving average) ───────────────────────
     cpi_all = data.get('cpi_all', [])
     if len(cpi_all) >= 60:
         labels, values = _dec_yoy(cpi_all)
@@ -135,8 +135,26 @@ def rebuild_charts(html, data):
         if lbl and labels:
             labels.append(lbl)
             values.append(yoy)
+        # Compute 3-month moving average of monthly YoY rates
+        avg3m = []
+        if len(cpi_all) >= 15:
+            # cpi_all is newest-first; compute monthly YoY for recent months
+            monthly_yoy = []
+            for i in range(min(len(cpi_all) - 12, 36)):  # up to 36 months of monthly YoY
+                cur_v = cpi_all[i]['value']
+                yr_ago = cpi_all[i + 12]['value']
+                if yr_ago and yr_ago != 0:
+                    monthly_yoy.append(round((cur_v - yr_ago) / yr_ago * 100, 2))
+                else:
+                    monthly_yoy.append(None)
+            # 3M avg of the 3 most recent monthly YoY rates
+            valid = [v for v in monthly_yoy[:3] if v is not None]
+            if valid:
+                avg3m = [round(sum(valid) / len(valid), 1)]
         if labels:
-            html = _inject_const(html, 'CPI_ANNUAL', {'labels': labels, 'data': values})
+            html = _inject_const(html, 'CPI_ANNUAL', {
+                'labels': labels, 'data': values,
+                'avg3m': avg3m[0] if avg3m else None})
 
     # ── PCE_ANNUAL ────────────────────────────────────────────────────
     pce = data.get('pce', [])
@@ -948,7 +966,7 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d, 'chg': f'{sign}{d:.0f}K',
                       'sub': f"Prior: {prev_chg:+.0f}K ({_mlbl(payems[1]['date'])})"})
 
-    # 3. CPI YoY — with MoM + YoY in sub
+    # 3. CPI YoY — with 3M avg + MoM + YoY in sub
     cpi = data.get('cpi_all', [])
     if cpi and len(cpi) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(cpi)
@@ -956,14 +974,24 @@ def rebuild_kpi_strip(html, data, vals):
         mom_pct = None
         if len(cpi) >= 2 and cpi[1]['value']:
             mom_pct = round((cpi[0]['value'] - cpi[1]['value']) / cpi[1]['value'] * 100, 2)
+        # 3-month average of monthly YoY
+        avg3m = None
+        if len(cpi) >= 15:
+            yoys = []
+            for i in range(3):
+                if cpi[i + 12]['value'] and cpi[i + 12]['value'] != 0:
+                    yoys.append(round((cpi[i]['value'] - cpi[i + 12]['value']) / cpi[i + 12]['value'] * 100, 2))
+            if yoys:
+                avg3m = round(sum(yoys) / len(yoys), 1)
         if yoy_cur is not None and yoy_prev is not None:
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
             lbl = f"CPI YoY {_mlbl(cpi[0]['date'])}"
             mom_str = f"MoM: {mom_pct:+.2f}% · " if mom_pct is not None else ""
+            avg3m_str = f" · 3M avg: {avg3m:.1f}%" if avg3m is not None else ""
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                          'sub': f"{mom_str}YoY: {yoy_cur:.1f}% · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
+                          'sub': f"{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
 
     # 4. Core PCE YoY
     pce_core = data.get('pce_core', [])

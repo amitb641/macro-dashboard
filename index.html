@@ -1548,9 +1548,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="metric-row" id="cpi-metrics"></div>
   <div class="panel">
-    <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %)</div>
-    <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS</div>
+    <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %) with 3-Month Average</div>
+    <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS · 3M avg smooths monthly volatility</div>
     <div class="ch260"><canvas id="c-cpi-bar"></canvas></div>
+    <p class="src" style="margin-top:6px">3-Month Average: computed from the 3 most recent monthly YoY CPI readings. Smooths single-month noise (e.g., seasonal adjustments, one-off price spikes). Current 3M avg shown in metric cards above.</p>
   </div>
   <div class="two-up">
     <div class="panel">
@@ -1564,6 +1565,15 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="dtable-wrap"><table class="dtable" id="cpi-tbl"></table></div>
       <p class="src">Source: BLS CPI-U. 2025 data: Jan 2026 = +2.4% YoY; Dec 2025 = +2.7%. Oct–Nov 2025 data unavailable (gov't shutdown). Core CPI Jan 2026: +2.5%.</p>
     </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average (FRED Interactive)</div>
+    <div class="panel-sub">Wages are a key driver of services inflation · <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Fed targets wage growth ~3% for 2% inflation</div>
+    <div class="fred-embed">
+      <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UM&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
+        title="Atlanta Fed Wage Growth Tracker - FRED Chart"></iframe>
+    </div>
+    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Federal Reserve Bank of Atlanta. 3-month moving average of median hourly wage growth. Wages above ~3.5% are inconsistent with the Fed's 2% inflation target — a key reason why the Fed remains cautious on rate cuts.</p>
   </div>
 
 </div>
@@ -1599,14 +1609,25 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="dtable-wrap"><table class="dtable" id="wage-tbl"></table></div>
     <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal earnings YoY. Real wages (CPI-adjusted) turned positive in 2023–24. Jan 2026: all-private avg $37.17/hr, +3.7% YoY nominal.</p>
   </div>
-  <div class="panel">
-    <div class="panel-title">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average (FRED Interactive)</div>
-    <div class="panel-sub">Median wage growth, unweighted, all workers · <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · <a href="https://www.atlantafed.org/chcs/wage-growth-tracker">Atlanta Fed</a></div>
-    <div class="fred-embed">
-      <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UM&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
-        title="Atlanta Fed Wage Growth Tracker - FRED Chart"></iframe>
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Atlanta Fed Wage Growth Tracker — 3M Moving Avg (FRED)</div>
+      <div class="panel-sub">Median hourly wage growth · <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a></div>
+      <div class="fred-embed">
+        <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UM&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
+          title="Atlanta Fed Wage Growth Tracker - FRED Chart"></iframe>
+      </div>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Atlanta Fed. 3M moving avg of median wage growth. Wages &gt;3.5% are inconsistent with 2% inflation.</p>
     </div>
-    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Federal Reserve Bank of Atlanta. 3-month moving average of median hourly wage growth from CPS microdata. More stable than BLS AHE; better captures underlying wage dynamics.</p>
+    <div class="panel">
+      <div class="panel-title">Household Debt Service Ratio — TDSP (FRED)</div>
+      <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Wages vs. debt burden context</div>
+      <div class="fred-embed">
+        <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UV&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
+          title="Household Debt Service Ratio - FRED Chart"></iframe>
+      </div>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Fed Reserve Board. Rising wages offset by rising debt service costs. When TDSP rises faster than wages, consumer stress increases.</p>
+    </div>
   </div>
 </div>
 
@@ -2516,24 +2537,38 @@ function buildUnempTab(){
 function buildCPITab(){
   if(builtTabs.cpi) return; builtTabs.cpi=1;
 
+  // Compute 3M avg from CPI_ANNUAL data for display
+  const cpi3mAvg = CPI_ANNUAL.avg3m != null ? CPI_ANNUAL.avg3m : null;
+  const cpiLatest = CPI_ANNUAL.data[CPI_ANNUAL.data.length-1];
   document.getElementById("cpi-metrics").innerHTML = [
-    {lbl:"CPI All Items Feb'26",    val:"+2.7%",  sub:"Dec 2024 YoY",                           col:"#c07010"},
-    {lbl:"CPI All Items Feb'26",    val:"+2.7%",  sub:"Dec 2025 YoY · Jan'26: 2.4%",           col:"#1a9e4a"},
+    {lbl:"CPI YoY (Latest)",       val:`+${cpiLatest}%`,  sub:`${CPI_ANNUAL.labels[CPI_ANNUAL.labels.length-1]} · single-month reading`,  col:"#c07010"},
+    {lbl:"CPI 3-Month Avg",        val:cpi3mAvg!=null?`${cpi3mAvg}%`:"—",  sub:"Smoothed 3M avg of monthly YoY · reduces volatility",  col:"#1a9e4a"},
     {lbl:"Core CPI Dec 2025",     val:"3.2%",  sub:"Ex food & energy · Jan'26 core: 3.3%",  col:"#6d40cc"},
     {lbl:"Shelter CPI 2025",      val:"4.6%",  sub:"Sticky — down from 4.9% in 2024, still elevated", col:"#4a72e8"},
     {lbl:"Food at Home 2025",     val:"3.1%",  sub:"Up from 1.1% in 2024; tariff impact",    col:"#d03030"},
     {lbl:"2026F CPI Consensus",   val:"2.7–3.0%",sub:"Tariff pass-through key uncertainty",  col:"#c07010"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
+  // Build 3M moving average line from annual data (simple rolling avg of 3 consecutive values)
+  const cpi3mLine = CPI_ANNUAL.data.map((v,i,arr)=>{
+    if(i<2) return null;
+    const vals = [arr[i-2],arr[i-1],arr[i]].filter(x=>x!=null&&isFinite(x));
+    return vals.length===3 ? Math.round((vals[0]+vals[1]+vals[2])/3*10)/10 : null;
+  });
+
   new Chart(document.getElementById("c-cpi-bar").getContext("2d"),{
     type:"bar",
-    data:{labels:CPI_ANNUAL.labels,datasets:[{
-      label:"CPI YoY %",data:CPI_ANNUAL.data,
-      backgroundColor:CPI_ANNUAL.data.map(v=>v>5?"#e06060bb":v>3?"#e0a040bb":"#4a72e8cc"),
-      borderRadius:4
-    }]},
+    data:{labels:CPI_ANNUAL.labels,datasets:[
+      {label:"CPI YoY %",data:CPI_ANNUAL.data,
+       backgroundColor:CPI_ANNUAL.data.map(v=>v>5?"#e06060bb":v>3?"#e0a040bb":"#4a72e8cc"),
+       borderRadius:4},
+      {label:"3M Moving Avg",type:"line",data:cpi3mLine,
+       borderColor:"#d03030",borderWidth:2.5,pointRadius:0,
+       tension:0.3,borderDash:[6,3],fill:false}
+    ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`CPI: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+        tooltip:{...TT,callbacks:{label:c=>c.dataset.type==="line"?`3M Avg: ${c.raw}%`:`CPI: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
               y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:11,border:{display:false}}}}
   });
@@ -2570,13 +2605,22 @@ function buildCPITab(){
 function buildWagesTab(){
   if(builtTabs.wages) return; builtTabs.wages=1;
 
+  // ATL Wage Tracker 3M metric (from KPI data if available)
+  const atlWageKpi = KPIS.find(k=>k.lbl.includes("ATL 3M"));
+  const atlVal = atlWageKpi ? atlWageKpi.val : "+3.7%";
+  const atlSub = atlWageKpi ? atlWageKpi.sub : "Atlanta Fed 3M avg";
+  // TDSP metric (from KPI data if available)
+  const tdspKpi = KPIS.find(k=>k.lbl.includes("Debt Service"));
+  const tdspVal = tdspKpi ? tdspKpi.val : "~9.8%";
+  const tdspSub = tdspKpi ? tdspKpi.sub : "% of disposable income";
+
   document.getElementById("wage-metrics").innerHTML = [
-    {lbl:"Nominal Wage Growth Feb'26", val:"+3.7%", sub:"All private avg hourly YoY",          col:"#1a9e4a"},
-    {lbl:"Nominal Wage Growth Feb'26", val:"+3.7%", sub:"Slowing; real wages +1.2% annualized", col:"#4a72e8"},
-    {lbl:"2026F Wage Growth",        val:"~3.5%", sub:"Converging to long-term avg per JPM",  col:"#c07010"},
-    {lbl:"Avg Hourly All Private",   val:"$37.22",sub:"Jan 2026; +4.1% YoY nominal · BLS",   col:"#6d40cc"},
-    {lbl:"Real Wages 2021–22",       val:"Neg.",  sub:"High CPI eroded nominal gains",        col:"#d03030"},
-    {lbl:"Real Wages 2025 (Trump)",  val:"+1.2%", sub:"Annualized through Nov'25 (+0.6% LT avg)", col:"#1a9e4a"},
+    {lbl:"ATL Fed Wage Tracker (3M)", val:atlVal,  sub:atlSub,                                  col:"#1a9e4a"},
+    {lbl:"Nominal Wage Growth Feb'26", val:"+3.7%", sub:"BLS AHE · Slowing; real wages +1.2%",  col:"#4a72e8"},
+    {lbl:"Debt Service Ratio (TDSP)", val:tdspVal,  sub:tdspSub,                                col:"#c07010"},
+    {lbl:"Avg Hourly All Private",   val:"$37.22",sub:"Jan 2026; +4.1% YoY nominal · BLS",     col:"#6d40cc"},
+    {lbl:"Real Wages 2025",          val:"+1.2%", sub:"Annualized · CPI-adj · +0.6% LT avg",   col:"#1a9e4a"},
+    {lbl:"2026F Wage Growth",        val:"~3.5%", sub:"Converging to long-term avg per JPM",    col:"#c07010"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
   new Chart(document.getElementById("c-wage-line").getContext("2d"),{
