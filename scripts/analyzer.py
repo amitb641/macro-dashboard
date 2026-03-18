@@ -29,6 +29,9 @@ THRESHOLDS = {
     'wages_yoy':  0.3,    # pp
     'cs_hpi_yoy': 1.0,    # pp
     'icsa':       30000,  # weekly initial claims swing
+    'umcsent':    5.0,    # UMich sentiment index points
+    'atl_wage_3m':0.3,    # pp — Atlanta Fed Wage Tracker 3M avg
+    'tdsp':       0.3,    # pp — Debt Service Ratio
 }
 
 # Absolute level alerts
@@ -43,6 +46,8 @@ LEVEL_ALERTS = {
     'mortgage30': {'watch': 7.0,  'alert': 7.5},
     'cc_delinq':  {'watch': 9.5,  'alert': 11.0},
     'icsa':       {'watch': 250000, 'alert': 300000},
+    'umcsent':    {'watch': 60,   'alert': 50},     # consumer pessimism
+    'tdsp':       {'watch': 10.5, 'alert': 11.5},   # debt service stress
 }
 
 
@@ -136,6 +141,15 @@ def analyze():
 
     v['cs_hpi_yoy']   = yoy(data.get('cs_hpi', []))
 
+    umcsent = data.get('umcsent', [])
+    v['umcsent']      = umcsent[0]['value'] if umcsent else None
+
+    atl_wage = data.get('atl_wage_tracker', [])
+    v['atl_wage_3m']  = atl_wage[0]['value'] if atl_wage else None
+
+    tdsp = data.get('tdsp', [])
+    v['tdsp']         = tdsp[0]['value'] if tdsp else None
+
     wti = data.get('wti_daily', [])
     v['wti']          = wti[0]['value'] if wti else None
     brent = data.get('brent_daily', [])
@@ -162,7 +176,8 @@ def analyze():
     # Extra signals without thresholds
     for key in ['dgs2', 'dgs5', 'dgs30', 'spread_10_2_bp', 'core_cpi_yoy',
                 'core_pce_yoy', 'u6rate', 'saving_rate', 'housing_starts',
-                'brent', 'gdp_growth_q', 'cc_delinq', 'ccsa']:
+                'brent', 'gdp_growth_q', 'cc_delinq', 'ccsa',
+                'umcsent', 'atl_wage_3m', 'tdsp']:
         if key not in sigs:
             sigs[key] = make_signal(v.get(key), snap_vals.get(key), 9e9)
             sigs[key]['alert'] = level_alert(key, v.get(key))

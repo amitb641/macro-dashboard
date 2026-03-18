@@ -1618,6 +1618,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="panel">
+    <div class="panel-title">Nonfarm Payrolls — BLS vs ADP (Monthly Change, thousands)</div>
+    <div class="panel-sub">BLS CES Total Nonfarm vs ADP National Employment Report · Note: BLS includes government; ADP is private only · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
+    <div class="ch300"><canvas id="c-nfp-vs-adp"></canvas></div>
+    <p class="src">Sources: BLS CES (Total Nonfarm, auto-updated from FRED PAYEMS). ADP National Employment Report (<a href="https://adpemploymentreport.com">adpemploymentreport.com</a>, manually updated). BLS and ADP use different methodologies — divergences are common and informative.</p>
+  </div>
+  <div class="panel">
     <div class="panel-title">Employment Change by Sector — Annual Net (thousands)</div>
     <div class="panel-sub">BLS CES · seasonally adjusted · 2025 revised to +181K total (Jan 2026 benchmark)</div>
     <div class="dtable-wrap"><table class="dtable" id="jobs-tbl"></table></div>
@@ -1658,6 +1664,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Household Debt & Delinquencies — NY Fed Data</div>
       <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
       <div class="ch320"><canvas id="c-debt-bar"></canvas></div>
+    </div>
+  </div>
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
+      <div class="panel-sub">Household debt service payments as % of disposable personal income · Federal Reserve Board · Quarterly</div>
+      <div class="ch260"><canvas id="c-tdsp-line"></canvas></div>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~9.8%.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Consumer Sentiment — Univ. of Michigan (Monthly)</div>
+      <div class="panel-sub">Index of Consumer Sentiment · U. of Michigan Survey of Consumers · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
+      <div class="ch260"><canvas id="c-umcsent-line"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
     </div>
   </div>
   <div class="panel">
@@ -2085,8 +2105,21 @@ const WAGE_SECTORS = [
   {s:"Hotel Front Desk / Housekpg",color:"#74B9FF", w21:7.8, w22:8.4, w23:6.2, w24:4.9, w25:4.2, hr24:17.4},
 ];
 
+// ── BLS vs ADP Monthly Comparison ────────────────────
+// BLS side auto-updated by renderer from PAYEMS. ADP manually maintained from adpemploymentreport.com
+const NFP_VS_ADP = {
+  labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],
+  bls:   [185, 108, 157, 179, 114, 89, 159, 12, 212, 256, 126, -92],
+  adp:   [155, 62, 152, 150, 122, 99, 143, 239, 146, 122, 183, 77]
+};
+// Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
+const NFP_BLS_MOM = {"labels":[], "bls":[]};
+
+// ── Debt Service Ratio (TDSP) — auto-rebuilt by renderer.py from FRED TDSP
+const TDSP_HIST = {"labels":[], "data":[]};
+
 // ── JOBS ─────────────────────────────────────────────
-const JOBS_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[1933, -1733, -518, 124, 2041, 2529, 2090, 1146, -3548, -5039, 1022, 2058, 2186, 2298, 2992, 2713, 2331, 2115, 2286, 1985, -9246, 7268, 4526, 2515, 1459, 116], "low":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "high":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]};
+const JOBS_ANNUAL ={"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[1933, -1733, -518, 124, 2041, 2529, 2090, 1146, -3548, -5039, 1022, 2058, 2186, 2298, 2992, 2713, 2331, 2115, 2286, 1985, -9246, 7268, 4526, 2515, 1459, 116], "low":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "high":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]};
 const JOBS_SECTORS = [
   {s:"Healthcare & Social Asst.", color:"#FF4757", j21:521,  j22:757,  j23:653,  j24:630,  j25:680},
   {s:"Leisure & Hospitality",     color:"#FF9F43", j21:1566, j22:1313, j23:530,  j24:266,  j25:90},
@@ -2606,6 +2639,24 @@ function buildJobsTab(){
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
+  // BLS vs ADP monthly comparison chart
+  if(NFP_VS_ADP.labels.length){
+    new Chart(document.getElementById("c-nfp-vs-adp").getContext("2d"),{
+      type:"bar",
+      data:{labels:NFP_VS_ADP.labels,datasets:[
+        {label:"BLS Total Nonfarm (K)",data:NFP_VS_ADP.bls,
+         backgroundColor:NFP_VS_ADP.bls.map(v=>v>=0?"#4a72e8cc":"#e06060bb"),borderRadius:3},
+        {label:"ADP Private (K)",data:NFP_VS_ADP.adp,
+         backgroundColor:"#c0701088",borderRadius:3},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+          tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
+        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
+                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
+    });
+  }
+
   const hd=["Sector","2022","2023","2024","2025","Trend"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:${i?'right':'left'}">${x}</th>`).join("")}</tr></thead><tbody>`;
   [...JOBS_SECTORS].sort((a,b)=>b.j25-a.j25).forEach(s=>{
@@ -2906,6 +2957,38 @@ function buildPCETab(){
         y2:{position:"right",grid:{display:false},ticks:{color:"#d03030",callback:v=>v+"%"},min:0,max:15,border:{display:false},title:{display:true,text:"90+ DPD %",color:"#d03030",font:{size:10,weight:"600"}}}
       }}
   });
+
+  // TDSP — Debt Service Ratio history
+  if(TDSP_HIST.labels.length){
+    new Chart(document.getElementById("c-tdsp-line").getContext("2d"),{
+      type:"bar",
+      data:{labels:TDSP_HIST.labels,datasets:[{
+        label:"Debt Service Ratio %",data:TDSP_HIST.data,
+        backgroundColor:TDSP_HIST.data.map(v=>v>=11?"#e06060bb":v>=10?"#c07010bb":"#4a72e8cc"),
+        borderRadius:3
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`DSR: ${c.raw}%`}}},
+        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",maxTicksLimit:15,font:{size:9}},border:{display:false}},
+                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:8,border:{display:false}}}}
+    });
+  }
+
+  // UMich Consumer Sentiment (annual from OIL_VS_SENTIMENT.sentiment)
+  if(OIL_VS_SENTIMENT.labels.length){
+    new Chart(document.getElementById("c-umcsent-line").getContext("2d"),{
+      type:"bar",
+      data:{labels:OIL_VS_SENTIMENT.labels,datasets:[{
+        label:"UMich Sentiment Index",data:OIL_VS_SENTIMENT.sentiment,
+        backgroundColor:OIL_VS_SENTIMENT.sentiment.map(v=>v<60?"#e06060bb":v<75?"#c07010bb":"#4a72e8cc"),
+        borderRadius:3
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`Sentiment: ${c.raw}`}}},
+        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",maxTicksLimit:15},border:{display:false}},
+                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},min:40,border:{display:false}}}}
+    });
+  }
 
   // Consumer table
   const hd=["Metric","2022","2023","2024","2025","Trend","Note"];
@@ -4181,6 +4264,10 @@ function buildStackTab(){
     ["💳 PCE",        "Core PCE",                       "BEA / FRED",          "Monthly",    "Jan 2026",  "Fed's preferred gauge"],
     ["💳 PCE",        "Personal Saving Rate",           "BEA / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls"],
     ["💳 PCE",        "Consumer Credit (G.19)",         "Fed / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls ~5 wks after month"],
+    ["💳 PCE",        "UMich Consumer Sentiment",       "FRED UMCSENT",        "Monthly",    "Mar 2026",  "Agent auto-pulls · sca.isr.umich.edu"],
+    ["💳 PCE",        "Debt Service Ratio (TDSP)",      "FRED TDSP",           "Quarterly",  "Q3 2025",   "Agent auto-pulls · Fed Reserve Board"],
+    ["💵 Wages",      "Atlanta Fed Wage Tracker (3M)",  "FRED FRBATLWGT3MMAUMHWGO","Monthly","Feb 2026",  "Agent auto-pulls · frbatlanta.org"],
+    ["📋 Jobs",       "ADP National Employment Report", "adpemploymentreport.com","Monthly", "Feb 2026",  "Manual — no public API"],
     ["📈 Fed Rates",  "2Y / 5Y / 10Y / 30Y Yields",    "FRED Treasury series","Monthly",    "Mar 2026",  "Agent pulls monthly avgs"],
     ["📈 Fed Rates",  "Fed Funds Rate",                 "FRED DFF",            "Monthly",    "Mar 2026",  "Current: 4.25–4.50%"],
     ["📈 Fed Rates",  "FOMC Dot Plot Forecasts",        "Federal Reserve SEP", "Quarterly",  "Dec 2025",  "Next SEP: Mar 19 2026"],
@@ -4839,6 +4926,10 @@ if(document.readyState === 'loading'){
           <tr><td><strong>Core CPI / PCE</strong></td><td>Excludes volatile food &amp; energy. Fed targets 2% core PCE. Jan 2026: Core CPI 3.3%, Core PCE 2.8%.</td></tr>
           <tr><td><strong>U-3 vs U-6</strong></td><td>U-3 = headline unemployment. U-6 adds marginally attached + involuntary part-time. Jan 2026: U-3 4.0%, U-6 8.0%.</td></tr>
           <tr><td><strong>AHE</strong></td><td>Average Hourly Earnings — mean hourly wage of all private nonfarm workers. Jan 2026: $37.22, +4.1% YoY.</td></tr>
+          <tr><td><strong>ATL Wage Tracker</strong></td><td>Atlanta Fed Wage Growth Tracker — 3-month moving average of median hourly wage growth, unweighted. FRED: FRBATLWGT3MMAUMHWGO. More stable than BLS AHE.</td></tr>
+          <tr><td><strong>UMCSENT</strong></td><td>University of Michigan Index of Consumer Sentiment — monthly survey of consumer confidence. Pre-pandemic avg ~95. 2022 low: 50. Source: sca.isr.umich.edu.</td></tr>
+          <tr><td><strong>TDSP</strong></td><td>Household Debt Service Ratio — debt payments as % of disposable income. Fed Reserve Board. Includes mortgage + consumer. 2007 peak: ~13.2%. Current: ~9.8%.</td></tr>
+          <tr><td><strong>ADP Report</strong></td><td>ADP National Employment Report — private payroll estimate from ADP payroll processing data. Released 2 days before BLS. Source: adpemploymentreport.com. Often diverges from BLS.</td></tr>
           <tr><td><strong>Initial Claims (ICSA)</strong></td><td>Weekly count of new unemployment insurance filings. Released Thursdays by DOL. SA. Below ~250K = healthy labor market. Spikes signal layoffs.</td></tr>
           <tr><td><strong>Continued Claims (CCSA)</strong></td><td>Weekly count of ongoing unemployment insurance recipients. Lags initial claims by 1 week. Rising continued claims = harder re-employment.</td></tr>
           <tr><td><strong>2Y–10Y Spread</strong></td><td>10yr minus 2yr Treasury. Negative = inverted (recession signal). Record 793-day inversion ended mid-2025; now ~+25bp.</td></tr>
