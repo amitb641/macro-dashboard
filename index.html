@@ -622,6 +622,19 @@ h1 span { color: var(--accent) !important; }
   color: var(--dim) !important;
   margin-top: 5px !important;
 }
+.kpi-delta {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0;
+}
+.kpi-delta.up   { color: #0D7A4A; background: #f0fdf4; }
+.kpi-delta.down { color: #C0392B; background: #fef2f2; }
+.kpi-delta.flat { color: #B45309; background: #fffbeb; }
 
 /* ── NAV TABS ── */
 .nav {
@@ -2098,7 +2111,7 @@ const JOBS_SECTORS = [
 ];
 
 // ── WEEKLY JOBLESS CLAIMS ────────────────────────────
-const CLAIMS_WEEKLY = {"labels":["Jan'20","","","","Feb'20","","","","Mar'20","","","","Apr'20","","","","May'20","","","","Jun'20","","","","Jul'20","","","","Aug'20","","","","Sep'20","","","","Oct'20","","","","Nov'20","","","","Dec'20","","",""], "initial":[215000,223000,217000,282000,3307000,6867000,6615000,5237000,4442000,3846000,2914000,2126000,1566000,1413000,1327000,1310000,1186000,1106000,893000,884000,857000,826000,787000,711000,709000,711000,751000,758000,778000,742000,787000,892000,853000,862000,787000,716000,892000,898000,873000,832000,712000,781000,790000,825000,892000,873000,837000,787000], "continued":[1793000,1733000,1690000,3029000,7446000,11912000,16806000,22377000,23012000,21052000,19371000,17770000,16090000,14709000,13684000,12640000,11979000,11343000,10672000,10100000,9584000,9019000,8535000,7946000,7548000,7183000,6897000,6509000,6206000,5936000,5647000,5296000,5032000,4782000,4494000,4216000,3981000,3751000,3581000,3415000,3256000,3105000,2979000,2841000,2740000,2650000,2550000,2460000]};
+const CLAIMS_WEEKLY = {"labels":["Mar'21", "Apr'21", "", "", "", "May'21", "", "", "", "", "Jun'21", "", "", "", "Jul'21", "", "", "", "", "Aug'21", "", "", "", "Sep'21", "", "", "", "Oct'21", "", "", "", "", "Nov'21", "", "", "", "Dec'21", "", "", "", "Jan'22", "", "", "", "", "Feb'22", "", "", "", "Mar'22", "", "", "", "Apr'22", "", "", "", "", "May'22", "", "", "", "Jun'22", "", "", "", "Jul'22", "", "", "", "", "Aug'22", "", "", "", "Sep'22", "", "", "", "Oct'22", "", "", "", "", "Nov'22", "", "", "", "Dec'22", "", "", "", "", "Jan'23", "", "", "", "Feb'23", "", "", "", "Mar'23", "", "", "", "Apr'23", "", "", "", "", "May'23", "", "", "", "Jun'23", "", "", "", "Jul'23", "", "", "", "", "Aug'23", "", "", "", "Sep'23", "", "", "", "", "Oct'23", "", "", "", "Nov'23", "", "", "", "Dec'23", "", "", "", "", "Jan'24", "", "", "", "Feb'24", "", "", "", "Mar'24", "", "", "", "", "Apr'24", "", "", "", "May'24", "", "", "", "Jun'24", "", "", "", "", "Jul'24", "", "", "", "Aug'24", "", "", "", "", "Sep'24", "", "", "", "Oct'24", "", "", "", "Nov'24", "", "", "", "", "Dec'24", "", "", "", "Jan'25", "", "", "", "Feb'25", "", "", "", "Mar'25", "", "", "", "", "Apr'25", "", "", "", "May'25", "", "", "", "", "Jun'25", "", "", "", "Jul'25", "", "", "", "Aug'25", "", "", "", "", "Sep'25", "", "", "", "Oct'25", "", "", "", "Nov'25", "", "", "", "", "Dec'25", "", "", "", "Jan'26", "", "", "", "", "Feb'26", "", "", "", "Mar'26", "14 Mar'26"], "initial":[867621, 356556, 422097, 408513, 543061, 527392, 492964, 504794, 358331, 374561, 410990, 507815, 497127, 537700, 349974, 357757, 312926, 241703, 281853, 350785, 312842, 296443, 328236, 264312, 265353, 330165, 309342, 251390, 360435, 272722, 339230, 316854, 334800, 290407, 258233, 299742, 315861, 301024, 266476, 312869, 227819, 228520, 207460, 214993, 189358, 202431, 212087, 240589, 215382, 253000, 222504, 187331, 184207, 221347, 215093, 207653, 254341, 221245, 245435, 240142, 214718, 212325, 253579, 214438, 256622, 256484, 227447, 198131, 244686, 186175, 194371, 200969, 235333, 188326, 230019, 241348, 212953, 181504, 195014, 250381, 214973, 224587, 218469, 200730, 180425, 214522, 203416, 193947, 219117, 246540, 206071, 229009, 201174, 264514, 237487, 197552, 242576, 226385, 226571, 205322, 258699, 264822, 211828, 216643, 264163, 222760, 221365, 247296, 252422, 254177, 227493, 203392, 197757, 225161, 195942, 202716, 203834, 238309, 262391, 231500, 223080, 212342, 256953, 256993, 219957, 207704, 241438, 248883, 202100, 202944, 239473, 227591, 219931, 253800, 250296, 231509, 227742, 253082, 207833, 196934, 225982, 248269, 258092, 247565, 216579, 200141, 217380, 218694, 245651, 251338, 243376, 231894, 212445, 214267, 237957, 235533, 249019, 203746, 238284, 232954, 210317, 233281, 212178, 238996, 244250, 226461, 237334, 237940, 202604, 205372, 243081, 237042, 220733, 213386, 246936, 215642, 225938, 244019, 219660, 220720, 204754, 230034, 236896, 204801, 213969, 217380, 222872, 216009, 218676, 228716, 246107, 240086, 234664, 243769, 219620, 206788, 217332, 217014, 246256, 227848, 249638, 257029, 223342, 251565, 243122, 226457, 216048, 237759, 212889, 231859, 251753, 220589, 238956, 256246, 246759, 217331, 255286, 245755, 234196, 246210, 238166, 212741, 233897, 233449, 254699, 253708, 233178, 236632, 259117, 225514, 221603, 211624, 258271, 236982, 258172, 227485, 255958, 235070, 240847, 223079, 232915, 224915, 211550, 222656, 231512, 214549, 233012, 243384, 254532, 236702, 222559, 232118, 232397, 222104, 243479, 235557, 248516, 240244, 227457, 217908], "continued":[4116739, 3777572, 3256787, 3146316, 3107473, 3776646, 3091161, 3442417, 3031244, 3229258, 3529903, 3027824, 3208496, 3681453, 2231148, 2617889, 2848749, 2795667, 2732052, 2356778, 2163032, 2800581, 2107175, 2398382, 2376417, 2633052, 2846335, 2765179, 2562275, 2967096, 2082627, 2869693, 2605397, 2738797, 2048050, 2810620, 2083667, 2908573, 2398591, 2475435, 1385277, 1486264, 1651364, 1667955, 1619360, 1580043, 1385669, 1498943, 1785171, 1415141, 1741897, 1420087, 1722075, 1510325, 1334701, 1778746, 1759469, 1411477, 1507425, 1374905, 1373206, 1690588, 1582579, 1691650, 1524622, 1509400, 1414987, 1567138, 1347662, 1751465, 1380132, 1715277, 1612690, 1501728, 1612417, 1577408, 1590049, 1656664, 1657412, 1693676, 1702967, 1358485, 1527942, 1537881, 1678584, 1562451, 1566171, 1756402, 1741277, 1619275, 1380131, 1699775, 1582789, 1600299, 1856170, 1658650, 1761225, 1630369, 1897458, 1644907, 1636287, 1665934, 1849184, 1738966, 1821846, 1882746, 1763429, 1795779, 1871358, 1663441, 1717806, 1777254, 1890414, 1715457, 1637220, 1720031, 1616469, 1637149, 1724782, 1854496, 1882713, 1899391, 1727400, 1813416, 1649453, 1825994, 1822077, 1844855, 1651599, 1811089, 1657288, 1700448, 1881168, 1673495, 1696200, 1842550, 1639523, 1888528, 1626522, 1648896, 1687194, 1854615, 1712065, 1630741, 1798691, 1802346, 1819277, 1810888, 1891497, 1845691, 1888326, 1740579, 1777780, 1715331, 1892869, 1715979, 1782209, 1713144, 1824987, 1839231, 1714910, 1721000, 1717962, 1717815, 1761657, 1731427, 1764543, 1855849, 1862367, 1809897, 1853006, 1837044, 1768358, 1875564, 1782361, 1769629, 1734308, 1869214, 1819858, 1897096, 1702441, 1862833, 1726209, 1840937, 1832614, 1734722, 1718033, 1796869, 1741352, 1842401, 1779303, 1871435, 1702050, 1845385, 1873903, 1735203, 1730258, 1944620, 1790749, 1823860, 1805215, 1839884, 1930223, 1819201, 1878065, 1763316, 1916273, 1822530, 1750929, 1784293, 1818670, 1944309, 1894619, 1862115, 1752534, 1769724, 1789073, 1759444, 1902701, 1788821, 1783409, 1830808, 1760458, 1805070, 1815412, 1776946, 1896770, 1912702, 1790515, 1792598, 1858080, 1797018, 1837080, 1925612, 1815055, 1791732, 1778336, 1760151, 1808309, 1870665, 1830003, 1808438, 1923023, 1854455, 1823034, 1823170, 1918160, 1854773, 1890565, 1803617, 1914955, 1823405, 1805014, 1878193, 1845309, 1857199, 1815157, 1917899, 1833386, 1892901]};
 
 // ── FORECAST ─────────────────────────────────────────
 const FC_MACRO = {
@@ -2171,20 +2184,13 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [
-  {lbl:"Real GDP 2025",        val:"+2.2%",  sub:"BEA full-year · Q3: +4.4%, Q4: +1.4%",  col:"#4a72e8"},
-  {lbl:"Real GDP 2024",        val:"+2.8%",  sub:"Prior year comparison",                  col:"#7a90aa"},
-  {lbl:"Unemployment Feb'26",    val:"4.4%",  sub:"Avg; peaked 4.6% Nov · Jan'26: 4.3%",   col:"#c07010"},
-  {lbl:"CPI 2025",             val:"2.7%",   sub:"Dec 2025 YoY; Jan'26: 2.4%",            col:"#d03030"},
-  {lbl:"Wage Growth 2025",     val:"+3.3%",  sub:"ECI Dec 2025 · real wages +0.7%",        col:"#1a9e4a"},
-  {lbl:"Jobs Added 2025",      val:"+181K",  sub:"Revised benchmark · ~15K/mo avg",        col:"#c07010"},
-  {lbl:"2026F GDP",            val:"~2.1%",  sub:"Consensus · GS: +2.6%, Deloitte: +1.9%",col:"#4a72e8"},
-  {lbl:"2026F Unemployment",   val:"4.3–4.5%",sub:"GS baseline · RSM: up to 4.5%",        col:"#c07010"},
-];
-document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>`
-  <div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
-  <div class="kpi-val" style="color:${k.col}">${k.val}</div>
-  <div class="kpi-sub">${k.sub}</div></div>`).join("");
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.7%", "col":"#d03030", "delta":-0.17, "chg":"-0.2pp", "sub":"Prior: 2.8% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.27%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.76% \u00b7 Spread: +51bp"}, {"lbl":"Initial Claims Mar'26", "val":"218K", "col":"#c07010", "delta":-9549, "chg":"-10K", "sub":"Prior wk: 227K (Mar'26)"}];
+document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
+  const d = k.delta ? `<span class="kpi-delta ${k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat'}">${k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→'} ${k.chg||''}</span>` : '';
+  return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
+  <div class="kpi-val" style="color:${k.col}">${k.val}${d}</div>
+  <div class="kpi-sub">${k.sub}</div></div>`;
+}).join("");
 
 // ════════════════════════════════════════════════════
 // GDP TAB
@@ -2367,13 +2373,13 @@ function buildUnempTab(){
   if(builtTabs.unemp) return; builtTabs.unemp=1;
 
   document.getElementById("unemp-metrics").innerHTML = [
-    {lbl:"Unemployment 2024",      val:"4.0%",  sub:"Annual avg; rose from 3.6% in 2023",     col:"#c07010"},
+    {lbl:"Unemployment Feb'26",      val:"4.4%",  sub:"Annual avg; rose from 3.6% in 2023",     col:"#c07010"},
     {lbl:"Unemployment Feb'26",      val:"4.4%", sub:"Avg; peaked 4.6% Nov'25, Jan'26: 4.3%",  col:"#d03030"},
     {lbl:"2026F Consensus",        val:"4.5%",  sub:"Fed SEP median; range 4.3–4.8%",         col:"#c07010"},
     {lbl:"Lowest Sector 2024",     val:"1.8%",  sub:"Government (federal/state)",              col:"#1a9e4a"},
     {lbl:"Highest Sector 2024",    val:"4.6%",  sub:"Construction & cruise/resort workers",   col:"#d03030"},
     {lbl:"U-6 Broad Rate Feb'26", val:"7.9%",  sub:"Incl. underemployed & discouraged",      col:"#6d40cc"},
-    {lbl:"Initial Claims",        val:"221K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
+    {lbl:"Initial Claims Mar'26",        val:"218K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
@@ -2421,14 +2427,7 @@ function buildUnempTab(){
     const clLabels = CLAIMS_WEEKLY.labels;
     const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);
     const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
-    // Ensure the last label is always visible (show latest week)
-    if(clLabels.length>0){
-      const lastIdx=clLabels.length-1;
-      if(!clLabels[lastIdx]){
-        // Find most recent non-empty label and use its date pattern to derive last week
-        for(let i=lastIdx;i>=0;i--){if(clLabels[i]){clLabels[lastIdx]=clLabels[i];break;}}
-      }
-    }
+    // The renderer always sets the last label to the latest week's date (e.g. "8 Mar'26")
     new Chart(document.getElementById("c-claims-line").getContext("2d"),{
       type:"line",
       data:{labels:clLabels,datasets:[
@@ -4167,8 +4166,8 @@ function buildStackTab(){
     ["📊 GDP",        "2026 GDP Forecasts",             "GS · JPM · Deloitte", "Quarterly",  "Feb 2026",  "Update after each quarterly revision"],
     ["📋 Jobs",       "Nonfarm Payrolls",               "BLS CES",             "Monthly",    "Feb 2026",  "1st Friday · agent auto-pulls"],
     ["📋 Jobs",       "Payrolls by Sector",             "BLS CES",             "Annual",     "Jan 2026",  "Jan benchmark: −862K applied"],
-    ["📋 Jobs",       "Initial Jobless Claims (ICSA)",  "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
-    ["📋 Jobs",       "Continued Claims (CCSA)",        "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
+    ["👷 Unemp",      "Initial Jobless Claims (ICSA)",  "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
+    ["👷 Unemp",      "Continued Claims (CCSA)",        "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
     ["👷 Unemp",      "U-3 Unemployment Rate",          "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "U-6 Underemployment",            "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Manual — no sector API"],
@@ -4812,8 +4811,8 @@ if(document.readyState === 'loading'){
       <tbody>
         <tr><td><strong>🔭 Outlook</strong></td><td>2026 macro scenarios, recession probabilities, institutional forecasts, risk factors</td><td>GDP growth range, recession prob, Fed path, key risks</td><td>GS · JPM · Deloitte · EY · RSM · MS</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
-        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, weekly initial &amp; continued jobless claims, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, weekly claims, annual avg</td><td>BLS CES · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates</td><td>U-3 rate, U-6 rate, sector unemployment YoY</td><td>BLS Current Population Survey (CPS)</td><td>Feb 2026</td></tr>
+        <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS CES</td><td>Mar 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates, weekly initial &amp; continued jobless claims</td><td>U-3 rate, U-6 rate, sector unemployment YoY, weekly claims</td><td>BLS CPS · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
         <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>

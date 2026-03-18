@@ -17,7 +17,7 @@ Monthly series (latest available):
   BLS:  sector payrolls
 """
 
-import os, json, datetime, sys
+import os, json, datetime, sys, time
 from pathlib import Path
 
 try:
@@ -38,20 +38,32 @@ errors = []
 # ── FRED ──────────────────────────────────────────────────────────────
 
 def fred_obs(series_id, limit=14, freq=None):
-    """Return list of {date,value} newest first, no missing values."""
+    """Return list of {date,value} newest first, no missing values.
+    Retries up to 3 times with exponential backoff on 5xx errors."""
     if not FRED_KEY:
         errors.append(f'FRED key missing — skipped {series_id}'); return []
     params = {'series_id': series_id, 'api_key': FRED_KEY,
               'file_type': 'json', 'sort_order': 'desc', 'limit': limit}
     if freq: params['frequency'] = freq
-    try:
-        r = requests.get('https://api.stlouisfed.org/fred/series/observations',
-                         params=params, timeout=15)
-        r.raise_for_status()
-        return [{'date': o['date'], 'value': float(o['value'])}
-                for o in r.json().get('observations', []) if o['value'] != '.']
-    except Exception as e:
-        errors.append(f'FRED {series_id}: {e}'); return []
+    last_err = None
+    for attempt in range(4):  # 0, 1, 2, 3
+        try:
+            r = requests.get('https://api.stlouisfed.org/fred/series/observations',
+                             params=params, timeout=15)
+            r.raise_for_status()
+            return [{'date': o['date'], 'value': float(o['value'])}
+                    for o in r.json().get('observations', []) if o['value'] != '.']
+        except requests.exceptions.HTTPError as e:
+            last_err = e
+            if r.status_code >= 500 and attempt < 3:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print(f'    ↻ FRED {series_id}: {r.status_code}, retry {attempt+1}/3 in {wait}s')
+                time.sleep(wait)
+                continue
+            break
+        except Exception as e:
+            last_err = e; break
+    errors.append(f'FRED {series_id}: {last_err}'); return []
 
 def fv(sid, limit=14):
     d = fred_obs(sid, limit); return d[0] if d else None
@@ -198,20 +210,26 @@ def collect():
     # ── Monthly: labor, inflation, housing, GDP ───────────────────────
     # Pull 320 observations (~26 years) to build charts from 2000
     # ── Weekly: jobless claims (DOL releases Thursdays) ───────────────
-    # Only fetch fresh on Thursdays; carry forward prior data on other days
-    if datetime.date.today().weekday() == 3:  # Thursday
-        print('  [Weekly] Jobless Claims (Thursday refresh)...')
-        data['icsa']    = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
-        data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
-    else:
-        print('  [Weekly] Jobless Claims (carry forward — not Thursday)')
+    # Try carry-forward on non-Thursdays; always fetch fresh if no prior data
+    prior_icsa, prior_ccsa = [], []
+    if datetime.date.today().weekday() != 3:  # Not Thursday — try carry forward
         try:
             prior = json.loads(OUT_FILE.read_text()).get('data', {}) if OUT_FILE.exists() else {}
         except (json.JSONDecodeError, OSError):
             prior = {}
-            errors.append('ICSA carry-forward: could not read prior raw_data.json')
-        data['icsa']    = prior.get('icsa', [])
-        data['ccsa']    = prior.get('ccsa', [])
+        prior_icsa = prior.get('icsa', [])
+        prior_ccsa = prior.get('ccsa', [])
+
+    if datetime.date.today().weekday() == 3 or not prior_icsa:
+        # Thursday refresh OR no prior data — fetch fresh from FRED
+        reason = 'Thursday refresh' if datetime.date.today().weekday() == 3 else 'no prior data'
+        print(f'  [Weekly] Jobless Claims (fresh fetch — {reason})...')
+        data['icsa']    = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
+        data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
+    else:
+        print('  [Weekly] Jobless Claims (carry forward — not Thursday)')
+        data['icsa']    = prior_icsa
+        data['ccsa']    = prior_ccsa
 
     print('  [Monthly] Labor...')
     data['unrate']      = fred_obs('UNRATE',     320)
@@ -263,6 +281,19 @@ def collect():
     data['wti_monthly']       = fred_obs('DCOILWTICO', 320, freq='m')
     data['brent_monthly']     = fred_obs('DCOILBRENTEU', 320, freq='m')
 
+    # ── Carry forward: fill failed series from prior run ─────────────
+    try:
+        prior = json.loads(OUT_FILE.read_text()).get('data', {}) if OUT_FILE.exists() else {}
+    except (json.JSONDecodeError, OSError):
+        prior = {}
+    carried = 0
+    for key in data:
+        if not data[key] and key in prior and prior[key]:
+            data[key] = prior[key]
+            carried += 1
+    if carried:
+        print(f'  ℹ  Carried forward {carried} series from prior run')
+
     # ── Package ───────────────────────────────────────────────────────
     n_ok = sum(1 for v in data.values() if v)
     OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -273,7 +304,8 @@ def collect():
 
     print(f'[Agent 1] Done: {n_ok}/{len(data)} series, {len(errors)} errors')
     for e in errors: print(f'  ⚠  {e}')
-    return len(errors) == 0
+    # Succeed if we have data for most series (allow some FRED failures)
+    return n_ok >= len(data) * 0.6
 
 
 if __name__ == '__main__':
