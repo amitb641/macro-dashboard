@@ -237,6 +237,8 @@ def collect():
     data['payems']      = fred_obs('PAYEMS',     320)
     data['ahetpi']      = fred_obs('AHETPI',     320)
     data['jolts']       = fv('JTSJOL')
+    data['atl_wage_tracker'] = fred_obs('FRBATLWGT3MMAUMHWGO', 30)  # Atlanta Fed Wage Growth Tracker 3M avg
+    data['umcsent']     = fred_obs('UMCSENT',    30)   # UMich Consumer Sentiment (monthly)
     data['bls_sectors'] = bls_fetch([
         'CES0000000001','CES2000000001','CES3000000001',
         'CES4000000001','CES6000000001','CES7000000001',
@@ -260,6 +262,7 @@ def collect():
     data['gdp_growth']  = fred_obs('A191RL1Q225SBEA', 12)
     data['cc_delinq']   = fred_obs('DRCCLACBS',  12)
     data['mtg_delinq']  = fred_obs('DRSFRMACBS', 12)
+    data['tdsp']        = fred_obs('TDSP',   30)   # Household Debt Service Ratio (% of disp. income)
 
     # ── Annual history for chart rebuilding (from 2000) ──────────────
     print('  [History] Annual chart series...')

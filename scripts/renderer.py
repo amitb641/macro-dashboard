@@ -439,6 +439,42 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'CREDIT_GROWTH', {
                 'labels': labels, 'revolving': rev, 'nonrevolving': nonrev})
 
+    # ── TDSP_HIST ────────────────────────────────────────────────────
+    tdsp = data.get('tdsp', [])
+    if tdsp and len(tdsp) >= 4:
+        labels_t, values_t = [], []
+        for obs in sorted(tdsp, key=lambda x: x['date']):
+            yr = int(obs['date'][:4])
+            if yr >= START_YEAR:
+                qlbl = datetime.datetime.strptime(obs['date'], '%Y-%m-%d').strftime("%Y Q") + \
+                       str((int(obs['date'][5:7]) - 1) // 3 + 1)
+                labels_t.append(qlbl)
+                values_t.append(round(obs['value'], 1))
+        if labels_t:
+            html = _inject_const(html, 'TDSP_HIST', {
+                'labels': labels_t, 'data': values_t})
+
+    # ── NFP_VS_ADP (BLS side only — ADP is manually maintained) ────
+    payems = data.get('payems', [])
+    if payems and len(payems) >= 25:
+        # Compute MoM changes for last 24 months (newest-first in source)
+        months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes
+        nfp_labels, nfp_bls = [], []
+        for i in range(1, len(months)):
+            lbl = datetime.datetime.strptime(months[i]['date'], '%Y-%m-%d').strftime("%b'%y")
+            chg = round(months[i]['value'] - months[i-1]['value'])
+            nfp_labels.append(lbl)
+            nfp_bls.append(chg)
+        if nfp_labels:
+            # Only inject BLS side; preserve ADP data from HTML
+            bls_json = json.dumps({'labels': nfp_labels, 'bls': nfp_bls}, separators=(', ', ':'))
+            pattern = r'const NFP_BLS_MOM\s*=\s*\{[\s\S]*?\};'
+            new_decl = f'const NFP_BLS_MOM = {bls_json};'
+            new_html, n = re.subn(pattern, new_decl, html, count=1)
+            if n:
+                applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
+                html = new_html
+
     return html
 
 
@@ -912,17 +948,22 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d, 'chg': f'{sign}{d:.0f}K',
                       'sub': f"Prior: {prev_chg:+.0f}K ({_mlbl(payems[1]['date'])})"})
 
-    # 3. CPI YoY
+    # 3. CPI YoY — with MoM + YoY in sub
     cpi = data.get('cpi_all', [])
     if cpi and len(cpi) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(cpi)
+        # MoM % change (index level)
+        mom_pct = None
+        if len(cpi) >= 2 and cpi[1]['value']:
+            mom_pct = round((cpi[0]['value'] - cpi[1]['value']) / cpi[1]['value'] * 100, 2)
         if yoy_cur is not None and yoy_prev is not None:
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
             lbl = f"CPI YoY {_mlbl(cpi[0]['date'])}"
+            mom_str = f"MoM: {mom_pct:+.2f}% · " if mom_pct is not None else ""
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
+                          'sub': f"{mom_str}YoY: {yoy_cur:.1f}% · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
 
     # 4. Core PCE YoY
     pce_core = data.get('pce_core', [])
@@ -936,17 +977,31 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
-    # 5. Wages YoY
-    ahetpi = data.get('ahetpi', [])
-    if ahetpi and len(ahetpi) >= 14:
-        yoy_cur, yoy_prev = _yoy_pair(ahetpi)
-        if yoy_cur is not None and yoy_prev is not None:
-            d = round(yoy_cur - yoy_prev, 2)
-            sign = '+' if d > 0 else ''
-            lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
-            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#1a9e4a',
-                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
+    # 5. Wages — Atlanta Fed Wage Growth Tracker 3M avg (preferred) + BLS fallback
+    atl_wage = data.get('atl_wage_tracker', [])
+    if atl_wage and len(atl_wage) >= 2:
+        cur_w, prev_w, chg_w, d_w = _mom(atl_wage)
+        # YoY: compare to 12 months ago if available
+        yoy_w = None
+        if len(atl_wage) >= 13:
+            yoy_w = round(cur_w - atl_wage[12]['value'], 1)
+        lbl = f"Wage Growth (ATL 3M) {_mlbl(atl_wage[0]['date'])}"
+        yoy_str = f" · YoY: {yoy_w:+.1f}pp" if yoy_w is not None else ""
+        cards.append({'lbl': lbl, 'val': f'{cur_w:.1f}%', 'col': '#1a9e4a',
+                      'delta': d_w, 'chg': f'{chg_w}pp',
+                      'sub': f"MoM: {chg_w}pp{yoy_str} · Prior: {prev_w:.1f}% ({_mlbl(atl_wage[1]['date'])})"})
+    else:
+        # Fallback to BLS AHETPI
+        ahetpi = data.get('ahetpi', [])
+        if ahetpi and len(ahetpi) >= 14:
+            yoy_cur, yoy_prev = _yoy_pair(ahetpi)
+            if yoy_cur is not None and yoy_prev is not None:
+                d = round(yoy_cur - yoy_prev, 2)
+                sign = '+' if d > 0 else ''
+                lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
+                cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#1a9e4a',
+                              'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                              'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
 
     # 6. Fed Funds Rate
     ffr = data.get('ffr')
@@ -979,6 +1034,28 @@ def rebuild_kpi_strip(html, data, vals):
         cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'col': '#c07010',
                       'delta': d, 'chg': f'{sign}{d/1000:.0f}K',
                       'sub': f"Prior wk: {prev/1000:.0f}K ({_mlbl(icsa[1]['date'])})"})
+
+    # 9. Consumer Sentiment (UMich)
+    umcsent = data.get('umcsent', [])
+    if umcsent and len(umcsent) >= 2:
+        cur_s, prev_s, chg_s, d_s = _mom(umcsent)
+        yoy_s = None
+        if len(umcsent) >= 13:
+            yoy_s = round(cur_s - umcsent[12]['value'], 1)
+        lbl = f"UMich Sentiment {_mlbl(umcsent[0]['date'])}"
+        yoy_str = f" · YoY: {yoy_s:+.1f}" if yoy_s is not None else ""
+        cards.append({'lbl': lbl, 'val': f'{cur_s:.1f}', 'col': '#6d40cc',
+                      'delta': d_s, 'chg': f'{chg_s}',
+                      'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
+
+    # 10. Debt Service Ratio (TDSP)
+    tdsp = data.get('tdsp', [])
+    if tdsp and len(tdsp) >= 2:
+        cur_t, prev_t, chg_t, d_t = _mom(tdsp)
+        lbl = f"Debt Service Ratio {_mlbl(tdsp[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur_t:.1f}%', 'col': '#c07010',
+                      'delta': d_t, 'chg': f'{chg_t}pp',
+                      'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_mlbl(tdsp[1]['date'])})"})
 
     if not cards:
         return html
