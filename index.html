@@ -622,6 +622,19 @@ h1 span { color: var(--accent) !important; }
   color: var(--dim) !important;
   margin-top: 5px !important;
 }
+.kpi-delta {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0;
+}
+.kpi-delta.up   { color: #0D7A4A; background: #f0fdf4; }
+.kpi-delta.down { color: #C0392B; background: #fef2f2; }
+.kpi-delta.flat { color: #B45309; background: #fffbeb; }
 
 /* ── NAV TABS ── */
 .nav {
@@ -2171,20 +2184,13 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [
-  {lbl:"Real GDP 2025",        val:"+2.2%",  sub:"BEA full-year · Q3: +4.4%, Q4: +1.4%",  col:"#4a72e8"},
-  {lbl:"Real GDP 2024",        val:"+2.8%",  sub:"Prior year comparison",                  col:"#7a90aa"},
-  {lbl:"Unemployment Feb'26",    val:"4.4%",  sub:"Avg; peaked 4.6% Nov · Jan'26: 4.3%",   col:"#c07010"},
-  {lbl:"CPI 2025",             val:"2.7%",   sub:"Dec 2025 YoY; Jan'26: 2.4%",            col:"#d03030"},
-  {lbl:"Wage Growth 2025",     val:"+3.3%",  sub:"ECI Dec 2025 · real wages +0.7%",        col:"#1a9e4a"},
-  {lbl:"Jobs Added 2025",      val:"+181K",  sub:"Revised benchmark · ~15K/mo avg",        col:"#c07010"},
-  {lbl:"2026F GDP",            val:"~2.1%",  sub:"Consensus · GS: +2.6%, Deloitte: +1.9%",col:"#4a72e8"},
-  {lbl:"2026F Unemployment",   val:"4.3–4.5%",sub:"GS baseline · RSM: up to 4.5%",        col:"#c07010"},
-];
-document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>`
-  <div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
-  <div class="kpi-val" style="color:${k.col}">${k.val}</div>
-  <div class="kpi-sub">${k.sub}</div></div>`).join("");
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.7%", "col":"#d03030", "delta":-0.17, "chg":"-0.2pp", "sub":"Prior: 2.8% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.27%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.76% \u00b7 Spread: +51bp"}, {"lbl":"Initial Claims Mar'26", "val":"218K", "col":"#c07010", "delta":-9549, "chg":"-10K", "sub":"Prior wk: 227K (Mar'26)"}];
+document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
+  const d = k.delta ? `<span class="kpi-delta ${k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat'}">${k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→'} ${k.chg||''}</span>` : '';
+  return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
+  <div class="kpi-val" style="color:${k.col}">${k.val}${d}</div>
+  <div class="kpi-sub">${k.sub}</div></div>`;
+}).join("");
 
 // ════════════════════════════════════════════════════
 // GDP TAB
@@ -2367,7 +2373,7 @@ function buildUnempTab(){
   if(builtTabs.unemp) return; builtTabs.unemp=1;
 
   document.getElementById("unemp-metrics").innerHTML = [
-    {lbl:"Unemployment 2024",      val:"4.0%",  sub:"Annual avg; rose from 3.6% in 2023",     col:"#c07010"},
+    {lbl:"Unemployment Feb'26",      val:"4.4%",  sub:"Annual avg; rose from 3.6% in 2023",     col:"#c07010"},
     {lbl:"Unemployment Feb'26",      val:"4.4%", sub:"Avg; peaked 4.6% Nov'25, Jan'26: 4.3%",  col:"#d03030"},
     {lbl:"2026F Consensus",        val:"4.5%",  sub:"Fed SEP median; range 4.3–4.8%",         col:"#c07010"},
     {lbl:"Lowest Sector 2024",     val:"1.8%",  sub:"Government (federal/state)",              col:"#1a9e4a"},
@@ -4479,7 +4485,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 18, 2026 02:13 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 18, 2026 02:23 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>

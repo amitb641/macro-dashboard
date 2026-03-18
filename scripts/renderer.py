@@ -860,6 +860,142 @@ def render_outlook(html, ana):
     return html
 
 
+def rebuild_kpi_strip(html, data, vals):
+    """Rebuild the top-level KPIS array with latest values and MoM deltas."""
+
+    def _mlbl(date_str):
+        return datetime.datetime.strptime(date_str, '%Y-%m-%d').strftime("%b'%y")
+
+    def _mom(series, precision=1, pct=False):
+        """Return (current, prior, delta_str, delta_num) from newest-first monthly series."""
+        if not series or len(series) < 2:
+            return None, None, '', 0
+        cur, prev = series[0]['value'], series[1]['value']
+        if pct:
+            # Both are already YoY %, compute the delta in pp
+            d = round(cur - prev, precision)
+        else:
+            d = round(cur - prev, precision)
+        sign = '+' if d > 0 else ''
+        return cur, prev, f'{sign}{d}', d
+
+    def _yoy_pair(series):
+        """Return (latest_yoy, prior_month_yoy) from index series."""
+        if not series or len(series) < 14:
+            return None, None
+        v0, v12 = series[0]['value'], series[12]['value']
+        v1, v13 = series[1]['value'], series[13]['value']
+        yoy_cur  = round((v0 - v12) / v12 * 100, 2) if v12 else None
+        yoy_prev = round((v1 - v13) / v13 * 100, 2) if v13 else None
+        return yoy_cur, yoy_prev
+
+    cards = []
+
+    # 1. Unemployment
+    unrate = data.get('unrate', [])
+    if unrate and len(unrate) >= 2:
+        cur, prev, chg, d = _mom(unrate)
+        lbl = f"Unemployment {_mlbl(unrate[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'col': '#c07010',
+                      'delta': d, 'chg': f'{chg}pp',
+                      'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
+
+    # 2. NFP Jobs (MoM change)
+    payems = data.get('payems', [])
+    if payems and len(payems) >= 3:
+        cur_chg = round(payems[0]['value'] - payems[1]['value'])
+        prev_chg = round(payems[1]['value'] - payems[2]['value'])
+        d = cur_chg - prev_chg
+        sign = '+' if d > 0 else ''
+        lbl = f"Jobs {_mlbl(payems[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur_chg:+.0f}K', 'col': '#4a72e8',
+                      'delta': d, 'chg': f'{sign}{d:.0f}K',
+                      'sub': f"Prior: {prev_chg:+.0f}K ({_mlbl(payems[1]['date'])})"})
+
+    # 3. CPI YoY
+    cpi = data.get('cpi_all', [])
+    if cpi and len(cpi) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(cpi)
+        if yoy_cur is not None and yoy_prev is not None:
+            d = round(yoy_cur - yoy_prev, 2)
+            sign = '+' if d > 0 else ''
+            lbl = f"CPI YoY {_mlbl(cpi[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
+
+    # 4. Core PCE YoY
+    pce_core = data.get('pce_core', [])
+    if pce_core and len(pce_core) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(pce_core)
+        if yoy_cur is not None and yoy_prev is not None:
+            d = round(yoy_cur - yoy_prev, 2)
+            sign = '+' if d > 0 else ''
+            lbl = f"Core PCE {_mlbl(pce_core[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
+
+    # 5. Wages YoY
+    ahetpi = data.get('ahetpi', [])
+    if ahetpi and len(ahetpi) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(ahetpi)
+        if yoy_cur is not None and yoy_prev is not None:
+            d = round(yoy_cur - yoy_prev, 2)
+            sign = '+' if d > 0 else ''
+            lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#1a9e4a',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
+
+    # 6. Fed Funds Rate
+    ffr = data.get('ffr')
+    if ffr and isinstance(ffr, dict):
+        lbl = f"Fed Funds {_mlbl(ffr['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{ffr["value"]:.2f}%', 'col': '#4a72e8',
+                      'delta': 0, 'chg': '',
+                      'sub': f"Target range"})
+
+    # 7. 10Y Treasury
+    dgs10 = data.get('dgs10')
+    dgs2 = data.get('dgs2')
+    if dgs10 and isinstance(dgs10, dict):
+        spr = ''
+        if dgs2 and isinstance(dgs2, dict):
+            bp = round((dgs10['value'] - dgs2['value']) * 100)
+            spr = f" · 2Y: {dgs2['value']:.2f}% · Spread: {bp:+d}bp"
+        lbl = f"10Y Treasury {_mlbl(dgs10['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{dgs10["value"]:.2f}%', 'col': '#4a72e8',
+                      'delta': 0, 'chg': '',
+                      'sub': f"Daily{spr}"})
+
+    # 8. Initial Claims (weekly)
+    icsa = data.get('icsa', [])
+    if icsa and len(icsa) >= 2:
+        cur, prev = icsa[0]['value'], icsa[1]['value']
+        d = round(cur - prev)
+        sign = '+' if d > 0 else ''
+        lbl = f"Initial Claims {_mlbl(icsa[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'col': '#c07010',
+                      'delta': d, 'chg': f'{sign}{d/1000:.0f}K',
+                      'sub': f"Prior wk: {prev/1000:.0f}K ({_mlbl(icsa[1]['date'])})"})
+
+    if not cards:
+        return html
+
+    # Inject as JS
+    cards_json = json.dumps(cards, separators=(', ', ':'))
+    pattern = r'const KPIS\s*=\s*\[[\s\S]*?\];'
+    new_decl = f'const KPIS = {cards_json};'
+    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    if n:
+        applied.append(f'KPIS rebuilt ({len(cards)} cards with MoM deltas)')
+        return new_html
+    else:
+        warnings.append('rebuild_kpi_strip: KPIS array not matched')
+        return html
+
+
 def update_meta(html):
     today = datetime.date.today().strftime('%B %d, %Y')
     utc   = datetime.datetime.utcnow().strftime('%H:%M UTC')
@@ -896,6 +1032,14 @@ def render():
     except Exception as e:
         errors.append(f'rebuild_charts: {e}')
         print(f'  \u274c Chart history rebuild: {e}')
+
+    # Rebuild top KPI strip with MoM comparisons
+    try:
+        html = rebuild_kpi_strip(html, data, vals)
+        print('  \u2705 KPI strip (MoM deltas)')
+    except Exception as e:
+        errors.append(f'rebuild_kpi_strip: {e}')
+        print(f'  \u274c KPI strip: {e}')
 
     sections = [
         ('Rates/Yields', render_rates),
