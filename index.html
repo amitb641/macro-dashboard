@@ -452,6 +452,12 @@ body{overflow-x:hidden}
 .footer a{color:var(--muted);text-decoration:none}
 .footer a:hover{color:var(--accent)}
 
+/* FRED interactive chart embeds */
+.fred-embed{position:relative;width:100%;height:475px;overflow:hidden}
+.fred-embed iframe{width:100%;height:100%;border:none;border-radius:8px}
+@media(max-width:900px){.fred-embed{height:380px}}
+@media(max-width:600px){.fred-embed{height:320px}}
+
 .fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
 .fc-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
 .fc-name{font-size:12px;color:var(--text);font-weight:500;margin-bottom:8px}
@@ -1593,6 +1599,15 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="dtable-wrap"><table class="dtable" id="wage-tbl"></table></div>
     <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal earnings YoY. Real wages (CPI-adjusted) turned positive in 2023–24. Jan 2026: all-private avg $37.17/hr, +3.7% YoY nominal.</p>
   </div>
+  <div class="panel">
+    <div class="panel-title">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average (FRED Interactive)</div>
+    <div class="panel-sub">Median wage growth, unweighted, all workers · <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · <a href="https://www.atlantafed.org/chcs/wage-growth-tracker">Atlanta Fed</a></div>
+    <div class="fred-embed">
+      <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UM&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
+        title="Atlanta Fed Wage Growth Tracker - FRED Chart"></iframe>
+    </div>
+    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO">FRED FRBATLWGT3MMAUMHWGO</a> · Federal Reserve Bank of Atlanta. 3-month moving average of median hourly wage growth from CPS microdata. More stable than BLS AHE; better captures underlying wage dynamics.</p>
+  </div>
 </div>
 
 <!-- ══ JOBS ══ -->
@@ -1679,6 +1694,15 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="ch260"><canvas id="c-umcsent-line"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
     </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Household Debt Service Ratio — TDSP (FRED Interactive)</div>
+    <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board</div>
+    <div class="fred-embed">
+      <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UV&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
+        title="Household Debt Service Ratio - FRED Chart"></iframe>
+    </div>
+    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Total household debt service payments (mortgage + consumer) as % of disposable personal income. Hover to see exact quarterly values. 2007 peak: ~13.2%. Pre-pandemic avg: ~10%. Current level well below crisis thresholds.</p>
   </div>
   <div class="panel">
     <div class="panel-title">Consumer Health Dashboard — Debt, Savings & Spending Metrics</div>
