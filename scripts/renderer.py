@@ -1005,31 +1005,17 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
-    # 5. Wages — Atlanta Fed Wage Growth Tracker 3M avg (preferred) + BLS fallback
-    atl_wage = data.get('atl_wage_tracker', [])
-    if atl_wage and len(atl_wage) >= 2:
-        cur_w, prev_w, chg_w, d_w = _mom(atl_wage)
-        # YoY: compare to 12 months ago if available
-        yoy_w = None
-        if len(atl_wage) >= 13:
-            yoy_w = round(cur_w - atl_wage[12]['value'], 1)
-        lbl = f"Wage Growth (ATL 3M) {_mlbl(atl_wage[0]['date'])}"
-        yoy_str = f" · YoY: {yoy_w:+.1f}pp" if yoy_w is not None else ""
-        cards.append({'lbl': lbl, 'val': f'{cur_w:.1f}%', 'col': '#1a9e4a',
-                      'delta': d_w, 'chg': f'{chg_w}pp',
-                      'sub': f"MoM: {chg_w}pp{yoy_str} · Prior: {prev_w:.1f}% ({_mlbl(atl_wage[1]['date'])})"})
-    else:
-        # Fallback to BLS AHETPI
-        ahetpi = data.get('ahetpi', [])
-        if ahetpi and len(ahetpi) >= 14:
-            yoy_cur, yoy_prev = _yoy_pair(ahetpi)
-            if yoy_cur is not None and yoy_prev is not None:
-                d = round(yoy_cur - yoy_prev, 2)
-                sign = '+' if d > 0 else ''
-                lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
-                cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#1a9e4a',
-                              'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                              'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
+    # 5. Wages — BLS AHETPI
+    ahetpi = data.get('ahetpi', [])
+    if ahetpi and len(ahetpi) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(ahetpi)
+        if yoy_cur is not None and yoy_prev is not None:
+            d = round(yoy_cur - yoy_prev, 2)
+            sign = '+' if d > 0 else ''
+            lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#1a9e4a',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
 
     # 6. Fed Funds Rate
     ffr = data.get('ffr')

@@ -30,7 +30,6 @@ THRESHOLDS = {
     'cs_hpi_yoy': 1.0,    # pp
     'icsa':       30000,  # weekly initial claims swing
     'umcsent':    5.0,    # UMich sentiment index points
-    'atl_wage_3m':0.3,    # pp — Atlanta Fed Wage Tracker 3M avg
     'tdsp':       0.3,    # pp — Debt Service Ratio
 }
 
