@@ -1705,7 +1705,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Consumer Health Dashboard — Debt, Savings & Spending Metrics</div>
     <div class="panel-sub">Annual snapshot · BEA, NY Fed, Federal Reserve Board</div>
     <div class="dtable-wrap"><table class="dtable" id="consumer-tbl"></table></div>
-    <p class="src">Sources: BEA Personal Income & Outlays Dec 2025 (Feb 20, 2026); NY Fed Household Debt & Credit Q3 2025 (Nov 2025); Federal Reserve Financial Stability Report Nov 2025; BLS Consumer Expenditure Survey. Personal saving rate Dec 2025: 3.6% — near 2022 decade-low of 2.7%. Excess pandemic savings largely exhausted by mid-2024.</p>
+    <p class="src">Sources: BEA Personal Income & Outlays Dec 2025 (Feb 20, 2026); NY Fed Household Debt & Credit Q3 2025 (Nov 2025); Federal Reserve Financial Stability Report Nov 2025; BLS Consumer Expenditure Survey. Personal saving rate Jan 2026: 4.5% — up from revised 4.0% (Dec'25); highest since Jul'25. Excess pandemic savings largely exhausted by mid-2024.</p>
   </div>
 
 </div>
@@ -2131,7 +2131,7 @@ const WAGE_SECTORS = [
 const NFP_VS_ADP = {
   labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],
   bls:   [185, 108, 157, 179, 114, 89, 159, 12, 212, 256, 126, -92],
-  adp:   [155, 62, 152, 150, 122, 99, 143, 239, 146, 122, 183, 77]
+  adp:   [155, 62, 152, 150, 122, 99, 143, 239, 146, 122, 11, 63]
 };
 // Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
 const NFP_BLS_MOM = {"labels":["Mar'24", "Apr'24", "May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "bls":[228, 64, 78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92]};
@@ -2845,7 +2845,7 @@ const DEBT_DATA = {
 };
 const CONSUMER_TABLE = [
   {metric:"Total Household Debt",      val2022:"$16.5T",val2023:"$17.5T",val2024:"$18.0T",val2025:"$18.6T (Q3)",trend:"↑ Rising",note:"NY Fed Q3 2025; up $4T since pre-pandemic"},
-  {metric:"Personal Saving Rate",      val2022:"3.3%",  val2023:"5.4%",  val2024:"4.8%",  val2025:"3.6% (Dec)",  trend:"↓ Falling",note:"BEA; near 2022 decade-low of 2.7%"},
+  {metric:"Personal Saving Rate",      val2022:"3.3%",  val2023:"5.4%",  val2024:"4.8%",  val2025:"4.5% (Jan'26)",  trend:"↑ Rising",note:"BEA; Dec revised to 4.0%; Jan highest since Jul'25"},
   {metric:"PCE Headline (YoY)",        val2022:"6.3%",  val2023:"3.4%",  val2024:"2.6%",  val2025:"2.8% (Dec)",  trend:"→ Stable", note:"Fed's preferred inflation measure"},
   {metric:"Core PCE (ex F&E)",         val2022:"5.2%",  val2023:"3.9%",  val2024:"2.8%",  val2025:"2.8% (Dec)",  trend:"→ Stable", note:"Still above Fed 2% target"},
   {metric:"Real PCE Growth",           val2022:"2.1%",  val2023:"2.7%",  val2024:"2.9%",  val2025:"~2.6%",       trend:"↓ Slight",note:"BEA annual; consumer spending resilient"},
@@ -2951,7 +2951,7 @@ function buildPCETab(){
     {lbl:"PCE Headline Dec 2025",  val:"2.6%",  sub:"BEA Dec 2025 (revised) · up from 2.4% in Nov", col:"#c07010"},
     {lbl:"Core PCE Jan'26",      val:"+3.1%",  sub:"Fed target 2.0% · persistent services inflation",col:"#c07010"},
     {lbl:"Real PCE Growth 2025",   val:"~2.6%", sub:"Inflation-adj spending still solid",            col:"#1a9e4a"},
-    {lbl:"Personal Saving Rate",   val:"3.6%",  sub:"Dec 2025 · near 2022's decade-low of 2.7%",   col:"#c07010"},
+    {lbl:"Personal Saving Rate",   val:"4.5%",  sub:"Jan 2026 · up from revised 4.0% (Dec'25)",   col:"#1a9e4a"},
     {lbl:"Total Household Debt",   val:"$18.6T",sub:"Q3 2025 NY Fed · up $4T from pre-pandemic",   col:"#d03030"},
     {lbl:"CC Delinquency 90+",     val:"5.1%",  sub:"Credit card · Q3 2025 · elevated but flat",   col:"#c07010"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
