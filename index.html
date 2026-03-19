@@ -2571,7 +2571,7 @@ function buildCPITab(){
       ${[c.c22,c.c23,c.c24,c.c25].map(v=>`<td style="${col(v)}">${v>=0?"+":""}${v}%</td>`).join("")}
       <td>${trendPill(trendStr)}</td></tr>`;
   });
-  h+=`<tr><td>All Items CPI</td><td style="color:#C0392B">+6.5%</td><td style="color:#B45309">+3.4%</td><td style="color:#B45309">+2.9%</td><td style="color:#0D7A4A">+2.7%</td><td>${trendPill("↓ Easing")}</td></tr>`;
+  h+=`<tr><td>All Items CPI</td><td style="color:#C0392B">+6.5%</td><td style="color:#B45309">+3.4%</td><td style="color:#B45309">+2.9%</td><td style="color:#0D7A4A">+2.4%</td><td>${trendPill("↓ Easing")}</td></tr>`;
   document.getElementById("cpi-tbl").innerHTML=h+"</tbody>";
 }
 
