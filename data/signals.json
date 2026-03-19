@@ -6,9 +6,9 @@
   "flagged_count": 0,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.68,
-    "dgs5": 3.79,
-    "dgs10": 4.2,
+    "dgs2": 3.73,
+    "dgs5": 3.85,
+    "dgs10": 4.27,
     "dgs30": 4.85,
     "ig_oas": 92,
     "hy_oas": 322,
@@ -16,9 +16,9 @@
     "u6rate": 7.9,
     "nfp_level": 158466.0,
     "nfp_mom": -92,
-    "icsa": 205000.0,
+    "icsa": 213000.0,
     "ccsa": 1857000.0,
-    "wages_yoy": 3.69,
+    "wages_yoy": 3.8,
     "cpi_yoy": 2.4,
     "core_cpi_yoy": 2.5,
     "pce_yoy": 2.83,
@@ -45,8 +45,8 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.2,
-      "delta": 0.0,
+      "value": 4.27,
+      "delta": 0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -108,7 +108,7 @@
       "alert": null
     },
     "wages_yoy": {
-      "value": 3.69,
+      "value": 3.8,
       "delta": 0.0,
       "direction": "stable",
       "flagged": false,
@@ -122,8 +122,8 @@
       "alert": null
     },
     "icsa": {
-      "value": 205000.0,
-      "delta": -12908.0,
+      "value": 213000.0,
+      "delta": -1000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,15 +143,15 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.68,
-      "delta": 0.0,
+      "value": 3.73,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.79,
-      "delta": 0.0,
+      "value": 3.85,
+      "delta": 0.06,
       "direction": "stable",
       "flagged": false,
       "alert": null
