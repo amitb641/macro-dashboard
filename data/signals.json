@@ -1,23 +1,23 @@
 {
-  "analyzed_at": "2026-03-18T13:01:26.510248Z",
-  "risk_level": "MODERATE",
-  "alert_count": 0,
-  "watch_count": 2,
+  "analyzed_at": "2026-03-19T12:55:12.657119Z",
+  "risk_level": "ELEVATED",
+  "alert_count": 1,
+  "watch_count": 3,
   "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.73,
     "dgs5": 3.85,
     "dgs10": 4.27,
-    "dgs30": 4.86,
-    "ig_oas": 94,
-    "hy_oas": 327,
+    "dgs30": 4.85,
+    "ig_oas": 92,
+    "hy_oas": 322,
     "unrate": 4.4,
     "u6rate": 7.9,
     "nfp_level": 158466.0,
     "nfp_mom": -92,
     "icsa": 213000.0,
-    "ccsa": 1892901.0,
+    "ccsa": 1857000.0,
     "wages_yoy": 3.8,
     "cpi_yoy": 2.4,
     "core_cpi_yoy": 2.5,
@@ -27,11 +27,14 @@
     "mortgage30": 6.11,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 1.3,
-    "wti": 94.65,
-    "brent": 94.35,
+    "umcsent": 56.4,
+    "atl_wage_3m": null,
+    "tdsp": 11.256338,
+    "wti": 93.39,
+    "brent": 101.04,
     "gdp_growth_q": 0.7,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 55
+    "spread_10_2_bp": 52
   },
   "signals": {
     "ffr": {
@@ -43,21 +46,21 @@
     },
     "dgs10": {
       "value": 4.27,
-      "delta": -0.05,
+      "delta": 0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 94,
-      "delta": 1,
+      "value": 92,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 327,
-      "delta": -1,
+      "value": 322,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -91,7 +94,7 @@
       "alert": null
     },
     "wti": {
-      "value": 94.65,
+      "value": 93.39,
       "delta": 0.0,
       "direction": "stable",
       "flagged": false,
@@ -120,34 +123,48 @@
     },
     "icsa": {
       "value": 213000.0,
-      "delta": null,
+      "delta": -1000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
+    "umcsent": {
+      "value": 56.4,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "alert"
+    },
+    "tdsp": {
+      "value": 11.256338,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "watch"
+    },
     "dgs2": {
       "value": 3.73,
-      "delta": -0.05,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.8,
-      "delta": -0.07,
+      "value": 3.85,
+      "delta": 0.06,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.86,
-      "delta": -0.04,
+      "value": 4.85,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 55,
+      "value": 52,
       "delta": 0,
       "direction": "stable",
       "flagged": false,
@@ -189,7 +206,7 @@
       "alert": null
     },
     "brent": {
-      "value": 94.35,
+      "value": 101.04,
       "delta": 0.0,
       "direction": "stable",
       "flagged": false,
@@ -210,7 +227,14 @@
       "alert": null
     },
     "ccsa": {
-      "value": 1892901.0,
+      "value": 1857000.0,
+      "delta": -35901.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "atl_wage_3m": {
+      "value": null,
       "delta": null,
       "direction": "stable",
       "flagged": false,
@@ -218,5 +242,8 @@
     }
   },
   "headlines": [],
-  "raw_errors": []
+  "raw_errors": [
+    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
+    "EIA RBRTE: 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=iGh7dpVfGcLg7pOtYosy3CmQeKk0EzIqYmNpuNf9&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RBRTE&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=35"
+  ]
 }
