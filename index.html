@@ -2238,7 +2238,7 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26 rev.)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#1a9e4a", "delta":0, "chg":"0.0pp", "sub":"Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.8%", "col":"#1a9e4a", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.62%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target: 3.50–3.75% · Held steady"}, {"lbl":"10Y Treasury Mar'26", "val":"4.27%", "col":"#c07010", "delta":0.04, "chg":"+4bp", "sub":"Daily · 2Y: 3.73% · Spread: +54bp"}, {"lbl":"Initial Claims Mar'26", "val":"213K", "col":"#1a9e4a", "delta":-1000, "chg":"-1K", "sub":"Prior wk: 214K (Mar'26)"}, {"lbl":"UMich Sentiment Jan'26", "val":"56.4", "col":"#6d40cc", "delta":3.5, "chg":"+3.5", "sub":"MoM: +3.5 · YoY: -15.3 · Prior: 52.9 (Dec'25)"}, {"lbl":"Debt Service Ratio Jul'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"% of disp. income · Prior: 11.1% (Apr'25)"}];
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26 rev.)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#1a9e4a", "delta":0, "chg":"0.0pp", "sub":"Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.8%", "col":"#1a9e4a", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target: 3.50–3.75% · Held steady"}, {"lbl":"10Y Treasury Mar'26", "val":"4.27%", "col":"#c07010", "delta":0.04, "chg":"+4bp", "sub":"Daily · 2Y: 3.73% · Spread: +54bp"}, {"lbl":"Initial Claims Mar'26", "val":"213K", "col":"#1a9e4a", "delta":-1000, "chg":"-1K", "sub":"Prior wk: 214K (Mar'26)"}, {"lbl":"UMich Sentiment Jan'26", "val":"56.4", "col":"#6d40cc", "delta":3.5, "chg":"+3.5", "sub":"MoM: +3.5 · YoY: -15.3 · Prior: 52.9 (Dec'25)"}, {"lbl":"Debt Service Ratio Jul'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"% of disp. income · Prior: 11.1% (Apr'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const d = k.delta ? `<span class="kpi-delta ${k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat'}">${k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→'} ${k.chg||''}</span>` : '';
   return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
@@ -2433,7 +2433,7 @@ function buildUnempTab(){
     {lbl:"Lowest Sector 2024",     val:"1.8%",  sub:"Government (federal/state)",              col:"#1a9e4a"},
     {lbl:"Highest Sector 2024",    val:"4.6%",  sub:"Construction & cruise/resort workers",   col:"#d03030"},
     {lbl:"U-6 Broad Rate Feb'26", val:"7.9%",  sub:"Incl. underemployed & discouraged",      col:"#6d40cc"},
-    {lbl:"Initial Claims Mar'26",        val:"205K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
+    {lbl:"Initial Claims Mar'26",        val:"213K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
@@ -4053,7 +4053,7 @@ function buildYieldTab(){
     {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#1A56DB"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#0D7A4A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
-    {lbl:"10Y Treasury Mar'26",    val:"4.20%",   sub:"2Y: 3.68% · Spread: +52bp",col:"#6D28D9"},
+    {lbl:"10Y Treasury Mar'26",    val:"4.27%",   sub:"2Y: 3.73% · Spread: +54bp",col:"#6D28D9"},
 
   ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
 
