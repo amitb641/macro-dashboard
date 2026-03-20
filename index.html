@@ -1517,6 +1517,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
 
+  <!-- Monthly Rate Chart -->
+  <div class="panel">
+    <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
+    <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
+    <div class="ch260"><canvas id="c-unemp-monthly"></canvas></div>
+    <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
+  </div>
+
   <!-- Annual Chart -->
   <div class="panel">
     <div class="panel-title">National Unemployment Rate — Annual Average</div>
@@ -2590,6 +2598,21 @@ function buildUnempTab(){
         tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"")}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+  });
+
+  // ── Monthly Unemployment Rate Chart ──
+  new Chart(document.getElementById("c-unemp-monthly").getContext("2d"),{
+    type:"bar",
+    data:{labels:U_MONTHLY.labels,datasets:[{
+      label:"Unemployment Rate %",data:U_MONTHLY.data,
+      backgroundColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"rgba(208,48,48,.85)":"rgba(74,114,232,.7)"),
+      borderColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"#d03030":"#4a72e8"),
+      borderWidth:1,borderRadius:4
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:3.5,max:5.0,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
