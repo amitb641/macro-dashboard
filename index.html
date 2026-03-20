@@ -1556,43 +1556,47 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
 
-  <!-- Monthly MoM Charts -->
+  <!-- Row 1: Monthly Rate (left) | Sector MoM (right) -->
   <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
+      <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
+      <div class="ch260"><canvas id="c-unemp-monthly"></canvas></div>
+      <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
+    </div>
     <div class="panel">
       <div class="panel-title">Unemployment by Sector — Monthly MoM Change (pp)</div>
       <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Feb'26 vs Jan'26 · sorted by change</div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
     </div>
+  </div>
+
+  <!-- Row 2: Annual Rate (left) | Sector YoY (right) -->
+  <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
-      <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
-      <div class="ch260"><canvas id="c-claims-line"></canvas></div>
-      <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
+      <div class="panel-title">National Unemployment Rate — Annual Average</div>
+      <div class="panel-sub">% of civilian labor force · BLS CPS seasonally adjusted</div>
+      <div class="ch260"><canvas id="c-unemp-line"></canvas></div>
+      <p class="src">Source: BLS Current Population Survey (CPS), annual averages. Civilian labor force, seasonally adjusted.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Unemployment by Sector — 2025 vs 2024 (%)</div>
+      <div class="panel-sub">2025 rate vs 2024 rate · BLS CPS · seasonally adjusted</div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
+      <p class="src">Source: BLS Current Population Survey (CPS) Table A-14. Seasonally adjusted, 2025 vs 2024 rates by industry sector.</p>
     </div>
   </div>
 
-  <!-- Monthly Rate Chart -->
+  <!-- Weekly Claims -->
   <div class="panel">
-    <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
-    <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
-    <div class="ch260"><canvas id="c-unemp-monthly"></canvas></div>
-    <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
+    <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
+    <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
+    <div class="ch260"><canvas id="c-claims-line"></canvas></div>
+    <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
   </div>
 
-  <!-- Annual Chart -->
-  <div class="panel">
-    <div class="panel-title">National Unemployment Rate — Annual Average</div>
-    <div class="panel-sub">% of civilian labor force · BLS CPS seasonally adjusted</div>
-    <div class="ch260"><canvas id="c-unemp-line"></canvas></div>
-    <p class="src">Source: BLS Current Population Survey (CPS), annual averages. Civilian labor force, seasonally adjusted.</p>
-  </div>
-  <div class="panel">
-    <div class="panel-title">Unemployment by Sector — 2025 vs 2024 (%)</div>
-    <div class="panel-sub">2025 rate vs 2024 rate · BLS CPS · seasonally adjusted</div>
-    <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
-    <p class="src">Source: BLS Current Population Survey (CPS) Table A-14. Seasonally adjusted, 2025 vs 2024 rates by industry sector.</p>
-  </div>
+  <!-- Data Table -->
   <div class="panel">
     <div class="panel-title">Unemployment Rate by Industry — Annual Data</div>
     <div class="panel-sub">Annual averages · BLS Current Population Survey · industry categories</div>
