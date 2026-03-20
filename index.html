@@ -1517,6 +1517,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
 
+  <!-- Monthly Rate Chart -->
+  <div class="panel">
+    <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
+    <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
+    <div class="ch260"><canvas id="c-unemp-monthly"></canvas></div>
+    <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
+  </div>
+
   <!-- Annual Chart -->
   <div class="panel">
     <div class="panel-title">National Unemployment Rate — Annual Average</div>
@@ -1944,14 +1952,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <strong>📉 Credit Cycle Monitor — Q3/Q4 2025</strong> — Consumer credit stress is the dominant banking theme of 2025–26. Card NCO rates at 2011-era highs for mass-market issuers (Synchrony 5.4%, Capital One 4.9%). Student loan reporting resumed after pandemic forbearance — 9.4% instantly delinquent. Auto stress peaking. Bright spots: prime/super-prime (Amex best-in-class), mortgage (low delinquency), and USB (0.54% NCO). SLOOS data confirms tightening standards but pace is slowing. Late-cycle dynamics: watch for rising unemployment triggering credit deterioration feedback loop.
   </div>
   <div class="metric-row" id="credit-metrics"></div>
-
-  <!-- Quarterly Trend Chart -->
-  <div class="panel">
-    <div class="panel-title">Quarterly Delinquency Trend — 90+ DPD by Product (Q1'23–Q3'25)</div>
-    <div class="panel-sub">Cards, Auto, Mortgage · 90+ days past due rate · NY Fed Household Debt &amp; Credit · quarterly</div>
-    <div class="ch260"><canvas id="c-credit-mom"></canvas></div>
-    <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit Report. Quarterly data, 90+ days past due. Card delinquency near 2011-era high; auto stabilizing; mortgage resilient due to lock-in effect.</p>
-  </div>
 
   <div class="two-up">
     <div class="panel">
@@ -2598,6 +2598,21 @@ function buildUnempTab(){
         tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"")}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+  });
+
+  // ── Monthly Unemployment Rate Chart ──
+  new Chart(document.getElementById("c-unemp-monthly").getContext("2d"),{
+    type:"bar",
+    data:{labels:U_MONTHLY.labels,datasets:[{
+      label:"Unemployment Rate %",data:U_MONTHLY.data,
+      backgroundColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"rgba(208,48,48,.85)":"rgba(74,114,232,.7)"),
+      borderColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"#d03030":"#4a72e8"),
+      borderWidth:1,borderRadius:4
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:3.5,max:5.0,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
@@ -4007,18 +4022,6 @@ function buildCreditTab(){
     {lbl:"Worst Category",         val:"Cards 9.8%",sub:"Mass-market stress · NCO improving",            col:"#d03030"},
     {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
-
-  // ── Credit Quarterly Trend Chart ──
-  new Chart(document.getElementById("c-credit-mom").getContext("2d"),{
-    type:"line",
-    data:{labels:CREDIT_QUARTERLY.labels,datasets:[
-      {label:"Credit Cards 90+ DPD",data:CREDIT_QUARTERLY.card,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
-      {label:"Auto Loans 90+ DPD",data:CREDIT_QUARTERLY.auto,borderColor:"#c07010",borderWidth:2,pointRadius:4,tension:0.3},
-      {label:"Mortgage 90+ DPD",data:CREDIT_QUARTERLY.mort,borderColor:"#1a9e4a",borderWidth:2,pointRadius:4,tension:0.3},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
-      scales:{y:{min:0,max:12,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
-  });
 
   new Chart(document.getElementById("c-credit-delinq").getContext("2d"),{
     type:"line",
