@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-03-20T05:20:18.510273Z",
+  "analyzed_at": "2026-03-20T05:25:47.193284Z",
   "risk_level": "ELEVATED",
   "alert_count": 1,
   "watch_count": 3,
@@ -242,5 +242,8 @@
     }
   },
   "headlines": [],
-  "raw_errors": []
+  "raw_errors": [
+    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
+    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+  ]
 }

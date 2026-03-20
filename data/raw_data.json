@@ -1,8 +1,11 @@
 {
-  "collected_at": "2026-03-20T05:20:04.021888Z",
+  "collected_at": "2026-03-20T05:25:08.797436Z",
   "series_count": 54,
-  "error_count": 0,
-  "errors": [],
+  "error_count": 2,
+  "errors": [
+    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
+    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+  ],
   "data": {
     "ffr": {
       "date": "2026-02-01",
@@ -1100,10 +1103,6 @@
       {
         "date": "2026-01-27",
         "value": 62.04
-      },
-      {
-        "date": "2026-01-26",
-        "value": 60.46
       }
     ],
     "brent_daily": [
@@ -1302,7 +1301,7 @@
         "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 20 05:20 UTC",
+      "updated": "Mar 20 05:25 UTC",
       "sessions": 11
     },
     "mortgage30": [
