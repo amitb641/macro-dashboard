@@ -402,18 +402,18 @@ h1 span{color:var(--accent)}
 .kpi-val{font-size:20px;font-weight:500;line-height:1}
 .kpi-sub{font-size:9px;color:var(--muted);margin-top:4px}
 
-/* NAV — Grouped pill tabs */
-.nav-grouped{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:flex-start;padding:12px 0 14px;margin-bottom:20px;border-bottom:1px solid var(--border)}
+/* NAV — Grouped pill tabs (commercial) */
+.nav-grouped{display:flex;flex-wrap:wrap;gap:4px 20px;align-items:center;padding:10px 16px 10px;margin-bottom:22px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .nav-group{display:flex;align-items:center;gap:6px}
-.nav-group-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-right:2px;white-space:nowrap}
-.nav-group-pills{display:flex;gap:4px}
+.nav-group-lbl{font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim,var(--muted));font-weight:700;padding-right:2px;white-space:nowrap;opacity:.55}
+.nav-group-pills{display:flex;gap:3px}
 .nav-group-meta{margin-left:auto}
-.nav-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:5px 13px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;font-size:11.5px;font-weight:500;letter-spacing:0;transition:all .15s ease;border-radius:20px}
-.nav-btn:hover:not(.active){color:var(--text);background:var(--card);border-color:var(--bord2,var(--border));box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.nav-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(26,86,219,.25)}
-.nav-btn-meta{background:transparent;border-color:transparent;color:var(--muted);font-size:10.5px;padding:4px 10px}
-.nav-btn-meta:hover:not(.active){background:var(--bg2);border-color:var(--border);color:var(--text2)}
-.nav-btn-meta.active{background:var(--bg2);border-color:var(--border);color:var(--text);box-shadow:none}
+.nav-btn{background:transparent;border:1.5px solid transparent;color:var(--muted);padding:5px 14px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;font-size:11.5px;font-weight:500;letter-spacing:0;transition:all .18s ease;border-radius:8px}
+.nav-btn:hover:not(.active){color:var(--text);background:var(--bg2);border-color:var(--border)}
+.nav-btn.active{background:linear-gradient(135deg,#1A56DB,#2563eb);border-color:transparent;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(26,86,219,.3),inset 0 1px 0 rgba(255,255,255,.15)}
+.nav-btn-meta{background:transparent;border-color:transparent;color:var(--muted);font-size:10.5px;padding:4px 10px;opacity:.7}
+.nav-btn-meta:hover:not(.active){background:var(--bg2);border-color:var(--border);color:var(--text2);opacity:1}
+.nav-btn-meta.active{background:var(--bg2);border-color:var(--border);color:var(--text);box-shadow:none;opacity:1}
 
 /* TAB */
 .tab-panel{display:none}.tab-panel.active{display:block}
@@ -2455,7 +2455,7 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#d03030", "delta":0.04, "chg":"+0.0pp", "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#c07010", "delta":-8000, "chg":"-8K", "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#6d40cc", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#d03030", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#c07010", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#6d40cc", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
   const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
@@ -2712,7 +2712,7 @@ function buildUnempTab(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
       annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
         label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:3.5,max:5.0,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      scales:{y:{min:Math.floor(Math.min(...U_MONTHLY.data)*2-1)/2,max:Math.ceil(Math.max(...U_MONTHLY.data)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
@@ -2814,7 +2814,7 @@ function buildCPITab(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
       annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
         label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:1.5,max:3.5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   // ── CPI Category MoM Chart ──
@@ -2902,7 +2902,7 @@ function buildWagesTab(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
       annotation:{annotations:{avgLine:{type:"line",yMin:3.0,yMax:3.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
         label:{display:true,content:"Pre-pandemic ~3% norm",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:0,max:5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      scales:{y:{min:Math.floor(Math.min(...WAGE_MONTHLY.nominal,...WAGE_MONTHLY.real)*2-1)/2,max:Math.ceil(Math.max(...WAGE_MONTHLY.nominal,...WAGE_MONTHLY.real)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-wage-line").getContext("2d"),{
@@ -3290,7 +3290,7 @@ function buildPCETab(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
       annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
         label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:1.5,max:3.5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   // ── PCE Category MoM Chart ──
@@ -4357,18 +4357,26 @@ function buildHousingTab(){
     {lbl:"Peak → Now",             val:"Afford. 95→108",sub:"Up from 2023 trough · lock-in: ~85% sub-5%", col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
 
-  // ── Housing Monthly Trend Chart ──
-  new Chart(document.getElementById("c-housing-mom").getContext("2d"),{
-    type:"line",
-    data:{labels:HOUSING_MONTHLY.labels,datasets:[
-      {label:"Case-Shiller YoY %",data:HOUSING_MONTHLY.caseShiller,borderColor:"#4a72e8",backgroundColor:"#4a72e815",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
-      {label:"30yr Mortgage Rate %",data:HOUSING_MONTHLY.mortgage30,borderColor:"#d03030",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4],yAxisID:"y1"},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
-      scales:{y:{position:"left",min:3,max:6,title:{display:true,text:"Case-Shiller YoY %",font:{size:9}},ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},
-        y1:{position:"right",min:5.5,max:7.5,title:{display:true,text:"Mortgage Rate %",font:{size:9}},ticks:{callback:v=>v+"%",font:{size:10}},grid:{display:false}},
-        x:{ticks:{font:{size:9}},grid:{display:false}}}}
-  });
+  // ── Housing Monthly Trend Chart — dynamic dual-axis scaling ──
+  (function(){
+    var cs=HOUSING_MONTHLY.caseShiller, mt=HOUSING_MONTHLY.mortgage30;
+    var csMin=Math.min(...cs), csMax=Math.max(...cs), mtMin=Math.min(...mt), mtMax=Math.max(...mt);
+    // Add 20% padding and round to nearest 0.5
+    var pad=0.4;
+    var yMin=Math.floor((csMin-pad)*2)/2, yMax=Math.ceil((csMax+pad)*2)/2;
+    var y1Min=Math.floor((mtMin-pad)*2)/2, y1Max=Math.ceil((mtMax+pad)*2)/2;
+    new Chart(document.getElementById("c-housing-mom").getContext("2d"),{
+      type:"line",
+      data:{labels:HOUSING_MONTHLY.labels,datasets:[
+        {label:"Case-Shiller YoY %",data:cs,borderColor:"#4a72e8",backgroundColor:"#4a72e815",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
+        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#d03030",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4],yAxisID:"y1"},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
+        scales:{y:{position:"left",min:yMin,max:yMax,title:{display:true,text:"Case-Shiller YoY %",font:{size:9}},ticks:{callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#e5e7eb"}},
+          y1:{position:"right",min:y1Min,max:y1Max,title:{display:true,text:"Mortgage Rate %",font:{size:9}},ticks:{callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{display:false}},
+          x:{ticks:{font:{size:9}},grid:{display:false}}}}
+    });
+  })();
 
   new Chart(document.getElementById("c-hpi").getContext("2d"),{
     type:"line",
