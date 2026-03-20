@@ -4101,27 +4101,30 @@ function buildYieldTab(){
   // ── 10Y Treasury Yield vs Card 90+ DPD chart ────────────────────────
   try{
   var tCtx = document.getElementById("c-treasury").getContext("2d");
-  // Custom plugin to shade inversion zones (where 2Y > 10Y)
+  // Custom plugin to shade inversion zones (where 2Y > 10Y) — scoped to treasury canvas
   var inversionPlugin = {id:"inversionShade",beforeDraw:function(chart){
-    var ctx=chart.ctx, xAxis=chart.scales.x, yAxis=chart.scales.y, meta=chart.getDatasetMeta(0);
-    if(!meta||!meta.data)return;
+    if(chart.canvas.id!=="c-treasury")return;
+    var ctx=chart.ctx, yAxis=chart.scales.y, meta=chart.getDatasetMeta(0);
+    if(!meta||!meta.data||!meta.data.length)return;
     ctx.save();
-    for(var i=0;i<TREASURY_DATA.spread.length;i++){
+    var n=TREASURY_DATA.spread.length;
+    for(var i=0;i<n;i++){
       if(TREASURY_DATA.spread[i]<0&&meta.data[i]){
-        var x=meta.data[i].x, w=xAxis.width/TREASURY_DATA.labels.length;
-        ctx.fillStyle="rgba(192,57,43,.08)";
-        ctx.fillRect(x-w/2,yAxis.top,w,yAxis.bottom-yAxis.top);
-        // Small red triangle marker at top
-        ctx.fillStyle="rgba(192,57,43,.35)";
-        ctx.beginPath();ctx.moveTo(x-4,yAxis.top+2);ctx.lineTo(x+4,yAxis.top+2);ctx.lineTo(x,yAxis.top+8);ctx.fill();
+        var x=meta.data[i].x;
+        var xPrev=(i>0&&meta.data[i-1])?meta.data[i-1].x:x;
+        var xNext=(i<n-1&&meta.data[i+1])?meta.data[i+1].x:x;
+        var left=(x+xPrev)/2, right=(x+xNext)/2;
+        ctx.fillStyle="rgba(192,57,43,.10)";
+        ctx.fillRect(left,yAxis.top,right-left,yAxis.bottom-yAxis.top);
       }
     }
     ctx.restore();
   }};
-  // Fill between 10Y and 2Y lines (visual spread band)
+  // Fill between 10Y and 2Y lines (visual spread band) — scoped to treasury canvas
   var fillBetweenPlugin = {id:"fillBetween",beforeDatasetsDraw:function(chart){
+    if(chart.canvas.id!=="c-treasury")return;
     var ctx=chart.ctx, m0=chart.getDatasetMeta(0), m1=chart.getDatasetMeta(1);
-    if(!m0||!m0.data||!m1||!m1.data)return;
+    if(!m0||!m0.data||!m1||!m1.data||!m0.data.length)return;
     ctx.save();
     ctx.beginPath();
     for(var i=0;i<m0.data.length;i++){
@@ -4138,9 +4141,9 @@ function buildYieldTab(){
     type:"line",
     plugins:[inversionPlugin,fillBetweenPlugin],
     data:{labels:TREASURY_DATA.labels,datasets:[
-      {label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"#6D28D9",borderWidth:2.8,pointRadius:3.5,pointBackgroundColor:"#6D28D9",pointBorderColor:"#fff",pointBorderWidth:1.5,tension:0.3,fill:false,yAxisID:"y",order:1},
-      {label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",backgroundColor:"#1A56DB",borderWidth:2,pointRadius:2.5,pointBackgroundColor:"#1A56DB",pointBorderColor:"#fff",pointBorderWidth:1,tension:0.3,fill:false,yAxisID:"y",borderDash:[6,3],order:2},
-      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.08)",borderWidth:2.5,pointRadius:3.5,pointBackgroundColor:"#dc2626",pointBorderColor:"#fff",pointBorderWidth:1.5,pointStyle:"triangle",tension:0.3,fill:true,yAxisID:"y1",order:0}
+      {label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"#6D28D9",borderWidth:2.8,pointRadius:3,pointBackgroundColor:"#6D28D9",pointBorderColor:"#fff",pointBorderWidth:1.5,tension:0.3,fill:false,yAxisID:"y",order:1,datalabels:false},
+      {label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",backgroundColor:"#1A56DB",borderWidth:2,pointRadius:2,pointBackgroundColor:"#1A56DB",pointBorderColor:"#fff",pointBorderWidth:1,tension:0.3,fill:false,yAxisID:"y",borderDash:[6,3],order:2,datalabels:false},
+      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.06)",borderWidth:2.5,pointRadius:3,pointBackgroundColor:"#dc2626",pointBorderColor:"#fff",pointBorderWidth:1.5,pointStyle:"triangle",tension:0.3,fill:true,yAxisID:"y1",order:0,datalabels:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{mode:"index",intersect:false},
