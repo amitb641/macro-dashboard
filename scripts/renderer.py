@@ -848,6 +848,9 @@ def render_outlook(html, ana):
 
     txt = ana.get('tabs', {}).get('gdp', '')
     if txt: html = patch_commentary(html, 'gdp', txt)
+
+    banks_txt = ana.get('tabs', {}).get('banks', '')
+    if banks_txt: html = patch_commentary(html, 'banks', banks_txt)
     return html
 
 
@@ -1048,7 +1051,7 @@ def update_meta(html):
     utc   = datetime.datetime.utcnow().strftime('%H:%M UTC')
     new_h = re.sub(
         r'(GitHub Actions — Cron trigger: ).*?(?=</span>|<)',
-        rf'\g<1>Daily 7am ET — Last run: {today} {utc}',
+        rf'\g<1>Weekly Fri 8am ET + Monthly 2nd Sat — Last run: {today} {utc}',
         html, count=1
     )
     if new_h != html: applied.append('trigger_timestamp'); html = new_h
