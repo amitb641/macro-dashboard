@@ -1978,17 +1978,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="ch300"><canvas id="c-ffr"></canvas></div>
   </div>
 
-  <!-- Row 2: 10Y Treasury Yield chart -->
-  <div class="panel">
-    <div class="panel-title">10Y Treasury Yield vs 2Y — Yield Curve &amp; Spread</div>
-    <div class="panel-sub">Annual average yields · FRED DGS10/DGS2 · 2Y–10Y spread (bp) · Shaded = inversion</div>
-    <div class="ch300"><canvas id="c-treasury"></canvas></div>
-  </div>
-
-  <!-- Row 3: Treasury yield macro/credit explainer -->
-  <div id="treasury-explainer"></div>
-
-  <!-- Row 4: Rate history table -->
+  <!-- Row 2: Rate history table -->
   <div class="panel">
     <div class="panel-title">Fed Rate Cycle History &amp; Wall St Forecasts</div>
     <div class="panel-sub">FOMC rate path 2018–2026F · bank NIM cycle · card issuer yield · GS / JPM / MS targets</div>
@@ -2007,6 +1997,22 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Row 4: Fed rate impact explainer -->
   <div id="yield-explainer"></div>
+
+  <!-- Row 5: 10Y Treasury Yield vs Card 90+ DPD -->
+  <div class="panel">
+    <div class="panel-title">10Y Treasury Yield vs Card 90+ DPD — Yield &amp; Credit Risk Signal</div>
+    <div class="panel-sub">Annual avg yields (FRED DGS10/DGS2) · Card 90+ DPD % (NY Fed HHDC) · Shaded band = yield curve inversion · 2000–Mar'26</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#6D28D9;border-radius:2px"></span><span style="font-size:10.5px;color:#6D28D9;font-weight:600">10Y Yield</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#1A56DB;border-radius:2px;border-top:2px dashed #1A56DB"></span><span style="font-size:10.5px;color:#1A56DB;font-weight:600">2Y Yield</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#dc2626;border-radius:2px"></span><span style="font-size:10.5px;color:#dc2626;font-weight:600">Card 90+ DPD %</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:10px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:2px"></span><span style="font-size:10.5px;color:#94A3B8">Inversion zone</span></div>
+    </div>
+    <div style="height:340px"><canvas id="c-treasury"></canvas></div>
+  </div>
+
+  <!-- Row 6: Treasury yield macro/credit explainer -->
+  <div id="treasury-explainer"></div>
 
 </div>
 
@@ -3272,10 +3278,12 @@ const HOUSING_METROS = [
 ];
 
 // Treasury yield history (annual avg from FRED DGS10, DGS2) + latest
+// Card 90+ DPD aligned to same annual labels (NY Fed HHDC, annual or latest quarterly)
 const TREASURY_DATA = {"labels":["2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","Mar'26"],
   "dgs10":[6.03,5.02,4.61,4.01,4.27,4.29,4.80,4.63,3.66,3.26,3.22,2.78,1.80,2.35,2.54,2.14,1.84,2.33,2.91,2.14,0.89,1.45,2.95,3.96,4.25,4.42,4.26],
   "dgs2": [6.26,3.97,2.90,1.65,1.90,3.62,4.81,4.36,2.00,0.96,0.70,0.45,0.28,0.31,0.46,0.67,0.84,1.39,2.52,1.88,0.36,0.26,3.07,4.60,4.35,3.92,3.76],
-  "spread":[-0.23,1.05,1.71,2.36,2.37,0.67,-0.01,0.27,1.66,2.30,2.52,2.33,1.52,2.04,2.08,1.47,1.00,0.94,0.39,0.26,0.53,1.19,-0.12,-0.64,-0.10,0.50,0.50]};
+  "spread":[-0.23,1.05,1.71,2.36,2.37,0.67,-0.01,0.27,1.66,2.30,2.52,2.33,1.52,2.04,2.08,1.47,1.00,0.94,0.39,0.26,0.53,1.19,-0.12,-0.64,-0.10,0.50,0.50],
+  "card90":[null,null,null,9.5,8.7,8.0,7.5,8.2,10.4,13.7,12.5,10.0,9.0,8.0,7.3,6.8,6.5,6.0,5.5,5.9,9.1,6.8,4.0,6.4,9.8,9.8,9.8]};
 const FFR_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "GS 26F", "JPM 26F", "MS 26F"], "actual":[6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 3.64, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.21, 3.25, 3.75, 3.25]};
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
@@ -4090,29 +4098,69 @@ function buildYieldTab(){
   }catch(e){console.error("FFR chart error:",e);}
 
 
-  // ── 10Y Treasury Yield chart ─────────────────────────────────────────
+  // ── 10Y Treasury Yield vs Card 90+ DPD chart ────────────────────────
   try{
   var tCtx = document.getElementById("c-treasury").getContext("2d");
-  // Build spread bar colors: red for negative (inversion), blue for positive
-  var spreadColors = TREASURY_DATA.spread.map(function(v){return v<0?"rgba(192,57,43,.6)":"rgba(26,86,219,.35)";});
+  // Custom plugin to shade inversion zones (where 2Y > 10Y)
+  var inversionPlugin = {id:"inversionShade",beforeDraw:function(chart){
+    var ctx=chart.ctx, xAxis=chart.scales.x, yAxis=chart.scales.y, meta=chart.getDatasetMeta(0);
+    if(!meta||!meta.data)return;
+    ctx.save();
+    for(var i=0;i<TREASURY_DATA.spread.length;i++){
+      if(TREASURY_DATA.spread[i]<0&&meta.data[i]){
+        var x=meta.data[i].x, w=xAxis.width/TREASURY_DATA.labels.length;
+        ctx.fillStyle="rgba(192,57,43,.08)";
+        ctx.fillRect(x-w/2,yAxis.top,w,yAxis.bottom-yAxis.top);
+        // Small red triangle marker at top
+        ctx.fillStyle="rgba(192,57,43,.35)";
+        ctx.beginPath();ctx.moveTo(x-4,yAxis.top+2);ctx.lineTo(x+4,yAxis.top+2);ctx.lineTo(x,yAxis.top+8);ctx.fill();
+      }
+    }
+    ctx.restore();
+  }};
+  // Fill between 10Y and 2Y lines (visual spread band)
+  var fillBetweenPlugin = {id:"fillBetween",beforeDatasetsDraw:function(chart){
+    var ctx=chart.ctx, m0=chart.getDatasetMeta(0), m1=chart.getDatasetMeta(1);
+    if(!m0||!m0.data||!m1||!m1.data)return;
+    ctx.save();
+    ctx.beginPath();
+    for(var i=0;i<m0.data.length;i++){
+      var pt=m0.data[i];if(i===0)ctx.moveTo(pt.x,pt.y);else ctx.lineTo(pt.x,pt.y);
+    }
+    for(var j=m1.data.length-1;j>=0;j--){
+      ctx.lineTo(m1.data[j].x,m1.data[j].y);
+    }
+    ctx.closePath();
+    ctx.fillStyle="rgba(109,40,217,.06)";ctx.fill();
+    ctx.restore();
+  }};
   new Chart(tCtx,{
-    type:"bar",
+    type:"line",
+    plugins:[inversionPlugin,fillBetweenPlugin],
     data:{labels:TREASURY_DATA.labels,datasets:[
-      {type:"line",label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"rgba(109,40,217,.08)",borderWidth:2.5,pointRadius:4,tension:0.25,fill:false,yAxisID:"y",order:1},
-      {type:"line",label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",backgroundColor:"rgba(26,86,219,.08)",borderWidth:2,pointRadius:3,tension:0.25,fill:false,yAxisID:"y",borderDash:[5,3],order:2},
-      {type:"bar",label:"2Y–10Y Spread",data:TREASURY_DATA.spread.map(function(v){return Math.round(v*100);}),backgroundColor:spreadColors,borderRadius:2,yAxisID:"y1",order:3}
+      {label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"#6D28D9",borderWidth:2.8,pointRadius:3.5,pointBackgroundColor:"#6D28D9",pointBorderColor:"#fff",pointBorderWidth:1.5,tension:0.3,fill:false,yAxisID:"y",order:1},
+      {label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",backgroundColor:"#1A56DB",borderWidth:2,pointRadius:2.5,pointBackgroundColor:"#1A56DB",pointBorderColor:"#fff",pointBorderWidth:1,tension:0.3,fill:false,yAxisID:"y",borderDash:[6,3],order:2},
+      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.08)",borderWidth:2.5,pointRadius:3.5,pointBackgroundColor:"#dc2626",pointBorderColor:"#fff",pointBorderWidth:1.5,pointStyle:"triangle",tension:0.3,fill:true,yAxisID:"y1",order:0}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       interaction:{mode:"index",intersect:false},
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
-        tooltip:{callbacks:{label:function(ctx){
-          if(ctx.datasetIndex<2)return ctx.dataset.label+": "+ctx.parsed.y.toFixed(2)+"%";
-          return "Spread: "+ctx.parsed.y+"bp"+(ctx.parsed.y<0?" (INVERTED)":"");
-        }}}},
+      plugins:{legend:{display:false},
+        tooltip:{backgroundColor:"rgba(30,41,59,.95)",titleColor:"#f1f5f9",bodyColor:"#e2e8f0",borderColor:"rgba(255,255,255,.1)",borderWidth:1,padding:10,cornerRadius:8,
+          callbacks:{label:function(ctx){
+            if(ctx.datasetIndex===2)return "Card 90+ DPD: "+ctx.parsed.y.toFixed(1)+"%";
+            var sp=TREASURY_DATA.spread[ctx.dataIndex];
+            var extra=ctx.datasetIndex===0&&sp!==undefined?" (spread: "+(sp>0?"+":"")+Math.round(sp*100)+"bp"+(sp<0?" INVERTED":"")+")" :"";
+            return ctx.dataset.label+": "+ctx.parsed.y.toFixed(2)+"%"+extra;
+          },afterBody:function(items){
+            var idx=items[0].dataIndex;var sp=TREASURY_DATA.spread[idx];
+            if(sp<0)return ["  ⚠ Yield curve inverted — recession risk elevated"];
+            return [];
+          }}
+      }},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
-        y:{position:"left",grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%"}},min:0,max:7,title:{display:true,text:"Yield %",color:"#94A3B8",font:{size:10}},border:{display:false}},
-        y1:{position:"right",grid:{display:false},ticks:{color:"#94A3B8",callback:function(v){return v+"bp"}},title:{display:true,text:"Spread (bp)",color:"#94A3B8",font:{size:10}},border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10,weight:"500"}},border:{display:false}},
+        y:{position:"left",grid:{color:"rgba(148,163,184,.15)",lineWidth:1},ticks:{color:"#6D28D9",font:{size:10,weight:"500"},callback:function(v){return v+"%"},stepSize:1},min:0,max:7,title:{display:true,text:"Treasury Yield %",color:"#6D28D9",font:{size:10,weight:"600"}},border:{display:false}},
+        y1:{position:"right",grid:{display:false},ticks:{color:"#dc2626",font:{size:10,weight:"500"},callback:function(v){return v+"%"},stepSize:2},min:0,max:16,title:{display:true,text:"Card 90+ DPD %",color:"#dc2626",font:{size:10,weight:"600"}},border:{display:false}}
       }}
   });
   }catch(e){console.error("Treasury chart error:",e);}
