@@ -1611,6 +1611,18 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ JOBS ══ -->
 <div class="tab-panel" id="tab-jobs">
 
+  <div class="panel">
+    <div class="panel-title">Monthly Employment Change — BLS Total Nonfarm vs ADP Private (thousands)</div>
+    <div class="panel-sub">BLS CES = Total Nonfarm (includes government) · ADP = Private sector only (excludes government) · divergences reflect methodology differences · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
+    <div class="ch300"><canvas id="c-nfp-vs-adp"></canvas></div>
+    <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
+    <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
+    <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
+  </div>
+
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">📋 Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
     <div class="fc-note">
@@ -1629,12 +1641,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-sub">Annual net change in payroll employment · BLS CES · → indicates sub-sector</div>
       <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
     </div>
-  </div>
-  <div class="panel">
-    <div class="panel-title">Nonfarm Payrolls — BLS vs ADP (Monthly Change, thousands)</div>
-    <div class="panel-sub">BLS CES Total Nonfarm vs ADP National Employment Report · Note: BLS includes government; ADP is private only · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
-    <div class="ch300"><canvas id="c-nfp-vs-adp"></canvas></div>
-    <p class="src">Sources: BLS CES (Total Nonfarm, auto-updated from FRED PAYEMS). ADP National Employment Report (<a href="https://adpemploymentreport.com">adpemploymentreport.com</a>, manually updated). BLS and ADP use different methodologies — divergences are common and informative.</p>
   </div>
   <div class="panel">
     <div class="panel-title">Employment Change by Sector — Annual Net (thousands)</div>
@@ -2149,6 +2155,12 @@ const NFP_VS_ADP = {
   labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],
   bls:   [185, 108, 157, 179, 114, 89, 159, 12, 212, 256, 126, -92],
   adp:   [155, 62, 152, 150, 122, 99, 143, 239, 146, 122, 11, 63]
+};
+// Monthly sector breakdown (BLS CES major sectors, thousands)
+const SECTOR_MOM = {
+  sectors:["Healthcare","Retail Trade","State & Local Govt","Education (Pvt)","Construction","Financial Activities","Mining & Energy","Information (Tech)","Transport & Warehousing","Leisure & Hospitality","Manufacturing","Prof. & Biz Services","Federal Government"],
+  jan26:  [82, 18, 18, 8, 35, 8, 2, -8, -8, 22, -5, -10, -34],
+  feb26:  [44, 34, 8, 5, -15, -3, -2, -12, -18, -25, -28, -42, -38]
 };
 // Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
 const NFP_BLS_MOM = {"labels":["Mar'24", "Apr'24", "May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "bls":[228, 64, 78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92]};
@@ -2731,6 +2743,25 @@ function buildJobsTab(){
           tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
         scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
                 y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
+    });
+  }
+
+  // Sector MoM chart (horizontal bar, Jan'26 vs Feb'26)
+  {
+    const sIdx = SECTOR_MOM.feb26.map((_,i)=>i).sort((a,b)=>SECTOR_MOM.feb26[b]-SECTOR_MOM.feb26[a]);
+    new Chart(document.getElementById("c-sector-mom").getContext("2d"),{
+      type:"bar",
+      data:{labels:sIdx.map(i=>SECTOR_MOM.sectors[i]),datasets:[
+        {label:"Feb'26 (K)",data:sIdx.map(i=>SECTOR_MOM.feb26[i]),
+         backgroundColor:sIdx.map(i=>SECTOR_MOM.feb26[i]>=0?"#4a72e8cc":"#e06060bb"),borderRadius:3},
+        {label:"Jan'26 (K)",data:sIdx.map(i=>SECTOR_MOM.jan26[i]),
+         backgroundColor:"#c0701066",borderRadius:3},
+      ]},
+      options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+          tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
+        scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
+                y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
     });
   }
 
