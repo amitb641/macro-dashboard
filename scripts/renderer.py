@@ -255,13 +255,19 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'CLAIMS_WEEKLY', {
                 'labels': labels, 'initial': initial, 'continued': continued})
 
-    # ── SAVING_RATE ───────────────────────────────────────────────────
+    # ── SAVING_ANNUAL (annual averages from 2000) ─────────────────────
     psavert = data.get('psavert', [])
     if len(psavert) >= 60:
         labels, values = _annual_avg(psavert)
-        # Annual only — monthly shown via patch_array_last in render_inflation
         if labels:
-            html = _inject_const(html, 'SAVING_RATE', {'labels': labels, 'data': values})
+            html = _inject_const(html, 'SAVING_ANNUAL', {'labels': labels, 'data': values})
+
+    # ── SAVING_MONTHLY (last 12 months) ──────────────────────────────
+    if len(psavert) >= 12:
+        monthly = sorted(psavert[:12], key=lambda x: x['date'])  # oldest-first for chart
+        m_labels = [_month_lbl(o['date']) for o in monthly]
+        m_values = [round(o['value'], 1) for o in monthly]
+        html = _inject_const(html, 'SAVING_MONTHLY', {'labels': m_labels, 'data': m_values})
 
     # ── GDP_TOTAL_DATA ────────────────────────────────────────────────
     gdpc1_a = data.get('gdpc1_annual', [])
@@ -752,7 +758,7 @@ def render_inflation(html, data, vals, tabs):
         html = patch_kpi_full(html, 'Core PCE Dec 2025', pce_lbl, f'{core_pce:+.1f}%')
 
     if save is not None:
-        html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_RATE')
+        html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_MONTHLY')
 
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')
