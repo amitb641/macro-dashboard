@@ -110,6 +110,100 @@ p.desc{font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.5}
 .nav-f .nav-btn-meta:hover:not(.active){color:#6B7280;background:rgba(255,255,255,.5);border-color:rgba(99,102,241,.1)}
 .nav-f .nav-btn-meta.active{background:rgba(255,255,255,.7);color:#4F46E5;border-color:rgba(79,70,229,.15);box-shadow:none}
 .nav-f .nav-group-meta{margin-left:auto;display:flex;gap:2px}
+
+/* ═══════════════════════════════════════════════════
+   OPTION G — Bloomberg Terminal
+   Pure black bg, orange function-key tabs, monospace labels, high-density
+═══════════════════════════════════════════════════ */
+.nav-g{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;padding:6px 16px;background:#000;border:1px solid #333;border-radius:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.nav-g .nav-group-lbl{font-size:7.5px;letter-spacing:.18em;text-transform:uppercase;color:#FF6600;font-weight:700;white-space:nowrap;padding-right:4px;font-family:'Courier New',monospace}
+.nav-g .nav-group-pills{gap:2px}
+.nav-g .nav-btn{background:#111;border:1px solid #333;color:#AABBCC;padding:6px 14px;cursor:pointer;font-family:'Courier New',monospace;font-size:11px;font-weight:700;border-radius:3px;transition:all .12s ease;line-height:1;text-transform:uppercase;letter-spacing:.04em}
+.nav-g .nav-btn:hover:not(.active){color:#fff;background:#1a1a1a;border-color:#555}
+.nav-g .nav-btn.active{background:#FF6600;border-color:#FF6600;color:#000;box-shadow:0 0 8px rgba(255,102,0,.5)}
+.nav-g .nav-btn-meta{background:transparent;border:1px solid #222;color:#555;font-size:10px;padding:5px 10px;cursor:pointer;font-family:'Courier New',monospace;border-radius:3px;transition:all .12s;text-transform:uppercase;letter-spacing:.04em}
+.nav-g .nav-btn-meta:hover:not(.active){color:#888;border-color:#444}
+.nav-g .nav-btn-meta.active{background:#222;color:#FF6600;border-color:#FF6600;box-shadow:none}
+.nav-g .nav-group-meta{margin-left:auto}
+
+/* ═══════════════════════════════════════════════════
+   OPTION H — Stripe Dashboard
+   Pure white, thin bordered pills, single indigo accent, ultra-clean
+═══════════════════════════════════════════════════ */
+.nav-h{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:12px 24px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.nav-h .nav-group-lbl{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;font-weight:600;white-space:nowrap;padding-right:3px}
+.nav-h .nav-group-pills{gap:4px}
+.nav-h .nav-btn{background:#fff;border:1px solid #D1D5DB;color:#6B7280;padding:7px 16px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;border-radius:8px;transition:all .15s ease;line-height:1}
+.nav-h .nav-btn:hover:not(.active){color:#111827;border-color:#9CA3AF;background:#F9FAFB}
+.nav-h .nav-btn.active{background:#635BFF;border-color:#635BFF;color:#fff;font-weight:600;box-shadow:0 1px 3px rgba(99,91,255,.3)}
+.nav-h .nav-btn-meta{background:transparent;border:1px solid transparent;color:#9CA3AF;font-size:10.5px;padding:6px 12px;cursor:pointer;font-family:inherit;border-radius:8px;transition:all .15s}
+.nav-h .nav-btn-meta:hover:not(.active){color:#6B7280;border-color:#E5E7EB}
+.nav-h .nav-btn-meta.active{background:#F4F3FF;border-color:#C4B5FD;color:#635BFF;box-shadow:none}
+.nav-h .nav-group-meta{margin-left:auto}
+
+/* ═══════════════════════════════════════════════════
+   OPTION I — Linear
+   Minimal glass bar, indigo/violet accent, smooth transitions, micro-animations
+═══════════════════════════════════════════════════ */
+.nav-i-wrap{display:flex;justify-content:center;margin-bottom:20px}
+.nav-i{display:inline-flex;flex-wrap:wrap;gap:4px 16px;align-items:center;padding:8px 24px;background:rgba(255,255,255,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.06);border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.nav-i .nav-group-lbl{font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(99,102,241,.5);font-weight:700;white-space:nowrap;padding-right:2px}
+.nav-i .nav-group-pills{gap:2px}
+.nav-i .nav-btn{background:transparent;border:none;color:#9CA3AF;padding:8px 16px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;border-radius:10px;transition:all .25s cubic-bezier(.4,0,.2,1);line-height:1;position:relative}
+.nav-i .nav-btn:hover:not(.active){color:#4B5563;background:rgba(99,102,241,.05)}
+.nav-i .nav-btn.active{color:#5B5BD6;font-weight:600;background:rgba(91,91,214,.08)}
+.nav-i .nav-btn.active::after{content:'';position:absolute;bottom:1px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:#5B5BD6;border-radius:1px;animation:linearSlide .3s cubic-bezier(.4,0,.2,1)}
+@keyframes linearSlide{from{width:0;opacity:0}to{width:16px;opacity:1}}
+.nav-i .nav-btn-meta{color:#D1D5DB;font-size:10.5px;padding:6px 12px;background:transparent;border:none;cursor:pointer;font-family:inherit;border-radius:8px;transition:all .2s}
+.nav-i .nav-btn-meta:hover:not(.active){color:#9CA3AF}
+.nav-i .nav-btn-meta.active{color:#5B5BD6;background:rgba(91,91,214,.06);box-shadow:none}
+.nav-i .nav-group-meta{margin-left:auto;display:flex;gap:2px}
+
+/* ═══════════════════════════════════════════════════
+   OPTION J — Robinhood
+   Dark mode, neon green accent, floating bar, bold
+═══════════════════════════════════════════════════ */
+.nav-j-wrap{display:flex;justify-content:center;margin-bottom:20px}
+.nav-j{display:inline-flex;flex-wrap:wrap;gap:4px 16px;align-items:center;padding:10px 28px;background:#1E1E1E;border:1px solid rgba(255,255,255,.06);border-radius:50px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.nav-j .nav-group-lbl{font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(0,200,5,.4);font-weight:700;white-space:nowrap;padding-right:3px}
+.nav-j .nav-group-pills{gap:3px}
+.nav-j .nav-btn{background:transparent;border:none;color:rgba(255,255,255,.4);padding:9px 18px;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:500;border-radius:50px;transition:all .2s ease;line-height:1}
+.nav-j .nav-btn:hover:not(.active){color:rgba(255,255,255,.75);background:rgba(255,255,255,.05)}
+.nav-j .nav-btn.active{background:#00C805;color:#000;font-weight:700;box-shadow:0 0 20px rgba(0,200,5,.35)}
+.nav-j .nav-btn-meta{color:rgba(255,255,255,.2);font-size:10.5px;padding:7px 12px;background:transparent;border:none;cursor:pointer;font-family:inherit;border-radius:50px;transition:all .15s}
+.nav-j .nav-btn-meta:hover:not(.active){color:rgba(255,255,255,.45)}
+.nav-j .nav-btn-meta.active{background:rgba(0,200,5,.12);color:#00C805;box-shadow:none}
+.nav-j .nav-group-meta{margin-left:auto;display:flex;gap:2px}
+
+/* ═══════════════════════════════════════════════════
+   OPTION K — Figma
+   Compact segmented, warm gray bg, white active card, tight spacing
+═══════════════════════════════════════════════════ */
+.nav-k{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:8px 18px;background:#2C2C2C;border:1px solid #3D3D3D;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.nav-k .nav-group-lbl{font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:600;white-space:nowrap;padding-right:2px}
+.nav-k .nav-group-pills{gap:0;background:#1E1E1E;border:1px solid #3D3D3D;border-radius:8px;padding:2px}
+.nav-k .nav-btn{background:transparent;border:none;color:rgba(255,255,255,.45);padding:6px 14px;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:500;border-radius:6px;transition:all .15s ease;line-height:1}
+.nav-k .nav-btn:hover:not(.active){color:rgba(255,255,255,.7);background:rgba(255,255,255,.05)}
+.nav-k .nav-btn.active{background:#fff;color:#1E1E1E;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.nav-k .nav-btn-meta{color:rgba(255,255,255,.2);font-size:10px;padding:5px 10px;background:transparent;border:none;cursor:pointer;font-family:inherit;border-radius:6px;transition:all .12s}
+.nav-k .nav-btn-meta:hover:not(.active){color:rgba(255,255,255,.4)}
+.nav-k .nav-btn-meta.active{background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);box-shadow:none}
+.nav-k .nav-group-meta{margin-left:auto;display:flex;gap:2px}
+
+/* ═══════════════════════════════════════════════════
+   OPTION L — Vercel
+   Dark slate, gradient active pill, frosted glass, sharp
+═══════════════════════════════════════════════════ */
+.nav-l{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;padding:10px 22px;background:linear-gradient(180deg,#0A0A0A,#111);border:1px solid #262626;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.04)}
+.nav-l .nav-group-lbl{font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);font-weight:700;white-space:nowrap;padding-right:3px}
+.nav-l .nav-group-pills{gap:3px}
+.nav-l .nav-btn{background:transparent;border:1px solid transparent;color:rgba(255,255,255,.4);padding:8px 16px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:500;border-radius:8px;transition:all .18s ease;line-height:1}
+.nav-l .nav-btn:hover:not(.active){color:rgba(255,255,255,.8);background:rgba(255,255,255,.04);border-color:#333}
+.nav-l .nav-btn.active{background:linear-gradient(135deg,#fff,#EDEDED);border-color:transparent;color:#000;font-weight:600;box-shadow:0 0 12px rgba(255,255,255,.12),0 2px 6px rgba(0,0,0,.3)}
+.nav-l .nav-btn-meta{color:rgba(255,255,255,.2);font-size:10.5px;padding:6px 12px;background:transparent;border:1px solid transparent;cursor:pointer;font-family:inherit;border-radius:8px;transition:all .15s}
+.nav-l .nav-btn-meta:hover:not(.active){color:rgba(255,255,255,.45);border-color:#262626}
+.nav-l .nav-btn-meta.active{background:#262626;color:rgba(255,255,255,.7);border-color:#333;box-shadow:none}
+.nav-l .nav-group-meta{margin-left:auto}
 </style>
 </head>
 <body>
@@ -208,8 +302,104 @@ p.desc{font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.5}
 </div></div>
 </div>
 
+<div class="divider"></div>
+
+<!-- OPTION G — Bloomberg Terminal -->
+<div class="section">
+<h2 style="color:#FF6600">Option G — Bloomberg Terminal</h2>
+<p class="desc">Pure black background, orange function-key style active tabs, monospace font, high-density layout. Classic institutional data terminal — maximum information density.</p>
+<div class="nav-g">
+  <div class="nav-group"><span class="nav-group-lbl">OVRVW</span><div class="nav-group-pills"><button class="nav-btn active">Outlook</button><button class="nav-btn">GDP</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">LABOR</span><div class="nav-group-pills"><button class="nav-btn">Jobs</button><button class="nav-btn">Unemp</button><button class="nav-btn">Wages</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">INFLTN</span><div class="nav-group-pills"><button class="nav-btn">CPI</button><button class="nav-btn">PCE</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">RATES</span><div class="nav-group-pills"><button class="nav-btn">Fed</button><button class="nav-btn">Credit</button><button class="nav-btn">Banks</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">SCTRS</span><div class="nav-group-pills"><button class="nav-btn">Housing</button><button class="nav-btn">Oil</button></div></div>
+  <div class="nav-group nav-group-meta"><div class="nav-group-pills"><button class="nav-btn nav-btn-meta">SRC</button><button class="nav-btn nav-btn-meta">DASH</button></div></div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- OPTION H — Stripe Dashboard -->
+<div class="section">
+<h2 style="color:#635BFF">Option H — Stripe Dashboard</h2>
+<p class="desc">Pure white bar, thin bordered inactive pills, single Stripe-purple accent. Ultra-clean, every tab is an obvious clickable button. Maximum clarity & readability.</p>
+<div class="nav-h">
+  <div class="nav-group"><span class="nav-group-lbl">Overview</span><div class="nav-group-pills"><button class="nav-btn active">Outlook</button><button class="nav-btn">GDP</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Labor</span><div class="nav-group-pills"><button class="nav-btn">Jobs</button><button class="nav-btn">Unemployment</button><button class="nav-btn">Wages</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Inflation</span><div class="nav-group-pills"><button class="nav-btn">CPI</button><button class="nav-btn">PCE & Consumer</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Rates & Credit</span><div class="nav-group-pills"><button class="nav-btn">Fed Rates</button><button class="nav-btn">Credit</button><button class="nav-btn">Banks</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Sectors</span><div class="nav-group-pills"><button class="nav-btn">Housing</button><button class="nav-btn">Oil</button></div></div>
+  <div class="nav-group nav-group-meta"><div class="nav-group-pills"><button class="nav-btn nav-btn-meta">Sources</button><button class="nav-btn nav-btn-meta">Dashboard</button></div></div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- OPTION I — Linear -->
+<div class="section">
+<h2 style="color:#5B5BD6">Option I — Linear</h2>
+<p class="desc">Minimal frosted glass bar, violet accent, text-only active with underline indicator, buttery smooth micro-animations. Clean, developer-focused product feel.</p>
+<div class="nav-i-wrap"><div class="nav-i">
+  <div class="nav-group"><span class="nav-group-lbl">Overview</span><div class="nav-group-pills"><button class="nav-btn active">Outlook</button><button class="nav-btn">GDP</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Labor</span><div class="nav-group-pills"><button class="nav-btn">Jobs</button><button class="nav-btn">Unemployment</button><button class="nav-btn">Wages</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Inflation</span><div class="nav-group-pills"><button class="nav-btn">CPI</button><button class="nav-btn">PCE & Consumer</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Rates & Credit</span><div class="nav-group-pills"><button class="nav-btn">Fed Rates</button><button class="nav-btn">Credit</button><button class="nav-btn">Banks</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Sectors</span><div class="nav-group-pills"><button class="nav-btn">Housing</button><button class="nav-btn">Oil</button></div></div>
+  <div class="nav-group nav-group-meta"><button class="nav-btn nav-btn-meta">Sources</button><button class="nav-btn nav-btn-meta">Dashboard</button></div>
+</div></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- OPTION J — Robinhood -->
+<div class="section">
+<h2 style="color:#00C805">Option J — Robinhood</h2>
+<p class="desc">Dark mode floating pill bar with neon green active state and glow. Rounded capsule shape. Bold, retail investor energy — unmissable active tab.</p>
+<div class="nav-j-wrap"><div class="nav-j">
+  <div class="nav-group"><span class="nav-group-lbl">Overview</span><div class="nav-group-pills"><button class="nav-btn active">Outlook</button><button class="nav-btn">GDP</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Labor</span><div class="nav-group-pills"><button class="nav-btn">Jobs</button><button class="nav-btn">Unemployment</button><button class="nav-btn">Wages</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Inflation</span><div class="nav-group-pills"><button class="nav-btn">CPI</button><button class="nav-btn">PCE & Consumer</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Rates & Credit</span><div class="nav-group-pills"><button class="nav-btn">Fed Rates</button><button class="nav-btn">Credit</button><button class="nav-btn">Banks</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Sectors</span><div class="nav-group-pills"><button class="nav-btn">Housing</button><button class="nav-btn">Oil</button></div></div>
+  <div class="nav-group nav-group-meta"><button class="nav-btn nav-btn-meta">Sources</button><button class="nav-btn nav-btn-meta">Dashboard</button></div>
+</div></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- OPTION K — Figma -->
+<div class="section">
+<h2 style="color:#fff;background:#2C2C2C;display:inline-block;padding:3px 10px;border-radius:6px">Option K — Figma</h2>
+<p class="desc">Dark gray bar, compact segmented controls with recessed track background, white raised active card. Tight spacing, tool-focused, design app feel.</p>
+<div class="nav-k">
+  <div class="nav-group"><span class="nav-group-lbl">Overview</span><div class="nav-group-pills"><button class="nav-btn active">Outlook</button><button class="nav-btn">GDP</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Labor</span><div class="nav-group-pills"><button class="nav-btn">Jobs</button><button class="nav-btn">Unemployment</button><button class="nav-btn">Wages</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Inflation</span><div class="nav-group-pills"><button class="nav-btn">CPI</button><button class="nav-btn">PCE & Consumer</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Rates & Credit</span><div class="nav-group-pills"><button class="nav-btn">Fed Rates</button><button class="nav-btn">Credit</button><button class="nav-btn">Banks</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Sectors</span><div class="nav-group-pills"><button class="nav-btn">Housing</button><button class="nav-btn">Oil</button></div></div>
+  <div class="nav-group nav-group-meta"><button class="nav-btn nav-btn-meta">Sources</button><button class="nav-btn nav-btn-meta">Dashboard</button></div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- OPTION L — Vercel -->
+<div class="section">
+<h2 style="color:#fff;background:#0A0A0A;display:inline-block;padding:3px 10px;border-radius:6px">Option L — Vercel</h2>
+<p class="desc">Near-black slate bar, white gradient active pill with soft glow, sharp corners. Sleek developer platform aesthetic — active tab glows against the void.</p>
+<div class="nav-l">
+  <div class="nav-group"><span class="nav-group-lbl">Overview</span><div class="nav-group-pills"><button class="nav-btn active">Outlook</button><button class="nav-btn">GDP</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Labor</span><div class="nav-group-pills"><button class="nav-btn">Jobs</button><button class="nav-btn">Unemployment</button><button class="nav-btn">Wages</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Inflation</span><div class="nav-group-pills"><button class="nav-btn">CPI</button><button class="nav-btn">PCE & Consumer</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Rates & Credit</span><div class="nav-group-pills"><button class="nav-btn">Fed Rates</button><button class="nav-btn">Credit</button><button class="nav-btn">Banks</button></div></div>
+  <div class="nav-group"><span class="nav-group-lbl">Sectors</span><div class="nav-group-pills"><button class="nav-btn">Housing</button><button class="nav-btn">Oil</button></div></div>
+  <div class="nav-group nav-group-meta"><div class="nav-group-pills"><button class="nav-btn nav-btn-meta">Sources</button><button class="nav-btn nav-btn-meta">Dashboard</button></div></div>
+</div>
+</div>
+
 <script>
-document.querySelectorAll('.nav-a,.nav-b,.nav-c,.nav-d,.nav-e,.nav-f').forEach(nav=>{
+document.querySelectorAll('.nav-a,.nav-b,.nav-c,.nav-d,.nav-e,.nav-f,.nav-g,.nav-h,.nav-i,.nav-j,.nav-k,.nav-l').forEach(nav=>{
   nav.querySelectorAll('.nav-btn,.nav-btn-meta').forEach(btn=>{
     btn.addEventListener('click',function(){
       nav.querySelectorAll('.nav-btn,.nav-btn-meta').forEach(b=>b.classList.remove('active'));
