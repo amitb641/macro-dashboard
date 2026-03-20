@@ -747,7 +747,7 @@ def render_inflation(html, data, vals, tabs):
     save     = vals.get('saving_rate')
 
     if cpi is not None:
-        html = patch_array_last(html, 'data', cpi, 1, scope_var='CPI_MONTHLY')
+        html = patch_array_last(html, 'headline', cpi, 1, scope_var='CPI_MONTHLY')
         cpi_s2 = data.get('cpi_all')
         cpi_date = cpi_s2[0].get('date','') if cpi_s2 else ''
         cpi_lbl = f"CPI All Items {month_label(cpi_date)}" if cpi_date else 'CPI All Items'
