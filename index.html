@@ -1492,30 +1492,22 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ UNEMPLOYMENT ══ -->
 <div class="tab-panel" id="tab-unemp">
 
+  <div class="metric-row" id="unemp-metrics"></div>
+
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">👷 Unemployment Commentary — Trends &amp; Risk Factors</div>
     <div class="fc-note">
-      <strong>Current:</strong> U-3 at <strong>4.3%</strong> (Jan 2026) — above 2023 trough of 3.4% but well below historical average of ~5.7%. U-6 broad unemployment at <strong>8.0%</strong>. <strong>Sectoral divergence:</strong> Construction &amp; manufacturing unemployment rising (tariff exposure); healthcare and government remain tight. Long-term unemployment (27+ weeks) ticking higher — a leading indicator of structural stress. <strong>2026 scenarios:</strong> Base 4.3–4.5% (GS/JPM); bear case 5.0–5.5% if tariff shock materializes; bull case 4.0% if productivity accelerates. The Fed watches prime-age employment-population ratio (~80.7%) as its cleanest signal.
+      <strong>Current:</strong> U-3 at <strong>4.4%</strong> (Feb 2026) — above 2023 trough of 3.4% but well below historical average of ~5.7%. U-6 broad unemployment at <strong>7.9%</strong>. <strong>Sectoral divergence:</strong> Construction &amp; manufacturing unemployment rising (tariff exposure); healthcare and government remain tight. Long-term unemployment (27+ weeks) ticking higher — a leading indicator of structural stress. <strong>2026 scenarios:</strong> Base 4.3–4.5% (GS/JPM); bear case 5.0–5.5% if tariff shock materializes; bull case 4.0% if productivity accelerates. The Fed watches prime-age employment-population ratio (~80.7%) as its cleanest signal.
     </div>
   </div>
-  <!-- ── Why Government has LOW unemp despite big job losses ── -->
-  <div style="background:#FFFBEB;border:1px solid rgba(180,83,9,.18);border-left:4px solid #B45309;
-    border-radius:6px;padding:12px 16px;margin-bottom:14px;font-size:11px;line-height:1.7">
-    <strong style="color:#B45309">❓ Why does Government show the lowest unemployment (~2.2%) despite −327K federal job losses?</strong><br>
-    Three separate effects explain this apparent paradox:<br>
-    <strong>1. Different surveys, different populations.</strong> The −327K job loss is from the <em>payroll survey</em> (CES — counts employer jobs). The 2.2% unemployment is from the <em>household survey</em> (CPS — counts people). They don't have to move together.<br>
-    <strong>2. The −327K is cumulative peak-to-trough (Oct 2024 → Mar 2026), not a 2025 annual figure.</strong> The 2025 annual net change was −200K. State &amp; local government <em>added</em> +70K in 2025, partially offsetting federal losses. The unemployment sector "Government" covers <em>all</em> government workers — federal, state, and local combined.<br>
-    <strong>3. Displaced federal workers rarely become "unemployed" in BLS terms.</strong> To be counted as unemployed you must be actively job-searching. Most affected federal workers: retire early, transfer to state/local roles, move to contractor positions (which are counted in private-sector payrolls), or simply exit the labor force — none of which register as unemployment.
-  </div>
-  <div class="metric-row" id="unemp-metrics"></div>
 
-  <!-- Monthly MoM Chart -->
+  <!-- Monthly MoM Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
-      <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg</div>
-      <div class="ch260"><canvas id="c-unemp-mom"></canvas></div>
-      <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. Prior year avg shown as reference baseline.</p>
+      <div class="panel-title">Unemployment by Sector — Monthly MoM Change (pp)</div>
+      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Feb'26 vs Jan'26 · sorted by change</div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
+      <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
     </div>
     <div class="panel">
       <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
@@ -1542,7 +1534,17 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Unemployment Rate by Industry — Annual Data</div>
     <div class="panel-sub">Annual averages · BLS Current Population Survey · industry categories</div>
     <div class="dtable-wrap"><table class="dtable" id="unemp-tbl"></table></div>
-    <p class="src">Source: BLS CPS Table A-14 (unemployed by industry). Annual averages from BLS CPS. Jan 2026 overall rate: 4.3%. Note: Leisure & Hospitality and Construction carry highest cyclical unemployment. Information/Tech unemployment has risen with 2023–24 tech layoffs.</p>
+    <p class="src">Source: BLS CPS Table A-14 (unemployed by industry). Annual averages from BLS CPS. Feb 2026 overall rate: 4.4%. Note: Leisure &amp; Hospitality and Construction carry highest cyclical unemployment. Information/Tech unemployment has risen with 2023–24 tech layoffs.</p>
+  </div>
+
+  <!-- ── Why Government has LOW unemp despite big job losses ── -->
+  <div style="background:#FFFBEB;border:1px solid rgba(180,83,9,.18);border-left:4px solid #B45309;
+    border-radius:6px;padding:12px 16px;margin-bottom:14px;font-size:11px;line-height:1.7">
+    <strong style="color:#B45309">❓ Why does Government show the lowest unemployment (~2.2%) despite −327K federal job losses?</strong><br>
+    Three separate effects explain this apparent paradox:<br>
+    <strong>1. Different surveys, different populations.</strong> The −327K job loss is from the <em>payroll survey</em> (CES — counts employer jobs). The 2.2% unemployment is from the <em>household survey</em> (CPS — counts people). They don't have to move together.<br>
+    <strong>2. The −327K is cumulative peak-to-trough (Oct 2024 → Mar 2026), not a 2025 annual figure.</strong> The 2025 annual net change was −200K. State &amp; local government <em>added</em> +70K in 2025, partially offsetting federal losses. The unemployment sector "Government" covers <em>all</em> government workers — federal, state, and local combined.<br>
+    <strong>3. Displaced federal workers rarely become "unemployed" in BLS terms.</strong> To be counted as unemployed you must be actively job-searching. Most affected federal workers: retire early, transfer to state/local roles, move to contractor positions (which are counted in private-sector payrolls), or simply exit the labor force — none of which register as unemployment.
   </div>
 
 </div>
@@ -2176,8 +2178,13 @@ const GDP_BROAD = [
 ];
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
-const U_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Feb'26"], "data":[4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3, 4.5]};
+const U_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Feb'26"], "data":[4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3, 4.4]};
 const U_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],data:[4.2,4.1,4.1,4.2,4.3,4.2,4.3,4.4,4.6,4.4,4.3,4.4]};
+const U_SECTOR_MOM = {
+  sectors:["Construction","Hotel & Lodging","Restaurant Workers","Retail Trade","Information/Tech","Transport & Warehousing","Manufacturing","Prof. & Biz Services","Agriculture & Mining","Wholesale Trade","Healthcare & Education","Financial Activities","Government"],
+  jan26: [4.6, 5.0, 4.8, 4.3, 3.3, 3.4, 3.1, 3.0, 3.5, 2.9, 2.4, 2.2, 2.1],
+  feb26: [4.8, 5.1, 4.9, 4.4, 3.4, 3.5, 3.2, 3.1, 3.6, 3.0, 2.5, 2.3, 2.2]
+};
 const U_SECTORS = [
   {s:"Cruise Line & Resort Workers",color:"#6C5CE7", u21:22.4,u22:8.2, u23:5.8, u24:5.2, u25:5.0},
   {s:"Hotel & Lodging Workers",     color:"#FF9F43", u21:15.4,u22:7.8, u23:5.4, u24:4.8, u25:5.1},
@@ -2560,19 +2567,20 @@ function buildUnempTab(){
     {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
 
-  // ── Unemployment MoM Chart ──
+  // ── Unemployment Sector MoM Chart ──
+  var uMom = U_SECTOR_MOM.sectors.map((s,i)=>({s:s,change:+(U_SECTOR_MOM.feb26[i]-U_SECTOR_MOM.jan26[i]).toFixed(2),feb:U_SECTOR_MOM.feb26[i],jan:U_SECTOR_MOM.jan26[i]}));
+  uMom.sort((a,b)=>b.change-a.change);
   new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
     type:"bar",
-    data:{labels:U_MONTHLY.labels,datasets:[{
-      label:"Unemployment Rate %",data:U_MONTHLY.data,
-      backgroundColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"rgba(208,48,48,.85)":"rgba(74,114,232,.7)"),
-      borderColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"#d03030":"#4a72e8"),
-      borderWidth:1,borderRadius:4
-    }]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
-      annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:3.5,max:5.0,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+    data:{labels:uMom.map(r=>r.s),datasets:[
+      {label:"Feb'26 Rate %",data:uMom.map(r=>r.feb),backgroundColor:uMom.map(r=>r.change>0?"rgba(208,48,48,.75)":"rgba(26,158,74,.7)"),borderRadius:3},
+      {label:"Jan'26 Rate %",data:uMom.map(r=>r.jan),backgroundColor:"rgba(192,112,16,.4)",borderRadius:3},
+    ]},
+    options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"")}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
