@@ -2496,8 +2496,8 @@ function buildUnempTab(){
   // ── Weekly Jobless Claims chart ─────────────────────
   if(typeof CLAIMS_WEEKLY !== 'undefined' && CLAIMS_WEEKLY.initial){
     const clLabels = CLAIMS_WEEKLY.labels;
-    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);
-    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
+    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v!=null?v/1000:null);
+    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v!=null?v/1000:null);
     // The renderer always sets the last label to the latest week's date (e.g. "8 Mar'26")
     new Chart(document.getElementById("c-claims-line").getContext("2d"),{
       type:"line",
@@ -2505,7 +2505,7 @@ function buildUnempTab(){
         {label:"Initial Claims (K)",data:clInitial,borderColor:"#7c3aed",backgroundColor:"#7c3aed22",
          borderWidth:1.5,pointRadius:0,tension:0.3,fill:true,yAxisID:"y"},
         {label:"Continued Claims (K)",data:clContinued,borderColor:"#e8590c",backgroundColor:"transparent",
-         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2"},
+         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2",spanGaps:true},
       ]},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
         plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
