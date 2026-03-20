@@ -1804,10 +1804,16 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BEA Series PCEPI / PCEPILFE (PCE Price Index, Headline &amp; Core) · Each year = Dec-to-Dec YoY % change, e.g. 2025 = Dec'25 PCE vs Dec'24 PCE. Headline = +2.9%, Core = +3.0%.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Personal Saving Rate — Monthly % of Disposable Income</div>
-      <div class="panel-sub">BEA Personal Income & Outlays · Dec 2025: 3.6% · Pre-pandemic avg: ~7–9%</div>
-      <div class="ch260"><canvas id="c-saving-line"></canvas></div>
+      <div class="panel-title">Personal Saving Rate — Last 12 Months</div>
+      <div class="panel-sub">BEA Personal Income & Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
+      <div class="ch260"><canvas id="c-saving-monthly"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Personal Saving Rate — Annual Averages (2000–2025)</div>
+      <div class="panel-sub">Annual avg of monthly saving rate · BEA · COVID spike 2020: 15.1%</div>
+      <div class="ch260"><canvas id="c-saving-annual"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Annual average of monthly personal saving rate.</p>
     </div>
   </div>
   <div class="two-up">
@@ -3117,7 +3123,8 @@ function buildFCTab(){
 // ════════════════════════════════════════════════════
 const PCE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "headline":[2.5, 1.1, 2.1, 2.1, 2.8, 2.9, 2.3, 3.5, 0.1, 2.1, 1.5, 2.5, 1.6, 1.4, 0.7, 0.3, 1.7, 1.8, 1.9, 1.6, 1.3, 6.1, 5.5, 2.8, 2.7, 2.9], "core":[1.9, 1.7, 1.8, 1.6, 2.1, 2.3, 2.3, 2.4, 1.1, 1.5, 1.1, 2.0, 1.7, 1.5, 1.4, 1.2, 1.8, 1.6, 2.0, 1.5, 1.5, 5.2, 5.0, 3.1, 3.0, 3.0]};
 const PCE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26"],headline:[2.5,2.5,2.4,2.4,2.5,2.5,2.6,2.5,2.4,2.6,2.8],core:[2.8,2.7,2.7,2.6,2.6,2.7,2.7,2.8,2.8,2.6,3.1]};
-const SAVING_RATE = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Jan'26"], "data":[4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6, 4.5]};
+const SAVING_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
+const SAVING_MONTHLY = {"labels":["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26"], "data":[4.7, 4.8, 5.2, 5.6, 5.0, 4.8, 4.5, 4.4, 4.0, 4.5]};
 const PCE_CATS = [
   {cat:"Housing & Utilities",  y23:5.8,  y24:4.2,  y25:3.2},
   {cat:"Healthcare Services",  y23:3.8,  y24:3.4,  y25:3.1},
@@ -3303,15 +3310,33 @@ function buildPCETab(){
               y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
 
-  // Saving rate chart
-  new Chart(document.getElementById("c-saving-line").getContext("2d"),{
-    type:"line",
-    data:{labels:SAVING_RATE.labels,datasets:[{
-      label:"Saving Rate",data:SAVING_RATE.data,
-      borderColor:"#6d40cc",backgroundColor:"#6d40cc18",borderWidth:2.5,
-      pointRadius:5,pointHoverRadius:7,tension:0.35,fill:true
+  // Saving rate — monthly (last 12 months, bar chart)
+  new Chart(document.getElementById("c-saving-monthly").getContext("2d"),{
+    type:"bar",
+    data:{labels:SAVING_MONTHLY.labels,datasets:[{
+      label:"Saving Rate %",data:SAVING_MONTHLY.data,
+      backgroundColor:SAVING_MONTHLY.data.map((v,i)=>i===SAVING_MONTHLY.data.length-1?"rgba(109,64,204,.85)":"rgba(109,64,204,.55)"),
+      borderColor:SAVING_MONTHLY.data.map((v,i)=>i===SAVING_MONTHLY.data.length-1?"#6d40cc":"#6d40cc"),
+      borderWidth:1,borderRadius:3
     },{
-      label:"Pre-pandemic avg (~8%)",data:SAVING_RATE.labels.map(()=>8),
+      label:"Pre-pandemic avg (~8%)",data:SAVING_MONTHLY.labels.map(()=>8),
+      type:"line",borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
+              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
+  });
+
+  // Saving rate — annual (2000+, line chart)
+  new Chart(document.getElementById("c-saving-annual").getContext("2d"),{
+    type:"line",
+    data:{labels:SAVING_ANNUAL.labels,datasets:[{
+      label:"Saving Rate (Annual Avg)",data:SAVING_ANNUAL.data,
+      borderColor:"#6d40cc",backgroundColor:"#6d40cc18",borderWidth:2.5,
+      pointRadius:4,pointHoverRadius:7,tension:0.35,fill:true
+    },{
+      label:"Pre-pandemic avg (~8%)",data:SAVING_ANNUAL.labels.map(()=>8),
       borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
