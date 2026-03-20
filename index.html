@@ -1978,7 +1978,17 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="ch300"><canvas id="c-ffr"></canvas></div>
   </div>
 
-  <!-- Row 2: Rate history table -->
+  <!-- Row 2: 10Y Treasury Yield chart -->
+  <div class="panel">
+    <div class="panel-title">10Y Treasury Yield vs 2Y — Yield Curve &amp; Spread</div>
+    <div class="panel-sub">Annual average yields · FRED DGS10/DGS2 · 2Y–10Y spread (bp) · Shaded = inversion</div>
+    <div class="ch300"><canvas id="c-treasury"></canvas></div>
+  </div>
+
+  <!-- Row 3: Treasury yield macro/credit explainer -->
+  <div id="treasury-explainer"></div>
+
+  <!-- Row 4: Rate history table -->
   <div class="panel">
     <div class="panel-title">Fed Rate Cycle History &amp; Wall St Forecasts</div>
     <div class="panel-sub">FOMC rate path 2018–2026F · bank NIM cycle · card issuer yield · GS / JPM / MS targets</div>
@@ -3261,7 +3271,11 @@ const HOUSING_METROS = [
   {city:"Detroit, MI",     y24:"+5.2%", y25:"+4.4%", med:"$220K", note:"Fastest-appreciating major market from low base; UAW effect"},
 ];
 
-// Yield curve maturities data removed — FFR + spreads retained
+// Treasury yield history (annual avg from FRED DGS10, DGS2) + latest
+const TREASURY_DATA = {"labels":["2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","Mar'26"],
+  "dgs10":[6.03,5.02,4.61,4.01,4.27,4.29,4.80,4.63,3.66,3.26,3.22,2.78,1.80,2.35,2.54,2.14,1.84,2.33,2.91,2.14,0.89,1.45,2.95,3.96,4.25,4.42,4.26],
+  "dgs2": [6.26,3.97,2.90,1.65,1.90,3.62,4.81,4.36,2.00,0.96,0.70,0.45,0.28,0.31,0.46,0.67,0.84,1.39,2.52,1.88,0.36,0.26,3.07,4.60,4.35,3.92,3.76],
+  "spread":[-0.23,1.05,1.71,2.36,2.37,0.67,-0.01,0.27,1.66,2.30,2.52,2.33,1.52,2.04,2.08,1.47,1.00,0.94,0.39,0.26,0.53,1.19,-0.12,-0.64,-0.10,0.50,0.50]};
 const FFR_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "GS 26F", "JPM 26F", "MS 26F"], "actual":[6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 3.64, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.21, 3.25, 3.75, 3.25]};
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
@@ -4075,6 +4089,66 @@ function buildYieldTab(){
   });
   }catch(e){console.error("FFR chart error:",e);}
 
+
+  // ── 10Y Treasury Yield chart ─────────────────────────────────────────
+  try{
+  var tCtx = document.getElementById("c-treasury").getContext("2d");
+  // Build spread bar colors: red for negative (inversion), blue for positive
+  var spreadColors = TREASURY_DATA.spread.map(function(v){return v<0?"rgba(192,57,43,.6)":"rgba(26,86,219,.35)";});
+  new Chart(tCtx,{
+    type:"bar",
+    data:{labels:TREASURY_DATA.labels,datasets:[
+      {type:"line",label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"rgba(109,40,217,.08)",borderWidth:2.5,pointRadius:4,tension:0.25,fill:false,yAxisID:"y",order:1},
+      {type:"line",label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",backgroundColor:"rgba(26,86,219,.08)",borderWidth:2,pointRadius:3,tension:0.25,fill:false,yAxisID:"y",borderDash:[5,3],order:2},
+      {type:"bar",label:"2Y–10Y Spread",data:TREASURY_DATA.spread.map(function(v){return Math.round(v*100);}),backgroundColor:spreadColors,borderRadius:2,yAxisID:"y1",order:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:function(ctx){
+          if(ctx.datasetIndex<2)return ctx.dataset.label+": "+ctx.parsed.y.toFixed(2)+"%";
+          return "Spread: "+ctx.parsed.y+"bp"+(ctx.parsed.y<0?" (INVERTED)":"");
+        }}}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
+        y:{position:"left",grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%"}},min:0,max:7,title:{display:true,text:"Yield %",color:"#94A3B8",font:{size:10}},border:{display:false}},
+        y1:{position:"right",grid:{display:false},ticks:{color:"#94A3B8",callback:function(v){return v+"bp"}},title:{display:true,text:"Spread (bp)",color:"#94A3B8",font:{size:10}},border:{display:false}}
+      }}
+  });
+  }catch(e){console.error("Treasury chart error:",e);}
+
+  // ── Treasury Yield Macro & Credit Risk Explainer ─────────────────────
+  document.getElementById("treasury-explainer").innerHTML = `
+  <div style="margin-top:8px;display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;align-items:flex-start;gap:14px;background:#F5F0FF;border:1px solid rgba(109,40,217,.15);border-left:4px solid #6D28D9;border-radius:10px;padding:14px 18px">
+      <div style="font-size:26px;flex-shrink:0">📐</div>
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6D28D9;margin-bottom:3px">HOW TREASURY YIELDS IMPACT THE MACRO ECONOMY</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          <strong>The 10Y Treasury yield</strong> is the benchmark "risk-free" rate that prices nearly everything in the economy:
+          <br>• <strong>Mortgages:</strong> 30-year fixed rates ≈ 10Y yield + ~170bp spread. When the 10Y rises from 3.5% → 4.5%, mortgage rates jump from ~5.2% → 6.2%, reducing home affordability by ~12% and cooling housing demand.
+          <br>• <strong>Corporate borrowing:</strong> IG bond yields = 10Y + credit spread (~90bp today). A 100bp 10Y rise adds ~$10B/yr in interest costs across S&P 500 companies, compressing margins and slowing capex.
+          <br>• <strong>Stock valuations:</strong> Higher 10Y → higher discount rate → lower present value of future earnings. A rule of thumb: +100bp in the 10Y = ~8–10% decline in growth stock multiples (P/E compression).
+          <br>• <strong>Federal deficit:</strong> The US has $28T+ in outstanding debt. Each +100bp in average yield adds ~$280B/yr in debt servicing costs — crowding out other spending.
+          <br>• <strong>Dollar & capital flows:</strong> Higher US yields attract foreign capital, strengthening the dollar. This hurts US exporters but suppresses imported inflation.
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:14px;background:#FFF7ED;border:1px solid rgba(180,83,9,.15);border-left:4px solid #B45309;border-radius:10px;padding:14px 18px">
+      <div style="font-size:26px;flex-shrink:0">⚠️</div>
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#B45309;margin-bottom:3px">YIELD CURVE & CREDIT RISK SIGNALS</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">
+          <strong>2Y–10Y spread</strong> is the most-watched recession indicator. When the 2Y yield exceeds the 10Y (negative spread = inversion), it signals that markets expect the Fed to cut rates due to an economic downturn.
+          <br>• <strong>Track record:</strong> Every US recession since 1970 was preceded by a 2Y–10Y inversion, with a 12–24 month lead time. The 2022–2024 inversion (793 days, longest ever) was followed by a sharp slowdown in 2025.
+          <br>• <strong>Credit spreads widen</strong> when yields rise sharply or the curve inverts: IG OAS is currently 91bp (vs 55bp average), and HY OAS is 320bp — both elevated, reflecting tariff and policy uncertainty.
+          <br>• <strong>Current signal (Mar 2026):</strong> The curve has re-steepened to +50bp (10Y 4.26% vs 2Y 3.76%), which is <em>normalizing</em> — the recession risk from the inversion has partially played out via the 2025 slowdown. However, persistent high 10Y yields above 4% signal the bond market expects sticky inflation, limiting Fed rate cuts.
+          <br>• <strong>For credit portfolios:</strong> Rising 10Y yields increase consumer borrowing costs (auto loans, personal loans), depress refinancing activity, and raise card issuer funding costs — all of which push delinquencies higher and compress net interest margins at banks.
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
 
   // ── Rate history table ─────────────────────────────────────────────
   try{
