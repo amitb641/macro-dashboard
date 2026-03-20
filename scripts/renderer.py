@@ -153,10 +153,16 @@ def rebuild_charts(html, data):
         avg3m = []
         if len(cpi_all) >= 15:
             # cpi_all is newest-first; compute monthly YoY for recent months
+            # Build date→value lookup for year-ago matching (handles data gaps)
+            _cpi_by_ym = {}
+            for obs in cpi_all:
+                _d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+                _cpi_by_ym[(_d.year, _d.month)] = obs['value']
             monthly_yoy = []
-            for i in range(min(len(cpi_all) - 12, 36)):  # up to 36 months of monthly YoY
+            for i in range(min(len(cpi_all), 36)):
                 cur_v = cpi_all[i]['value']
-                yr_ago = cpi_all[i + 12]['value']
+                _d = datetime.datetime.strptime(cpi_all[i]['date'], '%Y-%m-%d')
+                yr_ago = _cpi_by_ym.get((_d.year - 1, _d.month))
                 if yr_ago and yr_ago != 0:
                     monthly_yoy.append(round((cur_v - yr_ago) / yr_ago * 100, 2))
                 else:
@@ -1001,13 +1007,19 @@ def rebuild_kpi_strip(html, data, vals):
         mom_pct = None
         if len(cpi) >= 2 and cpi[1]['value']:
             mom_pct = round((cpi[0]['value'] - cpi[1]['value']) / cpi[1]['value'] * 100, 2)
-        # 3-month average of monthly YoY
+        # 3-month average of monthly YoY (match by calendar month, not index)
         avg3m = None
         if len(cpi) >= 15:
+            _cpi_ym = {}
+            for obs in cpi:
+                _d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+                _cpi_ym[(_d.year, _d.month)] = obs['value']
             yoys = []
             for i in range(3):
-                if cpi[i + 12]['value'] and cpi[i + 12]['value'] != 0:
-                    yoys.append(round((cpi[i]['value'] - cpi[i + 12]['value']) / cpi[i + 12]['value'] * 100, 2))
+                _d = datetime.datetime.strptime(cpi[i]['date'], '%Y-%m-%d')
+                yr_ago = _cpi_ym.get((_d.year - 1, _d.month))
+                if yr_ago and yr_ago != 0:
+                    yoys.append(round((cpi[i]['value'] - yr_ago) / yr_ago * 100, 2))
             if yoys:
                 avg3m = round(sum(yoys) / len(yoys), 1)
         if yoy_cur is not None and yoy_prev is not None:
