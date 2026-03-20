@@ -761,11 +761,10 @@ h1 span { color: var(--accent) !important; }
 
 /* ── METRICS ── */
 .metric {
-  background: var(--card) !important;
   border: 1px solid var(--border) !important;
   border-radius: 10px !important;
   box-shadow: 0 1px 3px rgba(0,0,0,.04) !important;
-  transition: box-shadow .2s ease, transform .15s ease !important;
+  transition: box-shadow .2s ease, transform .15s ease, background .2s ease !important;
 }
 .metric:hover {
   box-shadow: 0 4px 14px rgba(0,0,0,.07) !important;
@@ -775,13 +774,11 @@ h1 span { color: var(--accent) !important; }
   font-size: 10px !important;
   font-weight: 700 !important;
   letter-spacing: .1em !important;
-  color: var(--muted) !important;
 }
 .m-val {
   font-family: 'Instrument Serif', serif !important;
   font-size: 24px !important;
   font-weight: 400 !important;
-  color: var(--text) !important;
   letter-spacing: -.02em !important;
 }
 .m-sub { font-size: 10.5px !important; color: var(--dim) !important; }
@@ -2295,6 +2292,8 @@ function trendPillPos(t){
     label = t.replace("⚠","").trim() || "Alert";
   } else if(t.includes("Rising")){
     icon="↑"; color="#0D7A4A"; bg="#f0fdf4"; border="rgba(13,122,74,.22)"; label="Rising";
+  } else if(t.includes("Sharp")){
+    icon="↓"; color="#C0392B"; bg="#fef2f2"; border="rgba(192,57,43,.22)"; label="Sharp ↓";
   } else if(t.includes("Falling")){
     icon="↓"; color="#C0392B"; bg="#fef2f2"; border="rgba(192,57,43,.22)"; label="Falling";
   } else if(t.includes("Stable")){
@@ -2450,6 +2449,10 @@ function setSortBy(val,btn){
 }
 
 // ════════════════════════════════════════════════════
+// ── Metric tile color helper ──────────────────────
+function _mHex(h){h=h.replace('#','');if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.06)';var bdr='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.2)';return '<div class="metric" style="background:'+bg+';border:1px solid '+bdr+';border-left:3.5px solid '+m.col+'"><div class="m-lbl" style="color:'+m.col+'">'+m.lbl+'</div><div class="m-val" style="color:'+m.col+'">'+m.val+'</div><div class="m-sub">'+m.sub+'</div></div>';}
+
 // UNEMPLOYMENT TAB
 // ════════════════════════════════════════════════════
 function buildUnempTab(){
@@ -2463,7 +2466,7 @@ function buildUnempTab(){
     {lbl:"Highest Sector 2024",    val:"4.6%",  sub:"Construction & cruise/resort workers",   col:"#d03030"},
     {lbl:"U-6 Broad Rate Feb'26", val:"7.9%",  sub:"Incl. underemployed & discouraged",      col:"#6d40cc"},
     {lbl:"Initial Claims Mar'26",        val:"205K",   sub:"Weekly initial jobless claims · SA · DOL",  col:"#7c3aed"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
     type:"line",
@@ -2552,7 +2555,7 @@ function buildCPITab(){
     {lbl:"Shelter CPI 2025",      val:"4.6%",  sub:"Sticky — down from 4.9% in 2024, still elevated", col:"#4a72e8"},
     {lbl:"Food at Home 2025",     val:"3.1%",  sub:"Up from 1.1% in 2024; tariff impact",    col:"#d03030"},
     {lbl:"2026F CPI Consensus",   val:"2.7–3.0%",sub:"Tariff pass-through key uncertainty",  col:"#c07010"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   // Build 3M moving average line from annual data (simple rolling avg of 3 consecutive values)
   const cpi3mLine = CPI_ANNUAL.data.map((v,i,arr)=>{
@@ -2621,7 +2624,7 @@ function buildWagesTab(){
     {lbl:"Avg Hourly All Private",   val:"$37.22",sub:"Jan 2026; +4.1% YoY nominal · BLS",     col:"#6d40cc"},
     {lbl:"Real Wages 2025",          val:"+1.2%", sub:"Annualized · CPI-adj · +0.6% LT avg",   col:"#1a9e4a"},
     {lbl:"2026F Wage Growth",        val:"~3.5%", sub:"Converging to long-term avg per JPM",    col:"#c07010"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-wage-line").getContext("2d"),{
     type:"line",
@@ -2698,7 +2701,7 @@ function buildJobsTab(){
     {lbl:"Feb'26 Jobs",        val:"-92K",  sub:"BLS Feb 7 release · Healthcare +44K, retail +34K", col:"#c07010"},
     {lbl:"Top Sector 2025",      val:"Health", sub:"Healthcare & Social Asst. held strong",  col:"#FF4757"},
     {lbl:"Fed Govt (peak→now)",  val:"−327K",  sub:"Cumulative Oct'24 peak · 2025 annual: −200K · Unemp still low: gov't workers rarely file (tenure/transfers)",col:"#d03030"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
     type:"bar",
@@ -2776,9 +2779,9 @@ function buildJobsTab(){
       <td style="color:${s.j23>=0?"#3d4f6e":"#d03030"}">${s.j23>=0?"+":""}${s.j23}K</td>
       <td style="color:${c24}">${s.j24>=0?"+":""}${s.j24}K</td>
       <td style="color:${c25}">${s.j25>=0?"+":""}${s.j25}K</td>
-      <td>${trendPill(trendStr)}</td></tr>`;
+      <td>${trendPillPos(trendStr)}</td></tr>`;
   });
-  h+=`<tr><td>Total Nonfarm</td><td style="color:#0D7A4A">+4,819K</td><td style="color:#7A8FA8">+3,026K</td><td style="color:#0D7A4A">+2,000K</td><td style="color:#C0392B">+181K</td><td style="color:#C0392B">↓ Sharp</td></tr>`;
+  h+=`<tr><td>Total Nonfarm</td><td style="color:#0D7A4A">+4,819K</td><td style="color:#7A8FA8">+3,026K</td><td style="color:#0D7A4A">+2,000K</td><td style="color:#C0392B">+181K</td><td>${trendPillPos("↓ Sharp")}</td></tr>`;
   document.getElementById("jobs-tbl").innerHTML=h+"</tbody>";
 }
 
@@ -3002,7 +3005,7 @@ function buildPCETab(){
     {lbl:"Personal Saving Rate",   val:"4.5%",  sub:"Jan 2026 · up from revised 4.0% (Dec'25)",   col:"#1a9e4a"},
     {lbl:"Total Household Debt",   val:"$18.6T",sub:"Q3 2025 NY Fed · up $4T from pre-pandemic",   col:"#d03030"},
     {lbl:"CC Delinquency 90+",     val:"5.1%",  sub:"Credit card · Q3 2025 · elevated but flat",   col:"#c07010"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   // PCE line chart
   new Chart(document.getElementById("c-pce-line").getContext("2d"),{
@@ -3125,7 +3128,7 @@ function buildBanksTab(){
     {lbl:"Global M&A Volume 2025",         val:"$5.1T",   sub:"+42% YoY · best U.S. IB year since pandemic", col:"#6d40cc"},
     {lbl:"Synchrony NCO Rate Q4 2025",     val:"5.37%",   sub:"Down 108bps YoY · within 5.5–6% target",     col:"#ea580c"},
     {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#d03030"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   // Main comparison table
   const hd2=["Bank","FY Rev","FY Net Income","EPS 2025","ROTCE","CET1","Q4 NII","NCO Rate","2026 NII/Rev Guide","2026 NCO/Note","Outlook"];
@@ -3404,7 +3407,7 @@ function buildOilTab(){
     {lbl:"WTI 2025 Annual Avg",  val:"$70.2", sub:"Pre-crisis baseline · EIA annual avg",                                       col:"#94A3B8"},
     {lbl:"Gas burden — Feb 2026",val:"~2.4%", sub:"Gasoline as % of disposable income · pre-crisis est. · ~3.2% at $90+ WTI · BLS/EIA", col:"#B45309"},
     {lbl:"Gas burden — 2022 peak",val:"~3.8%",sub:"Peak consumer fuel burden at $123 WTI · vs 1.8% avg 2015–2020 · BLS",       col:"#C0392B"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   // ── Annual history ──
   new Chart(document.getElementById("c-oil-hist").getContext("2d"),{
@@ -3786,7 +3789,7 @@ function buildCreditTab(){
     {lbl:"Student Loan DQ",        val:"9.4%",  sub:"First reporting after forbearance — shock value",col:"#FF9F43"},
     {lbl:"Mortgage 90+ DPD",       val:"0.8%",  sub:"Resilient; lock-in effect shields market",col:"#1a9e4a"},
     {lbl:"SLOOS Tightening Q4'25", val:"~2%",   sub:"Nearly neutral — easing from 46% peak in 2023",col:"#4a72e8"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-credit-delinq").getContext("2d"),{
     type:"line",
@@ -4014,7 +4017,7 @@ function buildHousingTab(){
     {lbl:"NAR Affordability",   val:"108",   sub:"100 = barely qualifying; up from 95 in 2023",   col:"#c07010"},
     {lbl:"Months Supply 2025",  val:"3.9 mo",sub:"Still below 6-mo balanced market norm",          col:"#c07010"},
     {lbl:"Lock-in Effect",      val:"~85%",  sub:"Mortgage holders with sub-5% rate — frozen mkt",col:"#6d40cc"},
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-hpi").getContext("2d"),{
     type:"line",
@@ -4109,7 +4112,7 @@ function buildYieldTab(){
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#B45309"},
     {lbl:"10Y Treasury Mar'26",    val:"4.26%",   sub:"2Y: 3.76% · Spread: +50bp",col:"#6D28D9"},
 
-  ].map(m=>`<div class="metric" style="border-left-color:${m.col}"><div class="m-lbl">${m.lbl}</div><div class="m-val" style="color:${m.col}">${m.val}</div><div class="m-sub">${m.sub}</div></div>`).join("");
+  ].map(m=>_mTile(m)).join("");
 
   // ── Fed Funds Rate chart ──────────────────────────────────────────
   try{
