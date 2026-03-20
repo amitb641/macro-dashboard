@@ -898,16 +898,16 @@ def rebuild_kpi_strip(html, data, vals):
 
     cards = []
 
-    # 1. Unemployment
+    # 1. Unemployment  (up = bad)
     unrate = data.get('unrate', [])
     if unrate and len(unrate) >= 2:
         cur, prev, chg, d = _mom(unrate)
         lbl = f"Unemployment {_mlbl(unrate[0]['date'])}"
         cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'col': '#c07010',
-                      'delta': d, 'chg': f'{chg}pp',
+                      'delta': d, 'chg': f'{chg}pp', 'inv': True,
                       'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
 
-    # 2. NFP Jobs (MoM change)
+    # 2. NFP Jobs (MoM change)  (up = good)
     payems = data.get('payems', [])
     if payems and len(payems) >= 3:
         cur_chg = round(payems[0]['value'] - payems[1]['value'])
@@ -949,10 +949,10 @@ def rebuild_kpi_strip(html, data, vals):
             mom_str = f"MoM: {mom_pct:+.2f}% · " if mom_pct is not None else ""
             avg3m_str = f" · 3M avg: {avg3m:.1f}%" if avg3m is not None else ""
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
-                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
 
-    # 4. Core PCE YoY
+    # 4. Core PCE YoY  (up = bad)
     pce_core = data.get('pce_core', [])
     if pce_core and len(pce_core) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(pce_core)
@@ -961,10 +961,10 @@ def rebuild_kpi_strip(html, data, vals):
             sign = '+' if d > 0 else ''
             lbl = f"Core PCE {_mlbl(pce_core[0]['date'])}"
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
-                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
-    # 5. Wages — BLS AHETPI
+    # 5. Wages — BLS AHETPI  (up = good)
     ahetpi = data.get('ahetpi', [])
     if ahetpi and len(ahetpi) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(ahetpi)
@@ -997,7 +997,7 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': 0, 'chg': '',
                       'sub': f"Daily{spr}"})
 
-    # 8. Initial Claims (weekly)
+    # 8. Initial Claims (weekly)  (up = bad)
     icsa = data.get('icsa', [])
     if icsa and len(icsa) >= 2:
         cur, prev = icsa[0]['value'], icsa[1]['value']
@@ -1005,10 +1005,10 @@ def rebuild_kpi_strip(html, data, vals):
         sign = '+' if d > 0 else ''
         lbl = f"Initial Claims {_mlbl(icsa[0]['date'])}"
         cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'col': '#c07010',
-                      'delta': d, 'chg': f'{sign}{d/1000:.0f}K',
+                      'delta': d, 'chg': f'{sign}{d/1000:.0f}K', 'inv': True,
                       'sub': f"Prior wk: {prev/1000:.0f}K ({_mlbl(icsa[1]['date'])})"})
 
-    # 9. Consumer Sentiment (UMich)
+    # 9. Consumer Sentiment (UMich)  (up = good)
     umcsent = data.get('umcsent', [])
     if umcsent and len(umcsent) >= 2:
         cur_s, prev_s, chg_s, d_s = _mom(umcsent)
@@ -1021,13 +1021,13 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d_s, 'chg': f'{chg_s}',
                       'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
 
-    # 10. Debt Service Ratio (TDSP)
+    # 10. Debt Service Ratio (TDSP)  (up = bad)
     tdsp = data.get('tdsp', [])
     if tdsp and len(tdsp) >= 2:
         cur_t, prev_t, chg_t, d_t = _mom(tdsp)
         lbl = f"Debt Service Ratio {_mlbl(tdsp[0]['date'])}"
         cards.append({'lbl': lbl, 'val': f'{cur_t:.1f}%', 'col': '#c07010',
-                      'delta': d_t, 'chg': f'{chg_t}pp',
+                      'delta': d_t, 'chg': f'{chg_t}pp', 'inv': True,
                       'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_mlbl(tdsp[1]['date'])})"})
 
     if not cards:

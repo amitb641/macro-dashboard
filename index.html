@@ -2464,7 +2464,10 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#d03030", "delta":0.04, "chg":"+0.0pp", "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#c07010", "delta":-8000, "chg":"-8K", "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#6d40cc", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
-  const d = k.delta ? `<span class="kpi-delta ${k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat'}">${k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→'} ${k.chg||''}</span>` : '';
+  const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
+  const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
+  const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
+  const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
   return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
   <div class="kpi-val" style="color:${k.col}">${k.val}${d}</div>
   <div class="kpi-sub">${k.sub}</div></div>`;
