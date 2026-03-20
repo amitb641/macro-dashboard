@@ -1586,10 +1586,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Annual Chart -->
   <div class="panel">
-    <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %) with 3-Month Average</div>
-    <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS · 3M avg smooths monthly volatility</div>
+    <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %)</div>
+    <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS</div>
     <div class="ch260"><canvas id="c-cpi-bar"></canvas></div>
-    <p class="src">Source: BLS CPI-U All Urban Consumers. 3-Month Average computed from the 3 most recent monthly YoY CPI readings. Smooths single-month noise.</p>
+    <p class="src">Source: BLS CPI-U All Urban Consumers. Dec-to-Dec annual YoY % change.</p>
   </div>
   <div class="two-up">
     <div class="panel">
@@ -2704,13 +2704,6 @@ function buildCPITab(){
     {lbl:"Peak → Now",             val:"Jun'22: 9.1%",sub:"Now ~2.8% · down 69% from peak",              col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
 
-  // Build 3M moving average line from annual data (simple rolling avg of 3 consecutive values)
-  const cpi3mLine = CPI_ANNUAL.data.map((v,i,arr)=>{
-    if(i<2) return null;
-    const vals = [arr[i-2],arr[i-1],arr[i]].filter(x=>x!=null&&isFinite(x));
-    return vals.length===3 ? Math.round((vals[0]+vals[1]+vals[2])/3*10)/10 : null;
-  });
-
   // ── CPI MoM Chart ──
   new Chart(document.getElementById("c-cpi-mom").getContext("2d"),{
     type:"line",
@@ -2744,14 +2737,11 @@ function buildCPITab(){
     data:{labels:CPI_ANNUAL.labels,datasets:[
       {label:"CPI YoY %",data:CPI_ANNUAL.data,
        backgroundColor:CPI_ANNUAL.data.map(v=>v>5?"#e06060bb":v>3?"#e0a040bb":"#4a72e8cc"),
-       borderRadius:4},
-      {label:"3M Moving Avg",type:"line",data:cpi3mLine,
-       borderColor:"#d03030",borderWidth:2.5,pointRadius:0,
-       tension:0.3,borderDash:[6,3],fill:false}
+       borderRadius:4}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
-        tooltip:{...TT,callbacks:{label:c=>c.dataset.type==="line"?`3M Avg: ${c.raw}%`:`CPI: ${c.raw}%`}}},
+      plugins:{legend:{display:false},
+        tooltip:{...TT,callbacks:{label:c=>`CPI: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
               y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:11,border:{display:false}}}}
   });
