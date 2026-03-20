@@ -6,7 +6,7 @@ Patches index.html: chart arrays, KPIs, tab commentary.
 No LLM. Output: index.html (updated in-place).
 """
 
-import os, re, json, datetime, sys
+import os, re, json, datetime, math, sys
 from pathlib import Path
 
 
@@ -979,10 +979,14 @@ def rebuild_kpi_strip(html, data, vals):
     # 6. Fed Funds Rate
     ffr = data.get('ffr')
     if ffr and isinstance(ffr, dict):
+        v = ffr['value']
+        # Derive FOMC target range from effective rate (round down to nearest 0.25)
+        lower = math.floor(v * 4) / 4
+        upper = lower + 0.25
         lbl = f"Fed Funds {_mlbl(ffr['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{ffr["value"]:.2f}%', 'col': '#4a72e8',
+        cards.append({'lbl': lbl, 'val': f'{v:.2f}%', 'col': '#4a72e8',
                       'delta': 0, 'chg': '',
-                      'sub': f"Target range"})
+                      'sub': f"FOMC range: {lower:.2f}–{upper:.2f}% · Effective rate"})
 
     # 7. 10Y Treasury
     dgs10 = data.get('dgs10')
