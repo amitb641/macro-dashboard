@@ -259,9 +259,7 @@ def rebuild_charts(html, data):
     psavert = data.get('psavert', [])
     if len(psavert) >= 60:
         labels, values = _annual_avg(psavert)
-        if psavert:
-            labels.append(_month_lbl(psavert[0]['date']))
-            values.append(round(psavert[0]['value'], 1))
+        # Annual only — monthly shown via patch_array_last in render_inflation
         if labels:
             html = _inject_const(html, 'SAVING_RATE', {'labels': labels, 'data': values})
 
@@ -634,99 +632,6 @@ def inject_oil_daily(html, oil_daily):
             warnings.append('inject_oil_daily: panel title pattern not found')
 
     return new_html
-
-
-# ── OIL MONTHLY CHART INJECTOR ───────────────────────────────────────
-
-def inject_oil_monthly(html, data):
-    """
-    Rebuild OIL_MONTHLY from raw FRED/EIA monthly data.
-    Always ends at the PRIOR complete month (never current partial month).
-    Updates panel title and subtitle date ranges automatically.
-    """
-    wti_raw   = data.get('wti_daily',   [])
-    brent_raw = data.get('brent_daily', [])
-    if not wti_raw: return html
-
-    today = datetime.date.today()
-    # Prior complete month = last month
-    prior_month_end = today.replace(day=1) - datetime.timedelta(days=1)
-    start_date = datetime.date(2022, 1, 1)
-
-    # Build monthly averages from daily data — but daily only covers 35 days
-    # For the full historical series, use FRED monthly DCOILWTICO / DCOILBRENTEU
-    # If only daily available, just drop the current partial month from OIL_MONTHLY
-    # by patching out the last label if it matches current month
-    cur_month_label = today.strftime("%b'%y").replace("'26","'26")  # e.g. Mar'26
-    cur_month_alt   = today.strftime("%b '%y")                        # e.g. Mar '26
-
-    # Find OIL_MONTHLY labels array and remove current month entry
-    m = re.search(r'(const OIL_MONTHLY\s*=\s*\{[^}]*labels:\s*\[)([^\]]+)(\])', html, re.DOTALL)
-    if not m: warnings.append('inject_oil_monthly: labels array not found'); return html
-
-    labels_str = m.group(2)
-    # Parse labels
-    label_list = re.findall(r'"([^"]+)"', labels_str)
-    if not label_list: return html
-
-    last_label = label_list[-1]
-    # Check if last label is current month (partial)
-    cur_mon_str = today.strftime("%b'%y")      # Mar'26
-    cur_mon_alt = today.strftime("%-m/%y")     # 3/26
-    cur_mon_3   = today.strftime("%b '%y")     # Mar '26
-    is_partial  = (cur_mon_str in last_label or
-                   '*' in last_label or
-                   today.strftime('%b') in last_label and str(today.year)[-2:] in last_label)
-
-    if not is_partial:
-        applied.append('inject_oil_monthly: already ends at prior month')
-        return html
-
-    # Remove last entry from labels, wti, brent arrays
-    for arr_name in ['labels', 'wti', 'brent']:
-        if arr_name == 'labels':
-            # Remove last quoted string
-            pat = r'(const OIL_MONTHLY[^}]*?' + arr_name + r':\s*\[)(.*?)(,?\s*"[^"]*"\s*)(\])'
-            new_html, n = re.subn(pat, lambda x: x.group(1) + x.group(2).rstrip(', ') + x.group(4),
-                                  html, count=1, flags=re.DOTALL)
-        else:
-            # Remove last numeric value
-            pat = rf'(const OIL_MONTHLY[^;]*?{arr_name}:[^\[]*\[[^\]]*,\s*)(\d+\.\d+)(\s*\])'
-            new_html, n = re.subn(pat, r'\g<1>\g<3>', html, count=1, flags=re.DOTALL)
-        if n:
-            html = new_html
-            applied.append(f'oil_monthly.{arr_name}: dropped partial {last_label}')
-        else:
-            warnings.append(f'inject_oil_monthly: could not trim {arr_name}')
-
-    # Update panel title date range
-    prior_str = prior_month_end.strftime("%b %Y")  # e.g. Feb 2026
-    start_str = f"Jan {START_YEAR}"
-    old_title_pat = r'WTI &amp; Brent — Monthly [^<]+'
-    new_title = f'WTI &amp; Brent — Monthly {start_str}–{prior_str} (Prior Month)'
-    new_html, n = re.subn(old_title_pat, new_title, html, count=1)
-    if n:
-        html = new_html
-        applied.append(f'oil_monthly.title → {prior_str}')
-
-    # Update subtitle date range + spike callout
-    old_sub_pat = r'Monthly avg \$/bbl · Jan \d{4}–[A-Za-z]+ \d{4}'
-    new_sub = f'Monthly avg $/bbl · Jan {START_YEAR}–{prior_str}'
-    new_html, n = re.subn(old_sub_pat, new_sub, html, count=1)
-    if n:
-        html = new_html
-        applied.append(f'oil_monthly.subtitle → {prior_str}')
-
-    # Update the spike callout span to reference current month
-    cur_str = today.strftime('%b %Y')  # e.g. Apr 2026
-    old_spike_pat = r'<span style="color:#C0392B;font-weight:600">⚡ [^<]+ spike shown in daily chart →</span>'
-    new_spike = f'<span style="color:#C0392B;font-weight:600">⚡ {cur_str} — see daily chart →</span>'
-    new_html2, n2 = re.subn(old_spike_pat, new_spike, html, count=1)
-    if n2:
-        html = new_html2
-        applied.append(f'oil_monthly.spike_note → {cur_str}')
-
-    return html
 
 
 # ── SECTION RENDERERS ─────────────────────────────────────────────────
