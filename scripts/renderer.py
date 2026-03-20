@@ -269,6 +269,14 @@ def rebuild_charts(html, data):
         m_values = [round(o['value'], 1) for o in monthly]
         html = _inject_const(html, 'SAVING_MONTHLY', {'labels': m_labels, 'data': m_values})
 
+    # ── UMCSENT_MONTHLY (last 12 months) ────────────────────────────
+    umcsent = data.get('umcsent', [])
+    if len(umcsent) >= 12:
+        monthly = sorted(umcsent[:12], key=lambda x: x['date'])  # oldest-first for chart
+        m_labels = [_month_lbl(o['date']) for o in monthly]
+        m_values = [round(o['value'], 1) for o in monthly]
+        html = _inject_const(html, 'UMCSENT_MONTHLY', {'labels': m_labels, 'data': m_values})
+
     # ── GDP_TOTAL_DATA ────────────────────────────────────────────────
     gdpc1_a = data.get('gdpc1_annual', [])
     gdp_a = data.get('gdp_annual', [])

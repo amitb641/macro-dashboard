@@ -1838,12 +1838,19 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~9.8%.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Consumer Sentiment — Univ. of Michigan (Monthly)</div>
-      <div class="panel-sub">Index of Consumer Sentiment · U. of Michigan Survey of Consumers · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
-      <div class="ch260"><canvas id="c-umcsent-line"></canvas></div>
-      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+      <div class="panel-title">Consumer Sentiment — Last 12 Months</div>
+      <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
+      <div class="ch260"><canvas id="c-umcsent-monthly"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95.</p>
     </div>
   </div>
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
+      <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
+      <div class="ch260"><canvas id="c-umcsent-annual"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+    </div>
   <div class="panel">
     <div class="panel-title">Consumer Health Dashboard — Debt, Savings & Spending Metrics</div>
     <div class="panel-sub">Annual snapshot · BEA, NY Fed, Federal Reserve Board</div>
@@ -3125,6 +3132,7 @@ const PCE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2
 const PCE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26"],headline:[2.5,2.5,2.4,2.4,2.5,2.5,2.6,2.5,2.4,2.6,2.8],core:[2.8,2.7,2.7,2.6,2.6,2.7,2.7,2.8,2.8,2.6,3.1]};
 const SAVING_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
 const SAVING_MONTHLY = {"labels":["Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26"], "data":[5.2, 5.1, 5.5, 4.9, 4.6, 4.5, 4.4, 4.3, 4.0, 4.0, 4.0, 4.5]};
+const UMCSENT_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[57.0, 52.2, 52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6]};
 const PCE_CATS = [
   {cat:"Housing & Utilities",  y23:5.8,  y24:4.2,  y25:3.2},
   {cat:"Healthcare Services",  y23:3.8,  y24:3.4,  y25:3.1},
@@ -3392,9 +3400,26 @@ function buildPCETab(){
     });
   }
 
-  // UMich Consumer Sentiment (annual from OIL_VS_SENTIMENT.sentiment)
+  // UMich Consumer Sentiment — monthly (last 12 months, bar chart)
+  new Chart(document.getElementById("c-umcsent-monthly").getContext("2d"),{
+    type:"bar",
+    data:{labels:UMCSENT_MONTHLY.labels,datasets:[{
+      label:"Sentiment Index",data:UMCSENT_MONTHLY.data,
+      backgroundColor:UMCSENT_MONTHLY.data.map((v,i)=>i===UMCSENT_MONTHLY.data.length-1?"rgba(109,64,204,.85)":"rgba(109,64,204,.55)"),
+      borderColor:"#6d40cc",borderWidth:1,borderRadius:3
+    },{
+      label:"Pre-pandemic avg (~95)",data:UMCSENT_MONTHLY.labels.map(()=>95),
+      type:"line",borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
+              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},min:40,max:100,border:{display:false}}}}
+  });
+
+  // UMich Consumer Sentiment — annual (from OIL_VS_SENTIMENT)
   if(OIL_VS_SENTIMENT.labels.length){
-    new Chart(document.getElementById("c-umcsent-line").getContext("2d"),{
+    new Chart(document.getElementById("c-umcsent-annual").getContext("2d"),{
       type:"bar",
       data:{labels:OIL_VS_SENTIMENT.labels,datasets:[{
         label:"UMich Sentiment Index",data:OIL_VS_SENTIMENT.sentiment,
