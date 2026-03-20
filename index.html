@@ -1711,12 +1711,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="dtable-wrap"><table class="dtable" id="wage-tbl"></table></div>
     <p class="src">Source: BLS Series CES0500000003 (Avg Hourly Earnings, All Private, SA) · Each year = average of 12 monthly YoY % readings, e.g. 2025 nominal = (Jan + Feb + … + Dec YoY%) ÷ 12 = +3.8%. Real = nominal minus CPI.</p>
   </div>
-  <div class="panel">
-    <div class="panel-title">Household Debt Service Ratio — TDSP</div>
-    <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Wages vs. debt burden context</div>
-    <div class="ch260"><canvas id="c-wage-tdsp"></canvas></div>
-    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Fed Reserve Board. Rising wages offset by rising debt service costs. When TDSP rises faster than wages, consumer stress increases.</p>
-  </div>
 </div>
 
 <!-- ══ JOBS ══ -->
@@ -2929,26 +2923,6 @@ function buildWagesTab(){
   h+=`<tr><td>All Private</td><td style="color:#C0392B">+5.1%</td><td>+4.3%</td><td style="color:#0D7A4A">+3.9%</td><td style="color:#B45309">+3.3%</td><td>${trendPillPos("↓ Falling")}</td><td style="color:#2563eb">$37.17</td></tr>`;
   document.getElementById("wage-tbl").innerHTML=h+"</tbody>";
 
-  // TDSP — Debt Service Ratio in Wages context
-  if(TDSP_HIST.labels.length){
-    const tdspCtx = document.getElementById("c-wage-tdsp").getContext("2d");
-    const tdspGrad = tdspCtx.createLinearGradient(0,0,0,260);
-    tdspGrad.addColorStop(0,"rgba(106,58,204,0.35)");
-    tdspGrad.addColorStop(1,"rgba(106,58,204,0.03)");
-    new Chart(tdspCtx,{
-      type:"line",
-      data:{labels:TDSP_HIST.labels,datasets:[{
-        label:"Debt Service Ratio %",data:TDSP_HIST.data,
-        borderColor:"#6a3acc",backgroundColor:tdspGrad,fill:true,
-        tension:0.3,pointRadius:0,pointHoverRadius:5,borderWidth:2.5
-      }]},
-      options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`DSR: ${c.raw}%`}},
-          annotation:TDSP_HIST.data.length?undefined:undefined},
-        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",maxTicksLimit:12,font:{size:9}},border:{display:false}},
-                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:8,border:{display:false}}}}
-    });
-  }
 }
 
 // ════════════════════════════════════════════════════
