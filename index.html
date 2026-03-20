@@ -1855,7 +1855,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
       <div class="panel-sub">Household debt service payments as % of disposable income · Federal Reserve Board · Quarterly</div>
       <div class="ch260"><canvas id="c-tdsp-line"></canvas></div>
-      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~9.8%.</p>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~11.3%.</p>
     </div>
   </div>
 
@@ -3182,11 +3182,11 @@ const CONSUMER_TABLE = [
   {metric:"CC Delinquency Rate (90+)", val2022:"2.8%",  val2023:"4.2%",  val2024:"5.1%",  val2025:"5.1% (Q3)",   trend:"→ Stable", note:"Elevated but flattening after sharp rise"},
   {metric:"Auto Loan Delinquency (90+)",val2022:"2.2%", val2023:"2.8%",  val2024:"3.0%",  val2025:"1.9% (Q3)",   trend:"↑ Watch",  note:"Auto NCO rates ticking up in Q3 2025"},
   {metric:"Student Loan Delinquency",  val2022:"0%",    val2023:"0%",    val2024:"0%",    val2025:"9.4% (Q3)",   trend:"⚠ Spike", note:"Pandemic forbearance ended; first reporting in credit bureaus"},
-  {metric:"DSR — Total (Mortgage + Consumer)", val2022:"9.5%",  val2023:"9.6%",  val2024:"9.8%",  val2025:"9.8% (Q3)",   trend:"→ Stable", note:"Fed Z.1 / G.19 · mortgage 3.9% + consumer 5.9% · well below 2007 peak of 13.2%"},
-  {metric:"DSR — Consumer Only (ex-Mortgage)",  val2022:"5.3%",  val2023:"5.6%",  val2024:"5.8%",  val2025:"5.9% (Q3)",   trend:"↑ Rising", note:"Fed G.19 · cards + auto + student loans · creeping up as card balances rise"},
-  {metric:"FOR — Financial Obligations Ratio",  val2022:"9.9%",  val2023:"10.1%", val2024:"10.3%", val2025:"~10.5% (Q3)", trend:"↑ Rising", note:"Fed Z.1 · DSR + rent + auto leases + homeowner insurance · broader stress measure"},
+  {metric:"DSR — Total (Mortgage + Consumer)", val2022:"10.6%", val2023:"10.7%", val2024:"11.1%", val2025:"11.3% (Q3)",  trend:"↑ Rising", note:"FRED TDSP · mortgage + consumer debt payments as % of disposable income · below 2007 peak of 13.2%"},
+  {metric:"DSR — Consumer Only (ex-Mortgage)",  val2022:"5.9%",  val2023:"6.2%",  val2024:"6.3%",  val2025:"~6.4% (Q3)",  trend:"↑ Rising", note:"FRED CDSP · cards + auto + student loans · creeping up as card balances rise"},
+  {metric:"FOR — Financial Obligations Ratio",  val2022:"15.0%", val2023:"15.2%", val2024:"15.5%", val2025:"~15.7% (Q3)", trend:"↑ Rising", note:"FRED FODSP · DSR + rent + auto leases + homeowner insurance · broader stress measure"},
   {metric:"Consumer Sentiment (Mich.)",val2022:"58.7",  val2023:"69.0",  val2024:"73.0",  val2025:"~65 (late)",  trend:"↓ Weak",  note:"Tariff anxiety + inflation expectations rose in late 2025"},
-  {metric:"Debt-to-Disposable Income", val2022:"99%",   val2023:"97%",   val2024:"95%",   val2025:"~96%",        trend:"→ Stable", note:"Fed Z.1; lower than 2008 peak of 130%"},
+  {metric:"Debt-to-Disposable Income", val2022:"99%",   val2023:"97%",   val2024:"96%",   val2025:"~97%",        trend:"→ Stable", note:"Fed Z.1 · $18T household debt / disposable income · lower than 2008 peak of 130%"},
 ];
 
 // ════════════════════════════════════════════════════
