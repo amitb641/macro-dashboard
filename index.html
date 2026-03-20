@@ -1508,11 +1508,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <strong>3. Displaced federal workers rarely become "unemployed" in BLS terms.</strong> To be counted as unemployed you must be actively job-searching. Most affected federal workers: retire early, transfer to state/local roles, move to contractor positions (which are counted in private-sector payrolls), or simply exit the labor force — none of which register as unemployment.
   </div>
   <div class="metric-row" id="unemp-metrics"></div>
+
+  <!-- Monthly MoM Chart -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">National Unemployment Rate — Annual Average</div>
-      <div class="panel-sub">% of civilian labor force · BLS CPS seasonally adjusted</div>
-      <div class="ch260"><canvas id="c-unemp-line"></canvas></div>
+      <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
+      <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg</div>
+      <div class="ch260"><canvas id="c-unemp-mom"></canvas></div>
+      <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. Prior year avg shown as reference baseline.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
@@ -1521,10 +1524,19 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
     </div>
   </div>
+
+  <!-- Annual Chart -->
+  <div class="panel">
+    <div class="panel-title">National Unemployment Rate — Annual Average</div>
+    <div class="panel-sub">% of civilian labor force · BLS CPS seasonally adjusted</div>
+    <div class="ch260"><canvas id="c-unemp-line"></canvas></div>
+    <p class="src">Source: BLS Current Population Survey (CPS), annual averages. Civilian labor force, seasonally adjusted.</p>
+  </div>
   <div class="panel">
     <div class="panel-title">Unemployment by Sector — 2025 vs 2024 (%)</div>
     <div class="panel-sub">2025 rate vs 2024 rate · BLS CPS · seasonally adjusted</div>
     <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
+    <p class="src">Source: BLS Current Population Survey (CPS) Table A-14. Seasonally adjusted, 2025 vs 2024 rates by industry sector.</p>
   </div>
   <div class="panel">
     <div class="panel-title">Unemployment Rate by Industry — Annual Data</div>
@@ -1545,17 +1557,28 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="cpi-metrics"></div>
+
+  <!-- Monthly MoM Chart -->
+  <div class="panel">
+    <div class="panel-title">Monthly CPI — Headline vs Core YoY % (12-Month Trend)</div>
+    <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
+    <div class="ch260"><canvas id="c-cpi-mom"></canvas></div>
+    <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference. Monthly readings show short-term inflation trajectory.</p>
+  </div>
+
+  <!-- Annual Chart -->
   <div class="panel">
     <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %) with 3-Month Average</div>
     <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS · 3M avg smooths monthly volatility</div>
     <div class="ch260"><canvas id="c-cpi-bar"></canvas></div>
-    <p class="src" style="margin-top:6px">3-Month Average: computed from the 3 most recent monthly YoY CPI readings. Smooths single-month noise (e.g., seasonal adjustments, one-off price spikes). Current 3M avg shown in metric cards above.</p>
+    <p class="src">Source: BLS CPI-U All Urban Consumers. 3-Month Average computed from the 3 most recent monthly YoY CPI readings. Smooths single-month noise.</p>
   </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">CPI by Category — 2022 Peak vs 2024 vs 2025</div>
       <div class="panel-sub">Dec-to-Dec % change · grouped comparison</div>
       <div class="ch320"><canvas id="c-cpi-cat"></canvas></div>
+      <p class="src">Source: BLS CPI-U All Urban Consumers. Dec-to-Dec % change by category.</p>
     </div>
     <div class="panel">
       <div class="panel-title">CPI Category Annual Rates</div>
@@ -1578,6 +1601,16 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
 
   <div class="metric-row" id="wage-metrics"></div>
+
+  <!-- Monthly MoM Chart -->
+  <div class="panel">
+    <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (12-Month Trend)</div>
+    <div class="panel-sub">Average Hourly Earnings YoY % · nominal (solid) vs real CPI-adjusted (dashed) · BLS CES</div>
+    <div class="ch260"><canvas id="c-wage-mom"></canvas></div>
+    <p class="src">Source: BLS Current Employment Statistics (CES), Average Hourly Earnings. Real wages = nominal minus CPI YoY. Monthly readings, seasonally adjusted.</p>
+  </div>
+
+  <!-- Annual Charts -->
   <div class="panel">
     <div class="panel-title">Household Debt Service Ratio — TDSP</div>
     <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Wages vs. debt burden context</div>
@@ -1589,12 +1622,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Nominal vs Real Wage Growth — All Private</div>
       <div class="panel-sub">Avg hourly earnings YoY % · nominal (solid) vs real inflation-adj (dashed)</div>
       <div class="ch260"><canvas id="c-wage-line"></canvas></div>
-    
-</div>
+      <p class="src">Source: BLS Current Employment Statistics (CES), Average Hourly Earnings. Real wages = nominal minus CPI YoY. Annual data.</p>
+    </div>
     <div class="panel">
       <div class="panel-title">Avg Hourly Earnings by Sector — 2025 vs 2024</div>
       <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3</div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar"></canvas></div>
+      <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal YoY % change by sector.</p>
     </div>
   </div>
   <div class="panel">
@@ -1608,18 +1642,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ JOBS ══ -->
 <div class="tab-panel" id="tab-jobs">
 
-  <div class="panel">
-    <div class="panel-title">Monthly Employment Change — BLS Total Nonfarm vs ADP Private (thousands)</div>
-    <div class="panel-sub">BLS CES = Total Nonfarm (includes government) · ADP = Private sector only (excludes government) · divergences reflect methodology differences · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
-    <div class="ch300"><canvas id="c-nfp-vs-adp"></canvas></div>
-    <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
-  </div>
-  <div class="panel">
-    <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
-    <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
-    <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
-  </div>
-
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">📋 Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
     <div class="fc-note">
@@ -1627,16 +1649,36 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
+
+  <!-- Monthly MoM Charts -->
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Monthly Employment Change — BLS Total Nonfarm vs ADP Private (thousands)</div>
+      <div class="panel-sub">BLS CES = Total Nonfarm (includes government) · ADP = Private sector only (excludes government) · divergences reflect methodology differences · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
+      <div class="ch300"><canvas id="c-nfp-vs-adp"></canvas></div>
+      <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
+      <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
+      <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
+    </div>
+  </div>
+
+  <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
       <div class="panel-sub">Net job gains/losses · BLS CES · seasonally adjusted · <span style="color:#4a72e8;font-style:italic">2026F base case +1,000K · range +800K–+1,200K · tariff-adjusted · pre-tariff consensus was +1,500K</span></div>
       <div class="ch260"><canvas id="c-jobs-total"></canvas></div>
+      <p class="src">Source: BLS Current Employment Statistics (CES), seasonally adjusted. Annual net job gains/losses.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Job Gains by Sector — 2025 vs 2024 (thousands)</div>
       <div class="panel-sub">Annual net change in payroll employment · BLS CES · → indicates sub-sector</div>
       <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
+      <p class="src">Source: BLS Current Employment Statistics (CES). Annual net change in payroll employment by sector.</p>
     </div>
   </div>
   <div class="panel">
@@ -1658,16 +1700,28 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="pce-metrics"></div>
+
+  <!-- Monthly MoM Chart -->
+  <div class="panel">
+    <div class="panel-title">Monthly PCE Price Index — Headline vs Core YoY % (11-Month Trend)</div>
+    <div class="panel-sub">Personal Consumption Expenditures price index · monthly YoY readings · headline vs core · BEA</div>
+    <div class="ch260"><canvas id="c-pce-mom"></canvas></div>
+    <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge. Fed 2% target shown as reference.</p>
+  </div>
+
+  <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">PCE Price Index — Annual YoY % (Fed's Preferred Inflation Gauge)</div>
       <div class="panel-sub">Personal Consumption Expenditures price index · Headline vs Core · BEA</div>
       <div class="ch260"><canvas id="c-pce-line"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. PCE Price Index annual YoY %, Headline vs Core.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Personal Saving Rate — Monthly % of Disposable Income</div>
       <div class="panel-sub">BEA Personal Income & Outlays · Dec 2025: 3.6% · Pre-pandemic avg: ~7–9%</div>
       <div class="ch260"><canvas id="c-saving-line"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
     </div>
   </div>
   <div class="two-up">
@@ -1675,11 +1729,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Real PCE by Category — Growth Rate 2023 vs 2024 vs 2025</div>
       <div class="panel-sub">Inflation-adjusted consumer spending growth · BEA</div>
       <div class="ch320"><canvas id="c-pce-cat"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Household Debt & Delinquencies — NY Fed Data</div>
       <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
       <div class="ch320"><canvas id="c-debt-bar"></canvas></div>
+      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025.</p>
     </div>
   </div>
   <div class="two-up">
@@ -1724,17 +1780,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Big 6 Banks — Q4 2025 Earnings Comparison</div>
     <div class="panel-sub">Full-year 2025 results from Q4 2025 earnings releases · Jan 13–15, 2026</div>
     <div class="dtable-wrap"><table class="dtable" id="bank-tbl"></table></div>
+    <p class="src">Sources: Q4 2025 earnings releases from JPM, BAC, WFC, C, GS, USB (Jan 13–15, 2026). Full-year 2025 results.</p>
   </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">2026 NII Guidance — Full-Year Outlook ($B)</div>
       <div class="panel-sub">Net Interest Income guidance from Q4 2025 earnings calls</div>
       <div class="ch260"><canvas id="c-bank-nii"></canvas></div>
+      <p class="src">Source: Q4 2025 earnings calls from major U.S. banks (Jan 2026). Net Interest Income guidance.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Net Charge-Off Rates & Delinquency Outlook 2025–2026</div>
       <div class="panel-sub">Consumer credit loss rates · Q4 2025 actuals & 2026 guidance</div>
       <div class="ch260"><canvas id="c-bank-nco"></canvas></div>
+      <p class="src">Source: Q4 2025 earnings releases. Consumer credit loss rates and 2026 guidance.</p>
     </div>
   </div>
   <div class="panel">
@@ -1757,11 +1816,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">2025 Quarterly GDP — BEA Estimates</div>
       <div class="panel-sub">Annualized % change by quarter · 2025 full year +2.2%</div>
       <div class="ch200"><canvas id="c-gdp-q"></canvas></div>
+      <p class="src">Source: BEA. Real GDP annualized % change by quarter, 2025.</p>
     </div>
     <div class="panel">
       <div class="panel-title">2024 vs 2025 vs 2026F — Key Macro Indicators</div>
       <div class="panel-sub">Annual comparison · 2026 = consensus midpoint estimate</div>
       <div class="ch200"><canvas id="c-fc-group"></canvas></div>
+      <p class="src">Sources: BEA (GDP), BLS (unemployment, wages, CPI), Federal Reserve (rates). 2026F = consensus midpoint.</p>
     </div>
   </div>
 
@@ -1805,11 +1866,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">WTI &amp; Brent — 35-Year History</div>
       <div class="panel-sub">Annual average $/bbl · 1990–2025 · EIA · <span style="color:#C0392B;font-weight:600">Note: 2022 avg $94.5 masks Jun peak of $114–123</span> · grey bands = NBER recessions</div>
       <div class="ch320"><canvas id="c-oil-hist"></canvas></div>
+      <p class="src">Source: Energy Information Administration (EIA). Annual average $/bbl, 1990–2025. Grey bands = NBER recessions.</p>
     </div>
     <div class="panel">
       <div class="panel-title">WTI &amp; Brent — Monthly Jan 2022–Feb 2026 (Prior Month)</div>
       <div class="panel-sub">Monthly avg $/bbl · Jan 2022–Feb 2026 · EIA · Ends prior complete month · <span style="color:#C0392B;font-weight:600">⚡ Mar 2026 spike shown in daily chart →</span></div>
       <div class="ch320"><canvas id="c-oil-monthly"></canvas></div>
+      <p class="src">Source: Energy Information Administration (EIA). Monthly average $/bbl, Jan 2022–Feb 2026.</p>
     </div>
   </div>
 
@@ -1857,6 +1920,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">WTI Price History with Recession Shading · 1973–2025</div>
       <div class="panel-sub">Annual WTI $/bbl · NBER recession years shaded red · 1973–2025</div>
       <div class="ch300"><canvas id="c-oil-recession"></canvas></div>
+      <p class="src">Source: EIA (WTI historical prices); NBER (recession dating). Annual averages, 1973–2025.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Historical Oil Shock Episodes</div>
@@ -1873,6 +1937,15 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <strong>📉 Credit Cycle Monitor — Q3/Q4 2025</strong> — Consumer credit stress is the dominant banking theme of 2025–26. Card NCO rates at 2011-era highs for mass-market issuers (Synchrony 5.4%, Capital One 4.9%). Student loan reporting resumed after pandemic forbearance — 9.4% instantly delinquent. Auto stress peaking. Bright spots: prime/super-prime (Amex best-in-class), mortgage (low delinquency), and USB (0.54% NCO). SLOOS data confirms tightening standards but pace is slowing. Late-cycle dynamics: watch for rising unemployment triggering credit deterioration feedback loop.
   </div>
   <div class="metric-row" id="credit-metrics"></div>
+
+  <!-- Quarterly Trend Chart -->
+  <div class="panel">
+    <div class="panel-title">Quarterly Delinquency Trend — 90+ DPD by Product (Q1'23–Q3'25)</div>
+    <div class="panel-sub">Cards, Auto, Mortgage · 90+ days past due rate · NY Fed Household Debt &amp; Credit · quarterly</div>
+    <div class="ch260"><canvas id="c-credit-mom"></canvas></div>
+    <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit Report. Quarterly data, 90+ days past due. Card delinquency near 2011-era high; auto stabilizing; mortgage resilient due to lock-in effect.</p>
+  </div>
+
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Delinquency Rates by Product — 90+ Days Past Due (%)</div>
@@ -1912,6 +1985,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Consumer Credit Growth — Revolving vs Non-Revolving YoY %</div>
       <div class="panel-sub">Federal Reserve G.19 Consumer Credit · annual % change</div>
       <div class="ch260"><canvas id="c-credit-growth"></canvas></div>
+      <p class="src">Source: Federal Reserve G.19 Consumer Credit release. Annual % change, revolving vs non-revolving.</p>
     </div>
   </div>
   <div class="panel">
@@ -1937,16 +2011,28 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="housing-metrics"></div>
+
+  <!-- Monthly Trend Chart -->
+  <div class="panel">
+    <div class="panel-title">Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate (12-Month)</div>
+    <div class="panel-sub">Case-Shiller National HPI YoY % (left axis) · 30yr fixed mortgage rate (right axis) · monthly</div>
+    <div class="ch260"><canvas id="c-housing-mom"></canvas></div>
+    <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Inverse relationship: higher rates suppress demand → slower price growth.</p>
+  </div>
+
+  <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Home Price Index — Case-Shiller & FHFA (2012=100)</div>
       <div class="panel-sub">National composite annual indices · S&P/Case-Shiller, FHFA</div>
       <div class="ch260"><canvas id="c-hpi"></canvas></div>
+      <p class="src">Source: S&amp;P/Case-Shiller National Home Price Index; FHFA House Price Index. Annual composite indices, base year 2012=100.</p>
     </div>
     <div class="panel">
       <div class="panel-title">30-Year Mortgage Rate vs Fed Funds Rate</div>
       <div class="panel-sub">Annual averages 2018–2026F · Freddie Mac PMMS · Fed</div>
       <div class="ch260"><canvas id="c-mortgage"></canvas></div>
+      <p class="src">Source: Freddie Mac Primary Mortgage Market Survey (30yr fixed); Federal Reserve (effective federal funds rate). Annual averages.</p>
     </div>
   </div>
   <div class="two-up">
@@ -1954,11 +2040,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Housing Starts — Single-Family vs Multi-Family (000s units)</div>
       <div class="panel-sub">Annual seasonally adjusted · Census Bureau</div>
       <div class="ch260"><canvas id="c-starts"></canvas></div>
+      <p class="src">Source: U.S. Census Bureau. Housing starts, seasonally adjusted annual rate (000s).</p>
     </div>
     <div class="panel">
       <div class="panel-title">Affordability Index & Months Supply</div>
       <div class="panel-sub">NAR Housing Affordability Index (100=qualifying income) · months supply</div>
       <div class="ch260"><canvas id="c-afford"></canvas></div>
+      <p class="src">Source: NAR Housing Affordability Index; NAR Existing Home Sales (months supply).</p>
     </div>
   </div>
   <div class="panel">
@@ -1979,6 +2067,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Fed Funds Rate — Actual vs FOMC Dot Plot 2026F</div>
     <div class="panel-sub">Actual year-end rate + Dec 2025 SEP median dots · Wall St consensus · Federal Reserve</div>
     <div class="ch300"><canvas id="c-ffr"></canvas></div>
+    <p class="src">Sources: Federal Reserve H.15; FOMC Dec 2025 SEP (dot plot); GS, JPM, MS forecasts (Jan 2026).</p>
   </div>
 
   <!-- Row 2: Rate history table -->
@@ -2012,6 +2101,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:10px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:2px"></span><span style="font-size:10.5px;color:#94A3B8">Inversion zone</span></div>
     </div>
     <div style="height:340px"><canvas id="c-treasury"></canvas></div>
+    <p class="src">Source: Federal Reserve H.15 (Treasury yields); NY Fed HHDC (Card 90+ DPD). Annual data, 2000–present.</p>
   </div>
 
   <!-- Row 6: Treasury yield macro/credit explainer -->
@@ -2087,6 +2177,7 @@ const GDP_BROAD = [
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
 const U_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Feb'26"], "data":[4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3, 4.5]};
+const U_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],data:[4.2,4.1,4.1,4.2,4.3,4.2,4.3,4.4,4.6,4.4,4.3,4.4]};
 const U_SECTORS = [
   {s:"Cruise Line & Resort Workers",color:"#6C5CE7", u21:22.4,u22:8.2, u23:5.8, u24:5.2, u25:5.0},
   {s:"Hotel & Lodging Workers",     color:"#FF9F43", u21:15.4,u22:7.8, u23:5.4, u24:4.8, u25:5.1},
@@ -2109,6 +2200,7 @@ const U_SECTORS = [
 
 // ── CPI ──────────────────────────────────────────────
 const CPI_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Feb'26"], "data":[3.4, 1.6, 2.5, 2.0, 3.3, 3.3, 2.5, 4.1, -0.0, 2.8, 1.4, 3.1, 1.8, 1.5, 0.7, 0.6, 2.1, 2.1, 2.0, 2.3, 1.3, 7.2, 6.4, 3.3, 2.9, 2.7, 2.4], "avg3m":2.5};
+const CPI_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],headline:[2.4,2.3,2.5,2.6,2.8,2.5,2.4,2.6,2.7,2.7,2.4,2.8],core:[2.8,2.7,2.7,2.6,2.6,2.5,2.5,2.5,2.5,2.5,2.5,2.5]};
 const CPI_CATS = [
   {cat:"Shelter / Housing",     color:"#6d40cc", c21:4.1,  c22:7.9,  c23:6.5,  c24:4.9,  c25:4.6},
   {cat:"Food Away from Home",   color:"#1a9e4a", c21:4.4,  c22:7.7,  c23:5.2,  c24:4.1,  c25:3.6},
@@ -2124,6 +2216,7 @@ const CPI_CATS = [
 
 // ── WAGES ────────────────────────────────────────────
 const WAGE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Feb'26"], "nominal":[4.3, 3.1, 3.1, 1.8, 2.5, 3.2, 4.2, 3.7, 4.0, 2.4, 2.1, 1.8, 1.7, 2.2, 1.8, 2.5, 2.5, 2.4, 3.7, 3.2, 5.5, 6.4, 5.5, 4.4, 4.0, 3.8, 3.7], "real":[0.9, 1.5, 0.6, -0.2, -0.8, -0.1, 1.7, -0.4, 4.0, -0.4, 0.7, -1.3, -0.1, 0.7, 1.1, 1.9, 0.4, 0.3, 1.7, 0.9, 4.2, -0.8, -0.9, 1.1, 1.1, 1.1, 1.3]};
+const WAGE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],nominal:[3.8,3.9,4.0,3.9,3.8,3.7,3.6,3.5,3.4,3.3,3.4,3.7],real:[1.4,1.6,1.5,1.3,1.0,1.2,1.2,0.9,0.7,0.6,1.0,0.9]};
 const WAGE_SECTORS = [
   {s:"Airline Pilots & Crew",      color:"#0984E3", w21:3.2, w22:7.8, w23:9.4, w24:5.2, w25:4.1, hr24:89.5},
   {s:"Information/Tech",           color:"#20C997", w21:5.8, w22:5.5, w23:4.1, w24:3.6, w25:2.8, hr24:56.8},
@@ -2467,6 +2560,21 @@ function buildUnempTab(){
     {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
 
+  // ── Unemployment MoM Chart ──
+  new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
+    type:"bar",
+    data:{labels:U_MONTHLY.labels,datasets:[{
+      label:"Unemployment Rate %",data:U_MONTHLY.data,
+      backgroundColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"rgba(208,48,48,.85)":"rgba(74,114,232,.7)"),
+      borderColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"#d03030":"#4a72e8"),
+      borderWidth:1,borderRadius:4
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:3.5,max:5.0,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
     type:"line",
     data:{labels:U_ANNUAL.labels,datasets:[{
@@ -2563,6 +2671,19 @@ function buildCPITab(){
     return vals.length===3 ? Math.round((vals[0]+vals[1]+vals[2])/3*10)/10 : null;
   });
 
+  // ── CPI MoM Chart ──
+  new Chart(document.getElementById("c-cpi-mom").getContext("2d"),{
+    type:"line",
+    data:{labels:CPI_MONTHLY.labels,datasets:[
+      {label:"Headline CPI YoY %",data:CPI_MONTHLY.headline,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Core CPI YoY %",data:CPI_MONTHLY.core,borderColor:"#4a72e8",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
+      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:1.5,max:3.5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
   new Chart(document.getElementById("c-cpi-bar").getContext("2d"),{
     type:"bar",
     data:{labels:CPI_ANNUAL.labels,datasets:[
@@ -2625,6 +2746,19 @@ function buildWagesTab(){
     {lbl:"Real Wages 2025",        val:"+1.2%",  sub:"CPI-adj · vs +0.6% long-term avg",                col:"#1a9e4a"},
     {lbl:"Peak → Now",             val:"2022: +5.1%",sub:"Now +3.7% · converging to ~3.5% LT avg",     col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
+
+  // ── Wages MoM Chart ──
+  new Chart(document.getElementById("c-wage-mom").getContext("2d"),{
+    type:"line",
+    data:{labels:WAGE_MONTHLY.labels,datasets:[
+      {label:"Nominal AHE YoY %",data:WAGE_MONTHLY.nominal,borderColor:"#1a9e4a",backgroundColor:"#1a9e4a15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Real (CPI-adj) YoY %",data:WAGE_MONTHLY.real,borderColor:"#2563eb",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
+      annotation:{annotations:{avgLine:{type:"line",yMin:3.0,yMax:3.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"Pre-pandemic ~3% norm",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:0,max:5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
 
   new Chart(document.getElementById("c-wage-line").getContext("2d"),{
     type:"line",
@@ -2875,6 +3009,7 @@ function buildFCTab(){
 // PCE & CONSUMER HEALTH DATA
 // ════════════════════════════════════════════════════
 const PCE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Jan'26"], "headline":[2.5, 1.1, 2.1, 2.1, 2.8, 2.9, 2.3, 3.5, 0.1, 2.1, 1.5, 2.5, 1.6, 1.4, 0.7, 0.3, 1.7, 1.8, 1.9, 1.6, 1.3, 6.1, 5.5, 2.8, 2.7, 2.9, 2.8], "core":[1.9, 1.7, 1.8, 1.6, 2.1, 2.3, 2.3, 2.4, 1.1, 1.5, 1.1, 2.0, 1.7, 1.5, 1.4, 1.2, 1.8, 1.6, 2.0, 1.5, 1.5, 5.2, 5.0, 3.1, 3.0, 3.0, 2.5]};
+const PCE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26"],headline:[2.5,2.5,2.4,2.4,2.5,2.5,2.6,2.5,2.4,2.6,2.8],core:[2.8,2.7,2.7,2.6,2.6,2.7,2.7,2.8,2.8,2.6,3.1]};
 const SAVING_RATE = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Jan'26"], "data":[4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6, 4.5]};
 const PCE_CATS = [
   {cat:"Housing & Utilities",  y23:5.8,  y24:4.2,  y25:3.2},
@@ -3006,6 +3141,19 @@ function buildPCETab(){
     {lbl:"Consumer Stress",        val:"CC DQ 5.1%", sub:"90+ day delinquency · Q3 2025 · elevated",    col:"#d03030"},
     {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed",col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
+
+  // ── PCE MoM Chart ──
+  new Chart(document.getElementById("c-pce-mom").getContext("2d"),{
+    type:"line",
+    data:{labels:PCE_MONTHLY.labels,datasets:[
+      {label:"Headline PCE YoY %",data:PCE_MONTHLY.headline,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Core PCE YoY %",data:PCE_MONTHLY.core,borderColor:"#6d40cc",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
+      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:1.5,max:3.5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
 
   // PCE line chart
   new Chart(document.getElementById("c-pce-line").getContext("2d"),{
@@ -3246,6 +3394,7 @@ const OIL_LINKAGES = [
 // ════════════════════════════════════════════════════
 // CREDIT CYCLE DATA
 // ════════════════════════════════════════════════════
+const CREDIT_QUARTERLY = {labels:["Q1'23","Q2'23","Q3'23","Q4'23","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25"],card:[6.4,7.2,8.0,8.5,8.6,9.0,9.2,9.8,10.1,10.0,9.8],auto:[2.8,3.0,3.2,3.4,3.5,3.7,4.0,3.9,3.8,3.7,3.6],mort:[0.8,0.8,0.8,0.9,0.9,0.9,1.0,1.1,1.2,1.3,1.4]};
 const CREDIT_DELINQ = {
   labels:["2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023","Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25"],
   card:  [9.5,   8.7,   8.0,   7.5,   8.2,   10.4,  13.7,  12.5,  10.0,  9.0,   8.0,   7.3,   6.8,   6.5,   6.0,   5.5,   5.9,   9.1,   6.8,   4.0,   6.4,   8.6,   9.0,   9.2,   9.8,   10.1,  10.0,  9.8],
@@ -3290,6 +3439,7 @@ const CREDIT_DEBT_TABLE = [
 // ════════════════════════════════════════════════════
 // HOUSING & RATES DATA
 // ════════════════════════════════════════════════════
+const HOUSING_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],caseShiller:[4.8,4.6,4.5,4.4,4.3,4.2,4.1,4.0,4.0,4.1,4.1,4.1],mortgage30:[6.65,6.81,6.78,6.92,6.71,6.48,6.32,6.40,6.55,6.72,6.58,6.22]};
 const HPI_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "cs":[105, 113, 122, 134, 150, 172, 183, 180, 164, 148, 145, 139, 141, 154, 165, 172, 181, 191, 202, 209, 222, 260, 298, 306, 321, 329], "fhfa":[108, 117, 126, 138, 155, 177, 189, 185, 169, 153, 149, 143, 145, 159, 170, 177, 186, 197, 208, 216, 229, 268, 307, 315, 331, 339]};
 const MORTGAGE_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026F"], "rate30":[8.05, 6.97, 6.54, 5.83, 5.84, 5.87, 6.41, 6.34, 6.03, 5.04, 4.69, 4.45, 3.66, 3.98, 4.17, 3.85, 3.65, 3.99, 4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.6, 6.22], "ffr":[6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 4.21, 3.75]};
 const STARTS_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "sf":[1232, 1272, 1363, 1505, 1604, 1718, 1474, 1036, 616, 442, 471, 434, 537, 619, 646, 712, 785, 848, 871, 889, 1000, 1129, 1005, 947, 1016, 1487], "mf":[341, 330, 347, 349, 345, 354, 338, 306, 284, 112, 114, 178, 247, 309, 354, 395, 392, 356, 375, 403, 394, 474, 547, 473, 355, 415]};
@@ -3791,6 +3941,18 @@ function buildCreditTab(){
     {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
 
+  // ── Credit Quarterly Trend Chart ──
+  new Chart(document.getElementById("c-credit-mom").getContext("2d"),{
+    type:"line",
+    data:{labels:CREDIT_QUARTERLY.labels,datasets:[
+      {label:"Credit Cards 90+ DPD",data:CREDIT_QUARTERLY.card,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Auto Loans 90+ DPD",data:CREDIT_QUARTERLY.auto,borderColor:"#c07010",borderWidth:2,pointRadius:4,tension:0.3},
+      {label:"Mortgage 90+ DPD",data:CREDIT_QUARTERLY.mort,borderColor:"#1a9e4a",borderWidth:2,pointRadius:4,tension:0.3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
+      scales:{y:{min:0,max:12,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
   new Chart(document.getElementById("c-credit-delinq").getContext("2d"),{
     type:"line",
     data:{labels:CREDIT_DELINQ.labels,datasets:[
@@ -4018,6 +4180,19 @@ function buildHousingTab(){
     {lbl:"Weakest Metric",         val:"3.9 mo supply",sub:"Below 6-mo balanced norm · tight market",      col:"#d03030"},
     {lbl:"Peak → Now",             val:"Afford. 95→108",sub:"Up from 2023 trough · lock-in: ~85% sub-5%", col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
+
+  // ── Housing Monthly Trend Chart ──
+  new Chart(document.getElementById("c-housing-mom").getContext("2d"),{
+    type:"line",
+    data:{labels:HOUSING_MONTHLY.labels,datasets:[
+      {label:"Case-Shiller YoY %",data:HOUSING_MONTHLY.caseShiller,borderColor:"#4a72e8",backgroundColor:"#4a72e815",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
+      {label:"30yr Mortgage Rate %",data:HOUSING_MONTHLY.mortgage30,borderColor:"#d03030",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4],yAxisID:"y1"},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
+      scales:{y:{position:"left",min:3,max:6,title:{display:true,text:"Case-Shiller YoY %",font:{size:9}},ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},
+        y1:{position:"right",min:5.5,max:7.5,title:{display:true,text:"Mortgage Rate %",font:{size:9}},ticks:{callback:v=>v+"%",font:{size:10}},grid:{display:false}},
+        x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
 
   new Chart(document.getElementById("c-hpi").getContext("2d"),{
     type:"line",
