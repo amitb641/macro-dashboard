@@ -37,7 +37,7 @@ def _annual_avg(monthly_series, start_year=START_YEAR):
     today = datetime.date.today()
     labels, values = [], []
     for yr in sorted(by_yr):
-        # Skip current year (partial) — handled by appending latest
+        # Skip current year (partial) — monthly charts show current data
         if yr == today.year:
             continue
         # Require at least 6 months of data for a valid annual average
@@ -131,24 +131,17 @@ def rebuild_charts(html, data):
     """Rebuild all chart arrays from collected historical data (from 2000)."""
     today = datetime.date.today()
 
-    # ── U_ANNUAL ──────────────────────────────────────────────────────
+    # ── U_ANNUAL (annual averages only — monthly shown in U_MONTHLY) ──
     unrate = data.get('unrate', [])
     if len(unrate) >= 60:
         labels, values = _annual_avg(unrate)
-        if labels and unrate:
-            labels.append(_month_lbl(unrate[0]['date']))
-            values.append(round(unrate[0]['value'], 1))
         if labels:
             html = _inject_const(html, 'U_ANNUAL', {'labels': labels, 'data': values})
 
-    # ── CPI_ANNUAL (with 3-month moving average) ───────────────────────
+    # ── CPI_ANNUAL (Dec-to-Dec only — monthly shown in CPI_MONTHLY) ───
     cpi_all = data.get('cpi_all', [])
     if len(cpi_all) >= 60:
         labels, values = _dec_yoy(cpi_all)
-        lbl, yoy = _latest_yoy(cpi_all)
-        if lbl and labels:
-            labels.append(lbl)
-            values.append(yoy)
         # Compute 3-month moving average of monthly YoY rates
         avg3m = []
         if len(cpi_all) >= 15:
@@ -186,13 +179,7 @@ def rebuild_charts(html, data):
         common_labels = [l for l in h_labels if l in c_labels]
         headline = [h_values[h_labels.index(l)] for l in common_labels]
         core = [c_values[c_labels.index(l)] for l in common_labels]
-        # Append latest
-        h_lbl, h_yoy = _latest_yoy(pce)
-        c_lbl, c_yoy = _latest_yoy(pce_core)
-        if h_lbl and h_yoy is not None and c_yoy is not None:
-            common_labels.append(h_lbl)
-            headline.append(h_yoy)
-            core.append(c_yoy)
+        # Annual only — monthly shown in PCE_MONTHLY
         if common_labels:
             html = _inject_const(html, 'PCE_ANNUAL', {
                 'labels': common_labels, 'headline': headline, 'core': core})
@@ -210,13 +197,7 @@ def rebuild_charts(html, data):
                 labels.append(l)
                 nominal.append(n)
                 real.append(round(n - c, 1))
-        # Append latest
-        w_lbl, w_yoy = _latest_yoy(ahetpi)
-        c_lbl, c_yoy = _latest_yoy(cpi_all)
-        if w_lbl and w_yoy is not None and c_yoy is not None:
-            labels.append(w_lbl)
-            nominal.append(w_yoy)
-            real.append(round(w_yoy - c_yoy, 1))
+        # Annual only — monthly shown in WAGE_MONTHLY
         if labels:
             html = _inject_const(html, 'WAGE_ANNUAL', {
                 'labels': labels, 'nominal': nominal, 'real': real})
