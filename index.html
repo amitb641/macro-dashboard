@@ -2496,8 +2496,8 @@ function buildUnempTab(){
   // ── Weekly Jobless Claims chart ─────────────────────
   if(typeof CLAIMS_WEEKLY !== 'undefined' && CLAIMS_WEEKLY.initial){
     const clLabels = CLAIMS_WEEKLY.labels;
-    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v/1000);
-    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v/1000);
+    const clInitial = CLAIMS_WEEKLY.initial.map(v=>v!=null?v/1000:null);
+    const clContinued = CLAIMS_WEEKLY.continued.map(v=>v!=null?v/1000:null);
     // The renderer always sets the last label to the latest week's date (e.g. "8 Mar'26")
     new Chart(document.getElementById("c-claims-line").getContext("2d"),{
       type:"line",
@@ -2505,7 +2505,7 @@ function buildUnempTab(){
         {label:"Initial Claims (K)",data:clInitial,borderColor:"#7c3aed",backgroundColor:"#7c3aed22",
          borderWidth:1.5,pointRadius:0,tension:0.3,fill:true,yAxisID:"y"},
         {label:"Continued Claims (K)",data:clContinued,borderColor:"#e8590c",backgroundColor:"transparent",
-         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2"},
+         borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2",spanGaps:true},
       ]},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
         plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
@@ -4101,69 +4101,18 @@ function buildYieldTab(){
   // ── 10Y Treasury Yield vs Card 90+ DPD chart ────────────────────────
   try{
   var tCtx = document.getElementById("c-treasury").getContext("2d");
-  // Custom plugin to shade inversion zones (where 2Y > 10Y) — scoped to treasury canvas
-  var inversionPlugin = {id:"inversionShade",beforeDraw:function(chart){
-    if(chart.canvas.id!=="c-treasury")return;
-    var ctx=chart.ctx, yAxis=chart.scales.y, meta=chart.getDatasetMeta(0);
-    if(!meta||!meta.data||!meta.data.length)return;
-    ctx.save();
-    var n=TREASURY_DATA.spread.length;
-    for(var i=0;i<n;i++){
-      if(TREASURY_DATA.spread[i]<0&&meta.data[i]){
-        var x=meta.data[i].x;
-        var xPrev=(i>0&&meta.data[i-1])?meta.data[i-1].x:x;
-        var xNext=(i<n-1&&meta.data[i+1])?meta.data[i+1].x:x;
-        var left=(x+xPrev)/2, right=(x+xNext)/2;
-        ctx.fillStyle="rgba(192,57,43,.10)";
-        ctx.fillRect(left,yAxis.top,right-left,yAxis.bottom-yAxis.top);
-      }
-    }
-    ctx.restore();
-  }};
-  // Fill between 10Y and 2Y lines (visual spread band) — scoped to treasury canvas
-  var fillBetweenPlugin = {id:"fillBetween",beforeDatasetsDraw:function(chart){
-    if(chart.canvas.id!=="c-treasury")return;
-    var ctx=chart.ctx, m0=chart.getDatasetMeta(0), m1=chart.getDatasetMeta(1);
-    if(!m0||!m0.data||!m1||!m1.data||!m0.data.length)return;
-    ctx.save();
-    ctx.beginPath();
-    for(var i=0;i<m0.data.length;i++){
-      var pt=m0.data[i];if(i===0)ctx.moveTo(pt.x,pt.y);else ctx.lineTo(pt.x,pt.y);
-    }
-    for(var j=m1.data.length-1;j>=0;j--){
-      ctx.lineTo(m1.data[j].x,m1.data[j].y);
-    }
-    ctx.closePath();
-    ctx.fillStyle="rgba(109,40,217,.06)";ctx.fill();
-    ctx.restore();
-  }};
   new Chart(tCtx,{
     type:"line",
-    plugins:[inversionPlugin,fillBetweenPlugin],
     data:{labels:TREASURY_DATA.labels,datasets:[
-      {label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"#6D28D9",borderWidth:2.8,pointRadius:3,pointBackgroundColor:"#6D28D9",pointBorderColor:"#fff",pointBorderWidth:1.5,tension:0.3,fill:false,yAxisID:"y",order:1,datalabels:false},
-      {label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",backgroundColor:"#1A56DB",borderWidth:2,pointRadius:2,pointBackgroundColor:"#1A56DB",pointBorderColor:"#fff",pointBorderWidth:1,tension:0.3,fill:false,yAxisID:"y",borderDash:[6,3],order:2,datalabels:false},
-      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.06)",borderWidth:2.5,pointRadius:3,pointBackgroundColor:"#dc2626",pointBorderColor:"#fff",pointBorderWidth:1.5,pointStyle:"triangle",tension:0.3,fill:true,yAxisID:"y1",order:0,datalabels:false}
+      {label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"rgba(109,40,217,.06)",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true,datalabels:false},
+      {label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",borderWidth:2,pointRadius:2,tension:0.3,fill:false,borderDash:[6,3],datalabels:false},
+      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.06)",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true,yAxisID:"y2",datalabels:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      interaction:{mode:"index",intersect:false},
-      plugins:{legend:{display:false},
-        tooltip:{backgroundColor:"rgba(30,41,59,.95)",titleColor:"#f1f5f9",bodyColor:"#e2e8f0",borderColor:"rgba(255,255,255,.1)",borderWidth:1,padding:10,cornerRadius:8,
-          callbacks:{label:function(ctx){
-            if(ctx.datasetIndex===2)return "Card 90+ DPD: "+ctx.parsed.y.toFixed(1)+"%";
-            var sp=TREASURY_DATA.spread[ctx.dataIndex];
-            var extra=ctx.datasetIndex===0&&sp!==undefined?" (spread: "+(sp>0?"+":"")+Math.round(sp*100)+"bp"+(sp<0?" INVERTED":"")+")" :"";
-            return ctx.dataset.label+": "+ctx.parsed.y.toFixed(2)+"%"+extra;
-          },afterBody:function(items){
-            var idx=items[0].dataIndex;var sp=TREASURY_DATA.spread[idx];
-            if(sp<0)return ["  ⚠ Yield curve inverted — recession risk elevated"];
-            return [];
-          }}
-      }},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10,weight:"500"}},border:{display:false}},
-        y:{position:"left",grid:{color:"rgba(148,163,184,.15)",lineWidth:1},ticks:{color:"#6D28D9",font:{size:10,weight:"500"},callback:function(v){return v+"%"},stepSize:1},min:0,max:7,title:{display:true,text:"Treasury Yield %",color:"#6D28D9",font:{size:10,weight:"600"}},border:{display:false}},
-        y1:{position:"right",grid:{display:false},ticks:{color:"#dc2626",font:{size:10,weight:"500"},callback:function(v){return v+"%"},stepSize:2},min:0,max:16,title:{display:true,text:"Card 90+ DPD %",color:"#dc2626",font:{size:10,weight:"600"}},border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
+        y:{position:"left",grid:{color:"rgba(148,163,184,.15)"},ticks:{color:"#6D28D9",callback:function(v){return v+"%"},stepSize:1},min:0,max:7,title:{display:true,text:"Treasury Yield %",color:"#6D28D9",font:{size:10,weight:"600"}},border:{display:false}},
+        y2:{position:"right",grid:{display:false},ticks:{color:"#dc2626",callback:function(v){return v+"%"},stepSize:2},min:0,max:16,title:{display:true,text:"Card 90+ DPD %",color:"#dc2626",font:{size:10,weight:"600"}},border:{display:false}}
       }}
   });
   }catch(e){console.error("Treasury chart error:",e);}
