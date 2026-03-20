@@ -1945,14 +1945,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="metric-row" id="credit-metrics"></div>
 
-  <!-- Quarterly Trend Chart -->
-  <div class="panel">
-    <div class="panel-title">Quarterly Delinquency Trend — 90+ DPD by Product (Q1'23–Q3'25)</div>
-    <div class="panel-sub">Cards, Auto, Mortgage · 90+ days past due rate · NY Fed Household Debt &amp; Credit · quarterly</div>
-    <div class="ch260"><canvas id="c-credit-mom"></canvas></div>
-    <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit Report. Quarterly data, 90+ days past due. Card delinquency near 2011-era high; auto stabilizing; mortgage resilient due to lock-in effect.</p>
-  </div>
-
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Delinquency Rates by Product — 90+ Days Past Due (%)</div>
@@ -4007,18 +3999,6 @@ function buildCreditTab(){
     {lbl:"Worst Category",         val:"Cards 9.8%",sub:"Mass-market stress · NCO improving",            col:"#d03030"},
     {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
-
-  // ── Credit Quarterly Trend Chart ──
-  new Chart(document.getElementById("c-credit-mom").getContext("2d"),{
-    type:"line",
-    data:{labels:CREDIT_QUARTERLY.labels,datasets:[
-      {label:"Credit Cards 90+ DPD",data:CREDIT_QUARTERLY.card,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
-      {label:"Auto Loans 90+ DPD",data:CREDIT_QUARTERLY.auto,borderColor:"#c07010",borderWidth:2,pointRadius:4,tension:0.3},
-      {label:"Mortgage 90+ DPD",data:CREDIT_QUARTERLY.mort,borderColor:"#1a9e4a",borderWidth:2,pointRadius:4,tension:0.3},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
-      scales:{y:{min:0,max:12,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
-  });
 
   new Chart(document.getElementById("c-credit-delinq").getContext("2d"),{
     type:"line",
