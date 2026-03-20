@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-03-20T14:01:18.851081Z",
+  "collected_at": "2026-03-20T14:22:03.076385Z",
   "series_count": 54,
   "error_count": 0,
   "errors": [],
@@ -481,14 +481,18 @@
       }
     ],
     "ig_oas": {
-      "date": "2026-03-18",
-      "value": 0.91
+      "date": "2026-03-19",
+      "value": 0.9
     },
     "hy_oas": {
-      "date": "2026-03-18",
-      "value": 3.2
+      "date": "2026-03-19",
+      "value": 3.27
     },
     "ig_hist": [
+      {
+        "date": "2026-03-19",
+        "value": 0.9
+      },
       {
         "date": "2026-03-18",
         "value": 0.91
@@ -720,13 +724,13 @@
       {
         "date": "2025-12-30",
         "value": 0.79
-      },
-      {
-        "date": "2025-12-29",
-        "value": 0.79
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-03-19",
+        "value": 3.27
+      },
       {
         "date": "2026-03-18",
         "value": 3.2
@@ -958,10 +962,6 @@
       {
         "date": "2025-12-30",
         "value": 2.84
-      },
-      {
-        "date": "2025-12-29",
-        "value": 2.87
       }
     ],
     "wti_daily": [
@@ -1302,7 +1302,7 @@
         "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 20 14:01 UTC",
+      "updated": "Mar 20 14:22 UTC",
       "sessions": 11
     },
     "mortgage30": [
