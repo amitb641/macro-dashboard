@@ -51,9 +51,24 @@ LEVEL_ALERTS = {
 
 
 def yoy(series):
-    """YoY % change from list of {date,value} newest-first."""
+    """YoY % change from list of {date,value} newest-first.
+    Matches by calendar month 12 months prior (not by index position),
+    so gaps in monthly data (e.g. gov't shutdown) don't shift the comparison.
+    """
     if not series or len(series) < 13: return None
-    v, v0 = series[0]['value'], series[12]['value']
+    latest = series[0]
+    v = latest['value']
+    d0 = datetime.datetime.strptime(latest['date'], '%Y-%m-%d')
+    target_yr, target_mo = d0.year - 1, d0.month
+    v0 = None
+    for obs in series:
+        od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+        if od.year == target_yr and od.month == target_mo:
+            v0 = obs['value']
+            break
+    if v0 is None:
+        # Fallback to index [12] if exact month not found
+        v0 = series[12]['value'] if len(series) > 12 else None
     return round((v - v0) / abs(v0) * 100, 2) if v0 else None
 
 
