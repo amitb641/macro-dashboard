@@ -1,8 +1,10 @@
 {
-  "collected_at": "2026-03-20T21:00:54.419462Z",
+  "collected_at": "2026-03-20T21:20:52.241419Z",
   "series_count": 54,
-  "error_count": 0,
-  "errors": [],
+  "error_count": 1,
+  "errors": [
+    "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
+  ],
   "data": {
     "ffr": {
       "date": "2026-02-01",
@@ -1310,7 +1312,7 @@
         "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 20 21:01 UTC",
+      "updated": "Mar 20 21:21 UTC",
       "sessions": 11
     },
     "mortgage30": [
