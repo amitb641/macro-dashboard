@@ -402,11 +402,18 @@ h1 span{color:var(--accent)}
 .kpi-val{font-size:20px;font-weight:500;line-height:1}
 .kpi-sub{font-size:9px;color:var(--muted);margin-top:4px}
 
-/* NAV */
-.nav{display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:24px}
-.nav-btn{background:none;border:1px solid transparent;color:var(--muted);padding:6px 14px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;font-size:11.5px;font-weight:500;letter-spacing:0;transition:all .15s ease;border-radius:20px}
-.nav-btn:hover:not(.active){color:var(--text2);border-color:var(--border);background:var(--bg2)}
-.nav-btn.active{background:#EBF2FF;border-color:rgba(26,86,219,.25);color:var(--accent);font-weight:600;box-shadow:0 1px 4px rgba(26,86,219,.12)}
+/* NAV — Grouped pill tabs */
+.nav-grouped{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:flex-start;padding:12px 0 14px;margin-bottom:20px;border-bottom:1px solid var(--border)}
+.nav-group{display:flex;align-items:center;gap:6px}
+.nav-group-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-right:2px;white-space:nowrap}
+.nav-group-pills{display:flex;gap:4px}
+.nav-group-meta{margin-left:auto}
+.nav-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:5px 13px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;font-size:11.5px;font-weight:500;letter-spacing:0;transition:all .15s ease;border-radius:20px}
+.nav-btn:hover:not(.active){color:var(--text);background:var(--card);border-color:var(--bord2,var(--border));box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.nav-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(26,86,219,.25)}
+.nav-btn-meta{background:transparent;border-color:transparent;color:var(--muted);font-size:10.5px;padding:4px 10px}
+.nav-btn-meta:hover:not(.active){background:var(--bg2);border-color:var(--border);color:var(--text2)}
+.nav-btn-meta.active{background:var(--bg2);border-color:var(--border);color:var(--text);box-shadow:none}
 
 /* TAB */
 .tab-panel{display:none}.tab-panel.active{display:block}
@@ -501,7 +508,7 @@ body{overflow-x:hidden}
 .sector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 
 /* Scrollable nav on small screens */
-.nav{flex-wrap:wrap}
+.nav-grouped{flex-wrap:wrap}
 
 /* ── BREAKPOINTS ── */
 
@@ -702,37 +709,7 @@ h1 span { color: var(--accent) !important; }
 .kpi-delta.flat { color: #B45309; background: #fffbeb; }
 
 /* ── NAV TABS ── */
-.nav {
-  border-bottom: 2px solid var(--border) !important;
-  padding-bottom: 0 !important;
-  margin-bottom: 24px !important;
-  gap: 4px !important;
-}
-.nav-btn {
-  font-family: 'DM Sans', sans-serif !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0 !important;
-  color: var(--muted) !important;
-  padding: 8px 16px 10px !important;
-  border-radius: 0 !important;
-  border: none !important;
-  border-bottom: 2px solid transparent !important;
-  margin-bottom: -2px !important;
-  background: none !important;
-  transition: color .15s ease, border-color .15s ease !important;
-}
-.nav-btn:hover:not(.active) {
-  color: var(--text2) !important;
-  background: transparent !important;
-  border-bottom-color: var(--bord2) !important;
-}
-.nav-btn.active {
-  color: var(--accent) !important;
-  background: none !important;
-  border-bottom: 2px solid var(--accent) !important;
-  font-weight: 600 !important;
-}
+/* Nav grouped — dark mode inherits pill styles via CSS vars, no overrides needed */
 
 /* ── PANELS / CARDS ── */
 .panel {
@@ -1182,22 +1159,12 @@ table{border-collapse:collapse}
   .kpi{flex:1 1 calc(50% - 8px);min-width:140px}
   .kpi-val{font-size:18px}
   h1{font-size:clamp(18px,5vw,28px)}
-  /* Scrollable nav — no wrapping on mobile */
-  .nav{
-    overflow-x:auto;overflow-y:hidden;
-    flex-wrap:nowrap;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:6px;
-    scrollbar-width:none;
-    gap:4px;
-  }
-  .nav::-webkit-scrollbar{display:none}
-  .nav-btn{
-    white-space:nowrap;
-    padding:5px 10px;
-    font-size:10px;
-    flex-shrink:0;
-  }
+  /* Scrollable nav — compact on tablet */
+  .nav-grouped{gap:4px 10px;padding:8px 0 10px}
+  .nav-group-lbl{font-size:8px}
+  .nav-btn{padding:4px 10px;font-size:10px}
+  .nav-btn-meta{font-size:9.5px;padding:4px 8px}
+  .nav-group-meta{margin-left:0}
   .metric-row{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
   .dtable{min-width:480px;font-size:11px}
   .dtable th,.dtable td{padding:7px 10px}
@@ -1225,16 +1192,12 @@ table{border-collapse:collapse}
   .m-val{font-size:16px}
   .metric-row{grid-template-columns:1fr 1fr}
   .dtable th,.dtable td{white-space:normal;word-break:break-word;font-size:10px;padding:5px 7px}
-  .nav{
-    overflow-x:auto;overflow-y:hidden;
-    flex-wrap:nowrap;
-    -webkit-overflow-scrolling:touch;
-    padding-bottom:6px;
-    scrollbar-width:none;
-    gap:3px
-  }
-  .nav::-webkit-scrollbar{display:none}
+  .nav-grouped{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:3px 8px;padding:6px 0 8px}
+  .nav-grouped::-webkit-scrollbar{display:none}
+  .nav-group{flex-shrink:0}
+  .nav-group-lbl{display:none}
   .nav-btn{white-space:nowrap;font-size:9.5px;padding:4px 8px;flex-shrink:0}
+  .nav-btn-meta{font-size:9px;padding:3px 7px}
   .fc-note{font-size:10px;padding:9px;line-height:1.55}
   .sector-card{padding:12px}
   .card-name{font-size:11px}
@@ -1251,14 +1214,15 @@ table{border-collapse:collapse}
   .kpi-strip{flex-direction:column}
   body{padding:8px 6px 24px}
   .panel{padding:10px}
-  .nav-btn{font-size:9px;padding:4px 7px}
+  .nav-btn{font-size:9px;padding:3px 6px}
+  .nav-btn-meta{font-size:8.5px;padding:3px 6px}
 }
 
 /* ═══════════════════════════════════════════════════════════════
    PRINT / PDF
 ═══════════════════════════════════════════════════════════════ */
 @media print{
-  .nav,.download-btn,.filter-row,.sort-row{display:none!important}
+  .nav-grouped,.download-btn,.filter-row,.sort-row{display:none!important}
   .panel{break-inside:avoid;page-break-inside:avoid}
   body{padding:0;font-size:10pt}
   .ch400,.ch320,.ch300{height:220px!important}
@@ -1498,7 +1462,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 </head>
 <body>
 
-<div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Updated daily via GitHub Actions</div>
+<div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Updated weekly via GitHub Actions</div>
 <h1>U.S. <span>Macro</span> Dashboard</h1>
 <p class="subtitle">Growth · Labor · Inflation · Financial Conditions · Credit · Housing · Energy — 2025 actuals · 2026 outlook</p>
 
@@ -1507,26 +1471,55 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <div class="kpi-strip" id="kpi-strip"></div>
 
-<div class="nav">
-  <button class="nav-btn active" data-tab="fc">🔭 Outlook</button>
-  <button class="nav-btn" data-tab="gdp">📊 GDP</button>
-  <button class="nav-btn" data-tab="jobs">📋 Jobs</button>
-  <button class="nav-btn" data-tab="unemp">👷 Unemployment</button>
-  <button class="nav-btn" data-tab="wages">💵 Wages</button>
-  <button class="nav-btn" data-tab="cpi">🛒 CPI</button>
-  <button class="nav-btn" data-tab="pce">💳 PCE &amp; Consumer</button>
-  <button class="nav-btn" data-tab="yield">📈 Fed Rates</button>
-  <button class="nav-btn" data-tab="credit">🔗 Credit</button>
-  <button class="nav-btn" data-tab="banks">🏦 Banks</button>
-  <button class="nav-btn" data-tab="housing">🏠 Housing</button>
-  <button class="nav-btn" data-tab="oil">🛢️ Oil</button>
-  <div style="width:1px;background:var(--border);margin:4px 2px;align-self:stretch"></div>
-  <button class="nav-btn" data-tab="dict">📖 Sources</button>
-  <button class="nav-btn" data-tab="stack">⚙️ Dashboard</button>
+<div class="nav-grouped">
+  <div class="nav-group">
+    <span class="nav-group-lbl">Overview</span>
+    <div class="nav-group-pills">
+      <button class="nav-btn active" data-tab="fc">Outlook</button>
+      <button class="nav-btn" data-tab="gdp">GDP</button>
+    </div>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-lbl">Labor</span>
+    <div class="nav-group-pills">
+      <button class="nav-btn" data-tab="jobs">Jobs</button>
+      <button class="nav-btn" data-tab="unemp">Unemployment</button>
+      <button class="nav-btn" data-tab="wages">Wages</button>
+    </div>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-lbl">Inflation</span>
+    <div class="nav-group-pills">
+      <button class="nav-btn" data-tab="cpi">CPI</button>
+      <button class="nav-btn" data-tab="pce">PCE &amp; Consumer</button>
+    </div>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-lbl">Rates &amp; Credit</span>
+    <div class="nav-group-pills">
+      <button class="nav-btn" data-tab="yield">Fed Rates</button>
+      <button class="nav-btn" data-tab="credit">Credit</button>
+      <button class="nav-btn" data-tab="banks">Banks</button>
+    </div>
+  </div>
+  <div class="nav-group">
+    <span class="nav-group-lbl">Sectors</span>
+    <div class="nav-group-pills">
+      <button class="nav-btn" data-tab="housing">Housing</button>
+      <button class="nav-btn" data-tab="oil">Oil</button>
+    </div>
+  </div>
+  <div class="nav-group nav-group-meta">
+    <div class="nav-group-pills">
+      <button class="nav-btn nav-btn-meta" data-tab="dict">Sources</button>
+      <button class="nav-btn nav-btn-meta" data-tab="stack">Dashboard</button>
+    </div>
+  </div>
 </div>
 
 <!-- ══ GDP ══ -->
 <div class="tab-panel" id="tab-gdp">
+  <div class="metric-row" id="gdp-metrics"></div>
   <div class="sort-row">
     <span class="sort-lbl">FILTER</span>
     <div id="group-filters" style="display:flex;flex-wrap:wrap;gap:6px"></div>
@@ -2480,6 +2473,7 @@ let sortBy = "share";
 let activeGroup = "All";
 
 const GDP_TOTAL_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "nominal":[10.3, 10.6, 10.9, 11.5, 12.2, 13.0, 13.8, 14.5, 14.8, 14.5, 15.0, 15.6, 16.3, 16.9, 17.6, 18.3, 18.8, 19.6, 20.7, 21.5, 21.4, 23.7, 26.1, 27.8, 29.3, 30.8], "real":[14.1, 14.2, 14.5, 14.9, 15.4, 16.0, 16.4, 16.8, 16.8, 16.3, 16.8, 17.1, 17.4, 17.8, 18.3, 18.8, 19.1, 19.6, 20.2, 20.7, 20.3, 21.5, 22.1, 22.7, 23.4, 23.9]};
+
 // ── Shared trend pill renderer ────────────────────────────────────────
 // trendPill()    — UP = red (bad),  DOWN = green (good)  → inflation, unemployment, debt
 // trendPillPos() — UP = green (good), DOWN = red (bad)   → wages, GDP, bank earnings, home prices
@@ -2653,6 +2647,28 @@ function setSortBy(val,btn){
 // ── Metric tile color helper ──────────────────────
 function _mHex(h){h=h.replace('#','');if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
 function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.06)';var bdr='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.2)';return '<div class="metric" style="background:'+bg+';border:1px solid '+bdr+';border-left:3.5px solid '+m.col+'"><div class="m-lbl" style="color:'+m.col+'">'+m.lbl+'</div><div class="m-val" style="color:'+m.col+'">'+m.val+'</div><div class="m-sub">'+m.sub+'</div></div>';}
+
+// GDP metric tiles — computed dynamically from GDP_TOTAL_DATA
+(function(){
+  var r = GDP_TOTAL_DATA.real, n = GDP_TOTAL_DATA.nominal, L = r.length;
+  var realNow = r[L-1], realPrior = r[L-2], nomNow = n[L-1];
+  var realGrowth = ((realNow - realPrior) / realPrior * 100).toFixed(1);
+  var realGrowthPrior = ((realPrior - r[L-3]) / r[L-3] * 100).toFixed(1);
+  var nomGrowth = ((nomNow - n[L-2]) / n[L-2] * 100).toFixed(1);
+  var yr = GDP_TOTAL_DATA.labels[L-1], yrP = GDP_TOTAL_DATA.labels[L-2];
+  var delta = (realGrowth - realGrowthPrior).toFixed(1);
+  var sign = delta >= 0 ? "+" : "";
+  var deflator = (nomGrowth - realGrowth).toFixed(1);
+  var cagr = ((Math.pow(realNow/r[0], 1/(L-1))-1)*100).toFixed(1);
+  document.getElementById("gdp-metrics").innerHTML = [
+    {lbl:"Real GDP "+yr, val:"$"+realNow+"T", sub:"Chained 2017 dollars · BEA", col:"#1a9e4a"},
+    {lbl:"Real Growth "+yr, val:"+"+realGrowth+"%", sub:sign+delta+"pp vs "+yrP+" (+"+realGrowthPrior+"%) · advance est.", col:parseFloat(realGrowth)>=2?"#1a9e4a":"#c07010"},
+    {lbl:"Nominal GDP "+yr, val:"$"+nomNow+"T", sub:"Nominal growth: +"+nomGrowth+"% YoY", col:"#4a72e8"},
+    {lbl:"2026F Consensus", val:"+1.5–2.2%", sub:"GS: 1.5% · JPM: 1.9% · MS: 2.0% · tariff drag risk", col:"#6d40cc"},
+    {lbl:"GDP Deflator "+yr, val:"+"+deflator+"%", sub:"Nominal − real = implied price level change", col:"#d03030"},
+    {lbl:(L-1)+"yr Real CAGR", val:"+"+cagr+"%", sub:"Since 2000 · long-run trend capacity", col:"#4a72e8"},
+  ].map(m=>_mTile(m)).join("");
+})();
 
 // UNEMPLOYMENT TAB
 // ════════════════════════════════════════════════════
@@ -5075,7 +5091,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Daily 7am ET — Last run: March 20, 2026 21:21 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: March 20, 2026 21:21 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 5 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
