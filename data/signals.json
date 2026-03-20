@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-03-20T03:57:00.765521Z",
+  "analyzed_at": "2026-03-20T04:39:51.578647Z",
   "risk_level": "ELEVATED",
   "alert_count": 1,
   "watch_count": 3,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.76,
@@ -19,8 +19,8 @@
     "icsa": 205000.0,
     "ccsa": 1857000.0,
     "wages_yoy": 3.69,
-    "cpi_yoy": 2.4,
-    "core_cpi_yoy": 2.5,
+    "cpi_yoy": 2.43,
+    "core_cpi_yoy": 2.47,
     "pce_yoy": 2.83,
     "core_pce_yoy": 3.06,
     "saving_rate": 4.5,
@@ -46,21 +46,21 @@
     },
     "dgs10": {
       "value": 4.26,
-      "delta": -0.01,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 91,
-      "delta": -1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 320,
-      "delta": -2,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -73,8 +73,8 @@
       "alert": null
     },
     "cpi_yoy": {
-      "value": 2.4,
-      "delta": 0.0,
+      "value": 2.43,
+      "delta": 0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -102,14 +102,14 @@
     },
     "mortgage30": {
       "value": 6.22,
-      "delta": 0.11,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "wages_yoy": {
       "value": 3.69,
-      "delta": -0.11,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -123,7 +123,7 @@
     },
     "icsa": {
       "value": 205000.0,
-      "delta": -8000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -144,35 +144,35 @@
     },
     "dgs2": {
       "value": 3.76,
-      "delta": 0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 3.87,
-      "delta": 0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 4.88,
-      "delta": 0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 50,
-      "delta": -4,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "core_cpi_yoy": {
-      "value": 2.5,
-      "delta": 0.0,
+      "value": 2.47,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,12 +241,6 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "cpi_yoy",
-      "line": "cpi_yoy: 2.66 (\u25b20.26 vs prior)",
-      "alert": null
-    }
-  ],
+  "headlines": [],
   "raw_errors": []
 }
