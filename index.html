@@ -49,11 +49,14 @@ class MC{
   _sz(){
     const c=this.ctx.canvas;
     const p=c.parentElement;
+    const dpr=window.devicePixelRatio||1;
     // Use parentElement dimensions — reliable even before first paint
     const W=p?(p.offsetWidth||p.clientWidth||p.getBoundingClientRect().width||300):640;
     const H=p?(p.offsetHeight||p.clientHeight||p.getBoundingClientRect().height||260):260;
-    c.width=Math.max(W,10);c.height=Math.max(H,10);
-    return{W:c.width,H:c.height};
+    c.width=Math.max(W*dpr,10);c.height=Math.max(H*dpr,10);
+    c.style.width=W+"px";c.style.height=H+"px";
+    this.ctx.setTransform(dpr,0,0,dpr,0,0);
+    return{W:Math.max(W,10),H:Math.max(H,10)};
   }
   _render(){
     this._hits=[];
@@ -77,14 +80,16 @@ class MC{
     return{min:f?.min??tks[0],max:f?.max??tks[tks.length-1]};
   }
   _fmt(v,cb){
-    if(cb)return cb(v);
     if(!isFinite(v))return"";
+    // Round to 1 decimal to avoid floating-point artifacts
+    const rv=Math.round(v*10)/10;
+    if(cb)return cb(rv);
     // show clean numbers: integers stay, decimals to 1 place max
-    const abs=Math.abs(v);
+    const abs=Math.abs(rv);
     if(abs===0)return"0";
-    if(abs>=1000)return(v/1000).toFixed(1)+"K";
-    if(Number.isInteger(v)||abs>=10)return v.toFixed(0);
-    return v.toFixed(1);
+    if(abs>=1000)return(rv/1000).toFixed(1)+"K";
+    if(Number.isInteger(rv)||abs>=10)return rv.toFixed(0);
+    return rv.toFixed(1);
   }
   _grid(ctx,d,r,labels,sc,isY2){
     const cb=isY2?(sc?.y2?.ticks?.callback||null):(sc?.y?.ticks?.callback||null);
@@ -187,13 +192,13 @@ class MC{
         visible.forEach(({p,show})=>{
           if(!p||!show)return;
           const lbl=this._fmt(p.v,cb);
-          ctx.font="bold 9px 'DM Mono',monospace";
+          ctx.font="bold 10px 'DM Mono',monospace";
           const tw=ctx.measureText(lbl).width;
           const lx=Math.max(d.x0+2,Math.min(p.x-tw/2,d.x0+d.iw-tw-2));
-          const ly=p.y>d.y0+12?p.y-6:p.y+13;
+          const ly=p.y>d.y0+12?p.y-7:p.y+14;
           // pill bg
-          ctx.fillStyle="rgba(255,255,255,0.88)";
-          ctx.beginPath();ctx.roundRect(lx-3,ly-9,tw+6,13,3);ctx.fill();
+          ctx.fillStyle="rgba(255,255,255,0.92)";
+          ctx.beginPath();ctx.roundRect(lx-3,ly-10,tw+6,14,3);ctx.fill();
           ctx.fillStyle=pC(col);
           ctx.textAlign="left";
           ctx.fillText(lbl,lx,ly);
@@ -276,15 +281,15 @@ class MC{
             if(v==null||!isFinite(v)||!showIdx.has(gi))return;
             const cx_dl=d.x0+gW_dl*gi+gap_dl+bW_dl*di+bW_dl/2;
             const lbl=this._fmt(v,cb_dl);
-            ctx.font="bold 9px 'DM Mono',monospace";
+            ctx.font="bold 10px 'DM Mono',monospace";
             ctx.textAlign="center";
             const barY=v>=0?toY_dl(v):zY_dl,barH=Math.abs(toY_dl(v)-zY_dl);
             // position: above positive bars (or at zero line for tiny bars), below negative bars
-            const labelY = v>=0 ? Math.min(barY, zY_dl)-5 : Math.max(barY+barH, zY_dl)+11;
+            const labelY = v>=0 ? Math.min(barY, zY_dl)-5 : Math.max(barY+barH, zY_dl)+12;
             {
               const tw=ctx.measureText(lbl).width;
-              ctx.fillStyle="rgba(255,255,255,0.88)";
-              ctx.beginPath();ctx.roundRect(cx_dl-tw/2-2,labelY-9,tw+4,12,2);ctx.fill();
+              ctx.fillStyle="rgba(255,255,255,0.92)";
+              ctx.beginPath();ctx.roundRect(cx_dl-tw/2-2,labelY-10,tw+4,14,2);ctx.fill();
               const col=Array.isArray(ds.backgroundColor)?ds.backgroundColor[gi]:(ds.backgroundColor||aC(di));
               ctx.fillStyle=pC(col);
               ctx.fillText(lbl,cx_dl,labelY);
@@ -329,9 +334,7 @@ class MC{
   _initTip(){
     const c=this.ctx.canvas,me=this;
     this._onMM=function(e){
-      const r=c.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
-      const sx=c.width/r.width,sy=c.height/r.height;
-      const cx=mx*sx,cy=my*sy;
+      const r=c.getBoundingClientRect(),cx=e.clientX-r.left,cy=e.clientY-r.top;
       let best=null,bestD=Infinity;
       me._hits.forEach(h=>{
         let d;
