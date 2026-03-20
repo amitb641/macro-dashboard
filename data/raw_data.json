@@ -1,8 +1,10 @@
 {
-  "collected_at": "2026-03-20T06:00:25.792128Z",
+  "collected_at": "2026-03-20T06:16:44.491482Z",
   "series_count": 54,
-  "error_count": 0,
-  "errors": [],
+  "error_count": 1,
+  "errors": [
+    "BLS: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+  ],
   "data": {
     "ffr": {
       "date": "2026-02-01",
@@ -1302,7 +1304,7 @@
         "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 20 06:01 UTC",
+      "updated": "Mar 20 06:16 UTC",
       "sessions": 11
     },
     "mortgage30": [
