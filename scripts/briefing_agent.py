@@ -77,7 +77,8 @@ Respond with this exact JSON (no markdown):
     "yield":   "2-3 sentences on yield curve, Fed path, rate outlook",
     "credit":  "2-3 sentences on IG/HY spreads, credit conditions, risk appetite",
     "housing": "2-3 sentences on mortgage rates, affordability, supply/demand balance",
-    "oil":     "2-3 sentences on WTI/Brent, supply/demand, macro transmission"
+    "oil":     "2-3 sentences on WTI/Brent, supply/demand, macro transmission",
+    "banks":   "2-3 sentences on bank earnings themes, NII outlook, consumer credit quality"
   }},
   "kpi_updates": {{
     "risk_posture": "one of: Defensive | Cautious | Neutral | Constructive | Risk-On",
@@ -131,7 +132,7 @@ def _fallback() -> dict:
         'outlook_headline': msg,
         'outlook_body':     msg,
         'tabs':            {k: msg for k in ['gdp','jobs','unemp','wages','cpi',
-                                             'pce','yield','credit','housing','oil']},
+                                             'pce','yield','credit','housing','oil','banks']},
         'kpi_updates':     {'risk_posture':'Neutral','macro_regime':'Expansion','fed_bias':'On Hold'},
         'signal_flags':    [],
     }

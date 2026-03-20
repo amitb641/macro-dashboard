@@ -1,8 +1,12 @@
-name: Daily Macro Update
+name: Weekly Macro Update
 
 on:
   schedule:
-    - cron: '0 12 * * 1-5'   # Mon–Fri 12:00 UTC = 8am EDT / 7am EST
+    # Weekly data pull: every Friday 8am ET (12:00 UTC)
+    - cron: '0 12 * * 5'
+    # Monthly deep refresh: 2nd Saturday 10am ET (14:00 UTC)
+    # Captures Jobs (1st Fri) + CPI (~10th-13th) in one AI pass
+    - cron: '0 14 8-14 * 6'
   workflow_dispatch:
     inputs:
       force_ai:
@@ -61,13 +65,10 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FORCE_AI: ${{ github.event.inputs.force_ai || 'false' }}
         run: |
-          DAY=$(date -u +'%d')
-          if [ "$DAY" = "01" ] || [ "$FORCE_AI" = "true" ]; then
-            echo "Running Agent 3"
-            python scripts/briefing_agent.py
-          else
-            echo "Skipping Agent 3 — daily patch only"
-          fi
+          # Run AI commentary on every scheduled run (weekly + monthly)
+          # All runs now generate fresh commentary from latest data
+          echo "Running Agent 3 — AI commentary refresh"
+          python scripts/briefing_agent.py
 
       - name: Agent 4 — Renderer
         env:
@@ -90,7 +91,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "📊 Daily update: $(date -u +'%Y-%m-%d')"
+            git commit -m "📊 Weekly update: $(date -u +'%Y-%m-%d')"
             git push
           fi
 
