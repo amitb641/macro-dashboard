@@ -499,8 +499,30 @@ def rebuild_charts(html, data):
 
 # ── HELPERS ───────────────────────────────────────────────────────────
 
-def patch_array_last(html, js_key, new_val, precision=2):
+def patch_array_last(html, js_key, new_val, precision=2, scope_var=None):
     fmt = str(round(new_val, precision)) if new_val is not None else 'null'
+    # If scope_var is given, only patch within that variable's declaration
+    if scope_var:
+        var_pat = rf'((?:const|let|var)\s+{re.escape(scope_var)}\s*=\s*)'
+        m = re.search(var_pat, html)
+        if not m:
+            errors.append(f'patch_array_last: scope var {scope_var} not found')
+            return html
+        start = m.start()
+        end = html.find(';', start)
+        if end < 0: end = len(html)
+        chunk = html[start:end + 1]
+        pattern = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+((\s*)\])'
+        new_chunk, n = re.subn(pattern, rf'\g<1>{fmt}\g<3>]', chunk, count=1, flags=re.DOTALL)
+        if not n:
+            pattern2 = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+(\s*,\s*(?:null\s*,?\s*)*\])'
+            new_chunk, n = re.subn(pattern2, rf'\g<1>{fmt}\2', chunk, count=1, flags=re.DOTALL)
+        if n:
+            applied.append(f'{scope_var}.{js_key}[-1]={fmt}')
+            return html[:start] + new_chunk + html[end + 1:]
+        else:
+            errors.append(f'patch_array_last: {js_key} not found in {scope_var}')
+            return html
     # Match both unquoted JS keys (key: [...]) and quoted JSON keys ("key":[...])
     # First try: replace last numeric value before ]
     pattern = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+((\s*)\])'
@@ -761,13 +783,10 @@ def render_labor(html, data, vals, tabs):
     wages  = vals.get('wages_yoy')
 
     if unrate is not None:
-        html = patch_array_last(html, 'data', unrate, 1)
+        html = patch_array_last(html, 'data', unrate, 1, scope_var='U_MONTHLY')
         unemp_date = data.get('unrate', [{}])[0].get('date','') if data.get('unrate') else ''
         u_lbl = f"Unemployment {month_label(unemp_date)}" if unemp_date else 'Unemployment'
         html = patch_kpi_full(html, 'Unemployment 2025', u_lbl, f'{unrate:.1f}%')
-        unrate_s = data.get('unrate', [])
-        if unrate_s:
-            html = patch_var_last_label(html, 'U_ANNUAL', month_label(unrate_s[0]['date']))
 
     if u6 is not None:
         u6_date = data.get('u6rate', [{}])[0].get('date','') if data.get('u6rate') else ''
@@ -781,7 +800,7 @@ def render_labor(html, data, vals, tabs):
         html = patch_kpi_full(html, 'Jan 2026 Jobs', jobs_lbl, f'{nfp:+.0f}K')
 
     if wages is not None:
-        html = patch_array_last(html, 'nominal', wages, 1)
+        html = patch_array_last(html, 'nominal', wages, 1, scope_var='WAGE_MONTHLY')
         ahetpi_s = data.get('ahetpi')
         wages_date = ahetpi_s[0].get('date','') if ahetpi_s else ''
         wages_lbl = f"Nominal Wage Growth {month_label(wages_date)}" if wages_date else 'Nominal Wage Growth'
@@ -808,20 +827,17 @@ def render_inflation(html, data, vals, tabs):
     save     = vals.get('saving_rate')
 
     if cpi is not None:
-        html = patch_array_last(html, 'data', cpi, 1)
+        html = patch_array_last(html, 'data', cpi, 1, scope_var='CPI_MONTHLY')
         cpi_s2 = data.get('cpi_all')
         cpi_date = cpi_s2[0].get('date','') if cpi_s2 else ''
         cpi_lbl = f"CPI All Items {month_label(cpi_date)}" if cpi_date else 'CPI All Items'
         html = patch_kpi_full(html, 'CPI All Items 2025', cpi_lbl, f'{cpi:+.1f}%')
-        cpi_s = data.get('cpi_all', [])
-        if cpi_s:
-            html = patch_var_last_label(html, 'CPI_ANNUAL', month_label(cpi_s[0]['date']))
 
     if core_cpi is not None:
-        html = patch_array_last(html, 'core', core_cpi, 1)
+        html = patch_array_last(html, 'core', core_cpi, 1, scope_var='CPI_MONTHLY')
 
     if pce is not None:
-        html = patch_array_last(html, 'headline', pce, 1)
+        html = patch_array_last(html, 'headline', pce, 1, scope_var='PCE_MONTHLY')
 
     if core_pce is not None:
         pce_core_s = data.get('pce_core')
@@ -830,7 +846,7 @@ def render_inflation(html, data, vals, tabs):
         html = patch_kpi_full(html, 'Core PCE Dec 2025', pce_lbl, f'{core_pce:+.1f}%')
 
     if save is not None:
-        html = patch_array_last(html, 'data', save, 1)
+        html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_RATE')
 
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')
