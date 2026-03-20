@@ -1560,12 +1560,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="metric-row" id="cpi-metrics"></div>
 
-  <!-- Monthly MoM Chart -->
-  <div class="panel">
-    <div class="panel-title">Monthly CPI — Headline vs Core YoY % (12-Month Trend)</div>
-    <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
-    <div class="ch260"><canvas id="c-cpi-mom"></canvas></div>
-    <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference. Monthly readings show short-term inflation trajectory.</p>
+  <!-- Monthly MoM Charts -->
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Monthly CPI — Headline vs Core YoY % (12-Month Trend)</div>
+      <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
+      <div class="ch260"><canvas id="c-cpi-mom"></canvas></div>
+      <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">CPI by Category — MoM Change (Feb'26 vs Jan'26)</div>
+      <div class="panel-sub">YoY % by category · Feb'26 vs Jan'26 · sorted by Feb'26 rate · BLS CPI-U</div>
+      <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-cpi-cat-mom"></canvas></div>
+      <p class="src">Source: BLS CPI-U All Urban Consumers. Monthly YoY % change by category. Feb'26 vs Jan'26 comparison.</p>
+    </div>
   </div>
 
   <!-- Annual Chart -->
@@ -1710,6 +1718,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="ch260"><canvas id="c-pce-mom"></canvas></div>
     <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge. Fed 2% target shown as reference.</p>
   </div>
+  <div class="panel">
+    <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
+    <div class="panel-sub">Real PCE spending growth by category · Jan'26 vs Dec'25 · sorted by Jan'26 rate · BEA</div>
+    <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-pce-cat-mom"></canvas></div>
+    <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category. Jan'26 vs Dec'25 comparison.</p>
+  </div>
 
   <!-- Annual Charts -->
   <div class="two-up">
@@ -1753,15 +1767,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="ch260"><canvas id="c-umcsent-line"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
     </div>
-  </div>
-  <div class="panel">
-    <div class="panel-title">Household Debt Service Ratio — TDSP (FRED Interactive)</div>
-    <div class="panel-sub">Debt payments as % of disposable income · <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board</div>
-    <div class="fred-embed">
-      <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1H9UV&width=670&height=475" scrolling="no" frameborder="0" loading="lazy"
-        title="Household Debt Service Ratio - FRED Chart"></iframe>
-    </div>
-    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Total household debt service payments (mortgage + consumer) as % of disposable personal income. Hover to see exact quarterly values. 2007 peak: ~13.2%. Pre-pandemic avg: ~10%. Current level well below crisis thresholds.</p>
   </div>
   <div class="panel">
     <div class="panel-title">Consumer Health Dashboard — Debt, Savings & Spending Metrics</div>
@@ -2219,6 +2224,18 @@ const CPI_CATS = [
   {cat:"Apparel",               color:"#FCC419", c21:5.8,  c22:3.2,  c23:2.4,  c24:0.4,  c25:0.6},
   {cat:"Energy (all)",          color:"#FFB84C", c21:29.3, c22:7.3,  c23:-2.0, c24:0.5,  c25:1.2},
   {cat:"Used Cars & Trucks",    color:"#00C9A7", c21:37.3, c22:3.0,  c23:-5.0, c24:1.6,  c25:0.8},
+];
+const CPI_CAT_MOM = [
+  {cat:"Shelter / Housing",     jan:4.5, feb:4.3, color:"#6d40cc"},
+  {cat:"Food Away from Home",   jan:3.5, feb:3.4, color:"#1a9e4a"},
+  {cat:"Transportation Svcs",   jan:6.2, feb:5.8, color:"#CC5DE8"},
+  {cat:"Medical Care Svcs",     jan:3.0, feb:3.0, color:"#FF6B9D"},
+  {cat:"Core CPI (ex F&E)",     jan:2.5, feb:2.5, color:"#F76707"},
+  {cat:"Food at Home",          jan:1.9, feb:2.1, color:"#51CF66"},
+  {cat:"New Vehicles",          jan:0.8, feb:0.4, color:"#4DABF7"},
+  {cat:"Apparel",               jan:0.5, feb:0.3, color:"#FCC419"},
+  {cat:"Energy (all)",          jan:1.0, feb:-0.2, color:"#FFB84C"},
+  {cat:"Used Cars & Trucks",    jan:1.0, feb:0.8, color:"#00C9A7"},
 ];
 
 // ── WAGES ────────────────────────────────────────────
@@ -2692,6 +2709,21 @@ function buildCPITab(){
       scales:{y:{min:1.5,max:3.5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
+  // ── CPI Category MoM Chart ──
+  var cpiMom = [...CPI_CAT_MOM].sort((a,b)=>b.feb-a.feb);
+  new Chart(document.getElementById("c-cpi-cat-mom").getContext("2d"),{
+    type:"bar",
+    data:{labels:cpiMom.map(r=>r.cat),datasets:[
+      {label:"Feb'26 YoY %",data:cpiMom.map(r=>r.feb),backgroundColor:cpiMom.map(r=>r.feb>r.jan?"rgba(208,48,48,.75)":"rgba(74,114,232,.7)"),borderRadius:3},
+      {label:"Jan'26 YoY %",data:cpiMom.map(r=>r.jan),backgroundColor:"rgba(192,112,16,.4)",borderRadius:3},
+    ]},
+    options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:c=>{var d=cpiMom[c.dataIndex];var ch=(d.feb-d.jan).toFixed(1);return `${c.dataset.label}: ${c.raw}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+  });
+
   new Chart(document.getElementById("c-cpi-bar").getContext("2d"),{
     type:"bar",
     data:{labels:CPI_ANNUAL.labels,datasets:[
@@ -3031,6 +3063,18 @@ const PCE_CATS = [
   {cat:"Food & Bev (Grocery)", y23:1.8,  y24:1.1,  y25:3.1},
   {cat:"Energy Goods",         y23:-5.2, y24:-1.8, y25:-2.8},
 ];
+const PCE_CAT_MOM = [
+  {cat:"Housing & Utilities",  dec:3.3, jan:3.4},
+  {cat:"Healthcare Services",  dec:3.0, jan:3.2},
+  {cat:"Financial Services",   dec:4.4, jan:4.6},
+  {cat:"Food Services",        dec:4.0, jan:4.2},
+  {cat:"Recreation Services",  dec:3.7, jan:3.9},
+  {cat:"Transportation Svcs",  dec:5.0, jan:5.2},
+  {cat:"Nondurable Goods",     dec:1.6, jan:1.9},
+  {cat:"Durable Goods",        dec:0.4, jan:0.8},
+  {cat:"Food & Bev (Grocery)", dec:2.9, jan:3.2},
+  {cat:"Energy Goods",         dec:-2.4,jan:-1.8},
+];
 const DEBT_DATA = {
   labels:["Mortgage","Auto Loans","Credit Cards","Student Loans","HELOC","Other"],
   balance:  [13.07, 1.64, 1.19, 1.65, 0.40, 0.65],  // $T Q3 2025
@@ -3161,6 +3205,21 @@ function buildPCETab(){
       annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
         label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
       scales:{y:{min:1.5,max:3.5,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  // ── PCE Category MoM Chart ──
+  var pceMom = [...PCE_CAT_MOM].sort((a,b)=>b.jan-a.jan);
+  new Chart(document.getElementById("c-pce-cat-mom").getContext("2d"),{
+    type:"bar",
+    data:{labels:pceMom.map(r=>r.cat),datasets:[
+      {label:"Jan'26",data:pceMom.map(r=>r.jan),backgroundColor:pceMom.map(r=>r.jan>r.dec?"rgba(208,48,48,.75)":"rgba(74,114,232,.7)"),borderRadius:3},
+      {label:"Dec'25",data:pceMom.map(r=>r.dec),backgroundColor:"rgba(192,112,16,.4)",borderRadius:3},
+    ]},
+    options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:c=>{var d=pceMom[c.dataIndex];var ch=(d.jan-d.dec).toFixed(1);return `${c.dataset.label}: ${c.raw}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
   // PCE line chart
