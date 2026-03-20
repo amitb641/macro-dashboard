@@ -1838,12 +1838,19 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~9.8%.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Consumer Sentiment — Univ. of Michigan (Monthly)</div>
-      <div class="panel-sub">Index of Consumer Sentiment · U. of Michigan Survey of Consumers · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
-      <div class="ch260"><canvas id="c-umcsent-line"></canvas></div>
-      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+      <div class="panel-title">Consumer Sentiment — Last 12 Months</div>
+      <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
+      <div class="ch260"><canvas id="c-umcsent-monthly"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95.</p>
     </div>
   </div>
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
+      <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
+      <div class="ch260"><canvas id="c-umcsent-annual"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+    </div>
   <div class="panel">
     <div class="panel-title">Consumer Health Dashboard — Debt, Savings & Spending Metrics</div>
     <div class="panel-sub">Annual snapshot · BEA, NY Fed, Federal Reserve Board</div>
@@ -2449,7 +2456,7 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#d03030", "delta":0.04, "chg":"+0.0pp", "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.26%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.76% \u00b7 Spread: +50bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#c07010", "delta":-8000, "chg":"-8K", "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Jan'26", "val":"56.4", "col":"#6d40cc", "delta":3.5, "chg":"+3.5", "sub":"MoM: +3.5 \u00b7 YoY: -15.3 \u00b7 Prior: 52.9 (Dec'25)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#d03030", "delta":0.04, "chg":"+0.0pp", "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Target range"}, {"lbl":"10Y Treasury Mar'26", "val":"4.26%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.76% \u00b7 Spread: +50bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#c07010", "delta":-8000, "chg":"-8K", "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#6d40cc", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -19.9 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const d = k.delta ? `<span class="kpi-delta ${k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat'}">${k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→'} ${k.chg||''}</span>` : '';
   return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
@@ -3124,7 +3131,8 @@ function buildFCTab(){
 const PCE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "headline":[2.5, 1.1, 2.1, 2.1, 2.8, 2.9, 2.3, 3.5, 0.1, 2.1, 1.5, 2.5, 1.6, 1.4, 0.7, 0.3, 1.7, 1.8, 1.9, 1.6, 1.3, 6.1, 5.5, 2.8, 2.7, 2.9], "core":[1.9, 1.7, 1.8, 1.6, 2.1, 2.3, 2.3, 2.4, 1.1, 1.5, 1.1, 2.0, 1.7, 1.5, 1.4, 1.2, 1.8, 1.6, 2.0, 1.5, 1.5, 5.2, 5.0, 3.1, 3.0, 3.0]};
 const PCE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26"],headline:[2.5,2.5,2.4,2.4,2.5,2.5,2.6,2.5,2.4,2.6,2.8],core:[2.8,2.7,2.7,2.6,2.6,2.7,2.7,2.8,2.8,2.6,3.1]};
 const SAVING_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
-const SAVING_MONTHLY = {"labels":["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26"], "data":[4.7, 4.8, 5.2, 5.6, 5.0, 4.8, 4.5, 4.4, 4.0, 4.5]};
+const SAVING_MONTHLY = {"labels":["Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26"], "data":[5.2, 5.1, 5.5, 4.9, 4.6, 4.5, 4.4, 4.3, 4.0, 4.0, 4.0, 4.5]};
+const UMCSENT_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[57.0, 52.2, 52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6]};
 const PCE_CATS = [
   {cat:"Housing & Utilities",  y23:5.8,  y24:4.2,  y25:3.2},
   {cat:"Healthcare Services",  y23:3.8,  y24:3.4,  y25:3.1},
@@ -3392,9 +3400,26 @@ function buildPCETab(){
     });
   }
 
-  // UMich Consumer Sentiment (annual from OIL_VS_SENTIMENT.sentiment)
+  // UMich Consumer Sentiment — monthly (last 12 months, bar chart)
+  new Chart(document.getElementById("c-umcsent-monthly").getContext("2d"),{
+    type:"bar",
+    data:{labels:UMCSENT_MONTHLY.labels,datasets:[{
+      label:"Sentiment Index",data:UMCSENT_MONTHLY.data,
+      backgroundColor:UMCSENT_MONTHLY.data.map((v,i)=>i===UMCSENT_MONTHLY.data.length-1?"rgba(109,64,204,.85)":"rgba(109,64,204,.55)"),
+      borderColor:"#6d40cc",borderWidth:1,borderRadius:3
+    },{
+      label:"Pre-pandemic avg (~95)",data:UMCSENT_MONTHLY.labels.map(()=>95),
+      type:"line",borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
+              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},min:40,max:100,border:{display:false}}}}
+  });
+
+  // UMich Consumer Sentiment — annual (from OIL_VS_SENTIMENT)
   if(OIL_VS_SENTIMENT.labels.length){
-    new Chart(document.getElementById("c-umcsent-line").getContext("2d"),{
+    new Chart(document.getElementById("c-umcsent-annual").getContext("2d"),{
       type:"bar",
       data:{labels:OIL_VS_SENTIMENT.labels,datasets:[{
         label:"UMich Sentiment Index",data:OIL_VS_SENTIMENT.sentiment,
@@ -4748,9 +4773,9 @@ function buildStackTab(){
     ["💵 Wages",      "Avg Hourly Earnings",            "BLS CES",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["💵 Wages",      "Wages by Sector",                "BLS CES",             "Annual",     "Jan 2026",  "Manual update each January"],
     ["💵 Wages",      "Real Wage Growth",               "BLS CES + CPI",       "Monthly",    "Feb 2026",  "Computed: AHE − CPI YoY"],
-    ["🛒 CPI",        "CPI-U All Items YoY",            "BLS CPI",             "Monthly",    "Jan 2026",  "Agent auto-pulls ~2 wks after month"],
-    ["🛒 CPI",        "Core CPI (ex food & energy)",   "BLS CPI",             "Monthly",    "Jan 2026",  "Agent auto-pulls"],
-    ["🛒 CPI",        "CPI by Category (8 series)",    "BLS CPI",             "Monthly",    "Jan 2026",  "Agent pulls all 8 components"],
+    ["🛒 CPI",        "CPI-U All Items YoY",            "BLS CPI",             "Monthly",    "Feb 2026",  "Agent auto-pulls ~2 wks after month"],
+    ["🛒 CPI",        "Core CPI (ex food & energy)",   "BLS CPI",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
+    ["🛒 CPI",        "CPI by Category (8 series)",    "BLS CPI",             "Monthly",    "Feb 2026",  "Agent pulls all 8 components"],
     ["💳 PCE",        "PCE Headline",                   "BEA / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls ~4 wks after month"],
     ["💳 PCE",        "Core PCE",                       "BEA / FRED",          "Monthly",    "Jan 2026",  "Fed's preferred gauge"],
     ["💳 PCE",        "Personal Saving Rate",           "BEA / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls"],
