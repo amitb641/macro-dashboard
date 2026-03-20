@@ -1781,31 +1781,41 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="metric-row" id="pce-metrics"></div>
 
-  <!-- Monthly MoM Chart -->
-  <div class="panel">
-    <div class="panel-title">Monthly PCE Price Index — Headline vs Core YoY % (11-Month Trend)</div>
-    <div class="panel-sub">Personal Consumption Expenditures price index · monthly YoY readings · headline vs core · BEA</div>
-    <div class="ch260"><canvas id="c-pce-mom"></canvas></div>
-    <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge. Fed 2% target shown as reference.</p>
-  </div>
-  <div class="panel">
-    <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
-    <div class="panel-sub">Real PCE spending growth by category · Jan'26 vs Dec'25 · sorted by Jan'26 rate · BEA</div>
-    <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-pce-cat-mom"></canvas></div>
-    <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category. Jan'26 vs Dec'25 comparison.</p>
-  </div>
-
-  <!-- Annual Charts -->
+  <!-- ── SECTION 1: PCE Inflation ── -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">PCE Price Index — Annual YoY % (Fed's Preferred Inflation Gauge)</div>
-      <div class="panel-sub">Personal Consumption Expenditures price index · Headline vs Core · BEA</div>
-      <div class="ch260"><canvas id="c-pce-line"></canvas></div>
-      <p class="src">Source: BEA Series PCEPI / PCEPILFE (PCE Price Index, Headline &amp; Core) · Each year = Dec-to-Dec YoY % change, e.g. 2025 = Dec'25 PCE vs Dec'24 PCE. Headline = +2.9%, Core = +3.0%.</p>
+      <div class="panel-title">PCE Price Index — Monthly Headline vs Core YoY %</div>
+      <div class="panel-sub">Last 12 months · BEA · Fed's preferred inflation gauge · 2% target shown</div>
+      <div class="ch260"><canvas id="c-pce-mom"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge.</p>
     </div>
     <div class="panel">
+      <div class="panel-title">PCE Price Index — Annual Headline vs Core YoY %</div>
+      <div class="panel-sub">Dec-to-Dec YoY % change · 2000–2025 · BEA</div>
+      <div class="ch260"><canvas id="c-pce-line"></canvas></div>
+      <p class="src">Source: BEA Series PCEPI / PCEPILFE. Each year = Dec-to-Dec YoY % change. 2025: Headline +2.9%, Core +3.0%.</p>
+    </div>
+  </div>
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
+      <div class="panel-sub">Real PCE spending growth by category · sorted by Jan'26 rate · BEA</div>
+      <div class="ch320"><canvas id="c-pce-cat-mom"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">PCE by Category — Annual Growth 2023 vs 2024 vs 2025</div>
+      <div class="panel-sub">Inflation-adjusted consumer spending growth · BEA</div>
+      <div class="ch320"><canvas id="c-pce-cat"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: Savings & Spending ── -->
+  <div class="two-up">
+    <div class="panel">
       <div class="panel-title">Personal Saving Rate — Last 12 Months</div>
-      <div class="panel-sub">BEA Personal Income & Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
+      <div class="panel-sub">BEA Personal Income &amp; Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
       <div class="ch260"><canvas id="c-saving-monthly"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
     </div>
@@ -1816,45 +1826,45 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BEA Personal Income &amp; Outlays. Annual average of monthly personal saving rate.</p>
     </div>
   </div>
+
+  <!-- ── SECTION 3: Consumer Sentiment ── -->
   <div class="two-up">
-    <div class="panel">
-      <div class="panel-title">Real PCE by Category — Growth Rate 2023 vs 2024 vs 2025</div>
-      <div class="panel-sub">Inflation-adjusted consumer spending growth · BEA</div>
-      <div class="ch320"><canvas id="c-pce-cat"></canvas></div>
-      <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
-    </div>
-    <div class="panel">
-      <div class="panel-title">Household Debt & Delinquencies — NY Fed Data</div>
-      <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
-      <div class="ch320"><canvas id="c-debt-bar"></canvas></div>
-      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025.</p>
-    </div>
-  </div>
-  <div class="two-up">
-    <div class="panel">
-      <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
-      <div class="panel-sub">Household debt service payments as % of disposable personal income · Federal Reserve Board · Quarterly</div>
-      <div class="ch260"><canvas id="c-tdsp-line"></canvas></div>
-      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~9.8%.</p>
-    </div>
     <div class="panel">
       <div class="panel-title">Consumer Sentiment — Last 12 Months</div>
       <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
       <div class="ch260"><canvas id="c-umcsent-monthly"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95.</p>
     </div>
+    <div class="panel">
+      <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
+      <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
+      <div class="ch260"><canvas id="c-umcsent-annual"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+    </div>
   </div>
-  <div class="panel">
-    <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
-    <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
-    <div class="ch260"><canvas id="c-umcsent-annual"></canvas></div>
-    <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+
+  <!-- ── SECTION 4: Consumer Debt & Stress ── -->
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Household Debt &amp; Delinquencies — NY Fed Data</div>
+      <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
+      <div class="ch260"><canvas id="c-debt-bar"></canvas></div>
+      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
+      <div class="panel-sub">Household debt service payments as % of disposable income · Federal Reserve Board · Quarterly</div>
+      <div class="ch260"><canvas id="c-tdsp-line"></canvas></div>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~9.8%.</p>
+    </div>
   </div>
+
+  <!-- ── SECTION 5: Summary Table ── -->
   <div class="panel">
-    <div class="panel-title">Consumer Health Dashboard — Debt, Savings & Spending Metrics</div>
+    <div class="panel-title">Consumer Health Dashboard — Debt, Savings &amp; Spending Metrics</div>
     <div class="panel-sub">Annual snapshot · BEA, NY Fed, Federal Reserve Board</div>
     <div class="dtable-wrap"><table class="dtable" id="consumer-tbl"></table></div>
-    <p class="src">Sources: BEA Personal Income & Outlays Dec 2025 (Feb 20, 2026); NY Fed Household Debt & Credit Q3 2025 (Nov 2025); Federal Reserve Financial Stability Report Nov 2025; BLS Consumer Expenditure Survey. Personal saving rate Jan 2026: 4.5% — up from revised 4.0% (Dec'25); highest since Jul'25. Excess pandemic savings largely exhausted by mid-2024.</p>
+    <p class="src">Sources: BEA Personal Income &amp; Outlays Dec 2025 (Feb 20, 2026); NY Fed Household Debt &amp; Credit Q3 2025 (Nov 2025); Federal Reserve Financial Stability Report Nov 2025; BLS Consumer Expenditure Survey. Personal saving rate Jan 2026: 4.5% — up from revised 4.0% (Dec'25); highest since Jul'25. Excess pandemic savings largely exhausted by mid-2024.</p>
   </div>
 
 </div>
