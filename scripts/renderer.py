@@ -67,14 +67,28 @@ def _dec_yoy(monthly_series, start_year=START_YEAR):
 
 
 def _latest_yoy(monthly_series):
-    """Compute latest-month YoY% from monthly index data."""
+    """Compute latest-month YoY% from monthly index data.
+    Matches by calendar month 12 months prior (not by index position),
+    so gaps in monthly data (e.g. gov't shutdown) don't shift the comparison.
+    """
     if not monthly_series or len(monthly_series) < 13:
         return None, None
-    v0, v12 = monthly_series[0]['value'], monthly_series[12]['value']
-    if v12 == 0:
+    latest = monthly_series[0]
+    v0 = latest['value']
+    d0 = datetime.datetime.strptime(latest['date'], '%Y-%m-%d')
+    # Find the observation from exactly 12 months ago
+    target_yr = d0.year - 1
+    target_mo = d0.month
+    v12 = None
+    for obs in monthly_series:
+        od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+        if od.year == target_yr and od.month == target_mo:
+            v12 = obs['value']
+            break
+    if v12 is None or v12 == 0:
         return None, None
     yoy = round((v0 - v12) / v12 * 100, 1)
-    lbl = datetime.datetime.strptime(monthly_series[0]['date'], '%Y-%m-%d').strftime("%b'%y")
+    lbl = d0.strftime("%b'%y")
     return lbl, yoy
 
 
@@ -934,11 +948,24 @@ def rebuild_kpi_strip(html, data, vals):
         return cur, prev, f'{sign}{d}', d
 
     def _yoy_pair(series):
-        """Return (latest_yoy, prior_month_yoy) from index series."""
+        """Return (latest_yoy, prior_month_yoy) from index series.
+        Matches by calendar month (not index position) to handle gaps.
+        """
         if not series or len(series) < 14:
             return None, None
-        v0, v12 = series[0]['value'], series[12]['value']
-        v1, v13 = series[1]['value'], series[13]['value']
+        def _find_month(yr, mo):
+            for obs in series:
+                od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+                if od.year == yr and od.month == mo:
+                    return obs['value']
+            return None
+        d0 = datetime.datetime.strptime(series[0]['date'], '%Y-%m-%d')
+        d1 = datetime.datetime.strptime(series[1]['date'], '%Y-%m-%d')
+        v0, v12 = series[0]['value'], _find_month(d0.year - 1, d0.month)
+        v1, v13 = series[1]['value'], _find_month(d1.year - 1, d1.month)
+        # Fallback to index position if exact month not found
+        if v12 is None: v12 = series[12]['value'] if len(series) > 12 else None
+        if v13 is None: v13 = series[13]['value'] if len(series) > 13 else None
         yoy_cur  = round((v0 - v12) / v12 * 100, 2) if v12 else None
         yoy_prev = round((v1 - v13) / v13 * 100, 2) if v13 else None
         return yoy_cur, yoy_prev
