@@ -15,6 +15,7 @@ HTML_FILE = ROOT / 'index.html'
 RAW_FILE  = ROOT / 'data' / 'raw_data.json'
 SIG_FILE  = ROOT / 'data' / 'signals.json'
 ANA_FILE  = ROOT / 'data' / 'analysis.json'
+OVR_FILE  = ROOT / 'data' / 'overrides.json'
 
 applied  = []
 errors   = []
@@ -1151,6 +1152,23 @@ def render():
     data = raw.get('data', {})
     vals = sig.get('values', {})
     tabs = ana.get('tabs', {})
+
+    # Merge manual overrides (for data not yet on FRED)
+    if OVR_FILE.exists():
+        ovr = json.loads(OVR_FILE.read_text())
+        for key, entries in ovr.items():
+            series = data.get(key, [])
+            existing_dates = {e['date'] for e in series}
+            added = 0
+            for entry in entries:
+                if entry['date'] not in existing_dates:
+                    series.insert(0, entry)
+                    added += 1
+            if added:
+                # Re-sort descending by date
+                series.sort(key=lambda e: e['date'], reverse=True)
+                data[key] = series
+                print(f'  ✅ Override: added {added} entry(ies) to {key}')
 
     # Rebuild all chart arrays from historical data (2000+)
     try:
