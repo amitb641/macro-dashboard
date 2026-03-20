@@ -1,37 +1,38 @@
 {
-  "collected_at": "2026-03-19T12:54:36.779476Z",
+  "collected_at": "2026-03-20T03:56:41.312503Z",
   "series_count": 54,
-  "error_count": 2,
-  "errors": [
-    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
-    "EIA RBRTE: 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=iGh7dpVfGcLg7pOtYosy3CmQeKk0EzIqYmNpuNf9&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RBRTE&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=35"
-  ],
+  "error_count": 0,
+  "errors": [],
   "data": {
     "ffr": {
       "date": "2026-02-01",
       "value": 3.64
     },
     "dff": {
-      "date": "2026-03-17",
+      "date": "2026-03-18",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-03-17",
-      "value": 3.68
+      "date": "2026-03-18",
+      "value": 3.76
     },
     "dgs5": {
-      "date": "2026-03-17",
-      "value": 3.79
+      "date": "2026-03-18",
+      "value": 3.87
     },
     "dgs10": {
-      "date": "2026-03-17",
-      "value": 4.2
+      "date": "2026-03-18",
+      "value": 4.26
     },
     "dgs30": {
-      "date": "2026-03-17",
-      "value": 4.85
+      "date": "2026-03-18",
+      "value": 4.88
     },
     "dgs10_hist": [
+      {
+        "date": "2026-03-18",
+        "value": 4.26
+      },
       {
         "date": "2026-03-17",
         "value": 4.2
@@ -251,13 +252,13 @@
       {
         "date": "2025-12-26",
         "value": 4.14
-      },
-      {
-        "date": "2025-12-24",
-        "value": 4.15
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-03-18",
+        "value": 3.76
+      },
       {
         "date": "2026-03-17",
         "value": 3.68
@@ -477,21 +478,21 @@
       {
         "date": "2025-12-26",
         "value": 3.46
-      },
-      {
-        "date": "2025-12-24",
-        "value": 3.47
       }
     ],
     "ig_oas": {
-      "date": "2026-03-17",
-      "value": 0.92
+      "date": "2026-03-18",
+      "value": 0.91
     },
     "hy_oas": {
-      "date": "2026-03-17",
-      "value": 3.22
+      "date": "2026-03-18",
+      "value": 3.2
     },
     "ig_hist": [
+      {
+        "date": "2026-03-18",
+        "value": 0.91
+      },
       {
         "date": "2026-03-17",
         "value": 0.92
@@ -723,13 +724,13 @@
       {
         "date": "2025-12-29",
         "value": 0.79
-      },
-      {
-        "date": "2025-12-26",
-        "value": 0.79
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-03-18",
+        "value": 3.2
+      },
       {
         "date": "2026-03-17",
         "value": 3.22
@@ -961,10 +962,6 @@
       {
         "date": "2025-12-29",
         "value": 2.87
-      },
-      {
-        "date": "2025-12-26",
-        "value": 2.86
       }
     ],
     "wti_daily": [
@@ -1103,6 +1100,10 @@
       {
         "date": "2026-01-27",
         "value": 62.04
+      },
+      {
+        "date": "2026-01-26",
+        "value": 60.46
       }
     ],
     "brent_daily": [
@@ -1301,10 +1302,14 @@
         "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 19 12:55 UTC",
+      "updated": "Mar 20 03:56 UTC",
       "sessions": 11
     },
     "mortgage30": [
+      {
+        "date": "2026-03-19",
+        "value": 6.22
+      },
       {
         "date": "2026-03-12",
         "value": 6.11
@@ -1324,13 +1329,13 @@
       {
         "date": "2026-02-12",
         "value": 6.09
-      },
-      {
-        "date": "2026-02-05",
-        "value": 6.11
       }
     ],
     "mortgage15": [
+      {
+        "date": "2026-03-19",
+        "value": 5.54
+      },
       {
         "date": "2026-03-12",
         "value": 5.5
@@ -1350,10 +1355,6 @@
       {
         "date": "2026-02-12",
         "value": 5.44
-      },
-      {
-        "date": "2026-02-05",
-        "value": 5.5
       }
     ],
     "icsa": [
