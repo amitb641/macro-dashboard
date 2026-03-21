@@ -9,7 +9,7 @@
 <script>
 (function(){
 "use strict";
-function pC(c){if(!c)return"rgba(74,114,232,0.75)";if(typeof c==="string"&&(c.startsWith("rgba")||c.startsWith("rgb")||c.startsWith("#")))return c;return"#4a72e8";}
+function pC(c){if(!c)return"rgba(26,86,219,0.75)";if(typeof c==="string"&&(c.startsWith("rgba")||c.startsWith("rgb")||c.startsWith("#")))return c;return"#1A56DB";}
 function aC(i){return["#1A56DB","#0D7A4A","#C0392B","#B45309","#6D28D9","#0E7490","#D97706","#DC2626","#2563EB","#059669"][i%10];}
 
 // Nice round tick values — avoids 10000000.2% style garbage
@@ -120,7 +120,7 @@ class MC{
     const tw=items.reduce((a,ds)=>a+ctx.measureText(ds.label).width+18,0);
     let lx=(d.x0+d.iw/2)-Math.min(tw,d.iw)/2,ly=8;
     items.forEach(ds=>{
-      let c=ds.borderColor||ds.backgroundColor||"#4a72e8";
+      let c=ds.borderColor||ds.backgroundColor||"#1A56DB";
       if(Array.isArray(c))c=c[0];
       ctx.fillStyle=pC(c);ctx.fillRect(lx,ly,10,7);
       ctx.fillStyle="#334E68";ctx.fillText(ds.label,lx+13,ly+7);
@@ -312,7 +312,7 @@ class MC{
     tks.forEach(v=>{
       const xp=pL+iw*((v-r.min)/(r.max-r.min));
       if(!isFinite(xp))return;
-      ctx.strokeStyle="#dde2ee";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xp,pT);ctx.lineTo(xp,pT+ih);ctx.stroke();
+      ctx.strokeStyle="#E2E8F0";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xp,pT);ctx.lineTo(xp,pT+ih);ctx.stroke();
       ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
       ctx.fillText(this._fmt(v,sc.x?.ticks?.callback||null),xp,pT+ih+14);
     });
@@ -554,10 +554,10 @@ body{overflow-x:hidden}
   50%{opacity:.45;transform:scale(1.35)}
 }
 .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;
-  background:#1a9e4a;margin-right:5px;vertical-align:middle;
+  background:#0D7A4A;margin-right:5px;vertical-align:middle;
   animation:pulse-dot 1.8s ease-in-out infinite}
-.live-dot.stale{background:#c07010}
-.live-dot.error{background:#d03030;animation:none}
+.live-dot.stale{background:#B45309}
+.live-dot.error{background:#C0392B;animation:none}
 
 /* Ticker bar */
 .live-ticker{
@@ -582,8 +582,8 @@ body{overflow-x:hidden}
 .lt-name{color:var(--muted);font-size:9.5px}
 .lt-val{font-weight:600;font-size:11px;color:var(--text)}
 .lt-chg{font-size:9px;padding:1px 4px;border-radius:3px;font-weight:500}
-.lt-chg.up{color:#0D7A4A;background:#1a9e4a14}
-.lt-chg.dn{color:#C0392B;background:#d0303014}
+.lt-chg.up{color:#0D7A4A;background:#0D7A4A14}
+.lt-chg.dn{color:#C0392B;background:#C0392B14}
 .lt-chg.flat{color:var(--muted)}
 .live-ts{font-size:8.5px;color:var(--muted);margin-left:auto;padding-left:12px;
   white-space:nowrap;flex-shrink:0}
@@ -595,7 +595,7 @@ body{overflow-x:hidden}
   border-radius:3px;padding:1px 6px;color:var(--muted);
   margin-left:6px;vertical-align:middle;
 }
-.asof-badge.live{border-color:#0D7A4A55;color:#0D7A4A;background:#1a9e4a0e}
+.asof-badge.live{border-color:#0D7A4A55;color:#0D7A4A;background:#0D7A4A0e}
 .asof-badge.stale{border-color:#B4530955;color:#B45309}
 
 /* Skeleton shimmer while loading */
@@ -610,7 +610,7 @@ body{overflow-x:hidden}
 .kpi-live-badge{
   display:inline-block;font-size:7.5px;letter-spacing:.08em;
   border-radius:3px;padding:1px 5px;margin-top:3px;
-  background:#1a9e4a12;color:#0D7A4A;border:1px solid #1a9e4a30;
+  background:#0D7A4A12;color:#0D7A4A;border:1px solid #0D7A4A30;
 }
 
 
@@ -949,7 +949,7 @@ div[style*="background:#fff8e6"] {
 }
 
 /* ── UNEMPLOYMENT CALLOUT ── */
-div[style*="background:#fff8e6;border:1px solid #c0701040"] {
+div[style*="background:#fff8e6;border:1px solid #B4530940"] {
   background: #FFFBEB !important;
   border: 1px solid rgba(180,83,9,.2) !important;
   border-left: 4px solid var(--amber) !important;
@@ -1570,9 +1570,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Unemployment by Sector — Monthly MoM Change (pp)</div>
       <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Feb'26 vs Jan'26 · sorted by change</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>Feb'26 rate rose</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>Feb'26 rate fell</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>Jan'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>Feb'26 rate rose</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>Feb'26 rate fell</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>Jan'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
@@ -1591,9 +1591,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Unemployment by Sector — 2025 vs 2024 (%)</div>
       <div class="panel-sub">2025 rate vs 2024 rate · BLS CPS · seasonally adjusted</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>2025 improved (lower)</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>2025 worsened (higher)</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>2024</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>2025 improved (lower)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>2025 worsened (higher)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>2024</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS) Table A-14. Seasonally adjusted, 2025 vs 2024 rates by industry sector.</p>
@@ -1651,9 +1651,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">CPI by Category — MoM Change (Feb'26 vs Jan'26)</div>
       <div class="panel-sub">YoY % by category · Feb'26 vs Jan'26 · sorted by Feb'26 rate · BLS CPI-U</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>Feb'26 accelerating</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>Feb'26 cooling</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>Jan'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>Feb'26 accelerating</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>Feb'26 cooling</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>Jan'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-cpi-cat-mom"></canvas></div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Monthly YoY % change by category. Feb'26 vs Jan'26 comparison.</p>
@@ -1716,9 +1716,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Avg Hourly Earnings by Sector — 2025 vs 2024</div>
       <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>2025 higher</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>2025 lower</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>2024</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>2025 higher</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>2025 lower</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>2024</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal YoY % change by sector.</p>
@@ -1755,9 +1755,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
       <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>Feb'26 improved vs Jan</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>Feb'26 worsened vs Jan</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>Jan'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>Feb'26 improved vs Jan</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>Feb'26 worsened vs Jan</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>Jan'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
       <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
@@ -1768,7 +1768,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
-      <div class="panel-sub">Net job gains/losses · BLS CES · seasonally adjusted · <span style="color:#4a72e8;font-style:italic">2026F base case +1,000K · range +800K–+1,200K · tariff-adjusted · pre-tariff consensus was +1,500K</span></div>
+      <div class="panel-sub">Net job gains/losses · BLS CES · seasonally adjusted · <span style="color:#1A56DB;font-style:italic">2026F base case +1,000K · range +800K–+1,200K · tariff-adjusted · pre-tariff consensus was +1,500K</span></div>
       <div class="ch260"><canvas id="c-jobs-total"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES), seasonally adjusted. Annual net job gains/losses.</p>
     </div>
@@ -1776,9 +1776,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Job Gains by Sector — 2025 vs 2024 (thousands)</div>
       <div class="panel-sub">Annual net change in payroll employment · BLS CES · → indicates sub-sector</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>2025 higher</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>2025 lower</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>2024</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>2025 higher</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>2025 lower</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>2024</span>
       </div>
       <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES). Annual net change in payroll employment by sector.</p>
@@ -1824,9 +1824,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
       <div class="panel-sub">Real PCE spending growth by category · sorted by Jan'26 rate · BEA</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>Jan'26 accelerating</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>Jan'26 cooling</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>Dec'25</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#C0392Bbb;display:inline-block"></span>Jan'26 accelerating</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#0D7A4Acc;display:inline-block"></span>Jan'26 cooling</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#6D28D9bb;display:inline-block"></span>Dec'25</span>
       </div>
       <div class="ch320"><canvas id="c-pce-cat-mom"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
@@ -2092,11 +2092,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Senior Loan Officer Survey (SLOOS) — Tightening Standards %</div>
       <div class="panel-sub">Net % of banks tightening consumer lending standards · Fed · NY Fed Recession Prob. overlay</div>
-      <div id="sloos-corr-badge" style="margin-bottom:6px;font-size:11px;color:#3d4f6e;font-weight:500"></div>
+      <div id="sloos-corr-badge" style="margin-bottom:6px;font-size:11px;color:#334E68;font-weight:500"></div>
       <div class="ch260"><canvas id="c-credit-sloos"></canvas></div>
       <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
       <details style="margin-top:6px;font-size:10px;color:#7a90aa">
-        <summary style="cursor:pointer;font-weight:600;color:#5a6a8a">📐 Correlation methodology</summary>
+        <summary style="cursor:pointer;font-weight:600;color:#334E68">📐 Correlation methodology</summary>
         <div id="sloos-corr-detail" style="margin-top:6px;line-height:1.6"></div>
       </details>
     </div>
@@ -2219,7 +2219,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#6D28D9;border-radius:2px"></span><span style="font-size:10.5px;color:#6D28D9;font-weight:600">10Y Yield</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#1A56DB;border-radius:2px;border-top:2px dashed #1A56DB"></span><span style="font-size:10.5px;color:#1A56DB;font-weight:600">2Y Yield</span></div>
-      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#dc2626;border-radius:2px"></span><span style="font-size:10.5px;color:#dc2626;font-weight:600">Card 90+ DPD %</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#C0392B;border-radius:2px"></span><span style="font-size:10.5px;color:#C0392B;font-weight:600">Card 90+ DPD %</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:10px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:2px"></span><span style="font-size:10.5px;color:#94A3B8">Inversion zone</span></div>
     </div>
     <div style="height:340px"><canvas id="c-treasury"></canvas></div>
@@ -2318,7 +2318,7 @@ const U_SECTORS = [
   {s:"Information / Tech",          color:"#20C997", u21:3.9, u22:2.2, u23:2.4, u24:3.0, u25:3.4},
   {s:"Manufacturing",               color:"#FFB84C", u21:4.8, u22:3.0, u23:3.0, u24:3.0, u25:3.2},
   {s:"E-Commerce & Fulfillment",    color:"#48DBF0", u21:5.4, u22:3.8, u23:3.2, u24:2.8, u25:3.0},
-  {s:"Prof. & Biz Services",        color:"#6d40cc", u21:4.2, u22:2.6, u23:2.7, u24:2.9, u25:3.1},
+  {s:"Prof. & Biz Services",        color:"#6D28D9", u21:4.2, u22:2.6, u23:2.7, u24:2.9, u25:3.1},
   {s:"Wholesale Trade",             color:"#94D82D", u21:3.8, u22:2.5, u23:2.6, u24:2.8, u25:3.0},
   {s:"Healthcare & Education",      color:"#FF4757", u21:3.5, u22:2.3, u23:2.2, u24:2.4, u25:2.5},
   {s:"Financial Activities",        color:"#00B894", u21:2.6, u22:1.8, u23:1.9, u24:2.1, u25:2.3},
@@ -2329,8 +2329,8 @@ const U_SECTORS = [
 const CPI_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[3.4, 1.6, 2.5, 2.0, 3.3, 3.3, 2.5, 4.1, -0.0, 2.8, 1.4, 3.1, 1.8, 1.5, 0.7, 0.6, 2.1, 2.1, 2.0, 2.3, 1.3, 7.2, 6.4, 3.3, 2.9, 2.7], "avg3m":2.5};
 const CPI_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],headline:[2.4,2.3,2.5,2.6,2.8,2.5,2.4,2.6,2.7,2.7,2.4,2.4],core:[2.8,2.7,2.7,2.6,2.6,2.5,2.5,2.5,2.5,2.5,2.5,2.5]};
 const CPI_CATS = [
-  {cat:"Shelter / Housing",     color:"#6d40cc", c21:4.1,  c22:7.9,  c23:6.5,  c24:4.9,  c25:4.6},
-  {cat:"Food Away from Home",   color:"#1a9e4a", c21:4.4,  c22:7.7,  c23:5.2,  c24:4.1,  c25:3.6},
+  {cat:"Shelter / Housing",     color:"#6D28D9", c21:4.1,  c22:7.9,  c23:6.5,  c24:4.9,  c25:4.6},
+  {cat:"Food Away from Home",   color:"#0D7A4A", c21:4.4,  c22:7.7,  c23:5.2,  c24:4.1,  c25:3.6},
   {cat:"Transportation Svcs",   color:"#CC5DE8", c21:4.2,  c22:14.9, c23:9.7,  c24:7.7,  c25:6.1},
   {cat:"Medical Care Svcs",     color:"#FF6B9D", c21:2.4,  c22:5.0,  c23:3.9,  c24:3.3,  c25:3.1},
   {cat:"Core CPI (ex F&E)",     color:"#F76707", c21:4.1,  c22:5.7,  c23:4.0,  c24:3.2,  c25:2.8},
@@ -2341,8 +2341,8 @@ const CPI_CATS = [
   {cat:"Used Cars & Trucks",    color:"#00C9A7", c21:37.3, c22:3.0,  c23:-5.0, c24:1.6,  c25:0.8},
 ];
 const CPI_CAT_MOM = [
-  {cat:"Shelter / Housing",     jan:4.5, feb:4.3, color:"#6d40cc"},
-  {cat:"Food Away from Home",   jan:3.5, feb:3.4, color:"#1a9e4a"},
+  {cat:"Shelter / Housing",     jan:4.5, feb:4.3, color:"#6D28D9"},
+  {cat:"Food Away from Home",   jan:3.5, feb:3.4, color:"#0D7A4A"},
   {cat:"Transportation Svcs",   jan:6.2, feb:5.8, color:"#CC5DE8"},
   {cat:"Medical Care Svcs",     jan:3.0, feb:3.0, color:"#FF6B9D"},
   {cat:"Core CPI (ex F&E)",     jan:2.5, feb:2.5, color:"#F76707"},
@@ -2362,7 +2362,7 @@ const WAGE_SECTORS = [
   {s:"Investment Banking",         color:"#00B894", w21:6.2, w22:8.1, w23:5.4, w24:5.8, w25:5.2, hr24:52.4},
   {s:"Commercial Banking",         color:"#00CEC9", w21:4.2, w22:5.9, w23:4.8, w24:4.9, w25:4.2, hr24:44.1},
   {s:"Pharmaceuticals",            color:"#FFA502", w21:5.1, w22:4.8, w23:4.2, w24:4.4, w25:4.0, hr24:43.8},
-  {s:"Prof. & Biz Svcs",           color:"#6d40cc", w21:4.8, w22:5.8, w23:4.5, w24:4.3, w25:3.8, hr24:41.8},
+  {s:"Prof. & Biz Svcs",           color:"#6D28D9", w21:4.8, w22:5.8, w23:4.5, w24:4.3, w25:3.8, hr24:41.8},
   {s:"Aerospace & Defense",        color:"#F0932B", w21:3.4, w22:4.8, w23:5.2, w24:5.6, w25:4.8, hr24:40.2},
   {s:"Construction",               color:"#E8590C", w21:3.2, w22:6.2, w23:4.8, w24:4.4, w25:3.9, hr24:37.5},
   {s:"E-Commerce (Warehouse)",     color:"#48DBF0", w21:8.2, w22:6.4, w23:4.1, w24:3.8, w25:3.4, hr24:36.2},
@@ -2404,7 +2404,7 @@ const JOBS_SECTORS = [
   {s:"Leisure & Hospitality",     color:"#FF9F43", j21:1566, j22:1313, j23:530,  j24:266,  j25:90},
   {s:"→ Restaurants & Bars",      color:"#FF6B6B", j21:1210, j22:1000, j23:410,  j24:180,  j25:60},
   {s:"→ Hotels & Lodging",        color:"#74B9FF", j21:188,  j22:244,  j23:97,   j24:55,   j25:20},
-  {s:"Prof. & Biz Services",      color:"#6d40cc", j21:1009, j22:783,  j23:285,  j24:262,  j25:-80},
+  {s:"Prof. & Biz Services",      color:"#6D28D9", j21:1009, j22:783,  j23:285,  j24:262,  j25:-80},
   {s:"Government",                color:"#F76707", j21:28,   j22:354,  j23:499,  j24:277,  j25:-130},
   {s:"→ Federal Government",      color:"#E84393", j21:-28,  j22:52,   j23:68,   j24:30,   j25:-200},
   {s:"→ State & Local",           color:"#F368E0", j21:56,   j22:302,  j23:431,  j24:247,  j25:70},
@@ -2487,16 +2487,16 @@ const FC_SECTORS = [
 // CHART GLOBALS
 // ════════════════════════════════════════════════════
 // Chart.defaults set in _initDashboard after CDN loads
-const TT = {backgroundColor:"#ffffff",borderColor:"#dde2ee",borderWidth:1,padding:10,titleColor:"#1a2035",bodyColor:"#3d4f6e"};
+const TT = {backgroundColor:"#ffffff",borderColor:"#E2E8F0",borderWidth:1,padding:10,titleColor:"#1a2035",bodyColor:"#334E68"};
 function pct(v){ return (v >= 0 ? "+" : "") + v + "%" }
-function colorVal(v, hi="#1a9e4a", lo="#d03030"){ return v < 0 ? lo : hi }
+function colorVal(v, hi="#0D7A4A", lo="#C0392B"){ return v < 0 ? lo : hi }
 let miniCharts = {};
 let builtTabs = {"status": false};
 
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#4a72e8", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#d03030", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#d03030", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1a9e4a", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#4a72e8", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#c07010", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#6d40cc", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#c07010", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#B45309", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#1A56DB", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#C0392B", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#C0392B", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#0D7A4A", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#1A56DB", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#1A56DB", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#B45309", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#6D28D9", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#B45309", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
   const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
@@ -2611,13 +2611,13 @@ function buildSectorCards(){
     const compYr=dispYr===2025?2024:dispYr===2024?2023:2022;
     const gDisp=s.y[dispYr],gComp=s.y[compYr];
     const delta=(gDisp-gComp).toFixed(1);
-    const gc=gDisp>=0?"#1a9e4a":"#d03030";
+    const gc=gDisp>=0?"#0D7A4A":"#C0392B";
     const dCl=parseFloat(delta)>=0?"up":"dn";
     const dAr=parseFloat(delta)>=0?"▲":"▼";
     const dispLabel=dispYr===2025?"2025 est.":dispYr===2024?"2024 act.":"2023 act.";
     const compLabel="'"+String(compYr).slice(2);
     const yoyCells=[2022,2023,2024,2025].map(yr=>{
-      const v=s.y[yr],vc=v>=0?"#1a9e4a":"#d03030",act=yr===dispYr;
+      const v=s.y[yr],vc=v>=0?"#0D7A4A":"#C0392B",act=yr===dispYr;
       return `<div class="yoy-cell" style="${act?"background:"+s.color+"22;border-color:"+s.color+"66":""}"><div class="yoy-yr" style="${act?"color:"+s.color+";font-weight:600":""}">${yr}</div><div class="yoy-v" style="color:${vc};${act?"font-weight:600":""}">${pct(v)}</div></div>`;
     }).join("");
     const cid="mc_"+s.short.replace(/\W/g,"_");
@@ -2644,10 +2644,10 @@ function buildSectorCards(){
     requestAnimationFrame(()=>{
     miniCharts[cid]=new Chart(ctx,{type:"bar",data:{
       labels:["'22","'23","'24","'25"],
-      datasets:[{data:vals,backgroundColor:vals.map((v,i)=>i===hiIdx?s.color+"ff":v>=0?s.color+"55":"#d03030aa"),borderRadius:3,borderSkipped:false}]
+      datasets:[{data:vals,backgroundColor:vals.map((v,i)=>i===hiIdx?s.color+"ff":v>=0?s.color+"55":"#C0392Baa"),borderRadius:3,borderSkipped:false}]
     },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${pct(c.raw)} real growth`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:9}},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",font:{size:9},callback:v=>v+"%"},border:{display:false}}}}});
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9}},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",font:{size:9},callback:v=>v+"%"},border:{display:false}}}}});
     });
   });
 }
@@ -2661,7 +2661,7 @@ function buildGDPTable(){
     const cells = vals.map((v,i)=>{
       const neg=v.startsWith("−")||v.startsWith("-");
       const fc=i>=4;
-      const col=neg?"#d03030":fc?"#2563eb":parseFloat(v)>3?"#1a9e4a":"#3d4f6e";
+      const col=neg?"#C0392B":fc?"#1A56DB":parseFloat(v)>3?"#0D7A4A":"#334E68";
       return `<td style="color:${col};${fc?"font-style:italic":""}">${v}</td>`;
     }).join("");
     // Trend = compare 2025E (index 4) vs 2024 (index 3)
@@ -2702,12 +2702,12 @@ function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb
   var deflator = (nomGrowth - realGrowth).toFixed(1);
   var cagr = ((Math.pow(realNow/r[0], 1/(L-1))-1)*100).toFixed(1);
   document.getElementById("gdp-metrics").innerHTML = [
-    {lbl:"Real GDP "+yr, val:"$"+realNow+"T", sub:"Chained 2017 dollars · BEA", col:"#1a9e4a"},
-    {lbl:"Real Growth "+yr, val:"+"+realGrowth+"%", sub:sign+delta+"pp vs "+yrP+" (+"+realGrowthPrior+"%) · advance est.", col:parseFloat(realGrowth)>=2?"#1a9e4a":"#c07010"},
-    {lbl:"Nominal GDP "+yr, val:"$"+nomNow+"T", sub:"Nominal growth: +"+nomGrowth+"% YoY", col:"#4a72e8"},
-    {lbl:"2026F Consensus", val:"+1.5–2.2%", sub:"GS: 1.5% · JPM: 1.9% · MS: 2.0% · tariff drag risk", col:"#6d40cc"},
-    {lbl:"GDP Deflator "+yr, val:"+"+deflator+"%", sub:"Nominal − real = implied price level change", col:"#d03030"},
-    {lbl:(L-1)+"yr Real CAGR", val:"+"+cagr+"%", sub:"Since 2000 · long-run trend capacity", col:"#4a72e8"},
+    {lbl:"Real GDP "+yr, val:"$"+realNow+"T", sub:"Chained 2017 dollars · BEA", col:"#0D7A4A"},
+    {lbl:"Real Growth "+yr, val:"+"+realGrowth+"%", sub:sign+delta+"pp vs "+yrP+" (+"+realGrowthPrior+"%) · advance est.", col:parseFloat(realGrowth)>=2?"#0D7A4A":"#B45309"},
+    {lbl:"Nominal GDP "+yr, val:"$"+nomNow+"T", sub:"Nominal growth: +"+nomGrowth+"% YoY", col:"#1A56DB"},
+    {lbl:"2026F Consensus", val:"+1.5–2.2%", sub:"GS: 1.5% · JPM: 1.9% · MS: 2.0% · tariff drag risk", col:"#6D28D9"},
+    {lbl:"GDP Deflator "+yr, val:"+"+deflator+"%", sub:"Nominal − real = implied price level change", col:"#C0392B"},
+    {lbl:(L-1)+"yr Real CAGR", val:"+"+cagr+"%", sub:"Since 2000 · long-run trend capacity", col:"#1A56DB"},
   ].map(m=>_mTile(m)).join("");
 })();
 
@@ -2717,12 +2717,12 @@ function buildUnempTab(){
   if(builtTabs.unemp) return; builtTabs.unemp=1;
 
   document.getElementById("unemp-metrics").innerHTML = [
-    {lbl:"Unemp Rate Feb'26",     val:"4.4%",  sub:"MoM: +0.1pp vs Jan 4.3% · BLS",                   col:"#d03030"},
-    {lbl:"Full Year 2025",        val:"4.2%",  sub:"YoY: +0.2pp vs 4.0% in 2024",                     col:"#c07010"},
-    {lbl:"Monthly Avg 2025",      val:"4.2%",  sub:"vs 4.0% avg in 2024 · peaked 4.6% Nov'25",        col:"#c07010"},
-    {lbl:"Lowest Sector",         val:"1.8%",  sub:"Government (federal/state) · 2024",                col:"#1a9e4a"},
-    {lbl:"Highest Sector",        val:"4.6%",  sub:"Construction & leisure workers · 2024",             col:"#d03030"},
-    {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#6d40cc"},
+    {lbl:"Unemp Rate Feb'26",     val:"4.4%",  sub:"MoM: +0.1pp vs Jan 4.3% · BLS",                   col:"#C0392B"},
+    {lbl:"Full Year 2025",        val:"4.2%",  sub:"YoY: +0.2pp vs 4.0% in 2024",                     col:"#B45309"},
+    {lbl:"Monthly Avg 2025",      val:"4.2%",  sub:"vs 4.0% avg in 2024 · peaked 4.6% Nov'25",        col:"#B45309"},
+    {lbl:"Lowest Sector",         val:"1.8%",  sub:"Government (federal/state) · 2024",                col:"#0D7A4A"},
+    {lbl:"Highest Sector",        val:"4.6%",  sub:"Construction & leisure workers · 2024",             col:"#C0392B"},
+    {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Unemployment Sector MoM Chart — bar + dot ──
@@ -2731,15 +2731,15 @@ function buildUnempTab(){
   new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
     type:"bar",
     data:{labels:uMom.map(r=>r.s),datasets:[
-      {label:"Feb'26 Rate %",data:uMom.map(r=>r.feb),backgroundColor:uMom.map(r=>r.change>0?"#dc2626bb":"#16a34acc"),borderRadius:3},
+      {label:"Feb'26 Rate %",data:uMom.map(r=>r.feb),backgroundColor:uMom.map(r=>r.change>0?"#C0392Bbb":"#0D7A4Acc"),borderRadius:3},
       {label:"Jan'26 Rate %",data:uMom.map(r=>r.jan),
-       backgroundColor:"#8b7fc7bb",borderRadius:3},
+       backgroundColor:"#6D28D9bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"");}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   // ── Monthly Unemployment Rate Chart ──
@@ -2747,27 +2747,27 @@ function buildUnempTab(){
     type:"bar",
     data:{labels:U_MONTHLY.labels,datasets:[{
       label:"Unemployment Rate %",data:U_MONTHLY.data,
-      backgroundColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"rgba(208,48,48,.85)":"rgba(74,114,232,.7)"),
-      borderColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"#d03030":"#4a72e8"),
+      backgroundColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"rgba(192,57,43,.85)":"rgba(26,86,219,.7)"),
+      borderColor:U_MONTHLY.data.map((v,i)=>i===U_MONTHLY.data.length-1?"#C0392B":"#1A56DB"),
       borderWidth:1,borderRadius:4
     }]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
-      annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:Math.floor(Math.min(...U_MONTHLY.data)*2-1)/2,max:Math.ceil(Math.max(...U_MONTHLY.data)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      annotation:{annotations:{avgLine:{type:"line",yMin:4.0,yMax:4.0,borderColor:"#B45309",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"2024 Avg: 4.0%",position:"start",font:{size:9},color:"#B45309",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:Math.floor(Math.min(...U_MONTHLY.data)*2-1)/2,max:Math.ceil(Math.max(...U_MONTHLY.data)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-unemp-line").getContext("2d"),{
     type:"line",
     data:{labels:U_ANNUAL.labels,datasets:[{
       label:"Unemployment Rate",data:U_ANNUAL.data,
-      borderColor:"#c07010",backgroundColor:"#c0701018",borderWidth:2.5,
+      borderColor:"#B45309",backgroundColor:"#B4530918",borderWidth:2.5,
       pointRadius:5,pointHoverRadius:7,tension:0.35,fill:true
     }]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw}% unemployment`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{color:"#dde2ee"}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{color:"#E2E8F0"}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
   });
 
   const usorted = [...U_SECTORS].sort((a,b)=>b.u25-a.u25);
@@ -2775,21 +2775,21 @@ function buildUnempTab(){
     type:"bar",
     data:{labels:usorted.map(s=>s.s),datasets:[
       {label:"2025 Rate",data:usorted.map(s=>s.u25),
-       backgroundColor:usorted.map(s=>s.u25<=s.u24?"#16a34acc":"#dc2626bb"),borderRadius:4},
-      {label:"2024 Rate",data:usorted.map(s=>s.u24),backgroundColor:"#8b7fc7bb",borderRadius:4},
+       backgroundColor:usorted.map(s=>s.u25<=s.u24?"#0D7A4Acc":"#C0392Bbb"),borderRadius:4},
+      {label:"2024 Rate",data:usorted.map(s=>s.u24),backgroundColor:"#6D28D9bb",borderRadius:4},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   const hd=["Industry","2022","2023","2024","2025","Trend"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:${i?'right':'left'}">${x}</th>`).join("")}</tr></thead><tbody>`;
   [...U_SECTORS].sort((a,b)=>a.u25-b.u25).forEach(s=>{
     const trendStr = s.u25>s.u24?"↑ Rising":s.u25<s.u24?"↓ Falling":"→ Stable";
-    const uc25 = s.u25<2.5?"#1a9e4a":s.u25>4?"#d03030":"#c07010";
-    const uc24 = s.u24<2.5?"#1a9e4a":s.u24>4?"#d03030":"#c07010";
+    const uc25 = s.u25<2.5?"#0D7A4A":s.u25>4?"#C0392B":"#B45309";
+    const uc24 = s.u24<2.5?"#0D7A4A":s.u24>4?"#C0392B":"#B45309";
     h+=`<tr><td><span class="dot" style="background:${s.color}"></span>${s.s}</td>
       <td style="color:#7A8FA8">${s.u22}%</td><td style="color:#7A8FA8">${s.u23}%</td>
       <td style="color:${uc24}">${s.u24}%</td><td style="color:${uc25}">${s.u25}%</td>
@@ -2807,23 +2807,23 @@ function buildUnempTab(){
     new Chart(document.getElementById("c-claims-line").getContext("2d"),{
       type:"line",
       data:{labels:clLabels,datasets:[
-        {label:"Initial Claims (K)",data:clInitial,borderColor:"#7c3aed",backgroundColor:"#7c3aed22",
+        {label:"Initial Claims (K)",data:clInitial,borderColor:"#6D28D9",backgroundColor:"#6D28D922",
          borderWidth:1.5,pointRadius:0,tension:0.3,fill:true,yAxisID:"y"},
         {label:"Continued Claims (K)",data:clContinued,borderColor:"#e8590c",backgroundColor:"transparent",
          borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3],yAxisID:"y2",spanGaps:true},
       ]},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
-        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+        plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
           tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
         scales:{
-          x:{grid:{display:false},ticks:{color:"#5a6a8a",maxRotation:45,autoSkip:true,maxTicksLimit:24,
+          x:{grid:{display:false},ticks:{color:"#334E68",maxRotation:45,autoSkip:true,maxTicksLimit:24,
             includeBounds:true},border:{display:false},afterBuildTicks:function(axis){
               // Force the last tick to always be visible
               if(axis.ticks.length>0){const last=clLabels.length-1;
                 if(!axis.ticks.find(t=>t.value===last))axis.ticks.push({value:last});}
             }},
-          y:{position:"left",title:{display:true,text:"Initial Claims (thousands)",color:"#7c3aed"},grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
-          y2:{position:"right",title:{display:true,text:"Continued Claims (thousands)",color:"#e8590c"},grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}}
+          y:{position:"left",title:{display:true,text:"Initial Claims (thousands)",color:"#6D28D9"},grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
+          y2:{position:"right",title:{display:true,text:"Continued Claims (thousands)",color:"#e8590c"},grid:{display:false},ticks:{color:"#334E68"},border:{display:false}}
         }}
     });
   }
@@ -2839,25 +2839,25 @@ function buildCPITab(){
   const cpi3mAvg = CPI_ANNUAL.avg3m != null ? CPI_ANNUAL.avg3m : null;
   const cpiLatest = CPI_MONTHLY.headline[CPI_MONTHLY.headline.length-1];
   document.getElementById("cpi-metrics").innerHTML = [
-    {lbl:"CPI YoY Feb'26",        val:`+${cpiLatest}%`,  sub:`MoM: +0.2% · Core: 2.5% ex food & energy`, col:"#c07010"},
-    {lbl:"Full Year 2025",         val:"+2.9%",  sub:"YoY: −0.5pp vs +3.4% in 2024",                     col:"#c07010"},
-    {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg · vs +3.2%/mo in 2024", col:"#1a9e4a"},
-    {lbl:"Stickiest Category",     val:"Shelter +4.6%", sub:"Down from 4.9% in 2024 · still elevated",    col:"#4a72e8"},
-    {lbl:"Fastest Rising",         val:"Food +3.1%", sub:"Food at home · up from 1.1% in 2024 · tariffs", col:"#d03030"},
-    {lbl:"Peak → Now",             val:"Jun'22: 9.1%",sub:"Now ~2.8% · down 69% from peak",              col:"#6d40cc"},
+    {lbl:"CPI YoY Feb'26",        val:`+${cpiLatest}%`,  sub:`MoM: +0.2% · Core: 2.5% ex food & energy`, col:"#B45309"},
+    {lbl:"Full Year 2025",         val:"+2.9%",  sub:"YoY: −0.5pp vs +3.4% in 2024",                     col:"#B45309"},
+    {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg · vs +3.2%/mo in 2024", col:"#0D7A4A"},
+    {lbl:"Stickiest Category",     val:"Shelter +4.6%", sub:"Down from 4.9% in 2024 · still elevated",    col:"#1A56DB"},
+    {lbl:"Fastest Rising",         val:"Food +3.1%", sub:"Food at home · up from 1.1% in 2024 · tariffs", col:"#C0392B"},
+    {lbl:"Peak → Now",             val:"Jun'22: 9.1%",sub:"Now ~2.8% · down 69% from peak",              col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   // ── CPI MoM Chart ──
   new Chart(document.getElementById("c-cpi-mom").getContext("2d"),{
     type:"line",
     data:{labels:CPI_MONTHLY.labels,datasets:[
-      {label:"Headline CPI YoY %",data:CPI_MONTHLY.headline,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
-      {label:"Core CPI YoY %",data:CPI_MONTHLY.core,borderColor:"#4a72e8",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+      {label:"Headline CPI YoY %",data:CPI_MONTHLY.headline,borderColor:"#C0392B",backgroundColor:"#C0392B15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Core CPI YoY %",data:CPI_MONTHLY.core,borderColor:"#1A56DB",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
-      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#0D7A4A",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#0D7A4A",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   // ── CPI Category MoM Chart — bar + dot ──
@@ -2865,48 +2865,48 @@ function buildCPITab(){
   new Chart(document.getElementById("c-cpi-cat-mom").getContext("2d"),{
     type:"bar",
     data:{labels:cpiMom.map(r=>r.cat),datasets:[
-      {label:"Feb'26 YoY %",data:cpiMom.map(r=>r.feb),backgroundColor:cpiMom.map(r=>r.feb>r.jan?"#dc2626bb":"#16a34acc"),borderRadius:3},
+      {label:"Feb'26 YoY %",data:cpiMom.map(r=>r.feb),backgroundColor:cpiMom.map(r=>r.feb>r.jan?"#C0392Bbb":"#0D7A4Acc"),borderRadius:3},
       {label:"Jan'26 YoY %",data:cpiMom.map(r=>r.jan),
-       backgroundColor:"#8b7fc7bb",borderRadius:3},
+       backgroundColor:"#6D28D9bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=cpiMom[c.dataIndex];var ch=(d.feb-d.jan).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-cpi-bar").getContext("2d"),{
     type:"bar",
     data:{labels:CPI_ANNUAL.labels,datasets:[
       {label:"CPI YoY %",data:CPI_ANNUAL.data,
-       backgroundColor:CPI_ANNUAL.data.map(v=>v>5?"#e06060bb":v>3?"#e0a040bb":"#4a72e8cc"),
+       backgroundColor:CPI_ANNUAL.data.map(v=>v>5?"#C0392Bbb":v>3?"#e0a040bb":"#1A56DBcc"),
        borderRadius:4}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
         tooltip:{...TT,callbacks:{label:c=>`CPI: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:11,border:{display:false}}}}
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:11,border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-cpi-cat").getContext("2d"),{
     type:"bar",
     data:{labels:CPI_CATS.map(c=>c.cat),datasets:[
-      {label:"2022 (peak)",data:CPI_CATS.map(c=>c.c22),backgroundColor:"#d03030aa",borderRadius:3},
-      {label:"2024",       data:CPI_CATS.map(c=>c.c24),backgroundColor:"#c07010aa",borderRadius:3},
-      {label:"2025",       data:CPI_CATS.map(c=>c.c25),backgroundColor:"#4a72e8cc",borderRadius:3},
+      {label:"2022 (peak)",data:CPI_CATS.map(c=>c.c22),backgroundColor:"#C0392Baa",borderRadius:3},
+      {label:"2024",       data:CPI_CATS.map(c=>c.c24),backgroundColor:"#B45309aa",borderRadius:3},
+      {label:"2025",       data:CPI_CATS.map(c=>c.c25),backgroundColor:"#1A56DBcc",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   const hd=["Category","2022","2023","2024","2025","Trend"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:${i?'right':'left'}">${x}</th>`).join("")}</tr></thead><tbody>`;
   CPI_CATS.forEach(c=>{
-    const col=v=>v<0?"color:#2563eb":v>5?"color:#C0392B":v>3?"color:#B45309":"color:#7A8FA8";
+    const col=v=>v<0?"color:#1A56DB":v>5?"color:#C0392B":v>3?"color:#B45309":"color:#7A8FA8";
     const trendStr=c.c25<c.c24?"↓ Easing":c.c25>c.c24?"↑ Rising":"→ Stable";
     h+=`<tr><td><span class="dot" style="background:${c.color}"></span>${c.cat}</td>
       ${[c.c22,c.c23,c.c24,c.c25].map(v=>`<td style="${col(v)}">${v>=0?"+":""}${v}%</td>`).join("")}
@@ -2928,37 +2928,37 @@ function buildWagesTab(){
   const tdspSub = tdspKpi ? tdspKpi.sub : "% of disposable income";
 
   document.getElementById("wage-metrics").innerHTML = [
-    {lbl:"Wage Growth Feb'26",     val:"+3.7%",  sub:"MoM: AHE $37.32/hr · BLS nonfarm",                col:"#4a72e8"},
-    {lbl:"Full Year 2025",         val:"+3.9%",  sub:"YoY: −0.4pp vs +4.3% in 2024",                    col:"#c07010"},
-    {lbl:"Monthly Avg 2025",       val:"+3.8%",  sub:"vs +4.1%/mo in 2024 · normalizing",               col:"#c07010"},
-    {lbl:"Top Sector",             val:"Leisure", sub:"+5.2% YoY — fastest growing · 2025",              col:"#1a9e4a"},
-    {lbl:"Real Wages 2025",        val:"+1.2%",  sub:"CPI-adj · vs +0.6% long-term avg",                col:"#1a9e4a"},
-    {lbl:"Peak → Now",             val:"2022: +5.1%",sub:"Now +3.7% · converging to ~3.5% LT avg",     col:"#6d40cc"},
+    {lbl:"Wage Growth Feb'26",     val:"+3.7%",  sub:"MoM: AHE $37.32/hr · BLS nonfarm",                col:"#1A56DB"},
+    {lbl:"Full Year 2025",         val:"+3.9%",  sub:"YoY: −0.4pp vs +4.3% in 2024",                    col:"#B45309"},
+    {lbl:"Monthly Avg 2025",       val:"+3.8%",  sub:"vs +4.1%/mo in 2024 · normalizing",               col:"#B45309"},
+    {lbl:"Top Sector",             val:"Leisure", sub:"+5.2% YoY — fastest growing · 2025",              col:"#0D7A4A"},
+    {lbl:"Real Wages 2025",        val:"+1.2%",  sub:"CPI-adj · vs +0.6% long-term avg",                col:"#0D7A4A"},
+    {lbl:"Peak → Now",             val:"2022: +5.1%",sub:"Now +3.7% · converging to ~3.5% LT avg",     col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Wages MoM Chart ──
   new Chart(document.getElementById("c-wage-mom").getContext("2d"),{
     type:"line",
     data:{labels:WAGE_MONTHLY.labels,datasets:[
-      {label:"Nominal AHE YoY %",data:WAGE_MONTHLY.nominal,borderColor:"#1a9e4a",backgroundColor:"#1a9e4a15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
-      {label:"Real (CPI-adj) YoY %",data:WAGE_MONTHLY.real,borderColor:"#2563eb",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+      {label:"Nominal AHE YoY %",data:WAGE_MONTHLY.nominal,borderColor:"#0D7A4A",backgroundColor:"#0D7A4A15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Real (CPI-adj) YoY %",data:WAGE_MONTHLY.real,borderColor:"#1A56DB",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
-      annotation:{annotations:{avgLine:{type:"line",yMin:3.0,yMax:3.0,borderColor:"#c07010",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"Pre-pandemic ~3% norm",position:"start",font:{size:9},color:"#c07010",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:Math.floor(Math.min(...WAGE_MONTHLY.nominal,...WAGE_MONTHLY.real)*2-1)/2,max:Math.ceil(Math.max(...WAGE_MONTHLY.nominal,...WAGE_MONTHLY.real)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      annotation:{annotations:{avgLine:{type:"line",yMin:3.0,yMax:3.0,borderColor:"#B45309",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"Pre-pandemic ~3% norm",position:"start",font:{size:9},color:"#B45309",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:Math.floor(Math.min(...WAGE_MONTHLY.nominal,...WAGE_MONTHLY.real)*2-1)/2,max:Math.ceil(Math.max(...WAGE_MONTHLY.nominal,...WAGE_MONTHLY.real)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-wage-line").getContext("2d"),{
     type:"line",
     data:{labels:WAGE_ANNUAL.labels,datasets:[
-      {label:"Nominal",data:WAGE_ANNUAL.nominal,borderColor:"#1a9e4a",backgroundColor:"#1a9e4a18",borderWidth:2.5,pointRadius:5,tension:0.3,fill:false},
-      {label:"Real (inflation-adj)",data:WAGE_ANNUAL.real,borderColor:"#2563eb",backgroundColor:"#4DABF718",borderWidth:2,pointRadius:5,tension:0.3,fill:false,borderDash:[5,4]},
+      {label:"Nominal",data:WAGE_ANNUAL.nominal,borderColor:"#0D7A4A",backgroundColor:"#0D7A4A18",borderWidth:2.5,pointRadius:5,tension:0.3,fill:false},
+      {label:"Real (inflation-adj)",data:WAGE_ANNUAL.real,borderColor:"#1A56DB",backgroundColor:"#4DABF718",borderWidth:2,pointRadius:5,tension:0.3,fill:false,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${pct(c.raw)}`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{color:"#dde2ee"}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${pct(c.raw)}`}}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{color:"#E2E8F0"}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
 
   const wsrt=[...WAGE_SECTORS].sort((a,b)=>b.w25-a.w25);
@@ -2966,14 +2966,14 @@ function buildWagesTab(){
     type:"bar",
     data:{labels:wsrt.map(s=>s.s),datasets:[
       {label:"2025 Wage %",data:wsrt.map(s=>s.w25),
-       backgroundColor:wsrt.map(s=>s.w25>=s.w24?"#16a34acc":"#dc2626bb"),borderRadius:4},
+       backgroundColor:wsrt.map(s=>s.w25>=s.w24?"#0D7A4Acc":"#C0392Bbb"),borderRadius:4},
       {label:"2024 Wage %",data:wsrt.map(s=>s.w24),
-       backgroundColor:"#8b7fc7bb",borderRadius:3},
+       backgroundColor:"#6D28D9bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: +${v}%`}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   const hd=["Sector","2022","2023","2024","2025","Trend","$/hr '24"];
@@ -2986,9 +2986,9 @@ function buildWagesTab(){
       <td style="color:#0D7A4A">+${s.w24}%</td>
       <td style="${w25c}">+${s.w25||"~3.5"}%</td>
       <td>${trendPillPos(s.w25>s.w24?"↑ Rising":s.w25<s.w24?"↓ Falling":"→ Stable")}</td>
-      <td style="color:#2563eb">$${s.hr24}</td></tr>`;
+      <td style="color:#1A56DB">$${s.hr24}</td></tr>`;
   });
-  h+=`<tr><td>All Private</td><td style="color:#C0392B">+5.1%</td><td>+4.3%</td><td style="color:#0D7A4A">+3.9%</td><td style="color:#B45309">+3.3%</td><td>${trendPillPos("↓ Falling")}</td><td style="color:#2563eb">$37.17</td></tr>`;
+  h+=`<tr><td>All Private</td><td style="color:#C0392B">+5.1%</td><td>+4.3%</td><td style="color:#0D7A4A">+3.9%</td><td style="color:#B45309">+3.3%</td><td>${trendPillPos("↓ Falling")}</td><td style="color:#1A56DB">$37.17</td></tr>`;
   document.getElementById("wage-tbl").innerHTML=h+"</tbody>";
 
 }
@@ -3000,27 +3000,27 @@ function buildJobsTab(){
   if(builtTabs.jobs) return; builtTabs.jobs=1;
 
   document.getElementById("jobs-metrics").innerHTML = [
-    {lbl:"Feb'26 Jobs",         val:"-92K",   sub:"MoM: −235K vs Jan +143K · BLS nonfarm",              col:"#d03030"},
-    {lbl:"Full Year 2025",      val:"+181K",  sub:"YoY: −91% vs +2.0M in 2024 (post-revision)",        col:"#d03030"},
-    {lbl:"Monthly Avg 2025",    val:"~15K",   sub:"vs 167K/mo in 2024 · sharp slowdown",               col:"#c07010"},
-    {lbl:"Top Sector 2025",     val:"Healthcare", sub:"+44K Feb'26 · Social Asst. held strong all year",col:"#1a9e4a"},
-    {lbl:"Worst Sector 2025",   val:"Fed Govt",sub:"−327K cumulative from Oct'24 peak",                 col:"#d03030"},
-    {lbl:"Peak → Now",          val:"2024: +2.0M",sub:"Trough: 2025 +181K post-revision · −91%",       col:"#6d40cc"},
+    {lbl:"Feb'26 Jobs",         val:"-92K",   sub:"MoM: −235K vs Jan +143K · BLS nonfarm",              col:"#C0392B"},
+    {lbl:"Full Year 2025",      val:"+181K",  sub:"YoY: −91% vs +2.0M in 2024 (post-revision)",        col:"#C0392B"},
+    {lbl:"Monthly Avg 2025",    val:"~15K",   sub:"vs 167K/mo in 2024 · sharp slowdown",               col:"#B45309"},
+    {lbl:"Top Sector 2025",     val:"Healthcare", sub:"+44K Feb'26 · Social Asst. held strong all year",col:"#0D7A4A"},
+    {lbl:"Worst Sector 2025",   val:"Fed Govt",sub:"−327K cumulative from Oct'24 peak",                 col:"#C0392B"},
+    {lbl:"Peak → Now",          val:"2024: +2.0M",sub:"Trough: 2025 +181K post-revision · −91%",       col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
     type:"bar",
     data:{labels:JOBS_ANNUAL.labels,datasets:[{
       label:"Net Jobs (000s)",data:JOBS_ANNUAL.data,
-      backgroundColor:JOBS_ANNUAL.data.map((v,i)=>i===JOBS_ANNUAL.data.length-1?"#4a72e844":v>=0?"#4a72e8cc":"#e06060bb"),
-      borderColor:JOBS_ANNUAL.data.map((v,i)=>i===JOBS_ANNUAL.data.length-1?"#4a72e8":"transparent"),
+      backgroundColor:JOBS_ANNUAL.data.map((v,i)=>i===JOBS_ANNUAL.data.length-1?"#1A56DB44":v>=0?"#1A56DBcc":"#C0392Bbb"),
+      borderColor:JOBS_ANNUAL.data.map((v,i)=>i===JOBS_ANNUAL.data.length-1?"#1A56DB":"transparent"),
       borderWidth:JOBS_ANNUAL.data.map((v,i)=>i===JOBS_ANNUAL.data.length-1?2:0),
       borderDash:[4,3],borderRadius:4
     }]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw>=0?"+":""}${c.raw.toLocaleString()}K jobs`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
   });
 
   const jsrt=[...JOBS_SECTORS].sort((a,b)=>b.j25-a.j25);
@@ -3028,14 +3028,14 @@ function buildJobsTab(){
     type:"bar",
     data:{labels:jsrt.map(s=>s.s),datasets:[
       {label:"2025 Jobs (K)",data:jsrt.map(s=>s.j25),
-       backgroundColor:jsrt.map(s=>s.j25>=s.j24?"#16a34acc":"#dc2626bb"),borderRadius:3},
+       backgroundColor:jsrt.map(s=>s.j25>=s.j24?"#0D7A4Acc":"#C0392Bbb"),borderRadius:3},
       {label:"2024 Jobs (K)",data:jsrt.map(s=>s.j24),
-       backgroundColor:"#8b7fc7bb",borderRadius:3},
+       backgroundColor:"#6D28D9bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   // BLS vs ADP monthly comparison chart
@@ -3044,15 +3044,15 @@ function buildJobsTab(){
       type:"bar",
       data:{labels:NFP_VS_ADP.labels,datasets:[
         {label:"BLS Total Nonfarm (K)",data:NFP_VS_ADP.bls,
-         backgroundColor:NFP_VS_ADP.bls.map(v=>v>=0?"#4a72e8cc":"#e06060bb"),borderRadius:3},
+         backgroundColor:NFP_VS_ADP.bls.map(v=>v>=0?"#1A56DBcc":"#C0392Bbb"),borderRadius:3},
         {label:"ADP Private (K)",data:NFP_VS_ADP.adp,
-         backgroundColor:"#c0701088",borderRadius:3},
+         backgroundColor:"#B4530988",borderRadius:3},
       ]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+        plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
           tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
-        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
+        scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+                y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
     });
   }
 
@@ -3063,27 +3063,27 @@ function buildJobsTab(){
       type:"bar",
       data:{labels:sIdx.map(i=>SECTOR_MOM.sectors[i]),datasets:[
         {label:"Feb'26 (K)",data:sIdx.map(i=>SECTOR_MOM.feb26[i]),
-         backgroundColor:sIdx.map(i=>{const f=SECTOR_MOM.feb26[i],j=SECTOR_MOM.jan26[i];return f>=j?"#16a34acc":"#dc2626bb"}),borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
+         backgroundColor:sIdx.map(i=>{const f=SECTOR_MOM.feb26[i],j=SECTOR_MOM.jan26[i];return f>=j?"#0D7A4Acc":"#C0392Bbb"}),borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
         {label:"Jan'26 (K)",data:sIdx.map(i=>SECTOR_MOM.jan26[i]),
-         backgroundColor:"#8b7fc7bb",borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
+         backgroundColor:"#6D28D9bb",borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},
           tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
-        scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
-                y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+        scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
+                y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
     });
   }
 
   const hd=["Sector","2022","2023","2024","2025","Trend"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:${i?'right':'left'}">${x}</th>`).join("")}</tr></thead><tbody>`;
   [...JOBS_SECTORS].sort((a,b)=>b.j25-a.j25).forEach(s=>{
-    const c25=s.j25>200?"#1a9e4a":s.j25>0?"#3d4f6e":"#d03030";
-    const c24=s.j24>200?"#1a9e4a":s.j24>0?"#3d4f6e":"#d03030";
+    const c25=s.j25>200?"#0D7A4A":s.j25>0?"#334E68":"#C0392B";
+    const c24=s.j24>200?"#0D7A4A":s.j24>0?"#334E68":"#C0392B";
     const trendStr=s.j25>s.j24?"↑ Rising":s.j25<s.j24?"↓ Falling":"→ Stable";
     h+=`<tr><td><span class="dot" style="background:${s.color}"></span>${s.s}</td>
-      <td style="color:${s.j22>=0?"#3d4f6e":"#d03030"}">${s.j22>=0?"+":""}${s.j22}K</td>
-      <td style="color:${s.j23>=0?"#3d4f6e":"#d03030"}">${s.j23>=0?"+":""}${s.j23}K</td>
+      <td style="color:${s.j22>=0?"#334E68":"#C0392B"}">${s.j22>=0?"+":""}${s.j22}K</td>
+      <td style="color:${s.j23>=0?"#334E68":"#C0392B"}">${s.j23>=0?"+":""}${s.j23}K</td>
       <td style="color:${c24}">${s.j24>=0?"+":""}${s.j24}K</td>
       <td style="color:${c25}">${s.j25>=0?"+":""}${s.j25}K</td>
       <td>${trendPillPos(trendStr)}</td></tr>`;
@@ -3116,27 +3116,27 @@ function buildFCTab(){
     data:{labels:["Q1 2025","Q2 2025","Q3 2025","Q4 2025","Full 2025"],
       datasets:[{
         data:[-0.6, 3.8, 4.4, 1.4, 4.5],
-        backgroundColor:[-0.6,3.8,4.4,1.4,2.2].map(v=>v<0?"#d03030cc":v===2.2?"#4a72e8cc":"#1a9e4acc"),
+        backgroundColor:[-0.6,3.8,4.4,1.4,2.2].map(v=>v<0?"#C0392Bcc":v===2.2?"#1A56DBcc":"#0D7A4Acc"),
         borderRadius:5
       }]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw>=0?"+":""}${c.raw}% annualized`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}}}}
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
 
   // Macro comparison chart
   new Chart(document.getElementById("c-fc-group").getContext("2d"),{
     type:"bar",
     data:{labels:FC_MACRO.labels,datasets:[
-      {label:"2024 Actual",data:FC_MACRO.act24,backgroundColor:"#4a72e8cc",borderRadius:4},
-      {label:"2025 Actual",data:FC_MACRO.act25,backgroundColor:"#1a9e4acc",borderRadius:4},
-      {label:"2026 Forecast",data:FC_MACRO.f26, backgroundColor:"#c07010cc",borderRadius:4},
+      {label:"2024 Actual",data:FC_MACRO.act24,backgroundColor:"#1A56DBcc",borderRadius:4},
+      {label:"2025 Actual",data:FC_MACRO.act25,backgroundColor:"#0D7A4Acc",borderRadius:4},
+      {label:"2026 Forecast",data:FC_MACRO.f26, backgroundColor:"#B45309cc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#3d4f6e"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
 
   // Scenarios table
@@ -3169,7 +3169,7 @@ function buildFCTab(){
         <div class="fc-box"><div class="lbl">GDP 2026F</div><div class="val">${f.gdp26}</div></div>
       </div>
       <div class="fc-extra">
-        <span style="color:#2563eb">Unemp:</span> ${f.unemp}<br>
+        <span style="color:#1A56DB">Unemp:</span> ${f.unemp}<br>
         <span style="color:#C0392B">CPI:</span> ${f.cpi}<br>
         <span style="color:#0D7A4A">Wages:</span> ${f.wage}
       </div>
@@ -3240,7 +3240,7 @@ const BANK_RESULTS = [
    rev25:"$185B",ni25:"$57.5B",eps25:"$20.18",rotce:"20%",cet1:"14.5%",
    nii_q4:"$25.1B",nco:"3.2% card",
    nii26:"~$103B",expense26:"~$105B",nco26:"~3.4% card",loan_growth:"6–7% card",signal:"bull"},
-  {name:"Bank of America",  ticker:"BAC",color:"#dc2626",
+  {name:"Bank of America",  ticker:"BAC",color:"#C0392B",
    rev25:"$113.1B",ni25:"$30.5B",eps25:"$3.81",rotce:"13%",cet1:"11.8%",
    nii_q4:"$15.8B",nco:"0.57% consumer",
    nii26:"+5–7% YoY",expense26:"200bps oper. lev.",nco26:"50–55bps TTC",loan_growth:"mid-single digit",signal:"bull"},
@@ -3256,7 +3256,7 @@ const BANK_RESULTS = [
    rev25:"$58.28B",ni25:"$17.18B",eps25:"$51.32",rotce:"15%",cet1:"14.4%",
    nii_q4:"N/A",nco:"Apple exit",
    nii26:"N/A",expense26:"Disciplined",nco26:"Consumer exited",loan_growth:"Alt. invest.",signal:"bull"},
-  {name:"Capital One",      ticker:"COF",color:"#7c3aed",
+  {name:"Capital One",      ticker:"COF",color:"#6D28D9",
    rev25:"~$23.4B",ni25:"$9.5B adj",eps25:"$19.61 adj",rotce:"~14%",cet1:"13.6%",
    nii_q4:"~$7.5B",nco:"4.93% dom. card",
    nii26:"NIM ~8%+",expense26:"Integration costs",nco26:"~5% card",loan_growth:"Discover+Brex",signal:"bull"},
@@ -3279,7 +3279,7 @@ const BANK_COMMENTARY = [
    quote:"Each line of business performed well. Markets revenue up 17%; Payments hit a record $5.1B. We're cautious — markets may be underappreciating potential hazards including sticky inflation and geopolitical volatility.",
    credit:"Card NCO ~3.2% in 2025; guiding 3.4% for 2026. $2.2B Apple Card reserve build standard day-one accounting. Mortgage delinquencies at low end of historical range. Consumer resilient.",
    outlook:"NII $103B, expenses $105B for 2026. Two Fed cuts assumed. AI, branches, crypto ecosystem all investment areas. Proposed 10% credit card APR cap would be 'an economic disaster.'"},
-  {bank:"Bank of America",ceo:"Brian Moynihan, CEO",ticker:"BAC",color:"#dc2626",
+  {bank:"Bank of America",ceo:"Brian Moynihan, CEO",ticker:"BAC",color:"#C0392B",
    quote:"We delivered on our commitments with solid growth in revenue, earnings, and returns. Consumers and businesses proved resilient. We are bullish on the US economy in 2026 — risks remain, but the outlook is encouraging.",
    credit:"Provision $1.3B Q4, down from $1.5B. NCOs declined. CRE office losses improving. Through-cycle NCO target: 50–55bps. Consumer credit broadly stable.",
    outlook:"NII +5–7% in 2026. Operating leverage ~200bps. Loan growth mid-single digits. Q1 expenses ~4% higher YoY. Internal US GDP forecast: 2.6% for 2026."},
@@ -3295,7 +3295,7 @@ const BANK_COMMENTARY = [
    quote:"We exited consumer banking entirely in 2025 — a critical pivot allowing us to focus capital on what we do best. The 2026 M&A and capital markets pipeline is constructive. One GS 3.0 is our AI-powered future.",
    credit:"Apple Card transferred to held-for-sale ($2.26B markdown). Consumer loan exposure effectively zero post-transfer. Entire focus on institutional credit and financing.",
    outlook:"M&A and capital markets acceleration in 2026. Industry Ventures acquisition (Jan 2026). AWM AUM: $3.1T+. Dividend +12.5% to $4.50/share. ROE target 14–16%."},
-  {bank:"Capital One",ceo:"Richard Fairbank, CEO & Founder",ticker:"COF",color:"#7c3aed",
+  {bank:"Capital One",ceo:"Richard Fairbank, CEO & Founder",ticker:"COF",color:"#6D28D9",
    quote:"I'm struck by the number and quality of the opportunities we have before us. The Discover acquisition was transformational. The Brex deal is a hand-in-glove fit — accelerating our journey to build a banking and payments company.",
    credit:"Domestic Card charge-off rate 4.93% in Q4, down 113bps YoY — improving trend. Coverage ratio 5.16%. $23.4B total allowance. Consumer macro resilient with tax refund tailwind in H1 2026.",
    outlook:"Brex acquisition ($5.15B) accelerates corporate card + payments. Credit card migration to Discover network begins mid-2026. 10% APR cap 'would make credit much less available and could trigger recession.'"},
@@ -3320,25 +3320,25 @@ function buildPCETab(){
   if(builtTabs.pce) return; builtTabs.pce=1;
 
   document.getElementById("pce-metrics").innerHTML = [
-    {lbl:"Core PCE Jan'26",        val:"+3.1%",  sub:"MoM: +0.3% · Fed target 2.0%",                    col:"#c07010"},
-    {lbl:"Full Year 2025",         val:"2.6%",   sub:"YoY: +0.2pp vs 2.4% in 2024 · BEA",               col:"#c07010"},
-    {lbl:"Personal Saving Rate",   val:"4.5%",   sub:"Jan'26 · vs 4.0% Dec'25 · trending up",           col:"#1a9e4a"},
-    {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",            col:"#1a9e4a"},
-    {lbl:"Consumer Stress",        val:"CC DQ 5.1%", sub:"90+ day delinquency · Q3 2025 · elevated",    col:"#d03030"},
-    {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed",col:"#6d40cc"},
+    {lbl:"Core PCE Jan'26",        val:"+3.1%",  sub:"MoM: +0.3% · Fed target 2.0%",                    col:"#B45309"},
+    {lbl:"Full Year 2025",         val:"2.6%",   sub:"YoY: +0.2pp vs 2.4% in 2024 · BEA",               col:"#B45309"},
+    {lbl:"Personal Saving Rate",   val:"4.5%",   sub:"Jan'26 · vs 4.0% Dec'25 · trending up",           col:"#0D7A4A"},
+    {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",            col:"#0D7A4A"},
+    {lbl:"Consumer Stress",        val:"CC DQ 5.1%", sub:"90+ day delinquency · Q3 2025 · elevated",    col:"#C0392B"},
+    {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed",col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   // ── PCE MoM Chart ──
   new Chart(document.getElementById("c-pce-mom").getContext("2d"),{
     type:"line",
     data:{labels:PCE_MONTHLY.labels,datasets:[
-      {label:"Headline PCE YoY %",data:PCE_MONTHLY.headline,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
-      {label:"Core PCE YoY %",data:PCE_MONTHLY.core,borderColor:"#6d40cc",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+      {label:"Headline PCE YoY %",data:PCE_MONTHLY.headline,borderColor:"#C0392B",backgroundColor:"#C0392B15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Core PCE YoY %",data:PCE_MONTHLY.core,borderColor:"#6D28D9",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
-      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1a9e4a",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1a9e4a",backgroundColor:"rgba(255,255,255,.8)"}}}}},
-      scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#0D7A4A",borderWidth:1.5,borderDash:[6,4],
+        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#0D7A4A",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   // ── PCE Category MoM Chart ──
@@ -3346,29 +3346,29 @@ function buildPCETab(){
   new Chart(document.getElementById("c-pce-cat-mom").getContext("2d"),{
     type:"bar",
     data:{labels:pceMom.map(r=>r.cat),datasets:[
-      {label:"Jan'26",data:pceMom.map(r=>r.jan),backgroundColor:pceMom.map(r=>r.jan>r.dec?"#dc2626bb":"#16a34acc"),borderRadius:3},
+      {label:"Jan'26",data:pceMom.map(r=>r.jan),backgroundColor:pceMom.map(r=>r.jan>r.dec?"#C0392Bbb":"#0D7A4Acc"),borderRadius:3},
       {label:"Dec'25",data:pceMom.map(r=>r.dec),
-       backgroundColor:"#8b7fc7bb",borderRadius:3},
+       backgroundColor:"#6D28D9bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=pceMom[c.dataIndex];var ch=(d.jan-d.dec).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   // PCE line chart
   new Chart(document.getElementById("c-pce-line").getContext("2d"),{
     type:"line",
     data:{labels:PCE_ANNUAL.labels,datasets:[
-      {label:"Headline PCE",data:PCE_ANNUAL.headline,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
-      {label:"Core PCE",    data:PCE_ANNUAL.core,    borderColor:"#4a72e8",backgroundColor:"#4a72e815",borderWidth:2,  pointRadius:5,tension:0.3,fill:false,borderDash:[5,3]},
-      {label:"Fed 2% Target",data:PCE_ANNUAL.labels.map(()=>2),borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,tension:0,fill:false,borderDash:[4,4]},
+      {label:"Headline PCE",data:PCE_ANNUAL.headline,borderColor:"#C0392B",backgroundColor:"#C0392B15",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
+      {label:"Core PCE",    data:PCE_ANNUAL.core,    borderColor:"#1A56DB",backgroundColor:"#1A56DB15",borderWidth:2,  pointRadius:5,tension:0.3,fill:false,borderDash:[5,3]},
+      {label:"Fed 2% Target",data:PCE_ANNUAL.labels.map(()=>2),borderColor:"#0D7A4A",borderWidth:1.5,pointRadius:0,tension:0,fill:false,borderDash:[4,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
 
   // Saving rate — monthly (last 12 months, bar chart)
@@ -3376,17 +3376,17 @@ function buildPCETab(){
     type:"bar",
     data:{labels:SAVING_MONTHLY.labels,datasets:[{
       label:"Saving Rate %",data:SAVING_MONTHLY.data,
-      backgroundColor:SAVING_MONTHLY.data.map((v,i)=>i===SAVING_MONTHLY.data.length-1?"rgba(109,64,204,.85)":"rgba(109,64,204,.55)"),
-      borderColor:SAVING_MONTHLY.data.map((v,i)=>i===SAVING_MONTHLY.data.length-1?"#6d40cc":"#6d40cc"),
+      backgroundColor:SAVING_MONTHLY.data.map((v,i)=>i===SAVING_MONTHLY.data.length-1?"rgba(109,40,217,.85)":"rgba(109,40,217,.55)"),
+      borderColor:SAVING_MONTHLY.data.map((v,i)=>i===SAVING_MONTHLY.data.length-1?"#6D28D9":"#6D28D9"),
       borderWidth:1,borderRadius:3
     },{
       label:"Pre-pandemic avg (~8%)",data:SAVING_MONTHLY.labels.map(()=>8),
-      type:"line",borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
+      type:"line",borderColor:"#0D7A4A",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
   });
 
   // Saving rate — annual (2000+, line chart)
@@ -3394,46 +3394,46 @@ function buildPCETab(){
     type:"line",
     data:{labels:SAVING_ANNUAL.labels,datasets:[{
       label:"Saving Rate (Annual Avg)",data:SAVING_ANNUAL.data,
-      borderColor:"#6d40cc",backgroundColor:"#6d40cc18",borderWidth:2.5,
+      borderColor:"#6D28D9",backgroundColor:"#6D28D918",borderWidth:2.5,
       pointRadius:4,pointHoverRadius:7,tension:0.35,fill:true
     },{
       label:"Pre-pandemic avg (~8%)",data:SAVING_ANNUAL.labels.map(()=>8),
-      borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
+      borderColor:"#0D7A4A",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:20,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:20,border:{display:false}}}}
   });
 
   // PCE category chart
   new Chart(document.getElementById("c-pce-cat").getContext("2d"),{
     type:"bar",
     data:{labels:PCE_CATS.map(c=>c.cat),datasets:[
-      {label:"2023",data:PCE_CATS.map(c=>c.y23),backgroundColor:"#c07010aa",borderRadius:3},
-      {label:"2024",data:PCE_CATS.map(c=>c.y24),backgroundColor:"#4a72e8cc",borderRadius:3},
-      {label:"2025",data:PCE_CATS.map(c=>c.y25),backgroundColor:"#1a9e4acc",borderRadius:3},
+      {label:"2023",data:PCE_CATS.map(c=>c.y23),backgroundColor:"#B45309aa",borderRadius:3},
+      {label:"2024",data:PCE_CATS.map(c=>c.y24),backgroundColor:"#1A56DBcc",borderRadius:3},
+      {label:"2025",data:PCE_CATS.map(c=>c.y25),backgroundColor:"#0D7A4Acc",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
-              y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
   // Debt delinquency chart
   new Chart(document.getElementById("c-debt-bar").getContext("2d"),{
     type:"bar",
     data:{labels:DEBT_DATA.labels,datasets:[
-      {label:"Balance ($T)",         type:"bar",  data:DEBT_DATA.balance,  backgroundColor:"#4a72e8cc",borderRadius:5,yAxisID:"y"},
-      {label:"90+ Day Delinquency %",type:"line", data:DEBT_DATA.delinq90, borderColor:"#d03030",backgroundColor:"#d0303022",borderWidth:2.5,pointRadius:6,pointBackgroundColor:"#d03030",fill:true,tension:0.3,yAxisID:"y2"},
+      {label:"Balance ($T)",         type:"bar",  data:DEBT_DATA.balance,  backgroundColor:"#1A56DBcc",borderRadius:5,yAxisID:"y"},
+      {label:"90+ Day Delinquency %",type:"line", data:DEBT_DATA.delinq90, borderColor:"#C0392B",backgroundColor:"#C0392B22",borderWidth:2.5,pointRadius:6,pointBackgroundColor:"#C0392B",fill:true,tension:0.3,yAxisID:"y2"},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
                tooltip:{...TT,callbacks:{label:ctx=>ctx.dataset.yAxisID==="y2"?`${ctx.dataset.label}: ${ctx.raw}%`:`${ctx.dataset.label}: $${ctx.raw}T`}}},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-        y:{grid:{color:"#dde2ee"},ticks:{color:"#4a72e8",callback:v=>"$"+v+"T"},min:0,border:{display:false},title:{display:true,text:"Balance ($T)",color:"#4a72e8",font:{size:10,weight:"600"}}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#d03030",callback:v=>v+"%"},min:0,max:15,border:{display:false},title:{display:true,text:"90+ DPD %",color:"#d03030",font:{size:10,weight:"600"}}}
+        x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+        y:{grid:{color:"#E2E8F0"},ticks:{color:"#1A56DB",callback:v=>"$"+v+"T"},min:0,border:{display:false},title:{display:true,text:"Balance ($T)",color:"#1A56DB",font:{size:10,weight:"600"}}},
+        y2:{position:"right",grid:{display:false},ticks:{color:"#C0392B",callback:v=>v+"%"},min:0,max:15,border:{display:false},title:{display:true,text:"90+ DPD %",color:"#C0392B",font:{size:10,weight:"600"}}}
       }}
   });
 
@@ -3443,13 +3443,13 @@ function buildPCETab(){
       type:"bar",
       data:{labels:TDSP_HIST.labels,datasets:[{
         label:"Debt Service Ratio %",data:TDSP_HIST.data,
-        backgroundColor:TDSP_HIST.data.map(v=>v>=11?"#e06060bb":v>=10?"#c07010bb":"#4a72e8cc"),
+        backgroundColor:TDSP_HIST.data.map(v=>v>=11?"#C0392Bbb":v>=10?"#B45309bb":"#1A56DBcc"),
         borderRadius:3
       }]},
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`DSR: ${c.raw}%`}}},
-        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",maxTicksLimit:15,font:{size:9}},border:{display:false}},
-                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:8,border:{display:false}}}}
+        scales:{x:{grid:{display:false},ticks:{color:"#334E68",maxTicksLimit:15,font:{size:9}},border:{display:false}},
+                y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:8,border:{display:false}}}}
     });
   }
 
@@ -3458,16 +3458,16 @@ function buildPCETab(){
     type:"bar",
     data:{labels:UMCSENT_MONTHLY.labels,datasets:[{
       label:"Sentiment Index",data:UMCSENT_MONTHLY.data,
-      backgroundColor:UMCSENT_MONTHLY.data.map((v,i)=>i===UMCSENT_MONTHLY.data.length-1?"rgba(109,64,204,.85)":"rgba(109,64,204,.55)"),
-      borderColor:"#6d40cc",borderWidth:1,borderRadius:3
+      backgroundColor:UMCSENT_MONTHLY.data.map((v,i)=>i===UMCSENT_MONTHLY.data.length-1?"rgba(109,40,217,.85)":"rgba(109,40,217,.55)"),
+      borderColor:"#6D28D9",borderWidth:1,borderRadius:3
     },{
       label:"Pre-pandemic avg (~95)",data:UMCSENT_MONTHLY.labels.map(()=>95),
-      type:"line",borderColor:"#1a9e4a",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
+      type:"line",borderColor:"#0D7A4A",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},min:40,max:100,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},min:40,max:100,border:{display:false}}}}
   });
 
   // UMich Consumer Sentiment — annual (from OIL_VS_SENTIMENT)
@@ -3476,13 +3476,13 @@ function buildPCETab(){
       type:"bar",
       data:{labels:OIL_VS_SENTIMENT.labels,datasets:[{
         label:"UMich Sentiment Index",data:OIL_VS_SENTIMENT.sentiment,
-        backgroundColor:OIL_VS_SENTIMENT.sentiment.map(v=>v<60?"#e06060bb":v<75?"#c07010bb":"#4a72e8cc"),
+        backgroundColor:OIL_VS_SENTIMENT.sentiment.map(v=>v<60?"#C0392Bbb":v<75?"#B45309bb":"#1A56DBcc"),
         borderRadius:3
       }]},
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`Sentiment: ${c.raw}`}}},
-        scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",maxTicksLimit:15},border:{display:false}},
-                y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},min:40,border:{display:false}}}}
+        scales:{x:{grid:{display:false},ticks:{color:"#334E68",maxTicksLimit:15},border:{display:false}},
+                y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},min:40,border:{display:false}}}}
     });
   }
 
@@ -3507,12 +3507,12 @@ function buildBanksTab(){
 
   const sectorNI=BANK_RESULTS.reduce((a,b)=>a+parseFloat(b.ni25.replace(/[^0-9.]/g,"")),0).toFixed(1);
   document.getElementById("bank-metrics").innerHTML = [
-    {lbl:"Big 9 Banks — FY2025 Net Income",val:"~$157B",  sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1a9e4a"},
+    {lbl:"Big 9 Banks — FY2025 Net Income",val:"~$157B",  sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#0D7A4A"},
     {lbl:"JPM FY Revenue 2025",            val:"$185B",   sub:"Largest U.S. bank · up ~10% YoY",             col:"#1e3a8a"},
     {lbl:"AmEx FY Revenue 2025",           val:"$72.2B",  sub:"Record; +10% YoY · ROE 34%",                 col:"#059669"},
-    {lbl:"Global M&A Volume 2025",         val:"$5.1T",   sub:"+42% YoY · best U.S. IB year since pandemic", col:"#6d40cc"},
+    {lbl:"Global M&A Volume 2025",         val:"$5.1T",   sub:"+42% YoY · best U.S. IB year since pandemic", col:"#6D28D9"},
     {lbl:"Synchrony NCO Rate Q4 2025",     val:"5.37%",   sub:"Down 108bps YoY · within 5.5–6% target",     col:"#ea580c"},
-    {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#d03030"},
+    {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#C0392B"},
   ].map(m=>_mTile(m)).join("");
 
   // Main comparison table
@@ -3544,21 +3544,21 @@ function buildBanksTab(){
       datasets:[{
         label:"2026 NII Guidance ($B)",
         data:[103, 95, 63, 50, 15.5, 50],
-        backgroundColor:["#1e3a8acc","#1e3a8a66","#dc262666","#d9770688","#0f766ecc","#0284c7aa"],
-        borderColor:["#1e3a8a","#1e3a8a","#dc2626","#d97706","#0f766e","#0284c7"],
+        backgroundColor:["#1e3a8acc","#1e3a8a66","#C0392B66","#d9770688","#0f766ecc","#0284c7aa"],
+        borderColor:["#1e3a8a","#1e3a8a","#C0392B","#d97706","#0f766e","#0284c7"],
         borderWidth:1.5,borderRadius:6
       },{
         label:"2025 Actual (~$B)",
         data:[91, 88, 58, 47, 14.4, 45],
-        backgroundColor:["#1e3a8a33","#1e3a8a22","#dc262633","#d9770633","#0f766e33","#0284c733"],
-        borderColor:["#1e3a8a","#1e3a8a","#dc2626","#d97706","#0f766e","#0284c7"],
+        backgroundColor:["#1e3a8a33","#1e3a8a22","#C0392B33","#d9770633","#0f766e33","#0284c733"],
+        borderColor:["#1e3a8a","#1e3a8a","#C0392B","#d97706","#0f766e","#0284c7"],
         borderWidth:1.5,borderRadius:6
       }]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:9}},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>"$"+v+"B"},min:0,max:115,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9}},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>"$"+v+"B"},min:0,max:115,border:{display:false}}}}
   });
 
   // NCO rate chart — expanded with all card issuers
@@ -3568,14 +3568,14 @@ function buildBanksTab(){
       labels:["JPM Card 25A","JPM Card 26F","BofA Cons","COF Card 25A","Amex 25A","SYF Q4 25A","SYF 26F","WFC Cons","USB 25A","Pre-COVID"],
       datasets:[{
         data:[3.2, 3.4, 0.57, 4.93, 1.1, 5.37, 5.75, 1.37, 0.54, 2.5],
-        backgroundColor:["#c07010cc","#d03030cc","#dc262666","#7c3aedcc","#05966988","#ea580ccc","#ea580c88","#d9770688","#0f766ecc","#4a72e8cc"],
+        backgroundColor:["#B45309cc","#C0392Bcc","#C0392B66","#6D28D9cc","#05966988","#ea580ccc","#ea580c88","#d9770688","#0f766ecc","#1A56DBcc"],
         borderRadius:5
       }]
     },
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`NCO Rate: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#7A8FA8",font:{size:9},maxRotation:35,minRotation:35},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}}}}
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
 
   // Bank commentary cards
@@ -3620,12 +3620,12 @@ const OIL_OUTLOOK = [
   {inst:"Bloomberg",        wti:"$68–75",brent:"$72–78",basis:"US-Iran diplomacy wildcard; OPEC cohesion uncertain",note:"Range-bound unless macro surprise"},
 ];
 const OIL_LINKAGES = [
-  {title:"CPI & Inflation",color:"#d03030",signal:"DISINFLATIONARY",body:"WTI ~$70 = benign. Each $10 oil swing = ~0.2–0.3pp CPI. 2025 energy CPI deflation (−2.8%) has helped Fed's case. If oil spikes >$90, re-ignites inflation fears."},
-  {title:"Consumer Spending",color:"#c07010",signal:"TAILWIND",body:"Lower gas prices (~$3.00/gal avg 2025) act as consumer tax cut. Every $0.25/gal = ~$35B annual consumer savings. Positive for discretionary spending and card volume."},
+  {title:"CPI & Inflation",color:"#C0392B",signal:"DISINFLATIONARY",body:"WTI ~$70 = benign. Each $10 oil swing = ~0.2–0.3pp CPI. 2025 energy CPI deflation (−2.8%) has helped Fed's case. If oil spikes >$90, re-ignites inflation fears."},
+  {title:"Consumer Spending",color:"#B45309",signal:"TAILWIND",body:"Lower gas prices (~$3.00/gal avg 2025) act as consumer tax cut. Every $0.25/gal = ~$35B annual consumer savings. Positive for discretionary spending and card volume."},
   {title:"Auto Loan Credit",color:"#FF9F43",signal:"WATCH",body:"Lower oil reduces gas savings pressure on subprime borrowers. But depressed used-car values (energy workers, trucks) increase LGD. Net: small positive for auto credit quality."},
-  {title:"Energy Sector Loans",color:"#d03030",signal:"E&P STRESS <$60",body:"Banks with energy lending exposure (WFC, USB regional) watch $55–60 WTI floor. Below that: E&P covenant violations spike. Current ~$70 is comfortably above stress level."},
-  {title:"GDP & Manufacturing",color:"#4a72e8",signal:"MIXED",body:"Low oil boosts consumer but weighs on energy capex (1.8% of GDP). Permian production near record — capex holding. Net: oil at $65–75 is near-neutral to GDP."},
-  {title:"Geopolitical Risk Premium",color:"#6d40cc",signal:"ELEVATED",body:"Russia-Ukraine, Middle East, Iran sanctions all unresolved. $4–6 geopolitical premium baked in. Sudden de-escalation (bearish) or escalation (bullish spike to $90+) are tail risks."},
+  {title:"Energy Sector Loans",color:"#C0392B",signal:"E&P STRESS <$60",body:"Banks with energy lending exposure (WFC, USB regional) watch $55–60 WTI floor. Below that: E&P covenant violations spike. Current ~$70 is comfortably above stress level."},
+  {title:"GDP & Manufacturing",color:"#1A56DB",signal:"MIXED",body:"Low oil boosts consumer but weighs on energy capex (1.8% of GDP). Permian production near record — capex holding. Net: oil at $65–75 is near-neutral to GDP."},
+  {title:"Geopolitical Risk Premium",color:"#6D28D9",signal:"ELEVATED",body:"Russia-Ukraine, Middle East, Iran sanctions all unresolved. $4–6 geopolitical premium baked in. Sudden de-escalation (bearish) or escalation (bullish spike to $90+) are tail risks."},
 ];
 
 // ════════════════════════════════════════════════════
@@ -3642,7 +3642,7 @@ const CREDIT_DELINQ = {
 const CREDIT_NCO = {
   labels:["JPM Card","COF Dom.Card","SYF Q4","SYF 2026F","WFC Cons","BAC Cons","AXP","USB","Pre-COVID avg"],
   rates: [3.2, 4.93, 5.37, 5.75, 1.37, 0.57, 1.10, 0.54, 2.50],
-  colors:["#1e3a8a","#7c3aed","#ea580c","#ea580c88","#d97706","#dc2626","#059669","#0f766e","#4a72e8"]
+  colors:["#1e3a8a","#6D28D9","#ea580c","#ea580c88","#d97706","#C0392B","#059669","#0f766e","#1A56DB"]
 };
 // Card Specialists vs Diversified Banks NCO
 const NCO_CARDS={labels:["Capital One","Synchrony","Citi Card","JPM Card","Amex"],nco25:[4.93,5.37,3.40,3.20,1.10],nco26f:[4.80,5.75,3.50,3.40,1.15]};
@@ -3664,13 +3664,13 @@ const CREDIT_SLOOS = {
 };
 const CREDIT_GROWTH = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "revolving":[8.0, 9.4, 3.9, 4.0, 2.8, 3.8, 10.5, 6.7, 5.6, -5.2, -8.9, -4.5, 0.5, 1.2, 3.2, 2.8, 3.4, 5.8, 4.8, 3.9, -7.4, -1.0, 13.9, 11.7, 6.0, -1.6], "nonrevolving":[10.2, 11.6, 9.4, 6.5, 6.4, 6.0, 5.1, 4.2, 4.2, -0.2, 1.7, 12.3, 7.0, 8.2, 8.2, 7.6, 3.3, 5.9, 5.0, 5.0, 3.5, 7.0, 6.7, 2.9, 0.3, 1.0]};
 const CREDIT_DEBT_TABLE = [
-  {product:"Credit Cards",    balance:"$1.19T",  dq30:"9.8%",  dq90:"5.1%",  nco:"3.2–5.4%",  signal:"STRESS",   color:"#d03030",  note:"Mass-market stress; prime/super-prime stable (Amex, Chase top-tier)"},
-  {product:"Auto Loans",      balance:"$1.64T",  dq30:"3.8%",  dq90:"1.9%",  nco:"1.4%",      signal:"ELEVATED", color:"#c07010",  note:"Peaking; used-car value declines increase LGD. Subprime auto most stressed."},
+  {product:"Credit Cards",    balance:"$1.19T",  dq30:"9.8%",  dq90:"5.1%",  nco:"3.2–5.4%",  signal:"STRESS",   color:"#C0392B",  note:"Mass-market stress; prime/super-prime stable (Amex, Chase top-tier)"},
+  {product:"Auto Loans",      balance:"$1.64T",  dq30:"3.8%",  dq90:"1.9%",  nco:"1.4%",      signal:"ELEVATED", color:"#B45309",  note:"Peaking; used-car value declines increase LGD. Subprime auto most stressed."},
   {product:"Student Loans",   balance:"$1.65T",  dq30:"11.2%", dq90:"9.4%",  nco:"N/A",       signal:"WATCH",    color:"#FF9F43",  note:"First reporting since forbearance ended. Spike expected — servicer capacity strained."},
-  {product:"Mortgage",        balance:"$13.07T", dq30:"1.5%",  dq90:"0.8%",  nco:"<0.1%",     signal:"RESILIENT",color:"#1a9e4a",  note:"Lock-in effect: 85% of borrowers hold sub-5% rates. Minimal forced selling."},
-  {product:"HELOC",           balance:"$0.40T",  dq30:"1.8%",  dq90:"0.9%",  nco:"0.5%",      signal:"RISING",   color:"#c07010",  note:"Drawdowns accelerating as home equity elevated. Floating rate exposure if rates stay high."},
-  {product:"Other Consumer",  balance:"$0.65T",  dq30:"3.2%",  dq90:"1.8%",  nco:"2.8%",      signal:"WATCH",    color:"#c07010",  note:"BNPL, personal loans. Fintech vintages underperforming 2022–23 vs bank channels."},
-  {product:"Total HH Debt",   balance:"$18.6T",  dq30:"2.8%",  dq90:"1.6%",  nco:"~1.2%",     signal:"LATE-CYCLE",color:"#6d40cc", note:"Debt-to-disposable income ~96%; below 2008 peak 130% but rising. Watch unemployment trigger."},
+  {product:"Mortgage",        balance:"$13.07T", dq30:"1.5%",  dq90:"0.8%",  nco:"<0.1%",     signal:"RESILIENT",color:"#0D7A4A",  note:"Lock-in effect: 85% of borrowers hold sub-5% rates. Minimal forced selling."},
+  {product:"HELOC",           balance:"$0.40T",  dq30:"1.8%",  dq90:"0.9%",  nco:"0.5%",      signal:"RISING",   color:"#B45309",  note:"Drawdowns accelerating as home equity elevated. Floating rate exposure if rates stay high."},
+  {product:"Other Consumer",  balance:"$0.65T",  dq30:"3.2%",  dq90:"1.8%",  nco:"2.8%",      signal:"WATCH",    color:"#B45309",  note:"BNPL, personal loans. Fintech vintages underperforming 2022–23 vs bank channels."},
+  {product:"Total HH Debt",   balance:"$18.6T",  dq30:"2.8%",  dq90:"1.6%",  nco:"~1.2%",     signal:"LATE-CYCLE",color:"#6D28D9", note:"Debt-to-disposable income ~96%; below 2008 peak 130% but rising. Watch unemployment trigger."},
 ];
 
 // ════════════════════════════════════════════════════
@@ -3789,11 +3789,11 @@ function buildOilTab(){
 
   document.getElementById("oil-metrics").innerHTML = [
     {lbl:"WTI Latest Mar'26",     val:"$93.4",  sub:"MoM: +31.3% MTD · range $71–$98",                  col:"#C0392B"},
-    {lbl:"Full Year 2025 Avg",    val:"$70.2",  sub:"YoY: vs $77.6 in 2024 · EIA annual avg",           col:"#c07010"},
+    {lbl:"Full Year 2025 Avg",    val:"$70.2",  sub:"YoY: vs $77.6 in 2024 · EIA annual avg",           col:"#B45309"},
     {lbl:"Brent Spread",          val:"$101.0", sub:"Brent–WTI spread: $7.7 · Mar'26",                  col:"#92400E"},
     {lbl:"Biggest Weekly Gain",   val:"+35.6%", sub:"Mar 3–7 · largest WTI weekly since 1983",           col:"#C0392B"},
     {lbl:"Gas Burden Current",    val:"~3.2%",  sub:"% of disposable income at $90+ WTI · BLS/EIA",     col:"#B45309"},
-    {lbl:"Peak → Now",            val:"2022: $123",sub:"Gas burden peaked 3.8% vs 1.8% avg 2015–20",    col:"#6d40cc"},
+    {lbl:"Peak → Now",            val:"2022: $123",sub:"Gas burden peaked 3.8% vs 1.8% avg 2015–20",    col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Annual history ──
@@ -4070,8 +4070,8 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
     {phase:1, icon:"⛽", step:"Days 1–14",    title:"Pump prices spike",         desc:"Gasoline retail moves within days of a WTI shock · $10/bbl ≈ +$0.24/gallon at the pump · lower-income households hit hardest (fuel ~8% of their income vs ~2% for top earners)",  col:"#B45309"},
     {phase:1, icon:"🚚", step:"Weeks 3–6",    title:"Transport & freight costs",  desc:"Diesel surcharges, airline fuel costs, shipping rates adjust upward · input cost rises begin passing into goods prices along supply chains",                           col:"#E8590C"},
     {phase:1, icon:"📊", step:"Weeks 6–10",   title:"CPI Energy prints",          desc:"BLS captures pump price changes in the CPI Energy component · headline inflation number becomes official · Fed and markets react",                                       col:"#1A56DB"},
-    {phase:1, icon:"🍔", step:"Months 3–5",   title:"Food & services inflation",  desc:"Restaurant, hospitality, delivery costs hit menus as ingredient transport and energy bills rise · typically sticky upward once set",                                      col:"#1a9e4a"},
-    {phase:1, icon:"🏭", step:"Months 5–7",   title:"Core goods inflation",       desc:"Manufacturing, chemicals, plastics — energy as input cost bleeds into Core CPI with a longer lag · the reading the Fed watches most closely",                            col:"#6d40cc"},
+    {phase:1, icon:"🍔", step:"Months 3–5",   title:"Food & services inflation",  desc:"Restaurant, hospitality, delivery costs hit menus as ingredient transport and energy bills rise · typically sticky upward once set",                                      col:"#0D7A4A"},
+    {phase:1, icon:"🏭", step:"Months 5–7",   title:"Core goods inflation",       desc:"Manufacturing, chemicals, plastics — energy as input cost bleeds into Core CPI with a longer lag · the reading the Fed watches most closely",                            col:"#6D28D9"},
     // ── Phase 2: Consumer & Credit Stress ──
     {phase:2, icon:"💳", step:"Months 2–4",   title:"Discretionary spend falls",  desc:"Consumers rotate away from dining, retail, travel toward non-discretionary · real-time card spend data shows the rotation within 60–90 days of sustained high prices",  col:"#C0392B"},
     {phase:2, icon:"🏦", step:"Months 4–6",   title:"Savings drawdown",           desc:"Personal saving rate compresses as fuel costs eat into take-home pay · households dip into liquid buffers · visible in Fed Z.1 household balance sheet data",             col:"#C0392B"},
@@ -4130,12 +4130,12 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{
-        legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,filter:i=>i.datasetIndex===0}},
+        legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8,filter:i=>i.datasetIndex===0}},
         tooltip:{...TT,callbacks:{label:c=>c.datasetIndex===0?`WTI: $${c.raw}/bbl`:`Recession year`}}
       },
       scales:{
-        x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:9},maxRotation:45},border:{display:false}},
-        y:{grid:{color:"#dde2ee"},ticks:{color:"#B45309",callback:v=>"$"+v},min:0,max:150,border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9},maxRotation:45},border:{display:false}},
+        y:{grid:{color:"#E2E8F0"},ticks:{color:"#B45309",callback:v=>"$"+v},min:0,max:150,border:{display:false}}
       }}
   });
 
@@ -4170,49 +4170,49 @@ function buildCreditTab(){
   if(builtTabs.credit) return; builtTabs.credit=1;
 
   document.getElementById("credit-metrics").innerHTML = [
-    {lbl:"Card 90+ DPD Latest",    val:"9.8%",   sub:"MoM: flat · Q3 2025 · near 2011-era high",        col:"#d03030"},
-    {lbl:"Auto 90+ DPD",           val:"4.5%",   sub:"YoY: stable · subprime stress persists",           col:"#c07010"},
-    {lbl:"Student Loan DQ",        val:"9.4%",   sub:"Post-forbearance first reporting · shock",         col:"#c07010"},
-    {lbl:"Best Category",          val:"Mortgage 0.8%",sub:"Lock-in effect shields market · resilient",   col:"#1a9e4a"},
-    {lbl:"Worst Category",         val:"Cards 9.8%",sub:"Mass-market stress · NCO improving",            col:"#d03030"},
-    {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#6d40cc"},
+    {lbl:"Card 90+ DPD Latest",    val:"9.8%",   sub:"MoM: flat · Q3 2025 · near 2011-era high",        col:"#C0392B"},
+    {lbl:"Auto 90+ DPD",           val:"4.5%",   sub:"YoY: stable · subprime stress persists",           col:"#B45309"},
+    {lbl:"Student Loan DQ",        val:"9.4%",   sub:"Post-forbearance first reporting · shock",         col:"#B45309"},
+    {lbl:"Best Category",          val:"Mortgage 0.8%",sub:"Lock-in effect shields market · resilient",   col:"#0D7A4A"},
+    {lbl:"Worst Category",         val:"Cards 9.8%",sub:"Mass-market stress · NCO improving",            col:"#C0392B"},
+    {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-credit-delinq").getContext("2d"),{
     type:"line",
     data:{labels:CREDIT_DELINQ.labels,datasets:[
-      {label:"Credit Cards",  data:CREDIT_DELINQ.card,   borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true},
-      {label:"Auto Loans",    data:CREDIT_DELINQ.auto,   borderColor:"#c07010",borderWidth:2,pointRadius:3,tension:0.3},
-      {label:"Mortgage",      data:CREDIT_DELINQ.mort,   borderColor:"#1a9e4a",borderWidth:2,pointRadius:3,tension:0.3},
+      {label:"Credit Cards",  data:CREDIT_DELINQ.card,   borderColor:"#C0392B",backgroundColor:"#C0392B15",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true},
+      {label:"Auto Loans",    data:CREDIT_DELINQ.auto,   borderColor:"#B45309",borderWidth:2,pointRadius:3,tension:0.3},
+      {label:"Mortgage",      data:CREDIT_DELINQ.mort,   borderColor:"#0D7A4A",borderWidth:2,pointRadius:3,tension:0.3},
       {label:"Student Loans", data:CREDIT_DELINQ.student,borderColor:"#FF9F43",borderWidth:2,pointRadius:3,tension:0.3,borderDash:[5,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-nco-cards").getContext("2d"),{
     type:"bar",
     data:{labels:NCO_CARDS.labels,datasets:[
-      {label:"2025 NCO %", data:NCO_CARDS.nco25,  backgroundColor:"#d03030cc",borderRadius:4},
-      {label:"2026F NCO %",data:NCO_CARDS.nco26f, backgroundColor:"#c0701066",borderRadius:4},
+      {label:"2025 NCO %", data:NCO_CARDS.nco25,  backgroundColor:"#C0392Bcc",borderRadius:4},
+      {label:"2026F NCO %",data:NCO_CARDS.nco26f, backgroundColor:"#B4530966",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
   new Chart(document.getElementById("c-nco-banks").getContext("2d"),{
     type:"bar",
     data:{labels:NCO_BANKS.labels,datasets:[
-      {label:"2025 NCO %", data:NCO_BANKS.nco25,  backgroundColor:"#4a72e8cc",borderRadius:4},
-      {label:"2026F NCO %",data:NCO_BANKS.nco26f, backgroundColor:"#1a9e4a66",borderRadius:4},
+      {label:"2025 NCO %", data:NCO_BANKS.nco25,  backgroundColor:"#1A56DBcc",borderRadius:4},
+      {label:"2026F NCO %",data:NCO_BANKS.nco26f, backgroundColor:"#0D7A4A66",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,max:5,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:5,border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
@@ -4322,7 +4322,7 @@ function buildCreditTab(){
     if (detail) {
       let html = `<strong>Cross-correlation: Consumer Tightening ↔ Recession Probability (bidirectional lags)</strong><br>`;
       html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
-      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag</th><th>Direction</th><th>~Quarters</th><th>r</th><th>n</th></tr>`;
+      html += `<tr style="border-bottom:1px solid #E2E8F0"><th style="text-align:left;padding:2px 8px">Lag</th><th>Direction</th><th>~Quarters</th><th>r</th><th>n</th></tr>`;
       for (let i=0; i<consCorrs.length; i++) {
         const c = consCorrs[i];
         const isBest = c.lag===bestConsLag;
@@ -4339,7 +4339,7 @@ function buildCreditTab(){
       html += `</table>`;
       html += `<br><strong>Cross-correlation: Recession Probability → Credit Delinquency (DPD)</strong><br>`;
       html += `<table style="font-size:10px;border-collapse:collapse;margin:6px 0;width:100%">`;
-      html += `<tr style="border-bottom:1px solid #dde2ee"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Card DPD r</th><th>All Product DPD r</th><th>n</th></tr>`;
+      html += `<tr style="border-bottom:1px solid #E2E8F0"><th style="text-align:left;padding:2px 8px">Lag (periods)</th><th>~Quarters</th><th>Card DPD r</th><th>All Product DPD r</th><th>n</th></tr>`;
       for (let i=0; i<=maxLag; i++) {
         const isCardBest = i===bestRecCardLag;
         const isAllBest  = i===bestRecAllLag;
@@ -4366,13 +4366,13 @@ function buildCreditTab(){
   new Chart(document.getElementById("c-credit-growth").getContext("2d"),{
     type:"bar",
     data:{labels:CREDIT_GROWTH.labels,datasets:[
-      {label:"Revolving (Cards)",    data:CREDIT_GROWTH.revolving,   backgroundColor:"#d03030cc",borderRadius:4},
-      {label:"Non-Revolving (Auto/Student)",data:CREDIT_GROWTH.nonrevolving,backgroundColor:"#4a72e8cc",borderRadius:4},
+      {label:"Revolving (Cards)",    data:CREDIT_GROWTH.revolving,   backgroundColor:"#C0392Bcc",borderRadius:4},
+      {label:"Non-Revolving (Auto/Student)",data:CREDIT_GROWTH.nonrevolving,backgroundColor:"#1A56DBcc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}%`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
 
   const hd2=["Product","Balance","30+ DPD","90+ DPD","NCO Rate","Signal","Banking Context"];
@@ -4398,12 +4398,12 @@ function buildHousingTab(){
   if(builtTabs.housing) return; builtTabs.housing=1;
 
   document.getElementById("housing-metrics").innerHTML = [
-    {lbl:"Home Prices Mar'26",     val:"+4.1%",  sub:"MoM: Case-Shiller national YoY · supply constrained",col:"#4a72e8"},
-    {lbl:"Full Year 2025",         val:"+4.1%",  sub:"YoY: vs +4.8% in 2024 · price growth slowing",      col:"#c07010"},
-    {lbl:"30yr Mortgage Mar'26",   val:"6.22%",  sub:"vs 6.72% avg 2024 · Freddie Mac",                   col:"#d03030"},
-    {lbl:"Best Metro 2025",        val:"NYC +8.1%",sub:"Strongest major metro appreciation",               col:"#1a9e4a"},
-    {lbl:"Weakest Metric",         val:"3.9 mo supply",sub:"Below 6-mo balanced norm · tight market",      col:"#d03030"},
-    {lbl:"Peak → Now",             val:"Afford. 95→108",sub:"Up from 2023 trough · lock-in: ~85% sub-5%", col:"#6d40cc"},
+    {lbl:"Home Prices Mar'26",     val:"+4.1%",  sub:"MoM: Case-Shiller national YoY · supply constrained",col:"#1A56DB"},
+    {lbl:"Full Year 2025",         val:"+4.1%",  sub:"YoY: vs +4.8% in 2024 · price growth slowing",      col:"#B45309"},
+    {lbl:"30yr Mortgage Mar'26",   val:"6.22%",  sub:"vs 6.72% avg 2024 · Freddie Mac",                   col:"#C0392B"},
+    {lbl:"Best Metro 2025",        val:"NYC +8.1%",sub:"Strongest major metro appreciation",               col:"#0D7A4A"},
+    {lbl:"Weakest Metric",         val:"3.9 mo supply",sub:"Below 6-mo balanced norm · tight market",      col:"#C0392B"},
+    {lbl:"Peak → Now",             val:"Afford. 95→108",sub:"Up from 2023 trough · lock-in: ~85% sub-5%", col:"#6D28D9"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Housing Monthly Trend Chart — dynamic dual-axis scaling ──
@@ -4417,11 +4417,11 @@ function buildHousingTab(){
     new Chart(document.getElementById("c-housing-mom").getContext("2d"),{
       type:"line",
       data:{labels:HOUSING_MONTHLY.labels,datasets:[
-        {label:"Case-Shiller YoY %",data:cs,borderColor:"#4a72e8",backgroundColor:"#4a72e815",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
-        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#d03030",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4],yAxisID:"y1"},
+        {label:"Case-Shiller YoY %",data:cs,borderColor:"#1A56DB",backgroundColor:"#1A56DB15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
+        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#C0392B",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4],yAxisID:"y1"},
       ]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
-        scales:{y:{position:"left",min:yMin,max:yMax,title:{display:true,text:"Case-Shiller YoY %",font:{size:9}},ticks:{callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#e5e7eb"}},
+        scales:{y:{position:"left",min:yMin,max:yMax,title:{display:true,text:"Case-Shiller YoY %",font:{size:9}},ticks:{callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#E2E8F0"}},
           y1:{position:"right",min:y1Min,max:y1Max,title:{display:true,text:"Mortgage Rate %",font:{size:9}},ticks:{callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{display:false}},
           x:{ticks:{font:{size:9}},grid:{display:false}}}}
     });
@@ -4430,51 +4430,51 @@ function buildHousingTab(){
   new Chart(document.getElementById("c-hpi").getContext("2d"),{
     type:"line",
     data:{labels:HPI_DATA.labels,datasets:[
-      {label:"Case-Shiller Natl", data:HPI_DATA.cs,  borderColor:"#4a72e8",backgroundColor:"#4a72e818",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
-      {label:"FHFA HPI",          data:HPI_DATA.fhfa,borderColor:"#1a9e4a",borderWidth:2,pointRadius:5,tension:0.3},
+      {label:"Case-Shiller Natl", data:HPI_DATA.cs,  borderColor:"#1A56DB",backgroundColor:"#1A56DB18",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
+      {label:"FHFA HPI",          data:HPI_DATA.fhfa,borderColor:"#0D7A4A",borderWidth:2,pointRadius:5,tension:0.3},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},min:100,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},min:100,border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-mortgage").getContext("2d"),{
     type:"line",
     data:{labels:MORTGAGE_DATA.labels,datasets:[
-      {label:"30yr Mortgage Rate",data:MORTGAGE_DATA.rate30,borderColor:"#d03030",backgroundColor:"#d0303015",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
-      {label:"Fed Funds Rate",    data:MORTGAGE_DATA.ffr,  borderColor:"#4a72e8",borderWidth:2,pointRadius:5,tension:0.3,borderDash:[5,3]},
+      {label:"30yr Mortgage Rate",data:MORTGAGE_DATA.rate30,borderColor:"#C0392B",backgroundColor:"#C0392B15",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
+      {label:"Fed Funds Rate",    data:MORTGAGE_DATA.ffr,  borderColor:"#1A56DB",borderWidth:2,pointRadius:5,tension:0.3,borderDash:[5,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},min:0,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-starts").getContext("2d"),{
     type:"bar",
     data:{labels:STARTS_DATA.labels,datasets:[
-      {label:"Single-Family",data:STARTS_DATA.sf,backgroundColor:"#4a72e8cc",borderRadius:4},
-      {label:"Multi-Family", data:STARTS_DATA.mf,backgroundColor:"#6d40cccc",borderRadius:4},
+      {label:"Single-Family",data:STARTS_DATA.sf,backgroundColor:"#1A56DBcc",borderRadius:4},
+      {label:"Multi-Family", data:STARTS_DATA.mf,backgroundColor:"#6D28D9cc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}K units`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{stacked:true,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"K"},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}K units`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{stacked:true,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"K"},border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-afford").getContext("2d"),{
     type:"bar",
     data:{labels:AFFORD_DATA.labels,datasets:[
-      {label:"Affordability Index",data:AFFORD_DATA.index, backgroundColor:"#4a72e8cc",borderRadius:4,yAxisID:"y"},
-      {label:"Months Supply",      data:AFFORD_DATA.supply,borderColor:"#c07010",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
+      {label:"Affordability Index",data:AFFORD_DATA.index, backgroundColor:"#1A56DBcc",borderRadius:4,yAxisID:"y"},
+      {label:"Months Supply",      data:AFFORD_DATA.supply,borderColor:"#B45309",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-        y:{grid:{color:"#dde2ee"},ticks:{color:"#4a72e8"},min:0,border:{display:false}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#c07010",callback:v=>v+" mo"},min:0,max:12,border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+        y:{grid:{color:"#E2E8F0"},ticks:{color:"#1A56DB"},min:0,border:{display:false}},
+        y2:{position:"right",grid:{display:false},ticks:{color:"#B45309",callback:v=>v+" mo"},min:0,max:12,border:{display:false}}
       }}
   });
 
@@ -4489,7 +4489,7 @@ function buildHousingTab(){
       <td style="color:#1A56DB">${r.y24}</td>
       <td style="${p25};font-weight:500">${r.y25}</td>
       <td>${trendPillPos(metroTrend)}</td>
-      <td style="color:#6d40cc">${r.med}</td>
+      <td style="color:#6D28D9">${r.med}</td>
       <td style="color:#7A8FA8;white-space:normal;font-size:10px">${r.note}</td>
     </tr>`;
   });
@@ -4548,13 +4548,13 @@ function buildYieldTab(){
     data:{labels:TREASURY_DATA.labels,datasets:[
       {label:"10Y Yield",data:TREASURY_DATA.dgs10,borderColor:"#6D28D9",backgroundColor:"rgba(109,40,217,.06)",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true,datalabels:false},
       {label:"2Y Yield",data:TREASURY_DATA.dgs2,borderColor:"#1A56DB",borderWidth:2,pointRadius:2,tension:0.3,fill:false,borderDash:[6,3],datalabels:false},
-      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#dc2626",backgroundColor:"rgba(220,38,38,.06)",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true,yAxisID:"y2",datalabels:false}
+      {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#C0392B",backgroundColor:"rgba(220,38,38,.06)",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true,yAxisID:"y2",datalabels:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{
         x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
         y:{position:"left",grid:{color:"rgba(148,163,184,.15)"},ticks:{color:"#6D28D9",callback:function(v){return v+"%"},stepSize:1},min:0,max:7,title:{display:true,text:"Treasury Yield %",color:"#6D28D9",font:{size:10,weight:"600"}},border:{display:false}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#dc2626",callback:function(v){return v+"%"},stepSize:2},min:0,max:16,title:{display:true,text:"Card 90+ DPD %",color:"#dc2626",font:{size:10,weight:"600"}},border:{display:false}}
+        y2:{position:"right",grid:{display:false},ticks:{color:"#C0392B",callback:function(v){return v+"%"},stepSize:2},min:0,max:16,title:{display:true,text:"Card 90+ DPD %",color:"#C0392B",font:{size:10,weight:"600"}},border:{display:false}}
       }}
   });
   }catch(e){console.error("Treasury chart error:",e);}
@@ -4638,7 +4638,7 @@ function buildYieldTab(){
         options:{responsive:true,maintainAspectRatio:false,
           plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}}},
           scales:{
-            x:{grid:{display:false},ticks:{color:"#5a6a8a",font:{size:10}},border:{display:false}},
+            x:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}},
             y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return "$"+v+"B"}},border:{display:false}}
           }}
       });
@@ -4691,79 +4691,79 @@ function buildCorpTab_REMOVED(){
     type:"bar",
     data:{labels:MNA_DATA.labels,datasets:[{
       label:"U.S. M&A Volume ($B)",data:MNA_DATA.volume,
-      backgroundColor:MNA_DATA.volume.map((v,i)=>i===8?"#c07010cc":v>4500?"#1a9e4acc":v>3500?"#4a72e8cc":"#6d40cccc"),
+      backgroundColor:MNA_DATA.volume.map((v,i)=>i===8?"#B45309cc":v>4500?"#0D7A4Acc":v>3500?"#1A56DBcc":"#6D28D9cc"),
       borderRadius:5
     }]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`M&A Volume: $${c.raw.toLocaleString()}B`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>"$"+v+"B"},min:0,border:{display:false}}}}
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>"$"+v+"B"},min:0,border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-capex").getContext("2d"),{
     type:"bar",
     data:{labels:CAPEX_DATA.labels,datasets:[
-      {label:"Capex ($B)",data:CAPEX_DATA.capex,backgroundColor:"#4a72e8cc",borderRadius:4},
-      {label:"R&D ($B)",  data:CAPEX_DATA.rnd,  backgroundColor:"#6d40cccc",borderRadius:4},
+      {label:"Capex ($B)",data:CAPEX_DATA.capex,backgroundColor:"#1A56DBcc",borderRadius:4},
+      {label:"R&D ($B)",  data:CAPEX_DATA.rnd,  backgroundColor:"#6D28D9cc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{stacked:true,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>"$"+v+"B"},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{stacked:true,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>"$"+v+"B"},border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-eps").getContext("2d"),{
     type:"bar",
     data:{labels:EPS_DATA.labels,datasets:[
-      {label:"EPS Growth %",  data:EPS_DATA.growth,backgroundColor:EPS_DATA.growth.map(v=>v<0?"#d03030cc":v>20?"#1a9e4acc":"#4a72e8cc"),borderRadius:4,yAxisID:"y"},
-      {label:"Net Margin %",  data:EPS_DATA.margin, borderColor:"#c07010",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
+      {label:"EPS Growth %",  data:EPS_DATA.growth,backgroundColor:EPS_DATA.growth.map(v=>v<0?"#C0392Bcc":v>20?"#0D7A4Acc":"#1A56DBcc"),borderRadius:4,yAxisID:"y"},
+      {label:"Net Margin %",  data:EPS_DATA.margin, borderColor:"#B45309",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-        y:{grid:{color:"#dde2ee"},ticks:{color:"#4a72e8",callback:v=>v+"%"},border:{display:false}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#c07010",callback:v=>v+"%"},min:8,max:16,border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+        y:{grid:{color:"#E2E8F0"},ticks:{color:"#1A56DB",callback:v=>v+"%"},border:{display:false}},
+        y2:{position:"right",grid:{display:false},ticks:{color:"#B45309",callback:v=>v+"%"},min:8,max:16,border:{display:false}}
       }}
   });
 
   new Chart(document.getElementById("c-leverage").getContext("2d"),{
     type:"bar",
     data:{labels:LEVERAGE_DATA.labels,datasets:[
-      {label:"Debt/EBITDA",     data:LEVERAGE_DATA.debtEbitda,backgroundColor:"#d03030cc",borderRadius:4,yAxisID:"y"},
-      {label:"Interest Coverage",data:LEVERAGE_DATA.coverage,  borderColor:"#1a9e4a",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
+      {label:"Debt/EBITDA",     data:LEVERAGE_DATA.debtEbitda,backgroundColor:"#C0392Bcc",borderRadius:4,yAxisID:"y"},
+      {label:"Interest Coverage",data:LEVERAGE_DATA.coverage,  borderColor:"#0D7A4A",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-        y:{grid:{color:"#dde2ee"},ticks:{color:"#d03030",callback:v=>v+"x"},min:1,max:4,border:{display:false}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#1a9e4a",callback:v=>v+"x"},min:3,max:9,border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+        y:{grid:{color:"#E2E8F0"},ticks:{color:"#C0392B",callback:v=>v+"x"},min:1,max:4,border:{display:false}},
+        y2:{position:"right",grid:{display:false},ticks:{color:"#0D7A4A",callback:v=>v+"x"},min:3,max:9,border:{display:false}}
       }}
   });
 
   new Chart(document.getElementById("c-matwall").getContext("2d"),{
     type:"bar",
     data:{labels:MATWALL_DATA.labels,datasets:[
-      {label:"IG Maturities ($B)",data:MATWALL_DATA.ig,backgroundColor:"#4a72e8cc",borderRadius:4},
-      {label:"HY Maturities ($B)",data:MATWALL_DATA.hy,backgroundColor:"#d03030cc",borderRadius:4},
+      {label:"IG Maturities ($B)",data:MATWALL_DATA.ig,backgroundColor:"#1A56DBcc",borderRadius:4},
+      {label:"HY Maturities ($B)",data:MATWALL_DATA.hy,backgroundColor:"#C0392Bcc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{stacked:true,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>"$"+v+"B"},border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
+              y:{stacked:true,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>"$"+v+"B"},border:{display:false}}}}
   });
 
   new Chart(document.getElementById("c-privcredit").getContext("2d"),{
     type:"line",
     data:{labels:PRIVCREDIT_DATA.labels,datasets:[
-      {label:"Private Credit AUM ($T)", data:PRIVCREDIT_DATA.pc,  borderColor:"#6d40cc",backgroundColor:"#6d40cc18",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
-      {label:"Syndicated Loans ($T)",   data:PRIVCREDIT_DATA.synd,borderColor:"#4a72e8",borderWidth:2,pointRadius:5,tension:0.3},
+      {label:"Private Credit AUM ($T)", data:PRIVCREDIT_DATA.pc,  borderColor:"#6D28D9",backgroundColor:"#6D28D918",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
+      {label:"Syndicated Loans ($T)",   data:PRIVCREDIT_DATA.synd,borderColor:"#1A56DB",borderWidth:2,pointRadius:5,tension:0.3},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}T`}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a"},border:{display:false}},
-              y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>"$"+v+"T"},min:0,border:{display:false}}}}
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}T`}}},
+      scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
+              y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>"$"+v+"T"},min:0,border:{display:false}}}}
   });
 
   const hd2=["Sector","2024 ($B)","2025 ($B)","2026F ($B)","YoY","Key Theme"];
