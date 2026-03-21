@@ -263,7 +263,8 @@ new Chart(document.getElementById('c-combined'),{
         spanGaps:true,
         yAxisID:'y1',
         segment:{
-          borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444'
+          borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444',
+          borderDash:()=>[6,3]
         },
         order:1
       }
