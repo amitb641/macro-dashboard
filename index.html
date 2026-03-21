@@ -434,8 +434,8 @@ h1 span{color:#635BFF}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
 .sort-lbl{font-size:10px;color:var(--muted)}
 .sort-btn{background:var(--card);border:1px solid var(--border);color:var(--dim);padding:5px 12px;cursor:pointer;font-family:'Courier New',Courier,monospace;font-size:10px;transition:all .18s;border-radius:3px}
-.sort-btn.active{background:var(--accent);color:#fff;border-color:var(--acc2)}
-.sort-btn:hover:not(.active){color:var(--text);border-color:var(--bord2);background:var(--card2)}
+.sort-btn.active{background:#635BFF;color:#fff;border-color:#5449E6;box-shadow:0 1px 3px rgba(99,91,255,.3)}
+.sort-btn:hover:not(.active){color:#635BFF;border-color:#635BFF;background:#F4F3FF}
 
 /* SECTOR CARDS */
 .sector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
@@ -789,15 +789,16 @@ h1 span { color: #635BFF !important; }
   transition: all .15s ease !important;
 }
 .sort-btn:hover:not(.active) {
-  border-color: var(--accent) !important;
-  color: var(--accent) !important;
-  background: #EBF2FF !important;
+  border-color: #635BFF !important;
+  color: #635BFF !important;
+  background: #F4F3FF !important;
 }
 .sort-btn.active {
-  background: var(--accent) !important;
-  border-color: var(--acc2) !important;
+  background: #635BFF !important;
+  border-color: #5449E6 !important;
   color: #fff !important;
   font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(99,91,255,.3) !important;
 }
 
 /* ── METRICS ── */
