@@ -66,7 +66,7 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
   <div class="chart-legend">
     <span class="leg"><span class="swatch" style="background:#7C3AED"></span>Recession Probability %</span>
     <span class="leg"><span class="swatch" style="background:rgba(37,99,235,.5);height:8px;width:6px;border-radius:1px"></span>SLOOS Tightening %</span>
-    <span class="leg"><span class="swatch" style="background:#EF4444"></span>Card 90+ DPD %</span>
+    <span class="leg"><span class="swatch-dash" style="border-color:#EF4444"></span>Card 90+ DPD %</span>
     <span class="leg"><span class="swatch-dash" style="border-color:rgba(0,0,0,.12)"></span>NBER recession</span>
   </div>
 
@@ -87,6 +87,46 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
 
   <!-- Signal chain -->
   <div class="signal-chain" id="signal-chain"></div>
+
+  <!-- Methodology note -->
+  <div style="margin-top:14px;padding-top:12px;border-top:1px solid #F0F1F3">
+    <p style="font-size:10px;color:#7a90aa;line-height:1.6"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
+    <details style="margin-top:6px;font-size:10px;color:#7a90aa">
+      <summary style="cursor:pointer;font-weight:600;color:#334E68">Correlation methodology</summary>
+      <div style="margin-top:6px;line-height:1.7">
+        <p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags -6 to +6 periods (bidirectional for SLOOS &#8596; Recession Prob, positive-only for Recession Prob &#8594; DPD). Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025). Positive r = variables move together.</p>
+        <p style="margin:4px 0"><strong>Lag timing (quarters):</strong></p>
+        <table style="margin:6px 0 8px;border-collapse:collapse;font-size:10px;width:100%;max-width:520px">
+          <tr style="border-bottom:1px solid #E5E7EB">
+            <th style="text-align:left;padding:4px 8px;color:#334E68;font-weight:700">Signal pair</th>
+            <th style="text-align:center;padding:4px 8px;color:#334E68;font-weight:700">Lead time</th>
+            <th style="text-align:left;padding:4px 8px;color:#334E68;font-weight:700">Example</th>
+          </tr>
+          <tr style="border-bottom:1px solid #F0F1F3">
+            <td style="padding:4px 8px">Yield Curve inversion &#8594; Recession Prob rises</td>
+            <td style="text-align:center;padding:4px 8px;font-weight:600">1–2 Q</td>
+            <td style="padding:4px 8px;color:#6B7280">Curve inverted Q3'22, prob peaked Q1'24 at 71%</td>
+          </tr>
+          <tr style="border-bottom:1px solid #F0F1F3">
+            <td style="padding:4px 8px">Recession Prob &#8594; SLOOS Tightening</td>
+            <td style="text-align:center;padding:4px 8px;font-weight:600">2–4 Q</td>
+            <td style="padding:4px 8px;color:#6B7280">Prob rose Q3'07, SLOOS peaked Q3'08 (+60%)</td>
+          </tr>
+          <tr style="border-bottom:1px solid #F0F1F3">
+            <td style="padding:4px 8px">SLOOS Tightening &#8594; Card 90+ DPD</td>
+            <td style="text-align:center;padding:4px 8px;font-weight:600">2–4 Q</td>
+            <td style="padding:4px 8px;color:#6B7280">SLOOS peaked Q3'08, Card DPD peaked Q1'10 (13.7%)</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 8px">Full cycle: Yield Curve &#8594; Card losses</td>
+            <td style="text-align:center;padding:4px 8px;font-weight:600">5–10 Q</td>
+            <td style="padding:4px 8px;color:#6B7280">~15–30 months end-to-end</td>
+          </tr>
+        </table>
+        <p style="margin:4px 0"><strong>Interpretation:</strong> The signal chain runs: <strong>Yield Curve (Recession Prob) &#8594; SLOOS Tightening &#8594; Credit Losses (DPD)</strong>. The yield curve inverts first, driving recession probability higher. Banks then tighten lending standards in response (SLOOS lags recession prob by 2–4 quarters). Finally, tighter credit leads to rising delinquencies as borrowers lose refinancing options (DPD lags SLOOS by another 2–4 quarters). This three-stage cascade shows recession probability is both a leading indicator of bank behavior AND a predictor of credit losses.</p>
+      </div>
+    </details>
+  </div>
 </div>
 
 <!-- ═══ BEFORE / AFTER COMPARISON ═══ -->
@@ -216,7 +256,8 @@ new Chart(document.getElementById('c-combined'),{
         data:CARD_DQ,
         borderColor:'#EF4444',
         backgroundColor:'transparent',
-        borderWidth:2,
+        borderWidth:2.5,
+        borderDash:[6,3],
         fill:false,
         tension:0.35,
         spanGaps:true,
