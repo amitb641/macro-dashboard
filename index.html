@@ -272,11 +272,15 @@ class MC{
           const vals=ds.data.filter(v=>v!=null&&isFinite(v));
           const maxV=Math.max(...vals),minV=Math.min(...vals);
           const showIdx=new Set();
+          // For small charts (≤6 bars), show ALL labels
+          if(vals.length<=6){ds.data.forEach((v,i)=>{if(v!=null&&isFinite(v))showIdx.add(i);});}
+          else {
           ds.data.forEach((v,i)=>{if(v!=null&&isFinite(v)){if(v===maxV||v===minV)showIdx.add(i);}});
           // always show last non-null
           for(let i=ds.data.length-1;i>=0;i--){if(ds.data[i]!=null&&isFinite(ds.data[i])){showIdx.add(i);break;}}
           // always show first non-null
           for(let i=0;i<ds.data.length;i++){if(ds.data[i]!=null&&isFinite(ds.data[i])){showIdx.add(i);break;}}
+          }
           ds.data.forEach((v,gi)=>{
             if(v==null||!isFinite(v)||!showIdx.has(gi))return;
             const cx_dl=d.x0+gW_dl*gi+gap_dl+bW_dl*di+bW_dl/2;
@@ -1877,7 +1881,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Household Debt &amp; Delinquencies — NY Fed Data</div>
       <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
       <div class="ch300"><canvas id="c-debt-bar"></canvas></div>
-      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025.</p>
+      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025 (Equifax). Note: NY Fed/Equifax figures cover all credit card issuers (banks, credit unions, fintech, retail). Fed Board series (FRED RCCCBACTDPD90P) covers commercial banks only and reports ~7.8% — lower due to tighter bank underwriting standards.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
@@ -3154,7 +3158,7 @@ function buildFCTab(){
     type:"bar",
     data:{labels:["Q1 2025","Q2 2025","Q3 2025","Q4 2025","Full 2025"],
       datasets:[{
-        data:[-0.6, 3.8, 4.4, 1.4, 4.5],
+        data:[-0.6, 3.8, 4.4, 1.4, 2.2],
         backgroundColor:[-0.6,3.8,4.4,1.4,2.2].map(v=>v<0?"#D64045cc":v===2.2?"#336BCCcc":"#1A9E5Acc"),
         borderRadius:5
       }]},
@@ -3372,7 +3376,7 @@ function buildPCETab(){
     {lbl:"Full Year 2025",         val:"2.6%",   sub:"Real PCE growth 2025 · BEA",                        col:"#CC8A00"},
     {lbl:"Personal Saving Rate",   val:_savLatest+"%",   sub:_savLbl+" · vs "+_savPrior+"% prior · "+(_savLatest>_savPrior?"trending up":"trending down"), col:"#1A9E5A"},
     {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",              col:"#1A9E5A"},
-    {lbl:"Consumer Stress",        val:"CC DQ "+_crCardPCE+"%", sub:"90+ day delinquency · "+_crQlbl,      col:"#D64045"},
+    {lbl:"Consumer Stress",        val:"CC DQ "+_crCardPCE+"%", sub:"90+ DPD · NY Fed/Equifax all issuers · "+_crQlbl, col:"#D64045"},
     {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -4229,7 +4233,7 @@ function buildCreditTab(){
   var _crBest = _crAll.reduce((a,b)=>a.v<b.v?a:b);
   var _crWorst = _crAll.reduce((a,b)=>a.v>b.v?a:b);
   document.getElementById("credit-metrics").innerHTML = [
-    {lbl:"Card 90+ DPD "+_crLatestQ,  val:_crCard+"%",  sub:(_crCard>_crCardPrior?"Up":"Down")+" from "+_crCardPrior+"% prior quarter", col:"#D64045"},
+    {lbl:"Card 90+ DPD "+_crLatestQ,  val:_crCard+"%",  sub:"NY Fed/Equifax (all issuers) · "+(_crCard>_crCardPrior?"up":"down")+" from "+_crCardPrior+"% prior · Fed Board banks-only: ~7.8%", col:"#D64045"},
     {lbl:"Auto 90+ DPD",              val:_crAuto+"%",  sub:_crLatestQ+" · "+(_crAuto>_crAutoPrior?"up":"down")+" from "+_crAutoPrior+"% prior", col:"#CC8A00"},
     {lbl:"Student Loan DQ",           val:_crStudent+"%", sub:"Post-forbearance first reporting",              col:"#CC8A00"},
     {lbl:"Best Category",             val:_crBest.n+" "+_crBest.v+"%", sub:"Lowest 90+ DPD rate",              col:"#1A9E5A"},
