@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Cycle Phase Diagram — Prototype</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#F7F8FA;color:#0D1B2A;padding:32px}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.subtitle{font-size:13px;color:#7A8FA8;margin-bottom:28px}
+.panel{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.panel-title{font-size:15px;font-weight:700;color:#0D1B2A;margin-bottom:2px}
+.panel-sub{font-size:12px;color:#4B5563;margin-bottom:16px;line-height:1.5}
+.chart-box{position:relative;height:500px}
+.phase-legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:16px;font-size:11px;color:#334E68;align-items:center}
+.phase-legend .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px}
+.phase-labels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.phase-card{padding:12px 16px;border-radius:10px;font-size:11px;line-height:1.5}
+.phase-card strong{font-size:12px;display:block;margin-bottom:2px}
+.current-box{margin-top:20px;padding:16px 20px;border-radius:12px;background:#F8FAFC;border:1px solid #E2E8F0}
+.current-box h3{font-size:13px;font-weight:700;margin-bottom:8px;color:#334E68}
+.current-vals{display:flex;gap:24px;flex-wrap:wrap}
+.cv{text-align:center}
+.cv .num{font-size:22px;font-weight:700;font-family:'DM Mono',monospace}
+.cv .lbl{font-size:10px;color:#7A8FA8;margin-top:2px}
+.src{font-size:10px;color:#94A3B8;margin-top:12px}
+</style>
+</head>
+<body>
+
+<h1>Credit Cycle Phase Diagram — Prototype</h1>
+<p class="subtitle">Option 3: SLOOS Tightening (x) vs Card 90+ DPD (y) · dot size = recession probability · color = time period</p>
+
+<div class="panel">
+  <div class="panel-title">Credit Cycle Phase Diagram</div>
+  <div class="panel-sub">Each dot = one quarter · X-axis: lending standards (SLOOS tightening %) · Y-axis: consumer stress (Card 90+ DPD %) · Dot size: recession probability · Arrow shows current trajectory</div>
+
+  <div class="chart-box"><canvas id="phase"></canvas></div>
+
+  <div class="phase-labels">
+    <div class="phase-card" style="background:#f0fdf4;border:1px solid #bbf7d0">
+      <strong style="color:#1A9E5A">↙ Bottom-Left: Expansion</strong>
+      Low tightening + low delinquency = healthy credit cycle. Banks lending freely, consumers performing well.
+    </div>
+    <div class="phase-card" style="background:#fefce8;border:1px solid #fde68a">
+      <strong style="color:#CC8A00">↗ Top-Left: Early Stress</strong>
+      Delinquencies rising but banks haven't tightened yet. Early warning — stress building beneath the surface.
+    </div>
+    <div class="phase-card" style="background:#fef2f2;border:1px solid #fecaca">
+      <strong style="color:#D64045">↗ Top-Right: Crisis</strong>
+      High tightening + high delinquency = credit crunch. Banks pulling back as losses mount. (2008-09, 2020)
+    </div>
+    <div class="phase-card" style="background:#eff6ff;border:1px solid #bfdbfe">
+      <strong style="color:#336BCC">↙ Bottom-Right: Recovery</strong>
+      Banks still cautious (high tightening) but delinquencies improving. Credit cycle healing.
+    </div>
+  </div>
+
+  <div class="current-box">
+    <h3>Current Position (Q4'25)</h3>
+    <div class="current-vals">
+      <div class="cv"><div class="num" style="color:#336BCC">+2%</div><div class="lbl">SLOOS Tightening</div></div>
+      <div class="cv"><div class="num" style="color:#D64045">9.8%</div><div class="lbl">Card 90+ DPD</div></div>
+      <div class="cv"><div class="num" style="color:#CC8A00">19%</div><div class="lbl">Recession Prob</div></div>
+      <div class="cv"><div class="num" style="color:#8878B8">Stress</div><div class="lbl">Cycle Phase</div></div>
+    </div>
+  </div>
+
+  <p class="src">Sources: Federal Reserve Senior Loan Officer Opinion Survey (SLOOS) · NY Fed Household Debt & Credit (Equifax) · NY Fed Recession Probability Model (10Y-3M spread). Quarterly data Q1'00–Q4'25.</p>
+</div>
+
+<script>
+// Data from CREDIT_SLOOS
+const labels = ["Q1'00","Q3'00","Q1'01","Q3'01","Q1'02","Q3'02","Q1'03","Q3'03","Q1'04","Q3'04","Q1'05","Q3'05","Q1'06","Q3'06","Q1'07","Q3'07","Q1'08","Q3'08","Q1'09","Q3'09","Q1'10","Q3'10","Q1'11","Q3'11","Q1'12","Q3'12","Q1'13","Q3'13","Q1'14","Q3'14","Q1'15","Q3'15","Q1'16","Q3'16","Q1'17","Q3'17","Q1'18","Q3'18","Q1'19","Q3'19","Q1'20","Q3'20","Q1'21","Q3'21","Q1'22","Q3'22","Q1'23","Q3'23","Q1'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
+const consumer = [5,15,32,25,10,0,-5,-10,-10,-5,0,-5,-5,0,10,15,45,60,55,20,0,-10,-10,-5,0,0,0,-5,-5,0,0,0,5,5,0,-5,0,-5,5,8,62,-15,-22,-18,18,32,44,28,22,18,14,10,6,4,2];
+const card_dq = [null,null,null,null,null,null,9.5,9.5,8.7,8.7,8.0,8.0,7.5,7.5,8.2,8.2,10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0,9.0,8.0,8.0,7.3,7.3,6.8,6.8,6.5,6.5,6.0,6.0,5.5,5.5,5.9,5.9,9.1,9.1,6.8,6.8,4.0,4.0,6.4,6.4,8.6,9.2,9.8,10.1,10.0,9.8,9.8];
+const recession_prob = [30,40,30,20,10,7,5,4,3,2,2,3,4,8,15,35,40,35,10,2,1,1,1,2,4,6,8,7,5,4,3,3,4,5,4,3,3,5,20,33,28,5,2,1,2,6,40,66,71,58,50,38,28,22,19];
+
+// Color by era
+function getEra(lbl) {
+  const y = parseInt(lbl.replace(/Q\d'/,"20").replace(/Q\d'/,""));
+  const q = lbl;
+  if (q.includes("'00") || q.includes("'01") || q.includes("'02")) return 'dot2000';
+  if (q.includes("'03") || q.includes("'04") || q.includes("'05") || q.includes("'06")) return 'expansion';
+  if (q.includes("'07") || q.includes("'08") || q.includes("'09")) return 'gfc';
+  if (q.includes("'10") || q.includes("'11") || q.includes("'12") || q.includes("'13") || q.includes("'14") || q.includes("'15") || q.includes("'16") || q.includes("'17") || q.includes("'18") || q.includes("'19")) return 'recovery';
+  if (q.includes("'20") || q.includes("'21")) return 'covid';
+  return 'current'; // '22-'25
+}
+
+const eraColors = {
+  dot2000: {bg: '#94A3B866', border: '#94A3B8'},
+  expansion: '#1A9E5A',
+  gfc: '#D64045',
+  recovery: '#336BCC',
+  covid: '#CC8A00',
+  current: '#635BFF'
+};
+
+// Build scatter data
+const points = [];
+for (let i = 0; i < labels.length; i++) {
+  if (card_dq[i] == null) continue;
+  const era = getEra(labels[i]);
+  const rp = recession_prob[i] || 1;
+  points.push({
+    x: consumer[i],
+    y: card_dq[i],
+    r: Math.max(4, Math.sqrt(rp) * 2.8),
+    label: labels[i],
+    era: era,
+    rp: rp,
+    idx: i
+  });
+}
+
+// Group by era for datasets
+const eras = ['dot2000','expansion','gfc','recovery','covid','current'];
+const eraLabels = ['2000-02 (Dot-com)','2003-06 (Expansion)','2007-09 (GFC)','2010-19 (Recovery)','2020-21 (COVID)','2022-25 (Current)'];
+const eraColorMap = {
+  dot2000: '#94A3B8',
+  expansion: '#1A9E5A',
+  gfc: '#D64045',
+  recovery: '#336BCC',
+  covid: '#CC8A00',
+  current: '#635BFF'
+};
+
+const datasets = eras.map((era, ei) => {
+  const pts = points.filter(p => p.era === era);
+  return {
+    label: eraLabels[ei],
+    data: pts.map(p => ({x: p.x, y: p.y, r: p.r, label: p.label, rp: p.rp})),
+    backgroundColor: eraColorMap[era] + '55',
+    borderColor: eraColorMap[era],
+    borderWidth: 1.5,
+    hoverBorderWidth: 2.5,
+    pointStyle: 'circle'
+  };
+});
+
+// Add trajectory arrow (last 4 quarters)
+const trail = points.slice(-5);
+const arrowDS = {
+  label: 'Trajectory',
+  data: trail.map(p => ({x: p.x, y: p.y})),
+  type: 'line',
+  borderColor: '#635BFF',
+  borderWidth: 2.5,
+  pointRadius: 0,
+  tension: 0.3,
+  borderDash: [],
+  fill: false,
+  order: 0
+};
+
+// Current position (big dot)
+const cur = points[points.length - 1];
+const nowDS = {
+  label: 'NOW (Q4\'25)',
+  data: [{x: cur.x, y: cur.y, r: 14}],
+  backgroundColor: '#635BFFcc',
+  borderColor: '#fff',
+  borderWidth: 3,
+  hoverBorderWidth: 4,
+  pointStyle: 'circle',
+  order: -1
+};
+
+new Chart(document.getElementById('phase').getContext('2d'), {
+  type: 'bubble',
+  data: { datasets: [...datasets, arrowDS, nowDS] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: '#334E68',
+          font: { size: 11, family: 'DM Sans' },
+          boxWidth: 12,
+          boxHeight: 10,
+          usePointStyle: true,
+          pointStyle: 'circle',
+          filter: (item) => item.text !== 'Trajectory'
+        }
+      },
+      tooltip: {
+        backgroundColor: '#fff',
+        borderColor: '#E2E8F0',
+        borderWidth: 1,
+        titleColor: '#0D1B2A',
+        bodyColor: '#334E68',
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          title: (items) => {
+            const d = items[0].raw;
+            return d.label || items[0].dataset.label;
+          },
+          label: (ctx) => {
+            const d = ctx.raw;
+            if (!d.rp) return `SLOOS: ${d.x}% | Card DPD: ${d.y}%`;
+            return [
+              `SLOOS Tightening: ${d.x}%`,
+              `Card 90+ DPD: ${d.y}%`,
+              `Recession Prob: ${d.rp}%`
+            ];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'SLOOS Consumer Tightening %', color: '#334E68', font: { size: 12, weight: '600' } },
+        grid: { color: '#E2E8F0' },
+        ticks: { color: '#334E68', callback: v => v + '%' },
+        min: -30,
+        max: 75,
+        border: { display: false }
+      },
+      y: {
+        title: { display: true, text: 'Card 90+ DPD %', color: '#334E68', font: { size: 12, weight: '600' } },
+        grid: { color: '#E2E8F0' },
+        ticks: { color: '#334E68', callback: v => v + '%' },
+        min: 3,
+        max: 15,
+        border: { display: false }
+      }
+    }
+  },
+  plugins: [{
+    id: 'quadrants',
+    beforeDraw(chart) {
+      const {ctx, chartArea: {left, top, right, bottom}, scales: {x, y}} = chart;
+      const cx = x.getPixelForValue(10); // tightening threshold
+      const cy = y.getPixelForValue(8);  // delinquency threshold
+
+      // Expansion (bottom-left) — green
+      ctx.fillStyle = 'rgba(26,158,90,0.04)';
+      ctx.fillRect(left, cy, cx - left, bottom - cy);
+
+      // Early Stress (top-left) — amber
+      ctx.fillStyle = 'rgba(204,138,0,0.04)';
+      ctx.fillRect(left, top, cx - left, cy - top);
+
+      // Crisis (top-right) — red
+      ctx.fillStyle = 'rgba(214,64,69,0.06)';
+      ctx.fillRect(cx, top, right - cx, cy - top);
+
+      // Recovery (bottom-right) — blue
+      ctx.fillStyle = 'rgba(51,107,204,0.04)';
+      ctx.fillRect(cx, cy, right - cx, bottom - cy);
+
+      // Quadrant labels
+      ctx.font = "600 10px 'DM Sans'";
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = '#1A9E5A';
+      ctx.textAlign = 'left';
+      ctx.fillText('EXPANSION', left + 8, bottom - 8);
+
+      ctx.fillStyle = '#CC8A00';
+      ctx.fillText('EARLY STRESS', left + 8, top + 16);
+
+      ctx.fillStyle = '#D64045';
+      ctx.textAlign = 'right';
+      ctx.fillText('CRISIS', right - 8, top + 16);
+
+      ctx.fillStyle = '#336BCC';
+      ctx.fillText('RECOVERY', right - 8, bottom - 8);
+      ctx.globalAlpha = 1;
+
+      // Draw crosshair lines
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx, top);
+      ctx.lineTo(cx, bottom);
+      ctx.moveTo(left, cy);
+      ctx.lineTo(right, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }, {
+    id: 'arrowHead',
+    afterDraw(chart) {
+      const ds = chart.data.datasets.find(d => d.label === 'Trajectory');
+      if (!ds || ds.data.length < 2) return;
+      const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(ds));
+      const pts = meta.data;
+      if (pts.length < 2) return;
+      const last = pts[pts.length - 1];
+      const prev = pts[pts.length - 2];
+      const angle = Math.atan2(last.y - prev.y, last.x - prev.x);
+      const ctx = chart.ctx;
+      const size = 10;
+      ctx.save();
+      ctx.translate(last.x, last.y);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-size, -size/2);
+      ctx.lineTo(-size, size/2);
+      ctx.closePath();
+      ctx.fillStyle = '#635BFF';
+      ctx.fill();
+      ctx.restore();
+
+      // Label "NOW"
+      ctx.font = "bold 11px 'DM Mono'";
+      ctx.fillStyle = '#635BFF';
+      ctx.textAlign = 'left';
+      ctx.fillText('NOW', last.x + 12, last.y + 4);
+    }
+  }]
+});
+</script>
+</body>
+</html>
