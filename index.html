@@ -2511,11 +2511,12 @@ const _KPI_THRESHOLDS = {
   claims:  {parse:v=>parseFloat(v), green:v=>v<220,   red:v=>v>=280},
   umcsent: {parse:v=>parseFloat(v), green:v=>v>=70,   red:v=>v<55},
   dsr:     {parse:v=>parseFloat(v), green:v=>v<10.5,  red:v=>v>=12.0},
-  rate:    {parse:v=>parseFloat(v), green:()=>false,   red:()=>false} // always purple
+  rate:    {parse:v=>parseFloat(v), purple:true, green:()=>false, red:()=>false} // always purple — policy rate
 };
 function _kpiColor(metric, val){
   var t = _KPI_THRESHOLDS[metric];
   if(!t) return '#635BFF';
+  if(t.purple) return '#635BFF'; // policy rates — always purple
   var n = t.parse(val);
   if(isNaN(n)) return '#635BFF';
   if(t.red(n)) return '#D64045';
@@ -5589,6 +5590,38 @@ if(document.readyState === 'loading'){
 <div class="tab-panel" id="tab-dict">
   <div class="fc-note">
     <strong>📖 Sources, Definitions &amp; Dashboard Guide</strong> — All data sourced from U.S. federal agencies, central bank surveys, financial regulators, and publicly reported bank earnings. Forecast figures are consensus or institution-specific estimates published Jan–Mar 2026. Dashboard current as of March 20, 2026. Latest data: Feb'26 BLS (jobs, CPI, wages), Jan'26 BEA (PCE), Mar'26 FRED (claims, yields).
+  </div>
+
+  <!-- KPI SIGNAL COLOR GUIDE -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">KPI Signal Color Logic</div>
+    <div class="panel-sub">Each KPI tile in the header strip is color-coded based on defined economic thresholds. Colors update automatically when data changes — no manual assignment.</div>
+    <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:600;color:#1A9E5A">● Green = Healthy — within normal/target range</span>
+      <span style="font-size:11px;font-weight:600;color:#CC8A00">● Amber = Watch — approaching stress levels</span>
+      <span style="font-size:11px;font-weight:600;color:#D64045">● Red = Stress — outside normal bounds, action warranted</span>
+      <span style="font-size:11px;font-weight:600;color:#635BFF">● Purple = Policy Rate — Fed-set or influenced, not a directional signal</span>
+    </div>
+    <div class="dtable-wrap"><table class="dtable" style="width:100%">
+      <thead><tr>
+        <th style="text-align:left;min-width:160px">Metric</th>
+        <th style="text-align:center;min-width:120px"><span style="color:#1A9E5A">● Green (Healthy)</span></th>
+        <th style="text-align:center;min-width:120px"><span style="color:#CC8A00">● Amber (Watch)</span></th>
+        <th style="text-align:center;min-width:120px"><span style="color:#D64045">● Red (Stress)</span></th>
+        <th style="text-align:left;min-width:240px">Rationale</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Unemployment Rate</td><td style="text-align:center">&lt; 4.0%</td><td style="text-align:center">4.0 – 4.9%</td><td style="text-align:center">≥ 5.0%</td><td style="font-size:10px;color:#7A8FA8">Sub-4% = full employment (NAIRU ~4%). Above 5% historically signals recession onset. Fed dual mandate target.</td></tr>
+        <tr><td>Jobs MoM (K)</td><td style="text-align:center">&gt; +100K</td><td style="text-align:center">0 – +100K</td><td style="text-align:center">&lt; 0</td><td style="font-size:10px;color:#7A8FA8">+100K/mo = breakeven for population growth. Sub-zero = active contraction. Based on BLS CES nonfarm payrolls.</td></tr>
+        <tr><td>CPI YoY %</td><td style="text-align:center">&lt; 2.5%</td><td style="text-align:center">2.5 – 3.5%</td><td style="text-align:center">≥ 3.5%</td><td style="font-size:10px;color:#7A8FA8">Fed targets ~2% inflation. Below 2.5% = near target. Above 3.5% = persistent overshoot requiring policy response.</td></tr>
+        <tr><td>Core PCE YoY %</td><td style="text-align:center">&lt; 2.5%</td><td style="text-align:center">2.5 – 3.0%</td><td style="text-align:center">≥ 3.0%</td><td style="font-size:10px;color:#7A8FA8">Fed's preferred inflation gauge. Tighter thresholds than CPI because PCE is the actual policy target. Above 3% = hawkish Fed.</td></tr>
+        <tr><td>Wage Growth %</td><td style="text-align:center">3.0 – 4.5%</td><td style="text-align:center">Outside range</td><td style="text-align:center">&lt; 2% or &gt; 6%</td><td style="font-size:10px;color:#7A8FA8">Goldilocks zone: 3-4.5% supports consumption without fueling wage-price spiral. Below 2% = stagnation. Above 6% = overheating (2021-22 peak).</td></tr>
+        <tr><td>Initial Claims (K)</td><td style="text-align:center">&lt; 220K</td><td style="text-align:center">220 – 280K</td><td style="text-align:center">≥ 280K</td><td style="font-size:10px;color:#7A8FA8">Pre-pandemic normal ~210K. Above 250K = labor market softening. 300K+ historically precedes recessions. Weekly leading indicator.</td></tr>
+        <tr><td>UMich Sentiment</td><td style="text-align:center">≥ 70</td><td style="text-align:center">55 – 70</td><td style="text-align:center">&lt; 55</td><td style="font-size:10px;color:#7A8FA8">Long-run avg ~85. Below 70 = consumer pessimism. Sub-55 = crisis-level (2008: 55, 2022: 50). Leads spending by 1-2 quarters.</td></tr>
+        <tr><td>Debt Service Ratio %</td><td style="text-align:center">&lt; 10.5%</td><td style="text-align:center">10.5 – 12%</td><td style="text-align:center">≥ 12%</td><td style="font-size:10px;color:#7A8FA8">FRED TDSP: mortgage + consumer debt payments as % of disposable income. 2007 peak: 13.2%. Above 12% = financial stress rising.</td></tr>
+        <tr><td>Fed Funds / 10Y Treasury</td><td colspan="3" style="text-align:center;color:#635BFF;font-weight:600">Always purple — policy rate, not a directional signal</td><td style="font-size:10px;color:#7A8FA8">Rates set by FOMC or market expectations. Not inherently good/bad — context-dependent (inflation regime, growth outlook, term premium).</td></tr>
+      </tbody>
+    </table></div>
   </div>
 
   <!-- TAB INDEX -->
