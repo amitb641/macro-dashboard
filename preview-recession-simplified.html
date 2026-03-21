@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recession Risk Tracker — Simplified Preview</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#F3F4F6;color:#1F2937;padding:32px}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.subtitle{font-size:13px;color:#6B7280;margin-bottom:32px}
+
+.panel{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.panel-title{font-size:15px;font-weight:700;color:#1F2937;margin-bottom:2px}
+.panel-sub{font-size:12px;color:#4B5563;margin-bottom:14px;line-height:1.5}
+
+/* Combined chart */
+.chart-wrap{position:relative;height:200px;margin-bottom:4px}
+.chart-legend{display:flex;gap:18px;margin-bottom:10px;flex-wrap:wrap}
+.chart-legend .leg{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151}
+.chart-legend .leg .swatch{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chart-legend .leg .swatch-dash{border-top:2px dashed;width:14px;display:inline-block}
+
+/* Heatmap strip */
+.heat-section{margin-top:14px;padding-top:12px;border-top:1px solid #F0F1F3}
+.heat-section-title{font-size:11px;font-weight:700;color:#4B5563;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.heat-row{display:flex;align-items:center;margin-bottom:3px}
+.heat-row .hlabel{width:100px;font-size:11px;font-weight:600;color:#374151;flex-shrink:0;text-align:right;padding-right:8px}
+.heat-cells{display:flex;gap:1px;flex:1}
+.hcell{flex:1;height:16px;border-radius:2px;position:relative;cursor:pointer;transition:transform .1s}
+.hcell:hover{transform:scaleY(1.5);z-index:2}
+.hcell:hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;z-index:10;pointer-events:none}
+.heat-axis{display:flex;margin-left:100px;gap:1px;margin-top:2px}
+.heat-axis span{flex:1;font-size:9px;color:#6B7280;text-align:center}
+.heat-legend{display:flex;gap:3px;align-items:center;margin-top:6px;margin-left:100px}
+.heat-legend .bar{width:100px;height:10px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#ef4444)}
+.heat-legend span{font-size:10px;color:#4B5563}
+
+/* Signal chain */
+.signal-chain{display:flex;align-items:center;gap:0;margin-top:14px;flex-wrap:wrap}
+.signal-node{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid}
+.signal-arrow{color:#6B7280;font-size:16px;padding:0 4px}
+
+/* Comparison layout */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px}
+.compare .tag{display:inline-block;font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.tag-before{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
+.tag-after{background:#F0FDF4;color:#16A34A;border:1px solid #BBF7D0}
+.compare-note{font-size:12px;color:#6B7280;line-height:1.6;margin-top:8px}
+.compare-note strong{color:#1F2937}
+</style>
+</head>
+<body>
+
+<h1>Recession Risk Tracker — Simplified Preview</h1>
+<p class="subtitle">Combined sparkline + 2-row heatmap + signal chain. Same data, half the height, clearer story.</p>
+
+<!-- ═══ SIMPLIFIED VERSION ═══ -->
+<div class="panel">
+  <div class="panel-title">Credit Cycle & Recession Risk Monitor</div>
+  <div class="panel-sub">NY Fed recession probability & card delinquency — 25-year signal history</div>
+
+  <!-- Chart legend -->
+  <div class="chart-legend">
+    <span class="leg"><span class="swatch" style="background:#7C3AED"></span>Recession Probability %</span>
+    <span class="leg"><span class="swatch" style="background:#EF4444"></span>Card 90+ DPD %</span>
+    <span class="leg"><span class="swatch-dash" style="border-color:rgba(0,0,0,.12)"></span>NBER recession</span>
+  </div>
+
+  <!-- Single combined chart -->
+  <div class="chart-wrap">
+    <canvas id="c-combined"></canvas>
+  </div>
+
+  <!-- 2-row heatmap -->
+  <div class="heat-section">
+    <div class="heat-section-title">Risk Intensity Timeline</div>
+    <div id="heatmap"></div>
+    <div class="heat-legend">
+      <div class="bar"></div>
+      <span>Low → High risk</span>
+    </div>
+  </div>
+
+  <!-- Signal chain -->
+  <div class="signal-chain" id="signal-chain"></div>
+</div>
+
+<!-- ═══ BEFORE / AFTER COMPARISON ═══ -->
+<div class="compare">
+  <div>
+    <span class="tag tag-before">Before — 3 panels + 3-row heatmap</span>
+    <div class="compare-note">
+      <strong>3 separate sparklines</strong> (Recession Prob, SLOOS bars, Card DPD)<br>
+      <strong>3-row heatmap</strong> + NBER recession row<br>
+      <strong>3 status pills</strong> at top<br>
+      <strong>~400px</strong> vertical height<br>
+      Harder to spot divergences between series
+    </div>
+  </div>
+  <div>
+    <span class="tag tag-after">After — 1 chart + 2-row heatmap</span>
+    <div class="compare-note">
+      <strong>1 overlay chart</strong> with dual Y-axes (leading + lagging indicator)<br>
+      <strong>2-row heatmap</strong> (SLOOS dropped — redundant middle signal)<br>
+      <strong>Signal chain only</strong> — pills removed (chain shows same info)<br>
+      <strong>~220px</strong> vertical height (45% smaller)<br>
+      Divergences visible at a glance (lines cross/separate)
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Data ──
+const LABELS=["Q1'00","Q3'00","Q1'01","Q3'01","Q1'02","Q3'02","Q1'03","Q3'03","Q1'04","Q3'04","Q1'05","Q3'05","Q1'06","Q3'06","Q1'07","Q3'07","Q1'08","Q3'08","Q1'09","Q3'09","Q1'10","Q3'10","Q1'11","Q3'11","Q1'12","Q3'12","Q1'13","Q3'13","Q1'14","Q3'14","Q1'15","Q3'15","Q1'16","Q3'16","Q1'17","Q3'17","Q1'18","Q3'18","Q1'19","Q3'19","Q1'20","Q3'20","Q1'21","Q3'21","Q1'22","Q3'22","Q1'23","Q3'23","Q1'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
+const CONSUMER=[5,15,32,25,10,0,-5,-10,-10,-5,0,-5,-5,0,10,15,45,60,55,20,0,-10,-10,-5,0,0,0,-5,-5,0,0,0,5,5,0,-5,0,-5,5,8,62,-15,-22,-18,18,32,44,28,22,18,14,10,6,4,2];
+const CARD_DQ=[null,null,null,null,null,null,9.5,9.5,8.7,8.7,8.0,8.0,7.5,7.5,8.2,8.2,10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0,9.0,8.0,8.0,7.3,7.3,6.8,6.8,6.5,6.5,6.0,6.0,5.5,5.5,5.9,5.9,9.1,9.1,6.8,6.8,4.0,4.0,6.4,6.4,8.6,9.2,9.8,10.1,10.0,9.8,9.8];
+const REC_PROB=[30,40,30,20,10,7,5,4,3,2,2,3,4,8,15,35,40,35,10,2,1,1,1,2,4,6,8,7,5,4,3,3,4,5,4,3,3,5,20,33,28,5,2,1,2,6,40,66,71,58,50,38,28,22,19];
+const RECESSIONS=[{start:2,end:3},{start:16,end:19},{start:40,end:41}];
+
+// ── Helpers ──
+function riskLevel(v,th){return v>th[1]?'high':v>th[0]?'elevated':'low'}
+function riskColor(level){return{high:['#DC2626','#FEF2F2','#FECACA'],elevated:['#D97706','#FFFBEB','#FDE68A'],low:['#16A34A','#F0FDF4','#BBF7D0']}[level]}
+
+const lastRec=REC_PROB.at(-1), lastSloos=CONSUMER.at(-1), lastCard=CARD_DQ.at(-1);
+
+// ── Recession band plugin ──
+const recPlugin={
+  id:'recBands',
+  beforeDraw(chart){
+    const{ctx,chartArea:{left,right,top,bottom},scales:{x}}=chart;
+    const w=(right-left)/LABELS.length;
+    ctx.save();
+    RECESSIONS.forEach(r=>{
+      ctx.fillStyle='rgba(0,0,0,.06)';
+      ctx.fillRect(left+r.start*w,top,(r.end-r.start+1)*w,bottom-top);
+    });
+    ctx.restore();
+  }
+};
+
+// ── Risk zone background plugin ──
+const zonePlugin={
+  id:'riskZones',
+  beforeDraw(chart){
+    const{ctx,chartArea:{left,right,top,bottom},scales:{y}}=chart;
+    ctx.save();
+    // High risk zone (>40%)
+    const y40=y.getPixelForValue(40);
+    const y20=y.getPixelForValue(20);
+    if(y40>top){
+      ctx.fillStyle='rgba(220,38,38,.04)';
+      ctx.fillRect(left,top,right-left,y40-top);
+    }
+    // Elevated zone (20-40%)
+    if(y20>y40){
+      ctx.fillStyle='rgba(217,119,6,.03)';
+      ctx.fillRect(left,y40,right-left,y20-y40);
+    }
+    ctx.restore();
+  }
+};
+
+// ── Combined Chart ──
+new Chart(document.getElementById('c-combined'),{
+  type:'line',
+  plugins:[recPlugin,zonePlugin],
+  data:{
+    labels:LABELS,
+    datasets:[
+      {
+        label:'Recession Probability',
+        data:REC_PROB,
+        borderColor:'#7C3AED',
+        backgroundColor:'rgba(124,58,237,.06)',
+        borderWidth:2.5,
+        fill:true,
+        tension:0.35,
+        yAxisID:'y',
+        segment:{
+          borderColor:ctx=>ctx.p1.parsed.y>40?'#DC2626':ctx.p1.parsed.y>20?'#D97706':'#7C3AED',
+          backgroundColor:ctx=>ctx.p1.parsed.y>40?'rgba(220,38,38,.08)':ctx.p1.parsed.y>20?'rgba(217,119,6,.05)':'rgba(124,58,237,.05)'
+        },
+        order:2
+      },
+      {
+        label:'Card 90+ DPD',
+        data:CARD_DQ,
+        borderColor:'#EF4444',
+        backgroundColor:'transparent',
+        borderWidth:2,
+        fill:false,
+        tension:0.35,
+        spanGaps:true,
+        yAxisID:'y1',
+        segment:{
+          borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444'
+        },
+        order:1
+      }
+    ]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    animation:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        titleFont:{family:'DM Sans',size:11,weight:600},
+        bodyFont:{family:'DM Sans',size:11},
+        padding:8,
+        cornerRadius:6,
+        displayColors:true,
+        boxWidth:8,
+        boxHeight:8,
+        usePointStyle:true,
+        callbacks:{
+          label:ctx=>{
+            if(ctx.raw==null) return null;
+            return ctx.dataset.label+': '+ctx.raw+'%';
+          }
+        }
+      }
+    },
+    elements:{point:{radius:0,hoverRadius:4}},
+    scales:{
+      x:{
+        display:true,
+        grid:{display:false},
+        ticks:{
+          font:{family:'DM Sans',size:9,weight:500},
+          color:'#9CA3AF',
+          maxRotation:0,
+          autoSkip:true,
+          maxTicksLimit:12
+        },
+        border:{display:false}
+      },
+      y:{
+        position:'left',
+        min:0,max:80,
+        title:{display:true,text:'Recession Prob %',font:{family:'DM Sans',size:10,weight:600},color:'#7C3AED'},
+        grid:{color:'rgba(0,0,0,.04)',drawTicks:false},
+        ticks:{font:{family:'DM Sans',size:9},color:'#9CA3AF',padding:6,stepSize:20},
+        border:{display:false}
+      },
+      y1:{
+        position:'right',
+        min:3,max:15,
+        title:{display:true,text:'Card 90+ DPD %',font:{family:'DM Sans',size:10,weight:600},color:'#EF4444'},
+        grid:{display:false,drawTicks:false},
+        ticks:{font:{family:'DM Sans',size:9},color:'#9CA3AF',padding:6,stepSize:3},
+        border:{display:false}
+      }
+    }
+  }
+});
+
+// ── 2-row Heatmap ──
+function heatColor(t){
+  t=Math.max(0,Math.min(1,t));
+  if(t<=0.5){const f=t*2;return `rgb(${34+200*f},${197-34*f},${94-86*f})`}
+  else{const f=(t-0.5)*2;return `rgb(${234+5*f},${163-95*f},${8+60*f})`}
+}
+
+const heatSeries=[
+  {label:'Recession Prob',data:REC_PROB,min:0,max:75,unit:'%'},
+  {label:'Card 90+ DPD',data:CARD_DQ,min:3,max:14,unit:'%'},
+];
+
+const heatContainer=document.getElementById('heatmap');
+heatSeries.forEach(s=>{
+  const row=document.createElement('div');row.className='heat-row';
+  let h=`<span class="hlabel">${s.label}</span><div class="heat-cells">`;
+  s.data.forEach((v,i)=>{
+    if(v==null) h+=`<div class="hcell" style="background:#f3f4f6" data-tip="${LABELS[i]}: n/a"></div>`;
+    else{
+      const t=(v-s.min)/(s.max-s.min);
+      h+=`<div class="hcell" style="background:${heatColor(t)}" data-tip="${LABELS[i]}: ${v}${s.unit}"></div>`;
+    }
+  });
+  h+='</div>';row.innerHTML=h;heatContainer.appendChild(row);
+});
+
+// NBER recession row
+const recRow=document.createElement('div');recRow.className='heat-row';
+let rh=`<span class="hlabel" style="color:#6B7280;font-style:italic;font-size:10px">NBER Recession</span><div class="heat-cells">`;
+LABELS.forEach((_,i)=>{
+  const inR=RECESSIONS.some(r=>i>=r.start&&i<=r.end);
+  rh+=`<div class="hcell" style="background:${inR?'#374151':'#f9fafb'};height:6px;border-radius:1px" data-tip="${LABELS[i]}${inR?' — Recession':''}"></div>`;
+});
+rh+='</div>';recRow.innerHTML=rh;heatContainer.appendChild(recRow);
+
+// Axis labels
+const axis=document.createElement('div');axis.className='heat-axis';
+LABELS.forEach((l,i)=>{const s=document.createElement('span');s.textContent=i%4===0?l:'';axis.appendChild(s)});
+heatContainer.appendChild(axis);
+
+// ── Signal Chain ──
+const chain=[
+  {label:'Yield Curve',status:'low',detail:'Normal'},
+  {label:'Recession Prob',status:riskLevel(lastRec,[20,40]),detail:lastRec+'%'},
+  {label:'SLOOS Tightening',status:riskLevel(lastSloos,[10,30]),detail:(lastSloos>=0?'+':'')+lastSloos+'%'},
+  {label:'Card Losses',status:riskLevel(lastCard,[7,9]),detail:lastCard+'%'},
+];
+document.getElementById('signal-chain').innerHTML=chain.map((n,i)=>{
+  const[c,bg,bd]=riskColor(n.status);
+  const arrow=i<chain.length-1?'<span class="signal-arrow">\u2192</span>':'';
+  return `<span class="signal-node" style="color:${c};background:${bg};border-color:${bd}">${n.label} <strong>${n.detail}</strong></span>${arrow}`;
+}).join('');
+</script>
+</body>
+</html>
