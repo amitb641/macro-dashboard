@@ -1567,7 +1567,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Unemployment by Sector — MoM Rate Change (pp)</div>
+      <div class="panel-title">Unemployment by Sector — Monthly MoM Change (pp)</div>
       <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Feb'26 vs Jan'26 · sorted by change</div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
@@ -1638,7 +1638,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">CPI by Category — MoM Rate Change (Feb'26 vs Jan'26)</div>
+      <div class="panel-title">CPI by Category — MoM Change (Feb'26 vs Jan'26)</div>
       <div class="panel-sub">YoY % by category · Feb'26 vs Jan'26 · sorted by Feb'26 rate · BLS CPI-U</div>
       <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-cpi-cat-mom"></canvas></div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Monthly YoY % change by category. Feb'26 vs Jan'26 comparison.</p>
@@ -1698,7 +1698,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BLS Series CES0500000003 · Each year = average of 12 monthly YoY % readings. Real = nominal minus CPI. e.g. 2025: nominal +3.8%, real +1.1%.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Avg Hourly Earnings by Sector — YoY Change 2025 vs 2024</div>
+      <div class="panel-title">Avg Hourly Earnings by Sector — 2025 vs 2024</div>
       <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3</div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal YoY % change by sector.</p>
@@ -1732,7 +1732,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Sector Momentum Shift — Feb'26 vs Jan'26 (thousands)</div>
+      <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
       <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
       <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
@@ -1748,8 +1748,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BLS Current Employment Statistics (CES), seasonally adjusted. Annual net job gains/losses.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Job Gains by Sector — YoY Change 2025 vs 2024 (thousands)</div>
-      <div class="panel-sub">Annual net change in payroll employment · BLS CES · <em>indented = sub-sector</em></div>
+      <div class="panel-title">Job Gains by Sector — 2025 vs 2024 (thousands)</div>
+      <div class="panel-sub">Annual net change in payroll employment · BLS CES · → indicates sub-sector</div>
       <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES). Annual net change in payroll employment by sector.</p>
     </div>
@@ -1791,7 +1791,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">PCE by Category — MoM Rate Change (Jan'26 vs Dec'25)</div>
+      <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
       <div class="panel-sub">Real PCE spending growth by category · sorted by Jan'26 rate · BEA</div>
       <div class="ch320"><canvas id="c-pce-cat-mom"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
@@ -2367,22 +2367,22 @@ const JOBS_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "
 const JOBS_SECTORS = [
   {s:"Healthcare & Social Asst.", color:"#FF4757", j21:521,  j22:757,  j23:653,  j24:630,  j25:680},
   {s:"Leisure & Hospitality",     color:"#FF9F43", j21:1566, j22:1313, j23:530,  j24:266,  j25:90},
-  {s:"Restaurants & Bars",         color:"#FF6B6B", j21:1210, j22:1000, j23:410,  j24:180,  j25:60,  sub:true},
-  {s:"Hotels & Lodging",           color:"#74B9FF", j21:188,  j22:244,  j23:97,   j24:55,   j25:20,  sub:true},
+  {s:"→ Restaurants & Bars",      color:"#FF6B6B", j21:1210, j22:1000, j23:410,  j24:180,  j25:60},
+  {s:"→ Hotels & Lodging",        color:"#74B9FF", j21:188,  j22:244,  j23:97,   j24:55,   j25:20},
   {s:"Prof. & Biz Services",      color:"#6d40cc", j21:1009, j22:783,  j23:285,  j24:262,  j25:-80},
   {s:"Government",                color:"#F76707", j21:28,   j22:354,  j23:499,  j24:277,  j25:-130},
-  {s:"Federal Government",         color:"#E84393", j21:-28,  j22:52,   j23:68,   j24:30,   j25:-200, sub:true},
-  {s:"State & Local",              color:"#F368E0", j21:56,   j22:302,  j23:431,  j24:247,  j25:70,   sub:true},
+  {s:"→ Federal Government",      color:"#E84393", j21:-28,  j22:52,   j23:68,   j24:30,   j25:-200},
+  {s:"→ State & Local",           color:"#F368E0", j21:56,   j22:302,  j23:431,  j24:247,  j25:70},
   {s:"Construction",              color:"#E8590C", j21:234,  j22:293,  j23:250,  j24:194,  j25:100},
   {s:"Education (Private)",       color:"#94D82D", j21:266,  j22:248,  j23:215,  j24:120,  j25:80},
   {s:"Financial Activities",      color:"#00B894", j21:97,   j22:199,  j23:93,   j24:34,   j25:10},
   {s:"Retail Trade",              color:"#4DABF7", j21:197,  j22:37,   j23:-5,   j24:17,   j25:-30},
-  {s:"Grocery Stores",             color:"#6AB04C", j21:18,   j22:10,   j23:8,    j24:12,   j25:8,   sub:true},
-  {s:"General Merchandise",        color:"#BADC58", j21:62,   j22:-8,   j23:-18,  j24:-14,  j25:-22, sub:true},
+  {s:"→ Grocery Stores",          color:"#6AB04C", j21:18,   j22:10,   j23:8,    j24:12,   j25:8},
+  {s:"→ General Merchandise",     color:"#BADC58", j21:62,   j22:-8,   j23:-18,  j24:-14,  j25:-22},
   {s:"Transport & Warehousing",   color:"#CC5DE8", j21:362,  j22:183,  j23:30,   j24:3,    j25:-40},
   {s:"Manufacturing",             color:"#FFB84C", j21:349,  j22:348,  j23:41,   j24:14,   j25:-50},
-  {s:"Autos & Parts",              color:"#F9CA24", j21:68,   j22:82,   j23:28,   j24:8,    j25:-12, sub:true},
-  {s:"Aerospace",                  color:"#F0932B", j21:12,   j22:28,   j23:34,   j24:22,   j25:15,  sub:true},
+  {s:"→ Autos & Parts",           color:"#F9CA24", j21:68,   j22:82,   j23:28,   j24:8,    j25:-12},
+  {s:"→ Aerospace",               color:"#F0932B", j21:12,   j22:28,   j23:34,   j24:22,   j25:15},
   {s:"Information (Tech)",        color:"#20C997", j21:72,   j22:115,  j23:-24,  j24:-49,  j25:-60},
   {s:"Mining & Energy",           color:"#FCC419", j21:29,   j22:79,   j23:14,   j24:5,    j25:-10},
 ];
@@ -2690,19 +2690,19 @@ function buildUnempTab(){
     {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#6d40cc"},
   ].map(m=>_mTile(m)).join("");
 
-  // ── Unemployment Sector MoM Chart — delta bars ──
+  // ── Unemployment Sector MoM Chart ──
   var uMom = U_SECTOR_MOM.sectors.map((s,i)=>({s:s,change:+(U_SECTOR_MOM.feb26[i]-U_SECTOR_MOM.jan26[i]).toFixed(2),feb:U_SECTOR_MOM.feb26[i],jan:U_SECTOR_MOM.jan26[i]}));
   uMom.sort((a,b)=>b.change-a.change);
   new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
     type:"bar",
     data:{labels:uMom.map(r=>r.s),datasets:[
-      {label:"MoM Change (pp)",data:uMom.map(r=>r.change),
-       backgroundColor:uMom.map(r=>r.change>0?"#dc2626bb":"#16a34acc"),borderRadius:3},
+      {label:"Feb'26 Rate %",data:uMom.map(r=>r.feb),backgroundColor:uMom.map(r=>r.change>0?"rgba(208,48,48,.75)":"rgba(26,158,74,.7)"),borderRadius:3},
+      {label:"Jan'26 Rate %",data:uMom.map(r=>r.jan),backgroundColor:"rgba(192,112,16,.4)",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>{var d=uMom[c.dataIndex];return[`Change: ${d.change>=0?"+":""}${d.change}pp`,`Feb'26: ${d.feb}%`,`Jan'26: ${d.jan}%`]}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>(v>=0?"+":"")+v+"pp",font:{size:10}},border:{display:false}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"")}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
@@ -2823,18 +2823,18 @@ function buildCPITab(){
       scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
-  // ── CPI Category MoM Chart — delta bars ──
-  var cpiMom = [...CPI_CAT_MOM].sort((a,b)=>(b.feb-b.jan)-(a.feb-a.jan));
+  // ── CPI Category MoM Chart ──
+  var cpiMom = [...CPI_CAT_MOM].sort((a,b)=>b.feb-a.feb);
   new Chart(document.getElementById("c-cpi-cat-mom").getContext("2d"),{
     type:"bar",
     data:{labels:cpiMom.map(r=>r.cat),datasets:[
-      {label:"MoM Change (pp)",data:cpiMom.map(r=>+(r.feb-r.jan).toFixed(1)),
-       backgroundColor:cpiMom.map(r=>r.feb>r.jan?"#dc2626bb":"#16a34acc"),borderRadius:3},
+      {label:"Feb'26 YoY %",data:cpiMom.map(r=>r.feb),backgroundColor:cpiMom.map(r=>r.feb>r.jan?"rgba(208,48,48,.75)":"rgba(74,114,232,.7)"),borderRadius:3},
+      {label:"Jan'26 YoY %",data:cpiMom.map(r=>r.jan),backgroundColor:"rgba(192,112,16,.4)",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>{var d=cpiMom[c.dataIndex];var ch=(d.feb-d.jan).toFixed(1);return[`Change: ${ch>=0?"+":""}${ch}pp`,`Feb'26: ${d.feb}%`,`Jan'26: ${d.jan}%`]}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>(v>=0?"+":"")+v+"pp",font:{size:10}},border:{display:false}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:c=>{var d=cpiMom[c.dataIndex];var ch=(d.feb-d.jan).toFixed(1);return `${c.dataset.label}: ${c.raw}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
@@ -2923,19 +2923,16 @@ function buildWagesTab(){
               y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}}}}
   });
 
-  const wsrt=[...WAGE_SECTORS].sort((a,b)=>(b.w25-b.w24)-(a.w25-a.w24));
-  const wDelta=wsrt.map(s=>+(s.w25-s.w24).toFixed(1));
+  const wsrt=[...WAGE_SECTORS].sort((a,b)=>b.w25-a.w25);
   new Chart(document.getElementById("c-wage-bar").getContext("2d"),{
     type:"bar",
     data:{labels:wsrt.map(s=>s.s),datasets:[
-      {label:"YoY Change (pp)",data:wDelta,
-       backgroundColor:wDelta.map(v=>v>=0?"#16a34acc":"#dc2626bb"),borderRadius:4},
+      {label:"2025 Wage %",data:wsrt.map(s=>s.w25),backgroundColor:"#1a9e4acc",borderRadius:4},
+      {label:"2024 Wage %",data:wsrt.map(s=>s.w24),backgroundColor:"#4a72e877",borderRadius:4},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{
-        const s=wsrt[c.dataIndex];
-        return[`Change: ${c.raw>=0?"+":""}${c.raw}pp`,`2025: +${s.w25}%`,`2024: +${s.w24}%`]}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"pp"},border:{display:false}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: +${c.raw}%`}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
@@ -2986,18 +2983,15 @@ function buildJobsTab(){
               y:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
   });
 
-  const jsrt=[...JOBS_SECTORS].sort((a,b)=>(b.j25-b.j24)-(a.j25-a.j24));
-  const jsDelta=jsrt.map(s=>s.j25-s.j24);
+  const jsrt=[...JOBS_SECTORS].sort((a,b)=>b.j25-a.j25);
   new Chart(document.getElementById("c-jobs-bar").getContext("2d"),{
     type:"bar",
-    data:{labels:jsrt.map(s=>(s.sub?"   ":"")+s.s),datasets:[
-      {label:"YoY Change (K)",data:jsDelta,
-       backgroundColor:jsDelta.map(v=>v>=0?"#16a34acc":"#dc2626bb"),borderRadius:3},
+    data:{labels:jsrt.map(s=>s.s),datasets:[
+      {label:"2025 Jobs (K)",data:jsrt.map(s=>s.j25),backgroundColor:"#4a72e8cc",borderRadius:3},
+      {label:"2024 Jobs (K)",data:jsrt.map(s=>s.j24),backgroundColor:"#c0701066",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{
-        const s=jsrt[c.dataIndex];
-        return[`Change: ${c.raw>=0?"+":""}${c.raw}K`,`2025: ${s.j25>=0?"+":""}${s.j25}K`,`2024: ${s.j24>=0?"+":""}${s.j24}K`]}}}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
@@ -3020,24 +3014,21 @@ function buildJobsTab(){
     });
   }
 
-  // Sector MoM chart — delta bars (Feb minus Jan), green=accelerating, red=decelerating
+  // Sector MoM chart (horizontal bar, Jan'26 vs Feb'26)
   {
-    const delta = SECTOR_MOM.feb26.map((v,i)=>v - SECTOR_MOM.jan26[i]);
-    const sIdx = delta.map((_,i)=>i).sort((a,b)=>delta[b]-delta[a]);
+    const sIdx = SECTOR_MOM.feb26.map((_,i)=>i).sort((a,b)=>SECTOR_MOM.feb26[b]-SECTOR_MOM.feb26[a]);
     new Chart(document.getElementById("c-sector-mom").getContext("2d"),{
       type:"bar",
       data:{labels:sIdx.map(i=>SECTOR_MOM.sectors[i]),datasets:[
-        {label:"MoM Change (K)",data:sIdx.map(i=>delta[i]),
-         backgroundColor:sIdx.map(i=>delta[i]>=0?"#16a34acc":"#dc2626bb"),borderRadius:3},
+        {label:"Feb'26 (K)",data:sIdx.map(i=>SECTOR_MOM.feb26[i]),
+         backgroundColor:sIdx.map(i=>SECTOR_MOM.feb26[i]>=0?"#4a72e8cc":"#e06060bb"),borderRadius:3},
+        {label:"Jan'26 (K)",data:sIdx.map(i=>SECTOR_MOM.jan26[i]),
+         backgroundColor:"#c0701066",borderRadius:3},
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},
-          tooltip:{...TT,callbacks:{label:c=>{
-            const i=sIdx[c.dataIndex];
-            return[`Change: ${c.raw>=0?"+":""}${c.raw}K`,
-                   `Feb'26: ${SECTOR_MOM.feb26[i]>=0?"+":""}${SECTOR_MOM.feb26[i]}K`,
-                   `Jan'26: ${SECTOR_MOM.jan26[i]>=0?"+":""}${SECTOR_MOM.jan26[i]}K`]}}}},
-        scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},
+          tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
+        scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
                 y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
     });
   }
@@ -3308,18 +3299,18 @@ function buildPCETab(){
       scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#e5e7eb"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
-  // ── PCE Category MoM Chart — delta bars ──
-  var pceMom = [...PCE_CAT_MOM].sort((a,b)=>(b.jan-b.dec)-(a.jan-a.dec));
+  // ── PCE Category MoM Chart ──
+  var pceMom = [...PCE_CAT_MOM].sort((a,b)=>b.jan-a.jan);
   new Chart(document.getElementById("c-pce-cat-mom").getContext("2d"),{
     type:"bar",
     data:{labels:pceMom.map(r=>r.cat),datasets:[
-      {label:"MoM Change (pp)",data:pceMom.map(r=>+(r.jan-r.dec).toFixed(1)),
-       backgroundColor:pceMom.map(r=>r.jan>r.dec?"#dc2626bb":"#16a34acc"),borderRadius:3},
+      {label:"Jan'26",data:pceMom.map(r=>r.jan),backgroundColor:pceMom.map(r=>r.jan>r.dec?"rgba(208,48,48,.75)":"rgba(74,114,232,.7)"),borderRadius:3},
+      {label:"Dec'25",data:pceMom.map(r=>r.dec),backgroundColor:"rgba(192,112,16,.4)",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>{var d=pceMom[c.dataIndex];var ch=(d.jan-d.dec).toFixed(1);return[`Change: ${ch>=0?"+":""}${ch}pp`,`Jan'26: ${d.jan}%`,`Dec'25: ${d.dec}%`]}}}},
-      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>(v>=0?"+":"")+v+"pp",font:{size:10}},border:{display:false}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8}},
+        tooltip:{callbacks:{label:c=>{var d=pceMom[c.dataIndex];var ch=(d.jan-d.dec).toFixed(1);return `${c.dataset.label}: ${c.raw}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
+      scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
 
