@@ -5,11 +5,11 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:transparent;overflow:hidden}
-.chart-wrap{position:relative;height:280px}
-.heat-section{margin-top:10px;padding-top:10px;border-top:1px solid #F0F1F3}
-.heat-title{font-size:11px;font-weight:700;color:#4B5563;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-.heat-row{display:flex;align-items:center;margin-bottom:3px}
+body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:transparent;overflow:hidden;padding:0 0 8px}
+.chart-wrap{position:relative;height:310px}
+.heat-section{margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3}
+.heat-title{font-size:11px;font-weight:700;color:#4B5563;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.heat-row{display:flex;align-items:center;margin-bottom:2px}
 .hlabel{width:100px;font-size:11px;font-weight:600;color:#374151;flex-shrink:0;text-align:right;padding-right:8px}
 .heat-cells{display:flex;gap:1px;flex:1}
 .hcell{flex:1;height:16px;border-radius:2px;position:relative;cursor:pointer;transition:transform .1s}
@@ -17,13 +17,15 @@ body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:transpa
 .hcell:hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;z-index:10;pointer-events:none}
 .heat-axis{display:flex;margin-left:100px;gap:1px;margin-top:2px}
 .heat-axis span{flex:1;font-size:9px;color:#6B7280;text-align:center}
-.heat-legend{display:flex;gap:3px;align-items:center;margin-top:6px;margin-left:100px}
-.signal-chain{display:flex;align-items:center;gap:0;margin-top:12px;flex-wrap:wrap}
+.heat-legend{display:flex;gap:3px;align-items:center;margin-top:4px;margin-left:100px}
+.narrative{margin:8px 0 6px;padding:8px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:10.5px;color:#374151;line-height:1.65}
+.narrative strong{color:#1F2937}
+.signal-chain{display:flex;align-items:center;gap:0;margin-top:8px;flex-wrap:wrap}
+.meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:6px;border-top:1px solid #F0F1F3;font-size:9px;color:#9CA3AF}
 </style>
 </head>
 <body>
 <div class="chart-wrap"><canvas id="c"></canvas></div>
-<div style="margin:10px 0;padding:8px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:10px;color:#4B5563;line-height:1.6">Card losses trail recession probability by ~5Q <span style="color:#6B7280">(r=0.50)</span> — yield curve trouble sets credit losses in motion. SLOOS tightening is the bridge, predicting card stress ~3Q ahead <span style="color:#6B7280">(r=0.48)</span>. Cards lead all products <span style="color:#6B7280">(broad DQ r=0.27)</span> — the canary in the credit coal mine.</div>
 <div class="heat-section">
   <div class="heat-title">Risk Intensity Timeline</div>
   <div id="heatmap"></div>
@@ -32,7 +34,14 @@ body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:transpa
     <span style="font-size:10px;color:#4B5563">Low → High risk</span>
   </div>
 </div>
+<div class="narrative">
+  <strong>Risk assessment:</strong> Credit card delinquencies lag recession probability by approximately 5 quarters <span style="color:#6B7280">(r = 0.50)</span> — once the yield curve signals distress, card losses are already building beneath the surface. SLOOS bank tightening serves as the transmission mechanism, forecasting elevated card stress roughly 3 quarters forward <span style="color:#6B7280">(r = 0.48)</span>. Notably, card delinquencies deteriorate ahead of broader consumer credit products <span style="color:#6B7280">(all-product DQ r = 0.27, ~5Q lag)</span>, positioning cards as the earliest observable stress indicator in the consumer credit cycle.
+</div>
 <div class="signal-chain" id="signal-chain"></div>
+<div class="meta">
+  <span>Data through Q4 2025 · Last updated Mar 2026</span>
+  <span>Next refresh: <strong style="color:#4B5563">May 2026</strong> (Q1'26 SLOOS + NY Fed HH Debt)</span>
+</div>
 <script>
 const L=["Q1'00","Q3'00","Q1'01","Q3'01","Q1'02","Q3'02","Q1'03","Q3'03","Q1'04","Q3'04","Q1'05","Q3'05","Q1'06","Q3'06","Q1'07","Q3'07","Q1'08","Q3'08","Q1'09","Q3'09","Q1'10","Q3'10","Q1'11","Q3'11","Q1'12","Q3'12","Q1'13","Q3'13","Q1'14","Q3'14","Q1'15","Q3'15","Q1'16","Q3'16","Q1'17","Q3'17","Q1'18","Q3'18","Q1'19","Q3'19","Q1'20","Q3'20","Q1'21","Q3'21","Q1'22","Q3'22","Q1'23","Q3'23","Q1'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
 const S=[5,15,32,25,10,0,-5,-10,-10,-5,0,-5,-5,0,10,15,45,60,55,20,0,-10,-10,-5,0,0,0,-5,-5,0,0,0,5,5,0,-5,0,-5,5,8,62,-15,-22,-18,18,32,44,28,22,18,14,10,6,4,2];
