@@ -65,6 +65,7 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
   <!-- Chart legend -->
   <div class="chart-legend">
     <span class="leg"><span class="swatch" style="background:#7C3AED"></span>Recession Probability %</span>
+    <span class="leg"><span class="swatch" style="background:rgba(37,99,235,.5);height:8px;width:6px;border-radius:1px"></span>SLOOS Tightening %</span>
     <span class="leg"><span class="swatch" style="background:#EF4444"></span>Card 90+ DPD %</span>
     <span class="leg"><span class="swatch-dash" style="border-color:rgba(0,0,0,.12)"></span>NBER recession</span>
   </div>
@@ -103,8 +104,8 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
   <div>
     <span class="tag tag-after">After — 1 chart + 2-row heatmap</span>
     <div class="compare-note">
-      <strong>1 overlay chart</strong> with dual Y-axes (leading + lagging indicator)<br>
-      <strong>2-row heatmap</strong> (SLOOS dropped — redundant middle signal)<br>
+      <strong>1 overlay chart</strong> with dual Y-axes — SLOOS bars + Recession Prob line + Card DPD line<br>
+      <strong>3-row heatmap</strong> (all signals retained)<br>
       <strong>Signal chain only</strong> — pills removed (chain shows same info)<br>
       <strong>~220px</strong> vertical height (45% smaller)<br>
       Divergences visible at a glance (lines cross/separate)
@@ -171,6 +172,17 @@ new Chart(document.getElementById('c-combined'),{
     labels:LABELS,
     datasets:[
       {
+        type:'bar',
+        label:'SLOOS Tightening',
+        data:CONSUMER,
+        backgroundColor:CONSUMER.map(v=>v>30?'rgba(37,99,235,.45)':v>0?'rgba(37,99,235,.25)':v>-10?'rgba(22,163,106,.2)':'rgba(22,163,106,.35)'),
+        borderRadius:1,
+        yAxisID:'y',
+        order:3,
+        barPercentage:0.9,
+        categoryPercentage:0.9
+      },
+      {
         label:'Recession Probability',
         data:REC_PROB,
         borderColor:'#7C3AED',
@@ -221,7 +233,9 @@ new Chart(document.getElementById('c-combined'),{
         callbacks:{
           label:ctx=>{
             if(ctx.raw==null) return null;
-            return ctx.dataset.label+': '+ctx.raw+'%';
+            const v=ctx.raw;
+            const prefix=ctx.dataset.label==='SLOOS Tightening'&&v>=0?'+':'';
+            return ctx.dataset.label+': '+prefix+v+'%';
           }
         }
       }
@@ -242,8 +256,8 @@ new Chart(document.getElementById('c-combined'),{
       },
       y:{
         position:'left',
-        min:0,max:80,
-        title:{display:true,text:'Recession Prob %',font:{family:'DM Sans',size:10,weight:600},color:'#7C3AED'},
+        min:-30,max:80,
+        title:{display:true,text:'Recession Prob / SLOOS %',font:{family:'DM Sans',size:10,weight:600},color:'#4B5563'},
         grid:{color:'rgba(0,0,0,.04)',drawTicks:false},
         ticks:{font:{family:'DM Sans',size:9},color:'#9CA3AF',padding:6,stepSize:20},
         border:{display:false}
@@ -269,6 +283,7 @@ function heatColor(t){
 
 const heatSeries=[
   {label:'Recession Prob',data:REC_PROB,min:0,max:75,unit:'%'},
+  {label:'SLOOS Tight.',data:CONSUMER,min:-25,max:65,unit:'%'},
   {label:'Card 90+ DPD',data:CARD_DQ,min:3,max:14,unit:'%'},
 ];
 
