@@ -66,7 +66,7 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
   <div class="chart-legend">
     <span class="leg"><span class="swatch" style="background:#7C3AED"></span>Recession Probability %</span>
     <span class="leg"><span class="swatch" style="background:rgba(37,99,235,.5);height:8px;width:6px;border-radius:1px"></span>SLOOS Tightening %</span>
-    <span class="leg"><span class="swatch" style="background:#EF4444"></span>Card 90+ DPD %</span>
+    <span class="leg"><span class="swatch-dash" style="border-color:#EF4444"></span>Card 90+ DPD %</span>
     <span class="leg"><span class="swatch-dash" style="border-color:rgba(0,0,0,.12)"></span>NBER recession</span>
   </div>
 
@@ -216,7 +216,8 @@ new Chart(document.getElementById('c-combined'),{
         data:CARD_DQ,
         borderColor:'#EF4444',
         backgroundColor:'transparent',
-        borderWidth:2,
+        borderWidth:2.5,
+        borderDash:[6,3],
         fill:false,
         tension:0.35,
         spanGaps:true,
