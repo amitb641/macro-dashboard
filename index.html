@@ -4418,11 +4418,11 @@ function buildHousingTab(){
       type:"line",
       data:{labels:HOUSING_MONTHLY.labels,datasets:[
         {label:"Case-Shiller YoY %",data:cs,borderColor:"#336BCC",backgroundColor:"#336BCC15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
-        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#D64045",backgroundColor:"#D6404522",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#D64045",tension:0.3,yAxisID:"y1"},
+        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#D64045",backgroundColor:"#D6404522",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#D64045",tension:0.3,yAxisID:"y2"},
       ]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
-        scales:{y:{type:"linear",display:true,position:"left",min:yMin,max:yMax,title:{display:true,text:"Case-Shiller YoY %",color:"#336BCC",font:{size:9}},ticks:{color:"#336BCC",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#E2E8F0"},border:{display:false}},
-          y1:{type:"linear",display:true,position:"right",min:y1Min,max:y1Max,title:{display:true,text:"Mortgage Rate %",color:"#D64045",font:{size:9}},ticks:{color:"#D64045",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{display:false},border:{display:false}},
+        scales:{y:{position:"left",min:yMin,max:yMax,title:{display:true,text:"Case-Shiller YoY %",color:"#336BCC",font:{size:9}},ticks:{color:"#336BCC",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#E2E8F0"},border:{display:false}},
+          y2:{position:"right",min:y1Min,max:y1Max,title:{display:true,text:"Mortgage Rate %",color:"#D64045",font:{size:9}},ticks:{color:"#D64045",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{display:false},border:{display:false}},
           x:{ticks:{font:{size:9}},grid:{display:false}}}}
     });
   })();
