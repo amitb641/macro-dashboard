@@ -87,6 +87,18 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
 
   <!-- Signal chain -->
   <div class="signal-chain" id="signal-chain"></div>
+
+  <!-- Methodology note -->
+  <div style="margin-top:14px;padding-top:12px;border-top:1px solid #F0F1F3">
+    <p style="font-size:10px;color:#7a90aa;line-height:1.6"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
+    <details style="margin-top:6px;font-size:10px;color:#7a90aa">
+      <summary style="cursor:pointer;font-weight:600;color:#334E68">Correlation methodology</summary>
+      <div style="margin-top:6px;line-height:1.7">
+        <p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags -6 to +6 periods (bidirectional for SLOOS &#8596; Recession Prob, positive-only for Recession Prob &#8594; DPD). Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025). Positive r = variables move together.</p>
+        <p style="margin:4px 0"><strong>Interpretation:</strong> The signal chain runs: <strong>Yield Curve (Recession Prob) &#8594; SLOOS Tightening &#8594; Credit Losses (DPD)</strong>. The yield curve inverts first, driving recession probability higher. Banks then tighten lending standards in response (SLOOS lags recession prob). Finally, tighter credit leads to rising delinquencies as borrowers lose refinancing options. This three-stage cascade shows recession probability is both a leading indicator of bank behavior AND a predictor of credit losses.</p>
+      </div>
+    </details>
+  </div>
 </div>
 
 <!-- ═══ BEFORE / AFTER COMPARISON ═══ -->
