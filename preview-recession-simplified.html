@@ -17,7 +17,7 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
 .panel-sub{font-size:12px;color:#4B5563;margin-bottom:14px;line-height:1.5}
 
 /* Combined chart */
-.chart-wrap{position:relative;height:200px;margin-bottom:4px}
+.chart-wrap{position:relative;height:240px;margin-bottom:4px}
 .chart-legend{display:flex;gap:18px;margin-bottom:10px;flex-wrap:wrap}
 .chart-legend .leg{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151}
 .chart-legend .leg .swatch{width:14px;height:3px;border-radius:2px;display:inline-block}
@@ -175,25 +175,39 @@ new Chart(document.getElementById('c-combined'),{
         type:'bar',
         label:'SLOOS Tightening',
         data:CONSUMER,
-        backgroundColor:CONSUMER.map(v=>v>30?'rgba(37,99,235,.45)':v>0?'rgba(37,99,235,.25)':v>-10?'rgba(22,163,106,.2)':'rgba(22,163,106,.35)'),
-        borderRadius:1,
+        backgroundColor:CONSUMER.map(v=>
+          v>40?'rgba(185,28,28,.7)':    // crisis tightening — strong red
+          v>20?'rgba(37,99,235,.65)':    // heavy tightening — bold blue
+          v>0 ?'rgba(37,99,235,.4)':     // mild tightening — medium blue
+          v>-10?'rgba(16,185,129,.35)':  // mild easing — teal
+                'rgba(16,185,129,.55)'   // strong easing — bold teal
+        ),
+        borderColor:CONSUMER.map(v=>
+          v>40?'rgba(185,28,28,.9)':
+          v>20?'rgba(37,99,235,.8)':
+          v>0 ?'rgba(37,99,235,.55)':
+          v>-10?'rgba(16,185,129,.5)':
+                'rgba(16,185,129,.7)'
+        ),
+        borderWidth:1,
+        borderRadius:2,
         yAxisID:'y',
         order:3,
-        barPercentage:0.9,
-        categoryPercentage:0.9
+        barPercentage:1.0,
+        categoryPercentage:0.95
       },
       {
         label:'Recession Probability',
         data:REC_PROB,
         borderColor:'#7C3AED',
-        backgroundColor:'rgba(124,58,237,.06)',
+        backgroundColor:'rgba(124,58,237,.03)',
         borderWidth:2.5,
         fill:true,
         tension:0.35,
         yAxisID:'y',
         segment:{
           borderColor:ctx=>ctx.p1.parsed.y>40?'#DC2626':ctx.p1.parsed.y>20?'#D97706':'#7C3AED',
-          backgroundColor:ctx=>ctx.p1.parsed.y>40?'rgba(220,38,38,.08)':ctx.p1.parsed.y>20?'rgba(217,119,6,.05)':'rgba(124,58,237,.05)'
+          backgroundColor:ctx=>ctx.p1.parsed.y>40?'rgba(220,38,38,.04)':ctx.p1.parsed.y>20?'rgba(217,119,6,.03)':'rgba(124,58,237,.03)'
         },
         order:2
       },
