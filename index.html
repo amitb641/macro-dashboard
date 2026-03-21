@@ -3047,17 +3047,17 @@ function buildJobsTab(){
       type:"bar",
       data:{labels:sIdx.map(i=>SECTOR_MOM.sectors[i]),datasets:[
         {label:"Feb'26 (K)",data:sIdx.map(i=>SECTOR_MOM.feb26[i]),
-         backgroundColor:sIdx.map(i=>{const f=SECTOR_MOM.feb26[i],j=SECTOR_MOM.jan26[i];return f>=j?"#16a34acc":"#dc2626bb"}),borderRadius:3},
-        {label:"Jan'26 (K)",data:sIdx.map(i=>SECTOR_MOM.jan26[i]),type:"scatter",
-         pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
+         backgroundColor:sIdx.map(i=>{const f=SECTOR_MOM.feb26[i],j=SECTOR_MOM.jan26[i];return f>=j?"#16a34acc":"#dc2626bb"}),borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
+        {label:"Jan'26 (K)",data:sIdx.map(i=>SECTOR_MOM.jan26[i]),
+         backgroundColor:"#64748bbb",borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:false,
-          generateLabels:ch=>[
-            {text:"Feb'26 improved",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
-            {text:"Feb'26 worsened",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
-            {text:"Jan'26",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
-          ]}},
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:14,boxHeight:10,usePointStyle:false,
+          generateLabels:function(){return[
+            {text:"Feb'26 improved vs Jan",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false,datasetIndex:0},
+            {text:"Feb'26 worsened vs Jan",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false,datasetIndex:0},
+            {text:"Jan'26",fillStyle:"#64748bbb",strokeStyle:"#64748bbb",lineWidth:0,hidden:false,datasetIndex:1}
+          ]}}},
           tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
         scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
                 y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
