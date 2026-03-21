@@ -15,37 +15,37 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
 /* Panel mimics dashboard style */
 .panel{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .panel-title{font-size:15px;font-weight:700;color:#1F2937;margin-bottom:2px}
-.panel-sub{font-size:11px;color:#7a90aa;margin-bottom:14px;line-height:1.5}
+.panel-sub{font-size:12px;color:#4B5563;margin-bottom:14px;line-height:1.5}
 
 /* Sparkline rows */
 .spark-row{position:relative;height:110px;border-bottom:1px solid #F0F1F3}
 .spark-row:last-child{border-bottom:none}
-.spark-label{position:absolute;top:6px;left:8px;font-size:10px;font-weight:600;color:#6B7280;z-index:2;letter-spacing:.02em}
-.spark-val{position:absolute;top:4px;right:10px;font-size:12px;font-weight:700;z-index:2;padding:2px 8px;border-radius:5px}
+.spark-label{position:absolute;top:6px;left:8px;font-size:12px;font-weight:700;color:#374151;z-index:2;letter-spacing:.02em}
+.spark-val{position:absolute;top:4px;right:10px;font-size:13px;font-weight:700;z-index:2;padding:2px 8px;border-radius:5px}
 
 /* Heatmap strip */
 .heat-section{margin-top:16px;padding-top:14px;border-top:1px solid #F0F1F3}
-.heat-section-title{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.heat-section-title{font-size:11px;font-weight:700;color:#4B5563;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 .heat-row{display:flex;align-items:center;margin-bottom:3px}
-.heat-row .hlabel{width:100px;font-size:10px;font-weight:600;color:#6B7280;flex-shrink:0;text-align:right;padding-right:8px}
+.heat-row .hlabel{width:100px;font-size:11px;font-weight:600;color:#374151;flex-shrink:0;text-align:right;padding-right:8px}
 .heat-cells{display:flex;gap:1px;flex:1}
 .hcell{flex:1;height:18px;border-radius:2px;position:relative;cursor:pointer;transition:transform .1s}
 .hcell:hover{transform:scaleY(1.4);z-index:2}
 .hcell:hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;z-index:10;pointer-events:none}
 .heat-axis{display:flex;margin-left:100px;gap:1px;margin-top:2px}
-.heat-axis span{flex:1;font-size:7.5px;color:#B0B8C4;text-align:center}
+.heat-axis span{flex:1;font-size:9px;color:#6B7280;text-align:center}
 .heat-legend{display:flex;gap:3px;align-items:center;margin-top:8px;margin-left:100px}
 .heat-legend .bar{width:100px;height:10px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#ef4444)}
-.heat-legend span{font-size:9px;color:#9CA3AF}
+.heat-legend span{font-size:10px;color:#4B5563}
 
 /* Signal chain */
 .signal-chain{display:flex;align-items:center;gap:0;margin-top:12px;flex-wrap:wrap}
-.signal-node{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:10px;font-weight:600;border:1px solid}
-.signal-arrow{color:#9CA3AF;font-size:14px;padding:0 4px}
+.signal-node{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid}
+.signal-arrow{color:#6B7280;font-size:16px;padding:0 4px}
 
 /* Status pills */
 .status-pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
-.status-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid}
 .status-pill .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 </style>
 </head>
@@ -60,6 +60,14 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
 
   <!-- Status pills -->
   <div class="status-pills" id="status-pills"></div>
+
+  <!-- Legend for shaded regions -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:#374151;align-items:center">
+    <span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:20px;height:12px;background:rgba(0,0,0,.08);border-radius:2px"></span>NBER recession</span>
+    <span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:20px;height:12px;background:rgba(124,58,237,.15);border-radius:2px"></span>Low risk</span>
+    <span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:20px;height:12px;background:rgba(217,119,6,.15);border-radius:2px"></span>Elevated risk</span>
+    <span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:20px;height:12px;background:rgba(220,38,38,.15);border-radius:2px"></span>High risk</span>
+  </div>
 
   <!-- Sparkline panels -->
   <div style="margin-top:16px">
@@ -227,7 +235,7 @@ heatSeries.forEach(s=>{
 
 // NBER recession row
 const recRow=document.createElement('div');recRow.className='heat-row';
-let rh=`<span class="hlabel" style="color:#B0B8C4;font-style:italic;font-size:9px">NBER Recession</span><div class="heat-cells">`;
+let rh=`<span class="hlabel" style="color:#6B7280;font-style:italic;font-size:10px">NBER Recession</span><div class="heat-cells">`;
 LABELS.forEach((_,i)=>{
   const inR=RECESSIONS.some(r=>i>=r.start&&i<=r.end);
   rh+=`<div class="hcell" style="background:${inR?'#374151':'#f9fafb'};height:6px;border-radius:1px" data-tip="${LABELS[i]}${inR?' — Recession':''}"></div>`;
