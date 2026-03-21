@@ -2108,26 +2108,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:3px;background:#7C3AED;border-radius:2px"></span>Recession Probability %</span>
       <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:6px;height:12px;background:rgba(37,99,235,.6);border-radius:1px"></span><span style="display:inline-block;width:6px;height:8px;background:rgba(185,28,28,.7);border-radius:1px;margin-left:-2px"></span>SLOOS Tightening % (bars)</span>
       <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;border-top:2px dashed #EF4444"></span>Card 90+ DPD %</span>
-      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(0,0,0,.06);border-radius:2px"></span>NBER recession</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.25);border-radius:2px"></span>NBER recession</span>
     </div>
 
-    <div class="ch300"><canvas id="c-credit-sloos"></canvas></div>
-
-    <!-- Heatmap strip -->
-    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #F0F1F3">
-      <div style="font-size:11px;font-weight:700;color:#4B5563;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Risk Intensity Timeline</div>
-      <div id="sloos-heatmap"></div>
-      <div style="display:flex;gap:3px;align-items:center;margin-top:6px;margin-left:100px">
-        <div style="width:100px;height:10px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#ef4444)"></div>
-        <span style="font-size:10px;color:#4B5563">Low → High risk</span>
-      </div>
-    </div>
-
-    <!-- Correlation narrative -->
-    <p style="margin-top:10px;font-size:9px;color:#7a90aa;line-height:1.55">Card delinquencies follow recession probability by ~5Q (r=0.50). Bank tightening (SLOOS) bridges the gap, predicting card stress ~3Q ahead (r=0.48). Broader delinquencies show a weaker link (r=0.27, ~5Q lag) — cards remain the canary in the credit coal mine.</p>
-
-    <!-- Signal chain -->
-    <div id="sloos-signal-chain" style="display:flex;align-items:center;gap:0;margin-top:12px;flex-wrap:wrap"></div>
+    <!-- Embedded Chart.js chart with heatmap + signal chain -->
+    <iframe src="embed-sloos.html" style="width:100%;height:520px;border:none;display:block" loading="lazy"></iframe>
 
     <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
     <details style="margin-top:6px;font-size:10px;color:#7a90aa">
@@ -4424,131 +4409,6 @@ function buildCreditTab(){
       scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:5,border:{display:false}}}}
   });
-
-  // ── NBER recession band plugin for SLOOS chart ──
-  const _sloosRecessions=[{start:2,end:3},{start:16,end:19},{start:40,end:41}];
-
-  new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
-    type:"bar",
-    data:{labels:CREDIT_SLOOS.labels,datasets:[
-      {label:"SLOOS Tightening",data:CREDIT_SLOOS.consumer,
-        backgroundColor:CREDIT_SLOOS.consumer.map(v=>
-          v>40?'rgba(185,28,28,.85)':v>20?'rgba(37,99,235,.75)':v>0?'rgba(37,99,235,.5)':v>-10?'rgba(16,185,129,.45)':'rgba(16,185,129,.65)'
-        ),
-        borderColor:CREDIT_SLOOS.consumer.map(v=>
-          v>40?'rgba(185,28,28,1)':v>20?'rgba(37,99,235,.9)':v>0?'rgba(37,99,235,.65)':v>-10?'rgba(16,185,129,.6)':'rgba(16,185,129,.8)'
-        ),
-        borderWidth:1,borderRadius:3,datalabels:false},
-      {type:"line",label:"Recession Probability",data:CREDIT_SLOOS.recession_prob,
-        borderColor:'#7C3AED',backgroundColor:'transparent',borderWidth:2.5,fill:false,
-        pointRadius:0,datalabels:false},
-      {type:"line",label:"Card 90+ DPD",data:CREDIT_SLOOS.card_dq,
-        borderColor:'#EF4444',backgroundColor:'transparent',borderWidth:2.5,borderDash:[6,3],
-        fill:false,spanGaps:true,pointRadius:0,yAxisID:"y2",datalabels:false},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      scales:{
-        y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"},min:-25,max:70,
-          grid:{color:"rgba(0,0,0,.04)"},border:{display:false}},
-        y2:{position:"right",min:3,max:15,grid:{display:false},
-          ticks:{color:"#EF4444",callback:v=>v+"%",font:{size:9}},
-          title:{display:true,text:"Card 90+ DPD %",color:"#EF4444",font:{size:10}},border:{display:false}}
-      }}
-  });
-
-  // ── Draw recession bands on SLOOS canvas ──
-  (function(){
-    const canvas=document.getElementById("c-credit-sloos");
-    if(!canvas) return;
-    const ctx=canvas.getContext("2d");
-    const dpr=window.devicePixelRatio||1;
-    const p=canvas.parentElement;
-    const W=p?p.offsetWidth:canvas.width/dpr;
-    const H=p?p.offsetHeight:canvas.height/dpr;
-    const pad={left:40,right:50,top:12,bottom:22};
-    const iw=W-pad.left-pad.right;
-    const ih=H-pad.top-pad.bottom;
-    const n=CREDIT_SLOOS.labels.length;
-    const gW=iw/n;
-    _sloosRecessions.forEach(r=>{
-      const x1=pad.left+gW*r.start;
-      const rw=(r.end-r.start+1)*gW;
-      ctx.fillStyle='rgba(239,68,68,.10)';
-      ctx.fillRect(x1,pad.top,rw,ih);
-      ctx.strokeStyle='rgba(239,68,68,.25)';
-      ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(x1,pad.top);ctx.lineTo(x1,pad.top+ih);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(x1+rw,pad.top);ctx.lineTo(x1+rw,pad.top+ih);ctx.stroke();
-    });
-  })();
-
-  // ── SLOOS Heatmap Strip ──
-  (function(){
-    function _heatColor(t){
-      t=Math.max(0,Math.min(1,t));
-      if(t<=0.5){const f=t*2;return `rgb(${34+200*f},${197-34*f},${94-86*f})`}
-      else{const f=(t-0.5)*2;return `rgb(${234+5*f},${163-95*f},${8+60*f})`}
-    }
-    const _hLabels=CREDIT_SLOOS.labels;
-    const _hSeries=[
-      {label:'Recession Prob',data:CREDIT_SLOOS.recession_prob,min:0,max:75,unit:'%'},
-      {label:'SLOOS Tight.',data:CREDIT_SLOOS.consumer,min:-25,max:65,unit:'%'},
-      {label:'Card 90+ DPD',data:CREDIT_SLOOS.card_dq,min:3,max:14,unit:'%'},
-    ];
-    const _hCont=document.getElementById('sloos-heatmap');
-    if(_hCont){
-      _hSeries.forEach(s=>{
-        const row=document.createElement('div');
-        row.style.cssText='display:flex;align-items:center;margin-bottom:3px';
-        let h=`<span style="width:100px;font-size:11px;font-weight:600;color:#374151;flex-shrink:0;text-align:right;padding-right:8px">${s.label}</span><div style="display:flex;gap:1px;flex:1">`;
-        s.data.forEach((v,i)=>{
-          if(v==null) h+=`<div style="flex:1;height:16px;border-radius:2px;background:#f3f4f6;position:relative;cursor:pointer" data-tip="${_hLabels[i]}: n/a"></div>`;
-          else{
-            const t=(v-s.min)/(s.max-s.min);
-            h+=`<div style="flex:1;height:16px;border-radius:2px;background:${_heatColor(t)};position:relative;cursor:pointer;transition:transform .1s" onmouseenter="this.style.transform='scaleY(1.5)'" onmouseleave="this.style.transform=''" title="${_hLabels[i]}: ${v}${s.unit}"></div>`;
-          }
-        });
-        h+='</div>';row.innerHTML=h;_hCont.appendChild(row);
-      });
-      // NBER recession row
-      const recRow=document.createElement('div');
-      recRow.style.cssText='display:flex;align-items:center;margin-bottom:3px';
-      let rh=`<span style="width:100px;font-size:10px;font-weight:600;color:#6B7280;font-style:italic;flex-shrink:0;text-align:right;padding-right:8px">NBER Recession</span><div style="display:flex;gap:1px;flex:1">`;
-      _hLabels.forEach((_,i)=>{
-        const inR=_sloosRecessions.some(r=>i>=r.start&&i<=r.end);
-        rh+=`<div style="flex:1;height:6px;border-radius:1px;background:${inR?'#374151':'#f9fafb'}" title="${_hLabels[i]}${inR?' — Recession':''}"></div>`;
-      });
-      rh+='</div>';recRow.innerHTML=rh;_hCont.appendChild(recRow);
-      // Axis
-      const axis=document.createElement('div');
-      axis.style.cssText='display:flex;margin-left:100px;gap:1px;margin-top:2px';
-      _hLabels.forEach((l,i)=>{const s=document.createElement('span');s.style.cssText='flex:1;font-size:9px;color:#6B7280;text-align:center';s.textContent=i%4===0?l:'';axis.appendChild(s)});
-      _hCont.appendChild(axis);
-    }
-  })();
-
-  // ── SLOOS Signal Chain ──
-  (function(){
-    function _riskLevel(v,th){return v>th[1]?'high':v>th[0]?'elevated':'low'}
-    function _riskColor(level){return{high:['#DC2626','#FEF2F2','#FECACA'],elevated:['#D97706','#FFFBEB','#FDE68A'],low:['#16A34A','#F0FDF4','#BBF7D0']}[level]}
-    const _lastRec=CREDIT_SLOOS.recession_prob.at(-1);
-    const _lastSloos=CREDIT_SLOOS.consumer.at(-1);
-    const _lastCard=CREDIT_SLOOS.card_dq.at(-1);
-    const chain=[
-      {label:'Yield Curve',status:'low',detail:'Normal'},
-      {label:'Recession Prob',status:_riskLevel(_lastRec,[20,40]),detail:_lastRec+'%'},
-      {label:'SLOOS Tightening',status:_riskLevel(_lastSloos,[10,30]),detail:(_lastSloos>=0?'+':'')+_lastSloos+'%'},
-      {label:'Card Losses',status:_riskLevel(_lastCard,[7,9]),detail:_lastCard+'%'},
-    ];
-    const el=document.getElementById('sloos-signal-chain');
-    if(el){
-      el.innerHTML=chain.map((n,i)=>{
-        const[c,bg,bd]=_riskColor(n.status);
-        const arrow=i<chain.length-1?'<span style="color:#6B7280;font-size:16px;padding:0 4px">\u2192</span>':'';
-        return `<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:12px;font-weight:600;border:1px solid ${bd};color:${c};background:${bg}">${n.label} <strong>${n.detail}</strong></span>${arrow}`;
-      }).join('');
-    }
-  })();
 
   // ── SLOOS ↔ Recession Probability Cross-Correlation Analysis ──────────────
   (function(){
