@@ -2691,6 +2691,12 @@ function setSortBy(val,btn){
 // ════════════════════════════════════════════════════
 // ── Metric tile color helper ──────────────────────
 function _mHex(h){h=h.replace('#','');if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+// Utility: extract latest year key from sector objects (e.g. "u25" from {u21:...,u22:...,u25:...})
+function _latestKey(obj,prefix){var keys=Object.keys(obj).filter(function(k){return k.startsWith(prefix)&&/\d{2}$/.test(k);}).sort();return keys.length?keys[keys.length-1]:prefix+"25";}
+function _priorKey(obj,prefix){var keys=Object.keys(obj).filter(function(k){return k.startsWith(prefix)&&/\d{2}$/.test(k);}).sort();return keys.length>1?keys[keys.length-2]:keys[0]||prefix+"24";}
+function _keyYear(k){return "20"+k.replace(/^[a-z]+/i,"");}
+// Utility: clean sector name for tile display (remove → prefix, truncate at & or ()
+function _shortName(s){return s.replace(/^→\s*/,"").replace(/\s*[&(].*$/,"").trim()||s;}
 function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.06)';var bdr='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.2)';return '<div class="metric" style="background:'+bg+';border:1px solid '+bdr+';border-left:3.5px solid '+m.col+'"><div class="m-lbl" style="color:'+m.col+'">'+m.lbl+'</div><div class="m-val" style="color:'+m.col+'">'+m.val+'</div><div class="m-sub">'+m.sub+'</div></div>';}
 
 // GDP metric tiles — computed dynamically from GDP_TOTAL_DATA
@@ -2721,21 +2727,23 @@ function buildUnempTab(){
   if(builtTabs.unemp) return; builtTabs.unemp=1;
 
   // ── Unemployment Tiles (dynamic) ──
+  var _uk = _latestKey(U_SECTORS[0],"u"), _ukp = _priorKey(U_SECTORS[0],"u");
+  var _uYr = _keyYear(_uk), _uYrP = _keyYear(_ukp);
   var _uLatest = U_MONTHLY.data[U_MONTHLY.data.length-1];
   var _uPrior = U_MONTHLY.data[U_MONTHLY.data.length-2];
   var _uFY = U_ANNUAL.data[U_ANNUAL.data.length-1];
   var _uFYPrior = U_ANNUAL.data[U_ANNUAL.data.length-2];
   var _uPeak = Math.max(...U_MONTHLY.data);
   var _uPeakIdx = U_MONTHLY.data.indexOf(_uPeak);
-  var _uLow = U_SECTORS.reduce((a,b)=>a.u25<b.u25?a:b);
-  var _uHigh = U_SECTORS.reduce((a,b)=>a.u25>b.u25?a:b);
+  var _uLow = U_SECTORS.reduce(function(a,b){return a[_uk]<b[_uk]?a:b;});
+  var _uHigh = U_SECTORS.reduce(function(a,b){return a[_uk]>b[_uk]?a:b;});
   document.getElementById("unemp-metrics").innerHTML = [
     {lbl:"Unemp Rate "+U_MONTHLY.labels[U_MONTHLY.labels.length-1], val:_uLatest+"%", sub:"MoM: "+((_uLatest-_uPrior)>=0?"+":"")+(_uLatest-_uPrior).toFixed(1)+"pp vs "+U_MONTHLY.labels[U_MONTHLY.labels.length-2]+" "+_uPrior+"% · BLS", col:_uLatest>_uPrior?"#D64045":"#1A9E5A"},
-    {lbl:"Full Year 2025",        val:_uFY+"%",  sub:"YoY: "+(_uFY>=_uFYPrior?"+":"")+(_uFY-_uFYPrior).toFixed(1)+"pp vs "+_uFYPrior+"% in 2024", col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",      val:_uFY+"%",  sub:"vs "+_uFYPrior+"% avg in 2024 · peaked "+_uPeak+"% "+U_MONTHLY.labels[_uPeakIdx], col:"#CC8A00"},
-    {lbl:"Lowest Sector",         val:_uLow.u25+"%",  sub:_uLow.s+" · 2025",                          col:"#1A9E5A"},
-    {lbl:"Highest Sector",        val:_uHigh.u25+"%", sub:_uHigh.s+" · 2025",                         col:"#D64045"},
-    {lbl:"Peak → Now",            val:_uPeak+"%→"+_uLatest+"%",sub:"Peak "+U_MONTHLY.labels[_uPeakIdx]+" · U-6 broad: 7.9% · Claims: 205K", col:"#8878B8"},
+    {lbl:"Full Year "+_uYr,      val:_uFY+"%",  sub:"YoY: "+(_uFY>=_uFYPrior?"+":"")+(_uFY-_uFYPrior).toFixed(1)+"pp vs "+_uFYPrior+"% in "+_uYrP, col:"#CC8A00"},
+    {lbl:"Monthly Avg "+_uYr,    val:_uFY+"%",  sub:"vs "+_uFYPrior+"% avg in "+_uYrP+" · peaked "+_uPeak+"% "+U_MONTHLY.labels[_uPeakIdx], col:"#CC8A00"},
+    {lbl:"Lowest Sector",         val:_uLow[_uk]+"%",  sub:_uLow.s+" · "+_uYr,                        col:"#1A9E5A"},
+    {lbl:"Highest Sector",        val:_uHigh[_uk]+"%", sub:_uHigh.s+" · "+_uYr,                       col:"#D64045"},
+    {lbl:"Peak → Now",            val:_uPeak+"%→"+_uLatest+"%",sub:"Peak "+U_MONTHLY.labels[_uPeakIdx], col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Unemployment Sector MoM Chart — bar + dot ──
@@ -2858,16 +2866,17 @@ function buildCPITab(){
   var _cpiFY = CPI_ANNUAL.data[CPI_ANNUAL.data.length-1];
   var _cpiFYPrior = CPI_ANNUAL.data[CPI_ANNUAL.data.length-2];
   var _cpiCore = CPI_MONTHLY.core[CPI_MONTHLY.core.length-1];
-  var _cpiSticky = [...CPI_CATS].sort((a,b)=>b.c25-a.c25)[0];
-  var _cpiFastest = [...CPI_CATS].filter(c=>c.c25>c.c24).sort((a,b)=>(b.c25-b.c24)-(a.c25-a.c24))[0];
+  var _ck = _latestKey(CPI_CATS[0],"c"), _ckp = _priorKey(CPI_CATS[0],"c");
+  var _cpiSticky = [...CPI_CATS].sort(function(a,b){return b[_ck]-a[_ck];})[0];
+  var _cpiFastest = [...CPI_CATS].filter(function(c){return c[_ck]>c[_ckp];}).sort(function(a,b){return (b[_ck]-b[_ckp])-(a[_ck]-a[_ckp]);})[0];
   var _cpiPeak = Math.max(...CPI_ANNUAL.data);
   var _cpiPeakIdx = CPI_ANNUAL.data.indexOf(_cpiPeak);
   document.getElementById("cpi-metrics").innerHTML = [
     {lbl:"CPI YoY "+CPI_MONTHLY.labels[CPI_MONTHLY.labels.length-1], val:`+${cpiLatest}%`, sub:`Core: ${_cpiCore}% ex food & energy`, col:"#CC8A00"},
     {lbl:"Full Year 2025",         val:"+"+_cpiFY+"%",  sub:"YoY: "+(_cpiFY>=_cpiFYPrior?"+":"")+(_cpiFY-_cpiFYPrior).toFixed(1)+"pp vs +"+_cpiFYPrior+"% in 2024", col:"#CC8A00"},
     {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg", col:"#1A9E5A"},
-    {lbl:"Stickiest Category",     val:_cpiSticky.cat+" +"+_cpiSticky.c25+"%", sub:"Down from "+_cpiSticky.c24+"% in 2024 · still elevated", col:"#336BCC"},
-    {lbl:"Fastest Rising",         val:(_cpiFastest?_cpiFastest.cat+" +"+_cpiFastest.c25+"%":"N/A"), sub:_cpiFastest?"Up from "+_cpiFastest.c24+"% in 2024":"", col:"#D64045"},
+    {lbl:"Stickiest Category",     val:_cpiSticky.cat+" +"+_cpiSticky[_ck]+"%", sub:"Down from "+_cpiSticky[_ckp]+"% prior year", col:"#336BCC"},
+    {lbl:"Fastest Rising",         val:(_cpiFastest?_cpiFastest.cat+" +"+_cpiFastest[_ck]+"%":"N/A"), sub:_cpiFastest?"Up from "+_cpiFastest[_ckp]+"% prior year":"", col:"#D64045"},
     {lbl:"Peak → Now",             val:CPI_ANNUAL.labels[_cpiPeakIdx]+": "+_cpiPeak+"%",sub:"Now ~"+cpiLatest+"% · down "+((((_cpiPeak-cpiLatest)/_cpiPeak)*100)|0)+"% from peak", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -2960,16 +2969,18 @@ function buildWagesTab(){
   var _wFY = WAGE_ANNUAL.nominal[WAGE_ANNUAL.nominal.length-1];
   var _wFYPrior = WAGE_ANNUAL.nominal[WAGE_ANNUAL.nominal.length-2];
   var _wAvg = +(WAGE_MONTHLY.nominal.reduce((a,b)=>a+b,0)/WAGE_MONTHLY.nominal.length).toFixed(1);
-  var _wTop = [...WAGE_SECTORS].sort((a,b)=>b.w25-a.w25)[0];
+  var _wk = _latestKey(WAGE_SECTORS[0],"w"), _wkp = _priorKey(WAGE_SECTORS[0],"w");
+  var _wYr = _keyYear(_wk), _wYrP = _keyYear(_wkp);
+  var _wTop = [...WAGE_SECTORS].sort(function(a,b){return b[_wk]-a[_wk];})[0];
   var _wReal = WAGE_ANNUAL.real[WAGE_ANNUAL.real.length-1];
   var _wPeak = Math.max(...WAGE_ANNUAL.nominal);
   var _wPeakIdx = WAGE_ANNUAL.nominal.indexOf(_wPeak);
   document.getElementById("wage-metrics").innerHTML = [
     {lbl:"Wage Growth "+WAGE_MONTHLY.labels[WAGE_MONTHLY.labels.length-1], val:"+"+_wLatest+"%", sub:"BLS nonfarm AHE nominal", col:"#336BCC"},
-    {lbl:"Full Year 2025",         val:"+"+_wFY+"%",  sub:"YoY: "+(_wFY>=_wFYPrior?"+":"")+(_wFY-_wFYPrior).toFixed(1)+"pp vs +"+_wFYPrior+"% in 2024", col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",       val:"+"+_wAvg+"%", sub:"vs +"+_wFYPrior+"%/mo in 2024 · normalizing", col:"#CC8A00"},
-    {lbl:"Top Sector",             val:_wTop.s, sub:"+"+_wTop.w25+"% YoY — fastest growing · 2025",     col:"#1A9E5A"},
-    {lbl:"Real Wages 2025",        val:"+"+_wReal+"%", sub:"CPI-adj · inflation-adjusted gain",          col:"#1A9E5A"},
+    {lbl:"Full Year "+_wYr,         val:"+"+_wFY+"%",  sub:"YoY: "+(_wFY>=_wFYPrior?"+":"")+(_wFY-_wFYPrior).toFixed(1)+"pp vs +"+_wFYPrior+"% in "+_wYrP, col:"#CC8A00"},
+    {lbl:"Monthly Avg "+_wYr,       val:"+"+_wAvg+"%", sub:"vs +"+_wFYPrior+"%/mo in "+_wYrP+" · normalizing", col:"#CC8A00"},
+    {lbl:"Top Sector",             val:_shortName(_wTop.s), sub:"+"+_wTop[_wk]+"% YoY — fastest growing · "+_wYr, col:"#1A9E5A"},
+    {lbl:"Real Wages "+_wYr,        val:"+"+_wReal+"%", sub:"CPI-adj · inflation-adjusted gain",          col:"#1A9E5A"},
     {lbl:"Peak → Now",             val:WAGE_ANNUAL.labels[_wPeakIdx]+": +"+_wPeak+"%",sub:"Now +"+_wLatest+"% · converging to ~3.5% LT avg", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -3040,26 +3051,39 @@ function buildJobsTab(){
   if(builtTabs.jobs) return; builtTabs.jobs=1;
 
   // ── Jobs Tiles (dynamic) ──
+  // Helper: get latest year's job key from JOBS_SECTORS (e.g. "j25", "j26")
+  var _jKeys = Object.keys(JOBS_SECTORS[0]).filter(k=>/^j\d{2}$/.test(k)).sort();
+  var _jCurKey = _jKeys[_jKeys.length-1]; // latest year key
+  var _jPrvKey = _jKeys.length>1?_jKeys[_jKeys.length-2]:_jCurKey;
+  var _jCurYr = "20"+_jCurKey.slice(1); // e.g. "2025"
+  var _jPrvYr = "20"+_jPrvKey.slice(1);
+  // Helper: get SECTOR_MOM month keys dynamically (exclude "sectors")
+  var _smKeys = Object.keys(SECTOR_MOM).filter(k=>k!=="sectors");
+  var _smCur = _smKeys[_smKeys.length-1]; // latest month (e.g. "feb26")
+  var _smPrv = _smKeys.length>1?_smKeys[_smKeys.length-2]:_smCur;
+  var _smCurLbl = _smCur.replace(/^([a-z]{3})(\d{2})$/,function(_,m,y){return m.charAt(0).toUpperCase()+m.slice(1)+"'"+y;});
+  var _smPrvLbl = _smPrv.replace(/^([a-z]{3})(\d{2})$/,function(_,m,y){return m.charAt(0).toUpperCase()+m.slice(1)+"'"+y;});
+  // Helper: truncate sector name to first meaningful segment
+  function _shortSector(name){return name.replace(/^→\s*/,"").replace(/\s*[&(].*/,"").trim()||name;}
+  // Compute values
   var _jFY = JOBS_ANNUAL.data[JOBS_ANNUAL.data.length-1];
   var _jFYPrior = JOBS_ANNUAL.data[JOBS_ANNUAL.data.length-2];
   var _jAvg = Math.round(_jFY/12);
   var _jAvgPrior = Math.round(_jFYPrior/12);
-  var _jLatest = SECTOR_MOM.feb26.reduce((a,b)=>a+b,0);
-  var _jLatestLbl = "Feb'26";
-  var _jPrior = SECTOR_MOM.jan26.reduce((a,b)=>a+b,0);
-  var _jTopIdx = SECTOR_MOM.feb26.indexOf(Math.max(...SECTOR_MOM.feb26));
-  var _jWorstIdx = SECTOR_MOM.feb26.indexOf(Math.min(...SECTOR_MOM.feb26));
+  var _jLatest = SECTOR_MOM[_smCur].reduce((a,b)=>a+b,0);
+  var _jPrior = SECTOR_MOM[_smPrv].reduce((a,b)=>a+b,0);
   var _jChgPct = _jFYPrior!==0?Math.round(((_jFY-_jFYPrior)/_jFYPrior)*100):0;
-  var _jMainSectors = JOBS_SECTORS.filter(s=>!s.s.startsWith("→"));
-  var _jTopSector = [..._jMainSectors].sort((a,b)=>b.j25-a.j25)[0];
-  var _jWorstSector = [..._jMainSectors].sort((a,b)=>a.j25-b.j25)[0];
+  // Filter to main sectors only (no sub-sectors with → prefix)
+  var _jMainSectors = JOBS_SECTORS.filter(function(s){return !s.s.startsWith("→");});
+  var _jTopSector = [..._jMainSectors].sort(function(a,b){return b[_jCurKey]-a[_jCurKey];})[0];
+  var _jWorstSector = [..._jMainSectors].sort(function(a,b){return a[_jCurKey]-b[_jCurKey];})[0];
   document.getElementById("jobs-metrics").innerHTML = [
-    {lbl:_jLatestLbl+" Jobs",   val:(_jLatest>=0?"+":"")+_jLatest+"K", sub:"MoM: "+(_jLatest-_jPrior>=0?"+":"")+(_jLatest-_jPrior)+"K vs Jan "+((_jPrior>=0?"+":"")+_jPrior)+"K · BLS nonfarm", col:_jLatest<0?"#D64045":"#1A9E5A"},
-    {lbl:"Full Year 2025",      val:(_jFY>=0?"+":"")+_jFY+"K", sub:"YoY: "+_jChgPct+"% vs "+(_jFYPrior>=0?"+":"")+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M in 2024", col:_jFY<_jFYPrior?"#D64045":"#1A9E5A"},
-    {lbl:"Monthly Avg 2025",    val:"~"+_jAvg+"K", sub:"vs "+_jAvgPrior+"K/mo in 2024", col:"#CC8A00"},
-    {lbl:"Top Sector 2025",     val:_jTopSector.s.split(/[&(]/)[0].trim(), sub:(_jTopSector.j25>=0?"+":"")+_jTopSector.j25+"K annual · strongest contributor", col:"#1A9E5A"},
-    {lbl:"Worst Sector 2025",   val:_jWorstSector.s.split(/[&(]/)[0].trim(), sub:(_jWorstSector.j25>=0?"+":"")+_jWorstSector.j25+"K annual", col:"#D64045"},
-    {lbl:"Peak → Now",          val:"2024: "+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M", sub:"2025: "+(_jFY>=0?"+":"")+_jFY+"K · "+_jChgPct+"% change", col:"#8878B8"},
+    {lbl:_smCurLbl+" Jobs",     val:(_jLatest>=0?"+":"")+_jLatest+"K", sub:"MoM: "+(_jLatest-_jPrior>=0?"+":"")+(_jLatest-_jPrior)+"K vs "+_smPrvLbl+" "+(_jPrior>=0?"+":"")+_jPrior+"K · BLS nonfarm", col:_jLatest<0?"#D64045":"#1A9E5A"},
+    {lbl:"Full Year "+_jCurYr,  val:(_jFY>=0?"+":"")+_jFY+"K", sub:"YoY: "+_jChgPct+"% vs "+(_jFYPrior>=0?"+":"")+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M in "+_jPrvYr, col:_jFY<_jFYPrior?"#D64045":"#1A9E5A"},
+    {lbl:"Monthly Avg "+_jCurYr,val:"~"+_jAvg+"K", sub:"vs "+_jAvgPrior+"K/mo in "+_jPrvYr, col:"#CC8A00"},
+    {lbl:"Top Sector "+_jCurYr, val:_shortSector(_jTopSector.s), sub:(_jTopSector[_jCurKey]>=0?"+":"")+_jTopSector[_jCurKey]+"K annual · strongest contributor", col:"#1A9E5A"},
+    {lbl:"Worst Sector "+_jCurYr,val:_shortSector(_jWorstSector.s), sub:(_jWorstSector[_jCurKey]>=0?"+":"")+_jWorstSector[_jCurKey]+"K annual", col:"#D64045"},
+    {lbl:"Peak → Now",          val:_jPrvYr+": "+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M", sub:_jCurYr+": "+(_jFY>=0?"+":"")+_jFY+"K · "+_jChgPct+"% change", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
