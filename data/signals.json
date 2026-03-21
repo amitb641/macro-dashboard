@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-03-20T21:21:34.208682Z",
+  "analyzed_at": "2026-03-21T14:31:21.185999Z",
   "risk_level": "ELEVATED",
   "alert_count": 1,
   "watch_count": 3,
@@ -242,7 +242,5 @@
     }
   },
   "headlines": [],
-  "raw_errors": [
-    "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
-  ]
+  "raw_errors": []
 }
