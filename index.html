@@ -3050,14 +3050,15 @@ function buildJobsTab(){
   var _jTopIdx = SECTOR_MOM.feb26.indexOf(Math.max(...SECTOR_MOM.feb26));
   var _jWorstIdx = SECTOR_MOM.feb26.indexOf(Math.min(...SECTOR_MOM.feb26));
   var _jChgPct = _jFYPrior!==0?Math.round(((_jFY-_jFYPrior)/_jFYPrior)*100):0;
-  var _jTopSector = [...JOBS_SECTORS].sort((a,b)=>b.j25-a.j25)[0];
-  var _jWorstSector = [...JOBS_SECTORS].sort((a,b)=>a.j25-b.j25)[0];
+  var _jMainSectors = JOBS_SECTORS.filter(s=>!s.s.startsWith("→"));
+  var _jTopSector = [..._jMainSectors].sort((a,b)=>b.j25-a.j25)[0];
+  var _jWorstSector = [..._jMainSectors].sort((a,b)=>a.j25-b.j25)[0];
   document.getElementById("jobs-metrics").innerHTML = [
     {lbl:_jLatestLbl+" Jobs",   val:(_jLatest>=0?"+":"")+_jLatest+"K", sub:"MoM: "+(_jLatest-_jPrior>=0?"+":"")+(_jLatest-_jPrior)+"K vs Jan "+((_jPrior>=0?"+":"")+_jPrior)+"K · BLS nonfarm", col:_jLatest<0?"#D64045":"#1A9E5A"},
     {lbl:"Full Year 2025",      val:(_jFY>=0?"+":"")+_jFY+"K", sub:"YoY: "+_jChgPct+"% vs "+(_jFYPrior>=0?"+":"")+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M in 2024", col:_jFY<_jFYPrior?"#D64045":"#1A9E5A"},
     {lbl:"Monthly Avg 2025",    val:"~"+_jAvg+"K", sub:"vs "+_jAvgPrior+"K/mo in 2024", col:"#CC8A00"},
-    {lbl:"Top Sector 2025",     val:_jTopSector.s.split(" ")[0], sub:"+"+_jTopSector.j25+"K annual · strongest contributor", col:"#1A9E5A"},
-    {lbl:"Worst Sector 2025",   val:_jWorstSector.s.split(" ")[0], sub:(_jWorstSector.j25>=0?"+":"")+_jWorstSector.j25+"K annual", col:"#D64045"},
+    {lbl:"Top Sector 2025",     val:_jTopSector.s.split(/[&(]/)[0].trim(), sub:(_jTopSector.j25>=0?"+":"")+_jTopSector.j25+"K annual · strongest contributor", col:"#1A9E5A"},
+    {lbl:"Worst Sector 2025",   val:_jWorstSector.s.split(/[&(]/)[0].trim(), sub:(_jWorstSector.j25>=0?"+":"")+_jWorstSector.j25+"K annual", col:"#D64045"},
     {lbl:"Peak → Now",          val:"2024: "+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M", sub:"2025: "+(_jFY>=0?"+":"")+_jFY+"K · "+_jChgPct+"% change", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
