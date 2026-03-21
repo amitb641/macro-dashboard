@@ -1590,6 +1590,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Unemployment by Sector — 2025 vs 2024 (%)</div>
       <div class="panel-sub">2025 rate vs 2024 rate · BLS CPS · seasonally adjusted</div>
+      <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>2025 improved (lower)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>2025 worsened (higher)</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8b7fc7bb;display:inline-block"></span>2024</span>
+      </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS) Table A-14. Seasonally adjusted, 2025 vs 2024 rates by industry sector.</p>
     </div>
@@ -2769,11 +2774,12 @@ function buildUnempTab(){
   new Chart(document.getElementById("c-unemp-bar").getContext("2d"),{
     type:"bar",
     data:{labels:usorted.map(s=>s.s),datasets:[
-      {label:"2025 Rate",data:usorted.map(s=>s.u25),backgroundColor:"#d03030cc",borderRadius:4},
-      {label:"2024 Rate",data:usorted.map(s=>s.u24),backgroundColor:"#c0701066",borderRadius:4},
+      {label:"2025 Rate",data:usorted.map(s=>s.u25),
+       backgroundColor:usorted.map(s=>s.u25<=s.u24?"#16a34acc":"#dc2626bb"),borderRadius:4},
+      {label:"2024 Rate",data:usorted.map(s=>s.u24),backgroundColor:"#8b7fc7bb",borderRadius:4},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
