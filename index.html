@@ -2102,13 +2102,62 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">Senior Loan Officer Survey (SLOOS) — Tightening Standards %</div>
-      <div class="panel-sub">Net % of banks tightening consumer lending standards · Fed · NY Fed Recession Prob. overlay</div>
-      <div id="sloos-corr-badge" style="margin-bottom:6px;font-size:11px;color:#334E68;font-weight:500"></div>
+      <div class="panel-sub">Net % of banks tightening consumer lending standards · Fed · NY Fed Recession Prob. overlay · Card 90+ DPD</div>
+
+      <!-- Chart legend -->
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+        <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(37,99,235,.5);border-radius:1px"></span>SLOOS Tightening %</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:3px;background:#7C3AED;border-radius:2px"></span>Recession Probability %</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;border-top:2px dashed #EF4444"></span>Card 90+ DPD %</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(0,0,0,.06);border-radius:2px"></span>NBER recession</span>
+      </div>
+
       <div class="ch300"><canvas id="c-credit-sloos"></canvas></div>
-      <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
+
+      <!-- Correlation narrative -->
+      <p style="margin-top:8px;font-size:9px;color:#7a90aa;line-height:1.55">Card delinquencies follow recession probability by ~5Q (r=0.50). Bank tightening (SLOOS) bridges the gap, predicting card stress ~3Q ahead (r=0.48). Broader delinquencies show a weaker link (r=0.27, ~5Q lag) — cards remain the canary in the credit coal mine.</p>
+
+      <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
       <details style="margin-top:6px;font-size:10px;color:#7a90aa">
-        <summary style="cursor:pointer;font-weight:600;color:#334E68">📐 Correlation methodology</summary>
-        <div id="sloos-corr-detail" style="margin-top:6px;line-height:1.6"></div>
+        <summary style="cursor:pointer;font-weight:600;color:#334E68">Correlation findings</summary>
+        <div style="margin-top:6px;line-height:1.7">
+          <p style="margin:4px 0 8px"><strong>Key takeaways:</strong></p>
+          <ul style="margin:0 0 10px 16px;padding:0;list-style:disc">
+            <li style="margin-bottom:4px">The yield curve is the earliest warning — inversions precede bank tightening and credit losses by <strong>15–30 months</strong></li>
+            <li style="margin-bottom:4px">SLOOS tightening is the transmission mechanism — when banks restrict lending, borrower stress follows within <strong>2–4 quarters</strong></li>
+            <li style="margin-bottom:4px">Card 90+ DPD is the lagging confirmation — delinquencies rise last, peaking <strong>5–10 quarters</strong> after the yield curve first signals trouble</li>
+            <li style="margin-bottom:4px"><strong>Current read (Q4'25):</strong> Recession prob. down to 19% (from 71% peak), SLOOS near neutral (+2%), but Card DPD remains elevated at 9.8% — the lag effect from 2023 tightening is still playing out</li>
+          </ul>
+          <p style="margin:4px 0"><strong>Lag timing (quarters):</strong></p>
+          <table style="margin:6px 0 8px;border-collapse:collapse;font-size:10px;width:100%;max-width:520px">
+            <tr style="border-bottom:1px solid #E5E7EB">
+              <th style="text-align:left;padding:4px 8px;color:#334E68;font-weight:700">Signal pair</th>
+              <th style="text-align:center;padding:4px 8px;color:#334E68;font-weight:700">Lead time</th>
+              <th style="text-align:left;padding:4px 8px;color:#334E68;font-weight:700">Example</th>
+            </tr>
+            <tr style="border-bottom:1px solid #F0F1F3">
+              <td style="padding:4px 8px">Yield Curve inversion → Recession Prob rises</td>
+              <td style="text-align:center;padding:4px 8px;font-weight:600">1–2 Q</td>
+              <td style="padding:4px 8px;color:#6B7280">Curve inverted Q3'22, prob peaked Q1'24 at 71%</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F0F1F3">
+              <td style="padding:4px 8px">Recession Prob → SLOOS Tightening</td>
+              <td style="text-align:center;padding:4px 8px;font-weight:600">2–4 Q</td>
+              <td style="padding:4px 8px;color:#6B7280">Prob rose Q3'07, SLOOS peaked Q3'08 (+60%)</td>
+            </tr>
+            <tr style="border-bottom:1px solid #F0F1F3">
+              <td style="padding:4px 8px">SLOOS Tightening → Card 90+ DPD</td>
+              <td style="text-align:center;padding:4px 8px;font-weight:600">2–4 Q</td>
+              <td style="padding:4px 8px;color:#6B7280">SLOOS peaked Q3'08, Card DPD peaked Q1'10 (13.7%)</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 8px">Full cycle: Yield Curve → Card losses</td>
+              <td style="text-align:center;padding:4px 8px;font-weight:600">5–10 Q</td>
+              <td style="padding:4px 8px;color:#6B7280">~15–30 months end-to-end</td>
+            </tr>
+          </table>
+          <div id="sloos-corr-detail" style="margin-top:6px;line-height:1.6"></div>
+        </div>
       </details>
     </div>
     <div class="panel">
@@ -4364,16 +4413,68 @@ function buildCreditTab(){
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:5,border:{display:false}}}}
   });
 
+  // ── NBER recession band plugin for SLOOS chart ──
+  const _sloosRecessions=[{start:2,end:3},{start:16,end:19},{start:40,end:41}];
+  const _sloosRecPlugin={
+    id:'sloosRecBands',
+    beforeDraw(chart){
+      const{ctx,chartArea:{left,right,top,bottom}}=chart;
+      const w=(right-left)/CREDIT_SLOOS.labels.length;
+      ctx.save();
+      _sloosRecessions.forEach(r=>{
+        ctx.fillStyle='rgba(0,0,0,.06)';
+        ctx.fillRect(left+r.start*w,top,(r.end-r.start+1)*w,bottom-top);
+      });
+      ctx.restore();
+    }
+  };
+
   new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
-    type:"bar",
+    type:"line",
+    plugins:[_sloosRecPlugin],
     data:{labels:CREDIT_SLOOS.labels,datasets:[
-      {label:"Consumer Tightening",data:CREDIT_SLOOS.consumer,backgroundColor:"#E8637Acc",borderRadius:3,datalabels:false},
-      {label:"Recession Prob. %",data:CREDIT_SLOOS.recession_prob,type:"line",borderColor:"#000000",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y",fill:false,borderDash:[6,3],datalabels:false},
-      {label:"Card 90+ DPD %",data:CREDIT_SLOOS.card_dq,type:"line",borderColor:"#D64045",backgroundColor:"transparent",borderWidth:1.5,pointRadius:0,tension:0.4,yAxisID:"y2",fill:false,borderDash:[4,2],datalabels:false},
+      {type:"bar",label:"SLOOS Tightening",data:CREDIT_SLOOS.consumer,
+        backgroundColor:CREDIT_SLOOS.consumer.map(v=>
+          v>40?'rgba(185,28,28,.7)':v>20?'rgba(37,99,235,.65)':v>0?'rgba(37,99,235,.4)':v>-10?'rgba(16,185,129,.35)':'rgba(16,185,129,.55)'
+        ),
+        borderColor:CREDIT_SLOOS.consumer.map(v=>
+          v>40?'rgba(185,28,28,.9)':v>20?'rgba(37,99,235,.8)':v>0?'rgba(37,99,235,.55)':v>-10?'rgba(16,185,129,.5)':'rgba(16,185,129,.7)'
+        ),
+        borderWidth:1,borderRadius:2,yAxisID:"y",order:3,barPercentage:1.0,categoryPercentage:0.95,datalabels:false},
+      {label:"Recession Probability",data:CREDIT_SLOOS.recession_prob,
+        borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,.03)',borderWidth:2.5,fill:true,tension:0.35,
+        pointRadius:0,hoverRadius:4,yAxisID:"y",order:2,datalabels:false,
+        segment:{
+          borderColor:ctx=>ctx.p1.parsed.y>40?'#DC2626':ctx.p1.parsed.y>20?'#D97706':'#7C3AED',
+          backgroundColor:ctx=>ctx.p1.parsed.y>40?'rgba(220,38,38,.04)':ctx.p1.parsed.y>20?'rgba(217,119,6,.03)':'rgba(124,58,237,.03)'
+        }},
+      {label:"Card 90+ DPD",data:CREDIT_SLOOS.card_dq,
+        borderColor:'#EF4444',backgroundColor:'transparent',borderWidth:2.5,borderDash:[6,3],
+        fill:false,tension:0.35,spanGaps:true,pointRadius:0,hoverRadius:4,yAxisID:"y2",order:1,datalabels:false,
+        segment:{
+          borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444',
+          borderDash:()=>[6,3]
+        }},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      scales:{y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"}},
-              y2:{position:"right",min:0,max:16,grid:{display:false},ticks:{color:"#D64045",callback:v=>v+"%",font:{size:9}},title:{display:true,text:"Card 90+ DPD %",color:"#D64045",font:{size:10}}}}}
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{
+        label:ctx=>{
+          if(ctx.raw==null) return null;
+          const prefix=ctx.dataset.label==='SLOOS Tightening'&&ctx.raw>=0?'+':'';
+          return ctx.dataset.label+': '+prefix+ctx.raw+'%';
+        }
+      }}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:"#9CA3AF",font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:14},border:{display:false}},
+        y:{position:"left",min:-30,max:80,
+          title:{display:true,text:"Recession Prob / SLOOS %",color:"#4B5563",font:{size:10,weight:'600'}},
+          grid:{color:"rgba(0,0,0,.04)",drawTicks:false},
+          ticks:{color:"#9CA3AF",font:{size:9},padding:6,stepSize:20,callback:v=>(v>0?"+":"")+v+"%"},border:{display:false}},
+        y2:{position:"right",min:3,max:15,grid:{display:false,drawTicks:false},
+          title:{display:true,text:"Card 90+ DPD %",color:"#EF4444",font:{size:10,weight:'600'}},
+          ticks:{color:"#9CA3AF",font:{size:9},padding:6,stepSize:3,callback:v=>v+"%"},border:{display:false}}
+      }}
   });
 
   // ── SLOOS ↔ Recession Probability Cross-Correlation Analysis ──────────────
@@ -4449,22 +4550,6 @@ function buildCreditTab(){
       if (bestLag > 0) return `${aName} leads ${bName} by ~${q}Q`;
       if (bestLag < 0) return `${bName} leads ${aName} by ~${q}Q`;
       return `concurrent`;
-    }
-
-    const badge = document.getElementById("sloos-corr-badge");
-    if (badge) {
-      const consDesc = descLag(bestConsLag, "Tightening", "Recession Prob");
-      const recCardQ = lagToQ(bestRecCardLag);
-      const recAllQ  = lagToQ(bestRecAllLag);
-      badge.innerHTML =
-        `<span style="background:#00000008;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px;font-weight:600">` +
-        `Signal chain: Yield Curve (Recession Prob) → SLOOS Tightening → Credit Losses</span>` +
-        `<br><span style="display:inline-block;margin-top:6px;background:#E8637A15;color:#D64045;border:1px solid #D6404533;border-radius:10px;padding:3px 10px;margin-right:8px">` +
-        `Consumer Tightening ↔ Recession Prob: r=${bestConsR.toFixed(2)} · ${consDesc}</span>` +
-        `<br><span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px;margin-right:8px">` +
-        `Recession Prob → Card DPD: r=${bestRecCardR.toFixed(2)} · leads by ~${recCardQ}Q</span>` +
-        `<span style="display:inline-block;margin-top:6px;background:#00000010;color:#333;border:1px solid #33333333;border-radius:10px;padding:3px 10px">` +
-        `Recession Prob → All Product DPD: r=${bestRecAllR.toFixed(2)} · leads by ~${recAllQ}Q</span>`;
     }
 
     const detail = document.getElementById("sloos-corr-detail");
