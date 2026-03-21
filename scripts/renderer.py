@@ -905,7 +905,7 @@ def rebuild_kpi_strip(html, data, vals):
     if unrate and len(unrate) >= 2:
         cur, prev, chg, d = _mom(unrate)
         lbl = f"Unemployment {_mlbl(unrate[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'col': '#c07010',
+        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'metric': 'unemp',
                       'delta': d, 'chg': f'{chg}pp', 'inv': True,
                       'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
 
@@ -917,7 +917,7 @@ def rebuild_kpi_strip(html, data, vals):
         d = cur_chg - prev_chg
         sign = '+' if d > 0 else ''
         lbl = f"Jobs {_mlbl(payems[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur_chg:+.0f}K', 'col': '#4a72e8',
+        cards.append({'lbl': lbl, 'val': f'{cur_chg:+.0f}K', 'metric': 'jobs',
                       'delta': d, 'chg': f'{sign}{d:.0f}K',
                       'sub': f"Prior: {prev_chg:+.0f}K ({_mlbl(payems[1]['date'])})"})
 
@@ -950,7 +950,7 @@ def rebuild_kpi_strip(html, data, vals):
             lbl = f"CPI YoY {_mlbl(cpi[0]['date'])}"
             mom_str = f"MoM: {mom_pct:+.2f}% · " if mom_pct is not None else ""
             avg3m_str = f" · 3M avg: {avg3m:.1f}%" if avg3m is not None else ""
-            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'cpi',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
 
@@ -962,7 +962,7 @@ def rebuild_kpi_strip(html, data, vals):
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
             lbl = f"Core PCE {_mlbl(pce_core[0]['date'])}"
-            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#d03030',
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'pce',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
@@ -974,7 +974,7 @@ def rebuild_kpi_strip(html, data, vals):
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
             lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
-            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'col': '#1a9e4a',
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'wages',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
 
@@ -986,7 +986,7 @@ def rebuild_kpi_strip(html, data, vals):
         lower = math.floor(v * 4) / 4
         upper = lower + 0.25
         lbl = f"Fed Funds {_mlbl(ffr['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{v:.2f}%', 'col': '#4a72e8',
+        cards.append({'lbl': lbl, 'val': f'{v:.2f}%', 'metric': 'rate',
                       'delta': 0, 'chg': '',
                       'sub': f"FOMC range: {lower:.2f}–{upper:.2f}% · Effective rate"})
 
@@ -999,7 +999,7 @@ def rebuild_kpi_strip(html, data, vals):
             bp = round((dgs10['value'] - dgs2['value']) * 100)
             spr = f" · 2Y: {dgs2['value']:.2f}% · Spread: {bp:+d}bp"
         lbl = f"10Y Treasury {_mlbl(dgs10['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{dgs10["value"]:.2f}%', 'col': '#4a72e8',
+        cards.append({'lbl': lbl, 'val': f'{dgs10["value"]:.2f}%', 'metric': 'rate',
                       'delta': 0, 'chg': '',
                       'sub': f"Daily{spr}"})
 
@@ -1010,7 +1010,7 @@ def rebuild_kpi_strip(html, data, vals):
         d = round(cur - prev)
         sign = '+' if d > 0 else ''
         lbl = f"Initial Claims {_mlbl(icsa[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'col': '#c07010',
+        cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'metric': 'claims',
                       'delta': d, 'chg': f'{sign}{d/1000:.0f}K', 'inv': True,
                       'sub': f"Prior wk: {prev/1000:.0f}K ({_mlbl(icsa[1]['date'])})"})
 
@@ -1023,7 +1023,7 @@ def rebuild_kpi_strip(html, data, vals):
             yoy_s = round(cur_s - umcsent[12]['value'], 1)
         lbl = f"UMich Sentiment {_mlbl(umcsent[0]['date'])}"
         yoy_str = f" · YoY: {yoy_s:+.1f}" if yoy_s is not None else ""
-        cards.append({'lbl': lbl, 'val': f'{cur_s:.1f}', 'col': '#6d40cc',
+        cards.append({'lbl': lbl, 'val': f'{cur_s:.1f}', 'metric': 'umcsent',
                       'delta': d_s, 'chg': f'{chg_s}',
                       'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
 
@@ -1032,7 +1032,7 @@ def rebuild_kpi_strip(html, data, vals):
     if tdsp and len(tdsp) >= 2:
         cur_t, prev_t, chg_t, d_t = _mom(tdsp)
         lbl = f"Debt Service Ratio {_mlbl(tdsp[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur_t:.1f}%', 'col': '#c07010',
+        cards.append({'lbl': lbl, 'val': f'{cur_t:.1f}%', 'metric': 'dsr',
                       'delta': d_t, 'chg': f'{chg_t}pp', 'inv': True,
                       'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_mlbl(tdsp[1]['date'])})"})
 
