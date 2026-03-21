@@ -2718,10 +2718,10 @@ function buildUnempTab(){
 
   document.getElementById("unemp-metrics").innerHTML = [
     {lbl:"Unemp Rate Feb'26",     val:"4.4%",  sub:"MoM: +0.1pp vs Jan 4.3% · BLS",                   col:"#D64045"},
-    {lbl:"Full Year 2025",        val:"4.2%",  sub:"YoY: +0.2pp vs 4.0% in 2024",                     col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",      val:"4.2%",  sub:"vs 4.0% avg in 2024 · peaked 4.6% Nov'25",        col:"#CC8A00"},
-    {lbl:"Lowest Sector",         val:"1.8%",  sub:"Government (federal/state) · 2024",                col:"#1A9E5A"},
-    {lbl:"Highest Sector",        val:"4.6%",  sub:"Construction & leisure workers · 2024",             col:"#D64045"},
+    {lbl:"Full Year 2025",        val:"4.3%",  sub:"YoY: +0.3pp vs 4.0% in 2024",                     col:"#CC8A00"},
+    {lbl:"Monthly Avg 2025",      val:"4.3%",  sub:"vs 4.0% avg in 2024 · peaked 4.6% Nov'25",        col:"#CC8A00"},
+    {lbl:"Lowest Sector",         val:"2.2%",  sub:"Government (all levels) · 2025",                   col:"#1A9E5A"},
+    {lbl:"Highest Sector",        val:"5.1%",  sub:"Hotel & Lodging Workers · 2025",                   col:"#D64045"},
     {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -2840,10 +2840,10 @@ function buildCPITab(){
   const cpiLatest = CPI_MONTHLY.headline[CPI_MONTHLY.headline.length-1];
   document.getElementById("cpi-metrics").innerHTML = [
     {lbl:"CPI YoY Feb'26",        val:`+${cpiLatest}%`,  sub:`MoM: +0.2% · Core: 2.5% ex food & energy`, col:"#CC8A00"},
-    {lbl:"Full Year 2025",         val:"+2.9%",  sub:"YoY: −0.5pp vs +3.4% in 2024",                     col:"#CC8A00"},
+    {lbl:"Full Year 2025",         val:"+2.7%",  sub:"YoY: −0.2pp vs +2.9% in 2024",                     col:"#CC8A00"},
     {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg · vs +3.2%/mo in 2024", col:"#1A9E5A"},
     {lbl:"Stickiest Category",     val:"Shelter +4.6%", sub:"Down from 4.9% in 2024 · still elevated",    col:"#336BCC"},
-    {lbl:"Fastest Rising",         val:"Food +3.1%", sub:"Food at home · up from 1.1% in 2024 · tariffs", col:"#D64045"},
+    {lbl:"Fastest Rising",         val:"Food Away +3.6%", sub:"Food away from home · down from 4.1% in 2024", col:"#D64045"},
     {lbl:"Peak → Now",             val:"Jun'22: 9.1%",sub:"Now ~2.8% · down 69% from peak",              col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -2929,9 +2929,9 @@ function buildWagesTab(){
 
   document.getElementById("wage-metrics").innerHTML = [
     {lbl:"Wage Growth Feb'26",     val:"+3.7%",  sub:"MoM: AHE $37.32/hr · BLS nonfarm",                col:"#336BCC"},
-    {lbl:"Full Year 2025",         val:"+3.9%",  sub:"YoY: −0.4pp vs +4.3% in 2024",                    col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",       val:"+3.8%",  sub:"vs +4.1%/mo in 2024 · normalizing",               col:"#CC8A00"},
-    {lbl:"Top Sector",             val:"Leisure", sub:"+5.2% YoY — fastest growing · 2025",              col:"#1A9E5A"},
+    {lbl:"Full Year 2025",         val:"+3.8%",  sub:"YoY: −0.2pp vs +4.0% in 2024",                    col:"#CC8A00"},
+    {lbl:"Monthly Avg 2025",       val:"+3.7%",  sub:"vs +4.0%/mo in 2024 · normalizing",               col:"#CC8A00"},
+    {lbl:"Top Sector",             val:"Inv. Banking", sub:"+5.2% YoY — fastest growing · 2025",         col:"#1A9E5A"},
     {lbl:"Real Wages 2025",        val:"+1.2%",  sub:"CPI-adj · vs +0.6% long-term avg",                col:"#1A9E5A"},
     {lbl:"Peak → Now",             val:"2022: +5.1%",sub:"Now +3.7% · converging to ~3.5% LT avg",     col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
@@ -3001,11 +3001,11 @@ function buildJobsTab(){
 
   document.getElementById("jobs-metrics").innerHTML = [
     {lbl:"Feb'26 Jobs",         val:"-92K",   sub:"MoM: −235K vs Jan +143K · BLS nonfarm",              col:"#D64045"},
-    {lbl:"Full Year 2025",      val:"+181K",  sub:"YoY: −91% vs +2.0M in 2024 (post-revision)",        col:"#D64045"},
-    {lbl:"Monthly Avg 2025",    val:"~15K",   sub:"vs 167K/mo in 2024 · sharp slowdown",               col:"#CC8A00"},
+    {lbl:"Full Year 2025",      val:"+116K",  sub:"YoY: −92% vs +1.46M in 2024 (post-revision)",       col:"#D64045"},
+    {lbl:"Monthly Avg 2025",    val:"~10K",   sub:"vs 122K/mo in 2024 · sharp slowdown",               col:"#CC8A00"},
     {lbl:"Top Sector 2025",     val:"Healthcare", sub:"+44K Feb'26 · Social Asst. held strong all year",col:"#1A9E5A"},
     {lbl:"Worst Sector 2025",   val:"Fed Govt",sub:"−327K cumulative from Oct'24 peak",                 col:"#D64045"},
-    {lbl:"Peak → Now",          val:"2024: +2.0M",sub:"Trough: 2025 +181K post-revision · −91%",       col:"#8878B8"},
+    {lbl:"Peak → Now",          val:"2024: +1.46M",sub:"Trough: 2025 +116K post-revision · −92%",      col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
@@ -3324,7 +3324,7 @@ function buildPCETab(){
     {lbl:"Full Year 2025",         val:"2.6%",   sub:"YoY: +0.2pp vs 2.4% in 2024 · BEA",               col:"#CC8A00"},
     {lbl:"Personal Saving Rate",   val:"4.5%",   sub:"Jan'26 · vs 4.0% Dec'25 · trending up",           col:"#1A9E5A"},
     {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",            col:"#1A9E5A"},
-    {lbl:"Consumer Stress",        val:"CC DQ 5.1%", sub:"90+ day delinquency · Q3 2025 · elevated",    col:"#D64045"},
+    {lbl:"Consumer Stress",        val:"CC DQ 9.8%", sub:"90+ day delinquency · Q3 2025 · near 2011 high",col:"#D64045"},
     {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed",col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -4171,9 +4171,9 @@ function buildCreditTab(){
 
   document.getElementById("credit-metrics").innerHTML = [
     {lbl:"Card 90+ DPD Latest",    val:"9.8%",   sub:"MoM: flat · Q3 2025 · near 2011-era high",        col:"#D64045"},
-    {lbl:"Auto 90+ DPD",           val:"4.5%",   sub:"YoY: stable · subprime stress persists",           col:"#CC8A00"},
+    {lbl:"Auto 90+ DPD",           val:"3.6%",   sub:"Q3 2025 · down from 4.0% Q3'24 · improving",      col:"#CC8A00"},
     {lbl:"Student Loan DQ",        val:"9.4%",   sub:"Post-forbearance first reporting · shock",         col:"#CC8A00"},
-    {lbl:"Best Category",          val:"Mortgage 0.8%",sub:"Lock-in effect shields market · resilient",   col:"#1A9E5A"},
+    {lbl:"Best Category",          val:"Mortgage 1.4%",sub:"Lock-in effect shields market · resilient",   col:"#1A9E5A"},
     {lbl:"Worst Category",         val:"Cards 9.8%",sub:"Mass-market stress · NCO improving",            col:"#D64045"},
     {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
