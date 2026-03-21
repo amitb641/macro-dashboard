@@ -4427,90 +4427,60 @@ function buildCreditTab(){
 
   // ── NBER recession band plugin for SLOOS chart ──
   const _sloosRecessions=[{start:2,end:3},{start:16,end:19},{start:40,end:41}];
-  const _sloosRecPlugin={
-    id:'sloosRecBands',
-    beforeDraw(chart){
-      const{ctx,chartArea:{left,right,top,bottom}}=chart;
-      const w=(right-left)/CREDIT_SLOOS.labels.length;
-      ctx.save();
-      _sloosRecessions.forEach(r=>{
-        const x1=left+r.start*w;
-        const rw=(r.end-r.start+1)*w;
-        // Solid red-tinted band
-        ctx.fillStyle='rgba(239,68,68,.10)';
-        ctx.fillRect(x1,top,rw,bottom-top);
-        // Left border accent
-        ctx.strokeStyle='rgba(239,68,68,.25)';
-        ctx.lineWidth=1.5;
-        ctx.beginPath();
-        ctx.moveTo(x1,top);ctx.lineTo(x1,bottom);
-        ctx.stroke();
-        // Right border accent
-        ctx.beginPath();
-        ctx.moveTo(x1+rw,top);ctx.lineTo(x1+rw,bottom);
-        ctx.stroke();
-      });
-      ctx.restore();
-    }
-  };
-
-  // ── SLOOS peak/trough annotation plugin ──
-  const _sloosData=CREDIT_SLOOS.consumer;
-  const _sloosHighlights=[];
-  // Find local peaks (>25) and troughs (<-15)
-  _sloosData.forEach((v,i)=>{
-    if(v==null) return;
-    const prev=_sloosData[i-1]??0, next=_sloosData[i+1]??0;
-    if(v>=25 && v>=prev && v>=next) _sloosHighlights.push({idx:i,val:v,type:'peak'});
-    if(v<=-15 && v<=prev && v<=next) _sloosHighlights.push({idx:i,val:v,type:'trough'});
-  });
-  const _sloosAnnotPlugin={
-    id:'sloosAnnot',
-    afterDatasetsDraw(chart){
-      const{ctx,chartArea:{top},scales:{x,y}}=chart;
-      if(!y) return;
-      ctx.save();
-      ctx.font='bold 9px "DM Sans",system-ui,sans-serif';
-      ctx.textAlign='center';
-      _sloosHighlights.forEach(h=>{
-        const xPos=x.getPixelForValue(h.idx);
-        const yPos=y.getPixelForValue(h.val);
-        const isPeak=h.type==='peak';
-        ctx.fillStyle=isPeak?'#B91C1C':'#047857';
-        const label=(h.val>0?'+':'')+h.val+'%';
-        ctx.fillText(label,xPos,isPeak?yPos-6:yPos+12);
-      });
-      ctx.restore();
-    }
-  };
 
   new Chart(document.getElementById("c-credit-sloos").getContext("2d"),{
     type:"bar",
     data:{labels:CREDIT_SLOOS.labels,datasets:[
       {label:"SLOOS Tightening",data:CREDIT_SLOOS.consumer,
         backgroundColor:CREDIT_SLOOS.consumer.map(v=>
-          v>40?'rgba(185,28,28,.75)':v>20?'rgba(37,99,235,.7)':v>0?'rgba(37,99,235,.45)':v>-10?'rgba(16,185,129,.4)':'rgba(16,185,129,.6)'
+          v>40?'rgba(185,28,28,.85)':v>20?'rgba(37,99,235,.75)':v>0?'rgba(37,99,235,.5)':v>-10?'rgba(16,185,129,.45)':'rgba(16,185,129,.65)'
         ),
         borderColor:CREDIT_SLOOS.consumer.map(v=>
-          v>40?'rgba(185,28,28,.95)':v>20?'rgba(37,99,235,.85)':v>0?'rgba(37,99,235,.6)':v>-10?'rgba(16,185,129,.55)':'rgba(16,185,129,.75)'
+          v>40?'rgba(185,28,28,1)':v>20?'rgba(37,99,235,.9)':v>0?'rgba(37,99,235,.65)':v>-10?'rgba(16,185,129,.6)':'rgba(16,185,129,.8)'
         ),
-        borderWidth:1,borderRadius:2,barPercentage:0.9,categoryPercentage:0.85,datalabels:false},
+        borderWidth:1,borderRadius:3,datalabels:false},
       {type:"line",label:"Recession Probability",data:CREDIT_SLOOS.recession_prob,
-        borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,.03)',borderWidth:2.5,fill:true,tension:0.35,
+        borderColor:'#7C3AED',backgroundColor:'transparent',borderWidth:2.5,fill:false,
         pointRadius:0,datalabels:false},
       {type:"line",label:"Card 90+ DPD",data:CREDIT_SLOOS.card_dq,
         borderColor:'#EF4444',backgroundColor:'transparent',borderWidth:2.5,borderDash:[6,3],
-        fill:false,tension:0.35,spanGaps:true,pointRadius:0,yAxisID:"y2",datalabels:false},
+        fill:false,spanGaps:true,pointRadius:0,yAxisID:"y2",datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       scales:{
-        y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"},min:-30,max:80,
+        y:{ticks:{callback:v=>(v>0?"+":"")+v+"%"},min:-25,max:70,
           grid:{color:"rgba(0,0,0,.04)"},border:{display:false}},
         y2:{position:"right",min:3,max:15,grid:{display:false},
           ticks:{color:"#EF4444",callback:v=>v+"%",font:{size:9}},
           title:{display:true,text:"Card 90+ DPD %",color:"#EF4444",font:{size:10}},border:{display:false}}
       }}
   });
+
+  // ── Draw recession bands on SLOOS canvas ──
+  (function(){
+    const canvas=document.getElementById("c-credit-sloos");
+    if(!canvas) return;
+    const ctx=canvas.getContext("2d");
+    const dpr=window.devicePixelRatio||1;
+    const p=canvas.parentElement;
+    const W=p?p.offsetWidth:canvas.width/dpr;
+    const H=p?p.offsetHeight:canvas.height/dpr;
+    const pad={left:40,right:50,top:12,bottom:22};
+    const iw=W-pad.left-pad.right;
+    const ih=H-pad.top-pad.bottom;
+    const n=CREDIT_SLOOS.labels.length;
+    const gW=iw/n;
+    _sloosRecessions.forEach(r=>{
+      const x1=pad.left+gW*r.start;
+      const rw=(r.end-r.start+1)*gW;
+      ctx.fillStyle='rgba(239,68,68,.10)';
+      ctx.fillRect(x1,pad.top,rw,ih);
+      ctx.strokeStyle='rgba(239,68,68,.25)';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x1,pad.top);ctx.lineTo(x1,pad.top+ih);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x1+rw,pad.top);ctx.lineTo(x1+rw,pad.top+ih);ctx.stroke();
+    });
+  })();
 
   // ── SLOOS Heatmap Strip ──
   (function(){
