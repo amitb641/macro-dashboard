@@ -316,10 +316,12 @@ def rebuild_charts(html, data):
         common = [l for l in m_labels if l in f_labels]
         rate30 = [m_values[m_labels.index(l)] for l in common]
         ffr = [f_values[f_labels.index(l)] for l in common]
-        # Add forecast
-        common.append('2026F')
-        rate30.append(6.0)
-        ffr.append(3.75)
+        # Add forecast (dynamic year)
+        _fc_yr = str(datetime.date.today().year + 1) + 'F'
+        if common and common[-1] != _fc_yr:
+            common.append(_fc_yr)
+            rate30.append(6.0)
+            ffr.append(3.75)
         if common:
             html = _inject_const(html, 'MORTGAGE_DATA', {
                 'labels': common, 'rate30': rate30, 'ffr': ffr})

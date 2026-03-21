@@ -2808,7 +2808,10 @@ function buildUnempTab(){
       <td style="color:${uc24}">${s.u24}%</td><td style="color:${uc25}">${s.u25}%</td>
       <td>${trendPill(trendStr)}</td></tr>`;
   });
-  h+=`<tr><td>Overall (BLS)</td><td>3.6%</td><td>3.6%</td><td style="color:#CC8A00">4.0%</td><td style="color:#CC8A00">~4.3%</td><td>${trendPill("↑ Rising")}</td></tr>`;
+  var _uA=U_ANNUAL.data,_uL=_uA.length;
+  var _u22=_uA[_uL-4],_u23=_uA[_uL-3],_u24=_uA[_uL-2],_u25=_uA[_uL-1];
+  var _uTr=_u25>_u24?"↑ Rising":_u25<_u24?"↓ Falling":"→ Stable";
+  h+=`<tr><td>Overall (BLS)</td><td>${_u22}%</td><td>${_u23}%</td><td style="color:#CC8A00">${_u24}%</td><td style="color:#CC8A00">${_u25}%</td><td>${trendPill(_uTr)}</td></tr>`;
   document.getElementById("unemp-tbl").innerHTML=h+"</tbody>";
 
   // ── Weekly Jobless Claims chart ─────────────────────
@@ -2933,7 +2936,11 @@ function buildCPITab(){
       ${[c.c22,c.c23,c.c24,c.c25].map(v=>`<td style="${col(v)}">${v>=0?"+":""}${v}%</td>`).join("")}
       <td>${trendPill(trendStr)}</td></tr>`;
   });
-  h+=`<tr><td>All Items CPI</td><td style="color:#D64045">+6.5%</td><td style="color:#CC8A00">+3.4%</td><td style="color:#CC8A00">+2.9%</td><td style="color:#1A9E5A">+2.4%</td><td>${trendPill("↓ Easing")}</td></tr>`;
+  var _cA=CPI_ANNUAL.data,_cL=_cA.length;
+  var _c22=_cA[_cL-4],_c23=_cA[_cL-3],_c24=_cA[_cL-2],_c25=_cA[_cL-1];
+  var _cCol=v=>v>5?"#D64045":v>3?"#CC8A00":"#1A9E5A";
+  var _cTr=_c25<_c24?"↓ Easing":_c25>_c24?"↑ Rising":"→ Stable";
+  h+=`<tr><td>All Items CPI</td><td style="color:${_cCol(_c22)}">+${_c22}%</td><td style="color:${_cCol(_c23)}">+${_c23}%</td><td style="color:${_cCol(_c24)}">+${_c24}%</td><td style="color:${_cCol(_c25)}">+${_c25}%</td><td>${trendPill(_cTr)}</td></tr>`;
   document.getElementById("cpi-tbl").innerHTML=h+"</tbody>";
 }
 
@@ -3018,7 +3025,11 @@ function buildWagesTab(){
       <td>${trendPillPos(s.w25>s.w24?"↑ Rising":s.w25<s.w24?"↓ Falling":"→ Stable")}</td>
       <td style="color:#336BCC">$${s.hr24}</td></tr>`;
   });
-  h+=`<tr><td>All Private</td><td style="color:#D64045">+5.1%</td><td>+4.3%</td><td style="color:#1A9E5A">+3.9%</td><td style="color:#CC8A00">+3.3%</td><td>${trendPillPos("↓ Falling")}</td><td style="color:#336BCC">$37.17</td></tr>`;
+  var _wN=WAGE_ANNUAL.nominal,_wL=_wN.length;
+  var _w22=_wN[_wL-4],_w23=_wN[_wL-3],_w24=_wN[_wL-2],_w25=_wN[_wL-1];
+  var _wTr=_w25>_w24?"↑ Rising":_w25<_w24?"↓ Falling":"→ Stable";
+  var _wLatestHr=WAGE_MONTHLY.nominal[WAGE_MONTHLY.nominal.length-1];
+  h+=`<tr><td>All Private</td><td style="color:#D64045">+${_w22}%</td><td>+${_w23}%</td><td style="color:#1A9E5A">+${_w24}%</td><td style="color:#CC8A00">+${_w25}%</td><td>${trendPillPos(_wTr)}</td><td style="color:#336BCC">$37.17</td></tr>`;
   document.getElementById("wage-tbl").innerHTML=h+"</tbody>";
 
 }
@@ -3131,7 +3142,12 @@ function buildJobsTab(){
       <td style="color:${c25}">${s.j25>=0?"+":""}${s.j25}K</td>
       <td>${trendPillPos(trendStr)}</td></tr>`;
   });
-  h+=`<tr><td>Total Nonfarm</td><td style="color:#1A9E5A">+4,819K</td><td style="color:#7A8FA8">+3,026K</td><td style="color:#1A9E5A">+2,000K</td><td style="color:#D64045">+181K</td><td>${trendPillPos("↓ Sharp")}</td></tr>`;
+  var _jA=JOBS_ANNUAL.data,_jL=_jA.length;
+  var _j22=_jA[_jL-4],_j23=_jA[_jL-3],_j24=_jA[_jL-2],_j25=_jA[_jL-1];
+  var _jFmt=v=>(v>=0?"+":"")+v.toLocaleString()+"K";
+  var _jCol=v=>v>1000?"#1A9E5A":v>0?"#7A8FA8":"#D64045";
+  var _jTr2=_j25>_j24?"↑ Rising":_j25<_j24/2?"↓ Sharp":"↓ Falling";
+  h+=`<tr><td>Total Nonfarm</td><td style="color:${_jCol(_j22)}">${_jFmt(_j22)}</td><td style="color:${_jCol(_j23)}">${_jFmt(_j23)}</td><td style="color:${_jCol(_j24)}">${_jFmt(_j24)}</td><td style="color:${_jCol(_j25)}">${_jFmt(_j25)}</td><td>${trendPillPos(_jTr2)}</td></tr>`;
   document.getElementById("jobs-tbl").innerHTML=h+"</tbody>";
 }
 
