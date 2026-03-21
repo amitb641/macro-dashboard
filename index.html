@@ -2701,7 +2701,12 @@ function buildUnempTab(){
        pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8,usePointStyle:true}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8,usePointStyle:false,
+          generateLabels:()=>[
+            {text:"Feb'26 rate rose",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
+            {text:"Feb'26 rate fell",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
+            {text:"Jan'26",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
+          ]}},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"");}}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
@@ -2834,7 +2839,12 @@ function buildCPITab(){
        pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8,usePointStyle:true}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8,usePointStyle:false,
+          generateLabels:()=>[
+            {text:"Feb'26 accelerating",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
+            {text:"Feb'26 cooling",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
+            {text:"Jan'26",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
+          ]}},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=cpiMom[c.dataIndex];var ch=(d.feb-d.jan).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
@@ -2935,7 +2945,12 @@ function buildWagesTab(){
        pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:true}},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: +${v}%`}}}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:false,
+          generateLabels:()=>[
+            {text:"2025 higher",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
+            {text:"2025 lower",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
+            {text:"2024",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
+          ]}},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: +${v}%`}}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
@@ -2997,7 +3012,12 @@ function buildJobsTab(){
        pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:true}},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:false,
+          generateLabels:()=>[
+            {text:"2025 higher",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
+            {text:"2025 lower",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
+            {text:"2024",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
+          ]}},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
   });
@@ -3032,7 +3052,12 @@ function buildJobsTab(){
          pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:true}},
+        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:12,boxHeight:8,usePointStyle:false,
+          generateLabels:ch=>[
+            {text:"Feb'26 improved",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
+            {text:"Feb'26 worsened",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
+            {text:"Jan'26",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
+          ]}},
           tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
         scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
                 y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
@@ -3315,7 +3340,12 @@ function buildPCETab(){
        pointStyle:"circle",pointRadius:5,pointBackgroundColor:"#6B728088",pointBorderColor:"#fff",pointBorderWidth:1.5},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8,usePointStyle:true}},
+      plugins:{legend:{labels:{color:"#3d4f6e",font:{size:10},boxWidth:12,boxHeight:8,usePointStyle:false,
+          generateLabels:()=>[
+            {text:"Jan'26 accelerating",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false},
+            {text:"Jan'26 cooling",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false},
+            {text:"Dec'25",fillStyle:"#6B728088",strokeStyle:"#fff",lineWidth:2,pointStyle:"circle",usePointStyle:true,hidden:false}
+          ]}},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=pceMom[c.dataIndex];var ch=(d.jan-d.dec).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
       scales:{x:{grid:{color:"#dde2ee"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
