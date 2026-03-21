@@ -85,6 +85,9 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
     </div>
   </div>
 
+  <!-- Correlation narrative -->
+  <p style="font-size:9px;color:#7a90aa;line-height:1.55;margin-top:10px">Card delinquencies follow recession probability by ~5Q (r=0.50). Bank tightening (SLOOS) bridges the gap, predicting card stress ~3Q ahead (r=0.48). Broader delinquencies show a weaker link (r=0.27, ~5Q lag) — cards remain the canary in the credit coal mine.</p>
+
   <!-- Signal chain -->
   <div class="signal-chain" id="signal-chain"></div>
 
@@ -92,9 +95,15 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
   <div style="margin-top:14px;padding-top:12px;border-top:1px solid #F0F1F3">
     <p style="font-size:10px;color:#7a90aa;line-height:1.6"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
     <details style="margin-top:6px;font-size:10px;color:#7a90aa">
-      <summary style="cursor:pointer;font-weight:600;color:#334E68">Correlation methodology</summary>
+      <summary style="cursor:pointer;font-weight:600;color:#334E68">Correlation findings</summary>
       <div style="margin-top:6px;line-height:1.7">
-        <p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags -6 to +6 periods (bidirectional for SLOOS &#8596; Recession Prob, positive-only for Recession Prob &#8594; DPD). Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025). Positive r = variables move together.</p>
+        <p style="margin:4px 0 8px"><strong>Key takeaways:</strong></p>
+        <ul style="margin:0 0 10px 16px;padding:0;list-style:disc">
+          <li style="margin-bottom:4px">The yield curve is the earliest warning — inversions precede bank tightening and credit losses by <strong>15–30 months</strong></li>
+          <li style="margin-bottom:4px">SLOOS tightening is the transmission mechanism — when banks restrict lending, borrower stress follows within <strong>2–4 quarters</strong></li>
+          <li style="margin-bottom:4px">Card 90+ DPD is the lagging confirmation — delinquencies rise last, peaking <strong>5–10 quarters</strong> after the yield curve first signals trouble</li>
+          <li style="margin-bottom:4px"><strong>Current read (Q4'25):</strong> Recession prob. down to 19% (from 71% peak), SLOOS near neutral (+2%), but Card DPD remains elevated at 9.8% — the lag effect from 2023 tightening is still playing out</li>
+        </ul>
         <p style="margin:4px 0"><strong>Lag timing (quarters):</strong></p>
         <table style="margin:6px 0 8px;border-collapse:collapse;font-size:10px;width:100%;max-width:520px">
           <tr style="border-bottom:1px solid #E5E7EB">
@@ -123,7 +132,7 @@ h1{font-size:22px;font-weight:700;margin-bottom:4px}
             <td style="padding:4px 8px;color:#6B7280">~15–30 months end-to-end</td>
           </tr>
         </table>
-        <p style="margin:4px 0"><strong>Interpretation:</strong> The signal chain runs: <strong>Yield Curve (Recession Prob) &#8594; SLOOS Tightening &#8594; Credit Losses (DPD)</strong>. The yield curve inverts first, driving recession probability higher. Banks then tighten lending standards in response (SLOOS lags recession prob by 2–4 quarters). Finally, tighter credit leads to rising delinquencies as borrowers lose refinancing options (DPD lags SLOOS by another 2–4 quarters). This three-stage cascade shows recession probability is both a leading indicator of bank behavior AND a predictor of credit losses.</p>
+        <p style="margin:4px 0"><strong>Method:</strong> Pearson cross-correlation at lags -6 to +6 periods. Each period ≈ 2 quarters (semi-annual 2000–2018) or 1 quarter (2019–2025). Positive r = variables move together. Signal chain: <strong>Yield Curve (Recession Prob) &#8594; SLOOS Tightening &#8594; Credit Losses (DPD)</strong>.</p>
       </div>
     </details>
   </div>
@@ -263,7 +272,8 @@ new Chart(document.getElementById('c-combined'),{
         spanGaps:true,
         yAxisID:'y1',
         segment:{
-          borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444'
+          borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444',
+          borderDash:()=>[6,3]
         },
         order:1
       }
