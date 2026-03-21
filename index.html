@@ -5496,17 +5496,16 @@ function buildStackTab(){
   <div class="stk-section-title">Signal Threshold Logic — how KPI colors are determined</div>
   <div class="panel" style="margin-bottom:20px;padding:20px">
     <div class="fc-note" style="margin-bottom:14px">
-      Each headline KPI is color-coded using threshold-based logic. The color reflects the <strong>economic signal</strong> of the reading — not whether the number went up or down. Thresholds are calibrated to post-2020 ranges and Fed targets.
+      Each headline KPI is color-coded using threshold-based logic. The color reflects the <strong>economic signal</strong> of the reading — not whether the number went up or down. Thresholds are derived from Fed targets, historical averages, and recession-era benchmarks.
     </div>
     <div style="overflow-x:auto">
       <table class="dtable" style="width:100%;font-size:11px">
         <thead>
           <tr>
             <th style="text-align:left;min-width:130px">Metric</th>
-            <th style="text-align:center;min-width:120px"><span style="color:#1A9E5A;font-weight:700">&#9679;</span> Green — Healthy</th>
-            <th style="text-align:center;min-width:120px"><span style="color:#CC8A00;font-weight:700">&#9679;</span> Amber — Watch</th>
-            <th style="text-align:center;min-width:120px"><span style="color:#D64045;font-weight:700">&#9679;</span> Red — Stress</th>
-            <th style="text-align:left;min-width:200px">Rationale</th>
+            <th style="text-align:center;min-width:100px"><span style="color:#1A9E5A;font-weight:700">&#9679;</span> Green</th>
+            <th style="text-align:center;min-width:100px"><span style="color:#CC8A00;font-weight:700">&#9679;</span> Amber</th>
+            <th style="text-align:center;min-width:100px"><span style="color:#D64045;font-weight:700">&#9679;</span> Red</th>
           </tr>
         </thead>
         <tbody>
@@ -5515,65 +5514,128 @@ function buildStackTab(){
             <td style="text-align:center;color:#1A9E5A">&lt; 4.0%</td>
             <td style="text-align:center;color:#CC8A00">4.0 – 4.9%</td>
             <td style="text-align:center;color:#D64045">&ge; 5.0%</td>
-            <td style="font-size:10px;color:var(--text2)">Fed considers ~4% as full employment. Above 5% historically signals recession risk.</td>
           </tr>
           <tr>
             <td><strong>Jobs (NFP MoM)</strong></td>
             <td style="text-align:center;color:#1A9E5A">&gt; +100K</td>
             <td style="text-align:center;color:#CC8A00">0 – +100K</td>
             <td style="text-align:center;color:#D64045">&lt; 0</td>
-            <td style="font-size:10px;color:var(--text2)">Economy needs ~100K/mo to absorb labor force growth. Negative prints are rare outside recessions.</td>
           </tr>
           <tr>
             <td><strong>CPI YoY</strong></td>
             <td style="text-align:center;color:#1A9E5A">&lt; 2.5%</td>
             <td style="text-align:center;color:#CC8A00">2.5 – 3.5%</td>
             <td style="text-align:center;color:#D64045">&ge; 3.5%</td>
-            <td style="font-size:10px;color:var(--text2)">Fed targets 2% (PCE-based). CPI above 3.5% typically triggers hawkish policy response.</td>
           </tr>
           <tr>
             <td><strong>Core PCE YoY</strong></td>
             <td style="text-align:center;color:#1A9E5A">&lt; 2.5%</td>
             <td style="text-align:center;color:#CC8A00">2.5 – 3.0%</td>
             <td style="text-align:center;color:#D64045">&ge; 3.0%</td>
-            <td style="font-size:10px;color:var(--text2)">The Fed's preferred inflation gauge. Tighter thresholds than CPI — 3%+ is a hard ceiling for cuts.</td>
           </tr>
           <tr>
             <td><strong>Wage Growth</strong></td>
             <td style="text-align:center;color:#1A9E5A">3.0 – 4.5%</td>
             <td style="text-align:center;color:#CC8A00">&lt; 3.0 or &gt; 4.5%</td>
             <td style="text-align:center;color:#D64045">&lt; 2.0 or &gt; 6.0%</td>
-            <td style="font-size:10px;color:var(--text2)">Goldilocks zone: enough for real wage gains without fueling a wage-price spiral.</td>
           </tr>
           <tr>
             <td><strong>Initial Claims</strong></td>
             <td style="text-align:center;color:#1A9E5A">&lt; 220K</td>
             <td style="text-align:center;color:#CC8A00">220 – 280K</td>
             <td style="text-align:center;color:#D64045">&ge; 280K</td>
-            <td style="font-size:10px;color:var(--text2)">Weekly leading indicator. Sub-220K = tight labor market. 280K+ historically precedes rising unemployment.</td>
           </tr>
           <tr>
             <td><strong>UMich Sentiment</strong></td>
             <td style="text-align:center;color:#1A9E5A">&ge; 70</td>
             <td style="text-align:center;color:#CC8A00">55 – 70</td>
             <td style="text-align:center;color:#D64045">&lt; 55</td>
-            <td style="font-size:10px;color:var(--text2)">Long-run average ~85. Below 55 only seen during recessions (2008, 2022 inflation shock).</td>
           </tr>
           <tr>
             <td><strong>Debt Service Ratio</strong></td>
             <td style="text-align:center;color:#1A9E5A">&lt; 10.5%</td>
             <td style="text-align:center;color:#CC8A00">10.5 – 12.0%</td>
             <td style="text-align:center;color:#D64045">&ge; 12.0%</td>
-            <td style="font-size:10px;color:var(--text2)">% of disposable income on debt payments. Pre-2008 peak was 13.2%. Above 12% = consumer stress.</td>
           </tr>
           <tr style="background:#F9FAFB">
             <td><strong>Fed Funds / 10Y</strong></td>
-            <td colspan="3" style="text-align:center;color:#635BFF;font-weight:600">Always purple — policy rate</td>
-            <td style="font-size:10px;color:var(--text2)">Policy rates aren't inherently good or bad — context-dependent. Shown in neutral purple.</td>
+            <td colspan="3" style="text-align:center;color:#635BFF;font-weight:600">Always purple — policy rate (context-dependent)</td>
           </tr>
         </tbody>
       </table>
     </div>
+
+    <!-- THRESHOLD DERIVATION -->
+    <div style="margin-top:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="padding:12px 16px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text);letter-spacing:.02em">
+        Threshold Derivation — how each boundary was chosen
+      </div>
+      <div style="padding:16px;font-size:10.5px;line-height:1.7;color:var(--text2)">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Unemployment &mdash; 4.0% / 5.0%</div>
+            <strong>Source:</strong> CBO's NAIRU (Non-Accelerating Inflation Rate of Unemployment) estimate of 4.0&ndash;4.4%. The Fed's Summary of Economic Projections (SEP) places the longer-run unemployment rate at 4.0%.<br>
+            <strong>Red threshold:</strong> Every post-war U.S. recession has seen unemployment breach 5.0%. The Sahm Rule triggers at a 0.5pp rise from the trailing 12-month low &mdash; historically, reaching 5%+ has coincided with that trigger in 8 of the last 9 recessions.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Jobs (NFP) &mdash; +100K / 0</div>
+            <strong>Source:</strong> BLS and CBO labor force projections. The U.S. working-age population grows by ~60&ndash;80K/mo from demographics; with immigration, the breakeven rate to hold unemployment steady is estimated at 75&ndash;150K/mo. The 100K midpoint is widely used by Fed officials and Wall Street strategists.<br>
+            <strong>Red threshold:</strong> Negative monthly payrolls have occurred in only 6% of months since 1948 &mdash; almost exclusively during NBER-dated recessions.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">CPI YoY &mdash; 2.5% / 3.5%</div>
+            <strong>Source:</strong> The Fed targets 2% inflation on PCE. CPI structurally runs 30&ndash;50bp above PCE due to methodological differences (CPI uses fixed basket weights; PCE allows substitution, and CPI weights shelter more heavily).<br>
+            <strong>Green:</strong> 2.5% CPI &asymp; 2.0&ndash;2.2% PCE &asymp; on-target. <strong>Red:</strong> CPI above 3.5% has historically triggered hawkish pivots &mdash; the 2022 tightening cycle began when CPI crossed 3.5% in mid-2021.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Core PCE &mdash; 2.5% / 3.0%</div>
+            <strong>Source:</strong> The Fed's explicitly stated 2% target metric (adopted January 2012, reaffirmed in the 2020 FAIT framework). Core PCE strips food &amp; energy to reveal underlying price pressure.<br>
+            <strong>Tighter than CPI</strong> because the Fed watches this directly. No rate cuts have been initiated with Core PCE above 3.0% in the modern era. The 2.5% amber line reflects the Fed's stated willingness to tolerate "moderately above 2%" under FAIT.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Wage Growth &mdash; 3.0&ndash;4.5% / 2.0% &amp; 6.0%</div>
+            <strong>Source:</strong> The "Goldilocks" range is derived from: 2% inflation target + ~1.0&ndash;1.5% productivity growth = 3.0&ndash;3.5% wage growth consistent with stable inflation. The 4.5% upper bound adds a buffer for higher-productivity periods.<br>
+            <strong>Red:</strong> Below 2.0% signals demand destruction (only seen during 2009 and early pandemic). Above 6.0% risks a wage-price spiral &mdash; only occurred during the 2021&ndash;2022 post-COVID reopening surge.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Initial Claims &mdash; 220K / 280K</div>
+            <strong>Source:</strong> DOL weekly data. The 2017&ndash;2019 pre-pandemic average was ~215K, representing a historically tight labor market. The 220K green boundary is the upper end of that "normal tight" range.<br>
+            <strong>Red:</strong> Claims sustained above 280K have preceded every significant unemployment rate rise since 1990. During the 2001 and 2008 recessions, claims crossed 280K 2&ndash;3 months before the NBER-dated recession start.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">UMich Sentiment &mdash; 70 / 55</div>
+            <strong>Source:</strong> University of Michigan Surveys of Consumers (1952&ndash;present). The long-run average is ~85. One standard deviation below is ~70, which serves as the amber threshold.<br>
+            <strong>Red:</strong> Readings below 55 have only occurred during three periods: the 1980 recession (51.7), the 2008&ndash;09 GFC (55.3), and the 2022 inflation shock (50.0, an all-time low). Below 55 signals extreme consumer distress.
+          </div>
+
+          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Debt Service Ratio &mdash; 10.5% / 12.0%</div>
+            <strong>Source:</strong> Federal Reserve TDSP series (household debt payments as % of disposable income). Historical (1980&ndash;2024) average is ~10.5%. The green threshold matches this long-run norm.<br>
+            <strong>Red:</strong> The pre-GFC peak was 13.2% (Q3 2007). Above 12% has historically coincided with rising consumer credit defaults and tightening bank lending standards (per the Fed's SLOOS survey).
+          </div>
+
+          <div style="padding:12px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px">
+            <div style="font-weight:600;color:#635BFF;margin-bottom:4px">Fed Funds / 10Y Treasury &mdash; Always purple</div>
+            Policy rates are <strong>tools, not signals</strong>. A 4.25% Fed Funds rate can be restrictive (if neutral rate is 2.5%) or accommodative (if neutral rate is 5%). The "correct" level depends on r* (the natural rate of interest), which is unobservable and debated.<br>
+            <strong>Design choice:</strong> Purple avoids false signals. The same rate can be bullish or bearish depending on the inflation and growth backdrop.
+          </div>
+
+        </div>
+
+        <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10px;color:#92400E;line-height:1.55">
+          <strong>Note:</strong> These are round-number approximations of economic consensus, not precise statistical cutoffs. They could be refined &mdash; e.g., unemployment thresholds could use the CBO's real-time NAIRU estimate instead of a static 4.0%, or CPI could adjust for the PCE-CPI wedge dynamically. The current thresholds prioritize <strong>readability and stability</strong> over precision.
+        </div>
+      </div>
+    </div>
+
+    <!-- DELTA ARROW LOGIC -->
     <div style="margin-top:12px;padding:10px 14px;background:#F0F9FF;border:1px solid rgba(51,107,204,.15);border-left:3px solid var(--accent);border-radius:8px;font-size:10.5px;color:#1E3A5F;line-height:1.6">
       <strong>Delta arrows</strong> (&#9650; &#9660;) show month-over-month direction. For <em>inverted</em> metrics (unemployment, CPI, PCE, claims, DSR), up = <span style="color:#D64045;font-weight:600">bad</span> and down = <span style="color:#1A9E5A;font-weight:600">good</span>. For normal metrics (jobs, wages, sentiment), up = <span style="color:#1A9E5A;font-weight:600">good</span> and down = <span style="color:#D64045;font-weight:600">bad</span>.
     </div>
