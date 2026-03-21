@@ -1734,6 +1734,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
       <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
+      <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#16a34acc;display:inline-block"></span>Feb'26 improved vs Jan</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#dc2626bb;display:inline-block"></span>Feb'26 worsened vs Jan</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#3d4f6e;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#64748bbb;display:inline-block"></span>Jan'26</span>
+      </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
       <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
     </div>
@@ -3052,12 +3057,7 @@ function buildJobsTab(){
          backgroundColor:"#64748bbb",borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:"#3d4f6e",font:{size:11},boxWidth:14,boxHeight:10,usePointStyle:false,
-          generateLabels:function(){return[
-            {text:"Feb'26 improved vs Jan",fillStyle:"#16a34acc",strokeStyle:"#16a34acc",lineWidth:0,hidden:false,datasetIndex:0},
-            {text:"Feb'26 worsened vs Jan",fillStyle:"#dc2626bb",strokeStyle:"#dc2626bb",lineWidth:0,hidden:false,datasetIndex:0},
-            {text:"Jan'26",fillStyle:"#64748bbb",strokeStyle:"#64748bbb",lineWidth:0,hidden:false,datasetIndex:1}
-          ]}}},
+        plugins:{legend:{display:false},
           tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
         scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#dde2ee"},ticks:{color:"#5a6a8a",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
                 y:{grid:{display:false},ticks:{color:"#3d4f6e",font:{size:10}},border:{display:false}}}}
