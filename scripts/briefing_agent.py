@@ -124,15 +124,14 @@ def call_claude(prompt: str) -> dict:
 
 def _fallback() -> dict:
     today = datetime.date.today().strftime('%B %d, %Y')
-    msg = 'Data refreshed. Add ANTHROPIC_API_KEY to GitHub Secrets for AI commentary.'
     return {
         'generated_at':    today,
         'risk_level':      'MODERATE',
-        'risk_rationale':  msg,
-        'outlook_headline': msg,
-        'outlook_body':     msg,
-        'tabs':            {k: msg for k in ['gdp','jobs','unemp','wages','cpi',
-                                             'pce','yield','credit','housing','oil','banks']},
+        'risk_rationale':  '',
+        'outlook_headline': '',
+        'outlook_body':     '',
+        'tabs':            {k: '' for k in ['gdp','jobs','unemp','wages','cpi',
+                                            'pce','yield','credit','housing','oil','banks']},
         'kpi_updates':     {'risk_posture':'Neutral','macro_regime':'Expansion','fed_bias':'On Hold'},
         'signal_flags':    [],
     }
