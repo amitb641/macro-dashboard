@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Palette Preview — Option A vs Option B</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#F7F8FA;color:#0D1B2A;padding:32px}
+h1{font-size:22px;font-weight:700;margin-bottom:4px}
+.subtitle{font-size:13px;color:#7A8FA8;margin-bottom:32px}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;margin-bottom:40px}
+@media(max-width:1200px){.grid{grid-template-columns:1fr}}
+.col-header{font-size:16px;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #E2E8F0}
+.panel{background:#fff;border:1px solid #E2E8F0;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.panel-title{font-size:13px;font-weight:700;margin-bottom:12px}
+.swatch-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.swatch{width:40px;height:24px;border-radius:6px;border:1px solid rgba(0,0,0,.08)}
+.swatch-label{font-size:11px;font-weight:600;color:#334E68}
+.swatch-hex{font-size:10px;color:#7A8FA8;font-family:monospace}
+.chart-box{height:260px;position:relative}
+.legend-row{display:flex;gap:14px;justify-content:center;margin-bottom:6px;flex-wrap:wrap}
+.legend-item{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:#334E68}
+.legend-dot{width:12px;height:9px;border-radius:2px;display:inline-block}
+</style>
+</head>
+<body>
+
+<h1>Color Palette Comparison</h1>
+<p class="subtitle">Current vs Option A (Institutional Finance) vs Option B (Modern Analyst) — applied to sample charts</p>
+
+<div class="grid">
+
+<!-- ═══ CURRENT ═══ -->
+<div>
+  <div class="col-header">Current Palette</div>
+  <div class="panel">
+    <div class="panel-title">Swatches</div>
+    <div class="swatch-row"><div class="swatch" style="background:#1A56DB"></div><span class="swatch-label">Blue</span><span class="swatch-hex">#1A56DB</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#0D7A4A"></div><span class="swatch-label">Green</span><span class="swatch-hex">#0D7A4A</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#C0392B"></div><span class="swatch-label">Red</span><span class="swatch-hex">#C0392B</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#B45309"></div><span class="swatch-label">Amber</span><span class="swatch-hex">#B45309</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#6D28D9"></div><span class="swatch-label">Purple</span><span class="swatch-hex">#6D28D9</span></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Comparison Bar Chart</div>
+    <div class="legend-row">
+      <span class="legend-item"><span class="legend-dot" style="background:#0D7A4Acc"></span>2025 higher</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#C0392Bcc"></span>2025 lower</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#6D28D9aa"></span>2024</span>
+    </div>
+    <div class="chart-box"><canvas id="bar-current"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Line Chart</div>
+    <div class="chart-box"><canvas id="line-current"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Multi-series Bar</div>
+    <div class="chart-box"><canvas id="multi-current"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ OPTION A ═══ -->
+<div>
+  <div class="col-header" style="border-color:#336BCC">Option A — Institutional Finance</div>
+  <div class="panel">
+    <div class="panel-title">Swatches</div>
+    <div class="swatch-row"><div class="swatch" style="background:#336BCC"></div><span class="swatch-label">Blue</span><span class="swatch-hex">#336BCC</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#1A9E5A"></div><span class="swatch-label">Green</span><span class="swatch-hex">#1A9E5A</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#D64045"></div><span class="swatch-label">Red</span><span class="swatch-hex">#D64045</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#CC8A00"></div><span class="swatch-label">Amber</span><span class="swatch-hex">#CC8A00</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#8878B8"></div><span class="swatch-label">Purple</span><span class="swatch-hex">#8878B8</span></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Comparison Bar Chart</div>
+    <div class="legend-row">
+      <span class="legend-item"><span class="legend-dot" style="background:#1A9E5Acc"></span>2025 higher</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#D64045cc"></span>2025 lower</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#8878B8bb"></span>2024</span>
+    </div>
+    <div class="chart-box"><canvas id="bar-a"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Line Chart</div>
+    <div class="chart-box"><canvas id="line-a"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Multi-series Bar</div>
+    <div class="chart-box"><canvas id="multi-a"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══ OPTION B ═══ -->
+<div>
+  <div class="col-header" style="border-color:#4A6CF7">Option B — Modern Analyst</div>
+  <div class="panel">
+    <div class="panel-title">Swatches</div>
+    <div class="swatch-row"><div class="swatch" style="background:#4A6CF7"></div><span class="swatch-label">Blue</span><span class="swatch-hex">#4A6CF7</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#10A874"></div><span class="swatch-label">Green</span><span class="swatch-hex">#10A874</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#E8534A"></div><span class="swatch-label">Red</span><span class="swatch-hex">#E8534A</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#E09920"></div><span class="swatch-label">Amber</span><span class="swatch-hex">#E09920</span></div>
+    <div class="swatch-row"><div class="swatch" style="background:#9B8EC4"></div><span class="swatch-label">Purple</span><span class="swatch-hex">#9B8EC4</span></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Comparison Bar Chart</div>
+    <div class="legend-row">
+      <span class="legend-item"><span class="legend-dot" style="background:#10A874cc"></span>2025 higher</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#E8534Acc"></span>2025 lower</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#9B8EC4bb"></span>2024</span>
+    </div>
+    <div class="chart-box"><canvas id="bar-b"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Line Chart</div>
+    <div class="chart-box"><canvas id="line-b"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Multi-series Bar</div>
+    <div class="chart-box"><canvas id="multi-b"></canvas></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const TT={backgroundColor:"#fff",borderColor:"#E2E8F0",borderWidth:1,padding:10,titleColor:"#1a2035",bodyColor:"#334E68",cornerRadius:8};
+
+const sectors = ["Healthcare","Retail Trade","Construction","Leisure","Manufacturing","Federal Govt","Prof. Services"];
+const v25     = [44, 34, -15, -25, -28, -38, -42];
+const v24     = [82, 18, 35, 22, -5, -34, -10];
+
+const lineLabels = ["Q1'24","Q2'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
+const headline   = [3.4, 3.3, 2.9, 2.7, 2.8, 2.6, 2.4, 2.4];
+const core       = [3.8, 3.6, 3.3, 3.2, 3.1, 3.0, 2.9, 2.8];
+
+const multiLabels = ["2022","2023","2024","2025"];
+const d1 = [4.7, 3.4, 2.9, 2.4];
+const d2 = [5.8, 4.1, 3.3, 2.8];
+const d3 = [8.0, 4.3, 2.7, 2.1];
+
+const palettes = {
+  current: {blue:"#1A56DB",green:"#0D7A4A",red:"#C0392B",amber:"#B45309",purple:"#6D28D9",grid:"#E2E8F0",text:"#334E68"},
+  a:       {blue:"#336BCC",green:"#1A9E5A",red:"#D64045",amber:"#CC8A00",purple:"#8878B8",grid:"#E2E8F0",text:"#334E68"},
+  b:       {blue:"#4A6CF7",green:"#10A874",red:"#E8534A",amber:"#E09920",purple:"#9B8EC4",grid:"#EDF0F5",text:"#475569"}
+};
+
+function makeBarChart(canvasId, p) {
+  new Chart(document.getElementById(canvasId).getContext("2d"),{
+    type:"bar",
+    data:{labels:sectors,datasets:[
+      {label:"Feb'26",data:v25,backgroundColor:v25.map((v,i)=>v>=v24[i]?p.green+"cc":p.red+"cc"),borderRadius:3,barPercentage:0.7},
+      {label:"Jan'26",data:v24,backgroundColor:p.purple+"aa",borderRadius:3,barPercentage:0.7},
+    ]},
+    options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{...TT}},
+      scales:{x:{grid:{color:p.grid},ticks:{color:p.text,callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
+              y:{grid:{display:false},ticks:{color:p.text,font:{size:10}},border:{display:false}}}}
+  });
+}
+
+function makeLineChart(canvasId, p) {
+  new Chart(document.getElementById(canvasId).getContext("2d"),{
+    type:"line",
+    data:{labels:lineLabels,datasets:[
+      {label:"Headline CPI",data:headline,borderColor:p.red,backgroundColor:p.red+"15",borderWidth:2.5,pointRadius:4,fill:true,tension:0.3},
+      {label:"Core CPI",data:core,borderColor:p.blue,borderWidth:2,borderDash:[5,4],pointRadius:4,tension:0.3},
+      {label:"Fed 2% Target",data:Array(8).fill(2),borderColor:p.green,borderWidth:1.5,borderDash:[4,4],pointRadius:0},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:p.text,font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      scales:{x:{grid:{color:p.grid},ticks:{color:p.text,font:{size:9}},border:{display:false}},
+              y:{grid:{color:p.grid},ticks:{color:p.text,callback:v=>v+"%"},border:{display:false},min:1.5,max:4.5}}}
+  });
+}
+
+function makeMultiBar(canvasId, p) {
+  new Chart(document.getElementById(canvasId).getContext("2d"),{
+    type:"bar",
+    data:{labels:multiLabels,datasets:[
+      {label:"Headline",data:d1,backgroundColor:p.red+"cc",borderRadius:4},
+      {label:"Core",data:d2,backgroundColor:p.blue+"cc",borderRadius:4},
+      {label:"Shelter",data:d3,backgroundColor:p.amber+"cc",borderRadius:4},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:p.text,font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      scales:{x:{grid:{display:false},ticks:{color:p.text},border:{display:false}},
+              y:{grid:{color:p.grid},ticks:{color:p.text,callback:v=>v+"%"},border:{display:false},min:0,max:10}}}
+  });
+}
+
+["current","a","b"].forEach(key=>{
+  const suffix = key==="current"?"current":key;
+  makeBarChart("bar-"+suffix, palettes[key]);
+  makeLineChart("line-"+suffix, palettes[key]);
+  makeMultiBar("multi-"+suffix, palettes[key]);
+});
+</script>
+</body>
+</html>
