@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recession Chart Preview — 3 Options</title>
+<title>Recession Tracking — Combined A+B Preview</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -11,289 +11,246 @@
 body{font-family:'DM Sans',system-ui,sans-serif;background:#F3F4F6;color:#1F2937;padding:32px}
 h1{font-size:22px;font-weight:700;margin-bottom:4px}
 .subtitle{font-size:13px;color:#6B7280;margin-bottom:32px}
-.option{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:28px;margin-bottom:32px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.option-label{display:inline-block;background:#635BFF;color:#fff;font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:6px;margin-bottom:10px;text-transform:uppercase}
-.option h2{font-size:17px;font-weight:600;margin-bottom:4px}
-.option .desc{font-size:12px;color:#6B7280;margin-bottom:18px;line-height:1.5}
-.chart-row{display:flex;gap:0;flex-direction:column}
-.mini-chart{position:relative;height:120px;border-bottom:1px solid #F3F4F6}
-.mini-chart:last-child{border-bottom:none}
-.mini-chart .mini-label{position:absolute;top:6px;left:8px;font-size:10px;font-weight:600;color:#6B7280;z-index:2;letter-spacing:.03em}
-.mini-chart .mini-val{position:absolute;top:4px;right:10px;font-size:13px;font-weight:700;z-index:2;padding:2px 8px;border-radius:5px}
-.full-chart{position:relative;height:300px}
-.pills{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid}
-.heatmap-container{margin-top:8px}
-.heatmap-row{display:flex;align-items:center;margin-bottom:4px}
-.heatmap-row .hlabel{width:110px;font-size:10px;font-weight:600;color:#6B7280;flex-shrink:0;text-align:right;padding-right:8px}
-.heatmap-cells{display:flex;gap:1px;flex:1}
-.hcell{flex:1;height:28px;border-radius:2px;position:relative;cursor:pointer}
-.hcell:hover::after{content:attr(data-tip);position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;z-index:10;pointer-events:none}
-.heatmap-axis{display:flex;margin-left:110px;gap:1px}
-.heatmap-axis span{flex:1;font-size:8px;color:#9CA3AF;text-align:center}
-.recession-band{position:absolute;top:0;bottom:0;background:rgba(0,0,0,.06);pointer-events:none;z-index:0}
-.legend-row{display:flex;gap:16px;margin-top:10px;font-size:10px;color:#6B7280;align-items:center;flex-wrap:wrap}
-.legend-row .ldot{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:middle}
+
+/* Panel mimics dashboard style */
+.panel{background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:24px;margin-bottom:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.panel-title{font-size:15px;font-weight:700;color:#1F2937;margin-bottom:2px}
+.panel-sub{font-size:11px;color:#7a90aa;margin-bottom:14px;line-height:1.5}
+
+/* Sparkline rows */
+.spark-row{position:relative;height:110px;border-bottom:1px solid #F0F1F3}
+.spark-row:last-child{border-bottom:none}
+.spark-label{position:absolute;top:6px;left:8px;font-size:10px;font-weight:600;color:#6B7280;z-index:2;letter-spacing:.02em}
+.spark-val{position:absolute;top:4px;right:10px;font-size:12px;font-weight:700;z-index:2;padding:2px 8px;border-radius:5px}
+
+/* Heatmap strip */
+.heat-section{margin-top:16px;padding-top:14px;border-top:1px solid #F0F1F3}
+.heat-section-title{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.heat-row{display:flex;align-items:center;margin-bottom:3px}
+.heat-row .hlabel{width:100px;font-size:10px;font-weight:600;color:#6B7280;flex-shrink:0;text-align:right;padding-right:8px}
+.heat-cells{display:flex;gap:1px;flex:1}
+.hcell{flex:1;height:18px;border-radius:2px;position:relative;cursor:pointer;transition:transform .1s}
+.hcell:hover{transform:scaleY(1.4);z-index:2}
+.hcell:hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;font-size:10px;padding:3px 7px;border-radius:4px;white-space:nowrap;z-index:10;pointer-events:none}
+.heat-axis{display:flex;margin-left:100px;gap:1px;margin-top:2px}
+.heat-axis span{flex:1;font-size:7.5px;color:#B0B8C4;text-align:center}
+.heat-legend{display:flex;gap:3px;align-items:center;margin-top:8px;margin-left:100px}
+.heat-legend .bar{width:100px;height:10px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#ef4444)}
+.heat-legend span{font-size:9px;color:#9CA3AF}
+
+/* Signal chain */
+.signal-chain{display:flex;align-items:center;gap:0;margin-top:12px;flex-wrap:wrap}
+.signal-node{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;font-size:10px;font-weight:600;border:1px solid}
+.signal-arrow{color:#9CA3AF;font-size:14px;padding:0 4px}
+
+/* Status pills */
+.status-pills{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;border:1px solid}
+.status-pill .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
 </style>
 </head>
 <body>
 
-<h1>Recession Tracking — Chart Preview</h1>
-<p class="subtitle">Three layout options using real SLOOS, recession probability & card delinquency data. Pick the one that tells the story best.</p>
+<h1>Recession Risk Tracker — Combined View Preview</h1>
+<p class="subtitle">Sparkline trend panels (Option A) + heatmap risk strip (Option B) in one unified component. Uses real SLOOS data.</p>
 
-<!-- ─── OPTION A ─── -->
-<div class="option">
-  <span class="option-label">Option A</span>
-  <h2>Stacked Sparkline Panels (Small Multiples)</h2>
-  <p class="desc">Three vertically aligned mini-charts sharing the same x-axis. Each series gets its own clean y-scale — no dual-axis confusion. The vertical alignment makes the lead-lag cascade visually obvious.</p>
-  <div class="chart-row">
-    <div class="mini-chart">
-      <span class="mini-label">Recession Probability %</span>
-      <span class="mini-val" id="pill-a-rec" style="color:#7C3AED;background:#F5F3FF">—</span>
-      <canvas id="a-recession"></canvas>
+<div class="panel">
+  <div class="panel-title">Credit Cycle & Recession Risk Monitor</div>
+  <div class="panel-sub">SLOOS tightening, NY Fed recession probability & card delinquency — signal chain with 25-year history</div>
+
+  <!-- Status pills -->
+  <div class="status-pills" id="status-pills"></div>
+
+  <!-- Sparkline panels -->
+  <div style="margin-top:16px">
+    <div class="spark-row">
+      <span class="spark-label">Recession Probability %</span>
+      <span class="spark-val" id="sv-rec">—</span>
+      <canvas id="s-rec"></canvas>
     </div>
-    <div class="mini-chart">
-      <span class="mini-label">SLOOS Consumer Tightening %</span>
-      <span class="mini-val" id="pill-a-sloos" style="color:#2563EB;background:#EFF6FF">—</span>
-      <canvas id="a-sloos"></canvas>
+    <div class="spark-row">
+      <span class="spark-label">SLOOS Consumer Tightening %</span>
+      <span class="spark-val" id="sv-sloos">—</span>
+      <canvas id="s-sloos"></canvas>
     </div>
-    <div class="mini-chart">
-      <span class="mini-label">Card 90+ DPD %</span>
-      <span class="mini-val" id="pill-a-card" style="color:#DC2626;background:#FEF2F2">—</span>
-      <canvas id="a-card"></canvas>
+    <div class="spark-row">
+      <span class="spark-label">Card 90+ DPD %</span>
+      <span class="spark-val" id="sv-card">—</span>
+      <canvas id="s-card"></canvas>
     </div>
   </div>
-  <div class="legend-row">
-    <span><span class="ldot" style="background:rgba(0,0,0,.06)"></span>Gray bands = NBER recessions</span>
-    <span>Signal chain: Yield curve inverts → Recession prob rises → Banks tighten (SLOOS) → Card losses spike</span>
-  </div>
-</div>
 
-<!-- ─── OPTION B ─── -->
-<div class="option">
-  <span class="option-label">Option B</span>
-  <h2>Normalized Heatmap Timeline</h2>
-  <p class="desc">Color intensity encodes severity (green → yellow → red). Extremely compact — the lag cascade appears as a red "wave" flowing downward across rows. Hover for exact values.</p>
-  <div class="heatmap-container" id="heatmap-container"></div>
-  <div style="display:flex;gap:3px;align-items:center;margin-top:10px;margin-left:110px">
-    <div style="width:120px;height:12px;border-radius:3px;background:linear-gradient(to right,#22c55e,#eab308,#ef4444)"></div>
-    <span style="font-size:10px;color:#9CA3AF">Low → High risk</span>
+  <!-- Heatmap strip -->
+  <div class="heat-section">
+    <div class="heat-section-title">Risk Intensity Timeline</div>
+    <div id="heatmap"></div>
+    <div class="heat-legend">
+      <div class="bar"></div>
+      <span>Low → High risk</span>
+    </div>
   </div>
-</div>
 
-<!-- ─── OPTION C ─── -->
-<div class="option">
-  <span class="option-label">Option C</span>
-  <h2>Unified Line Chart with Recession Shading</h2>
-  <p class="desc">All 3 series normalized to 0–100% scale for direct comparison. SLOOS converted from bars to a line. Gray bands mark NBER recessions. Current values shown as pills below.</p>
-  <div class="full-chart"><canvas id="c-unified"></canvas></div>
-  <div class="pills" id="pills-c"></div>
+  <!-- Signal chain -->
+  <div class="signal-chain" id="signal-chain"></div>
 </div>
 
 <script>
 // ── Real Data ──
-const LABELS = ["Q1'00","Q3'00","Q1'01","Q3'01","Q1'02","Q3'02","Q1'03","Q3'03","Q1'04","Q3'04","Q1'05","Q3'05","Q1'06","Q3'06","Q1'07","Q3'07","Q1'08","Q3'08","Q1'09","Q3'09","Q1'10","Q3'10","Q1'11","Q3'11","Q1'12","Q3'12","Q1'13","Q3'13","Q1'14","Q3'14","Q1'15","Q3'15","Q1'16","Q3'16","Q1'17","Q3'17","Q1'18","Q3'18","Q1'19","Q3'19","Q1'20","Q3'20","Q1'21","Q3'21","Q1'22","Q3'22","Q1'23","Q3'23","Q1'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
-const CONSUMER = [5,15,32,25,10,0,-5,-10,-10,-5,0,-5,-5,0,10,15,45,60,55,20,0,-10,-10,-5,0,0,0,-5,-5,0,0,0,5,5,0,-5,0,-5,5,8,62,-15,-22,-18,18,32,44,28,22,18,14,10,6,4,2];
-const CARD_DQ = [null,null,null,null,null,null,9.5,9.5,8.7,8.7,8.0,8.0,7.5,7.5,8.2,8.2,10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0,9.0,8.0,8.0,7.3,7.3,6.8,6.8,6.5,6.5,6.0,6.0,5.5,5.5,5.9,5.9,9.1,9.1,6.8,6.8,4.0,4.0,6.4,6.4,8.6,9.2,9.8,10.1,10.0,9.8,9.8];
-const REC_PROB = [30,40,30,20,10,7,5,4,3,2,2,3,4,8,15,35,40,35,10,2,1,1,1,2,4,6,8,7,5,4,3,3,4,5,4,3,3,5,20,33,28,5,2,1,2,6,40,66,71,58,50,38,28,22,19];
+const LABELS=["Q1'00","Q3'00","Q1'01","Q3'01","Q1'02","Q3'02","Q1'03","Q3'03","Q1'04","Q3'04","Q1'05","Q3'05","Q1'06","Q3'06","Q1'07","Q3'07","Q1'08","Q3'08","Q1'09","Q3'09","Q1'10","Q3'10","Q1'11","Q3'11","Q1'12","Q3'12","Q1'13","Q3'13","Q1'14","Q3'14","Q1'15","Q3'15","Q1'16","Q3'16","Q1'17","Q3'17","Q1'18","Q3'18","Q1'19","Q3'19","Q1'20","Q3'20","Q1'21","Q3'21","Q1'22","Q3'22","Q1'23","Q3'23","Q1'24","Q3'24","Q4'24","Q1'25","Q2'25","Q3'25","Q4'25"];
+const CONSUMER=[5,15,32,25,10,0,-5,-10,-10,-5,0,-5,-5,0,10,15,45,60,55,20,0,-10,-10,-5,0,0,0,-5,-5,0,0,0,5,5,0,-5,0,-5,5,8,62,-15,-22,-18,18,32,44,28,22,18,14,10,6,4,2];
+const CARD_DQ=[null,null,null,null,null,null,9.5,9.5,8.7,8.7,8.0,8.0,7.5,7.5,8.2,8.2,10.4,10.4,13.7,13.7,12.5,12.5,10.0,10.0,9.0,9.0,8.0,8.0,7.3,7.3,6.8,6.8,6.5,6.5,6.0,6.0,5.5,5.5,5.9,5.9,9.1,9.1,6.8,6.8,4.0,4.0,6.4,6.4,8.6,9.2,9.8,10.1,10.0,9.8,9.8];
+const REC_PROB=[30,40,30,20,10,7,5,4,3,2,2,3,4,8,15,35,40,35,10,2,1,1,1,2,4,6,8,7,5,4,3,3,4,5,4,3,3,5,20,33,28,5,2,1,2,6,40,66,71,58,50,38,28,22,19];
 
-// NBER recession quarters (approximate index ranges)
-const RECESSIONS = [{start:2,end:3},{start:16,end:19},{start:40,end:41}];
+const RECESSIONS=[{start:2,end:3},{start:16,end:19},{start:40,end:41}];
 
-// Chart.js recession band plugin
-const recessionPlugin = {
+// ── Recession band plugin ──
+const recPlugin={
   id:'recBands',
   beforeDraw(chart){
-    const {ctx,chartArea:{left,right,top,bottom},scales:{x}} = chart;
-    const w = (right-left)/LABELS.length;
+    const{ctx,chartArea:{left,right,top,bottom},scales:{x}}=chart;
+    const w=(right-left)/LABELS.length;
     ctx.save();
     RECESSIONS.forEach(r=>{
-      const x1 = left + r.start*w;
-      const x2 = left + (r.end+1)*w;
-      ctx.fillStyle='rgba(0,0,0,.06)';
-      ctx.fillRect(x1,top,x2-x1,bottom-top);
+      ctx.fillStyle='rgba(0,0,0,.05)';
+      ctx.fillRect(left+r.start*w,top,(r.end-r.start+1)*w,bottom-top);
     });
     ctx.restore();
   }
 };
 
-const MINI_OPTS = {responsive:true,maintainAspectRatio:false,animation:false,
-  plugins:{legend:{display:false},tooltip:{enabled:true,mode:'index',intersect:false}},
-  elements:{point:{radius:0}},
+const SPARK={responsive:true,maintainAspectRatio:false,animation:false,
+  plugins:{legend:{display:false},tooltip:{enabled:true,mode:'index',intersect:false,
+    titleFont:{size:10},bodyFont:{size:11},padding:6,displayColors:false}},
+  elements:{point:{radius:0,hoverRadius:3}},
   scales:{x:{display:false},y:{display:false}}
 };
 
-// ═══════════════════════════════════════════
-//  OPTION A — Stacked Sparklines
-// ═══════════════════════════════════════════
-function buildOptionA(){
-  // Recession Prob
-  const lastRec = REC_PROB[REC_PROB.length-1];
-  document.getElementById('pill-a-rec').textContent = lastRec+'%';
-  document.getElementById('pill-a-rec').style.color = lastRec>40?'#DC2626':lastRec>20?'#D97706':'#16A34A';
-  document.getElementById('pill-a-rec').style.background = lastRec>40?'#FEF2F2':lastRec>20?'#FFFBEB':'#F0FDF4';
+// ── Status Pills ──
+const lastRec=REC_PROB.at(-1), lastSloos=CONSUMER.at(-1), lastCard=CARD_DQ.at(-1);
+function riskLevel(v,thresholds){return v>thresholds[1]?'high':v>thresholds[0]?'elevated':'low'}
+function riskColor(level){return{high:['#DC2626','#FEF2F2','#FECACA'],elevated:['#D97706','#FFFBEB','#FDE68A'],low:['#16A34A','#F0FDF4','#BBF7D0']}[level]}
 
-  new Chart(document.getElementById('a-recession'),{
-    type:'line', plugins:[recessionPlugin],
-    data:{labels:LABELS,datasets:[{
-      data:REC_PROB, borderColor:'#7C3AED', backgroundColor:'rgba(124,58,237,.1)',
-      borderWidth:2, fill:true, tension:0.35,
-      segment:{borderColor:ctx=>ctx.p1.parsed.y>40?'#DC2626':'#7C3AED',
-               backgroundColor:ctx=>ctx.p1.parsed.y>40?'rgba(220,38,38,.12)':'rgba(124,58,237,.08)'}
-    }]},
-    options:{...MINI_OPTS,
-      plugins:{...MINI_OPTS.plugins,tooltip:{...MINI_OPTS.plugins.tooltip,callbacks:{label:c=>c.raw+'%'}}},
-      scales:{x:{display:false},y:{min:0,max:80,display:false}}}
-  });
+const pills=[
+  {label:'Recession Prob',val:lastRec+'%',risk:riskLevel(lastRec,[20,40])},
+  {label:'SLOOS Tightening',val:(lastSloos>=0?'+':'')+lastSloos+'%',risk:riskLevel(lastSloos,[10,30])},
+  {label:'Card 90+ DPD',val:lastCard+'%',risk:riskLevel(lastCard,[7,9])},
+];
+document.getElementById('status-pills').innerHTML=pills.map(p=>{
+  const[c,bg,bd]=riskColor(p.risk);
+  return `<span class="status-pill" style="color:${c};background:${bg};border-color:${bd}"><span class="dot" style="background:${c}"></span>${p.label}: <strong>${p.val}</strong></span>`;
+}).join('');
 
-  // SLOOS
-  const lastSloos = CONSUMER[CONSUMER.length-1];
-  document.getElementById('pill-a-sloos').textContent = (lastSloos>=0?'+':'')+lastSloos+'%';
-  new Chart(document.getElementById('a-sloos'),{
-    type:'bar', plugins:[recessionPlugin],
-    data:{labels:LABELS,datasets:[{
-      data:CONSUMER,
-      backgroundColor:CONSUMER.map(v=>v>30?'rgba(37,99,235,.7)':v>0?'rgba(37,99,235,.4)':v>-10?'rgba(22,163,106,.3)':'rgba(22,163,106,.5)'),
-      borderRadius:1
-    }]},
-    options:{...MINI_OPTS,scales:{x:{display:false},y:{min:-30,max:70,display:false}}}
-  });
+// ── Sparkline: Recession Prob ──
+const svRec=document.getElementById('sv-rec');
+svRec.textContent=lastRec+'%';
+const rc=riskColor(riskLevel(lastRec,[20,40]));
+svRec.style.color=rc[0]; svRec.style.background=rc[1];
 
-  // Card DPD
-  const lastCard = CARD_DQ[CARD_DQ.length-1];
-  document.getElementById('pill-a-card').textContent = lastCard+'%';
-  document.getElementById('pill-a-card').style.color = lastCard>8?'#DC2626':'#D97706';
-  document.getElementById('pill-a-card').style.background = lastCard>8?'#FEF2F2':'#FFFBEB';
-
-  new Chart(document.getElementById('a-card'),{
-    type:'line', plugins:[recessionPlugin],
-    data:{labels:LABELS,datasets:[{
-      data:CARD_DQ, borderColor:'#DC2626', backgroundColor:'rgba(220,38,38,.08)',
-      borderWidth:2, fill:true, tension:0.35, spanGaps:true,
-      segment:{borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':'#F97316',
-               backgroundColor:ctx=>(ctx.p1.parsed.y||0)>9?'rgba(220,38,38,.12)':'rgba(249,115,22,.06)'}
-    }]},
-    options:{...MINI_OPTS,
-      plugins:{...MINI_OPTS.plugins,tooltip:{...MINI_OPTS.plugins.tooltip,callbacks:{label:c=>c.raw!=null?c.raw+'%':'n/a'}}},
-      scales:{x:{display:false},y:{min:3,max:15,display:false}}}
-  });
-}
-
-// ═══════════════════════════════════════════
-//  OPTION B — Heatmap
-// ═══════════════════════════════════════════
-function buildOptionB(){
-  const container = document.getElementById('heatmap-container');
-  const series = [
-    {label:'Recession Prob',data:REC_PROB,min:0,max:75,unit:'%'},
-    {label:'SLOOS Tightening',data:CONSUMER,min:-25,max:65,unit:'%'},
-    {label:'Card 90+ DPD',data:CARD_DQ,min:3,max:14,unit:'%'},
-  ];
-
-  function heatColor(t){
-    // 0=green, 0.5=yellow, 1=red
-    if(t<=0.5){
-      const r=Math.round(34+(234-34)*t*2), g=Math.round(197+(163-197)*t*2), b=Math.round(94+(8-94)*t*2);
-      return `rgb(${r},${g},${b})`;
-    } else {
-      const t2=(t-0.5)*2;
-      const r=Math.round(234+(239-234)*t2), g=Math.round(163+(68-163)*t2), b=Math.round(8+(68-8)*t2);
-      return `rgb(${r},${g},${b})`;
+new Chart(document.getElementById('s-rec'),{
+  type:'line',plugins:[recPlugin],
+  data:{labels:LABELS,datasets:[{
+    data:REC_PROB,borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,.08)',
+    borderWidth:2,fill:true,tension:0.35,
+    segment:{
+      borderColor:ctx=>ctx.p1.parsed.y>40?'#DC2626':ctx.p1.parsed.y>20?'#D97706':'#7C3AED',
+      backgroundColor:ctx=>ctx.p1.parsed.y>40?'rgba(220,38,38,.1)':ctx.p1.parsed.y>20?'rgba(217,119,6,.06)':'rgba(124,58,237,.06)'
     }
-  }
+  }]},
+  options:{...SPARK,scales:{x:{display:false},y:{min:0,max:80,display:false}},
+    plugins:{...SPARK.plugins,tooltip:{...SPARK.plugins.tooltip,callbacks:{label:c=>'Recession Prob: '+c.raw+'%'}}}}
+});
 
-  series.forEach(s=>{
-    const row = document.createElement('div');
-    row.className='heatmap-row';
-    let html = `<span class="hlabel">${s.label}</span><div class="heatmap-cells">`;
-    s.data.forEach((v,i)=>{
-      if(v==null){
-        html+=`<div class="hcell" style="background:#f3f4f6" data-tip="${LABELS[i]}: n/a"></div>`;
-      } else {
-        const t = Math.max(0,Math.min(1,(v-s.min)/(s.max-s.min)));
-        const col = heatColor(t);
-        html+=`<div class="hcell" style="background:${col}" data-tip="${LABELS[i]}: ${v}${s.unit}"></div>`;
-      }
-    });
-    html+='</div>';
-    row.innerHTML=html;
-    container.appendChild(row);
-  });
+// ── Sparkline: SLOOS ──
+const svSloos=document.getElementById('sv-sloos');
+svSloos.textContent=(lastSloos>=0?'+':'')+lastSloos+'%';
+const sc=riskColor(riskLevel(lastSloos,[10,30]));
+svSloos.style.color=sc[0]; svSloos.style.background=sc[1];
 
-  // Recession overlay row
-  const recRow = document.createElement('div');
-  recRow.className='heatmap-row';
-  let rhtml = `<span class="hlabel" style="color:#9CA3AF;font-style:italic">NBER Recession</span><div class="heatmap-cells">`;
-  LABELS.forEach((_,i)=>{
-    const inRec = RECESSIONS.some(r=>i>=r.start&&i<=r.end);
-    rhtml+=`<div class="hcell" style="background:${inRec?'#374151':'#f9fafb'};height:8px;border-radius:1px" data-tip="${LABELS[i]}${inRec?' — Recession':''}"></div>`;
-  });
-  rhtml+='</div>';
-  recRow.innerHTML=rhtml;
-  container.appendChild(recRow);
+new Chart(document.getElementById('s-sloos'),{
+  type:'bar',plugins:[recPlugin],
+  data:{labels:LABELS,datasets:[{
+    data:CONSUMER,
+    backgroundColor:CONSUMER.map(v=>v>30?'rgba(37,99,235,.75)':v>0?'rgba(37,99,235,.45)':v>-10?'rgba(22,163,106,.35)':'rgba(22,163,106,.55)'),
+    borderRadius:1
+  }]},
+  options:{...SPARK,scales:{x:{display:false},y:{min:-30,max:70,display:false}},
+    plugins:{...SPARK.plugins,tooltip:{...SPARK.plugins.tooltip,callbacks:{label:c=>'SLOOS: '+(c.raw>=0?'+':'')+c.raw+'%'}}}}
+});
 
-  // Axis labels
-  const axis = document.createElement('div');
-  axis.className='heatmap-axis';
-  LABELS.forEach((l,i)=>{
-    const sp=document.createElement('span');
-    sp.textContent=(i%4===0)?l.replace("'","'"):'';
-    axis.appendChild(sp);
-  });
-  container.appendChild(axis);
+// ── Sparkline: Card DPD ──
+const svCard=document.getElementById('sv-card');
+svCard.textContent=lastCard+'%';
+const cc=riskColor(riskLevel(lastCard,[7,9]));
+svCard.style.color=cc[0]; svCard.style.background=cc[1];
+
+new Chart(document.getElementById('s-card'),{
+  type:'line',plugins:[recPlugin],
+  data:{labels:LABELS,datasets:[{
+    data:CARD_DQ,borderColor:'#EF4444',backgroundColor:'rgba(239,68,68,.06)',
+    borderWidth:2,fill:true,tension:0.35,spanGaps:true,
+    segment:{
+      borderColor:ctx=>(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444',
+      backgroundColor:ctx=>(ctx.p1.parsed.y||0)>9?'rgba(220,38,38,.1)':(ctx.p1.parsed.y||0)>7?'rgba(249,115,22,.06)':'rgba(239,68,68,.04)'
+    }
+  }]},
+  options:{...SPARK,scales:{x:{display:false},y:{min:3,max:15,display:false}},
+    plugins:{...SPARK.plugins,tooltip:{...SPARK.plugins.tooltip,callbacks:{label:c=>c.raw!=null?'Card DPD: '+c.raw+'%':'n/a'}}}}
+});
+
+// ── Heatmap Strip ──
+function heatColor(t){
+  t=Math.max(0,Math.min(1,t));
+  if(t<=0.5){const f=t*2;return `rgb(${34+200*f},${197-34*f},${94-86*f})`}
+  else{const f=(t-0.5)*2;return `rgb(${234+5*f},${163-95*f},${8+60*f})`}
 }
 
-// ═══════════════════════════════════════════
-//  OPTION C — Unified normalized chart
-// ═══════════════════════════════════════════
-function buildOptionC(){
-  // Normalize each series to 0-100
-  function norm(arr,min,max){return arr.map(v=>v==null?null:Math.round((v-min)/(max-min)*100))}
-  const recNorm = norm(REC_PROB,0,75);
-  const sloosNorm = norm(CONSUMER,-25,65);
-  const cardNorm = norm(CARD_DQ,3,14);
+const heatSeries=[
+  {label:'Recession Prob',data:REC_PROB,min:0,max:75,unit:'%'},
+  {label:'SLOOS Tight.',data:CONSUMER,min:-25,max:65,unit:'%'},
+  {label:'Card 90+ DPD',data:CARD_DQ,min:3,max:14,unit:'%'},
+];
 
-  new Chart(document.getElementById('c-unified'),{
-    type:'line', plugins:[recessionPlugin],
-    data:{labels:LABELS,datasets:[
-      {label:'Recession Prob.',data:recNorm,borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,.06)',borderWidth:2.5,fill:true,tension:0.35,pointRadius:0},
-      {label:'SLOOS Tightening',data:sloosNorm,borderColor:'#2563EB',backgroundColor:'transparent',borderWidth:2,fill:false,tension:0.35,pointRadius:0},
-      {label:'Card 90+ DPD',data:cardNorm,borderColor:'#DC2626',backgroundColor:'transparent',borderWidth:2,fill:false,tension:0.35,pointRadius:0,spanGaps:true},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,animation:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{legend:{labels:{color:'#3d4f6e',font:{size:11},boxWidth:12,boxHeight:3,usePointStyle:false}},
-        tooltip:{mode:'index',intersect:false,callbacks:{
-          label:c=>{
-            const i=c.dataIndex;
-            if(c.datasetIndex===0) return `Recession Prob: ${REC_PROB[i]}%`;
-            if(c.datasetIndex===1) return `SLOOS: ${CONSUMER[i]>0?'+':''}${CONSUMER[i]}%`;
-            return `Card DPD: ${CARD_DQ[i]!=null?CARD_DQ[i]+'%':'n/a'}`;
-          }
-        }}},
-      scales:{
-        x:{grid:{display:false},ticks:{color:'#9CA3AF',font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:14}},
-        y:{min:0,max:100,grid:{color:'#f0f0f0'},ticks:{display:false},title:{display:true,text:'Normalized 0–100%',color:'#9CA3AF',font:{size:10}}}
-      }
+const heatContainer=document.getElementById('heatmap');
+
+heatSeries.forEach(s=>{
+  const row=document.createElement('div');row.className='heat-row';
+  let h=`<span class="hlabel">${s.label}</span><div class="heat-cells">`;
+  s.data.forEach((v,i)=>{
+    if(v==null) h+=`<div class="hcell" style="background:#f3f4f6" data-tip="${LABELS[i]}: n/a"></div>`;
+    else{
+      const t=(v-s.min)/(s.max-s.min);
+      h+=`<div class="hcell" style="background:${heatColor(t)}" data-tip="${LABELS[i]}: ${v}${s.unit}"></div>`;
     }
   });
+  h+='</div>';row.innerHTML=h;heatContainer.appendChild(row);
+});
 
-  // Pills
-  const latest = REC_PROB.length-1;
-  const recV=REC_PROB[latest], sloosV=CONSUMER[latest], cardV=CARD_DQ[latest];
-  const pillsHtml = [
-    {label:'Recession Prob',val:recV+'%',color:recV>40?'#DC2626':recV>20?'#D97706':'#16A34A',bg:recV>40?'#FEF2F2':recV>20?'#FFFBEB':'#F0FDF4',border:recV>40?'#FECACA':recV>20?'#FDE68A':'#BBF7D0'},
-    {label:'SLOOS',val:(sloosV>=0?'+':'')+sloosV+'%',color:sloosV>20?'#DC2626':sloosV>0?'#D97706':'#16A34A',bg:sloosV>20?'#FEF2F2':sloosV>0?'#FFFBEB':'#F0FDF4',border:sloosV>20?'#FECACA':sloosV>0?'#FDE68A':'#BBF7D0'},
-    {label:'Card 90+ DPD',val:cardV+'%',color:cardV>9?'#DC2626':cardV>7?'#D97706':'#16A34A',bg:cardV>9?'#FEF2F2':cardV>7?'#FFFBEB':'#F0FDF4',border:cardV>9?'#FECACA':cardV>7?'#FDE68A':'#BBF7D0'},
-  ];
-  document.getElementById('pills-c').innerHTML = pillsHtml.map(p=>
-    `<span class="pill" style="color:${p.color};background:${p.bg};border-color:${p.border}"><strong>${p.val}</strong> ${p.label}</span>`
-  ).join('');
-}
+// NBER recession row
+const recRow=document.createElement('div');recRow.className='heat-row';
+let rh=`<span class="hlabel" style="color:#B0B8C4;font-style:italic;font-size:9px">NBER Recession</span><div class="heat-cells">`;
+LABELS.forEach((_,i)=>{
+  const inR=RECESSIONS.some(r=>i>=r.start&&i<=r.end);
+  rh+=`<div class="hcell" style="background:${inR?'#374151':'#f9fafb'};height:6px;border-radius:1px" data-tip="${LABELS[i]}${inR?' — Recession':''}"></div>`;
+});
+rh+='</div>';recRow.innerHTML=rh;heatContainer.appendChild(recRow);
 
-buildOptionA();
-buildOptionB();
-buildOptionC();
+// Axis
+const axis=document.createElement('div');axis.className='heat-axis';
+LABELS.forEach((l,i)=>{const s=document.createElement('span');s.textContent=i%4===0?l:'';axis.appendChild(s)});
+heatContainer.appendChild(axis);
+
+// ── Signal Chain ──
+const chain=[
+  {label:'Yield Curve',status:'low',detail:'Normal'},
+  {label:'Recession Prob',status:riskLevel(lastRec,[20,40]),detail:lastRec+'%'},
+  {label:'SLOOS Tightening',status:riskLevel(lastSloos,[10,30]),detail:(lastSloos>=0?'+':'')+lastSloos+'%'},
+  {label:'Card Losses',status:riskLevel(lastCard,[7,9]),detail:lastCard+'%'},
+];
+document.getElementById('signal-chain').innerHTML=chain.map((n,i)=>{
+  const[c,bg,bd]=riskColor(n.status);
+  const arrow=i<chain.length-1?'<span class="signal-arrow">\u2192</span>':'';
+  return `<span class="signal-node" style="color:${c};background:${bg};border-color:${bd}">${n.label} <strong>${n.detail}</strong></span>${arrow}`;
+}).join('');
 </script>
 </body>
 </html>
