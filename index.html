@@ -3028,8 +3028,7 @@ function buildWagesTab(){
   var _wN=WAGE_ANNUAL.nominal,_wL=_wN.length;
   var _w22=_wN[_wL-4],_w23=_wN[_wL-3],_w24=_wN[_wL-2],_w25=_wN[_wL-1];
   var _wTr=_w25>_w24?"↑ Rising":_w25<_w24?"↓ Falling":"→ Stable";
-  var _wLatestHr=WAGE_MONTHLY.nominal[WAGE_MONTHLY.nominal.length-1];
-  h+=`<tr><td>All Private</td><td style="color:#D64045">+${_w22}%</td><td>+${_w23}%</td><td style="color:#1A9E5A">+${_w24}%</td><td style="color:#CC8A00">+${_w25}%</td><td>${trendPillPos(_wTr)}</td><td style="color:#336BCC">$37.17</td></tr>`;
+  h+=`<tr><td>All Private</td><td style="color:#D64045">+${_w22}%</td><td>+${_w23}%</td><td style="color:#1A9E5A">+${_w24}%</td><td style="color:#CC8A00">+${_w25}%</td><td>${trendPillPos(_wTr)}</td><td style="color:#336BCC">$37.32</td></tr>`; /* $/hr updated by renderer */
   document.getElementById("wage-tbl").innerHTML=h+"</tbody>";
 
 }
@@ -4484,7 +4483,7 @@ function buildHousingTab(){
   var _hMortLatest = _hMort[_hMort.length-1];
   var _hMortAvg = +(_hMort.reduce((a,b)=>a+b,0)/_hMort.length).toFixed(2);
   var _hBestMetro = [...HOUSING_METROS].sort((a,b)=>parseFloat(b.y25)-parseFloat(a.y25))[0];
-  var _hAfford = AFFORD_DATA.afford;
+  var _hAfford = AFFORD_DATA.index;
   document.getElementById("housing-metrics").innerHTML = [
     {lbl:"Home Prices "+_hLbl,     val:"+"+_hLatest+"%",  sub:"Case-Shiller national YoY · supply constrained",col:"#336BCC"},
     {lbl:"Full Year 2025",         val:"+"+_hLatest+"%",  sub:"YoY: vs +"+_hCS[0]+"% start of period · price growth slowing", col:"#CC8A00"},
