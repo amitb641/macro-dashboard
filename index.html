@@ -1480,6 +1480,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 
 <div class="kpi-strip" id="kpi-strip"></div>
+<div style="display:flex;gap:14px;align-items:center;margin:-14px 0 18px 0;flex-wrap:wrap">
+  <span style="font-size:9px;color:#94A3B8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Signal:</span>
+  <span style="font-size:9px;color:#1A9E5A;font-weight:600">● Healthy</span>
+  <span style="font-size:9px;color:#CC8A00;font-weight:600">● Watch</span>
+  <span style="font-size:9px;color:#D64045;font-weight:600">● Stress</span>
+  <span style="font-size:9px;color:#635BFF;font-weight:600">● Policy Rate</span>
+</div>
 
 <div class="nav-grouped">
   <div class="nav-group">
@@ -2498,16 +2505,54 @@ let miniCharts = {};
 let builtTabs = {"status": false};
 
 // ════════════════════════════════════════════════════
-// KPI STRIP
+// KPI STRIP — Systematic Color Logic
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#CC8A00", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#635BFF", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#D64045", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#D64045", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1A9E5A", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#635BFF", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#635BFF", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#CC8A00", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#8878B8", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#CC8A00", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+// Color thresholds: each KPI has defined zones that determine its color.
+// Green (#1A9E5A) = healthy / target   Amber (#CC8A00) = watch / elevated
+// Red (#D64045)   = stress / concern   Purple (#635BFF) = neutral / policy rate
+//
+// ┌─────────────────────┬──────────────┬──────────────┬──────────────┐
+// │ Metric              │ Green        │ Amber        │ Red          │
+// ├─────────────────────┼──────────────┼──────────────┼──────────────┤
+// │ Unemployment %      │ < 4.0        │ 4.0 – 4.9    │ ≥ 5.0        │
+// │ Jobs (MoM, K)       │ > +100       │ 0 – +100     │ < 0          │
+// │ CPI YoY %           │ < 2.5        │ 2.5 – 3.5    │ ≥ 3.5        │
+// │ Core PCE YoY %      │ < 2.5        │ 2.5 – 3.0    │ ≥ 3.0        │
+// │ Wage Growth %       │ 3.0 – 4.5    │ < 3.0 or >4.5│ < 2.0 or >6  │
+// │ Initial Claims (K)  │ < 220        │ 220 – 280    │ ≥ 280        │
+// │ UMich Sentiment     │ ≥ 70         │ 55 – 70      │ < 55         │
+// │ Debt Service %      │ < 10.5       │ 10.5 – 12.0  │ ≥ 12.0       │
+// │ Fed Funds / 10Y     │ Always purple (policy rate, not inherently good/bad)│
+// └─────────────────────┴──────────────┴──────────────┴──────────────┘
+const _KPI_THRESHOLDS = {
+  unemp:   {parse:v=>parseFloat(v), green:v=>v<4.0,  red:v=>v>=5.0},
+  jobs:    {parse:v=>parseFloat(v), green:v=>v>100,   red:v=>v<0},
+  cpi:     {parse:v=>parseFloat(v), green:v=>v<2.5,   red:v=>v>=3.5},
+  pce:     {parse:v=>parseFloat(v), green:v=>v<2.5,   red:v=>v>=3.0},
+  wages:   {parse:v=>parseFloat(v), green:v=>v>=3.0&&v<=4.5, red:v=>v<2.0||v>6.0},
+  claims:  {parse:v=>parseFloat(v), green:v=>v<220,   red:v=>v>=280},
+  umcsent: {parse:v=>parseFloat(v), green:v=>v>=70,   red:v=>v<55},
+  dsr:     {parse:v=>parseFloat(v), green:v=>v<10.5,  red:v=>v>=12.0},
+  rate:    {parse:v=>parseFloat(v), green:()=>false,   red:()=>false} // always purple
+};
+function _kpiColor(metric, val){
+  var t = _KPI_THRESHOLDS[metric];
+  if(!t) return '#635BFF';
+  var n = t.parse(val);
+  if(isNaN(n)) return '#635BFF';
+  if(t.red(n)) return '#D64045';
+  if(t.green(n)) return '#1A9E5A';
+  return '#CC8A00';
+}
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "metric":"unemp", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "metric":"jobs", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "metric":"cpi", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "metric":"pce", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "metric":"wages", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "metric":"claims", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "metric":"umcsent", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
+  const col = _kpiColor(k.metric, k.val);
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
   const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
   const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
   const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
   return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
-  <div class="kpi-val" style="color:${k.col}">${k.val}${d}</div>
+  <div class="kpi-val" style="color:${col}">${k.val}${d}</div>
   <div class="kpi-sub">${k.sub}</div></div>`;
 }).join("");
 
