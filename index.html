@@ -4434,8 +4434,21 @@ function buildCreditTab(){
       const w=(right-left)/CREDIT_SLOOS.labels.length;
       ctx.save();
       _sloosRecessions.forEach(r=>{
-        ctx.fillStyle='rgba(0,0,0,.06)';
-        ctx.fillRect(left+r.start*w,top,(r.end-r.start+1)*w,bottom-top);
+        const x1=left+r.start*w;
+        const rw=(r.end-r.start+1)*w;
+        // Solid red-tinted band
+        ctx.fillStyle='rgba(239,68,68,.10)';
+        ctx.fillRect(x1,top,rw,bottom-top);
+        // Left border accent
+        ctx.strokeStyle='rgba(239,68,68,.25)';
+        ctx.lineWidth=1.5;
+        ctx.beginPath();
+        ctx.moveTo(x1,top);ctx.lineTo(x1,bottom);
+        ctx.stroke();
+        // Right border accent
+        ctx.beginPath();
+        ctx.moveTo(x1+rw,top);ctx.lineTo(x1+rw,bottom);
+        ctx.stroke();
       });
       ctx.restore();
     }
