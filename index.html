@@ -392,7 +392,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 /* HEADER */
 .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 h1{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:clamp(22px,5vw,34px);font-weight:800;letter-spacing:-.02em;color:var(--text);line-height:1.1}
-h1 span{color:var(--accent)}
+h1 span{color:#635BFF}
 .subtitle{font-size:11px;color:var(--muted);margin-top:5px;margin-bottom:22px}
 
 /* HEADLINE KPIs */
@@ -640,7 +640,7 @@ h1 {
   color: var(--text) !important;
   line-height: 1.1 !important;
 }
-h1 span { color: var(--accent) !important; }
+h1 span { color: #635BFF !important; }
 .subtitle {
   font-size: 12px !important;
   color: var(--muted) !important;
@@ -2496,7 +2496,7 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // KPI STRIP
 // ════════════════════════════════════════════════════
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#CC8A00", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#336BCC", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#D64045", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#D64045", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1A9E5A", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#336BCC", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#336BCC", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#CC8A00", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#8878B8", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#CC8A00", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "col":"#CC8A00", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "col":"#635BFF", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "col":"#D64045", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "col":"#D64045", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "col":"#1A9E5A", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Feb'26", "val":"3.64%", "col":"#635BFF", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Mar'26", "val":"4.25%", "col":"#635BFF", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +46bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "col":"#CC8A00", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "col":"#8878B8", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "col":"#CC8A00", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
   const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
@@ -2716,13 +2716,22 @@ function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb
 function buildUnempTab(){
   if(builtTabs.unemp) return; builtTabs.unemp=1;
 
+  // ── Unemployment Tiles (dynamic) ──
+  var _uLatest = U_MONTHLY.data[U_MONTHLY.data.length-1];
+  var _uPrior = U_MONTHLY.data[U_MONTHLY.data.length-2];
+  var _uFY = U_ANNUAL.data[U_ANNUAL.data.length-1];
+  var _uFYPrior = U_ANNUAL.data[U_ANNUAL.data.length-2];
+  var _uPeak = Math.max(...U_MONTHLY.data);
+  var _uPeakIdx = U_MONTHLY.data.indexOf(_uPeak);
+  var _uLow = U_SECTORS.reduce((a,b)=>a.u25<b.u25?a:b);
+  var _uHigh = U_SECTORS.reduce((a,b)=>a.u25>b.u25?a:b);
   document.getElementById("unemp-metrics").innerHTML = [
-    {lbl:"Unemp Rate Feb'26",     val:"4.4%",  sub:"MoM: +0.1pp vs Jan 4.3% · BLS",                   col:"#D64045"},
-    {lbl:"Full Year 2025",        val:"4.2%",  sub:"YoY: +0.2pp vs 4.0% in 2024",                     col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",      val:"4.2%",  sub:"vs 4.0% avg in 2024 · peaked 4.6% Nov'25",        col:"#CC8A00"},
-    {lbl:"Lowest Sector",         val:"1.8%",  sub:"Government (federal/state) · 2024",                col:"#1A9E5A"},
-    {lbl:"Highest Sector",        val:"4.6%",  sub:"Construction & leisure workers · 2024",             col:"#D64045"},
-    {lbl:"Peak → Now",            val:"4.6%→4.4%",sub:"Peak Nov'25 · U-6 broad: 7.9% · Claims: 205K", col:"#8878B8"},
+    {lbl:"Unemp Rate "+U_MONTHLY.labels[U_MONTHLY.labels.length-1], val:_uLatest+"%", sub:"MoM: "+((_uLatest-_uPrior)>=0?"+":"")+(_uLatest-_uPrior).toFixed(1)+"pp vs "+U_MONTHLY.labels[U_MONTHLY.labels.length-2]+" "+_uPrior+"% · BLS", col:_uLatest>_uPrior?"#D64045":"#1A9E5A"},
+    {lbl:"Full Year 2025",        val:_uFY+"%",  sub:"YoY: "+(_uFY>=_uFYPrior?"+":"")+(_uFY-_uFYPrior).toFixed(1)+"pp vs "+_uFYPrior+"% in 2024", col:"#CC8A00"},
+    {lbl:"Monthly Avg 2025",      val:_uFY+"%",  sub:"vs "+_uFYPrior+"% avg in 2024 · peaked "+_uPeak+"% "+U_MONTHLY.labels[_uPeakIdx], col:"#CC8A00"},
+    {lbl:"Lowest Sector",         val:_uLow.u25+"%",  sub:_uLow.s+" · 2025",                          col:"#1A9E5A"},
+    {lbl:"Highest Sector",        val:_uHigh.u25+"%", sub:_uHigh.s+" · 2025",                         col:"#D64045"},
+    {lbl:"Peak → Now",            val:_uPeak+"%→"+_uLatest+"%",sub:"Peak "+U_MONTHLY.labels[_uPeakIdx]+" · U-6 broad: 7.9% · Claims: 205K", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Unemployment Sector MoM Chart — bar + dot ──
@@ -2838,13 +2847,21 @@ function buildCPITab(){
   // Compute 3M avg from CPI_ANNUAL data for display
   const cpi3mAvg = CPI_ANNUAL.avg3m != null ? CPI_ANNUAL.avg3m : null;
   const cpiLatest = CPI_MONTHLY.headline[CPI_MONTHLY.headline.length-1];
+  // ── CPI Tiles (dynamic) ──
+  var _cpiFY = CPI_ANNUAL.data[CPI_ANNUAL.data.length-1];
+  var _cpiFYPrior = CPI_ANNUAL.data[CPI_ANNUAL.data.length-2];
+  var _cpiCore = CPI_MONTHLY.core[CPI_MONTHLY.core.length-1];
+  var _cpiSticky = [...CPI_CATS].sort((a,b)=>b.c25-a.c25)[0];
+  var _cpiFastest = [...CPI_CATS].filter(c=>c.c25>c.c24).sort((a,b)=>(b.c25-b.c24)-(a.c25-a.c24))[0];
+  var _cpiPeak = Math.max(...CPI_ANNUAL.data);
+  var _cpiPeakIdx = CPI_ANNUAL.data.indexOf(_cpiPeak);
   document.getElementById("cpi-metrics").innerHTML = [
-    {lbl:"CPI YoY Feb'26",        val:`+${cpiLatest}%`,  sub:`MoM: +0.2% · Core: 2.5% ex food & energy`, col:"#CC8A00"},
-    {lbl:"Full Year 2025",         val:"+2.9%",  sub:"YoY: −0.5pp vs +3.4% in 2024",                     col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg · vs +3.2%/mo in 2024", col:"#1A9E5A"},
-    {lbl:"Stickiest Category",     val:"Shelter +4.6%", sub:"Down from 4.9% in 2024 · still elevated",    col:"#336BCC"},
-    {lbl:"Fastest Rising",         val:"Food +3.1%", sub:"Food at home · up from 1.1% in 2024 · tariffs", col:"#D64045"},
-    {lbl:"Peak → Now",             val:"Jun'22: 9.1%",sub:"Now ~2.8% · down 69% from peak",              col:"#8878B8"},
+    {lbl:"CPI YoY "+CPI_MONTHLY.labels[CPI_MONTHLY.labels.length-1], val:`+${cpiLatest}%`, sub:`Core: ${_cpiCore}% ex food & energy`, col:"#CC8A00"},
+    {lbl:"Full Year 2025",         val:"+"+_cpiFY+"%",  sub:"YoY: "+(_cpiFY>=_cpiFYPrior?"+":"")+(_cpiFY-_cpiFYPrior).toFixed(1)+"pp vs +"+_cpiFYPrior+"% in 2024", col:"#CC8A00"},
+    {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg", col:"#1A9E5A"},
+    {lbl:"Stickiest Category",     val:_cpiSticky.cat+" +"+_cpiSticky.c25+"%", sub:"Down from "+_cpiSticky.c24+"% in 2024 · still elevated", col:"#336BCC"},
+    {lbl:"Fastest Rising",         val:(_cpiFastest?_cpiFastest.cat+" +"+_cpiFastest.c25+"%":"N/A"), sub:_cpiFastest?"Up from "+_cpiFastest.c24+"% in 2024":"", col:"#D64045"},
+    {lbl:"Peak → Now",             val:CPI_ANNUAL.labels[_cpiPeakIdx]+": "+_cpiPeak+"%",sub:"Now ~"+cpiLatest+"% · down "+((((_cpiPeak-cpiLatest)/_cpiPeak)*100)|0)+"% from peak", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // ── CPI MoM Chart ──
@@ -2927,13 +2944,22 @@ function buildWagesTab(){
   const tdspVal = tdspKpi ? tdspKpi.val : "~9.8%";
   const tdspSub = tdspKpi ? tdspKpi.sub : "% of disposable income";
 
+  // ── Wages Tiles (dynamic) ──
+  var _wLatest = WAGE_MONTHLY.nominal[WAGE_MONTHLY.nominal.length-1];
+  var _wFY = WAGE_ANNUAL.nominal[WAGE_ANNUAL.nominal.length-1];
+  var _wFYPrior = WAGE_ANNUAL.nominal[WAGE_ANNUAL.nominal.length-2];
+  var _wAvg = +(WAGE_MONTHLY.nominal.reduce((a,b)=>a+b,0)/WAGE_MONTHLY.nominal.length).toFixed(1);
+  var _wTop = [...WAGE_SECTORS].sort((a,b)=>b.w25-a.w25)[0];
+  var _wReal = WAGE_ANNUAL.real[WAGE_ANNUAL.real.length-1];
+  var _wPeak = Math.max(...WAGE_ANNUAL.nominal);
+  var _wPeakIdx = WAGE_ANNUAL.nominal.indexOf(_wPeak);
   document.getElementById("wage-metrics").innerHTML = [
-    {lbl:"Wage Growth Feb'26",     val:"+3.7%",  sub:"MoM: AHE $37.32/hr · BLS nonfarm",                col:"#336BCC"},
-    {lbl:"Full Year 2025",         val:"+3.9%",  sub:"YoY: −0.4pp vs +4.3% in 2024",                    col:"#CC8A00"},
-    {lbl:"Monthly Avg 2025",       val:"+3.8%",  sub:"vs +4.1%/mo in 2024 · normalizing",               col:"#CC8A00"},
-    {lbl:"Top Sector",             val:"Leisure", sub:"+5.2% YoY — fastest growing · 2025",              col:"#1A9E5A"},
-    {lbl:"Real Wages 2025",        val:"+1.2%",  sub:"CPI-adj · vs +0.6% long-term avg",                col:"#1A9E5A"},
-    {lbl:"Peak → Now",             val:"2022: +5.1%",sub:"Now +3.7% · converging to ~3.5% LT avg",     col:"#8878B8"},
+    {lbl:"Wage Growth "+WAGE_MONTHLY.labels[WAGE_MONTHLY.labels.length-1], val:"+"+_wLatest+"%", sub:"BLS nonfarm AHE nominal", col:"#336BCC"},
+    {lbl:"Full Year 2025",         val:"+"+_wFY+"%",  sub:"YoY: "+(_wFY>=_wFYPrior?"+":"")+(_wFY-_wFYPrior).toFixed(1)+"pp vs +"+_wFYPrior+"% in 2024", col:"#CC8A00"},
+    {lbl:"Monthly Avg 2025",       val:"+"+_wAvg+"%", sub:"vs +"+_wFYPrior+"%/mo in 2024 · normalizing", col:"#CC8A00"},
+    {lbl:"Top Sector",             val:_wTop.s, sub:"+"+_wTop.w25+"% YoY — fastest growing · 2025",     col:"#1A9E5A"},
+    {lbl:"Real Wages 2025",        val:"+"+_wReal+"%", sub:"CPI-adj · inflation-adjusted gain",          col:"#1A9E5A"},
+    {lbl:"Peak → Now",             val:WAGE_ANNUAL.labels[_wPeakIdx]+": +"+_wPeak+"%",sub:"Now +"+_wLatest+"% · converging to ~3.5% LT avg", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Wages MoM Chart ──
@@ -2999,13 +3025,26 @@ function buildWagesTab(){
 function buildJobsTab(){
   if(builtTabs.jobs) return; builtTabs.jobs=1;
 
+  // ── Jobs Tiles (dynamic) ──
+  var _jFY = JOBS_ANNUAL.data[JOBS_ANNUAL.data.length-1];
+  var _jFYPrior = JOBS_ANNUAL.data[JOBS_ANNUAL.data.length-2];
+  var _jAvg = Math.round(_jFY/12);
+  var _jAvgPrior = Math.round(_jFYPrior/12);
+  var _jLatest = SECTOR_MOM.feb26.reduce((a,b)=>a+b,0);
+  var _jLatestLbl = "Feb'26";
+  var _jPrior = SECTOR_MOM.jan26.reduce((a,b)=>a+b,0);
+  var _jTopIdx = SECTOR_MOM.feb26.indexOf(Math.max(...SECTOR_MOM.feb26));
+  var _jWorstIdx = SECTOR_MOM.feb26.indexOf(Math.min(...SECTOR_MOM.feb26));
+  var _jChgPct = _jFYPrior!==0?Math.round(((_jFY-_jFYPrior)/_jFYPrior)*100):0;
+  var _jTopSector = [...JOBS_SECTORS].sort((a,b)=>b.j25-a.j25)[0];
+  var _jWorstSector = [...JOBS_SECTORS].sort((a,b)=>a.j25-b.j25)[0];
   document.getElementById("jobs-metrics").innerHTML = [
-    {lbl:"Feb'26 Jobs",         val:"-92K",   sub:"MoM: −235K vs Jan +143K · BLS nonfarm",              col:"#D64045"},
-    {lbl:"Full Year 2025",      val:"+181K",  sub:"YoY: −91% vs +2.0M in 2024 (post-revision)",        col:"#D64045"},
-    {lbl:"Monthly Avg 2025",    val:"~15K",   sub:"vs 167K/mo in 2024 · sharp slowdown",               col:"#CC8A00"},
-    {lbl:"Top Sector 2025",     val:"Healthcare", sub:"+44K Feb'26 · Social Asst. held strong all year",col:"#1A9E5A"},
-    {lbl:"Worst Sector 2025",   val:"Fed Govt",sub:"−327K cumulative from Oct'24 peak",                 col:"#D64045"},
-    {lbl:"Peak → Now",          val:"2024: +2.0M",sub:"Trough: 2025 +181K post-revision · −91%",       col:"#8878B8"},
+    {lbl:_jLatestLbl+" Jobs",   val:(_jLatest>=0?"+":"")+_jLatest+"K", sub:"MoM: "+(_jLatest-_jPrior>=0?"+":"")+(_jLatest-_jPrior)+"K vs Jan "+((_jPrior>=0?"+":"")+_jPrior)+"K · BLS nonfarm", col:_jLatest<0?"#D64045":"#1A9E5A"},
+    {lbl:"Full Year 2025",      val:(_jFY>=0?"+":"")+_jFY+"K", sub:"YoY: "+_jChgPct+"% vs "+(_jFYPrior>=0?"+":"")+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M in 2024", col:_jFY<_jFYPrior?"#D64045":"#1A9E5A"},
+    {lbl:"Monthly Avg 2025",    val:"~"+_jAvg+"K", sub:"vs "+_jAvgPrior+"K/mo in 2024", col:"#CC8A00"},
+    {lbl:"Top Sector 2025",     val:_jTopSector.s.split(" ")[0], sub:"+"+_jTopSector.j25+"K annual · strongest contributor", col:"#1A9E5A"},
+    {lbl:"Worst Sector 2025",   val:_jWorstSector.s.split(" ")[0], sub:(_jWorstSector.j25>=0?"+":"")+_jWorstSector.j25+"K annual", col:"#D64045"},
+    {lbl:"Peak → Now",          val:"2024: "+(_jFYPrior/1000).toFixed(2).replace(/0$/,"")+"M", sub:"2025: "+(_jFY>=0?"+":"")+_jFY+"K · "+_jChgPct+"% change", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-jobs-total").getContext("2d"),{
@@ -3319,13 +3358,22 @@ const BANK_COMMENTARY = [
 function buildPCETab(){
   if(builtTabs.pce) return; builtTabs.pce=1;
 
+  // ── PCE Tiles (dynamic) ──
+  var _pceCore = PCE_MONTHLY.core[PCE_MONTHLY.core.length-1];
+  var _pceHL = PCE_MONTHLY.headline[PCE_MONTHLY.headline.length-1];
+  var _pceLbl = PCE_MONTHLY.labels[PCE_MONTHLY.labels.length-1];
+  var _savLatest = SAVING_MONTHLY.data[SAVING_MONTHLY.data.length-1];
+  var _savPrior = SAVING_MONTHLY.data[SAVING_MONTHLY.data.length-2];
+  var _savLbl = SAVING_MONTHLY.labels[SAVING_MONTHLY.labels.length-1];
+  var _crCardPCE = CREDIT_QUARTERLY.card[CREDIT_QUARTERLY.card.length-1];
+  var _crQlbl = CREDIT_QUARTERLY.labels[CREDIT_QUARTERLY.labels.length-1];
   document.getElementById("pce-metrics").innerHTML = [
-    {lbl:"Core PCE Jan'26",        val:"+3.1%",  sub:"MoM: +0.3% · Fed target 2.0%",                    col:"#CC8A00"},
-    {lbl:"Full Year 2025",         val:"2.6%",   sub:"YoY: +0.2pp vs 2.4% in 2024 · BEA",               col:"#CC8A00"},
-    {lbl:"Personal Saving Rate",   val:"4.5%",   sub:"Jan'26 · vs 4.0% Dec'25 · trending up",           col:"#1A9E5A"},
-    {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",            col:"#1A9E5A"},
-    {lbl:"Consumer Stress",        val:"CC DQ 5.1%", sub:"90+ day delinquency · Q3 2025 · elevated",    col:"#D64045"},
-    {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed",col:"#8878B8"},
+    {lbl:"Core PCE "+_pceLbl,        val:"+"+_pceCore+"%",  sub:"Headline: "+_pceHL+"% · Fed target 2.0%",     col:"#CC8A00"},
+    {lbl:"Full Year 2025",         val:"2.6%",   sub:"Real PCE growth 2025 · BEA",                        col:"#CC8A00"},
+    {lbl:"Personal Saving Rate",   val:_savLatest+"%",   sub:_savLbl+" · vs "+_savPrior+"% prior · "+(_savLatest>_savPrior?"trending up":"trending down"), col:"#1A9E5A"},
+    {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",              col:"#1A9E5A"},
+    {lbl:"Consumer Stress",        val:"CC DQ "+_crCardPCE+"%", sub:"90+ day delinquency · "+_crQlbl,      col:"#D64045"},
+    {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // ── PCE MoM Chart ──
@@ -4169,13 +4217,24 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
 function buildCreditTab(){
   if(builtTabs.credit) return; builtTabs.credit=1;
 
+  // ── Credit Tiles (dynamic) ──
+  var _crCard = CREDIT_QUARTERLY.card[CREDIT_QUARTERLY.card.length-1];
+  var _crAuto = CREDIT_QUARTERLY.auto[CREDIT_QUARTERLY.auto.length-1];
+  var _crMort = CREDIT_QUARTERLY.mort[CREDIT_QUARTERLY.mort.length-1];
+  var _crStudent = CREDIT_DELINQ.student[CREDIT_DELINQ.student.length-1];
+  var _crCardPrior = CREDIT_QUARTERLY.card[CREDIT_QUARTERLY.card.length-2];
+  var _crAutoPrior = CREDIT_QUARTERLY.auto[CREDIT_QUARTERLY.auto.length-2];
+  var _crLatestQ = CREDIT_QUARTERLY.labels[CREDIT_QUARTERLY.labels.length-1];
+  var _crAll = [{n:"Card",v:_crCard},{n:"Auto",v:_crAuto},{n:"Mortgage",v:_crMort}];
+  var _crBest = _crAll.reduce((a,b)=>a.v<b.v?a:b);
+  var _crWorst = _crAll.reduce((a,b)=>a.v>b.v?a:b);
   document.getElementById("credit-metrics").innerHTML = [
-    {lbl:"Card 90+ DPD Latest",    val:"9.8%",   sub:"MoM: flat · Q3 2025 · near 2011-era high",        col:"#D64045"},
-    {lbl:"Auto 90+ DPD",           val:"4.5%",   sub:"YoY: stable · subprime stress persists",           col:"#CC8A00"},
-    {lbl:"Student Loan DQ",        val:"9.4%",   sub:"Post-forbearance first reporting · shock",         col:"#CC8A00"},
-    {lbl:"Best Category",          val:"Mortgage 0.8%",sub:"Lock-in effect shields market · resilient",   col:"#1A9E5A"},
-    {lbl:"Worst Category",         val:"Cards 9.8%",sub:"Mass-market stress · NCO improving",            col:"#D64045"},
-    {lbl:"Peak → Now",             val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",col:"#8878B8"},
+    {lbl:"Card 90+ DPD "+_crLatestQ,  val:_crCard+"%",  sub:(_crCard>_crCardPrior?"Up":"Down")+" from "+_crCardPrior+"% prior quarter", col:"#D64045"},
+    {lbl:"Auto 90+ DPD",              val:_crAuto+"%",  sub:_crLatestQ+" · "+(_crAuto>_crAutoPrior?"up":"down")+" from "+_crAutoPrior+"% prior", col:"#CC8A00"},
+    {lbl:"Student Loan DQ",           val:_crStudent+"%", sub:"Post-forbearance first reporting",              col:"#CC8A00"},
+    {lbl:"Best Category",             val:_crBest.n+" "+_crBest.v+"%", sub:"Lowest 90+ DPD rate",              col:"#1A9E5A"},
+    {lbl:"Worst Category",            val:_crWorst.n+" "+_crWorst.v+"%", sub:"Highest 90+ DPD rate",           col:"#D64045"},
+    {lbl:"Peak → Now",                val:"SLOOS 46%→2%",sub:"Lending tightening peaked 2023 · near neutral",  col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   new Chart(document.getElementById("c-credit-delinq").getContext("2d"),{
@@ -4397,13 +4456,22 @@ function buildCreditTab(){
 function buildHousingTab(){
   if(builtTabs.housing) return; builtTabs.housing=1;
 
+  // ── Housing Tiles (dynamic) ──
+  var _hCS = HOUSING_MONTHLY.caseShiller;
+  var _hMort = HOUSING_MONTHLY.mortgage30;
+  var _hLatest = _hCS[_hCS.length-1];
+  var _hLbl = HOUSING_MONTHLY.labels[HOUSING_MONTHLY.labels.length-1];
+  var _hMortLatest = _hMort[_hMort.length-1];
+  var _hMortAvg = +(_hMort.reduce((a,b)=>a+b,0)/_hMort.length).toFixed(2);
+  var _hBestMetro = [...HOUSING_METROS].sort((a,b)=>parseFloat(b.y25)-parseFloat(a.y25))[0];
+  var _hAfford = AFFORD_DATA.afford;
   document.getElementById("housing-metrics").innerHTML = [
-    {lbl:"Home Prices Mar'26",     val:"+4.1%",  sub:"MoM: Case-Shiller national YoY · supply constrained",col:"#336BCC"},
-    {lbl:"Full Year 2025",         val:"+4.1%",  sub:"YoY: vs +4.8% in 2024 · price growth slowing",      col:"#CC8A00"},
-    {lbl:"30yr Mortgage Mar'26",   val:"6.22%",  sub:"vs 6.72% avg 2024 · Freddie Mac",                   col:"#D64045"},
-    {lbl:"Best Metro 2025",        val:"Miami +5.2%",sub:"Strongest major metro YoY appreciation",          col:"#1A9E5A"},
-    {lbl:"Weakest Metric",         val:"3.9 mo supply",sub:"Below 6-mo balanced norm · tight market",      col:"#D64045"},
-    {lbl:"Peak → Now",             val:"Afford. 95→108",sub:"Up from 2023 trough · lock-in: ~85% sub-5%", col:"#8878B8"},
+    {lbl:"Home Prices "+_hLbl,     val:"+"+_hLatest+"%",  sub:"Case-Shiller national YoY · supply constrained",col:"#336BCC"},
+    {lbl:"Full Year 2025",         val:"+"+_hLatest+"%",  sub:"YoY: vs +"+_hCS[0]+"% start of period · price growth slowing", col:"#CC8A00"},
+    {lbl:"30yr Mortgage "+_hLbl,   val:_hMortLatest+"%",  sub:"vs "+_hMortAvg+"% trailing avg · Freddie Mac",  col:"#D64045"},
+    {lbl:"Best Metro 2025",        val:_hBestMetro.city.split(",")[0]+" "+_hBestMetro.y25, sub:"Strongest major metro YoY appreciation", col:"#1A9E5A"},
+    {lbl:"Weakest Metric",         val:AFFORD_DATA.supply[AFFORD_DATA.supply.length-1]+" mo supply",sub:"Below 6-mo balanced norm · tight market", col:"#D64045"},
+    {lbl:"Peak → Now",             val:"Afford. "+_hAfford[0]+"→"+_hAfford[_hAfford.length-1],sub:"Affordability index trend", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // ── Housing Monthly Trend Chart — dynamic dual-axis scaling ──
