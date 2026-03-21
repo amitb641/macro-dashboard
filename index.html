@@ -272,11 +272,15 @@ class MC{
           const vals=ds.data.filter(v=>v!=null&&isFinite(v));
           const maxV=Math.max(...vals),minV=Math.min(...vals);
           const showIdx=new Set();
+          // For small charts (≤6 bars), show ALL labels
+          if(vals.length<=6){ds.data.forEach((v,i)=>{if(v!=null&&isFinite(v))showIdx.add(i);});}
+          else {
           ds.data.forEach((v,i)=>{if(v!=null&&isFinite(v)){if(v===maxV||v===minV)showIdx.add(i);}});
           // always show last non-null
           for(let i=ds.data.length-1;i>=0;i--){if(ds.data[i]!=null&&isFinite(ds.data[i])){showIdx.add(i);break;}}
           // always show first non-null
           for(let i=0;i<ds.data.length;i++){if(ds.data[i]!=null&&isFinite(ds.data[i])){showIdx.add(i);break;}}
+          }
           ds.data.forEach((v,gi)=>{
             if(v==null||!isFinite(v)||!showIdx.has(gi))return;
             const cx_dl=d.x0+gW_dl*gi+gap_dl+bW_dl*di+bW_dl/2;
@@ -3154,7 +3158,7 @@ function buildFCTab(){
     type:"bar",
     data:{labels:["Q1 2025","Q2 2025","Q3 2025","Q4 2025","Full 2025"],
       datasets:[{
-        data:[-0.6, 3.8, 4.4, 1.4, 4.5],
+        data:[-0.6, 3.8, 4.4, 1.4, 2.2],
         backgroundColor:[-0.6,3.8,4.4,1.4,2.2].map(v=>v<0?"#D64045cc":v===2.2?"#336BCCcc":"#1A9E5Acc"),
         borderRadius:5
       }]},
