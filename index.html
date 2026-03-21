@@ -1563,7 +1563,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
       <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
-      <div class="ch260"><canvas id="c-unemp-monthly"></canvas></div>
+      <div class="ch300"><canvas id="c-unemp-monthly"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
     </div>
     <div class="panel">
@@ -1584,7 +1584,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">National Unemployment Rate — Annual Average</div>
       <div class="panel-sub">% of civilian labor force · BLS CPS seasonally adjusted</div>
-      <div class="ch260"><canvas id="c-unemp-line"></canvas></div>
+      <div class="ch300"><canvas id="c-unemp-line"></canvas></div>
       <p class="src">Source: BLS Series LNS14000000 (Unemployment Rate, SA) · Each bar = average of 12 monthly readings for that year, e.g. 2025 = (Jan 4.2 + Feb 4.1 + … + Dec 4.4) ÷ 12 = 4.3%.</p>
     </div>
     <div class="panel">
@@ -1604,7 +1604,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
     <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
-    <div class="ch260"><canvas id="c-claims-line"></canvas></div>
+    <div class="ch300"><canvas id="c-claims-line"></canvas></div>
     <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
   </div>
 
@@ -1644,7 +1644,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Monthly CPI — Headline vs Core YoY % (12-Month Trend)</div>
       <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
-      <div class="ch260"><canvas id="c-cpi-mom"></canvas></div>
+      <div class="ch300"><canvas id="c-cpi-mom"></canvas></div>
       <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference.</p>
     </div>
     <div class="panel">
@@ -1664,14 +1664,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %)</div>
     <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS</div>
-    <div class="ch260"><canvas id="c-cpi-bar"></canvas></div>
+    <div class="ch300"><canvas id="c-cpi-bar"></canvas></div>
     <p class="src">Source: BLS Series CUUR0000SA0 (CPI-U All Urban Consumers, SA) · Each bar = Dec-to-Dec YoY % change for that calendar year, e.g. 2025 = Dec'25 CPI vs Dec'24 CPI = +2.7%.</p>
   </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">CPI by Category — 2022 Peak vs 2024 vs 2025</div>
       <div class="panel-sub">Dec-to-Dec % change · grouped comparison</div>
-      <div class="ch320"><canvas id="c-cpi-cat"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-cpi-cat"></canvas></div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Dec-to-Dec % change by category.</p>
     </div>
     <div class="panel">
@@ -1700,7 +1700,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (12-Month Trend)</div>
     <div class="panel-sub">Average Hourly Earnings YoY % · nominal (solid) vs real CPI-adjusted (dashed) · BLS CES</div>
-    <div class="ch260"><canvas id="c-wage-mom"></canvas></div>
+    <div class="ch300"><canvas id="c-wage-mom"></canvas></div>
     <p class="src">Source: BLS Current Employment Statistics (CES), Average Hourly Earnings. Real wages = nominal minus CPI YoY. Monthly readings, seasonally adjusted.</p>
   </div>
 
@@ -1709,7 +1709,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Nominal vs Real Wage Growth — All Private</div>
       <div class="panel-sub">Avg hourly earnings YoY % · nominal (solid) vs real inflation-adj (dashed)</div>
-      <div class="ch260"><canvas id="c-wage-line"></canvas></div>
+      <div class="ch300"><canvas id="c-wage-line"></canvas></div>
       <p class="src">Source: BLS Series CES0500000003 · Each year = average of 12 monthly YoY % readings. Real = nominal minus CPI. e.g. 2025: nominal +3.8%, real +1.1%.</p>
     </div>
     <div class="panel">
@@ -1769,7 +1769,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
       <div class="panel-sub">Net job gains/losses · BLS CES · seasonally adjusted · <span style="color:#336BCC;font-style:italic">2026F base case +1,000K · range +800K–+1,200K · tariff-adjusted · pre-tariff consensus was +1,500K</span></div>
-      <div class="ch260"><canvas id="c-jobs-total"></canvas></div>
+      <div class="ch300"><canvas id="c-jobs-total"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES), seasonally adjusted. Annual net job gains/losses.</p>
     </div>
     <div class="panel">
@@ -1809,13 +1809,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">PCE Price Index — Monthly Headline vs Core YoY %</div>
       <div class="panel-sub">Last 12 months · BEA · Fed's preferred inflation gauge · 2% target shown</div>
-      <div class="ch260"><canvas id="c-pce-mom"></canvas></div>
+      <div class="ch300"><canvas id="c-pce-mom"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge.</p>
     </div>
     <div class="panel">
       <div class="panel-title">PCE Price Index — Annual Headline vs Core YoY %</div>
       <div class="panel-sub">Dec-to-Dec YoY % change · 2000–2025 · BEA</div>
-      <div class="ch260"><canvas id="c-pce-line"></canvas></div>
+      <div class="ch300"><canvas id="c-pce-line"></canvas></div>
       <p class="src">Source: BEA Series PCEPI / PCEPILFE. Each year = Dec-to-Dec YoY % change. 2025: Headline +2.9%, Core +3.0%.</p>
     </div>
   </div>
@@ -1828,13 +1828,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Jan'26 cooling</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Dec'25</span>
       </div>
-      <div class="ch320"><canvas id="c-pce-cat-mom"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-pce-cat-mom"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
     </div>
     <div class="panel">
       <div class="panel-title">PCE by Category — Annual Growth 2023 vs 2024 vs 2025</div>
       <div class="panel-sub">Inflation-adjusted consumer spending growth · BEA</div>
-      <div class="ch320"><canvas id="c-pce-cat"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-pce-cat"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
     </div>
   </div>
@@ -1844,13 +1844,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Personal Saving Rate — Last 12 Months</div>
       <div class="panel-sub">BEA Personal Income &amp; Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
-      <div class="ch260"><canvas id="c-saving-monthly"></canvas></div>
+      <div class="ch300"><canvas id="c-saving-monthly"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Personal Saving Rate — Annual Averages (2000–2025)</div>
       <div class="panel-sub">Annual avg of monthly saving rate · BEA · COVID spike 2020: 15.1%</div>
-      <div class="ch260"><canvas id="c-saving-annual"></canvas></div>
+      <div class="ch300"><canvas id="c-saving-annual"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Annual average of monthly personal saving rate.</p>
     </div>
   </div>
@@ -1860,13 +1860,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Consumer Sentiment — Last 12 Months</div>
       <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
-      <div class="ch260"><canvas id="c-umcsent-monthly"></canvas></div>
+      <div class="ch300"><canvas id="c-umcsent-monthly"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
       <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
-      <div class="ch260"><canvas id="c-umcsent-annual"></canvas></div>
+      <div class="ch300"><canvas id="c-umcsent-annual"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
     </div>
   </div>
@@ -1876,13 +1876,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Household Debt &amp; Delinquencies — NY Fed Data</div>
       <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
-      <div class="ch260"><canvas id="c-debt-bar"></canvas></div>
+      <div class="ch300"><canvas id="c-debt-bar"></canvas></div>
       <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
       <div class="panel-sub">Household debt service payments as % of disposable income · Federal Reserve Board · Quarterly</div>
-      <div class="ch260"><canvas id="c-tdsp-line"></canvas></div>
+      <div class="ch300"><canvas id="c-tdsp-line"></canvas></div>
       <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~11.3%.</p>
     </div>
   </div>
@@ -1913,13 +1913,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">2026 NII Guidance — Full-Year Outlook ($B)</div>
       <div class="panel-sub">Net Interest Income guidance from Q4 2025 earnings calls</div>
-      <div class="ch260"><canvas id="c-bank-nii"></canvas></div>
+      <div class="ch300"><canvas id="c-bank-nii"></canvas></div>
       <p class="src">Source: Q4 2025 earnings calls from major U.S. banks (Jan 2026). Net Interest Income guidance.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Net Charge-Off Rates & Delinquency Outlook 2025–2026</div>
       <div class="panel-sub">Consumer credit loss rates · Q4 2025 actuals & 2026 guidance</div>
-      <div class="ch260"><canvas id="c-bank-nco"></canvas></div>
+      <div class="ch300"><canvas id="c-bank-nco"></canvas></div>
       <p class="src">Source: Q4 2025 earnings releases. Consumer credit loss rates and 2026 guidance.</p>
     </div>
   </div>
@@ -1942,13 +1942,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">2025 Quarterly GDP — BEA Estimates</div>
       <div class="panel-sub">Annualized % change by quarter · 2025 full year +2.2%</div>
-      <div class="ch200"><canvas id="c-gdp-q"></canvas></div>
+      <div class="ch260"><canvas id="c-gdp-q"></canvas></div>
       <p class="src">Source: BEA. Real GDP annualized % change by quarter, 2025.</p>
     </div>
     <div class="panel">
       <div class="panel-title">2024 vs 2025 vs 2026F — Key Macro Indicators</div>
       <div class="panel-sub">Annual comparison · 2026 = consensus midpoint estimate</div>
-      <div class="ch200"><canvas id="c-fc-group"></canvas></div>
+      <div class="ch260"><canvas id="c-fc-group"></canvas></div>
       <p class="src">Sources: BEA (GDP), BLS (unemployment, wages, CPI), Federal Reserve (rates). 2026F = consensus midpoint.</p>
     </div>
   </div>
@@ -2069,7 +2069,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Delinquency Rates by Product — 90+ Days Past Due (%)</div>
       <div class="panel-sub">NY Fed Household Debt & Credit · quarterly · Q3 2025</div>
-      <div class="ch260"><canvas id="c-credit-delinq"></canvas></div>
+      <div class="ch300"><canvas id="c-credit-delinq"></canvas></div>
       <p style="font-size:10px;color:#7a90aa;margin-top:4px">⚠ Student loan 90+ DPD data unavailable 2003–2007: NY Fed HHDC began tracking student loans in 2003, but reliable delinquency reporting lagged until ~2008 due to limited servicer data and high deferment/forbearance rates among recent graduates. Pre-2020 values (6–11%) reflect true delinquency; 2020–Q1'25 shows 0% due to CARES Act/on-ramp payment pause.</p>
     </div>
     <div class="panel">
@@ -2078,11 +2078,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="two-up" style="margin-top:12px">
         <div>
           <div style="font-size:11px;font-weight:600;color:#D64045;margin-bottom:6px">💳 Card Specialists</div>
-          <div class="ch260"><canvas id="c-nco-cards"></canvas></div>
+          <div class="ch300"><canvas id="c-nco-cards"></canvas></div>
         </div>
         <div>
           <div style="font-size:11px;font-weight:600;color:#336BCC;margin-bottom:6px">🏦 Diversified Banks — Consumer NCO</div>
-          <div class="ch260"><canvas id="c-nco-banks"></canvas></div>
+          <div class="ch300"><canvas id="c-nco-banks"></canvas></div>
         </div>
       </div>
       <p style="font-size:10px;color:#7a90aa;margin-top:6px">⚠ Note: Card specialists report card-only NCO on near-100% card portfolios. Diversified bank rates are blended across cards, auto, and mortgage. Not directly comparable.</p>
@@ -2093,7 +2093,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-title">Senior Loan Officer Survey (SLOOS) — Tightening Standards %</div>
       <div class="panel-sub">Net % of banks tightening consumer lending standards · Fed · NY Fed Recession Prob. overlay</div>
       <div id="sloos-corr-badge" style="margin-bottom:6px;font-size:11px;color:#334E68;font-weight:500"></div>
-      <div class="ch260"><canvas id="c-credit-sloos"></canvas></div>
+      <div class="ch300"><canvas id="c-credit-sloos"></canvas></div>
       <p style="margin-top:6px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (black dashed):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
       <details style="margin-top:6px;font-size:10px;color:#7a90aa">
         <summary style="cursor:pointer;font-weight:600;color:#334E68">📐 Correlation methodology</summary>
@@ -2103,7 +2103,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Consumer Credit Growth — Revolving vs Non-Revolving YoY %</div>
       <div class="panel-sub">Federal Reserve G.19 Consumer Credit · annual % change</div>
-      <div class="ch260"><canvas id="c-credit-growth"></canvas></div>
+      <div class="ch300"><canvas id="c-credit-growth"></canvas></div>
       <p class="src">Source: Federal Reserve G.19 Consumer Credit release. Annual % change, revolving vs non-revolving.</p>
     </div>
   </div>
@@ -2135,7 +2135,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate (12-Month)</div>
     <div class="panel-sub">Case-Shiller National HPI YoY % (left axis) · 30yr fixed mortgage rate (right axis) · monthly</div>
-    <div class="ch260"><canvas id="c-housing-mom"></canvas></div>
+    <div class="ch300"><canvas id="c-housing-mom"></canvas></div>
     <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Inverse relationship: higher rates suppress demand → slower price growth.</p>
   </div>
 
@@ -2144,13 +2144,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Home Price Index — Case-Shiller & FHFA (2012=100)</div>
       <div class="panel-sub">National composite annual indices · S&P/Case-Shiller, FHFA</div>
-      <div class="ch260"><canvas id="c-hpi"></canvas></div>
+      <div class="ch300"><canvas id="c-hpi"></canvas></div>
       <p class="src">Source: S&amp;P/Case-Shiller National Home Price Index; FHFA House Price Index. Annual composite indices, base year 2012=100.</p>
     </div>
     <div class="panel">
       <div class="panel-title">30-Year Mortgage Rate vs Fed Funds Rate</div>
       <div class="panel-sub">Annual averages 2018–2026F · Freddie Mac PMMS · Fed</div>
-      <div class="ch260"><canvas id="c-mortgage"></canvas></div>
+      <div class="ch300"><canvas id="c-mortgage"></canvas></div>
       <p class="src">Source: Freddie Mac Primary Mortgage Market Survey (30yr fixed); Federal Reserve (effective federal funds rate). Annual averages.</p>
     </div>
   </div>
@@ -2158,13 +2158,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Housing Starts — Single-Family vs Multi-Family (000s units)</div>
       <div class="panel-sub">Annual seasonally adjusted · Census Bureau</div>
-      <div class="ch260"><canvas id="c-starts"></canvas></div>
+      <div class="ch300"><canvas id="c-starts"></canvas></div>
       <p class="src">Source: U.S. Census Bureau. Housing starts, seasonally adjusted annual rate (000s).</p>
     </div>
     <div class="panel">
       <div class="panel-title">Affordability Index & Months Supply</div>
       <div class="panel-sub">NAR Housing Affordability Index (100=qualifying income) · months supply</div>
-      <div class="ch260"><canvas id="c-afford"></canvas></div>
+      <div class="ch300"><canvas id="c-afford"></canvas></div>
       <p class="src">Source: NAR Housing Affordability Index; NAR Existing Home Sales (months supply).</p>
     </div>
   </div>
@@ -2188,7 +2188,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Fed Funds Rate — Actual vs FOMC Dot Plot 2026F</div>
     <div class="panel-sub">Actual year-end rate + Dec 2025 SEP median dots · Wall St consensus · Federal Reserve</div>
-    <div class="ch300"><canvas id="c-ffr"></canvas></div>
+    <div class="ch320"><canvas id="c-ffr"></canvas></div>
     <p class="src">Sources: Federal Reserve H.15; FOMC Dec 2025 SEP (dot plot); GS, JPM, MS forecasts (Jan 2026).</p>
   </div>
 
@@ -2204,7 +2204,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Card Issuer Funding Mix — Deposits vs Market Borrowing</div>
     <div class="panel-sub">Bank-wide deposits vs total loans · L/D ratio · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
-    <div class="ch260"><canvas id="c-bank-funding"></canvas></div>
+    <div class="ch300"><canvas id="c-bank-funding"></canvas></div>
     <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
     <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Deposits &amp; Total Loans = bank-wide figures ($B). L/D ratio = total loans / total deposits; &gt;100% means loans exceed deposits, requiring wholesale funding. Card Yield = card portfolio interest yield where disclosed in quarterly earnings supplements or 10-K; &quot;—&quot; = not separately reported. Rate sensitivity = estimated NII impact of +100bp rate shock. Tickers: JPM = JPMorgan Chase; BAC = Bank of America; CITI = Citigroup; COF = Capital One; DFS = Discover Financial; AXP = American Express; BCS = Barclays; SYF = Synchrony Financial; BFH = Bread Financial.</p>
   </div>
