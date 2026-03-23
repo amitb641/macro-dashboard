@@ -1567,8 +1567,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="dl-wrap" id="dl-wrap">
         <button class="download-btn" id="download-btn" onclick="toggleDLMenu(event)" title="Download current tab"><svg viewBox="0 0 20 20" width="14" height="14" style="vertical-align:-2px;margin-right:5px"><path d="M10 3v9m0 0l-3-3m3 3l3-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 14v2a1 1 0 001 1h10a1 1 0 001-1v-2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download <svg viewBox="0 0 10 6" width="8" height="6" style="vertical-align:0;margin-left:3px"><path d="M1 1l4 4 4-4" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="dl-menu" onclick="event.stopPropagation()">
-          <button class="dl-menu-item" onclick="downloadTabPDF()"><svg viewBox="0 0 20 20" width="16" height="16"><rect x="3" y="2" width="14" height="16" rx="2" fill="#EF4444" opacity=".12"/><rect x="3" y="2" width="14" height="16" rx="2" fill="none" stroke="#EF4444" stroke-width="1.2"/><text x="10" y="13" text-anchor="middle" font-size="6" font-weight="700" fill="#EF4444">PDF</text></svg><div>PDF<div class="dl-menu-sub">Formatted document with charts</div></div></button>
-          <button class="dl-menu-item" onclick="downloadTabHTML()"><svg viewBox="0 0 20 20" width="16" height="16"><rect x="3" y="2" width="14" height="16" rx="2" fill="#3B82F6" opacity=".12"/><rect x="3" y="2" width="14" height="16" rx="2" fill="none" stroke="#3B82F6" stroke-width="1.2"/><text x="10" y="13" text-anchor="middle" font-size="5" font-weight="700" fill="#3B82F6">HTML</text></svg><div>HTML<div class="dl-menu-sub">Self-contained webpage file</div></div></button>
+          <button class="dl-menu-item" onclick="downloadTabPDF()"><svg viewBox="0 0 20 20" width="16" height="16"><rect x="3" y="2" width="14" height="16" rx="2" fill="#EF4444" opacity=".12"/><rect x="3" y="2" width="14" height="16" rx="2" fill="none" stroke="#EF4444" stroke-width="1.2"/><text x="10" y="13" text-anchor="middle" font-size="6" font-weight="700" fill="#EF4444">PDF</text></svg><div>PDF (current tab)<div class="dl-menu-sub">Formatted document with charts</div></div></button>
+          <button class="dl-menu-item" onclick="downloadTabHTML()"><svg viewBox="0 0 20 20" width="16" height="16"><rect x="3" y="2" width="14" height="16" rx="2" fill="#3B82F6" opacity=".12"/><rect x="3" y="2" width="14" height="16" rx="2" fill="none" stroke="#3B82F6" stroke-width="1.2"/><text x="10" y="13" text-anchor="middle" font-size="5" font-weight="700" fill="#3B82F6">HTML</text></svg><div>HTML (current tab)<div class="dl-menu-sub">Self-contained single tab</div></div></button>
+          <button class="dl-menu-item" onclick="downloadFullHTML()"><svg viewBox="0 0 20 20" width="16" height="16"><rect x="3" y="2" width="14" height="16" rx="2" fill="#10B981" opacity=".12"/><rect x="3" y="2" width="14" height="16" rx="2" fill="none" stroke="#10B981" stroke-width="1.2"/><text x="10" y="13" text-anchor="middle" font-size="5" font-weight="700" fill="#10B981">ALL</text></svg><div>Full Dashboard (HTML)<div class="dl-menu-sub">All tabs with navigation</div></div></button>
         </div>
       </div>
     </div>
@@ -6137,6 +6138,119 @@ function downloadTabHTML(){
   var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "macro-dashboard-" + tab.id + "-" + new Date().toISOString().slice(0,10) + ".html";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function downloadFullHTML(){
+  _setDLBtnState(true);
+
+  // Force-build every tab so lazy content is populated
+  var TAB_IDS = ["fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","housing","oil"];
+  var builders = {
+    fc:buildFCTab, gdp:buildGDPTab, jobs:buildJobsTab, unemp:buildUnempTab,
+    wages:buildWagesTab, cpi:buildCPITab, pce:buildPCETab, yield:buildYieldTab,
+    credit:buildCreditTab, banks:buildBanksTab, housing:buildHousingTab, oil:buildOilTab
+  };
+  TAB_IDS.forEach(function(id){
+    try { if(builders[id]) builders[id](); } catch(e){ console.warn("build "+id+":",e); }
+  });
+
+  // Small delay to let Chart.js finish rendering canvases
+  setTimeout(function(){
+    try { _buildFullHTMLInner(TAB_IDS); } catch(e){ console.error("Full HTML download failed:",e); }
+    _setDLBtnState(false);
+  }, 600);
+}
+
+function _buildFullHTMLInner(TAB_IDS){
+  var dateStr = new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+
+  // Collect styles
+  var styles = "";
+  document.querySelectorAll("style").forEach(function(s){ styles += s.outerHTML; });
+
+  var html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n'
+    + '<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n'
+    + '<title>U.S. Macro Dashboard — Full Report</title>\n'
+    + styles + '\n'
+    + '<style>\n'
+    + '.tab-panel{display:none}.tab-panel.active{display:block}\n'
+    + '.dl-wrap{display:none!important}\n'
+    + 'body{padding:0 0 32px 0;margin:0}\n'
+    + '.exp-header{padding:24px 20px 16px;border-bottom:2px solid #336BCC;margin:0 20px 16px}\n'
+    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 16px;position:sticky;top:0;background:var(--bg,#0F172A);z-index:100;border-bottom:1px solid var(--border,#1e293b)}\n'
+    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border,#334155);background:var(--bg2,#1e293b);color:var(--text2,#94a3b8);font-size:12px;cursor:pointer;font-family:inherit}\n'
+    + '.exp-nav button.active{background:#336BCC;color:#fff;border-color:#336BCC}\n'
+    + '.exp-nav button:hover{opacity:.85}\n'
+    + '</style>\n'
+    + '</head>\n<body>\n';
+
+  // Header
+  html += '<div class="exp-header">'
+    + '<div style="font-size:22px;font-weight:700;color:var(--text,#e2e8f0);">U.S. Macro Dashboard — Full Report</div>'
+    + '<div style="font-size:11px;color:var(--dim,#64748b);margin-top:4px;">Generated ' + dateStr + ' · Source: BEA, BLS, FRED, EIA</div>'
+    + '</div>\n';
+
+  // KPI strip
+  var kpi = document.getElementById("kpi-strip");
+  if(kpi) html += '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 16px;">' + kpi.innerHTML + '</div>\n';
+
+  // Tab nav
+  html += '<div class="exp-nav" id="exp-nav">\n';
+  TAB_IDS.forEach(function(id, i){
+    html += '  <button data-tab="' + id + '"' + (i===0?' class="active"':'') + '>' + (TAB_NAMES[id]||id) + '</button>\n';
+  });
+  html += '</div>\n';
+
+  // Tab panels — clone each, convert canvases to images
+  TAB_IDS.forEach(function(id, i){
+    var panel = document.getElementById("tab-" + id);
+    if(!panel) return;
+    var clone = panel.cloneNode(true);
+    clone.className = "tab-panel" + (i===0?" active":"");
+    clone.id = "tab-" + id;
+
+    // Convert canvases to static images
+    var origCanvases = panel.querySelectorAll("canvas");
+    var cloneCanvases = clone.querySelectorAll("canvas");
+    origCanvases.forEach(function(origC, ci){
+      try {
+        var img = document.createElement("img");
+        img.src = origC.toDataURL("image/png");
+        img.style.cssText = "width:100%;height:auto;display:block;";
+        if(cloneCanvases[ci] && cloneCanvases[ci].parentNode){
+          cloneCanvases[ci].parentNode.replaceChild(img, cloneCanvases[ci]);
+        }
+      } catch(e){}
+    });
+
+    html += '<div class="tab-panel' + (i===0?' active':'') + '" id="tab-' + id + '" style="padding:0 20px;">\n' + clone.innerHTML + '\n</div>\n';
+  });
+
+  // Tab switching JS
+  html += '<script>\n'
+    + 'document.getElementById("exp-nav").addEventListener("click",function(e){\n'
+    + '  var btn=e.target.closest("button"); if(!btn)return;\n'
+    + '  document.querySelectorAll(".exp-nav button").forEach(function(b){b.classList.remove("active")});\n'
+    + '  document.querySelectorAll(".tab-panel").forEach(function(p){p.classList.remove("active")});\n'
+    + '  btn.classList.add("active");\n'
+    + '  var p=document.getElementById("tab-"+btn.dataset.tab); if(p) p.classList.add("active");\n'
+    + '});\n'
+    + '</script>\n';
+
+  // Footer
+  html += '<div style="padding:16px 20px;font-size:10px;color:var(--dim,#64748b);border-top:1px solid var(--border,#1e293b);margin-top:24px;">'
+    + 'Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4\'25 Earnings.'
+    + '</div>\n';
+
+  html += '</body>\n</html>';
+
+  // Trigger download
+  var blob = new Blob([html], {type:"text/html;charset=utf-8"});
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "macro-dashboard-full-" + new Date().toISOString().slice(0,10) + ".html";
   a.click();
   URL.revokeObjectURL(a.href);
 }
