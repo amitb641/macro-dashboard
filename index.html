@@ -5991,12 +5991,14 @@ function _replaceCanvasesWithImages(origPanel, cloneEl){
       if(rect.width < 1 || rect.height < 1) return;
       var img = document.createElement("img");
       img.src = origC.toDataURL("image/png");
-      img.style.cssText = "display:block;width:"+Math.round(rect.width)+"px;height:"+Math.round(rect.height)+"px;max-width:100%;object-fit:contain;";
-      // Lock the parent container height so layout doesn't shift
+      // Fill container width, preserve aspect ratio via the container's height
+      img.style.cssText = "display:block;width:100%;height:100%;object-fit:contain;";
       var parent = cloneCanvases[i] ? cloneCanvases[i].parentNode : null;
       if(parent){
+        // Lock container to the canvas's rendered CSS size
+        parent.style.width = Math.round(rect.width) + "px";
         parent.style.height = Math.round(rect.height) + "px";
-        parent.style.overflow = "hidden";
+        parent.style.maxWidth = "100%";
         parent.replaceChild(img, cloneCanvases[i]);
       }
     } catch(e){}
