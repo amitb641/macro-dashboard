@@ -6007,6 +6007,27 @@ var TAB_NAMES = {
   dict:"Sources", stack:"Dashboard"
 };
 
+function _replaceCanvasesWithImages(origPanel, cloneEl){
+  var origCanvases = origPanel.querySelectorAll("canvas");
+  var cloneCanvases = cloneEl.querySelectorAll("canvas");
+  origCanvases.forEach(function(origC, i){
+    try {
+      var rect = origC.getBoundingClientRect();
+      if(rect.width < 1 || rect.height < 1) return;
+      var img = document.createElement("img");
+      img.src = origC.toDataURL("image/png");
+      img.style.cssText = "display:block;width:"+Math.round(rect.width)+"px;height:"+Math.round(rect.height)+"px;max-width:100%;object-fit:contain;";
+      // Lock the parent container height so layout doesn't shift
+      var parent = cloneCanvases[i] ? cloneCanvases[i].parentNode : null;
+      if(parent){
+        parent.style.height = Math.round(rect.height) + "px";
+        parent.style.overflow = "hidden";
+        parent.replaceChild(img, cloneCanvases[i]);
+      }
+    } catch(e){}
+  });
+}
+
 function toggleDLMenu(e){
   e.stopPropagation();
   var wrap = document.getElementById("dl-wrap");
@@ -6059,18 +6080,7 @@ function downloadTabPDF(){
   var cc = tab.panel.cloneNode(true); cc.style.display="block"; cc.classList.add("active"); wrapper.appendChild(cc);
 
   // Convert canvas charts to static images so html2canvas can capture them
-  var origCanvases = tab.panel.querySelectorAll("canvas");
-  var cloneCanvases = cc.querySelectorAll("canvas");
-  origCanvases.forEach(function(origC, i){
-    try {
-      var img = document.createElement("img");
-      img.src = origC.toDataURL("image/png");
-      img.style.cssText = "width:100%;height:auto;display:block;";
-      if(cloneCanvases[i] && cloneCanvases[i].parentNode){
-        cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
-      }
-    } catch(e){ /* cross-origin or empty canvas — skip */ }
-  });
+  _replaceCanvasesWithImages(tab.panel, cc);
 
   document.body.appendChild(wrapper);
 
@@ -6118,18 +6128,7 @@ function downloadTabHTML(){
 
   // Tab content — clone and convert canvases to images
   var tabClone = tab.panel.cloneNode(true);
-  var origCanvases = tab.panel.querySelectorAll("canvas");
-  var cloneCanvases = tabClone.querySelectorAll("canvas");
-  origCanvases.forEach(function(origC, i){
-    try {
-      var img = document.createElement("img");
-      img.src = origC.toDataURL("image/png");
-      img.style.cssText = "width:100%;height:auto;display:block;";
-      if(cloneCanvases[i] && cloneCanvases[i].parentNode){
-        cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
-      }
-    } catch(e){}
-  });
+  _replaceCanvasesWithImages(tab.panel, tabClone);
   html += '<div class="tab-panel active">' + tabClone.innerHTML + '</div>\n';
   html += '</body>\n</html>';
 
@@ -6176,11 +6175,11 @@ function _buildFullHTMLInner(TAB_IDS){
     + styles + '\n'
     + '<style>\n'
     + '.tab-panel{display:none}.tab-panel.active{display:block}\n'
-    + '.dl-wrap{display:none!important}\n'
-    + 'body{padding:0 0 32px 0;margin:0}\n'
+    + '.dl-wrap,.nav-grouped{display:none!important}\n'
+    + 'body{padding:0 0 32px 0;margin:0;background:var(--bg,#F7F8FA);color:var(--text,#0D1B2A)}\n'
     + '.exp-header{padding:24px 20px 16px;border-bottom:2px solid #336BCC;margin:0 20px 16px}\n'
-    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 16px;position:sticky;top:0;background:var(--bg,#0F172A);z-index:100;border-bottom:1px solid var(--border,#1e293b)}\n'
-    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border,#334155);background:var(--bg2,#1e293b);color:var(--text2,#94a3b8);font-size:12px;cursor:pointer;font-family:inherit}\n'
+    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 16px;position:sticky;top:0;background:var(--bg,#F7F8FA);z-index:100;border-bottom:1px solid var(--border,#E2E8F0)}\n'
+    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border,#E2E8F0);background:var(--bg2,#EEF1F7);color:var(--text2,#334E68);font-size:12px;cursor:pointer;font-family:inherit}\n'
     + '.exp-nav button.active{background:#336BCC;color:#fff;border-color:#336BCC}\n'
     + '.exp-nav button:hover{opacity:.85}\n'
     + '</style>\n'
@@ -6203,27 +6202,36 @@ function _buildFullHTMLInner(TAB_IDS){
   });
   html += '</div>\n';
 
-  // Tab panels — clone each, convert canvases to images
+  // Tab panels — temporarily show each panel so canvases have real dimensions,
+  // then clone and convert canvases to static images
+  var activePanel = document.querySelector(".tab-panel.active");
   TAB_IDS.forEach(function(id, i){
     var panel = document.getElementById("tab-" + id);
     if(!panel) return;
-    var clone = panel.cloneNode(true);
-    clone.className = "tab-panel" + (i===0?" active":"");
-    clone.id = "tab-" + id;
 
-    // Convert canvases to static images
-    var origCanvases = panel.querySelectorAll("canvas");
-    var cloneCanvases = clone.querySelectorAll("canvas");
-    origCanvases.forEach(function(origC, ci){
-      try {
-        var img = document.createElement("img");
-        img.src = origC.toDataURL("image/png");
-        img.style.cssText = "width:100%;height:auto;display:block;";
-        if(cloneCanvases[ci] && cloneCanvases[ci].parentNode){
-          cloneCanvases[ci].parentNode.replaceChild(img, cloneCanvases[ci]);
-        }
-      } catch(e){}
-    });
+    // Temporarily make panel visible so canvas getBoundingClientRect works
+    var wasActive = panel.classList.contains("active");
+    if(!wasActive){
+      panel.style.display = "block";
+      panel.style.position = "absolute";
+      panel.style.visibility = "hidden";
+      panel.style.left = "-9999px";
+      panel.classList.add("active");
+      // Force layout so Chart.js canvases have dimensions
+      panel.offsetHeight;
+    }
+
+    var clone = panel.cloneNode(true);
+    _replaceCanvasesWithImages(panel, clone);
+
+    // Restore original state
+    if(!wasActive){
+      panel.classList.remove("active");
+      panel.style.display = "";
+      panel.style.position = "";
+      panel.style.visibility = "";
+      panel.style.left = "";
+    }
 
     html += '<div class="tab-panel' + (i===0?' active':'') + '" id="tab-' + id + '" style="padding:0 20px;">\n' + clone.innerHTML + '\n</div>\n';
   });
