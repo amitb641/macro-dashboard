@@ -2129,7 +2129,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
 
     <!-- Inline SLOOS chart (was iframe) -->
-    <div style="position:relative;height:320px;margin-bottom:8px"><canvas id="c-sloos"></canvas></div>
+    <div class="ch320" style="margin-bottom:8px"><canvas id="c-sloos"></canvas></div>
     <div id="sloos-heatmap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3"></div>
     <div id="sloos-signal" style="display:flex;align-items:center;gap:0;margin-top:8px;flex-wrap:wrap"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:6px;border-top:1px solid #F0F1F3;font-size:9px;color:#9CA3AF">
@@ -6222,13 +6222,9 @@ function _captureAndDownload(TAB_IDS, origTabId){
     + styles + '\n'
     + '<style>\n'
     + '.tab-panel{display:none}.tab-panel.active{display:block}\n'
-    + '.download-btn,.nav-grouped,.dl-wrap{display:none!important}\n'
+    + '.download-btn,.dl-wrap{display:none!important}\n'
     + 'html,body{height:auto!important;overflow-y:auto!important;min-height:0!important}\n'
     + 'body{padding:0 20px 32px;margin:0}\n'
-    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 16px;position:sticky;top:0;background:var(--bg,#F7F8FA);z-index:100;border-bottom:1px solid var(--border,#E5E7EB)}\n'
-    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border,#E5E7EB);background:var(--bg2,#fff);color:var(--text2,#4B5563);font-size:12px;cursor:pointer;font-family:inherit}\n'
-    + '.exp-nav button.active{background:#635BFF;color:#fff;border-color:#635BFF}\n'
-    + '.exp-nav button:hover:not(.active){opacity:.85}\n'
     + '</style>\n'
     + '</head>\n<body>\n';
 
@@ -6250,12 +6246,24 @@ function _captureAndDownload(TAB_IDS, origTabId){
     + '<span style="font-size:9px;color:#635BFF;font-weight:600">\u25CF Policy Rate</span>'
     + '</div>\n';
 
-  // Tab navigation
-  html += '<div class="exp-nav" id="exp-nav">\n';
-  TAB_IDS.forEach(function(id, i){
-    html += '  <button data-tab="' + id + '"' + (i===0?' class="active"':'') + '>' + (TAB_NAMES[id]||id) + '</button>\n';
-  });
-  html += '</div>\n';
+  // Tab navigation — clone the real nav bar with icons and grouping
+  var navGrouped = document.querySelector(".nav-grouped");
+  if(navGrouped){
+    var navClone = navGrouped.cloneNode(true);
+    // Remove download button from the clone
+    var dlBtn = navClone.querySelector(".download-btn");
+    if(dlBtn) dlBtn.remove();
+    // Reset active states to first tab
+    navClone.querySelectorAll(".nav-btn").forEach(function(b){ b.classList.remove("active"); });
+    var firstBtn = navClone.querySelector('.nav-btn[data-tab="' + TAB_IDS[0] + '"]');
+    if(firstBtn) firstBtn.classList.add("active");
+    // Add sticky positioning for the exported nav
+    navClone.style.position = "sticky";
+    navClone.style.top = "0";
+    navClone.style.zIndex = "100";
+    navClone.id = "exp-nav";
+    html += navClone.outerHTML + '\n';
+  }
 
   // Capture each tab panel — show it, capture canvases, hide it
   TAB_IDS.forEach(function(id, i){
@@ -6289,11 +6297,12 @@ function _captureAndDownload(TAB_IDS, origTabId){
   // Tab switching JS for the exported file
   html += '<script>\n'
     + 'document.getElementById("exp-nav").addEventListener("click",function(e){\n'
-    + '  var btn=e.target.closest("button"); if(!btn)return;\n'
-    + '  document.querySelectorAll(".exp-nav button").forEach(function(b){b.classList.remove("active")});\n'
+    + '  var btn=e.target.closest(".nav-btn"); if(!btn||!btn.dataset.tab)return;\n'
+    + '  document.querySelectorAll("#exp-nav .nav-btn").forEach(function(b){b.classList.remove("active")});\n'
     + '  document.querySelectorAll(".tab-panel").forEach(function(p){p.classList.remove("active")});\n'
     + '  btn.classList.add("active");\n'
     + '  var p=document.getElementById("tab-"+btn.dataset.tab); if(p) p.classList.add("active");\n'
+    + '  window.scrollTo(0,0);\n'
     + '});\n'
     + '</' + 'script>\n';
 
