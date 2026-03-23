@@ -2129,7 +2129,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
 
     <!-- Embedded Chart.js chart with heatmap + signal chain -->
-    <iframe src="embed-sloos.html?v=20260321" style="width:100%;height:610px;border:none;display:block" loading="lazy"></iframe>
+    <iframe src="embed-sloos.html?v=20260321" style="width:100%;height:610px;border:none;display:block" loading="eager"></iframe>
 
     <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
     <details style="margin-top:6px;font-size:10px;color:#7a90aa">
@@ -6003,6 +6003,46 @@ function _replaceCanvasesWithImages(origPanel, cloneEl){
   });
 }
 
+function _replaceIframesWithContent(origPanel, cloneEl){
+  var origIframes = origPanel.querySelectorAll("iframe");
+  var cloneIframes = cloneEl.querySelectorAll("iframe");
+  origIframes.forEach(function(origIf, i){
+    try {
+      var cloneIf = cloneIframes[i];
+      if(!cloneIf) return;
+      var iframeDoc = origIf.contentDocument || origIf.contentWindow.document;
+      if(!iframeDoc || !iframeDoc.body) return;
+      // Capture iframe canvases as images before cloning
+      var wrapper = document.createElement("div");
+      wrapper.style.cssText = cloneIf.style.cssText;
+      wrapper.style.border = "none";
+      wrapper.style.overflow = "hidden";
+      // Clone iframe styles
+      var iframeStyles = "";
+      iframeDoc.querySelectorAll("style").forEach(function(s){ iframeStyles += s.outerHTML; });
+      // Clone iframe body content
+      var bodyClone = iframeDoc.body.cloneNode(true);
+      // Replace canvases in iframe with images
+      var origCanvases = iframeDoc.body.querySelectorAll("canvas");
+      var cloneCanvases = bodyClone.querySelectorAll("canvas");
+      origCanvases.forEach(function(oc, ci){
+        try {
+          var w = oc.offsetWidth || oc.clientWidth;
+          var h = oc.offsetHeight || oc.clientHeight;
+          if(w < 2 || h < 2) return;
+          var img = document.createElement("img");
+          img.src = oc.toDataURL("image/png");
+          img.style.cssText = "display:block;width:"+w+"px;height:"+h+"px;max-width:100%;";
+          var p = cloneCanvases[ci] ? cloneCanvases[ci].parentNode : null;
+          if(p) p.replaceChild(img, cloneCanvases[ci]);
+        } catch(e){}
+      });
+      wrapper.innerHTML = iframeStyles + bodyClone.innerHTML;
+      cloneIf.parentNode.replaceChild(wrapper, cloneIf);
+    } catch(e){ console.warn("iframe inline failed:", e); }
+  });
+}
+
 function _setDLBtnState(busy){
   var btn = document.getElementById("download-btn");
   if(busy){
@@ -6115,24 +6155,31 @@ function _captureAndDownload(TAB_IDS, origTabId){
     + '<style>\n'
     + '.tab-panel{display:none}.tab-panel.active{display:block}\n'
     + '.download-btn,.nav-grouped,.dl-wrap{display:none!important}\n'
-    + 'body{padding:0 0 32px 0;margin:0}\n'
-    + '.exp-header{padding:24px 20px 16px;border-bottom:2px solid #336BCC;margin:0 20px 16px}\n'
-    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 16px;position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:1px solid var(--border)}\n'
-    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:12px;cursor:pointer;font-family:inherit}\n'
-    + '.exp-nav button.active{background:#336BCC;color:#fff;border-color:#336BCC}\n'
-    + '.exp-nav button:hover{opacity:.85}\n'
+    + 'body{padding:0 20px 32px;margin:0}\n'
+    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 16px;position:sticky;top:0;background:var(--bg,#F7F8FA);z-index:100;border-bottom:1px solid var(--border,#E5E7EB)}\n'
+    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border,#E5E7EB);background:var(--bg2,#fff);color:var(--text2,#4B5563);font-size:12px;cursor:pointer;font-family:inherit}\n'
+    + '.exp-nav button.active{background:#635BFF;color:#fff;border-color:#635BFF}\n'
+    + '.exp-nav button:hover:not(.active){opacity:.85}\n'
     + '</style>\n'
     + '</head>\n<body>\n';
 
-  // Header
-  html += '<div class="exp-header">'
-    + '<div style="font-size:22px;font-weight:700;color:var(--text);">U.S. Macro Dashboard — Full Report</div>'
-    + '<div style="font-size:11px;color:var(--dim);margin-top:4px;">Generated ' + dateStr + ' · Source: BEA, BLS, FRED, EIA</div>'
-    + '</div>\n';
+  // Header — clone the real dashboard header so styling matches
+  html += '<div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Generated ' + dateStr + '</div>\n';
+  html += '<h1>U.S. <span>Macro</span> Dashboard</h1>\n';
+  html += '<p class="subtitle">Growth · Labor · Inflation · Financial Conditions · Credit · Housing · Energy — 2025 actuals · 2026 outlook</p>\n';
 
-  // KPI strip
+  // KPI strip — clone rendered KPI cards
   var kpi = document.getElementById("kpi-strip");
-  if(kpi) html += '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 16px;">' + kpi.innerHTML + '</div>\n';
+  if(kpi) html += '<div class="kpi-strip">' + kpi.innerHTML + '</div>\n';
+
+  // Signal legend
+  html += '<div style="display:flex;gap:14px;align-items:center;margin:-14px 0 18px 0;flex-wrap:wrap">'
+    + '<span style="font-size:9px;color:#94A3B8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Signal:</span>'
+    + '<span style="font-size:9px;color:#1A9E5A;font-weight:600">\u25CF Healthy</span>'
+    + '<span style="font-size:9px;color:#CC8A00;font-weight:600">\u25CF Watch</span>'
+    + '<span style="font-size:9px;color:#D64045;font-weight:600">\u25CF Stress</span>'
+    + '<span style="font-size:9px;color:#635BFF;font-weight:600">\u25CF Policy Rate</span>'
+    + '</div>\n';
 
   // Tab navigation
   html += '<div class="exp-nav" id="exp-nav">\n';
@@ -6151,6 +6198,7 @@ function _captureAndDownload(TAB_IDS, origTabId){
 
     var clone = panel.cloneNode(true);
     _replaceCanvasesWithImages(panel, clone);
+    _replaceIframesWithContent(panel, clone);
 
     _hidePanel(panel);
 
