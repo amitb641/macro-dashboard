@@ -1139,7 +1139,14 @@ def render():
 
     html = update_meta(html)
 
+    # Write version.json and sync BUILD_V in index.html for cache-busting
+    build_v = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    ver_file = ROOT / 'version.json'
+    ver_file.write_text(json.dumps({"v": build_v}), encoding='utf-8')
+    html = re.sub(r'var BUILD_V\s*=\s*"[^"]*"', f'var BUILD_V = "{build_v}"', html)
+
     HTML_FILE.write_text(html, encoding='utf-8')
+
     print(f'[Agent 4] Done — {len(applied)} patches, {len(errors)} errors, {len(warnings)} warnings | {HTML_FILE.stat().st_size:,} bytes')
     for e in errors:   print(f'  ⚠  {e}')
     for w in warnings: print(f'  ℹ  {w}')

@@ -4,10 +4,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="theme-color" content="#336BCC">
+<script>
+// Auto cache-bust: fetch version.json (unique query string bypasses CDN),
+// compare with the version embedded at build time, reload once if stale.
+(function(){
+  var BUILD_V = "2026-03-23T00:00:00Z";
+  if(sessionStorage.getItem("_v_checked")) return; // only check once per session
+  sessionStorage.setItem("_v_checked","1");
+  fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
+    if(d.v && d.v !== BUILD_V){
+      location.reload(true);
+    }
+  }).catch(function(){});
+})();
+</script>
 <title>U.S. Macro Dashboard</title>
 <script>
 (function(){
