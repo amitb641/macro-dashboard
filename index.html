@@ -5987,16 +5987,16 @@ function _replaceCanvasesWithImages(origPanel, cloneEl){
   var cloneCanvases = cloneEl.querySelectorAll("canvas");
   origCanvases.forEach(function(origC, i){
     try {
-      var rect = origC.getBoundingClientRect();
-      if(rect.width < 1 || rect.height < 1) return;
+      var w = origC.offsetWidth || origC.clientWidth;
+      var h = origC.offsetHeight || origC.clientHeight;
+      if(w < 2 || h < 2) return;
       var img = document.createElement("img");
       img.src = origC.toDataURL("image/png");
-      img.style.cssText = "display:block;width:"+Math.round(rect.width)+"px;height:"+Math.round(rect.height)+"px;max-width:100%;object-fit:contain;";
-      // Lock the parent container height so layout doesn't shift
+      img.style.cssText = "display:block;width:"+w+"px;height:"+h+"px;max-width:100%;";
       var parent = cloneCanvases[i] ? cloneCanvases[i].parentNode : null;
       if(parent){
-        parent.style.height = Math.round(rect.height) + "px";
-        parent.style.overflow = "hidden";
+        parent.style.height = h + "px";
+        parent.style.maxWidth = "100%";
         parent.replaceChild(img, cloneCanvases[i]);
       }
     } catch(e){}
@@ -6015,31 +6015,96 @@ function _setDLBtnState(busy){
   }
 }
 
+// ── Show a hidden panel in the normal document flow so charts render at
+//    full size (MC's _sz uses parentElement.offsetWidth/Height). ──
+function _showPanel(panel){
+  panel.classList.add("active");
+  panel.style.display = "block";
+  panel.offsetHeight; // force reflow
+}
+function _hidePanel(panel){
+  panel.classList.remove("active");
+  panel.style.display = "";
+}
+
 function downloadFullHTML(){
   _setDLBtnState(true);
 
-  // Force-build every tab so lazy content is populated
-  var TAB_IDS = ["fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","housing","oil"];
+  // All data tabs + meta tabs
+  var TAB_IDS = ["fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","housing","oil","dict","stack"];
   var builders = {
     fc:buildFCTab, gdp:buildGDPTab, jobs:buildJobsTab, unemp:buildUnempTab,
     wages:buildWagesTab, cpi:buildCPITab, pce:buildPCETab, yield:buildYieldTab,
-    credit:buildCreditTab, banks:buildBanksTab, housing:buildHousingTab, oil:buildOilTab
+    credit:buildCreditTab, banks:buildBanksTab, housing:buildHousingTab, oil:buildOilTab,
+    stack:buildStackTab
   };
+
+  // Remember which tab the user is currently viewing
+  var activeBtn = document.querySelector(".nav-btn.active");
+  var origTabId = activeBtn ? activeBtn.dataset.tab : "fc";
+
+  // Phase 1: For each tab, make it visible → build → so MC charts get real
+  // container dimensions. We must clear builtTabs for tabs that were already
+  // built while hidden (they'd have 10x10 fallback charts).
+  var panelsToRebuild = [];
   TAB_IDS.forEach(function(id){
-    try { if(builders[id]) builders[id](); } catch(e){ console.warn("build "+id+":",e); }
+    var panel = document.getElementById("tab-" + id);
+    if(!panel) return;
+    var builder = builders[id];
+    if(!builder) return;
+
+    // If tab was already built, its charts may have correct OR incorrect
+    // dimensions depending on whether it was visible when built.
+    // For already-built tabs: we need to check if canvases are properly sized.
+    if(builtTabs[id]){
+      // Check if any canvas in this panel has tiny dimensions (built while hidden)
+      var badCanvas = false;
+      panel.querySelectorAll("canvas").forEach(function(c){
+        if(c.offsetWidth < 20 || c.offsetHeight < 20) badCanvas = true;
+      });
+      if(badCanvas){
+        // Reset so builder will re-run, destroy existing charts first
+        panel.querySelectorAll("canvas").forEach(function(c){
+          try { c.width = c.width; } catch(e){} // clear canvas
+        });
+        builtTabs[id] = 0;
+        panelsToRebuild.push(id);
+      }
+    }
   });
 
-  // Small delay to let Chart.js finish rendering canvases
+  // Hide all panels first, then show+build each one sequentially
+  document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+
+  TAB_IDS.forEach(function(id){
+    var panel = document.getElementById("tab-" + id);
+    if(!panel) return;
+    var builder = builders[id];
+
+    // Make panel visible in normal document flow (not off-screen!)
+    // so MC _sz() gets real offsetWidth/Height from CSS layout
+    _showPanel(panel);
+
+    // Build tab content (charts, tables, metrics)
+    if(builder){
+      try { builder(); } catch(e){ console.warn("build "+id+":",e); }
+    }
+
+    _hidePanel(panel);
+  });
+
+  // Phase 2: Wait for requestAnimationFrame-deferred mini-charts (sector cards)
+  // then capture everything
   setTimeout(function(){
-    try { _buildFullHTMLInner(TAB_IDS); } catch(e){ console.error("Full HTML download failed:",e); }
+    try { _captureAndDownload(TAB_IDS, origTabId); } catch(e){ console.error("Download failed:",e); }
     _setDLBtnState(false);
-  }, 600);
+  }, 800);
 }
 
-function _buildFullHTMLInner(TAB_IDS){
+function _captureAndDownload(TAB_IDS, origTabId){
   var dateStr = new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
 
-  // Collect styles
+  // Collect all inline styles (includes fonts, CSS variables, responsive breakpoints)
   var styles = "";
   document.querySelectorAll("style").forEach(function(s){ styles += s.outerHTML; });
 
@@ -6049,11 +6114,11 @@ function _buildFullHTMLInner(TAB_IDS){
     + styles + '\n'
     + '<style>\n'
     + '.tab-panel{display:none}.tab-panel.active{display:block}\n'
-    + '.download-btn,.nav-grouped{display:none!important}\n'
-    + 'body{padding:0 0 32px 0;margin:0;background:var(--bg,#F7F8FA);color:var(--text,#0D1B2A)}\n'
+    + '.download-btn,.nav-grouped,.dl-wrap{display:none!important}\n'
+    + 'body{padding:0 0 32px 0;margin:0}\n'
     + '.exp-header{padding:24px 20px 16px;border-bottom:2px solid #336BCC;margin:0 20px 16px}\n'
-    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 16px;position:sticky;top:0;background:var(--bg,#F7F8FA);z-index:100;border-bottom:1px solid var(--border,#E2E8F0)}\n'
-    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border,#E2E8F0);background:var(--bg2,#EEF1F7);color:var(--text2,#334E68);font-size:12px;cursor:pointer;font-family:inherit}\n'
+    + '.exp-nav{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 16px;position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:1px solid var(--border)}\n'
+    + '.exp-nav button{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);color:var(--text2);font-size:12px;cursor:pointer;font-family:inherit}\n'
     + '.exp-nav button.active{background:#336BCC;color:#fff;border-color:#336BCC}\n'
     + '.exp-nav button:hover{opacity:.85}\n'
     + '</style>\n'
@@ -6061,62 +6126,50 @@ function _buildFullHTMLInner(TAB_IDS){
 
   // Header
   html += '<div class="exp-header">'
-    + '<div style="font-size:22px;font-weight:700;color:var(--text,#e2e8f0);">U.S. Macro Dashboard — Full Report</div>'
-    + '<div style="font-size:11px;color:var(--dim,#64748b);margin-top:4px;">Generated ' + dateStr + ' · Source: BEA, BLS, FRED, EIA</div>'
+    + '<div style="font-size:22px;font-weight:700;color:var(--text);">U.S. Macro Dashboard — Full Report</div>'
+    + '<div style="font-size:11px;color:var(--dim);margin-top:4px;">Generated ' + dateStr + ' · Source: BEA, BLS, FRED, EIA</div>'
     + '</div>\n';
 
   // KPI strip
   var kpi = document.getElementById("kpi-strip");
   if(kpi) html += '<div style="display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 16px;">' + kpi.innerHTML + '</div>\n';
 
-  // Tab nav
+  // Tab navigation
   html += '<div class="exp-nav" id="exp-nav">\n';
   TAB_IDS.forEach(function(id, i){
     html += '  <button data-tab="' + id + '"' + (i===0?' class="active"':'') + '>' + (TAB_NAMES[id]||id) + '</button>\n';
   });
   html += '</div>\n';
 
-  // Tab panels — temporarily show each panel so canvases have real dimensions,
-  // then clone and convert canvases to static images
-  var activePanel = document.querySelector(".tab-panel.active");
+  // Capture each tab panel — show it, capture canvases, hide it
   TAB_IDS.forEach(function(id, i){
     var panel = document.getElementById("tab-" + id);
     if(!panel) return;
 
-    // Temporarily make panel visible so canvas getBoundingClientRect works
-    var wasActive = panel.classList.contains("active");
-    if(!wasActive){
-      panel.style.display = "block";
-      panel.style.position = "absolute";
-      panel.style.visibility = "hidden";
-      panel.style.left = "-9999px";
-      panel.classList.add("active");
-      // Force layout so Chart.js canvases have dimensions
-      panel.offsetHeight;
-    }
+    // Must be visible for canvas capture (offsetWidth/Height needed)
+    _showPanel(panel);
 
     var clone = panel.cloneNode(true);
     _replaceCanvasesWithImages(panel, clone);
 
-    // Restore original state
-    if(!wasActive){
-      panel.classList.remove("active");
-      panel.style.display = "";
-      panel.style.position = "";
-      panel.style.visibility = "";
-      panel.style.left = "";
-    }
+    _hidePanel(panel);
 
-    html += '<div class="tab-panel' + (i===0?' active':'') + '" id="tab-' + id + '" style="padding:0 20px;">\n' + clone.innerHTML + '\n</div>\n';
+    // Write panel into export (no extra wrapper div — use the panel's own classes)
+    clone.className = "tab-panel" + (i===0?" active":"");
+    clone.id = "tab-" + id;
+    clone.removeAttribute("style");
+    html += clone.outerHTML + '\n';
   });
 
-  // Restore the originally active tab (loop may have toggled classes)
-  if(activePanel){
-    document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
-    activePanel.classList.add("active");
-  }
+  // Restore the user's original active tab
+  document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+  document.querySelectorAll(".nav-btn").forEach(function(b){ b.classList.remove("active"); });
+  var origPanel = document.getElementById("tab-" + origTabId);
+  var origBtn = document.querySelector('.nav-btn[data-tab="' + origTabId + '"]');
+  if(origPanel) origPanel.classList.add("active");
+  if(origBtn) origBtn.classList.add("active");
 
-  // Tab switching JS
+  // Tab switching JS for the exported file
   html += '<script>\n'
     + 'document.getElementById("exp-nav").addEventListener("click",function(e){\n'
     + '  var btn=e.target.closest("button"); if(!btn)return;\n'
@@ -6128,7 +6181,7 @@ function _buildFullHTMLInner(TAB_IDS){
     + '</' + 'script>\n';
 
   // Footer
-  html += '<div style="padding:16px 20px;font-size:10px;color:var(--dim,#64748b);border-top:1px solid var(--border,#1e293b);margin-top:24px;">'
+  html += '<div style="padding:16px 20px;font-size:10px;color:var(--dim);border-top:1px solid var(--border);margin-top:24px;">'
     + 'Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4\'25 Earnings.'
     + '</div>\n';
 
