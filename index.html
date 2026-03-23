@@ -6110,6 +6110,12 @@ function _buildFullHTMLInner(TAB_IDS){
     html += '<div class="tab-panel' + (i===0?' active':'') + '" id="tab-' + id + '" style="padding:0 20px;">\n' + clone.innerHTML + '\n</div>\n';
   });
 
+  // Restore the originally active tab (loop may have toggled classes)
+  if(activePanel){
+    document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+    activePanel.classList.add("active");
+  }
+
   // Tab switching JS
   html += '<script>\n'
     + 'document.getElementById("exp-nav").addEventListener("click",function(e){\n'
