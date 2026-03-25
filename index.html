@@ -1766,7 +1766,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">📋 Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
     <div class="fc-note" id="commentary-jobs">
-      <strong>Latest:</strong> Feb'26 nonfarm payrolls at <strong>−92K</strong> — the first negative print since the pandemic, following Jan's +126K. <strong>2025 full-year:</strong> +181K total after the Jan'26 benchmark revision slashed +1.0M by −862K — the largest downward revision since 2009. Gains concentrated in healthcare (+65K/mo), government (+42K), and leisure/hospitality. Manufacturing and retail shed jobs. <strong>Weekly claims</strong> steady at 205K (Mar'26) — no broad layoff surge yet. <strong>JOLTS openings</strong> ~7.6M, down from 12M peak; quits rate at 2019 levels. <strong>2026 outlook:</strong> Feb weakness likely overstates; DOGE federal cuts (−327K cumulative from Oct'24 peak) and weather distorted the print. Consensus ~100–140K/mo going forward. Key risk: if negative payrolls persist into Q2, recession probability rises materially.
+      <strong>Latest:</strong> Feb'26 nonfarm payrolls at <strong>−92K</strong> — the first negative print since the pandemic, following Jan's +126K. <strong>2025 full-year (revised):</strong> +116K total (Dec-to-Dec) after the Jan'26 benchmark revision slashed prior estimates by −862K — the largest downward revision since 2009. Multiple months in 2025 were revised to show losses (Oct −140K, Aug −70K, Jun −20K, Dec −17K). Healthcare gains moderated sharply; manufacturing, professional services, and federal government shed jobs throughout 2025. <strong>Weekly claims</strong> steady at 205K (Mar'26) — no broad layoff surge yet. <strong>JOLTS openings</strong> ~7.6M, down from 12M peak; quits rate at 2019 levels. <strong>2026 outlook:</strong> Feb weakness likely overstates; DOGE federal cuts (−327K cumulative from Oct'24 peak) and weather distorted the print. Consensus ~100–140K/mo going forward. Key risk: if negative payrolls persist into Q2, recession probability rises materially.
     </div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
@@ -1814,9 +1814,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="panel">
     <div class="panel-title">Employment Change by Sector — Annual Net (thousands)</div>
-    <div class="panel-sub">BLS CES · seasonally adjusted · 2025 revised to +181K total (Jan 2026 benchmark)</div>
+    <div class="panel-sub">BLS CES · seasonally adjusted · 2025 revised to +116K total (Jan 2026 benchmark, Dec-to-Dec PAYEMS)</div>
     <div class="dtable-wrap"><table class="dtable" id="jobs-tbl"></table></div>
-    <p class="src">Source: BLS CES. Jan 2026: +130K led by healthcare (+82K), construction (+33K), social assistance (+42K). Federal govt −34K in Jan '26; down 327K cumulatively from Oct 2024 peak (NOT a single-year figure). 2025 annual net: −200K. 2025 total revised sharply down from initial +584K to +181K.</p>
+    <p class="src">Source: BLS CES (seasonally adjusted, post-Jan 2026 benchmark revision). Feb 2026: −92K, driven by healthcare (−28K), federal govt (−38K), manufacturing (−12K). 2025 full-year (Dec-to-Dec): +116K after benchmark revision slashed prior estimates by −862K. Multiple 2025 months revised to show losses.</p>
   </div>
 
 </div>
@@ -2458,14 +2458,14 @@ const WAGE_SECTORS = [
 // BLS side auto-updated by renderer from PAYEMS. ADP manually maintained from adpemploymentreport.com
 const NFP_VS_ADP = {
   labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],
-  bls:   [185, 108, 157, 179, 114, 89, 159, 12, 212, 256, 126, -92],
+  bls:   [67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92],
   adp:   [155, 62, 152, 150, 122, 99, 143, 239, 146, 122, 11, 63]
 };
 // Monthly sector breakdown (BLS CES major sectors, thousands)
 const SECTOR_MOM = {
   sectors:["Healthcare","Retail Trade","State & Local Govt","Education (Pvt)","Construction","Financial Activities","Mining & Energy","Information (Tech)","Transport & Warehousing","Leisure & Hospitality","Manufacturing","Prof. & Biz Services","Federal Government"],
   jan26:  [82, 18, 18, 8, 35, 8, 2, -8, -8, 22, -5, -10, -34],
-  feb26:  [44, 34, 8, 5, -15, -3, -2, -12, -18, -25, -28, -42, -38]
+  feb26:  [-28, 2, 3, 9, -11, 2, 0, -11, -11, -27, -12, 2, -10]
 };
 // Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
 const NFP_BLS_MOM = {"labels":["Mar'24", "Apr'24", "May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "bls":[228, 64, 78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92]};
@@ -2476,23 +2476,23 @@ const TDSP_HIST = {"labels":["2018 Q3", "2018 Q4", "2019 Q1", "2019 Q2", "2019 Q
 // ── JOBS ─────────────────────────────────────────────
 const JOBS_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[1933, -1733, -518, 124, 2041, 2529, 2090, 1146, -3548, -5039, 1022, 2058, 2186, 2298, 2992, 2713, 2331, 2115, 2286, 1985, -9246, 7268, 4526, 2515, 1459, 116], "low":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "high":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]};
 const JOBS_SECTORS = [
-  {s:"Healthcare & Social Asst.", color:"#FF4757", j21:521,  j22:757,  j23:653,  j24:630,  j25:680},
-  {s:"Leisure & Hospitality",     color:"#FF9F43", j21:1566, j22:1313, j23:530,  j24:266,  j25:90},
-  {s:"→ Restaurants & Bars",      color:"#FF6B6B", j21:1210, j22:1000, j23:410,  j24:180,  j25:60},
-  {s:"→ Hotels & Lodging",        color:"#74B9FF", j21:188,  j22:244,  j23:97,   j24:55,   j25:20},
-  {s:"Prof. & Biz Services",      color:"#8878B8", j21:1009, j22:783,  j23:285,  j24:262,  j25:-80},
+  {s:"Healthcare & Social Asst.", color:"#FF4757", j21:521,  j22:757,  j23:653,  j24:630,  j25:584},
+  {s:"Leisure & Hospitality",     color:"#FF9F43", j21:1566, j22:1313, j23:530,  j24:266,  j25:99},
+  {s:"→ Restaurants & Bars",      color:"#FF6B6B", j21:1210, j22:1000, j23:410,  j24:180,  j25:66},
+  {s:"→ Hotels & Lodging",        color:"#74B9FF", j21:188,  j22:244,  j23:97,   j24:55,   j25:22},
+  {s:"Prof. & Biz Services",      color:"#8878B8", j21:1009, j22:783,  j23:285,  j24:262,  j25:-160},
   {s:"Government",                color:"#F76707", j21:28,   j22:354,  j23:499,  j24:277,  j25:-130},
   {s:"→ Federal Government",      color:"#E84393", j21:-28,  j22:52,   j23:68,   j24:30,   j25:-200},
   {s:"→ State & Local",           color:"#F368E0", j21:56,   j22:302,  j23:431,  j24:247,  j25:70},
-  {s:"Construction",              color:"#E8590C", j21:234,  j22:293,  j23:250,  j24:194,  j25:100},
+  {s:"Construction",              color:"#E8590C", j21:234,  j22:293,  j23:250,  j24:194,  j25:-4},
   {s:"Education (Private)",       color:"#94D82D", j21:266,  j22:248,  j23:215,  j24:120,  j25:80},
   {s:"Financial Activities",      color:"#00B894", j21:97,   j22:199,  j23:93,   j24:34,   j25:10},
-  {s:"Retail Trade",              color:"#4DABF7", j21:197,  j22:37,   j23:-5,   j24:17,   j25:-30},
-  {s:"→ Grocery Stores",          color:"#6AB04C", j21:18,   j22:10,   j23:8,    j24:12,   j25:8},
-  {s:"→ General Merchandise",     color:"#BADC58", j21:62,   j22:-8,   j23:-18,  j24:-14,  j25:-22},
-  {s:"Transport & Warehousing",   color:"#CC5DE8", j21:362,  j22:183,  j23:30,   j24:3,    j25:-40},
-  {s:"Manufacturing",             color:"#FFB84C", j21:349,  j22:348,  j23:41,   j24:14,   j25:-50},
-  {s:"→ Autos & Parts",           color:"#F9CA24", j21:68,   j22:82,   j23:28,   j24:8,    j25:-12},
+  {s:"Retail Trade",              color:"#4DABF7", j21:197,  j22:37,   j23:-5,   j24:17,   j25:-80},
+  {s:"→ Grocery Stores",          color:"#6AB04C", j21:18,   j22:10,   j23:8,    j24:12,   j25:-5},
+  {s:"→ General Merchandise",     color:"#BADC58", j21:62,   j22:-8,   j23:-18,  j24:-14,  j25:-45},
+  {s:"Transport & Warehousing",   color:"#CC5DE8", j21:362,  j22:183,  j23:30,   j24:3,    j25:-100},
+  {s:"Manufacturing",             color:"#FFB84C", j21:349,  j22:348,  j23:41,   j24:14,   j25:-113},
+  {s:"→ Autos & Parts",           color:"#F9CA24", j21:68,   j22:82,   j23:28,   j24:8,    j25:-27},
   {s:"→ Aerospace",               color:"#F0932B", j21:12,   j22:28,   j23:34,   j24:22,   j25:15},
   {s:"Information (Tech)",        color:"#20C997", j21:72,   j22:115,  j23:-24,  j24:-49,  j25:-60},
   {s:"Mining & Energy",           color:"#FCC419", j21:29,   j22:79,   j23:14,   j24:5,    j25:-10},
