@@ -239,8 +239,20 @@ def collect():
     data['jolts']       = fv('JTSJOL')
     data['umcsent']     = fred_obs('UMCSENT',    30)   # UMich Consumer Sentiment (monthly)
     data['bls_sectors'] = bls_fetch([
-        'CES0000000001','CES2000000001','CES3000000001',
-        'CES4000000001','CES6000000001','CES7000000001',
+        'CES0000000001',  # Total Nonfarm
+        'CES1000000001',  # Mining & Energy (Mining and Logging)
+        'CES2000000001',  # Construction
+        'CES3000000001',  # Manufacturing
+        'CES4200000001',  # Retail Trade
+        'CES4300000001',  # Transportation & Warehousing
+        'CES5000000001',  # Information (Tech)
+        'CES5500000001',  # Financial Activities
+        'CES6000000001',  # Professional & Business Services
+        'CES6561000001',  # Education (Private)
+        'CES6562000001',  # Healthcare
+        'CES7000000001',  # Leisure & Hospitality
+        'CES9091000001',  # Federal Government
+        'CES9093000001',  # State & Local Government
     ])
 
     print('  [Monthly] Inflation...')

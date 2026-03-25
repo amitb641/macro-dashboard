@@ -500,7 +500,7 @@ def rebuild_charts(html, data):
             nfp_labels.append(lbl)
             nfp_bls.append(chg)
         if nfp_labels:
-            # Only inject BLS side; preserve ADP data from HTML
+            # Update NFP_BLS_MOM (24-month history)
             bls_json = json.dumps({'labels': nfp_labels, 'bls': nfp_bls}, separators=(', ', ':'))
             pattern = r'const NFP_BLS_MOM\s*=\s*\{[\s\S]*?\};'
             new_decl = f'const NFP_BLS_MOM = {bls_json};'
@@ -508,6 +508,105 @@ def rebuild_charts(html, data):
             if n:
                 applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
                 html = new_html
+
+            # Also update BLS side of NFP_VS_ADP (12-month chart, preserving ADP)
+            bls_12 = nfp_bls[-12:]
+            lbl_12 = nfp_labels[-12:]
+            # Extract existing ADP array from HTML to preserve it
+            adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
+            if adp_match:
+                adp_str = adp_match.group(1).strip()
+                new_vs = (f'const NFP_VS_ADP = {{\n'
+                          f'  labels:{json.dumps(lbl_12)},\n'
+                          f'  bls:   {json.dumps(bls_12)},\n'
+                          f'  adp:   [{adp_str}]')
+                pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
+                new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)
+                if n2:
+                    applied.append(f'NFP_VS_ADP.bls updated ({len(bls_12)} months, ADP preserved)')
+                    html = new_html2
+
+    # ── SECTOR_MOM (auto-rebuild from BLS sector data) ────────────
+    bls_sectors = data.get('bls_sectors', {})
+    # Map BLS CES series IDs to SECTOR_MOM sector names
+    _SECTOR_CES = {
+        'CES6562000001': 'Healthcare',
+        'CES4200000001': 'Retail Trade',
+        'CES9093000001': 'State & Local Govt',
+        'CES6561000001': 'Education (Pvt)',
+        'CES2000000001': 'Construction',
+        'CES5500000001': 'Financial Activities',
+        'CES1000000001': 'Mining & Energy',
+        'CES5000000001': 'Information (Tech)',
+        'CES4300000001': 'Transport & Warehousing',
+        'CES7000000001': 'Leisure & Hospitality',
+        'CES3000000001': 'Manufacturing',
+        'CES6000000001': 'Prof. & Biz Services',
+        'CES9091000001': 'Federal Government',
+    }
+    if bls_sectors:
+        # Build MoM changes by sector for last 2 months
+        sector_mom_data = {}
+        for ces_id, sector_name in _SECTOR_CES.items():
+            series = bls_sectors.get(ces_id, [])
+            if len(series) >= 2:
+                # BLS data is newest-first
+                cur_val = int(series[0]['value'])
+                prev_val = int(series[1]['value'])
+                cur_period = series[0]['periodName'][:3].lower() + series[0]['year'][2:]
+                prev_period = series[1]['periodName'][:3].lower() + series[1]['year'][2:]
+                sector_mom_data[sector_name] = {
+                    'cur_key': cur_period,
+                    'prev_key': prev_period,
+                    'cur_chg': cur_val - prev_val,
+                }
+                # Also compute prev MoM if 3+ observations
+                if len(series) >= 3:
+                    prev2_val = int(series[2]['value'])
+                    sector_mom_data[sector_name]['prev_chg'] = prev_val - prev2_val
+
+        # Read existing SECTOR_MOM sectors list from HTML
+        sm_match = re.search(r'const SECTOR_MOM\s*=\s*\{', html)
+        if sm_match and sector_mom_data:
+            # Get the sector order from current HTML
+            sectors_match = re.search(
+                r'const SECTOR_MOM\s*=\s*\{[^}]*sectors:\s*\[([^\]]*)\]', html)
+            if sectors_match:
+                import ast
+                try:
+                    sector_names = ast.literal_eval('[' + sectors_match.group(1) + ']')
+                except Exception:
+                    sector_names = []
+
+                if sector_names:
+                    # Determine month keys from data
+                    any_sector = next(iter(sector_mom_data.values()))
+                    cur_key = any_sector['cur_key']
+                    prev_key = any_sector.get('prev_key', cur_key)
+
+                    cur_vals = []
+                    prev_vals = []
+                    updated_count = 0
+                    for s in sector_names:
+                        if s in sector_mom_data:
+                            cur_vals.append(sector_mom_data[s]['cur_chg'])
+                            prev_vals.append(sector_mom_data[s].get('prev_chg', 0))
+                            updated_count += 1
+                        else:
+                            cur_vals.append(0)
+                            prev_vals.append(0)
+
+                    if updated_count >= 10:  # Only rebuild if we have most sectors
+                        new_sm = (f'const SECTOR_MOM = {{\n'
+                                  f'  sectors:{json.dumps(sector_names)},\n'
+                                  f'  {prev_key}:  {json.dumps(prev_vals)},\n'
+                                  f'  {cur_key}:  {json.dumps(cur_vals)}\n'
+                                  f'}};')
+                        pattern_sm = r'const SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
+                        new_html3, n3 = re.subn(pattern_sm, new_sm, html, count=1)
+                        if n3:
+                            applied.append(f'SECTOR_MOM rebuilt ({updated_count} sectors, {prev_key} & {cur_key})')
+                            html = new_html3
 
     return html
 
