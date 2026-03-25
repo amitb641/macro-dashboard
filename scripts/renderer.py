@@ -724,6 +724,143 @@ def rebuild_charts(html, data):
                             applied.append(f'SECTOR_MOM rebuilt ({updated_count} sectors, {prev_key} & {cur_key})')
                             html = new_html3
 
+    # ── JOBS_SECTORS annual totals (auto-update latest year from BLS) ──
+    if bls_sectors:
+        today = datetime.date.today()
+        prev_yr = today.year - 1
+        yr_key = f'j{str(prev_yr)[2:]}'  # e.g. "j25" for 2025
+        _SECTOR_JS_MAP = {
+            'CES6562000001': 'Healthcare & Social Asst.',
+            'CES7000000001': 'Leisure & Hospitality',
+            'CES6000000001': 'Prof. & Biz Services',
+            'CES9091000001': '→ Federal Government',
+            'CES9093000001': '→ State & Local',
+            'CES2000000001': 'Construction',
+            'CES6561000001': 'Education (Private)',
+            'CES5500000001': 'Financial Activities',
+            'CES4200000001': 'Retail Trade',
+            'CES4300000001': 'Transport & Warehousing',
+            'CES3000000001': 'Manufacturing',
+            'CES5000000001': 'Information (Tech)',
+            'CES1000000001': 'Mining & Energy',
+        }
+        updated_sectors = 0
+        for ces_id, sector_name in _SECTOR_JS_MAP.items():
+            series = bls_sectors.get(ces_id, [])
+            # Find Dec of prev_yr and Dec of year before that for annual change
+            dec_cur, dec_prev = None, None
+            for obs in series:
+                yr = int(obs['year']) if 'year' in obs else int(obs['date'][:4])
+                mo_name = obs.get('periodName', '')
+                mo = int(obs['date'][5:7]) if 'date' in obs else (12 if mo_name == 'December' else 0)
+                if yr == prev_yr and mo == 12:
+                    dec_cur = int(obs['value'])
+                elif yr == prev_yr - 1 and mo == 12:
+                    dec_prev = int(obs['value'])
+            if dec_cur is not None and dec_prev is not None:
+                annual_chg = dec_cur - dec_prev
+                # Update the specific sector's latest year value in JOBS_SECTORS
+                esc_name = re.escape(sector_name)
+                pat = rf'(\{{s:"{esc_name}"[^}}]*{re.escape(yr_key)}:)\s*-?\d+'
+                new_html4, n4 = re.subn(pat, rf'\g<1>{annual_chg}', html, count=1)
+                if n4:
+                    updated_sectors += 1
+                    html = new_html4
+        if updated_sectors:
+            applied.append(f'JOBS_SECTORS.{yr_key} updated ({updated_sectors} sectors)')
+
+    # ── FC_MACRO actuals (auto-update from FRED data) ─────────────────
+    # FC_MACRO.act25 = [Real GDP %, Unemployment %, CPI %, Wage Growth %, FFR %]
+    prev_yr = datetime.date.today().year - 1
+    act_key = f'act{str(prev_yr)[2:]}'  # e.g. "act25"
+    fc_vals = []
+    # 1. Real GDP — use latest annual from gdp_real series if available
+    gdp_r = data.get('gdp_real_annual', data.get('gdp_real', []))
+    gdp_val = None
+    for obs in (gdp_r if isinstance(gdp_r, list) else []):
+        if int(obs['date'][:4]) == prev_yr:
+            gdp_val = round(obs['value'], 1)
+            break
+    fc_vals.append(gdp_val)
+    # 2. Unemployment — Dec of prev_yr
+    unrate_s = data.get('unrate', [])
+    u_val = None
+    for obs in unrate_s:
+        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
+        if yr == prev_yr and mo == 12:
+            u_val = round(obs['value'], 1)
+            break
+    fc_vals.append(u_val)
+    # 3. CPI — Dec YoY
+    cpi_s = data.get('cpi_all', [])
+    cpi_by_ym = {}
+    for obs in cpi_s:
+        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
+        cpi_by_ym[(yr, mo)] = obs['value']
+    cpi_dec = cpi_by_ym.get((prev_yr, 12))
+    cpi_dec_prev = cpi_by_ym.get((prev_yr - 1, 12))
+    cpi_val = round((cpi_dec - cpi_dec_prev) / cpi_dec_prev * 100, 1) if cpi_dec and cpi_dec_prev else None
+    fc_vals.append(cpi_val)
+    # 4. Wage Growth — Dec YoY from AHETPI
+    ahetpi_s = data.get('ahetpi', [])
+    ahe_by_ym = {}
+    for obs in ahetpi_s:
+        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
+        ahe_by_ym[(yr, mo)] = obs['value']
+    ahe_dec = ahe_by_ym.get((prev_yr, 12))
+    ahe_dec_prev = ahe_by_ym.get((prev_yr - 1, 12))
+    wage_val = round((ahe_dec - ahe_dec_prev) / ahe_dec_prev * 100, 1) if ahe_dec and ahe_dec_prev else None
+    fc_vals.append(wage_val)
+    # 5. Fed Funds Rate — annual average
+    ffr_s = data.get('ffr_monthly', data.get('ffr_annual', []))
+    ffr_vals_yr = []
+    for obs in (ffr_s if isinstance(ffr_s, list) else []):
+        if int(obs['date'][:4]) == prev_yr:
+            ffr_vals_yr.append(obs['value'])
+    ffr_val = round(sum(ffr_vals_yr) / len(ffr_vals_yr), 1) if ffr_vals_yr else None
+    fc_vals.append(ffr_val)
+    # Only update if we have at least 3 non-None values
+    non_none = [v for v in fc_vals if v is not None]
+    if len(non_none) >= 3:
+        # Build the replacement array, keeping existing values for None entries
+        existing_match = re.search(rf'{re.escape(act_key)}:\s*\[([^\]]+)\]', html)
+        if existing_match:
+            existing_vals = [float(v.strip()) for v in existing_match.group(1).split(',')]
+            final_vals = [fc_vals[i] if fc_vals[i] is not None else existing_vals[i]
+                         for i in range(min(len(fc_vals), len(existing_vals)))]
+            new_arr = ', '.join(str(v) for v in final_vals)
+            pat_fc = rf'({re.escape(act_key)}:\s*\[)[^\]]+(\])'
+            new_html5, n5 = re.subn(pat_fc, rf'\g<1>{new_arr}\2', html, count=1)
+            if n5:
+                applied.append(f'FC_MACRO.{act_key} updated {final_vals}')
+                html = new_html5
+
+    # ── Oil tile values (auto-update from OIL_ANNUAL data) ────────────
+    wti_a = data.get('wti_annual', [])
+    brent_a = data.get('brent_annual', [])
+    prev_yr = datetime.date.today().year - 1
+    wti_prev_avg = None
+    brent_prev_avg = None
+    for obs in (wti_a if isinstance(wti_a, list) else []):
+        if int(obs['date'][:4]) == prev_yr:
+            wti_prev_avg = round(obs['value'], 1)
+    for obs in (brent_a if isinstance(brent_a, list) else []):
+        if int(obs['date'][:4]) == prev_yr:
+            brent_prev_avg = round(obs['value'], 1)
+    if wti_prev_avg is not None:
+        # Update "Full Year YYYY Avg" tile value
+        pat_wti_tile = rf'(lbl:"Full Year {prev_yr} Avg"[^}}]*val:")(\$[\d.]+)(")'
+        new_html6, n6 = re.subn(pat_wti_tile, rf'\g<1>${wti_prev_avg}\3', html, count=1)
+        if n6:
+            applied.append(f'Oil tile WTI {prev_yr} avg → ${wti_prev_avg}')
+            html = new_html6
+    if brent_prev_avg is not None:
+        pat_brent_tile = rf'(lbl:"Brent {prev_yr} Avg"[^}}]*val:")(\$[\d.]+)(")'
+        new_html7, n7 = re.subn(pat_brent_tile, rf'\g<1>${brent_prev_avg}\3', html, count=1)
+        if n7:
+            applied.append(f'Oil tile Brent {prev_yr} avg → ${brent_prev_avg}')
+            html = new_html7
+
     return html
 
 
@@ -1362,7 +1499,36 @@ def render():
 
     HTML_FILE.write_text(html, encoding='utf-8')
 
+    # ── Revision detection: flag when source data changed key values ──
+    revisions = []
+    def _check_revision(label, computed, html_pattern):
+        """Compare computed value against what's in the HTML after patching."""
+        m = re.search(html_pattern, html)
+        if m and computed is not None:
+            in_html = float(m.group(1))
+            if abs(in_html - computed) > 0.15:
+                revisions.append(f'{label}: HTML={in_html}, Source={computed} (Δ={computed-in_html:+.1f})')
+
+    # Check key indicators for revision drift
+    for series_key, label in [('unrate', 'Unemployment'), ('cpi_all', 'CPI')]:
+        s = data.get(series_key, [])
+        if s:
+            _check_revision(f'{label} latest', s[0]['value'],
+                           rf'"val":"([\d.]+)%".*?"metric":"{label.lower()[:4]}"')
+    prev_yr = datetime.date.today().year - 1
+    wti_a = data.get('wti_annual', [])
+    for obs in (wti_a if isinstance(wti_a, list) else []):
+        if int(obs['date'][:4]) == prev_yr:
+            _check_revision(f'WTI {prev_yr} avg', round(obs['value'], 1),
+                           rf'Full Year {prev_yr} Avg[^}}]*val:"\$([\d.]+)"')
+
+    if revisions:
+        print(f'  🔄 REVISIONS DETECTED ({len(revisions)}):')
+        for r in revisions:
+            print(f'     → {r}')
+
     print(f'[Agent 4] Done — {len(applied)} patches, {len(errors)} errors, {len(warnings)} warnings | {HTML_FILE.stat().st_size:,} bytes')
+    for a in applied:  print(f'  ✅ {a}')
     for e in errors:   print(f'  ⚠  {e}')
     for w in warnings: print(f'  ℹ  {w}')
 
