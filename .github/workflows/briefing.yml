@@ -75,6 +75,16 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: python scripts/renderer.py
 
+      - name: Agent 6 — Validator
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+        run: python scripts/validator.py
+        continue-on-error: true
+
+      - name: Agent 4b — Re-render (inject validation report)
+        run: python scripts/renderer.py
+
       - name: Agent 5 — Publisher
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
