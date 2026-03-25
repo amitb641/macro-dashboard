@@ -93,6 +93,57 @@ def _latest_yoy(monthly_series):
     return lbl, yoy
 
 
+def _monthly_yoy_series(monthly_series, n_months=12):
+    """Compute YoY% for the last n_months from monthly index data (newest-first).
+    Returns (labels, values) where labels are "Mon'YY" strings."""
+    if not monthly_series or len(monthly_series) < 13 + n_months:
+        return [], []
+    # Build date→value lookup
+    by_ym = {}
+    for obs in monthly_series:
+        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
+        by_ym[(yr, mo)] = obs['value']
+    # Compute YoY for most recent n_months (series is newest-first)
+    labels, values = [], []
+    for i in range(n_months):
+        obs = monthly_series[i]
+        d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+        yr_ago_val = by_ym.get((d.year - 1, d.month))
+        if yr_ago_val and yr_ago_val != 0:
+            yoy = round((obs['value'] - yr_ago_val) / yr_ago_val * 100, 1)
+            labels.append(d.strftime("%b'%y"))
+            values.append(yoy)
+    # Reverse to oldest-first for chart display
+    labels.reverse()
+    values.reverse()
+    return labels, values
+
+
+def _monthly_avg_by_month(weekly_series, n_months=12):
+    """Compute monthly averages from weekly data (newest-first).
+    Returns (labels, avg_values) for the last n_months complete months."""
+    if not weekly_series:
+        return [], []
+    from collections import defaultdict
+    by_ym = defaultdict(list)
+    for obs in weekly_series:
+        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
+        by_ym[(yr, mo)].append(obs['value'])
+    # Sort by date, take last n_months+1 (skip current partial month)
+    today = datetime.date.today()
+    sorted_ym = sorted(by_ym.keys())
+    # Exclude current month (may be partial)
+    sorted_ym = [(y, m) for y, m in sorted_ym if (y, m) < (today.year, today.month)]
+    recent = sorted_ym[-n_months:] if len(sorted_ym) >= n_months else sorted_ym
+    labels, values = [], []
+    for yr, mo in recent:
+        d = datetime.date(yr, mo, 1)
+        avg = round(sum(by_ym[(yr, mo)]) / len(by_ym[(yr, mo)]), 2)
+        labels.append(d.strftime("%b'%y"))
+        values.append(avg)
+    return labels, values
+
+
 def _annual_from_freq(annual_series, start_year=START_YEAR, precision=1, scale=1):
     """Extract annual data from FRED freq='a' series. Returns (labels, values)."""
     if not annual_series:
@@ -350,6 +401,71 @@ def rebuild_charts(html, data):
         if labels:
             html = _inject_const(html, 'HPI_DATA', {
                 'labels': labels, 'cs': cs, 'fhfa': fhfa})
+
+    # ── CPI_MONTHLY (rolling 12-month YoY from index data) ────────────
+    cpi_all_m = data.get('cpi_all', [])
+    cpi_core_m = data.get('cpi_core', [])
+    if len(cpi_all_m) >= 25 and len(cpi_core_m) >= 25:
+        h_labels, h_values = _monthly_yoy_series(cpi_all_m, 12)
+        c_labels, c_values = _monthly_yoy_series(cpi_core_m, 12)
+        # Align to same labels (they should match)
+        if h_labels and h_labels == c_labels:
+            html = _inject_const(html, 'CPI_MONTHLY', {
+                'labels': h_labels, 'headline': h_values, 'core': c_values})
+        elif h_labels:
+            html = _inject_const(html, 'CPI_MONTHLY', {
+                'labels': h_labels, 'headline': h_values, 'core': c_values[:len(h_values)]})
+
+    # ── PCE_MONTHLY (rolling 12-month YoY from index data) ────────────
+    pce_m = data.get('pce', [])
+    pce_core_m = data.get('pce_core', [])
+    if len(pce_m) >= 25 and len(pce_core_m) >= 25:
+        h_labels, h_values = _monthly_yoy_series(pce_m, 12)
+        c_labels, c_values = _monthly_yoy_series(pce_core_m, 12)
+        if h_labels and h_labels == c_labels:
+            html = _inject_const(html, 'PCE_MONTHLY', {
+                'labels': h_labels, 'headline': h_values, 'core': c_values})
+        elif h_labels:
+            html = _inject_const(html, 'PCE_MONTHLY', {
+                'labels': h_labels, 'headline': h_values, 'core': c_values[:len(h_values)]})
+
+    # ── U_MONTHLY (rolling 12-month unemployment rate) ────────────────
+    unrate_m = data.get('unrate', [])
+    if len(unrate_m) >= 12:
+        # Unemployment rate is already a rate, not an index — no YoY needed
+        labels_u, values_u = [], []
+        for i in range(min(12, len(unrate_m))):
+            obs = unrate_m[i]
+            d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+            labels_u.append(d.strftime("%b'%y"))
+            values_u.append(round(obs['value'], 1))
+        labels_u.reverse()
+        values_u.reverse()
+        if labels_u:
+            html = _inject_const(html, 'U_MONTHLY', {
+                'labels': labels_u, 'data': values_u})
+
+    # ── HOUSING_MONTHLY (Case-Shiller YoY + monthly mortgage avg) ─────
+    cs_hpi_m = data.get('cs_hpi', [])
+    mortgage30_m = data.get('mortgage30', [])
+    if len(cs_hpi_m) >= 25:
+        cs_labels, cs_values = _monthly_yoy_series(cs_hpi_m, 12)
+        # Get monthly-averaged mortgage rates
+        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, 12)
+        # Align to Case-Shiller labels (CS has pub lag, mortgage is more current)
+        if cs_labels:
+            # Use CS labels as base; fill mortgage where available
+            mtg_by_lbl = dict(zip(mtg_labels, mtg_values))
+            mtg_aligned = [mtg_by_lbl.get(l, None) for l in cs_labels]
+            # If CS is shorter than mortgage, extend with mortgage-only months
+            extra_mtg_labels = [l for l in mtg_labels if l not in cs_labels]
+            all_labels = cs_labels + extra_mtg_labels
+            all_cs = cs_values + [cs_values[-1]] * len(extra_mtg_labels)  # hold last CS value
+            all_mtg = mtg_aligned + [mtg_by_lbl[l] for l in extra_mtg_labels]
+            html = _inject_const(html, 'HOUSING_MONTHLY', {
+                'labels': all_labels,
+                'caseShiller': all_cs,
+                'mortgage30': all_mtg})
 
     # ── SPREADS_DATA ──────────────────────────────────────────────────
     ig_a = data.get('ig_oas_annual', [])
