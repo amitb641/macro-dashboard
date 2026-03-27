@@ -1,17 +1,17 @@
 {
-  "analyzed_at": "2026-03-21T21:16:27.727082Z",
+  "analyzed_at": "2026-03-27T12:42:16.243869Z",
   "risk_level": "ELEVATED",
   "alert_count": 1,
   "watch_count": 3,
-  "flagged_count": 0,
+  "flagged_count": 2,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.79,
-    "dgs5": 3.88,
-    "dgs10": 4.25,
-    "dgs30": 4.83,
-    "ig_oas": 90,
-    "hy_oas": 327,
+    "dgs2": 3.84,
+    "dgs5": 3.96,
+    "dgs10": 4.33,
+    "dgs30": 4.89,
+    "ig_oas": 87,
+    "hy_oas": 317,
     "unrate": 4.4,
     "u6rate": 7.9,
     "nfp_level": 158466.0,
@@ -24,17 +24,17 @@
     "pce_yoy": 2.83,
     "core_pce_yoy": 3.06,
     "saving_rate": 4.5,
-    "mortgage30": 6.22,
+    "mortgage30": 6.38,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 1.3,
     "umcsent": 56.4,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
-    "wti": 93.39,
-    "brent": 101.04,
+    "wti": 89.33,
+    "brent": 103.79,
     "gdp_growth_q": 0.7,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 46
+    "spread_10_2_bp": 49
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.25,
-      "delta": 0.0,
+      "value": 4.33,
+      "delta": 0.08,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 90,
-      "delta": 0,
+      "value": 87,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 327,
-      "delta": 0,
+      "value": 317,
+      "delta": -10,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -94,17 +94,17 @@
       "alert": null
     },
     "wti": {
-      "value": 93.39,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 89.33,
+      "delta": -4.06,
+      "direction": "falling",
+      "flagged": true,
       "alert": "watch"
     },
     "mortgage30": {
-      "value": 6.22,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 6.38,
+      "delta": 0.16,
+      "direction": "rising",
+      "flagged": true,
       "alert": null
     },
     "wages_yoy": {
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.79,
-      "delta": 0.0,
+      "value": 3.84,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.88,
-      "delta": 0.0,
+      "value": 3.96,
+      "delta": 0.08,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.83,
-      "delta": 0.0,
+      "value": 4.89,
+      "delta": 0.06,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 46,
-      "delta": 0,
+      "value": 49,
+      "delta": 3,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -206,8 +206,8 @@
       "alert": null
     },
     "brent": {
-      "value": 101.04,
-      "delta": 0.0,
+      "value": 103.79,
+      "delta": 2.75,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,9 +241,17 @@
       "alert": null
     }
   },
-  "headlines": [],
-  "raw_errors": [
-    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
-    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-  ]
+  "headlines": [
+    {
+      "key": "wti",
+      "line": "wti: 89.33 (\u25bc4.06 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "mortgage30",
+      "line": "mortgage30: 6.38 (\u25b20.16 vs prior)",
+      "alert": null
+    }
+  ],
+  "raw_errors": []
 }

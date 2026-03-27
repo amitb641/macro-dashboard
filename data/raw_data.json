@@ -1,37 +1,50 @@
 {
-  "collected_at": "2026-03-21T21:15:43.638164Z",
+  "collected_at": "2026-03-27T12:42:03.267176Z",
   "series_count": 54,
-  "error_count": 2,
-  "errors": [
-    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
-    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-  ],
+  "error_count": 0,
+  "errors": [],
   "data": {
     "ffr": {
       "date": "2026-02-01",
       "value": 3.64
     },
     "dff": {
-      "date": "2026-03-19",
+      "date": "2026-03-25",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-03-19",
-      "value": 3.79
+      "date": "2026-03-25",
+      "value": 3.84
     },
     "dgs5": {
-      "date": "2026-03-19",
-      "value": 3.88
+      "date": "2026-03-25",
+      "value": 3.96
     },
     "dgs10": {
-      "date": "2026-03-19",
-      "value": 4.25
+      "date": "2026-03-25",
+      "value": 4.33
     },
     "dgs30": {
-      "date": "2026-03-19",
-      "value": 4.83
+      "date": "2026-03-25",
+      "value": 4.89
     },
     "dgs10_hist": [
+      {
+        "date": "2026-03-25",
+        "value": 4.33
+      },
+      {
+        "date": "2026-03-24",
+        "value": 4.39
+      },
+      {
+        "date": "2026-03-23",
+        "value": 4.34
+      },
+      {
+        "date": "2026-03-20",
+        "value": 4.39
+      },
       {
         "date": "2026-03-19",
         "value": 4.25
@@ -243,25 +256,25 @@
       {
         "date": "2026-01-02",
         "value": 4.19
-      },
-      {
-        "date": "2025-12-31",
-        "value": 4.18
-      },
-      {
-        "date": "2025-12-30",
-        "value": 4.14
-      },
-      {
-        "date": "2025-12-29",
-        "value": 4.12
-      },
-      {
-        "date": "2025-12-26",
-        "value": 4.14
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-03-25",
+        "value": 3.84
+      },
+      {
+        "date": "2026-03-24",
+        "value": 3.9
+      },
+      {
+        "date": "2026-03-23",
+        "value": 3.83
+      },
+      {
+        "date": "2026-03-20",
+        "value": 3.88
+      },
       {
         "date": "2026-03-19",
         "value": 3.79
@@ -473,33 +486,33 @@
       {
         "date": "2026-01-02",
         "value": 3.47
-      },
-      {
-        "date": "2025-12-31",
-        "value": 3.47
-      },
-      {
-        "date": "2025-12-30",
-        "value": 3.45
-      },
-      {
-        "date": "2025-12-29",
-        "value": 3.45
-      },
-      {
-        "date": "2025-12-26",
-        "value": 3.46
       }
     ],
     "ig_oas": {
-      "date": "2026-03-19",
-      "value": 0.9
+      "date": "2026-03-25",
+      "value": 0.87
     },
     "hy_oas": {
-      "date": "2026-03-19",
-      "value": 3.27
+      "date": "2026-03-25",
+      "value": 3.17
     },
     "ig_hist": [
+      {
+        "date": "2026-03-25",
+        "value": 0.87
+      },
+      {
+        "date": "2026-03-24",
+        "value": 0.87
+      },
+      {
+        "date": "2026-03-23",
+        "value": 0.88
+      },
+      {
+        "date": "2026-03-20",
+        "value": 0.88
+      },
       {
         "date": "2026-03-19",
         "value": 0.9
@@ -723,21 +736,25 @@
       {
         "date": "2026-01-05",
         "value": 0.79
-      },
-      {
-        "date": "2026-01-02",
-        "value": 0.79
-      },
-      {
-        "date": "2025-12-31",
-        "value": 0.79
-      },
-      {
-        "date": "2025-12-30",
-        "value": 0.79
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-03-25",
+        "value": 3.17
+      },
+      {
+        "date": "2026-03-24",
+        "value": 3.19
+      },
+      {
+        "date": "2026-03-23",
+        "value": 3.19
+      },
+      {
+        "date": "2026-03-20",
+        "value": 3.24
+      },
       {
         "date": "2026-03-19",
         "value": 3.27
@@ -961,21 +978,29 @@
       {
         "date": "2026-01-05",
         "value": 2.81
-      },
-      {
-        "date": "2026-01-02",
-        "value": 2.83
-      },
-      {
-        "date": "2025-12-31",
-        "value": 2.81
-      },
-      {
-        "date": "2025-12-30",
-        "value": 2.84
       }
     ],
     "wti_daily": [
+      {
+        "date": "2026-03-23",
+        "value": 89.33
+      },
+      {
+        "date": "2026-03-20",
+        "value": 98.71
+      },
+      {
+        "date": "2026-03-19",
+        "value": 96.11
+      },
+      {
+        "date": "2026-03-18",
+        "value": 96.12
+      },
+      {
+        "date": "2026-03-17",
+        "value": 96.01
+      },
       {
         "date": "2026-03-16",
         "value": 93.39
@@ -1095,25 +1120,29 @@
       {
         "date": "2026-02-02",
         "value": 61.6
-      },
-      {
-        "date": "2026-01-30",
-        "value": 64.5
-      },
-      {
-        "date": "2026-01-29",
-        "value": 64.77
-      },
-      {
-        "date": "2026-01-28",
-        "value": 62.75
-      },
-      {
-        "date": "2026-01-27",
-        "value": 62.04
       }
     ],
     "brent_daily": [
+      {
+        "date": "2026-03-23",
+        "value": 103.79
+      },
+      {
+        "date": "2026-03-20",
+        "value": 118.42
+      },
+      {
+        "date": "2026-03-19",
+        "value": 111.05
+      },
+      {
+        "date": "2026-03-18",
+        "value": 118.09
+      },
+      {
+        "date": "2026-03-17",
+        "value": 108.39
+      },
       {
         "date": "2026-03-16",
         "value": 101.04
@@ -1233,26 +1262,6 @@
       {
         "date": "2026-02-03",
         "value": 70.01
-      },
-      {
-        "date": "2026-02-02",
-        "value": 67.72
-      },
-      {
-        "date": "2026-01-30",
-        "value": 72.25
-      },
-      {
-        "date": "2026-01-29",
-        "value": 71.0
-      },
-      {
-        "date": "2026-01-28",
-        "value": 70.9
-      },
-      {
-        "date": "2026-01-27",
-        "value": 70.28
       }
     ],
     "oil_daily_chart": {
@@ -1267,7 +1276,12 @@
         "Mar 11",
         "Mar 12",
         "Mar 13",
-        "Mar 16"
+        "Mar 16",
+        "Mar 17",
+        "Mar 18",
+        "Mar 19",
+        "Mar 20",
+        "Mar 23"
       ],
       "wti": [
         71.13,
@@ -1280,7 +1294,12 @@
         86.8,
         95.61,
         98.48,
-        93.39
+        93.39,
+        96.01,
+        96.12,
+        96.11,
+        98.71,
+        89.33
       ],
       "brent": [
         77.24,
@@ -1293,7 +1312,12 @@
         90.98,
         102.38,
         103.23,
-        101.04
+        101.04,
+        108.39,
+        118.09,
+        111.05,
+        118.42,
+        103.79
       ],
       "notes": [
         null,
@@ -1306,13 +1330,22 @@
         "WTI surge $3.1 (3.7%) \u2014 pipeline updates this field with market headlines",
         "WTI surge $8.8 (10.1%) \u2014 pipeline updates this field with market headlines",
         "WTI surge $2.9 (3.0%) \u2014 pipeline updates this field with market headlines",
-        "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines"
+        "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $2.6 (2.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $9.4 (9.5%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "March 2026",
-      "updated": "Mar 21 21:16 UTC",
-      "sessions": 11
+      "updated": "Mar 27 12:42 UTC",
+      "sessions": 16
     },
     "mortgage30": [
+      {
+        "date": "2026-03-26",
+        "value": 6.38
+      },
       {
         "date": "2026-03-19",
         "value": 6.22
@@ -1332,13 +1365,13 @@
       {
         "date": "2026-02-19",
         "value": 6.01
-      },
-      {
-        "date": "2026-02-12",
-        "value": 6.09
       }
     ],
     "mortgage15": [
+      {
+        "date": "2026-03-26",
+        "value": 5.75
+      },
       {
         "date": "2026-03-19",
         "value": 5.54
@@ -1358,10 +1391,6 @@
       {
         "date": "2026-02-19",
         "value": 5.35
-      },
-      {
-        "date": "2026-02-12",
-        "value": 5.44
       }
     ],
     "icsa": [
@@ -7714,6 +7743,249 @@
           ]
         }
       ],
+      "CES1000000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "600",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "602",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "604",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "605",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "606",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "605",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "607",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "610",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "616",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "618",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "620",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "624",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "620",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "622",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "620",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "624",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "628",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "636",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "633",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "633",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
       "CES2000000001": [
         {
           "year": "2026",
@@ -8200,13 +8472,13 @@
           ]
         }
       ],
-      "CES4000000001": [
+      "CES4200000001": [
         {
           "year": "2026",
           "period": "M02",
           "periodName": "February",
           "latest": "true",
-          "value": "28615",
+          "value": "15426.5",
           "footnotes": [
             {
               "code": "P",
@@ -8218,7 +8490,7 @@
           "year": "2026",
           "period": "M01",
           "periodName": "January",
-          "value": "28617",
+          "value": "15424.2",
           "footnotes": [
             {
               "code": "P",
@@ -8230,7 +8502,7 @@
           "year": "2025",
           "period": "M12",
           "periodName": "December",
-          "value": "28616",
+          "value": "15413.5",
           "footnotes": [
             {}
           ]
@@ -8239,7 +8511,7 @@
           "year": "2025",
           "period": "M11",
           "periodName": "November",
-          "value": "28649",
+          "value": "15437.1",
           "footnotes": [
             {}
           ]
@@ -8248,7 +8520,7 @@
           "year": "2025",
           "period": "M10",
           "periodName": "October",
-          "value": "28714",
+          "value": "15438.0",
           "footnotes": [
             {}
           ]
@@ -8257,7 +8529,7 @@
           "year": "2025",
           "period": "M09",
           "periodName": "September",
-          "value": "28725",
+          "value": "15453.4",
           "footnotes": [
             {}
           ]
@@ -8266,7 +8538,7 @@
           "year": "2025",
           "period": "M08",
           "periodName": "August",
-          "value": "28743",
+          "value": "15440.3",
           "footnotes": [
             {}
           ]
@@ -8275,7 +8547,7 @@
           "year": "2025",
           "period": "M07",
           "periodName": "July",
-          "value": "28744",
+          "value": "15430.2",
           "footnotes": [
             {}
           ]
@@ -8284,7 +8556,7 @@
           "year": "2025",
           "period": "M06",
           "periodName": "June",
-          "value": "28741",
+          "value": "15425.5",
           "footnotes": [
             {}
           ]
@@ -8293,7 +8565,7 @@
           "year": "2025",
           "period": "M05",
           "periodName": "May",
-          "value": "28765",
+          "value": "15440.0",
           "footnotes": [
             {}
           ]
@@ -8302,7 +8574,7 @@
           "year": "2025",
           "period": "M04",
           "periodName": "April",
-          "value": "28783",
+          "value": "15461.6",
           "footnotes": [
             {}
           ]
@@ -8311,7 +8583,7 @@
           "year": "2025",
           "period": "M03",
           "periodName": "March",
-          "value": "28792",
+          "value": "15457.5",
           "footnotes": [
             {}
           ]
@@ -8320,7 +8592,7 @@
           "year": "2025",
           "period": "M02",
           "periodName": "February",
-          "value": "28806",
+          "value": "15441.8",
           "footnotes": [
             {}
           ]
@@ -8329,7 +8601,7 @@
           "year": "2025",
           "period": "M01",
           "periodName": "January",
-          "value": "28795",
+          "value": "15459.3",
           "footnotes": [
             {}
           ]
@@ -8338,7 +8610,7 @@
           "year": "2024",
           "period": "M12",
           "periodName": "December",
-          "value": "28811",
+          "value": "15460.1",
           "footnotes": [
             {}
           ]
@@ -8347,7 +8619,7 @@
           "year": "2024",
           "period": "M11",
           "periodName": "November",
-          "value": "28755",
+          "value": "15409.8",
           "footnotes": [
             {}
           ]
@@ -8356,7 +8628,7 @@
           "year": "2024",
           "period": "M10",
           "periodName": "October",
-          "value": "28794",
+          "value": "15452.4",
           "footnotes": [
             {}
           ]
@@ -8365,7 +8637,7 @@
           "year": "2024",
           "period": "M09",
           "periodName": "September",
-          "value": "28813",
+          "value": "15456.7",
           "footnotes": [
             {}
           ]
@@ -8374,7 +8646,7 @@
           "year": "2024",
           "period": "M08",
           "periodName": "August",
-          "value": "28802",
+          "value": "15458.4",
           "footnotes": [
             {}
           ]
@@ -8383,7 +8655,7 @@
           "year": "2024",
           "period": "M07",
           "periodName": "July",
-          "value": "28830",
+          "value": "15480.8",
           "footnotes": [
             {}
           ]
@@ -8392,7 +8664,7 @@
           "year": "2024",
           "period": "M06",
           "periodName": "June",
-          "value": "28851",
+          "value": "15499.9",
           "footnotes": [
             {}
           ]
@@ -8401,7 +8673,7 @@
           "year": "2024",
           "period": "M05",
           "periodName": "May",
-          "value": "28880",
+          "value": "15536.0",
           "footnotes": [
             {}
           ]
@@ -8410,7 +8682,7 @@
           "year": "2024",
           "period": "M04",
           "periodName": "April",
-          "value": "28880",
+          "value": "15531.2",
           "footnotes": [
             {}
           ]
@@ -8419,7 +8691,7 @@
           "year": "2024",
           "period": "M03",
           "periodName": "March",
-          "value": "28855",
+          "value": "15529.3",
           "footnotes": [
             {}
           ]
@@ -8428,7 +8700,7 @@
           "year": "2024",
           "period": "M02",
           "periodName": "February",
-          "value": "28839",
+          "value": "15528.5",
           "footnotes": [
             {}
           ]
@@ -8437,7 +8709,736 @@
           "year": "2024",
           "period": "M01",
           "periodName": "January",
-          "value": "28799",
+          "value": "15524.0",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
+      "CES4300000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "6531.7",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "6543.0",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "6555.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "6560.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "6619.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "6618.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "6657.8",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "6659.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "6655.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "6655.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "6655.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "6671.7",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "6689.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "6664.9",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "6663.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "6659.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "6650.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "6659.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "6643.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "6646.0",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "6647.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "6644.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "6631.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "6610.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "6600.3",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "6562.5",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
+      "CES5000000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "2812",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "2823",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "2842",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "2848",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "2853",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "2859",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "2860",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "2861",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "2863",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "2864",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "2865",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "2867",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "2876",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "2877",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "2895",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "2885",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "2887",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "2903",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "2909",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "2917",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "2930",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "2930",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "2940",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "2951",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "2958",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "2963",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
+      "CES5500000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "9166",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "9156",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "9186",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "9185",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "9184",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "9189",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "9185",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "9204",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "9204",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "9211",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "9205",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "9201",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "9199",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "9187",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "9179",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "9173",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "9164",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "9162",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "9162",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "9154",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "9159",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "9147",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "9144",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "9149",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "9151",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "9165",
           "footnotes": [
             {}
           ]
@@ -8686,6 +9687,492 @@
           ]
         }
       ],
+      "CES6561000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "4036.2",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "4051.9",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "4039.3",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "4043.3",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "4047.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "4050.3",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "4052.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "4052.0",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "4047.7",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "4058.7",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "4063.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "4055.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "4055.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "4045.3",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "4044.0",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "4038.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "4031.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "4017.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "3985.9",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "3973.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "3979.9",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "3958.8",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "3954.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "3948.8",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "3938.9",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "3937.6",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
+      "CES6562000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "23685.3",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "23703.9",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "23587.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "23545.7",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "23485.8",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "23438.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "23382.9",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "23360.1",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "23277.5",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "23217.0",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "23152.0",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "23076.0",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "23008.3",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "22960.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "22901.4",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "22831.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "22754.8",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "22673.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "22586.7",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "22541.9",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "22493.7",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "22424.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "22359.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "22276.6",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "22191.2",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "22095.6",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
       "CES7000000001": [
         {
           "year": "2026",
@@ -8924,6 +10411,492 @@
           "period": "M01",
           "periodName": "January",
           "value": "16716",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
+      "CES9091000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "2683",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "2693",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "2722",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "2733",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "2748",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "2914",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "2916",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "2935",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "2944",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "2952",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "2976",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "2988",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "2997",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "3010",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "3009",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "3009",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "3013",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "3012",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "3011",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "3007",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "3005",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "3001",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "2992",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "2989",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "2980",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "2971",
+          "footnotes": [
+            {}
+          ]
+        }
+      ],
+      "CES9093000001": [
+        {
+          "year": "2026",
+          "period": "M02",
+          "periodName": "February",
+          "latest": "true",
+          "value": "15160",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2026",
+          "period": "M01",
+          "periodName": "January",
+          "value": "15161",
+          "footnotes": [
+            {
+              "code": "P",
+              "text": "preliminary"
+            }
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M12",
+          "periodName": "December",
+          "value": "15151",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M11",
+          "periodName": "November",
+          "value": "15145",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M10",
+          "periodName": "October",
+          "value": "15149",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M09",
+          "periodName": "September",
+          "value": "15132",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M08",
+          "periodName": "August",
+          "value": "15132",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M07",
+          "periodName": "July",
+          "value": "15146",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M06",
+          "periodName": "June",
+          "value": "15126",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M05",
+          "periodName": "May",
+          "value": "15094",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M04",
+          "periodName": "April",
+          "value": "15070",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M03",
+          "periodName": "March",
+          "value": "15048",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M02",
+          "periodName": "February",
+          "value": "15037",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2025",
+          "period": "M01",
+          "periodName": "January",
+          "value": "15022",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M12",
+          "periodName": "December",
+          "value": "15005",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M11",
+          "periodName": "November",
+          "value": "14993",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M10",
+          "periodName": "October",
+          "value": "14981",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M09",
+          "periodName": "September",
+          "value": "14958",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M08",
+          "periodName": "August",
+          "value": "14957",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M07",
+          "periodName": "July",
+          "value": "14950",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M06",
+          "periodName": "June",
+          "value": "14911",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M05",
+          "periodName": "May",
+          "value": "14909",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M04",
+          "periodName": "April",
+          "value": "14884",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M03",
+          "periodName": "March",
+          "value": "14894",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M02",
+          "periodName": "February",
+          "value": "14826",
+          "footnotes": [
+            {}
+          ]
+        },
+        {
+          "year": "2024",
+          "period": "M01",
+          "periodName": "January",
+          "value": "14781",
           "footnotes": [
             {}
           ]
