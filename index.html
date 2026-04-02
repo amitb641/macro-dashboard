@@ -21,7 +21,10 @@
 </script>
 <title>U.S. Macro Dashboard</title>
 <script src="chart.umd.min.js"></script>
-<script>var _ChartJS = window.Chart;</script>
+<script>
+var _ChartJS = window.Chart;
+if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart will not render. Ensure the file is in the same directory as index.html.");
+</script>
 <script>
 (function(){
 "use strict";
@@ -4594,6 +4597,11 @@ function buildCreditTab(){
   var SR = CREDIT_SLOOS.recession_prob;
   var REC = [{start:2,end:3},{start:16,end:19},{start:40,end:41}];
 
+  if(typeof _ChartJS !== "function"){
+    var _cEl = document.getElementById("c-sloos");
+    if(_cEl) _cEl.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:310px;background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;color:#DC2626;font-size:13px;font-weight:600">SLOOS chart error: chart.umd.min.js not found. Place it in the same directory as index.html.</div>';
+  }
+
   var recPlugin = {id:'rec', beforeDraw:function(chart){
     var ctx=chart.ctx, left=chart.chartArea.left, right=chart.chartArea.right,
         top2=chart.chartArea.top, bottom=chart.chartArea.bottom;
@@ -4609,7 +4617,7 @@ function buildCreditTab(){
     ctx.restore();
   }};
 
-  new _ChartJS(document.getElementById('c-sloos'),{
+  if(typeof _ChartJS === "function") new _ChartJS(document.getElementById('c-sloos'),{
     type:'line', plugins:[recPlugin],
     data:{labels:SL, datasets:[
       {type:'bar', label:'SLOOS Tightening', data:SS,
