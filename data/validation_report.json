@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-03-28T14:35:40.039068Z",
+  "validated_at": "2026-04-03T12:40:58.188219Z",
   "status": "WARN",
   "summary": {
     "total_checks": 21,
@@ -11,9 +11,9 @@
   "internal_consistency": [
     {
       "check": "OIL_ANNUAL WTI 2025",
-      "html_value": 89.3,
+      "html_value": 104.7,
       "source_value": 65.4,
-      "difference": 23.9,
+      "difference": 39.3,
       "tolerance": 0.5,
       "severity": "warning",
       "pass": false
@@ -76,8 +76,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.42,
-      "fresh_api_value": 4.42,
+      "raw_data_value": 4.33,
+      "fresh_api_value": 4.33,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -103,8 +103,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.38,
-      "fresh_api_value": 6.38,
+      "raw_data_value": 6.46,
+      "fresh_api_value": 6.46,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -112,8 +112,8 @@
     },
     {
       "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158466,
-      "fresh_api_value": 158466,
+      "raw_data_value": 158637,
+      "fresh_api_value": 158637,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -124,7 +124,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-02-01",
-      "age_days": 55,
+      "age_days": 61,
       "max_lag_days": 45,
       "severity": "stale",
       "pass": false
@@ -132,7 +132,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-02-01",
-      "age_days": 55,
+      "age_days": 61,
       "max_lag_days": 45,
       "severity": "stale",
       "pass": false
@@ -140,7 +140,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-02-01",
-      "age_days": 55,
+      "age_days": 61,
       "max_lag_days": 45,
       "severity": "stale",
       "pass": false
@@ -148,7 +148,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-01-01",
-      "age_days": 86,
+      "age_days": 92,
       "max_lag_days": 60,
       "severity": "stale",
       "pass": false
@@ -156,7 +156,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-01-01",
-      "age_days": 86,
+      "age_days": 92,
       "max_lag_days": 60,
       "severity": "stale",
       "pass": false
@@ -164,30 +164,30 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-02-01",
-      "age_days": 55,
+      "age_days": 61,
       "max_lag_days": 40,
       "severity": "stale",
       "pass": false
     },
     {
       "check": "Staleness: cs_hpi",
-      "latest_date": "2025-12-01",
-      "age_days": 117,
+      "latest_date": "2026-01-01",
+      "age_days": 92,
       "max_lag_days": 90,
       "severity": "stale",
       "pass": false
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-03-26",
-      "age_days": 2,
+      "latest_date": "2026-04-02",
+      "age_days": 1,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-03-28T14:35:24.190347Z",
+      "collected_at": "2026-04-03T12:40:42.972690Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
