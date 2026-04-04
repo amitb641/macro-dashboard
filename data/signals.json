@@ -1,24 +1,24 @@
 {
-  "analyzed_at": "2026-04-03T12:40:53.927953Z",
+  "analyzed_at": "2026-04-04T14:37:15.817629Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
-  "flagged_count": 1,
+  "flagged_count": 2,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.81,
-    "dgs5": 3.97,
-    "dgs10": 4.33,
-    "dgs30": 4.91,
-    "ig_oas": 87,
-    "hy_oas": 316,
-    "unrate": 4.4,
-    "u6rate": 7.9,
-    "nfp_level": 158466.0,
-    "nfp_mom": -92,
+    "dgs2": 3.79,
+    "dgs5": 3.94,
+    "dgs10": 4.31,
+    "dgs30": 4.88,
+    "ig_oas": 86,
+    "hy_oas": 317,
+    "unrate": 4.3,
+    "u6rate": 8.0,
+    "nfp_level": 158637.0,
+    "nfp_mom": 178,
     "icsa": 205000.0,
     "ccsa": 1857000.0,
-    "wages_yoy": 3.69,
+    "wages_yoy": 3.38,
     "cpi_yoy": 2.43,
     "core_cpi_yoy": 2.47,
     "pce_yoy": 2.83,
@@ -45,29 +45,29 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.33,
-      "delta": -0.09,
+      "value": 4.31,
+      "delta": -0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 87,
+      "value": 86,
       "delta": -1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 316,
-      "delta": -5,
+      "value": 317,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "unrate": {
-      "value": 4.4,
-      "delta": 0.0,
+      "value": 4.3,
+      "delta": -0.1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -87,36 +87,36 @@
       "alert": null
     },
     "nfp_mom": {
-      "value": -92,
-      "delta": 0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 178,
+      "delta": 270,
+      "direction": "rising",
+      "flagged": true,
       "alert": null
     },
     "wti": {
       "value": 104.69,
-      "delta": 15.36,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "mortgage30": {
       "value": 6.46,
-      "delta": 0.08,
-      "direction": "stable",
-      "flagged": false,
-      "alert": null
-    },
-    "wages_yoy": {
-      "value": 3.69,
       "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
+    "wages_yoy": {
+      "value": 3.38,
+      "delta": -0.31,
+      "direction": "falling",
+      "flagged": true,
+      "alert": null
+    },
     "cs_hpi_yoy": {
       "value": 0.91,
-      "delta": -0.39,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.81,
-      "delta": -0.15,
+      "value": 3.79,
+      "delta": -0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.97,
-      "delta": -0.11,
+      "value": 3.94,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.91,
-      "delta": -0.02,
+      "value": 4.88,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 52,
-      "delta": 6,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -185,8 +185,8 @@
       "alert": "watch"
     },
     "u6rate": {
-      "value": 7.9,
-      "delta": 0.0,
+      "value": 8.0,
+      "delta": 0.1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -207,7 +207,7 @@
     },
     "brent": {
       "value": 121.88,
-      "delta": 18.09,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -243,10 +243,17 @@
   },
   "headlines": [
     {
-      "key": "wti",
-      "line": "wti: 104.69 (\u25b215.36 vs prior) [ALERT]",
-      "alert": "alert"
+      "key": "nfp_mom",
+      "line": "nfp_mom: 178.00 (\u25b2270.00 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "wages_yoy",
+      "line": "wages_yoy: 3.38 (\u25bc0.31 vs prior)",
+      "alert": null
     }
   ],
-  "raw_errors": []
+  "raw_errors": [
+    "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
+  ]
 }

@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-03T12:40:58.188219Z",
+  "validated_at": "2026-04-04T14:37:33.945059Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 21,
-    "passed": 13,
-    "failed": 8,
+    "total_checks": 20,
+    "passed": 14,
+    "failed": 6,
     "skipped": 0,
     "critical_divergences": 0
   },
@@ -31,8 +31,8 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "raw_data_value": 4.4,
-      "fresh_api_value": 4.4,
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -76,8 +76,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.33,
-      "fresh_api_value": 4.33,
+      "raw_data_value": 4.31,
+      "fresh_api_value": 4.31,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -94,8 +94,8 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158466.0,
-      "fresh_api_value": 158466.0,
+      "raw_data_value": 158637.0,
+      "fresh_api_value": 158637.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -109,30 +109,21 @@
       "tolerance": 0.05,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158637,
-      "fresh_api_value": 158637,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
-      "pass": true
     }
   ],
   "staleness": [
     {
       "check": "Staleness: unrate",
-      "latest_date": "2026-02-01",
-      "age_days": 61,
+      "latest_date": "2026-03-01",
+      "age_days": 34,
       "max_lag_days": 45,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-02-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 45,
       "severity": "stale",
       "pass": false
@@ -140,7 +131,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-02-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 45,
       "severity": "stale",
       "pass": false
@@ -148,7 +139,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-01-01",
-      "age_days": 92,
+      "age_days": 93,
       "max_lag_days": 60,
       "severity": "stale",
       "pass": false
@@ -156,23 +147,23 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-01-01",
-      "age_days": 92,
+      "age_days": 93,
       "max_lag_days": 60,
       "severity": "stale",
       "pass": false
     },
     {
       "check": "Staleness: payems",
-      "latest_date": "2026-02-01",
-      "age_days": 61,
+      "latest_date": "2026-03-01",
+      "age_days": 34,
       "max_lag_days": 40,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 92,
+      "age_days": 93,
       "max_lag_days": 90,
       "severity": "stale",
       "pass": false
@@ -180,14 +171,14 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-02",
-      "age_days": 1,
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-03T12:40:42.972690Z",
+      "collected_at": "2026-04-04T14:36:33.840884Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true

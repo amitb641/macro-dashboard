@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-03T12:40:58Z";
+  var BUILD_V = "2026-04-04T14:37:34Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2390,7 +2390,7 @@ const GDP_BROAD = [
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
 const U_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3]};
-const U_MONTHLY = {"labels":["Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[4.2, 4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.4]};
+const U_MONTHLY = {"labels":["Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[4.2, 4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.3]};
 const U_SECTOR_MOM = {
   sectors:["Construction","Hotel & Lodging","Restaurant Workers","Retail Trade","Information/Tech","Transport & Warehousing","Manufacturing","Prof. & Biz Services","Agriculture & Mining","Wholesale Trade","Healthcare & Education","Financial Activities","Government"],
   jan26: [4.6, 5.0, 4.8, 4.3, 3.3, 3.4, 3.1, 3.0, 3.5, 2.9, 2.4, 2.2, 2.1],
@@ -2446,7 +2446,7 @@ const CPI_CAT_MOM = [
 
 // ── WAGES ────────────────────────────────────────────
 const WAGE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "nominal":[4.3, 3.1, 3.1, 1.8, 2.5, 3.2, 4.2, 3.7, 4.0, 2.4, 2.1, 1.8, 1.7, 2.2, 1.8, 2.5, 2.5, 2.4, 3.7, 3.2, 5.5, 6.4, 5.5, 4.4, 4.0, 3.8], "real":[0.9, 1.5, 0.6, -0.2, -0.8, -0.1, 1.7, -0.4, 4.0, -0.4, 0.7, -1.3, -0.1, 0.7, 1.1, 1.9, 0.4, 0.3, 1.7, 0.9, 4.2, -0.8, -0.9, 1.1, 1.1, 1.1]};
-const WAGE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],nominal:[3.8,3.9,4.0,3.9,3.8,3.7,3.6,3.5,3.4,3.3,3.4,3.7],real:[1.4,1.6,1.5,1.3,1.0,1.2,1.2,0.9,0.7,0.6,1.0,0.9]};
+const WAGE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],nominal:[3.8,3.9,4.0,3.9,3.8,3.7,3.6,3.5,3.4,3.3,3.4,3.4],real:[1.4,1.6,1.5,1.3,1.0,1.2,1.2,0.9,0.7,0.6,1.0,0.9]};
 const WAGE_SECTORS = [
   {s:"Airline Pilots & Crew",      color:"#0984E3", w21:3.2, w22:7.8, w23:9.4, w24:5.2, w25:4.1, hr24:89.5},
   {s:"Information/Tech",           color:"#20C997", w21:5.8, w22:5.5, w23:4.1, w24:3.6, w25:2.8, hr24:56.8},
@@ -2625,7 +2625,7 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Unemployment Feb'26", "val":"4.4%", "metric":"unemp", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"Prior: 4.3% (Jan'26)"}, {"lbl":"Jobs Feb'26", "val":"-92K", "metric":"jobs", "delta":-218, "chg":"-218K", "sub":"Prior: +126K (Jan'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "metric":"cpi", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "metric":"pce", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Feb'26", "val":"3.7%", "metric":"wages", "delta":-0.04, "chg":"-0.0pp", "sub":"Prior: 3.7% (Jan'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.33%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.81% \u00b7 Spread: +52bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "metric":"claims", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "metric":"umcsent", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"CPI YoY Feb'26", "val":"2.4%", "metric":"cpi", "delta":0.04, "chg":"+0.0pp", "inv":true, "sub":"MoM: +0.27% \u00b7 YoY: 2.4% \u00b7 3M avg: 2.5% \u00b7 Prior: 2.4% (Jan'26)"}, {"lbl":"Core PCE Jan'26", "val":"3.1%", "metric":"pce", "delta":0.05, "chg":"+0.1pp", "inv":true, "sub":"Prior: 3.0% (Dec'25)"}, {"lbl":"Wage Growth Mar'26", "val":"3.4%", "metric":"wages", "delta":-0.28, "chg":"-0.3pp", "sub":"Prior: 3.7% (Feb'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.31%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.79% \u00b7 Spread: +52bp"}, {"lbl":"Initial Claims Mar'26", "val":"205K", "metric":"claims", "delta":-8000, "chg":"-8K", "inv":true, "sub":"Prior wk: 213K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "metric":"umcsent", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#635BFF');
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
@@ -3926,7 +3926,7 @@ const TREASURY_DATA = {"labels":["2000","2001","2002","2003","2004","2005","2006
 const FFR_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "GS 26F", "JPM 26F", "MS 26F"], "actual":[6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 3.64, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.21, 3.25, 3.75, 3.25]};
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
-const SPREADS_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Apr'26"], "ig":[2, 2, 2, 1, 1, 1, 1, 1, 4, 4, 2, 2, 2, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 87], "hy":[6, 8, 9, 6, 4, 4, 3, 4, 10, 12, 6, 6, 6, 5, 4, 5, 6, 4, 4, 4, 6, 3, 4, 4, 3, 3, 316]};
+const SPREADS_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "Apr'26"], "ig":[2, 2, 2, 1, 1, 1, 1, 1, 4, 4, 2, 2, 2, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 86], "hy":[6, 8, 9, 6, 4, 4, 3, 4, 10, 12, 6, 6, 6, 5, 4, 5, 6, 4, 4, 4, 6, 3, 4, 4, 3, 3, 317]};
 
 
 
@@ -4053,7 +4053,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":[],"wti":[],"brent":[],"notes":[],"month":"April 2026","updated":"Apr 03 12:40 UTC","sessions":0};
+const OIL_DAILY = {"labels":[],"wti":[],"brent":[],"notes":[],"month":"April 2026","updated":"Apr 04 14:36 UTC","sessions":0};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -4819,7 +4819,7 @@ function buildYieldTab(){
     {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#336BCC"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#1A9E5A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#CC8A00"},
-    {lbl:"10Y Treasury Apr'26",    val:"4.33%",   sub:"2Y: 3.81% · Spread: +52bp",col:"#8878B8"},
+    {lbl:"10Y Treasury Apr'26",    val:"4.31%",   sub:"2Y: 3.79% · Spread: +52bp",col:"#8878B8"},
 
   ].map(m=>_mTile(m)).join("");
 
@@ -5117,7 +5117,7 @@ document.querySelectorAll(".nav-btn").forEach(btn=>{
 // ═══════════════════════════════════════════════════════
 // VALIDATOR TAB — Data Quality Report
 // ═══════════════════════════════════════════════════════
-const VALIDATION_REPORT = {"validated_at":"2026-04-03T12:40:58.188219Z","status":"WARN","summary":{"total_checks":21,"passed":13,"failed":8,"skipped":0,"critical_divergences":0},"internal_consistency":[{"check":"OIL_ANNUAL WTI 2025","html_value":104.7,"source_value":65.4,"difference":39.3,"tolerance":0.5,"severity":"warning","pass":false},{"check":"FC_MACRO unemployment 2025","html_value":4.4,"source_value":4.4,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true}],"source_verification":[{"check":"FRED UNRATE (latest)","raw_data_value":4.4,"fresh_api_value":4.4,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"FRED CPIAUCSL (latest index)","raw_data_value":327.46,"fresh_api_value":327.46,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED CPILFESL (core CPI index)","raw_data_value":333.512,"fresh_api_value":333.512,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED PCEPI (PCE index)","raw_data_value":128.969,"fresh_api_value":128.969,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED PCEPILFE (core PCE index)","raw_data_value":128.394,"fresh_api_value":128.394,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED DGS10 (10Y yield)","raw_data_value":4.33,"fresh_api_value":4.33,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"FRED FEDFUNDS","raw_data_value":3.64,"fresh_api_value":3.64,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"FRED PAYEMS (latest level, 000s)","raw_data_value":158466.0,"fresh_api_value":158466.0,"difference":0.0,"tolerance":5,"severity":"ok","pass":true},{"check":"FRED MORTGAGE30US","raw_data_value":6.46,"fresh_api_value":6.46,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"BLS Total Nonfarm (latest)","raw_data_value":158637,"fresh_api_value":158637,"difference":0.0,"tolerance":5,"severity":"ok","pass":true}],"staleness":[{"check":"Staleness: unrate","latest_date":"2026-02-01","age_days":61,"max_lag_days":45,"severity":"stale","pass":false},{"check":"Staleness: cpi_all","latest_date":"2026-02-01","age_days":61,"max_lag_days":45,"severity":"stale","pass":false},{"check":"Staleness: cpi_core","latest_date":"2026-02-01","age_days":61,"max_lag_days":45,"severity":"stale","pass":false},{"check":"Staleness: pce","latest_date":"2026-01-01","age_days":92,"max_lag_days":60,"severity":"stale","pass":false},{"check":"Staleness: pce_core","latest_date":"2026-01-01","age_days":92,"max_lag_days":60,"severity":"stale","pass":false},{"check":"Staleness: payems","latest_date":"2026-02-01","age_days":61,"max_lag_days":40,"severity":"stale","pass":false},{"check":"Staleness: cs_hpi","latest_date":"2026-01-01","age_days":92,"max_lag_days":90,"severity":"stale","pass":false},{"check":"Staleness: mortgage30","latest_date":"2026-04-02","age_days":1,"max_lag_days":10,"severity":"ok","pass":true},{"check":"Collection recency","collected_at":"2026-04-03T12:40:42.972690Z","age_hours":0.0,"severity":"ok","pass":true}]};
+const VALIDATION_REPORT = {"validated_at":"2026-04-04T14:37:33.945059Z","status":"WARN","summary":{"total_checks":20,"passed":14,"failed":6,"skipped":0,"critical_divergences":0},"internal_consistency":[{"check":"OIL_ANNUAL WTI 2025","html_value":104.7,"source_value":65.4,"difference":39.3,"tolerance":0.5,"severity":"warning","pass":false},{"check":"FC_MACRO unemployment 2025","html_value":4.4,"source_value":4.4,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true}],"source_verification":[{"check":"FRED UNRATE (latest)","raw_data_value":4.3,"fresh_api_value":4.3,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"FRED CPIAUCSL (latest index)","raw_data_value":327.46,"fresh_api_value":327.46,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED CPILFESL (core CPI index)","raw_data_value":333.512,"fresh_api_value":333.512,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED PCEPI (PCE index)","raw_data_value":128.969,"fresh_api_value":128.969,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED PCEPILFE (core PCE index)","raw_data_value":128.394,"fresh_api_value":128.394,"difference":0.0,"tolerance":0.5,"severity":"ok","pass":true},{"check":"FRED DGS10 (10Y yield)","raw_data_value":4.31,"fresh_api_value":4.31,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"FRED FEDFUNDS","raw_data_value":3.64,"fresh_api_value":3.64,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true},{"check":"FRED PAYEMS (latest level, 000s)","raw_data_value":158637.0,"fresh_api_value":158637.0,"difference":0.0,"tolerance":5,"severity":"ok","pass":true},{"check":"FRED MORTGAGE30US","raw_data_value":6.46,"fresh_api_value":6.46,"difference":0.0,"tolerance":0.05,"severity":"ok","pass":true}],"staleness":[{"check":"Staleness: unrate","latest_date":"2026-03-01","age_days":34,"max_lag_days":45,"severity":"ok","pass":true},{"check":"Staleness: cpi_all","latest_date":"2026-02-01","age_days":62,"max_lag_days":45,"severity":"stale","pass":false},{"check":"Staleness: cpi_core","latest_date":"2026-02-01","age_days":62,"max_lag_days":45,"severity":"stale","pass":false},{"check":"Staleness: pce","latest_date":"2026-01-01","age_days":93,"max_lag_days":60,"severity":"stale","pass":false},{"check":"Staleness: pce_core","latest_date":"2026-01-01","age_days":93,"max_lag_days":60,"severity":"stale","pass":false},{"check":"Staleness: payems","latest_date":"2026-03-01","age_days":34,"max_lag_days":40,"severity":"ok","pass":true},{"check":"Staleness: cs_hpi","latest_date":"2026-01-01","age_days":93,"max_lag_days":90,"severity":"stale","pass":false},{"check":"Staleness: mortgage30","latest_date":"2026-04-02","age_days":2,"max_lag_days":10,"severity":"ok","pass":true},{"check":"Collection recency","collected_at":"2026-04-04T14:36:33.840884Z","age_hours":0.0,"severity":"ok","pass":true}]};
 
 function buildValidatorTab(){
   if(builtTabs && builtTabs["validator"]) return;
@@ -5570,7 +5570,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 03, 2026 12:40 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 04, 2026 14:37 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates all 6 agents in sequence · total runtime &lt;3 min</span>
       </div>
     </div>
