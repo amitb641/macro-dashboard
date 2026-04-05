@@ -1541,11 +1541,14 @@ def update_shock_tracker(html, data, vals):
     saving = vals.get('saving_rate', 4.5)
     cc_del = vals.get('cc_delinq', 2.94)
 
-    def _status(phase_idx, now, pre, expected_weeks):
-        """Determine phase status based on timing and data movement."""
+    def _status(now, pre, expected_weeks, data_is_post_shock=False):
+        """Determine phase status. Only confirm/emerge if data is post-shock."""
         if now is None:
             return 'awaiting_data'
         if pre is None:
+            return 'not_yet'
+        if not data_is_post_shock:
+            # Data predates the shock — it's the baseline, can't confirm anything
             return 'not_yet'
         chg = now - pre
         in_window = expected_weeks[0] <= weeks <= expected_weeks[1]
@@ -1558,48 +1561,61 @@ def update_shock_tracker(html, data, vals):
             return 'confirmed' if abs(chg) > 0.5 else 'emerging'
         return 'on_schedule' if in_window else 'not_yet'
 
+    # Determine which readings are post-shock (data date >= Mar 2026)
+    shock = '2026-03-01'
+    def _latest_date(key):
+        s = data.get(key, [])
+        return s[0].get('date', '') if s else ''
+
+    gas_post    = gas_est or (_latest_date('gasoline') >= shock)  # WTI estimate is real-time
+    cpi_post    = _latest_date('cpi_all') >= shock         # CPI Feb'26 = pre-shock
+    pce_post    = _latest_date('pce') >= shock             # PCE Jan'26 = pre-shock
+    umcsent_post = _latest_date('umcsent') >= shock        # UMich Feb'26 = pre-shock
+    saving_post = _latest_date('psavert') >= shock         # Saving Jan'26 = pre-shock
+    cc_post     = _latest_date('cc_delinq') >= shock       # CC Q3'25 = pre-shock
+
     phases = [
         {"phase": "Pump Prices Spike", "expected": "Days 1\u201314", "expected_weeks": [0, 2],
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
-         "status": 'confirmed' if (not gas_est and gas_now and gas_now > gas_pre + 0.30) else ('emerging' if gas_est and gas_now and gas_now > gas_pre + 0.30 else _status(0, gas_now, gas_pre, [0, 2])),
+         "status": _status(gas_now, gas_pre, [0, 2], data_is_post_shock=gas_post),
          "note": f"{'Est. from WTI' if gas_est else 'FRED GASREGW'}: ${gas_pre:.2f} → ~${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now else "Awaiting data"
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
          "metric": "CPI Transport Svcs YoY", "pre": cpi_trans, "now": cpi_trans, "chg": 0.0,
-         "status": "on_schedule",
-         "note": "CPI Transport lags \u2014 latest data predates shock. Next print will be first test"
+         "status": _status(cpi_trans, cpi_trans, [4, 6], data_is_post_shock=cpi_post),
+         "note": "CPI Transport data predates shock \u2014 next print will be first test" if not cpi_post else f"CPI Transport at {cpi_trans}%"
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201310", "expected_weeks": [6, 10],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
          "chg": round(cpi_energy_yoy - 0.4, 1) if cpi_energy_yoy is not None else None,
-         "status": _status(2, cpi_energy_yoy, 0.4, [6, 10]) if cpi_energy_yoy is not None else 'not_yet',
-         "note": f"CPI Energy at {'+' + str(cpi_energy_yoy) + '%' if cpi_energy_yoy is not None else '+0.4%'} YoY \u2014 first shock-impacted print expected in next CPI release"
+         "status": _status(cpi_energy_yoy, 0.4, [6, 10], data_is_post_shock=cpi_post),
+         "note": f"CPI Energy at +{cpi_energy_yoy}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release"
         },
         {"phase": "Food & Services Inflation", "expected": "Months 3\u20135", "expected_weeks": [12, 20],
          "metric": "CPI Food Away YoY", "pre": food_away, "now": food_away, "chg": 0.0,
          "status": "not_yet",
-         "note": "No pass-through visible yet \u2014 too early. Watch for menu price increases in Q2 data"
+         "note": "Too early \u2014 food & services pass-through takes 3+ months"
         },
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
-         "status": _status(4, core_cpi, 2.5, [20, 32]),
-         "note": f"Core CPI at {core_cpi}% \u2014 energy input costs haven't fed through yet"
+         "status": _status(core_cpi, 2.5, [20, 32], data_is_post_shock=cpi_post),
+         "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}"
         },
         {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
          "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),
-         "status": 'confirmed' if umcsent < 54 else ('emerging' if umcsent < 56 else 'on_schedule'),
-         "note": f"UMich at {umcsent} \u2014 {'deteriorating as expected' if umcsent < 55 else 'holding near pre-shock level, watch next release'}"
+         "status": _status(-umcsent, -56.6, [2, 6], data_is_post_shock=umcsent_post),  # invert: lower is worse
+         "note": f"UMich at {umcsent} \u2014 {'post-shock reading confirms decline' if umcsent_post and umcsent < 55 else 'pre-shock baseline, awaiting Mar+ reading' if not umcsent_post else 'watching for deterioration in next release'}"
         },
         {"phase": "Savings Drawdown", "expected": "Months 2\u20134", "expected_weeks": [8, 16],
          "metric": "Personal Saving Rate", "pre": 4.5, "now": saving, "chg": round(saving - 4.5, 1),
-         "status": _status(6, -saving, -4.5, [8, 16]),  # invert: lower is worse
-         "note": f"Saving rate at {saving}% \u2014 {'declining as fuel costs eat into take-home pay' if saving < 4.2 else 'stable so far'}"
+         "status": _status(-saving, -4.5, [8, 16], data_is_post_shock=saving_post),  # invert: lower is worse
+         "note": f"Saving rate at {saving}% \u2014 {'pre-shock baseline' if not saving_post else 'declining' if saving < 4.2 else 'stable so far'}"
         },
         {"phase": "Delinquencies Climb", "expected": "Months 5\u201310", "expected_weeks": [20, 40],
          "metric": "CC 90+ DPD Rate", "pre": 2.94, "now": cc_del, "chg": round(cc_del - 2.94, 2),
-         "status": _status(7, cc_del, 2.94, [20, 40]),
-         "note": f"CC delinquency at {cc_del}% \u2014 too early for oil impact. Q4 data due soon"
+         "status": _status(cc_del, 2.94, [20, 40], data_is_post_shock=cc_post),
+         "note": f"CC delinquency at {cc_del}% \u2014 {'pre-shock data, too early' if not cc_post else 'monitoring for oil impact'}"
         },
     ]
 
