@@ -53,7 +53,9 @@ console.log('\n\x1b[1m2. Canvas ↔ JS Wiring\x1b[0m');
 const canvasIds = [...html.matchAll(/<canvas\s+id="([^"]+)"/g)].map(m => m[1]);
 
 canvasIds.forEach(id => {
-  const jsRef = html.includes(`getElementById("${id}")`);
+  // Skip template literal canvas ids (dynamically generated)
+  if (id.includes('$')) return;
+  const jsRef = html.includes(`getElementById("${id}")`) || html.includes(`getElementById('${id}')`);
   if (jsRef) {
     pass(`canvas#${id} — wired to JS`);
   } else {
@@ -65,13 +67,18 @@ if (!canvasIds.length) warn('No canvas elements found');
 
 // ── 3. DOM getElementById references ─────────────────────────────────────
 console.log('\n\x1b[1m3. DOM Element References\x1b[0m');
-const domRefs = [...html.matchAll(/getElementById\("([^"]+)"\)/g)].map(m => m[1]);
+const domRefs = [
+  ...html.matchAll(/getElementById\("([^"]+)"\)/g),
+  ...html.matchAll(/getElementById\('([^']+)'\)/g),
+].map(m => m[1]);
 const uniqueRefs = [...new Set(domRefs)];
 let missingEls = 0;
 
 uniqueRefs.forEach(id => {
-  const exists = html.includes(`id="${id}"`);
-  if (!exists) {
+  // Check static HTML id="..." or id='...' or dynamically assigned .id = "..."
+  const existsStatic = html.includes(`id="${id}"`) || html.includes(`id='${id}'`);
+  const existsDynamic = html.includes(`.id = "${id}"`) || html.includes(`.id = '${id}'`);
+  if (!existsStatic && !existsDynamic) {
     fail(`getElementById("${id}") — element NOT found in HTML`);
     missingEls++;
   }
