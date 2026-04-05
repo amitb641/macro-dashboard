@@ -1561,7 +1561,7 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Pump Prices Spike", "expected": "Days 1\u201314", "expected_weeks": [0, 2],
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
-         "status": 'confirmed' if gas_now and gas_now > gas_pre + 0.30 else _status(0, gas_now, gas_pre, [0, 2]),
+         "status": 'confirmed' if (not gas_est and gas_now and gas_now > gas_pre + 0.30) else ('emerging' if gas_est and gas_now and gas_now > gas_pre + 0.30 else _status(0, gas_now, gas_pre, [0, 2])),
          "note": f"{'Est. from WTI' if gas_est else 'FRED GASREGW'}: ${gas_pre:.2f} → ~${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now else "Awaiting data"
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
