@@ -862,6 +862,10 @@ def rebuild_charts(html, data):
             applied.append(f'Oil tile Brent {prev_yr} avg → ${brent_prev_avg}')
             html = new_html7
 
+    # ── Category MoM auto-rebuilders ─────────────────────────────────
+    html = rebuild_u_sector_mom(html, data)
+    html = rebuild_cpi_cat_mom(html, data)
+
     return html
 
 
@@ -1001,6 +1005,124 @@ def inject_oil_daily(html, oil_daily):
             warnings.append('inject_oil_daily: panel title pattern not found')
 
     return new_html
+
+
+# ── CATEGORY MoM AUTO-REBUILDERS ─────────────────────────────────────
+
+def _yoy_from_index(series, n=2):
+    """Compute YoY % for the latest n months from a CPI/PCE index series."""
+    if not series or len(series) < 13:
+        return []
+    results = []
+    for i in range(n):
+        cur = series[i]
+        cur_date = cur['date']
+        target = f"{int(cur_date[:4])-1}{cur_date[4:]}"
+        ya = next((o for o in series if o['date'] == target), None)
+        if ya and ya['value']:
+            yoy = round((cur['value'] - ya['value']) / ya['value'] * 100, 1)
+            month_key = datetime.datetime.strptime(cur_date, '%Y-%m-%d').strftime('%b').lower()
+            results.append({'month_key': month_key, 'yoy': yoy, 'date': cur_date})
+    return results
+
+
+def rebuild_u_sector_mom(html, data):
+    """Rebuild U_SECTOR_MOM from BLS CPS sector unemployment data."""
+    bls_unemp = data.get('bls_unemp_sectors', {})
+    if not bls_unemp:
+        return html
+
+    SECTOR_MAP = {
+        'LNS14032200': 'Construction',
+        'LNS14033260': 'Hotel & Lodging',
+        'LNS14033270': 'Restaurant Workers',
+        'LNS14032500': 'Retail Trade',
+        'LNS14032800': 'Information/Tech',
+        'LNS14032600': 'Transport & Warehousing',
+        'LNS14032300': 'Manufacturing',
+        'LNS14033000': 'Prof. & Biz Services',
+        'LNS14032100': 'Agriculture & Mining',
+        'LNS14032400': 'Wholesale Trade',
+        'LNS14033100': 'Healthcare & Education',
+        'LNS14032900': 'Financial Activities',
+        'LNS14033400': 'Government',
+    }
+    sector_names = list(SECTOR_MAP.values())
+
+    # Extract latest 2 months from BLS data
+    sector_data = {}
+    for sid, sector_name in SECTOR_MAP.items():
+        series = bls_unemp.get(sid, [])
+        if len(series) >= 2:
+            cur = series[0]
+            prv = series[1]
+            cur_key = cur['period'].lower().replace('m', '')
+            cur_key = datetime.datetime.strptime(cur_key, '%m').strftime('%b').lower() + cur['year'][2:]
+            prv_key = prv['period'].lower().replace('m', '')
+            prv_key = datetime.datetime.strptime(prv_key, '%m').strftime('%b').lower() + prv['year'][2:]
+            sector_data[sector_name] = {
+                'cur_key': cur_key, 'prv_key': prv_key,
+                'cur_val': float(cur['value']), 'prv_val': float(prv['value'])
+            }
+
+    if len(sector_data) >= 10:
+        any_s = next(iter(sector_data.values()))
+        cur_k = any_s['cur_key']
+        prv_k = any_s['prv_key']
+        cur_vals = [sector_data.get(s, {}).get('cur_val', 0) for s in sector_names]
+        prv_vals = [sector_data.get(s, {}).get('prv_val', 0) for s in sector_names]
+
+        new_obj = (f'const U_SECTOR_MOM = {{\n'
+                   f'  sectors:{json.dumps(sector_names)},\n'
+                   f'  {prv_k}: {json.dumps(prv_vals)},\n'
+                   f'  {cur_k}: {json.dumps(cur_vals)}\n'
+                   f'}};')
+        pattern = r'const U_SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
+        new_html, n = re.subn(pattern, new_obj, html, count=1)
+        if n:
+            applied.append(f'U_SECTOR_MOM rebuilt ({len(sector_data)} sectors, {prv_k}/{cur_k})')
+            html = new_html
+
+    return html
+
+
+def rebuild_cpi_cat_mom(html, data):
+    """Rebuild CPI_CAT_MOM from FRED CPI category index series."""
+    CPI_CATS = [
+        ('Shelter / Housing',   'cpi_shelter',   '#8878B8'),
+        ('Food Away from Home', 'cpi_food_away', '#1A9E5A'),
+        ('Transportation Svcs', 'cpi_transport', '#CC5DE8'),
+        ('Medical Care Svcs',   'cpi_medical',   '#FF6B9D'),
+        ('Core CPI (ex F&E)',   'cpi_core',      '#F76707'),
+        ('Food at Home',        'cpi_food_home', '#51CF66'),
+        ('New Vehicles',        'cpi_new_veh',   '#4DABF7'),
+        ('Apparel',             'cpi_apparel',   '#FCC419'),
+        ('Energy (all)',        'cpi_energy',    '#FFB84C'),
+        ('Used Cars & Trucks',  'cpi_used_cars', '#00C9A7'),
+    ]
+
+    entries = []
+    for cat_name, data_key, color in CPI_CATS:
+        series = data.get(data_key, [])
+        yoys = _yoy_from_index(series, 2)
+        if len(yoys) >= 2:
+            entries.append({
+                'cat': cat_name,
+                yoys[1]['month_key']: yoys[1]['yoy'],  # prior month
+                yoys[0]['month_key']: yoys[0]['yoy'],  # current month
+                'color': color,
+            })
+
+    if len(entries) >= 8:
+        new_json = json.dumps(entries, separators=(', ', ':'))
+        pattern = r'const CPI_CAT_MOM\s*=\s*\[[\s\S]*?\];'
+        new_html, n = re.subn(pattern, f'const CPI_CAT_MOM = {new_json};', html, count=1)
+        if n:
+            keys = [k for k in entries[0] if k not in ('cat', 'color')]
+            applied.append(f'CPI_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
+            html = new_html
+
+    return html
 
 
 # ── SECTION RENDERERS ─────────────────────────────────────────────────

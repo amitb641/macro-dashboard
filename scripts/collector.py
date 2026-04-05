@@ -253,12 +253,42 @@ def collect():
         'CES9093000001',  # State & Local Government
     ])
 
+    # Sector unemployment rates (BLS CPS) for U_SECTOR_MOM auto-rebuild
+    print('  [Monthly] Sector Unemployment (CPS)...')
+    data['bls_unemp_sectors'] = bls_fetch([
+        'LNS14032200',  # Construction
+        'LNS14033260',  # Hotel & Lodging (Accommodation)
+        'LNS14033270',  # Restaurant Workers (Food Services)
+        'LNS14032500',  # Retail Trade
+        'LNS14032800',  # Information/Tech
+        'LNS14032600',  # Transport & Warehousing
+        'LNS14032300',  # Manufacturing
+        'LNS14033000',  # Prof. & Biz Services
+        'LNS14032100',  # Agriculture & Mining
+        'LNS14032400',  # Wholesale Trade
+        'LNS14033100',  # Healthcare & Education
+        'LNS14032900',  # Financial Activities
+        'LNS14033400',  # Government
+    ])
+
     print('  [Monthly] Inflation...')
     data['cpi_all']     = fred_obs('CPIAUCSL',  320)
     data['cpi_core']    = fred_obs('CPILFESL',  320)
     data['pce']         = fred_obs('PCEPI',     320)
     data['pce_core']    = fred_obs('PCEPILFE',  320)
     data['psavert']     = fred_obs('PSAVERT',   320)
+
+    # CPI category detail for CPI_CAT_MOM auto-rebuild
+    print('  [Monthly] CPI Categories (FRED)...')
+    data['cpi_shelter']   = fred_obs('CUSR0000SAH1', 6)   # Shelter
+    data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 6)   # Food Away from Home
+    data['cpi_transport'] = fred_obs('CUSR0000SETG', 6)   # Transportation Services
+    data['cpi_medical']   = fred_obs('CUSR0000SAM2', 6)   # Medical Care Services
+    data['cpi_food_home'] = fred_obs('CUSR0000SAF11',6)   # Food at Home
+    data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',6)  # New Vehicles
+    data['cpi_apparel']   = fred_obs('CUSR0000SAA',  6)   # Apparel
+    data['cpi_energy']    = fred_obs('CUSR0000SA0E', 6)   # Energy
+    data['cpi_used_cars'] = fred_obs('CUSR0000SETA02',6)  # Used Cars & Trucks
 
     print('  [Monthly] Housing...')
     data['houst']       = fred_obs('HOUST',      320)
