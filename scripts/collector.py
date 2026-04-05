@@ -200,7 +200,8 @@ def collect():
     data['brent_daily']  = brent_raw
     data['oil_daily_chart'] = build_oil_daily(wti_raw, brent_raw)  # Mar 1 onward
 
-    print('  [Daily] Mortgage (weekly)...')
+    print('  [Weekly] Gasoline + Mortgage...')
+    data['gasoline']    = fred_obs('GASREGW', 30)     # Weekly retail gasoline $/gal (EIA via FRED)
     data['mortgage30']  = fred_obs('MORTGAGE30US', 6)
     data['mortgage15']  = fred_obs('MORTGAGE15US', 6)
 

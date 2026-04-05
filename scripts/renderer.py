@@ -1285,8 +1285,136 @@ def render_oil(html, data, vals, tabs):
     if oil_daily:
         html = inject_oil_daily(html, oil_daily)
 
+    # ── Auto-update SHOCK_TRACKER with latest values ────────────────
+    html = update_shock_tracker(html, data, vals)
+
     txt = tabs.get('oil', '')
     if txt: html = patch_commentary(html, 'oil', txt)
+    return html
+
+
+def update_shock_tracker(html, data, vals):
+    """Update SHOCK_TRACKER with latest values from signals and raw data."""
+    shock_date = datetime.date(2026, 3, 1)
+    today = datetime.date.today()
+    weeks = round((today - shock_date).days / 7)
+    wti_pre = 65.4  # 2025 annual avg (pre-shock baseline)
+    wti_now = vals.get('wti', wti_pre)
+    wti_chg = round((wti_now / wti_pre - 1) * 100)
+
+    # Gather latest values for each phase
+    gas = data.get('gasoline', [])
+    gas_now = gas[0]['value'] if gas else None
+    # Gas pre-shock: find last value before March 2026
+    gas_pre = None
+    for obs in (gas or []):
+        if obs['date'] < '2026-03-01':
+            gas_pre = obs['value']; break
+
+    cpi_trans = 5.8  # CPI Transport Svcs baseline (Feb'26 from CPI_CAT_MOM)
+    cpi_energy_yoy = None
+    cpieng = data.get('cpiengsl', [])
+    if cpieng and len(cpieng) >= 13:
+        cur = cpieng[0]
+        target_mo = f"{int(cur['date'][:4])-1}{cur['date'][4:7]}"
+        ya = [o for o in cpieng if o['date'][:7] == target_mo]
+        if ya:
+            cpi_energy_yoy = round((cur['value'] - ya[0]['value']) / ya[0]['value'] * 100, 1)
+
+    core_cpi = vals.get('core_cpi_yoy', 2.5)
+    food_away = 3.4  # baseline from CPI_CAT_MOM
+    umcsent = vals.get('umcsent', 56.6)
+    saving = vals.get('saving_rate', 4.5)
+    cc_del = vals.get('cc_delinq', 2.94)
+
+    def _status(phase_idx, now, pre, expected_weeks):
+        """Determine phase status based on timing and data movement."""
+        if now is None:
+            return 'awaiting_data'
+        if pre is None:
+            return 'not_yet'
+        chg = now - pre
+        in_window = expected_weeks[0] <= weeks <= expected_weeks[1]
+        past_window = weeks > expected_weeks[1]
+        before_window = weeks < expected_weeks[0]
+        moved = abs(chg) > 0.15  # meaningful change threshold
+        if moved and before_window:
+            return 'ahead'
+        if moved and (in_window or past_window):
+            return 'confirmed' if abs(chg) > 0.5 else 'emerging'
+        return 'on_schedule' if in_window else 'not_yet'
+
+    phases = [
+        {"phase": "Pump Prices Spike", "expected": "Days 1\u201314", "expected_weeks": [0, 2],
+         "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
+         "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
+         "status": _status(0, gas_now, gas_pre, [0, 2]) if gas_now else 'awaiting_data',
+         "note": f"Retail gasoline {'$'+str(gas_pre)+' → $'+str(gas_now) if gas_now and gas_pre else 'data will populate on next pipeline run'}"
+        },
+        {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
+         "metric": "CPI Transport Svcs YoY", "pre": cpi_trans, "now": cpi_trans, "chg": 0.0,
+         "status": "on_schedule",
+         "note": "CPI Transport lags \u2014 latest data predates shock. Next print will be first test"
+        },
+        {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201310", "expected_weeks": [6, 10],
+         "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
+         "chg": round(cpi_energy_yoy - 0.4, 1) if cpi_energy_yoy is not None else None,
+         "status": _status(2, cpi_energy_yoy, 0.4, [6, 10]) if cpi_energy_yoy is not None else 'not_yet',
+         "note": f"CPI Energy at {'+' + str(cpi_energy_yoy) + '%' if cpi_energy_yoy is not None else '+0.4%'} YoY \u2014 first shock-impacted print expected in next CPI release"
+        },
+        {"phase": "Food & Services Inflation", "expected": "Months 3\u20135", "expected_weeks": [12, 20],
+         "metric": "CPI Food Away YoY", "pre": food_away, "now": food_away, "chg": 0.0,
+         "status": "not_yet",
+         "note": "No pass-through visible yet \u2014 too early. Watch for menu price increases in Q2 data"
+        },
+        {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
+         "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
+         "status": _status(4, core_cpi, 2.5, [20, 32]),
+         "note": f"Core CPI at {core_cpi}% \u2014 energy input costs haven't fed through yet"
+        },
+        {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
+         "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),
+         "status": 'confirmed' if umcsent < 54 else ('emerging' if umcsent < 56 else 'on_schedule'),
+         "note": f"UMich at {umcsent} \u2014 {'deteriorating as expected' if umcsent < 55 else 'holding near pre-shock level, watch next release'}"
+        },
+        {"phase": "Savings Drawdown", "expected": "Months 2\u20134", "expected_weeks": [8, 16],
+         "metric": "Personal Saving Rate", "pre": 4.5, "now": saving, "chg": round(saving - 4.5, 1),
+         "status": _status(6, -saving, -4.5, [8, 16]),  # invert: lower is worse
+         "note": f"Saving rate at {saving}% \u2014 {'declining as fuel costs eat into take-home pay' if saving < 4.2 else 'stable so far'}"
+        },
+        {"phase": "Delinquencies Climb", "expected": "Months 5\u201310", "expected_weeks": [20, 40],
+         "metric": "CC 90+ DPD Rate", "pre": 2.94, "now": cc_del, "chg": round(cc_del - 2.94, 2),
+         "status": _status(7, cc_del, 2.94, [20, 40]),
+         "note": f"CC delinquency at {cc_del}% \u2014 too early for oil impact. Q4 data due soon"
+        },
+    ]
+
+    tracker = {
+        "shock_date": "2026-03-01",
+        "weeks_elapsed": weeks,
+        "wti_pre": wti_pre, "wti_now": round(wti_now, 1), "wti_chg_pct": wti_chg,
+        "phases": phases
+    }
+
+    new_json = json.dumps(tracker, separators=(', ', ':'))
+    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\};\s*\n'
+    # Use a more robust approach: find the const and replace up to the closing };
+    import re as re2
+    match = re2.search(r'const SHOCK_TRACKER\s*=\s*', html)
+    if match:
+        start = match.start()
+        # Find matching closing brace by counting
+        depth = 0
+        i = match.end()
+        while i < len(html):
+            if html[i] == '{': depth += 1
+            elif html[i] == '}': depth -= 1
+            if depth == 0:
+                # Find the semicolon
+                end = html.index(';', i) + 1
+                new_html = html[:start] + f'const SHOCK_TRACKER = {new_json};' + html[end:]
+                applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
+                return new_html
     return html
 
 

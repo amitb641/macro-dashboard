@@ -2063,6 +2063,17 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
 
+  <!-- SHOCK REALITY TRACKER -->
+  <div class="panel" style="margin-bottom:16px">
+    <div style="display:inline-flex;align-items:center;gap:5px;background:#FEF2F2;border:1px solid rgba(214,64,69,.3);border-radius:5px;padding:3px 9px;margin-bottom:7px">
+      <span style="font-size:10px">🎯</span>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#D64045;letter-spacing:.05em">SHOCK REALITY CHECK — Expected vs Actual</span>
+    </div>
+    <div class="panel-title">Oil Shock Transmission Tracker — Are We On Script?</div>
+    <div class="panel-sub">Tracking whether the Mar 2026 Hormuz shock is transmitting through the economy as expected · updated weekly</div>
+    <div id="shock-tracker" style="padding:8px 0"></div>
+  </div>
+
   <!-- SECTION 3: Sector Impact -->
   <div class="stk-section-title">🏭 Section 3 — Sector Impact</div>
   <div class="panel" style="margin-bottom:16px">
@@ -4036,6 +4047,39 @@ function buildOilTab(){
 
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
+// SHOCK_TRACKER — Expected vs actual oil shock transmission (injected by renderer)
+const SHOCK_TRACKER = {
+  shock_date: "2026-03-01",
+  weeks_elapsed: 5,
+  wti_pre: 65.4, wti_now: 104.7, wti_chg_pct: 60,
+  phases: [
+    {phase:"Pump Prices Spike",         expected:"Days 1–14",   expected_weeks:[0,2],
+     metric:"Gasoline $/gal",           pre:2.89, now:null, chg:null,
+     status:"awaiting_data", note:"Gasoline data (GASREGW) will populate on next pipeline run"},
+    {phase:"Transport & Freight Costs", expected:"Weeks 4–6",   expected_weeks:[4,6],
+     metric:"CPI Transport Svcs YoY",   pre:5.8, now:5.8, chg:0.0,
+     status:"on_schedule", note:"Transport CPI lags — Feb'26 data predates shock. Mar data due mid-April"},
+    {phase:"CPI Energy Prints",         expected:"Weeks 6–10",  expected_weeks:[6,10],
+     metric:"CPI Energy YoY",           pre:0.4, now:0.4, chg:0.0,
+     status:"not_yet", note:"Feb'26 CPI Energy at +0.4% YoY — pre-shock baseline. Mar CPI (due Apr 10) will be first shock-impacted print"},
+    {phase:"Food & Services Inflation", expected:"Months 3–5",  expected_weeks:[12,20],
+     metric:"CPI Food Away YoY",        pre:3.4, now:3.4, chg:0.0,
+     status:"not_yet", note:"No pass-through visible yet — too early. Watch for menu price increases in Q2 data"},
+    {phase:"Core Goods Inflation",      expected:"Months 5–8",  expected_weeks:[20,32],
+     metric:"Core CPI YoY",             pre:2.5, now:2.5, chg:0.0,
+     status:"not_yet", note:"Core CPI stable at 2.5% — energy input costs haven't fed through yet"},
+    {phase:"Consumer Sentiment Falls",  expected:"Weeks 2–6",   expected_weeks:[2,6],
+     metric:"UMich Sentiment",           pre:56.6, now:56.6, chg:0.0,
+     status:"confirmed", note:"Sentiment already at 56.6 (pre-shock) — was depressed before oil spike. Mar reading (due Apr 11) will show oil impact"},
+    {phase:"Savings Drawdown",          expected:"Months 2–4",  expected_weeks:[8,16],
+     metric:"Personal Saving Rate",      pre:4.5, now:4.5, chg:0.0,
+     status:"not_yet", note:"Saving rate at 4.5% (Jan'26). Watch for decline as fuel costs eat into take-home pay"},
+    {phase:"Delinquencies Climb",       expected:"Months 5–10", expected_weeks:[20,40],
+     metric:"CC 90+ DPD Rate",           pre:2.94, now:2.94, chg:0.0,
+     status:"not_yet", note:"CC delinquency at 2.94% (Q3'25) — next data point Q4'25 due soon. Too early for oil impact"}
+  ]
+};
+
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
 const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9", "Mar 10", "Mar 11", "Mar 12", "Mar 13", "Mar 16", "Mar 17", "Mar 18", "Mar 19", "Mar 20", "Mar 23", "Mar 24", "Mar 25", "Mar 26", "Mar 27", "Mar 30"], "wti":[71.13, 74.48, 74.58, 80.88, 90.77, 94.65, 83.71, 86.8, 95.61, 98.48, 93.39, 96.01, 96.12, 96.11, 98.71, 89.33, 93.18, 91.51, 96.18, 101.26, 104.69], "brent":[77.24, 83.28, 81.56, 88.59, 95.74, 94.35, 89.84, 90.98, 102.38, 103.23, 101.04, 108.39, 118.09, 111.05, 118.42, 103.79, 108.42, 109.14, 113.39, 121.47, 121.88], "notes":[null, "WTI surge $3.4 (4.7%)", null, "WTI surge $6.3 (8.4%)", "WTI surge $9.9 (12.2%)", "WTI surge $3.9 (4.3%)", "WTI drop $10.9 (11.6%)", "WTI surge $3.1 (3.7%)", "WTI surge $8.8 (10.1%)", "WTI surge $2.9 (3.0%)", "WTI drop $5.1 (5.2%)", "WTI surge $2.6 (2.8%)", null, null, "WTI surge $2.6 (2.7%)", "WTI drop $9.4 (9.5%)", "WTI surge $3.9 (4.3%)", null, "WTI surge $4.7 (5.1%)", "WTI surge $5.1 (5.3%)", "WTI surge $3.4 (3.4%)"], "month":"Mar\u2013Apr 2026", "updated":"Apr 04 14:36 UTC", "sessions":21};
 
@@ -4307,6 +4351,71 @@ const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9
     Phase 1 and Phase 2 run in parallel — inflation transmission and consumer stress begin simultaneously after a sustained shock. Timelines are indicative medians; actual lags vary by shock size, duration, and household balance sheet strength.
     <span style="display:block;margin-top:2px">Sources: EIA · BLS CES · BLS CPI · NY Fed Household Credit · Fed Z.1 · SLOOS · Federal Reserve research</span>
   </div>`;
+
+  // ── Shock Reality Tracker ──
+  (function(){
+    var el = document.getElementById("shock-tracker");
+    if(!el) return;
+    var t = SHOCK_TRACKER;
+    var statusColors = {
+      confirmed:      {bg:"#DCFCE7",border:"#16A34A",text:"#15803D",label:"✅ Confirmed"},
+      emerging:       {bg:"#FEF9C3",border:"#CA8A04",text:"#A16207",label:"⚡ Emerging"},
+      on_schedule:    {bg:"#DBEAFE",border:"#2563EB",text:"#1D4ED8",label:"🕐 On Schedule"},
+      not_yet:        {bg:"#F3F4F6",border:"#9CA3AF",text:"#6B7280",label:"⏳ Not Yet"},
+      ahead:          {bg:"#FEE2E2",border:"#DC2626",text:"#B91C1C",label:"🔴 Ahead of Sched."},
+      awaiting_data:  {bg:"#F5F3FF",border:"#7C3AED",text:"#6D28D9",label:"📊 Awaiting Data"},
+    };
+    // Header
+    var wChg = t.wti_now - t.wti_pre;
+    var html = `<div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:140px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-radius:8px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#92400E;letter-spacing:.08em">Shock Magnitude</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;color:#CC8A00;margin-top:2px">+$${wChg.toFixed(0)}/bbl <span style="font-size:12px;color:#94A3B8">(+${t.wti_chg_pct}%)</span></div>
+        <div style="font-size:10px;color:#64748B">$${t.wti_pre} → $${t.wti_now} WTI</div>
+      </div>
+      <div style="flex:1;min-width:140px;padding:10px 14px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#94A3B8;letter-spacing:.08em">Time Since Shock</div>
+        <div style="font-family:'DM Mono',monospace;font-size:20px;color:#334E68;margin-top:2px">${t.weeks_elapsed} weeks</div>
+        <div style="font-size:10px;color:#64748B">Since ${t.shock_date}</div>
+      </div>
+    </div>`;
+    // Phase rows
+    html += '<div style="display:flex;flex-direction:column;gap:8px">';
+    t.phases.forEach(function(p){
+      var s = statusColors[p.status] || statusColors.not_yet;
+      var wk = t.weeks_elapsed;
+      // Progress bar: where are we relative to expected window?
+      var pctInWindow = p.expected_weeks[1] > p.expected_weeks[0] ?
+        Math.min(1, Math.max(0, (wk - p.expected_weeks[0]) / (p.expected_weeks[1] - p.expected_weeks[0]))) : 0;
+      var inWindow = wk >= p.expected_weeks[0] && wk <= p.expected_weeks[1];
+      var pastWindow = wk > p.expected_weeks[1];
+      var beforeWindow = wk < p.expected_weeks[0];
+      var windowLabel = beforeWindow ? "Before window" : pastWindow ? "Past window" : "In window now";
+      var chgStr = p.chg !== null ? (p.chg >= 0 ? "+" : "") + (typeof p.chg === 'number' ? p.chg.toFixed(1) : p.chg) : "—";
+      html += `<div style="display:flex;gap:10px;padding:10px 14px;background:${s.bg};border:1px solid ${s.border}22;border-radius:8px;align-items:flex-start">
+        <div style="min-width:90px">
+          <div style="font-size:10px;font-weight:700;color:${s.text};margin-bottom:2px">${s.label}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:#94A3B8">${p.expected}</div>
+          <div style="width:80px;height:4px;background:#E5E7EB;border-radius:2px;margin-top:4px;overflow:hidden">
+            <div style="width:${Math.round(pctInWindow*100)}%;height:100%;background:${s.border};border-radius:2px"></div>
+          </div>
+          <div style="font-size:7px;color:#94A3B8;margin-top:1px">${windowLabel}</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:600;color:#1E293B">${p.phase}</div>
+          <div style="font-size:10px;color:#64748B;margin-top:2px">
+            ${p.metric}: <span style="font-family:'DM Mono',monospace">${p.pre !== null ? p.pre : '—'}</span>
+            → <span style="font-family:'DM Mono',monospace;font-weight:600;color:${p.chg > 0 ? '#D64045' : p.chg < 0 ? '#1A9E5A' : '#64748B'}">${p.now !== null ? p.now : '—'}</span>
+            <span style="font-size:9px;color:#94A3B8">(${chgStr})</span>
+          </div>
+          <div style="font-size:9px;color:#7A8FA8;margin-top:3px;line-height:1.4">${p.note}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    html += '<div style="font-size:9px;color:#94A3B8;margin-top:8px;font-style:italic">Auto-updated weekly by pipeline · pre-shock baselines locked to Feb\'26 readings · status assessed against expected transmission timelines</div>';
+    el.innerHTML = html;
+  })();
 
   // ── Sector margin impact ──
   document.getElementById("oil-sector-impact").innerHTML = `
