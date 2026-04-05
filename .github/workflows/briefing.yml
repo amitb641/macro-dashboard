@@ -12,7 +12,7 @@ on:
       force_ai:
         description: 'Force Agent 3 (Claude AI) to run'
         required: false
-        default: 'false'
+        default: 'true'
 
 jobs:
   update:
