@@ -381,12 +381,12 @@ def check_staleness(data, collected_at):
     # Expected max lag (in days) from today for each series
     EXPECTED_LAGS = {
         'unrate':    45,   # Monthly, ~1 month lag
-        'cpi_all':   45,   # Monthly, ~2 week lag
-        'cpi_core':  45,
-        'pce':       60,   # Monthly, ~1 month lag
-        'pce_core':  60,
+        'cpi_all':   75,   # Monthly, ~2-3 week lag; can span 2 release cycles
+        'cpi_core':  75,
+        'pce':       95,   # Monthly, ~4 week lag; can span 2 release cycles
+        'pce_core':  95,
         'payems':    40,   # Monthly, ~1 week lag from reference period
-        'cs_hpi':    90,   # Monthly, ~2 month lag
+        'cs_hpi':   100,   # Monthly, ~2 month lag (Case-Shiller)
         'mortgage30': 10,  # Weekly
     }
 

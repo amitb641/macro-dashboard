@@ -96,30 +96,39 @@ def call_claude(prompt: str) -> dict:
         print('  ⚠  No ANTHROPIC_API_KEY — using static fallback')
         return _fallback()
     print('  Calling claude-sonnet-4-6...')
-    try:
-        r = requests.post(
-            'https://api.anthropic.com/v1/messages',
-            headers={
-                'x-api-key': ANTHROPIC_KEY,
-                'anthropic-version': '2023-06-01',
-                'content-type': 'application/json',
-            },
-            json={
-                'model': 'claude-sonnet-4-6',
-                'max_tokens': 2000,
-                'system': SYSTEM,
-                'messages': [{'role': 'user', 'content': prompt}],
-            },
-            timeout=60,
-        )
-        r.raise_for_status()
-        text = r.json()['content'][0]['text'].strip()
-        if text.startswith('```'): text = text.split('```')[1]
-        if text.startswith('json'): text = text[4:]
-        return json.loads(text.strip())
-    except Exception as e:
-        print(f'  ❌ Claude call failed: {e}')
-        return _fallback()
+    import time
+    last_err = None
+    for attempt in range(3):
+        try:
+            if attempt > 0:
+                wait = 2 ** attempt
+                print(f'  Retry {attempt}/2 after {wait}s...')
+                time.sleep(wait)
+            r = requests.post(
+                'https://api.anthropic.com/v1/messages',
+                headers={
+                    'x-api-key': ANTHROPIC_KEY,
+                    'anthropic-version': '2023-06-01',
+                    'content-type': 'application/json',
+                },
+                json={
+                    'model': 'claude-sonnet-4-6-20250514',
+                    'max_tokens': 2000,
+                    'system': SYSTEM,
+                    'messages': [{'role': 'user', 'content': prompt}],
+                },
+                timeout=90,
+            )
+            r.raise_for_status()
+            text = r.json()['content'][0]['text'].strip()
+            if text.startswith('```'): text = text.split('```')[1]
+            if text.startswith('json'): text = text[4:]
+            return json.loads(text.strip())
+        except Exception as e:
+            last_err = e
+            print(f'  ❌ Claude call failed (attempt {attempt+1}/3): {e}')
+    print(f'  ❌ All retries exhausted. Last error: {last_err}')
+    return _fallback()
 
 
 def _fallback() -> dict:
