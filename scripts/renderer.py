@@ -1088,6 +1088,22 @@ def render_labor(html, data, vals, tabs):
         icsa_lbl = f"Initial Claims {month_label(icsa_date)}" if icsa_date else 'Initial Claims'
         html = patch_kpi_full(html, 'Initial Claims', icsa_lbl, f'{icsa_val/1000:.0f}K')
 
+    # ── Auto-update Unemployment tab month references ──────────────
+    unrate_s = data.get('unrate', [])
+    if unrate_s and len(unrate_s) >= 2:
+        u_cur_d = unrate_s[0].get('date', '')
+        u_prv_d = unrate_s[1].get('date', '')
+        if u_cur_d and u_prv_d:
+            u_cur = month_label(u_cur_d)
+            u_prv = month_label(u_prv_d)
+            u_prv_short = u_prv.split("'")[0]
+            html = re.sub(
+                r"(Change in unemployment rate vs prior month · BLS CPS · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
+                rf"\g<1>{u_cur} vs {u_prv}", html, count=1)
+            html = re.sub(r"([A-Z][a-z]+'\d+) rate rose", f"{u_cur} rate rose", html, count=1)
+            html = re.sub(r"([A-Z][a-z]+'\d+) rate fell", f"{u_cur} rate fell", html, count=1)
+            applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
+
     # ── Auto-update Jobs tab month references ────────────────────────
     # The Jobs tab has hardcoded month names in titles, legends, and tiles.
     # Derive current and prior month labels from PAYEMS data.
@@ -1166,6 +1182,51 @@ def render_inflation(html, data, vals, tabs):
 
     if save is not None:
         html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_MONTHLY')
+
+    # ── Auto-update CPI tab month references ────────────────────────
+    cpi_s = data.get('cpi_all', [])
+    if cpi_s and len(cpi_s) >= 2:
+        cpi_cur = cpi_s[0].get('date', '')
+        cpi_prev = cpi_s[1].get('date', '')
+        if cpi_cur and cpi_prev:
+            c_cur = month_label(cpi_cur)
+            c_prv = month_label(cpi_prev)
+            c_prv_short = c_prv.split("'")[0]
+            html = re.sub(
+                r"CPI by Category — MoM Change \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
+                f"CPI by Category — MoM Change ({c_cur} vs {c_prv})", html, count=1)
+            html = re.sub(
+                r"(YoY % by category · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+( · sorted by )[A-Z][a-z]+'\d+",
+                rf"\g<1>{c_cur} vs {c_prv}\g<2>{c_cur}", html, count=1)
+            html = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{c_cur} accelerating", html, count=1)
+            html = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{c_cur} cooling", html, count=1)
+            # Update prior month legend label in CPI section (3rd legend entry after accelerating/cooling)
+            html = re.sub(
+                r"(CPI by Category[\s\S]{200,600}?</span>)</span>\s*<span[^>]*>[^<]*</span>([A-Z][a-z]+'\d+)</span>",
+                lambda m: m.group(0).replace(m.group(2), c_prv) if m.group(2) != c_prv else m.group(0),
+                html, count=1)
+            html = re.sub(
+                r"(Monthly YoY % change by category\. )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
+                rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
+            applied.append(f'CPI tab month refs updated to {c_prv}/{c_cur}')
+
+    # ── Auto-update PCE tab month references ────────────────────────
+    pce_s = data.get('pce', [])
+    if pce_s and len(pce_s) >= 2:
+        p_cur_d = pce_s[0].get('date', '')
+        p_prv_d = pce_s[1].get('date', '')
+        if p_cur_d and p_prv_d:
+            p_cur = month_label(p_cur_d)
+            p_prv = month_label(p_prv_d)
+            html = re.sub(
+                r"PCE by Category — MoM Change \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
+                f"PCE by Category — MoM Change ({p_cur} vs {p_prv})", html, count=1)
+            html = re.sub(
+                r"(Real PCE spending growth by category · sorted by )[A-Z][a-z]+'\d+",
+                rf"\g<1>{p_cur}", html, count=1)
+            html = re.sub(r"([A-Z][a-z]+'\d+) accelerating([\s\S]{0,300}?PCE)", f"{p_cur} accelerating\\2", html, count=1)
+            html = re.sub(r"([A-Z][a-z]+'\d+) cooling([\s\S]{0,300}?PCE)", f"{p_cur} cooling\\2", html, count=1)
+            applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')
