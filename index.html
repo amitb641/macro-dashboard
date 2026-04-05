@@ -2046,10 +2046,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel" style="display:flex;flex-direction:column">
       <div style="display:inline-flex;align-items:center;gap:5px;background:#FEF2F2;border:1px solid rgba(214,64,69,.3);border-radius:5px;padding:3px 9px;margin-bottom:7px">
         <span style="font-size:10px">⚡</span>
-        <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#D64045;letter-spacing:.05em">ACTIVE SUPPLY SHOCK — Strait of Hormuz · Mar 2026</span>
+        <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#D64045;letter-spacing:.05em">ACTIVE SUPPLY SHOCK — Strait of Hormuz · Since Mar 2026</span>
       </div>
-      <div class="panel-title">April 2026 — Daily Closes (Live)</div>
-      <div class="panel-sub"><span id="oil-daily-subtitle">WTI daily closes · EIA / CME</span></div>
+      <div class="panel-title">Oil Supply Shock Tracker — Daily Closes (Live)</div>
+      <div class="panel-sub"><span id="oil-daily-subtitle">Cumulative price action since Iran conflict · EIA / CME</span></div>
       <div id="oil-pulse-widget" style="padding:4px 0;flex:1;display:flex;flex-direction:column"></div>
     </div>
     <div class="panel">
@@ -4043,14 +4043,14 @@ const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9
       const wtiHigh2  = Math.max(...wtiVals);
       const wtiHighIdx = wtiVals.indexOf(wtiHigh2);
       const sessions  = labels.length;
-      const dateRange = firstLbl === lastLbl ? firstLbl : `${firstLbl}–${lastLbl} ${d.month.split(' ')[1]}`;
+      const dateRange = `${firstLbl}–${lastLbl}`;
       // Build price path: start → peak → end (only show peak if it's not start or end)
       let pricePath = `$${wtiFirst2.toFixed(0)}`;
       if (wtiHighIdx > 0 && wtiHighIdx < wtiVals.length - 1) {
         pricePath += ` → <span style="color:#D64045;font-weight:600">$${wtiHigh2.toFixed(0)} peak</span>`;
       }
       pricePath += ` → $${wtiLast2.toFixed(0)}`;
-      subEl.innerHTML = `WTI daily closes · ${dateRange} · EIA / CME · ${pricePath} in ${sessions} sessions`;
+      subEl.innerHTML = `Since Iran conflict · ${dateRange} · ${pricePath} across ${sessions} sessions`;
     }
 
     // Compute summary stats
@@ -4070,7 +4070,7 @@ const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9
         <div style="flex:1;min-width:120px;padding:12px 16px;background:#FFFBEB;border:1px solid rgba(204,138,0,.15);border-radius:8px;margin-right:8px">
           <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#92400E;margin-bottom:3px">WTI — Latest</div>
           <div style="font-family:'Instrument Serif',serif;font-size:28px;color:#CC8A00;line-height:1">\$${wtiLast.toFixed(1)}<span style="font-size:12px;color:#94A3B8">/bbl</span></div>
-          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:${wtiChgCol};margin-top:2px">${wtiSign}\$${Math.abs(wtiMtd).toFixed(1)} (${wtiSign}${wtiMtdPct}%) MTD</div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:${wtiChgCol};margin-top:2px">${wtiSign}\$${Math.abs(wtiMtd).toFixed(1)} (${wtiSign}${wtiMtdPct}%) since Mar 1</div>
         </div>
         <div style="flex:1;min-width:120px;padding:12px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px;margin-right:8px">
           <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:3px">Brent — Latest</div>
@@ -4078,7 +4078,7 @@ const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9
           <div style="font-size:10px;color:#64748B;margin-top:2px">Spread: \$${(brentLast - wtiLast).toFixed(1)}</div>
         </div>
         <div style="flex:1;min-width:120px;padding:12px 16px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
-          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:5px">${d.month} Range</div>
+          <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;margin-bottom:5px">Crisis Range</div>
           <div style="font-family:'DM Mono',monospace;font-size:12px;color:#334E68;line-height:1.8">
             <span style="color:#1A9E5A">▲ \$${wtiHigh.toFixed(1)}</span> High<br>
             <span style="color:#D64045">▼ \$${wtiLow.toFixed(1)}</span> Low<br>
@@ -4091,7 +4091,7 @@ const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9
       </div>
       <div id="oil-daily-headlines" style="margin-top:10px;padding:0 2px"></div>
       <div style="font-size:9px;color:#94A3B8;font-family:'DM Mono',monospace;margin-top:6px;text-align:right">
-        ${d.month} daily closes · EIA / FRED · Updated: ${d.updated}
+        Since Mar 1 · ${d.sessions} sessions · EIA / FRED · Updated: ${d.updated}
       </div>`;
 
     // ── Daily Oil Chart with event annotation flags ──
