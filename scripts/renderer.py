@@ -862,6 +862,12 @@ def rebuild_charts(html, data):
             applied.append(f'Oil tile Brent {prev_yr} avg → ${brent_prev_avg}')
             html = new_html7
 
+    # ── Category MoM auto-rebuilders ─────────────────────────────────
+    html = rebuild_u_sector_mom(html, data)
+    html = rebuild_cpi_cat_mom(html, data)
+    html = rebuild_treasury_data(html, data)
+    html = rebuild_oil_prod_spread(html, data)
+
     return html
 
 
@@ -1001,6 +1007,207 @@ def inject_oil_daily(html, oil_daily):
             warnings.append('inject_oil_daily: panel title pattern not found')
 
     return new_html
+
+
+# ── CATEGORY MoM AUTO-REBUILDERS ─────────────────────────────────────
+
+def _yoy_from_index(series, n=2):
+    """Compute YoY % for the latest n months from a CPI/PCE index series."""
+    if not series or len(series) < 13:
+        return []
+    results = []
+    for i in range(n):
+        cur = series[i]
+        cur_date = cur['date']
+        target = f"{int(cur_date[:4])-1}{cur_date[4:]}"
+        ya = next((o for o in series if o['date'] == target), None)
+        if ya and ya['value']:
+            yoy = round((cur['value'] - ya['value']) / ya['value'] * 100, 1)
+            month_key = datetime.datetime.strptime(cur_date, '%Y-%m-%d').strftime('%b').lower()
+            results.append({'month_key': month_key, 'yoy': yoy, 'date': cur_date})
+    return results
+
+
+def rebuild_u_sector_mom(html, data):
+    """Rebuild U_SECTOR_MOM from BLS CPS sector unemployment data."""
+    bls_unemp = data.get('bls_unemp_sectors', {})
+    if not bls_unemp:
+        return html
+
+    SECTOR_MAP = {
+        'LNS14032200': 'Construction',
+        'LNS14033260': 'Hotel & Lodging',
+        'LNS14033270': 'Restaurant Workers',
+        'LNS14032500': 'Retail Trade',
+        'LNS14032800': 'Information/Tech',
+        'LNS14032600': 'Transport & Warehousing',
+        'LNS14032300': 'Manufacturing',
+        'LNS14033000': 'Prof. & Biz Services',
+        'LNS14032100': 'Agriculture & Mining',
+        'LNS14032400': 'Wholesale Trade',
+        'LNS14033100': 'Healthcare & Education',
+        'LNS14032900': 'Financial Activities',
+        'LNS14033400': 'Government',
+    }
+    sector_names = list(SECTOR_MAP.values())
+
+    # Extract latest 2 months from BLS data
+    sector_data = {}
+    for sid, sector_name in SECTOR_MAP.items():
+        series = bls_unemp.get(sid, [])
+        if len(series) >= 2:
+            cur = series[0]
+            prv = series[1]
+            cur_key = cur['period'].lower().replace('m', '')
+            cur_key = datetime.datetime.strptime(cur_key, '%m').strftime('%b').lower() + cur['year'][2:]
+            prv_key = prv['period'].lower().replace('m', '')
+            prv_key = datetime.datetime.strptime(prv_key, '%m').strftime('%b').lower() + prv['year'][2:]
+            sector_data[sector_name] = {
+                'cur_key': cur_key, 'prv_key': prv_key,
+                'cur_val': float(cur['value']), 'prv_val': float(prv['value'])
+            }
+
+    if len(sector_data) >= 10:
+        any_s = next(iter(sector_data.values()))
+        cur_k = any_s['cur_key']
+        prv_k = any_s['prv_key']
+        cur_vals = [sector_data.get(s, {}).get('cur_val', 0) for s in sector_names]
+        prv_vals = [sector_data.get(s, {}).get('prv_val', 0) for s in sector_names]
+
+        new_obj = (f'const U_SECTOR_MOM = {{\n'
+                   f'  sectors:{json.dumps(sector_names)},\n'
+                   f'  {prv_k}: {json.dumps(prv_vals)},\n'
+                   f'  {cur_k}: {json.dumps(cur_vals)}\n'
+                   f'}};')
+        pattern = r'const U_SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
+        new_html, n = re.subn(pattern, new_obj, html, count=1)
+        if n:
+            applied.append(f'U_SECTOR_MOM rebuilt ({len(sector_data)} sectors, {prv_k}/{cur_k})')
+            html = new_html
+
+    return html
+
+
+def rebuild_cpi_cat_mom(html, data):
+    """Rebuild CPI_CAT_MOM from FRED CPI category index series."""
+    CPI_CATS = [
+        ('Shelter / Housing',   'cpi_shelter',   '#8878B8'),
+        ('Food Away from Home', 'cpi_food_away', '#1A9E5A'),
+        ('Transportation Svcs', 'cpi_transport', '#CC5DE8'),
+        ('Medical Care Svcs',   'cpi_medical',   '#FF6B9D'),
+        ('Core CPI (ex F&E)',   'cpi_core',      '#F76707'),
+        ('Food at Home',        'cpi_food_home', '#51CF66'),
+        ('New Vehicles',        'cpi_new_veh',   '#4DABF7'),
+        ('Apparel',             'cpi_apparel',   '#FCC419'),
+        ('Energy (all)',        'cpi_energy',    '#FFB84C'),
+        ('Used Cars & Trucks',  'cpi_used_cars', '#00C9A7'),
+    ]
+
+    entries = []
+    for cat_name, data_key, color in CPI_CATS:
+        series = data.get(data_key, [])
+        yoys = _yoy_from_index(series, 2)
+        if len(yoys) >= 2:
+            entries.append({
+                'cat': cat_name,
+                yoys[1]['month_key']: yoys[1]['yoy'],  # prior month
+                yoys[0]['month_key']: yoys[0]['yoy'],  # current month
+                'color': color,
+            })
+
+    if len(entries) >= 8:
+        new_json = json.dumps(entries, separators=(', ', ':'))
+        pattern = r'const CPI_CAT_MOM\s*=\s*\[[\s\S]*?\];'
+        new_html, n = re.subn(pattern, f'const CPI_CAT_MOM = {new_json};', html, count=1)
+        if n:
+            keys = [k for k in entries[0] if k not in ('cat', 'color')]
+            applied.append(f'CPI_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
+            html = new_html
+
+    return html
+
+
+def rebuild_treasury_data(html, data):
+    """Rebuild TREASURY_DATA with annual DGS10/DGS2 averages + latest daily."""
+    dgs10_ann = data.get('dgs10_annual', [])
+    dgs2_ann = data.get('dgs2_annual', [])
+    if not dgs10_ann or not dgs2_ann:
+        # Fall back to computing from daily history
+        return html
+
+    today = datetime.date.today()
+    t10_labels, t10_vals = _annual_from_freq(dgs10_ann, precision=2)
+    t2_labels, t2_vals = _annual_from_freq(dgs2_ann, precision=2)
+
+    if not t10_labels:
+        return html
+
+    # Align to common years
+    common = [l for l in t10_labels if l in t2_labels]
+    dgs10 = [t10_vals[t10_labels.index(l)] for l in common]
+    dgs2 = [t2_vals[t2_labels.index(l)] for l in common]
+    spread = [round(a - b, 2) for a, b in zip(dgs10, dgs2)]
+
+    # Add latest daily value
+    dgs10_latest = data.get('dgs10')
+    dgs2_latest = data.get('dgs2')
+    if dgs10_latest and dgs2_latest:
+        latest_lbl = month_label(datetime.date.today().strftime('%Y-%m-01'))
+        common.append(latest_lbl)
+        dgs10.append(round(dgs10_latest, 2))
+        dgs2.append(round(dgs2_latest, 2))
+        spread.append(round(dgs10_latest - dgs2_latest, 2))
+
+    # Card 90+ DPD — preserve existing values (NY Fed quarterly, not in FRED)
+    # Extract from current HTML
+    card90_match = re.search(r'"card90":\s*\[([^\]]*)\]', html)
+    card90 = []
+    if card90_match:
+        import ast as _ast
+        try:
+            card90 = _ast.literal_eval(f'[{card90_match.group(1)}]')
+        except Exception:
+            card90 = []
+    # Pad/trim card90 to match labels length
+    while len(card90) < len(common):
+        card90.append(card90[-1] if card90 else None)
+    card90 = card90[:len(common)]
+
+    obj = {'labels': common, 'dgs10': dgs10, 'dgs2': dgs2, 'spread': spread, 'card90': card90}
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const TREASURY_DATA\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const TREASURY_DATA = {new_json};', html, count=1)
+    if n:
+        applied.append(f'TREASURY_DATA rebuilt ({len(common)} points, latest {common[-1]})')
+        html = new_html
+    return html
+
+
+def rebuild_oil_prod_spread(html, data):
+    """Rebuild OIL_SPREAD from existing annual WTI/Brent data."""
+    wti_a = data.get('wti_annual', [])
+    brent_a = data.get('brent_annual', [])
+    if not wti_a or not brent_a:
+        return html
+
+    w_labels, w_vals = _annual_from_freq(wti_a, start_year=2015, precision=1)
+    b_labels, b_vals = _annual_from_freq(brent_a, start_year=2015, precision=1)
+    common = [l for l in w_labels if l in b_labels]
+    if not common:
+        return html
+
+    wti = [w_vals[w_labels.index(l)] for l in common]
+    brent = [b_vals[b_labels.index(l)] for l in common]
+    spread = [round(w - b, 1) for w, b in zip(wti, brent)]
+
+    obj = {'labels': common, 'spread': spread}
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const OIL_SPREAD\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const OIL_SPREAD = {new_json};', html, count=1)
+    if n:
+        applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
+        html = new_html
+    return html
 
 
 # ── SECTION RENDERERS ─────────────────────────────────────────────────
@@ -1200,11 +1407,7 @@ def render_inflation(html, data, vals, tabs):
                 rf"\g<1>{c_cur} vs {c_prv}\g<2>{c_cur}", html, count=1)
             html = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{c_cur} accelerating", html, count=1)
             html = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{c_cur} cooling", html, count=1)
-            # Update prior month legend label in CPI section (3rd legend entry after accelerating/cooling)
-            html = re.sub(
-                r"(CPI by Category[\s\S]{200,600}?</span>)</span>\s*<span[^>]*>[^<]*</span>([A-Z][a-z]+'\d+)</span>",
-                lambda m: m.group(0).replace(m.group(2), c_prv) if m.group(2) != c_prv else m.group(0),
-                html, count=1)
+            # Prior month legend label in CPI section — skip complex regex, not critical
             html = re.sub(
                 r"(Monthly YoY % change by category\. )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                 rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
@@ -1224,8 +1427,13 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"(Real PCE spending growth by category · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{p_cur}", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) accelerating([\s\S]{0,300}?PCE)", f"{p_cur} accelerating\\2", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) cooling([\s\S]{0,300}?PCE)", f"{p_cur} cooling\\2", html, count=1)
+            # PCE legend labels — find within the PCE tab section only
+            pce_section = html.find('PCE by Category')
+            if pce_section > 0:
+                chunk = html[pce_section:pce_section+2000]
+                chunk = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{p_cur} accelerating", chunk, count=1)
+                chunk = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{p_cur} cooling", chunk, count=1)
+                html = html[:pce_section] + chunk + html[pce_section+2000:]
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     for tab in ('cpi', 'pce'):
@@ -1306,10 +1514,16 @@ def update_shock_tracker(html, data, vals):
     gas = data.get('gasoline', [])
     gas_now = gas[0]['value'] if gas else None
     # Gas pre-shock: find last value before March 2026
-    gas_pre = None
+    gas_pre = 2.89  # default pre-shock baseline
     for obs in (gas or []):
         if obs['date'] < '2026-03-01':
             gas_pre = obs['value']; break
+    # If no GASREGW data, estimate from WTI (~$0.024/gal per $1/bbl)
+    if gas_now is None and wti_now:
+        gas_now = round(gas_pre + (wti_now - wti_pre) * 0.024, 2)
+        gas_est = True
+    else:
+        gas_est = False
 
     cpi_trans = 5.8  # CPI Transport Svcs baseline (Feb'26 from CPI_CAT_MOM)
     cpi_energy_yoy = None
@@ -1348,8 +1562,8 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Pump Prices Spike", "expected": "Days 1\u201314", "expected_weeks": [0, 2],
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
-         "status": _status(0, gas_now, gas_pre, [0, 2]) if gas_now else 'awaiting_data',
-         "note": f"Retail gasoline {'$'+str(gas_pre)+' → $'+str(gas_now) if gas_now and gas_pre else 'data will populate on next pipeline run'}"
+         "status": 'confirmed' if (not gas_est and gas_now and gas_now > gas_pre + 0.30) else ('emerging' if gas_est and gas_now and gas_now > gas_pre + 0.30 else _status(0, gas_now, gas_pre, [0, 2])),
+         "note": f"{'Est. from WTI' if gas_est else 'FRED GASREGW'}: ${gas_pre:.2f} → ~${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now else "Awaiting data"
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
          "metric": "CPI Transport Svcs YoY", "pre": cpi_trans, "now": cpi_trans, "chg": 0.0,
@@ -1397,24 +1611,16 @@ def update_shock_tracker(html, data, vals):
     }
 
     new_json = json.dumps(tracker, separators=(', ', ':'))
-    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\};\s*\n'
-    # Use a more robust approach: find the const and replace up to the closing };
-    import re as re2
-    match = re2.search(r'const SHOCK_TRACKER\s*=\s*', html)
-    if match:
-        start = match.start()
-        # Find matching closing brace by counting
-        depth = 0
-        i = match.end()
-        while i < len(html):
-            if html[i] == '{': depth += 1
-            elif html[i] == '}': depth -= 1
-            if depth == 0:
-                # Find the semicolon
-                end = html.index(';', i) + 1
-                new_html = html[:start] + f'const SHOCK_TRACKER = {new_json};' + html[end:]
-                applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
-                return new_html
+    new_decl = f'const SHOCK_TRACKER = {new_json};'
+    # SHOCK_TRACKER has nested arrays/objects — match up to the line
+    # before '// OIL_DAILY' which always follows it
+    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\n\};\s*(?=\n// OIL_DAILY)'
+    new_html, n = re.subn(pattern, new_decl, html, count=1)
+    if n:
+        applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
+        html = new_html
+    else:
+        warnings.append('update_shock_tracker: SHOCK_TRACKER const not matched')
     return html
 
 

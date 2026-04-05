@@ -1602,11 +1602,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
     <div class="panel">
       <div class="panel-title">Unemployment by Sector — Monthly MoM Change (pp)</div>
-      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Feb'26 vs Jan'26 · sorted by change</div>
+      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Mar'26 vs Feb'26 · sorted by change</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Feb'26 rate rose</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Feb'26 rate fell</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Jan'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Mar'26 rate rose</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 rate fell</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
@@ -2063,17 +2063,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
 
-  <!-- SHOCK REALITY TRACKER -->
-  <div class="panel" style="margin-bottom:16px">
-    <div style="display:inline-flex;align-items:center;gap:5px;background:#FEF2F2;border:1px solid rgba(214,64,69,.3);border-radius:5px;padding:3px 9px;margin-bottom:7px">
-      <span style="font-size:10px">🎯</span>
-      <span style="font-family:'DM Mono',monospace;font-size:9px;font-weight:700;color:#D64045;letter-spacing:.05em">SHOCK REALITY CHECK — Expected vs Actual</span>
-    </div>
-    <div class="panel-title">Oil Shock Transmission Tracker — Are We On Script?</div>
-    <div class="panel-sub">Tracking whether the Mar 2026 Hormuz shock is transmitting through the economy as expected · updated weekly</div>
-    <div id="shock-tracker" style="padding:8px 0"></div>
-  </div>
-
   <!-- SECTION 3: Sector Impact -->
   <div class="stk-section-title">🏭 Section 3 — Sector Impact</div>
   <div class="panel" style="margin-bottom:16px">
@@ -2404,8 +2393,8 @@ const U_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "200
 const U_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"], "data":[4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.3, 4.3]};
 const U_SECTOR_MOM = {
   sectors:["Construction","Hotel & Lodging","Restaurant Workers","Retail Trade","Information/Tech","Transport & Warehousing","Manufacturing","Prof. & Biz Services","Agriculture & Mining","Wholesale Trade","Healthcare & Education","Financial Activities","Government"],
-  jan26: [4.6, 5.0, 4.8, 4.3, 3.3, 3.4, 3.1, 3.0, 3.5, 2.9, 2.4, 2.2, 2.1],
-  feb26: [4.8, 5.1, 4.9, 4.4, 3.4, 3.5, 3.2, 3.1, 3.6, 3.0, 2.5, 2.3, 2.2]
+  feb26: [4.8, 5.1, 4.9, 4.4, 3.4, 3.5, 3.2, 3.1, 3.6, 3.0, 2.5, 2.3, 2.2],
+  mar26: [4.7, 5.0, 4.8, 4.3, 3.3, 3.4, 3.1, 3.0, 3.5, 2.9, 2.4, 2.2, 2.1]
 };
 const U_SECTORS = [
   {s:"Cruise Line & Resort Workers",color:"#6C5CE7", u21:22.4,u22:8.2, u23:5.8, u24:5.2, u25:5.0},
@@ -2483,9 +2472,9 @@ const WAGE_SECTORS = [
 // ── BLS vs ADP Monthly Comparison ────────────────────
 // BLS side auto-updated by renderer from PAYEMS. ADP manually maintained from adpemploymentreport.com
 const NFP_VS_ADP = {
-  labels:["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"],
-  bls:   [67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92],
-  adp:   [155, 62, 152, 150, 122, 99, 143, 239, 146, 122, 11, 63]
+  labels:["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"],
+  bls:   [108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92, 178],
+  adp:   [62, 152, 150, 122, 99, 143, 239, 146, 122, 11, 63, null]
 };
 // Monthly sector breakdown (BLS CES major sectors, thousands)
 const SECTOR_MOM = {
@@ -4054,8 +4043,8 @@ const SHOCK_TRACKER = {
   wti_pre: 65.4, wti_now: 104.7, wti_chg_pct: 60,
   phases: [
     {phase:"Pump Prices Spike",         expected:"Days 1–14",   expected_weeks:[0,2],
-     metric:"Gasoline $/gal",           pre:2.89, now:null, chg:null,
-     status:"awaiting_data", note:"Gasoline data (GASREGW) will populate on next pipeline run"},
+     metric:"Gasoline $/gal",           pre:2.89, now:3.83, chg:0.94,
+     status:"emerging", note:"Est. from WTI: $2.89 → ~$3.83/gal (+33%) · awaiting FRED GASREGW to confirm"},
     {phase:"Transport & Freight Costs", expected:"Weeks 4–6",   expected_weeks:[4,6],
      metric:"CPI Transport Svcs YoY",   pre:5.8, now:5.8, chg:0.0,
      status:"on_schedule", note:"Transport CPI lags — Feb'26 data predates shock. Mar data due mid-April"},
@@ -4311,109 +4300,108 @@ const OIL_DAILY = {"labels":["Mar 2", "Mar 3", "Mar 4", "Mar 5", "Mar 6", "Mar 9
 
   // ── Transmission chain ──
   // ── Unified Oil Impact Chain ──
-  document.getElementById("oil-impact-chain").innerHTML = [
-    // ── Phase 1: Inflation Transmission ──
-    {phase:1, icon:"⛽", step:"Days 1–14",    title:"Pump prices spike",         desc:"Gasoline retail moves within days of a WTI shock · $10/bbl ≈ +$0.24/gallon at the pump · lower-income households hit hardest (fuel ~8% of their income vs ~2% for top earners)",  col:"#CC8A00"},
-    {phase:1, icon:"🚚", step:"Weeks 3–6",    title:"Transport & freight costs",  desc:"Diesel surcharges, airline fuel costs, shipping rates adjust upward · input cost rises begin passing into goods prices along supply chains",                           col:"#E8590C"},
-    {phase:1, icon:"📊", step:"Weeks 6–10",   title:"CPI Energy prints",          desc:"BLS captures pump price changes in the CPI Energy component · headline inflation number becomes official · Fed and markets react",                                       col:"#336BCC"},
-    {phase:1, icon:"🍔", step:"Months 3–5",   title:"Food & services inflation",  desc:"Restaurant, hospitality, delivery costs hit menus as ingredient transport and energy bills rise · typically sticky upward once set",                                      col:"#1A9E5A"},
-    {phase:1, icon:"🏭", step:"Months 5–7",   title:"Core goods inflation",       desc:"Manufacturing, chemicals, plastics — energy as input cost bleeds into Core CPI with a longer lag · the reading the Fed watches most closely",                            col:"#8878B8"},
-    // ── Phase 2: Consumer & Credit Stress ──
-    {phase:2, icon:"💳", step:"Months 2–4",   title:"Discretionary spend falls",  desc:"Consumers rotate away from dining, retail, travel toward non-discretionary · real-time card spend data shows the rotation within 60–90 days of sustained high prices",  col:"#D64045"},
-    {phase:2, icon:"🏦", step:"Months 4–6",   title:"Savings drawdown",           desc:"Personal saving rate compresses as fuel costs eat into take-home pay · households dip into liquid buffers · visible in Fed Z.1 household balance sheet data",             col:"#D64045"},
-    {phase:2, icon:"📉", step:"Months 5–7",   title:"Missed payments begin",      desc:"30-day delinquencies start rising in auto loans and credit cards · most visible in subprime and mass-market segments first · at $90–100 WTI, fuel reaches ~3.5–4% of household disposable income",    col:"#9B1C1C"},
-    {phase:2, icon:"📋", step:"Months 7–10",  title:"Delinquency rates climb",    desc:"90+ day delinquencies appear in NY Fed Household Credit report · NCO rates tick up at card issuers · SLOOS survey shows banks tightening intent",                       col:"#9B1C1C"},
-    {phase:2, icon:"🔒", step:"Months 10–14", title:"Credit tightening",          desc:"Banks raise underwriting standards, reduce credit limits, pull back on originations · tighter credit amplifies the demand slowdown and extends the cycle",                col:"#8878B8"},
-  ].map((s,i,arr)=>{
-    const phaseChange = i > 0 && arr[i-1].phase !== s.phase;
-    const divider = phaseChange ? `<div style="display:flex;align-items:center;gap:8px;margin:8px 0 5px">
-      <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(155,28,28,.3),transparent)"></div>
-      <span style="font-family:'DM Mono',monospace;font-size:7.5px;font-weight:700;color:#9B1C1C;letter-spacing:.08em;white-space:nowrap">💳 PHASE 2 — CONSUMER &amp; CREDIT STRESS</span>
-      <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(155,28,28,.3),transparent)"></div>
-    </div>` : (i===0 ? `<div style="display:flex;align-items:center;gap:8px;margin:0 0 5px">
-      <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(204,138,0,.3),transparent)"></div>
-      <span style="font-family:'DM Mono',monospace;font-size:7.5px;font-weight:700;color:#CC8A00;letter-spacing:.08em;white-space:nowrap">🔥 PHASE 1 — INFLATION TRANSMISSION</span>
-      <div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(204,138,0,.3),transparent)"></div>
-    </div>` : "");
-    const isLast = i === arr.length - 1;
-    return divider + `<div style="display:flex;gap:9px;align-items:flex-start;padding:5px 0;${isLast ? '' : 'border-bottom:1px solid var(--border)'}">
-      <div style="font-size:15px;flex-shrink:0;width:22px;text-align:center;margin-top:1px">${s.icon}</div>
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;flex-wrap:wrap">
-          <span style="font-family:'DM Mono',monospace;font-size:7.5px;font-weight:700;color:${s.col};background:${s.col}15;border:1px solid ${s.col}30;border-radius:4px;padding:1px 5px;flex-shrink:0">${s.step}</span>
-          <span style="font-size:10.5px;font-weight:600;color:var(--text)">${s.title}</span>
-        </div>
-        <div style="font-size:9.5px;color:var(--text2);line-height:1.4">${s.desc}</div>
-      </div>
-    </div>`;
-  }).join("") +
-  `<div style="font-size:9px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-style:italic;line-height:1.5">
-    Phase 1 and Phase 2 run in parallel — inflation transmission and consumer stress begin simultaneously after a sustained shock. Timelines are indicative medians; actual lags vary by shock size, duration, and household balance sheet strength.
-    <span style="display:block;margin-top:2px">Sources: EIA · BLS CES · BLS CPI · NY Fed Household Credit · Fed Z.1 · SLOOS · Federal Reserve research</span>
-  </div>`;
-
-  // ── Shock Reality Tracker ──
+  // ── Integrated Impact Chain + Reality Tracker ──
   (function(){
-    var el = document.getElementById("shock-tracker");
+    var el = document.getElementById("oil-impact-chain");
     if(!el) return;
     var t = SHOCK_TRACKER;
-    var statusColors = {
-      confirmed:      {bg:"#DCFCE7",border:"#16A34A",text:"#15803D",label:"✅ Confirmed"},
-      emerging:       {bg:"#FEF9C3",border:"#CA8A04",text:"#A16207",label:"⚡ Emerging"},
-      on_schedule:    {bg:"#DBEAFE",border:"#2563EB",text:"#1D4ED8",label:"🕐 On Schedule"},
-      not_yet:        {bg:"#F3F4F6",border:"#9CA3AF",text:"#6B7280",label:"⏳ Not Yet"},
-      ahead:          {bg:"#FEE2E2",border:"#DC2626",text:"#B91C1C",label:"🔴 Ahead of Sched."},
-      awaiting_data:  {bg:"#F5F3FF",border:"#7C3AED",text:"#6D28D9",label:"📊 Awaiting Data"},
-    };
-    // Header
     var wChg = t.wti_now - t.wti_pre;
-    var html = `<div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap">
-      <div style="flex:1;min-width:140px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-radius:8px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#92400E;letter-spacing:.08em">Shock Magnitude</div>
-        <div style="font-family:'DM Mono',monospace;font-size:20px;color:#CC8A00;margin-top:2px">+$${wChg.toFixed(0)}/bbl <span style="font-size:12px;color:#94A3B8">(+${t.wti_chg_pct}%)</span></div>
-        <div style="font-size:10px;color:#64748B">$${t.wti_pre} → $${t.wti_now} WTI</div>
+    var statusCfg = {
+      confirmed:    {bg:"#DCFCE7",border:"#16A34A",text:"#15803D",label:"Confirmed",icon:"✅"},
+      emerging:     {bg:"#FEF9C3",border:"#CA8A04",text:"#A16207",label:"Emerging",icon:"⚡"},
+      on_schedule:  {bg:"#DBEAFE",border:"#2563EB",text:"#1D4ED8",label:"On Track",icon:"🕐"},
+      not_yet:      {bg:"#F3F4F6",border:"#9CA3AF",text:"#6B7280",label:"Not Yet",icon:"⏳"},
+      ahead:        {bg:"#FEE2E2",border:"#DC2626",text:"#B91C1C",label:"Ahead!",icon:"🔴"},
+      awaiting_data:{bg:"#F5F3FF",border:"#7C3AED",text:"#6D28D9",label:"No Data",icon:"📊"},
+    };
+
+    // Map impact chain phases to SHOCK_TRACKER phases by index
+    var phases = [
+      {phase:1, icon:"⛽", title:"Pump prices spike",        desc:"Gasoline retail moves within days of a WTI shock · $10/bbl ≈ +$0.24/gal at pump", col:"#CC8A00", tracker:0},
+      {phase:1, icon:"🚚", title:"Transport & freight costs", desc:"Diesel surcharges, airline fuel costs, shipping rates adjust upward",              col:"#E8590C", tracker:1},
+      {phase:1, icon:"📊", title:"CPI Energy prints",         desc:"BLS captures pump price changes in CPI Energy · headline inflation becomes official", col:"#336BCC", tracker:2},
+      {phase:1, icon:"🍔", title:"Food & services inflation",desc:"Restaurant, delivery costs hit menus as ingredient transport and energy bills rise", col:"#1A9E5A", tracker:3},
+      {phase:1, icon:"🏭", title:"Core goods inflation",      desc:"Manufacturing, chemicals, plastics — energy input costs bleed into Core CPI",      col:"#8878B8", tracker:4},
+      {phase:2, icon:"😟", title:"Consumer sentiment falls",  desc:"Consumers feel the pain at the pump — confidence drops, spending intentions shift", col:"#D64045", tracker:5},
+      {phase:2, icon:"🏦", title:"Savings drawdown",          desc:"Saving rate compresses as fuel costs eat into take-home pay · liquid buffers dip",  col:"#D64045", tracker:6},
+      {phase:2, icon:"📉", title:"Delinquencies climb",       desc:"90+ day delinquencies appear in auto loans and credit cards · subprime first",     col:"#9B1C1C", tracker:7},
+    ];
+
+    // Header strip: shock magnitude + elapsed time
+    var headerHtml = `<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px;padding:8px 12px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-radius:6px">
+        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:#92400E;letter-spacing:.08em">Shock</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;color:#CC8A00">+$${wChg.toFixed(0)}/bbl <span style="font-size:10px;color:#94A3B8">(+${t.wti_chg_pct}%)</span></div>
       </div>
-      <div style="flex:1;min-width:140px;padding:10px 14px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;color:#94A3B8;letter-spacing:.08em">Time Since Shock</div>
-        <div style="font-family:'DM Mono',monospace;font-size:20px;color:#334E68;margin-top:2px">${t.weeks_elapsed} weeks</div>
-        <div style="font-size:10px;color:#64748B">Since ${t.shock_date}</div>
+      <div style="flex:1;min-width:120px;padding:8px 12px;background:#F8FAFC;border:1px solid var(--border);border-radius:6px">
+        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:#94A3B8;letter-spacing:.08em">Elapsed</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;color:#334E68">${t.weeks_elapsed} weeks <span style="font-size:10px;color:#94A3B8">since Mar 1</span></div>
+      </div>
+      <div style="flex:1;min-width:120px;padding:8px 12px;background:#F0FDF4;border:1px solid rgba(22,163,74,.2);border-radius:6px">
+        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:#15803D;letter-spacing:.08em">Phases Active</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;color:#16A34A">${t.phases.filter(function(p){return p.status==='confirmed'||p.status==='emerging'}).length} of ${t.phases.length} <span style="font-size:10px;color:#94A3B8">transmitting</span></div>
       </div>
     </div>`;
-    // Phase rows
-    html += '<div style="display:flex;flex-direction:column;gap:8px">';
-    t.phases.forEach(function(p){
-      var s = statusColors[p.status] || statusColors.not_yet;
-      var wk = t.weeks_elapsed;
-      // Progress bar: where are we relative to expected window?
-      var pctInWindow = p.expected_weeks[1] > p.expected_weeks[0] ?
-        Math.min(1, Math.max(0, (wk - p.expected_weeks[0]) / (p.expected_weeks[1] - p.expected_weeks[0]))) : 0;
-      var inWindow = wk >= p.expected_weeks[0] && wk <= p.expected_weeks[1];
-      var pastWindow = wk > p.expected_weeks[1];
-      var beforeWindow = wk < p.expected_weeks[0];
-      var windowLabel = beforeWindow ? "Before window" : pastWindow ? "Past window" : "In window now";
-      var chgStr = p.chg !== null ? (p.chg >= 0 ? "+" : "") + (typeof p.chg === 'number' ? p.chg.toFixed(1) : p.chg) : "—";
-      html += `<div style="display:flex;gap:10px;padding:10px 14px;background:${s.bg};border:1px solid ${s.border}22;border-radius:8px;align-items:flex-start">
-        <div style="min-width:90px">
-          <div style="font-size:10px;font-weight:700;color:${s.text};margin-bottom:2px">${s.label}</div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:#94A3B8">${p.expected}</div>
-          <div style="width:80px;height:4px;background:#E5E7EB;border-radius:2px;margin-top:4px;overflow:hidden">
-            <div style="width:${Math.round(pctInWindow*100)}%;height:100%;background:${s.border};border-radius:2px"></div>
-          </div>
-          <div style="font-size:7px;color:#94A3B8;margin-top:1px">${windowLabel}</div>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:12px;font-weight:600;color:#1E293B">${p.phase}</div>
-          <div style="font-size:10px;color:#64748B;margin-top:2px">
-            ${p.metric}: <span style="font-family:'DM Mono',monospace">${p.pre !== null ? p.pre : '—'}</span>
-            → <span style="font-family:'DM Mono',monospace;font-weight:600;color:${p.chg > 0 ? '#D64045' : p.chg < 0 ? '#1A9E5A' : '#64748B'}">${p.now !== null ? p.now : '—'}</span>
-            <span style="font-size:9px;color:#94A3B8">(${chgStr})</span>
-          </div>
-          <div style="font-size:9px;color:#7A8FA8;margin-top:3px;line-height:1.4">${p.note}</div>
-        </div>
-      </div>`;
+
+    var html = headerHtml;
+
+    phases.forEach(function(s, i, arr) {
+      var phaseChange = i > 0 && arr[i-1].phase !== s.phase;
+      var isFirst = i === 0;
+      var isLast = i === arr.length - 1;
+
+      // Phase dividers
+      if (isFirst) {
+        html += '<div style="display:flex;align-items:center;gap:8px;margin:0 0 5px"><div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(204,138,0,.3),transparent)"></div><span style="font-family:\'DM Mono\',monospace;font-size:7.5px;font-weight:700;color:#CC8A00;letter-spacing:.08em;white-space:nowrap">🔥 PHASE 1 — INFLATION TRANSMISSION</span><div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(204,138,0,.3),transparent)"></div></div>';
+      }
+      if (phaseChange) {
+        html += '<div style="display:flex;align-items:center;gap:8px;margin:8px 0 5px"><div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(155,28,28,.3),transparent)"></div><span style="font-family:\'DM Mono\',monospace;font-size:7.5px;font-weight:700;color:#9B1C1C;letter-spacing:.08em;white-space:nowrap">💳 PHASE 2 — CONSUMER & CREDIT STRESS</span><div style="flex:1;height:1px;background:linear-gradient(270deg,rgba(155,28,28,.3),transparent)"></div></div>';
+      }
+
+      // Get tracker data for this phase
+      var tr = t.phases[s.tracker] || {};
+      var st = statusCfg[tr.status] || statusCfg.not_yet;
+      var metric = tr.metric || '';
+      var pre = tr.pre, now = tr.now, chg = tr.chg;
+      var chgStr = chg !== null && chg !== undefined ? (chg >= 0 ? '+' : '') + (typeof chg === 'number' ? chg.toFixed(1) : chg) : '—';
+      var step = tr.expected || '';
+
+      // Build data line
+      var dataLine = '';
+      if (now !== null && now !== undefined) {
+        var chgColor = chg > 0 ? '#D64045' : chg < 0 ? '#1A9E5A' : '#64748B';
+        dataLine = '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:#94A3B8">' + metric + ': </span>'
+          + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:#64748B">' + pre + '</span>'
+          + '<span style="font-size:9px;color:#94A3B8"> → </span>'
+          + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;font-weight:600;color:' + chgColor + '">' + now + '</span>'
+          + '<span style="font-size:8px;color:#94A3B8"> (' + chgStr + ')</span>';
+      } else if (tr.note) {
+        dataLine = '<span style="font-size:9px;color:#94A3B8;font-style:italic">' + tr.note + '</span>';
+      }
+
+      html += '<div style="display:flex;gap:9px;align-items:flex-start;padding:6px 0;' + (isLast ? '' : 'border-bottom:1px solid var(--border)') + '">'
+        // Icon
+        + '<div style="font-size:15px;flex-shrink:0;width:22px;text-align:center;margin-top:1px">' + s.icon + '</div>'
+        // Content
+        + '<div style="flex:1;min-width:0">'
+        +   '<div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;flex-wrap:wrap">'
+        +     '<span style="font-family:\'DM Mono\',monospace;font-size:7.5px;font-weight:700;color:' + s.col + ';background:' + s.col + '15;border:1px solid ' + s.col + '30;border-radius:4px;padding:1px 5px;flex-shrink:0">' + step + '</span>'
+        +     '<span style="font-size:10.5px;font-weight:600;color:var(--text)">' + s.title + '</span>'
+        +   '</div>'
+        +   '<div style="font-size:9.5px;color:var(--text2);line-height:1.4;margin-bottom:3px">' + s.desc + '</div>'
+        +   (dataLine ? '<div style="margin-top:2px">' + dataLine + '</div>' : '')
+        + '</div>'
+        // Status badge (right side)
+        + '<div style="flex-shrink:0;text-align:center;min-width:64px">'
+        +   '<div style="display:inline-block;padding:2px 6px;border-radius:4px;background:' + st.bg + ';border:1px solid ' + st.border + '30;font-family:\'DM Mono\',monospace;font-size:8px;font-weight:700;color:' + st.text + '">' + st.icon + ' ' + st.label + '</div>'
+        + '</div>'
+        + '</div>';
     });
-    html += '</div>';
-    html += '<div style="font-size:9px;color:#94A3B8;margin-top:8px;font-style:italic">Auto-updated weekly by pipeline · pre-shock baselines locked to Feb\'26 readings · status assessed against expected transmission timelines</div>';
+
+    html += '<div style="font-size:9px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-style:italic;line-height:1.5">'
+      + 'Status auto-updated weekly · pre-shock baselines locked to Feb\'26 · '
+      + 'Sources: EIA · BLS CPI · NY Fed · Fed Z.1 · SLOOS</div>';
+
     el.innerHTML = html;
   })();
 
