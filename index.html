@@ -2390,7 +2390,7 @@ const GDP_BROAD = [
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
 const U_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3]};
-const U_MONTHLY = {"labels":["Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[4.2, 4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.3]};
+const U_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"], "data":[4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.3, 4.3]};
 const U_SECTOR_MOM = {
   sectors:["Construction","Hotel & Lodging","Restaurant Workers","Retail Trade","Information/Tech","Transport & Warehousing","Manufacturing","Prof. & Biz Services","Agriculture & Mining","Wholesale Trade","Healthcare & Education","Financial Activities","Government"],
   jan26: [4.6, 5.0, 4.8, 4.3, 3.3, 3.4, 3.1, 3.0, 3.5, 2.9, 2.4, 2.2, 2.1],
@@ -2446,7 +2446,7 @@ const CPI_CAT_MOM = [
 
 // ── WAGES ────────────────────────────────────────────
 const WAGE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "nominal":[4.3, 3.1, 3.1, 1.8, 2.5, 3.2, 4.2, 3.7, 4.0, 2.4, 2.1, 1.8, 1.7, 2.2, 1.8, 2.5, 2.5, 2.4, 3.7, 3.2, 5.5, 6.4, 5.5, 4.4, 4.0, 3.8], "real":[0.9, 1.5, 0.6, -0.2, -0.8, -0.1, 1.7, -0.4, 4.0, -0.4, 0.7, -1.3, -0.1, 0.7, 1.1, 1.9, 0.4, 0.3, 1.7, 0.9, 4.2, -0.8, -0.9, 1.1, 1.1, 1.1]};
-const WAGE_MONTHLY = {labels:["Mar'25","Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26"],nominal:[3.8,3.9,4.0,3.9,3.8,3.7,3.6,3.5,3.4,3.3,3.4,3.4],real:[1.4,1.6,1.5,1.3,1.0,1.2,1.2,0.9,0.7,0.6,1.0,0.9]};
+const WAGE_MONTHLY = {labels:["Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26","Mar'26"],nominal:[3.9,4.0,3.9,3.8,3.7,3.6,3.5,3.4,3.3,3.4,3.4,3.4],real:[1.6,1.5,1.3,1.0,1.2,1.2,0.9,0.7,0.6,1.0,0.9,1.0]};
 const WAGE_SECTORS = [
   {s:"Airline Pilots & Crew",      color:"#0984E3", w21:3.2, w22:7.8, w23:9.4, w24:5.2, w25:4.1, hr24:89.5},
   {s:"Information/Tech",           color:"#20C997", w21:5.8, w22:5.5, w23:4.1, w24:3.6, w25:2.8, hr24:56.8},
@@ -2872,14 +2872,18 @@ function buildUnempTab(){
     {lbl:"Peak → Now",            val:_uPeak+"%→"+_uLatest+"%",sub:"Peak "+U_MONTHLY.labels[_uPeakIdx], col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
-  // ── Unemployment Sector MoM Chart — bar + dot ──
-  var uMom = U_SECTOR_MOM.sectors.map((s,i)=>({s:s,change:+(U_SECTOR_MOM.feb26[i]-U_SECTOR_MOM.jan26[i]).toFixed(2),feb:U_SECTOR_MOM.feb26[i],jan:U_SECTOR_MOM.jan26[i]}));
+  // ── Unemployment Sector MoM Chart — bar + dot (dynamic keys) ──
+  var _uK = Object.keys(U_SECTOR_MOM).filter(k=>k!=="sectors");
+  var _uCurK = _uK[_uK.length-1], _uPrvK = _uK.length>1?_uK[_uK.length-2]:_uCurK;
+  var _uCurL = _uCurK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
+  var _uPrvL = _uPrvK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
+  var uMom = U_SECTOR_MOM.sectors.map((s,i)=>({s:s,change:+(U_SECTOR_MOM[_uCurK][i]-U_SECTOR_MOM[_uPrvK][i]).toFixed(2),cur:U_SECTOR_MOM[_uCurK][i],prv:U_SECTOR_MOM[_uPrvK][i]}));
   uMom.sort((a,b)=>b.change-a.change);
   new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
     type:"bar",
     data:{labels:uMom.map(r=>r.s),datasets:[
-      {label:"Feb'26 Rate %",data:uMom.map(r=>r.feb),backgroundColor:uMom.map(r=>r.change>0?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
-      {label:"Jan'26 Rate %",data:uMom.map(r=>r.jan),
+      {label:_uCurL+" Rate %",data:uMom.map(r=>r.cur),backgroundColor:uMom.map(r=>r.change>0?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
+      {label:_uPrvL+" Rate %",data:uMom.map(r=>r.prv),
        backgroundColor:"#8878B8bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
@@ -3019,18 +3023,22 @@ function buildCPITab(){
       scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
-  // ── CPI Category MoM Chart — bar + dot ──
-  var cpiMom = [...CPI_CAT_MOM].sort((a,b)=>b.feb-a.feb);
+  // ── CPI Category MoM Chart — bar + dot (dynamic keys) ──
+  var _cpiK = Object.keys(CPI_CAT_MOM[0]).filter(k=>k!=="cat"&&k!=="color");
+  var _cpiCurK = _cpiK[_cpiK.length-1], _cpiPrvK = _cpiK.length>1?_cpiK[_cpiK.length-2]:_cpiCurK;
+  var _cpiCurL = _cpiCurK.charAt(0).toUpperCase()+_cpiCurK.slice(1)+"'26";
+  var _cpiPrvL = _cpiPrvK.charAt(0).toUpperCase()+_cpiPrvK.slice(1)+"'26";
+  var cpiMom = [...CPI_CAT_MOM].sort((a,b)=>b[_cpiCurK]-a[_cpiCurK]);
   new Chart(document.getElementById("c-cpi-cat-mom").getContext("2d"),{
     type:"bar",
     data:{labels:cpiMom.map(r=>r.cat),datasets:[
-      {label:"Feb'26 YoY %",data:cpiMom.map(r=>r.feb),backgroundColor:cpiMom.map(r=>r.feb>r.jan?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
-      {label:"Jan'26 YoY %",data:cpiMom.map(r=>r.jan),
+      {label:_cpiCurL+" YoY %",data:cpiMom.map(r=>r[_cpiCurK]),backgroundColor:cpiMom.map(r=>r[_cpiCurK]>r[_cpiPrvK]?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
+      {label:_cpiPrvL+" YoY %",data:cpiMom.map(r=>r[_cpiPrvK]),
        backgroundColor:"#8878B8bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=cpiMom[c.dataIndex];var ch=(d.feb-d.jan).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
+        tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=cpiMom[c.dataIndex];var ch=(d[_cpiCurK]-d[_cpiPrvK]).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -3566,18 +3574,22 @@ function buildPCETab(){
       scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
-  // ── PCE Category MoM Chart ──
-  var pceMom = [...PCE_CAT_MOM].sort((a,b)=>b.jan-a.jan);
+  // ── PCE Category MoM Chart (dynamic keys) ──
+  var _pceK = Object.keys(PCE_CAT_MOM[0]).filter(k=>k!=="cat");
+  var _pceCurK = _pceK[_pceK.length-1], _pcePrvK = _pceK.length>1?_pceK[_pceK.length-2]:_pceCurK;
+  var _pceCurL = _pceCurK.charAt(0).toUpperCase()+_pceCurK.slice(1)+"'26";
+  var _pcePrvL = _pcePrvK.charAt(0).toUpperCase()+_pcePrvK.slice(1)+"'25";
+  var pceMom = [...PCE_CAT_MOM].sort((a,b)=>b[_pceCurK]-a[_pceCurK]);
   new Chart(document.getElementById("c-pce-cat-mom").getContext("2d"),{
     type:"bar",
     data:{labels:pceMom.map(r=>r.cat),datasets:[
-      {label:"Jan'26",data:pceMom.map(r=>r.jan),backgroundColor:pceMom.map(r=>r.jan>r.dec?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
-      {label:"Dec'25",data:pceMom.map(r=>r.dec),
+      {label:_pceCurL,data:pceMom.map(r=>r[_pceCurK]),backgroundColor:pceMom.map(r=>r[_pceCurK]>r[_pcePrvK]?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
+      {label:_pcePrvL,data:pceMom.map(r=>r[_pcePrvK]),
        backgroundColor:"#8878B8bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=pceMom[c.dataIndex];var ch=(d.jan-d.dec).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
+        tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;var d=pceMom[c.dataIndex];var ch=(d[_pceCurK]-d[_pcePrvK]).toFixed(1);return `${c.dataset.label}: ${v}%`+(c.datasetIndex===0?" (MoM: "+(ch>=0?"+":"")+ch+"pp)":"");}}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -5921,7 +5933,7 @@ if(document.readyState === 'loading'){
 <!-- ══ DATA DICTIONARY & SOURCES ══ -->
 <div class="tab-panel" id="tab-dict">
   <div class="fc-note">
-    <strong>📖 Sources, Definitions &amp; Dashboard Guide</strong> — All data sourced from U.S. federal agencies, central bank surveys, financial regulators, and publicly reported bank earnings. Forecast figures are consensus or institution-specific estimates published Jan–Mar 2026. Dashboard current as of March 20, 2026. Latest data: Feb'26 BLS (jobs, CPI, wages), Jan'26 BEA (PCE), Mar'26 FRED (claims, yields).
+    <strong>📖 Sources, Definitions &amp; Dashboard Guide</strong> — All data sourced from U.S. federal agencies, central bank surveys, financial regulators, and publicly reported bank earnings. Forecast figures are consensus or institution-specific estimates published Jan–Mar 2026. Dashboard current as of April 5, 2026. Latest data: Mar'26 BLS (jobs, unemployment, wages), Feb'26 BLS (CPI), Jan'26 BEA (PCE), Apr'26 FRED (claims, yields).
   </div>
 
   <!-- KPI SIGNAL COLOR GUIDE -->
