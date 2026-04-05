@@ -4043,8 +4043,8 @@ const SHOCK_TRACKER = {
   wti_pre: 65.4, wti_now: 104.7, wti_chg_pct: 60,
   phases: [
     {phase:"Pump Prices Spike",         expected:"Days 1–14",   expected_weeks:[0,2],
-     metric:"Gasoline $/gal",           pre:2.89, now:3.83, chg:0.94,
-     status:"emerging", note:"Est. from WTI: $2.89 → ~$3.83/gal (+33%) · awaiting FRED GASREGW to confirm"},
+     metric:"Gasoline $/gal",           pre:2.89, now:null, chg:null,
+     status:"awaiting_data", note:"Awaiting FRED GASREGW weekly retail gasoline price — first post-shock reading will confirm"},
     {phase:"Transport & Freight Costs", expected:"Weeks 4–6",   expected_weeks:[4,6],
      metric:"CPI Transport Svcs YoY",   pre:5.8, now:5.8, chg:0.0,
      status:"not_yet", note:"CPI Transport at 5.8% — pre-shock data (Feb'26). Mar print due mid-April will be first test"},

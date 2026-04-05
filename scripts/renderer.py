@@ -1518,12 +1518,7 @@ def update_shock_tracker(html, data, vals):
     for obs in (gas or []):
         if obs['date'] < '2026-03-01':
             gas_pre = obs['value']; break
-    # If no GASREGW data, estimate from WTI (~$0.024/gal per $1/bbl)
-    if gas_now is None and wti_now:
-        gas_now = round(gas_pre + (wti_now - wti_pre) * 0.024, 2)
-        gas_est = True
-    else:
-        gas_est = False
+    # No estimates — only use real GASREGW data for status decisions
 
     cpi_trans = 5.8  # CPI Transport Svcs baseline (Feb'26 from CPI_CAT_MOM)
     cpi_energy_yoy = None
@@ -1566,7 +1561,7 @@ def update_shock_tracker(html, data, vals):
         s = data.get(key, [])
         return s[0].get('date', '') if s else ''
 
-    gas_post     = gas_est or (_latest_date('gasoline') >= shock)
+    gas_post     = _latest_date('gasoline') >= shock
     cpi_post     = _latest_date('cpi_all') >= shock
     umcsent_post = _latest_date('umcsent') >= shock
     saving_post  = _latest_date('psavert') >= shock
@@ -1577,7 +1572,7 @@ def update_shock_tracker(html, data, vals):
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
          "status": _status(gas_now, gas_pre, [0, 2], data_is_post_shock=gas_post),
-         "note": f"{'Est. from WTI' if gas_est else 'FRED GASREGW'}: ${gas_pre:.2f} \u2192 ~${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now else "Awaiting data"
+         "note": f"FRED GASREGW: ${gas_pre:.2f} \u2192 ${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now and gas_post else "Awaiting FRED GASREGW weekly retail gasoline data"
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
          "metric": "CPI Transport Svcs YoY", "pre": cpi_trans, "now": cpi_trans, "chg": 0.0,
