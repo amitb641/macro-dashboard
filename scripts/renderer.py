@@ -1407,11 +1407,7 @@ def render_inflation(html, data, vals, tabs):
                 rf"\g<1>{c_cur} vs {c_prv}\g<2>{c_cur}", html, count=1)
             html = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{c_cur} accelerating", html, count=1)
             html = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{c_cur} cooling", html, count=1)
-            # Update prior month legend label in CPI section (3rd legend entry after accelerating/cooling)
-            html = re.sub(
-                r"(CPI by Category[\s\S]{200,600}?</span>)</span>\s*<span[^>]*>[^<]*</span>([A-Z][a-z]+'\d+)</span>",
-                lambda m: m.group(0).replace(m.group(2), c_prv) if m.group(2) != c_prv else m.group(0),
-                html, count=1)
+            # Prior month legend label in CPI section — skip complex regex, not critical
             html = re.sub(
                 r"(Monthly YoY % change by category\. )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                 rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
@@ -1431,8 +1427,13 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"(Real PCE spending growth by category · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{p_cur}", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) accelerating([\s\S]{0,300}?PCE)", f"{p_cur} accelerating\\2", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) cooling([\s\S]{0,300}?PCE)", f"{p_cur} cooling\\2", html, count=1)
+            # PCE legend labels — find within the PCE tab section only
+            pce_section = html.find('PCE by Category')
+            if pce_section > 0:
+                chunk = html[pce_section:pce_section+2000]
+                chunk = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{p_cur} accelerating", chunk, count=1)
+                chunk = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{p_cur} cooling", chunk, count=1)
+                html = html[:pce_section] + chunk + html[pce_section+2000:]
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     for tab in ('cpi', 'pce'):
