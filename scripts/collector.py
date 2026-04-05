@@ -107,24 +107,22 @@ def eia_spot(product, days=35):
 
 def build_oil_daily(wti_series, brent_series):
     """
-    Extract current-month daily sessions from EIA/FRED data.
-    Returns dict with labels, wti, brent arrays for the chart.
-    Keeps it clean: only current calendar month, max ~23 sessions.
+    Extract daily sessions from EIA/FRED data starting March 1 of the
+    current year.  Tracks the full oil-price trajectory through the year.
     """
     today = datetime.date.today()
-    month_start = today.replace(day=1)
-    month_name = today.strftime('%B %Y')
+    start_date = datetime.date(today.year, 3, 1)
 
-    def filter_month(series):
+    def filter_from(series):
         out = []
         for obs in reversed(series):  # oldest first
             d = datetime.date.fromisoformat(obs['date'])
-            if d.year == today.year and d.month == today.month:
+            if d >= start_date:
                 out.append({'date': d, 'value': obs['value']})
         return out
 
-    wti_m   = filter_month(wti_series)
-    brent_m = filter_month(brent_series)
+    wti_m   = filter_from(wti_series)
+    brent_m = filter_from(brent_series)
 
     # Align by date
     wti_by_date   = {o['date']: o['value'] for o in wti_m}
@@ -136,7 +134,6 @@ def build_oil_daily(wti_series, brent_series):
     brent_vals = []
 
     for d in all_dates:
-        # Short label: "Mar 3" — concise, no year needed (all same month)
         labels.append(d.strftime('%b %-d'))
         wti_vals.append(wti_by_date.get(d))
         brent_vals.append(brent_by_date.get(d))
@@ -164,7 +161,7 @@ def build_oil_daily(wti_series, brent_series):
         'wti':      wti_vals,
         'brent':    brent_vals,
         'notes':    notes,
-        'month':    month_name,
+        'month':    f'Mar–{today.strftime("%b %Y")}',
         'updated':  datetime.datetime.utcnow().strftime('%b %d %H:%M UTC'),
         'sessions': len([v for v in wti_vals if v is not None]),
     }
@@ -195,13 +192,13 @@ def collect():
     data['hy_hist']     = fred_obs('BAMLH0A0HYM2', 60)
 
     print('  [Daily] Oil (EIA + FRED fallback)...')
-    wti_raw   = eia_spot('RWTC',  35)    # current month + buffer
-    brent_raw = eia_spot('RBRTE', 35)
-    if not wti_raw:   wti_raw   = fred_obs('DCOILWTICO',   35)
-    if not brent_raw: brent_raw = fred_obs('DCOILBRENTEU', 35)
+    wti_raw   = eia_spot('RWTC',  60)    # ~2 months to cover from Mar 1
+    brent_raw = eia_spot('RBRTE', 60)
+    if not wti_raw:   wti_raw   = fred_obs('DCOILWTICO',   60)
+    if not brent_raw: brent_raw = fred_obs('DCOILBRENTEU', 60)
     data['wti_daily']    = wti_raw
     data['brent_daily']  = brent_raw
-    data['oil_daily_chart'] = build_oil_daily(wti_raw, brent_raw)  # current month only
+    data['oil_daily_chart'] = build_oil_daily(wti_raw, brent_raw)  # Mar 1 onward
 
     print('  [Daily] Mortgage (weekly)...')
     data['mortgage30']  = fred_obs('MORTGAGE30US', 6)
