@@ -1772,7 +1772,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">📋 Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
     <div class="fc-note" id="commentary-jobs">
-      <strong>Latest:</strong> Feb'26 nonfarm payrolls at <strong>−92K</strong> — the first negative print since the pandemic, following Jan's +126K. <strong>2025 full-year (revised):</strong> +116K total (Dec-to-Dec) after the Jan'26 benchmark revision slashed prior estimates by −862K — the largest downward revision since 2009. Multiple months in 2025 were revised to show losses (Oct −140K, Aug −70K, Jun −20K, Dec −17K). Healthcare gains moderated sharply; manufacturing, professional services, and federal government shed jobs throughout 2025. <strong>Weekly claims</strong> steady at 205K (Mar'26) — no broad layoff surge yet. <strong>JOLTS openings</strong> ~7.6M, down from 12M peak; quits rate at 2019 levels. <strong>2026 outlook:</strong> Feb weakness likely overstates; DOGE federal cuts (−327K cumulative from Oct'24 peak) and weather distorted the print. Consensus ~100–140K/mo going forward. Key risk: if negative payrolls persist into Q2, recession probability rises materially.
+      <strong>Latest:</strong> Mar'26 nonfarm payrolls rebounded <strong>+178K</strong>, reversing Feb's −92K contraction. Healthcare led (+90K), with broad gains in leisure (+44K), construction (+26K), and transport (+21K). Federal government continued shedding (−18K). <strong>2025 full-year (revised):</strong> +116K total (Dec-to-Dec) after the Jan'26 benchmark revision slashed prior estimates by −862K. <strong>Weekly claims</strong> steady at 205K — no broad layoff surge. <strong>JOLTS openings</strong> ~7.6M, down from 12M peak; quits rate at 2019 levels. <strong>2026 outlook:</strong> March rebound suggests Feb was weather/DOGE distortion, not a labor market breakdown. Consensus ~100–140K/mo going forward. Key risk: if tariff escalation stalls hiring in Q2–Q3, payroll momentum could fade.
     </div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
@@ -1786,12 +1786,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Monthly Job Change by Sector — Jan'26 vs Feb'26 (thousands)</div>
-      <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Feb'26</div>
+      <div class="panel-title">Monthly Job Change by Sector — Feb'26 vs Mar'26 (thousands)</div>
+      <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Mar'26</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Feb'26 improved vs Jan</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Feb'26 worsened vs Jan</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Jan'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 improved vs Feb</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Mar'26 worsened vs Feb</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
       <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
@@ -1822,7 +1822,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Employment Change by Sector — Annual Net (thousands)</div>
     <div class="panel-sub">BLS CES · seasonally adjusted · 2025 revised to +116K total (Jan 2026 benchmark, Dec-to-Dec PAYEMS)</div>
     <div class="dtable-wrap"><table class="dtable" id="jobs-tbl"></table></div>
-    <p class="src">Source: BLS CES (seasonally adjusted, post-Jan 2026 benchmark revision). Feb 2026: −92K, driven by healthcare (−28K), federal govt (−38K), manufacturing (−12K). 2025 full-year (Dec-to-Dec): +116K after benchmark revision slashed prior estimates by −862K. Multiple 2025 months revised to show losses.</p>
+    <p class="src">Source: BLS CES (seasonally adjusted, post-Jan 2026 benchmark revision). Mar 2026: +178K, led by healthcare (+90K), leisure (+44K), construction (+26K). 2025 full-year (Dec-to-Dec): +116K after benchmark revision slashed prior estimates by −862K.</p>
   </div>
 
 </div>
@@ -2479,11 +2479,11 @@ const NFP_VS_ADP = {
 // Monthly sector breakdown (BLS CES major sectors, thousands)
 const SECTOR_MOM = {
   sectors:["Healthcare","Retail Trade","State & Local Govt","Education (Pvt)","Construction","Financial Activities","Mining & Energy","Information (Tech)","Transport & Warehousing","Leisure & Hospitality","Manufacturing","Prof. & Biz Services","Federal Government"],
-  jan26:  [82, 18, 18, 8, 35, 8, 2, -8, -8, 22, -5, -10, -34],
-  feb26:  [-28, 2, 3, 9, -11, 2, 0, -11, -11, -27, -12, 2, -10]
+  feb26:  [-28, -8, 4, -15, -13, 2, -1, -21, -48, -11, -6, 7, -9],
+  mar26:  [90, 10, 14, 2, 26, -15, 2, -3, 21, 44, 15, 2, -18]
 };
 // Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
-const NFP_BLS_MOM = {"labels":["Mar'24", "Apr'24", "May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "bls":[228, 64, 78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92]};
+const NFP_BLS_MOM = {"labels":["Apr'24", "May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"], "bls":[64, 78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 126, -92, 178]};
 
 // ── Debt Service Ratio (TDSP) — auto-rebuilt by renderer.py from FRED TDSP
 const TDSP_HIST = {"labels":["2018 Q3", "2018 Q4", "2019 Q1", "2019 Q2", "2019 Q3", "2019 Q4", "2020 Q1", "2020 Q2", "2020 Q3", "2020 Q4", "2021 Q1", "2021 Q2", "2021 Q3", "2021 Q4", "2022 Q1", "2022 Q2", "2022 Q3", "2022 Q4", "2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4", "2025 Q1", "2025 Q2", "2025 Q3", "2025 Q4"], "data":[11.6, 11.7, 11.5, 11.6, 11.6, 11.7, 11.6, 9.7, 10.1, 10.4, 9.1, 9.8, 10.0, 10.2, 10.5, 10.7, 10.6, 10.7, 10.6, 10.6, 10.7, 11.1, 11.1, 11.0, 11.1, 11.1, 11.1, 11.1, 11.3, 11.3]};
@@ -3260,21 +3260,28 @@ function buildJobsTab(){
     });
   }
 
-  // Sector MoM chart — colored bar + prior-month dot
+  // Sector MoM chart — colored bar + prior-month dot (dynamic keys)
   {
-    const sIdx = SECTOR_MOM.feb26.map((_,i)=>i).sort((a,b)=>SECTOR_MOM.feb26[b]-SECTOR_MOM.feb26[a]);
+    const _smK = Object.keys(SECTOR_MOM).filter(k=>k!=="sectors");
+    const _smCurK = _smK[_smK.length-1];
+    const _smPrvK = _smK.length>1?_smK[_smK.length-2]:_smCurK;
+    const _smCurD = SECTOR_MOM[_smCurK];
+    const _smPrvD = SECTOR_MOM[_smPrvK];
+    const _smCurL = _smCurK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
+    const _smPrvL = _smPrvK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
+    const sIdx = _smCurD.map((_,i)=>i).sort((a,b)=>_smCurD[b]-_smCurD[a]);
     new Chart(document.getElementById("c-sector-mom").getContext("2d"),{
       type:"bar",
       data:{labels:sIdx.map(i=>SECTOR_MOM.sectors[i]),datasets:[
-        {label:"Feb'26 (K)",data:sIdx.map(i=>SECTOR_MOM.feb26[i]),
-         backgroundColor:sIdx.map(i=>{const f=SECTOR_MOM.feb26[i],j=SECTOR_MOM.jan26[i];return f>=j?"#1A9E5Acc":"#D64045bb"}),borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
-        {label:"Jan'26 (K)",data:sIdx.map(i=>SECTOR_MOM.jan26[i]),
+        {label:_smCurL+" (K)",data:sIdx.map(i=>_smCurD[i]),
+         backgroundColor:sIdx.map(i=>{const f=_smCurD[i],j=_smPrvD[i];return f>=j?"#1A9E5Acc":"#D64045bb"}),borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
+        {label:_smPrvL+" (K)",data:sIdx.map(i=>_smPrvD[i]),
          backgroundColor:"#8878B8bb",borderRadius:3,barPercentage:0.7,categoryPercentage:0.8},
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},
           tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
-        scales:{x:{min:Math.min(...SECTOR_MOM.feb26,...SECTOR_MOM.jan26)-5,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
+        scales:{x:{min:Math.min(..._smCurD,..._smPrvD)-5,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
                 y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
     });
   }

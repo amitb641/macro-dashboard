@@ -1088,6 +1088,50 @@ def render_labor(html, data, vals, tabs):
         icsa_lbl = f"Initial Claims {month_label(icsa_date)}" if icsa_date else 'Initial Claims'
         html = patch_kpi_full(html, 'Initial Claims', icsa_lbl, f'{icsa_val/1000:.0f}K')
 
+    # ── Auto-update Jobs tab month references ────────────────────────
+    # The Jobs tab has hardcoded month names in titles, legends, and tiles.
+    # Derive current and prior month labels from PAYEMS data.
+    payems_s = data.get('payems', [])
+    if payems_s and len(payems_s) >= 2:
+        cur_date = payems_s[0].get('date', '')
+        prev_date = payems_s[1].get('date', '')
+        if cur_date and prev_date:
+            cur_lbl = month_label(cur_date)    # e.g. "Mar'26"
+            prev_lbl = month_label(prev_date)  # e.g. "Feb'26"
+            cur_upper = cur_lbl.upper()        # e.g. "MAR'26"
+
+            # Update sector chart title and subtitle
+            html = re.sub(
+                r'Monthly Job Change by Sector — [A-Z][a-z]+\'\d+ vs [A-Z][a-z]+\'\d+ \(thousands\)',
+                f"Monthly Job Change by Sector — {prev_lbl} vs {cur_lbl} (thousands)",
+                html, count=1)
+            html = re.sub(
+                r'(BLS CES major sector breakdown · month-over-month net payroll change · sorted by )[A-Z][a-z]+\'\d+',
+                rf'\g<1>{cur_lbl}', html, count=1)
+
+            # Update sector legend labels
+            html = re.sub(
+                r"([A-Z][a-z]+'\d+) improved vs [A-Z][a-z]+",
+                f"{cur_lbl} improved vs {prev_lbl.split(chr(39))[0]}",
+                html, count=1)
+            html = re.sub(
+                r"([A-Z][a-z]+'\d+) worsened vs [A-Z][a-z]+",
+                f"{cur_lbl} worsened vs {prev_lbl.split(chr(39))[0]}",
+                html, count=1)
+
+            # Update Jobs metric tile header
+            html = re.sub(
+                r"""FEB'26 JOBS""",
+                f"{cur_upper} JOBS", html, count=1)
+
+            # Update the metric tile value and subtitle
+            if nfp is not None:
+                html = re.sub(
+                    r'(<div[^>]*class="panel-title[^"]*"[^>]*>📋 Jobs Market Commentary)',
+                    r'\1', html, count=1)
+
+            applied.append(f'Jobs tab month refs updated to {prev_lbl}/{cur_lbl}')
+
     for tab in ('jobs', 'unemp', 'wages'):
         txt = tabs.get(tab, '')
         if txt: html = patch_commentary(html, tab, txt)
