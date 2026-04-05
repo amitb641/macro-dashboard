@@ -307,6 +307,8 @@ def collect():
     print('  [History] Annual chart series...')
     data['fedfunds_annual']   = fred_obs('FEDFUNDS', 30, freq='a')
     data['mortgage30_annual'] = fred_obs('MORTGAGE30US', 30, freq='a')
+    data['dgs10_annual']      = fred_obs('DGS10', 30, freq='a')
+    data['dgs2_annual']       = fred_obs('DGS2', 30, freq='a')
     data['ig_oas_annual']     = fred_obs('BAMLC0A0CM', 30, freq='a')
     data['hy_oas_annual']     = fred_obs('BAMLH0A0HYM2', 30, freq='a')
     data['wti_annual']        = fred_obs('DCOILWTICO', 30, freq='a')

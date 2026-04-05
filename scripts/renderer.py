@@ -865,6 +865,8 @@ def rebuild_charts(html, data):
     # ── Category MoM auto-rebuilders ─────────────────────────────────
     html = rebuild_u_sector_mom(html, data)
     html = rebuild_cpi_cat_mom(html, data)
+    html = rebuild_treasury_data(html, data)
+    html = rebuild_oil_prod_spread(html, data)
 
     return html
 
@@ -1122,6 +1124,89 @@ def rebuild_cpi_cat_mom(html, data):
             applied.append(f'CPI_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
             html = new_html
 
+    return html
+
+
+def rebuild_treasury_data(html, data):
+    """Rebuild TREASURY_DATA with annual DGS10/DGS2 averages + latest daily."""
+    dgs10_ann = data.get('dgs10_annual', [])
+    dgs2_ann = data.get('dgs2_annual', [])
+    if not dgs10_ann or not dgs2_ann:
+        # Fall back to computing from daily history
+        return html
+
+    today = datetime.date.today()
+    t10_labels, t10_vals = _annual_from_freq(dgs10_ann, precision=2)
+    t2_labels, t2_vals = _annual_from_freq(dgs2_ann, precision=2)
+
+    if not t10_labels:
+        return html
+
+    # Align to common years
+    common = [l for l in t10_labels if l in t2_labels]
+    dgs10 = [t10_vals[t10_labels.index(l)] for l in common]
+    dgs2 = [t2_vals[t2_labels.index(l)] for l in common]
+    spread = [round(a - b, 2) for a, b in zip(dgs10, dgs2)]
+
+    # Add latest daily value
+    dgs10_latest = data.get('dgs10')
+    dgs2_latest = data.get('dgs2')
+    if dgs10_latest and dgs2_latest:
+        latest_lbl = month_label(datetime.date.today().strftime('%Y-%m-01'))
+        common.append(latest_lbl)
+        dgs10.append(round(dgs10_latest, 2))
+        dgs2.append(round(dgs2_latest, 2))
+        spread.append(round(dgs10_latest - dgs2_latest, 2))
+
+    # Card 90+ DPD — preserve existing values (NY Fed quarterly, not in FRED)
+    # Extract from current HTML
+    card90_match = re.search(r'"card90":\s*\[([^\]]*)\]', html)
+    card90 = []
+    if card90_match:
+        import ast as _ast
+        try:
+            card90 = _ast.literal_eval(f'[{card90_match.group(1)}]')
+        except Exception:
+            card90 = []
+    # Pad/trim card90 to match labels length
+    while len(card90) < len(common):
+        card90.append(card90[-1] if card90 else None)
+    card90 = card90[:len(common)]
+
+    obj = {'labels': common, 'dgs10': dgs10, 'dgs2': dgs2, 'spread': spread, 'card90': card90}
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const TREASURY_DATA\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const TREASURY_DATA = {new_json};', html, count=1)
+    if n:
+        applied.append(f'TREASURY_DATA rebuilt ({len(common)} points, latest {common[-1]})')
+        html = new_html
+    return html
+
+
+def rebuild_oil_prod_spread(html, data):
+    """Rebuild OIL_SPREAD from existing annual WTI/Brent data."""
+    wti_a = data.get('wti_annual', [])
+    brent_a = data.get('brent_annual', [])
+    if not wti_a or not brent_a:
+        return html
+
+    w_labels, w_vals = _annual_from_freq(wti_a, start_year=2015, precision=1)
+    b_labels, b_vals = _annual_from_freq(brent_a, start_year=2015, precision=1)
+    common = [l for l in w_labels if l in b_labels]
+    if not common:
+        return html
+
+    wti = [w_vals[w_labels.index(l)] for l in common]
+    brent = [b_vals[b_labels.index(l)] for l in common]
+    spread = [round(w - b, 1) for w, b in zip(wti, brent)]
+
+    obj = {'labels': common, 'spread': spread}
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const OIL_SPREAD\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const OIL_SPREAD = {new_json};', html, count=1)
+    if n:
+        applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
+        html = new_html
     return html
 
 
