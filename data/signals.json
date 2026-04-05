@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-04-04T14:37:15.817629Z",
+  "analyzed_at": "2026-04-05T05:59:35.744135Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
-  "flagged_count": 2,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.79,
@@ -46,28 +46,28 @@
     },
     "dgs10": {
       "value": 4.31,
-      "delta": -0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 86,
-      "delta": -1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 317,
-      "delta": 1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "unrate": {
       "value": 4.3,
-      "delta": -0.1,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -88,9 +88,9 @@
     },
     "nfp_mom": {
       "value": 178,
-      "delta": 270,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0,
+      "direction": "stable",
+      "flagged": false,
       "alert": null
     },
     "wti": {
@@ -109,9 +109,9 @@
     },
     "wages_yoy": {
       "value": 3.38,
-      "delta": -0.31,
-      "direction": "falling",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": null
     },
     "cs_hpi_yoy": {
@@ -144,21 +144,21 @@
     },
     "dgs2": {
       "value": 3.79,
-      "delta": -0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 3.94,
-      "delta": -0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 4.88,
-      "delta": -0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -186,7 +186,7 @@
     },
     "u6rate": {
       "value": 8.0,
-      "delta": 0.1,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,19 +241,9 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "nfp_mom",
-      "line": "nfp_mom: 178.00 (\u25b2270.00 vs prior)",
-      "alert": null
-    },
-    {
-      "key": "wages_yoy",
-      "line": "wages_yoy: 3.38 (\u25bc0.31 vs prior)",
-      "alert": null
-    }
-  ],
+  "headlines": [],
   "raw_errors": [
-    "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
+    "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
   ]
 }
