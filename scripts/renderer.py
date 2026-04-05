@@ -1610,24 +1610,16 @@ def update_shock_tracker(html, data, vals):
     }
 
     new_json = json.dumps(tracker, separators=(', ', ':'))
-    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\};\s*\n'
-    # Use a more robust approach: find the const and replace up to the closing };
-    import re as re2
-    match = re2.search(r'const SHOCK_TRACKER\s*=\s*', html)
-    if match:
-        start = match.start()
-        # Find matching closing brace by counting
-        depth = 0
-        i = match.end()
-        while i < len(html):
-            if html[i] == '{': depth += 1
-            elif html[i] == '}': depth -= 1
-            if depth == 0:
-                # Find the semicolon
-                end = html.index(';', i) + 1
-                new_html = html[:start] + f'const SHOCK_TRACKER = {new_json};' + html[end:]
-                applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
-                return new_html
+    new_decl = f'const SHOCK_TRACKER = {new_json};'
+    # SHOCK_TRACKER has nested arrays/objects — match up to the line
+    # before '// OIL_DAILY' which always follows it
+    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\n\};\s*(?=\n// OIL_DAILY)'
+    new_html, n = re.subn(pattern, new_decl, html, count=1)
+    if n:
+        applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
+        html = new_html
+    else:
+        warnings.append('update_shock_tracker: SHOCK_TRACKER const not matched')
     return html
 
 
