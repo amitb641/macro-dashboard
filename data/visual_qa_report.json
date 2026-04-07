@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-04-07T04:32:47.859365Z",
-  "status": "PASS",
+  "checked_at": "2026-04-07T04:43:33.802973Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 224,
-    "passed": 224,
-    "failed": 0,
+    "total_checks": 219,
+    "passed": 218,
+    "failed": 1,
     "js_errors": 1,
     "console_errors": 0
   },
@@ -1198,8 +1198,9 @@
     {
       "category": "Dashboard",
       "check": "No undefined/NaN/null values",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "found: ['undefined', 'NaN']"
     },
     {
       "category": "Dashboard",
@@ -1222,36 +1223,6 @@
     {
       "category": "Dashboard",
       "check": "Panel \"\ud83d\udcb5 Wages\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83d\uded2 CPI\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83d\udcb3 PCE\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83d\udcc8 Fed Rates\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83d\udd17 Credit\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83c\udfe6 Banks\" has title",
       "pass": true,
       "severity": "ok"
     },
