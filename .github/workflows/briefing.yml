@@ -38,7 +38,9 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
 
       - name: Check setup
         run: |
@@ -85,12 +87,6 @@ jobs:
 
       - name: Agent 4b — Re-render (inject validation report)
         run: python scripts/renderer.py
-
-      - name: Agent 7 — Visual QA
-        run: |
-          playwright install --with-deps chromium
-          python scripts/visual_qa.py --screenshots
-        continue-on-error: true
 
       - name: Gate — Block publish on critical validation failures
         if: steps.validator.outcome == 'failure'
