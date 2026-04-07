@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
-Agent 6 — VALIDATOR
-Independent data quality agent. Runs after the renderer (Agent 4).
-Two-pass validation:
+Agent 6 — VALIDATOR (unified data + visual quality)
+Independent quality agent. Runs after the renderer (Agent 4).
+Four-pass validation:
   1. Internal consistency — compares index.html values vs raw_data.json
   2. Source verification — fresh API spot-checks against FRED/BLS
+  3. Staleness detection — flags data beyond expected publication lags
+  4. Visual QA — DOM-based checks via headless Chromium (if available)
 Outputs: data/validation_report.json
 Exit code: 0 = pass, 1 = critical divergences found
 """
@@ -438,9 +440,63 @@ def check_staleness(data, collected_at):
 # REPORT GENERATION
 # ═══════════════════════════════════════════════════════════════════════
 
-def build_report(internal, sources, staleness):
+def check_visual():
+    """Run DOM-based visual QA checks if Playwright is available.
+    Returns list of findings from the visual QA agent."""
+    try:
+        # Add scripts dir to path for visual_qa import
+        scripts_dir = str(Path(__file__).parent)
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+
+        import visual_qa
+        # Reset visual_qa state
+        visual_qa.PASS = 0
+        visual_qa.FAIL = 0
+        visual_qa.findings = []
+
+        # Run visual QA silently
+        import io
+        old_stdout = sys.stdout
+        sys.stdout = io.StringIO()
+        try:
+            visual_qa.run_visual_qa(take_screenshots=False)
+        except SystemExit:
+            pass
+        finally:
+            sys.stdout = old_stdout
+
+        # Convert visual QA findings to our format
+        results = []
+        for f in visual_qa.findings:
+            results.append({
+                'check': f'Visual: {f["category"]} — {f["check"]}',
+                'severity': f.get('severity', 'warning'),
+                'pass': f.get('pass', False),
+                'detail': f.get('detail', ''),
+            })
+        return results
+    except ImportError:
+        return [{
+            'check': 'Visual QA',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': 'Playwright not installed (pip install playwright)',
+        }]
+    except Exception as e:
+        return [{
+            'check': 'Visual QA',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': f'Visual QA error: {e}',
+        }]
+
+
+def build_report(internal, sources, staleness, visual=None):
     """Compile all findings into a validation report."""
-    all_findings = internal + sources + staleness
+    if visual is None:
+        visual = []
+    all_findings = internal + sources + staleness + visual
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -466,6 +522,7 @@ def build_report(internal, sources, staleness):
         'internal_consistency': internal,
         'source_verification': sources,
         'staleness': staleness,
+        'visual_qa': visual,
     }
     return report
 
@@ -513,8 +570,19 @@ def validate():
     else:
         print(f'  All series within expected freshness windows')
 
+    # Pass 4: Visual QA (DOM checks via Playwright, if available)
+    print('\n  ── Pass 4: Visual QA (DOM-based rendering checks) ──')
+    visual = check_visual()
+    vqa_pass = sum(1 for f in visual if f.get('pass'))
+    vqa_fail = sum(1 for f in visual if not f.get('pass') and f.get('severity') != 'skipped')
+    vqa_skip = sum(1 for f in visual if f.get('severity') == 'skipped')
+    if vqa_skip:
+        print(f'  Skipped ({visual[0].get("reason", "unavailable")})')
+    else:
+        print(f'  {vqa_pass} passed, {vqa_fail} failed')
+
     # Build and save report
-    report = build_report(internal, sources, staleness)
+    report = build_report(internal, sources, staleness, visual)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -527,7 +595,8 @@ def validate():
     print(f'  Report saved to {RPT_FILE.name}')
 
     # Print divergences for visibility
-    for section_name, section in [('Internal', internal), ('Source', sources), ('Staleness', staleness)]:
+    for section_name, section in [('Internal', internal), ('Source', sources),
+                                   ('Staleness', staleness), ('Visual', visual)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')

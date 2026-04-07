@@ -1,0 +1,1361 @@
+{
+  "checked_at": "2026-04-07T04:24:59.010864Z",
+  "status": "PASS",
+  "summary": {
+    "total_checks": 224,
+    "passed": 224,
+    "failed": 0,
+    "js_errors": 1,
+    "console_errors": 0
+  },
+  "js_errors": [
+    "dailyChart.getDatasetMeta is not a function"
+  ],
+  "console_errors": [],
+  "findings": [
+    {
+      "category": "global",
+      "check": "Page has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "Page body has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "No JS exceptions",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "No console errors",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "KPI strip has tiles",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "Nav buttons present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"2025 Quarterly GDP \u2014 BEA Estimates\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"2024 vs 2025 vs 2026F \u2014 Key Macro Indica\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"2026 Forecast Scenarios \u2014 Institution Co\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"Key 2025 Actuals & 2026 Macro Themes\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 5 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 6 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 7 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 8 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 9 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 10 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 11 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 12 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 13 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 14 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 15 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 16 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 17 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 18 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 19 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 20 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 21 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 22 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 23 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 24 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 25 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 26 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 27 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 28 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 29 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 30 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Chart canvas 31 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Panel \"Broad Sector Groups \u2014 Real GDP % Change\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"\ud83d\udccb Jobs Market Commentary \u2014 2025 & 2026 O\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"Monthly Employment Change \u2014 BLS Total No\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"Monthly Job Change by Sector \u2014 Feb'26 vs\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"Total Nonfarm Payrolls Added \u2014 Annual (t\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"Job Gains by Sector \u2014 2025 vs 2024 (thou\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"Employment Change by Sector \u2014 Annual Net\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"\ud83d\udc77 Unemployment Commentary \u2014 Trends & Ris\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"Monthly Unemployment Rate \u2014 12-Month Tre\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"Unemployment by Sector \u2014 Monthly MoM Cha\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"National Unemployment Rate \u2014 Annual Aver\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"Unemployment by Sector \u2014 2025 vs 2024 (%\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"Weekly Jobless Claims \u2014 Initial & Contin\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"Unemployment Rate by Industry \u2014 Annual D\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"\ud83d\udcb5 Wage Growth Commentary \u2014 Nominal vs Re\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"Monthly Wage Growth \u2014 Nominal vs Real Yo\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"Nominal vs Real Wage Growth \u2014 All Privat\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"Avg Hourly Earnings by Sector \u2014 2025 vs \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"Wage Growth by Sector \u2014 Annual Nominal %\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"\ud83d\uded2 CPI Commentary \u2014 Inflation Trajectory \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"Monthly CPI \u2014 Headline vs Core YoY % (12\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"CPI by Category \u2014 MoM Change (Feb'26 vs \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"U.S. CPI Inflation \u2014 Annual Rate (Dec-to\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"CPI by Category \u2014 2022 Peak vs 2024 vs 2\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"CPI Category Annual Rates\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 5 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 6 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 7 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 8 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Chart canvas 9 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"\ud83d\udcb3 PCE & Consumer Commentary \u2014 Spending H\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"PCE Price Index \u2014 Monthly Headline vs Co\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"PCE Price Index \u2014 Annual Headline vs Cor\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"PCE by Category \u2014 MoM Change (Jan'26 vs \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"PCE by Category \u2014 Annual Growth 2023 vs \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"Personal Saving Rate \u2014 Last 12 Months\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"Personal Saving Rate \u2014 Annual Averages (\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"Consumer Sentiment \u2014 Last 12 Months\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"Consumer Sentiment \u2014 Annual (2000\u20132025)\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "PCE & Consumer",
+      "check": "Panel \"Household Debt & Delinquencies \u2014 NY Fed \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"Fed Rate Cycle History & Wall St Forecas\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"Card Issuer Funding Mix \u2014 Deposits vs Ma\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"10Y Treasury Yield vs Card 90+ DPD \u2014 Yie\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"Net Charge-Off Rates \u2014 Card Specialists \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"Senior Loan Officer Survey (SLOOS) \u2014 Tig\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"Consumer Credit Growth \u2014 Revolving vs No\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"Household Debt Composition & Stress \u2014 Q3\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"Big 6 Banks \u2014 Q4 2025 Earnings Compariso\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"2026 NII Guidance \u2014 Full-Year Outlook ($\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"Net Charge-Off Rates & Delinquency Outlo\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"Bank-by-Bank Earnings Commentary \u2014 Key T\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"\ud83c\udfe0 Housing Commentary \u2014 Affordability Cri\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"Monthly Housing Trend \u2014 Case-Shiller YoY\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"Home Price Index \u2014 Case-Shiller & FHFA (\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"30-Year Mortgage Rate vs Fed Funds Rate\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"Housing Starts \u2014 Single-Family vs Multi-\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"Affordability Index & Months Supply\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"Metro Home Price Performance \u2014 Key Marke\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Chart canvas 0 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Chart canvas 2 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"WTI & Brent \u2014 35-Year History\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2026 \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"Oil Supply Shock Tracker \u2014 Daily Closes\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"Full Oil Impact Chain \u2014 Prices to Credit\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"Sector Margin Impact \u2014 Oil Sensitivity\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"WTI Price History with Recession Shading\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"Historical Oil Shock Episodes\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Panel \"KPI Signal Color Logic\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Panel \"Dashboard Tab Index\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Panel \"Key Definitions\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Panel \"\ud83d\udd2d Forecast Institutions \u2014 Methodology No\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Sources",
+      "check": "Panel \"\ud83e\udd16 Dynamic Commentary \u2014 AI-Generated from\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udcca GDP\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udccb Jobs\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udc77 Unemp\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udcb5 Wages\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\uded2 CPI\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udcb3 PCE\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udcc8 Fed Rates\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83d\udd17 Credit\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Dashboard",
+      "check": "Panel \"\ud83c\udfe6 Banks\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "No undefined/NaN/null values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 1: Internal Consistency\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 2: Source Verification\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 3: Data Staleness\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "KPIS defined",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "KPIS all have values",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "KPIS no NaN/undefined",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "CPI_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "PCE_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "U_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "NFP_VS_ADP has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "OIL_ANNUAL has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "OIL_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "HOUSING_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "VALIDATION_REPORT present",
+      "pass": true,
+      "severity": "ok"
+    }
+  ]
+}

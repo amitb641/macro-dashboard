@@ -1,0 +1,357 @@
+#!/usr/bin/env python3
+"""
+Agent 7 — VISUAL QA
+DOM-based dashboard quality checks using headless Chromium.
+Opens index.html, navigates each tab, and verifies:
+  - No JS console errors
+  - All tabs render with content (not empty/collapsed)
+  - KPI tiles have values (no empty, undefined, NaN)
+  - Chart canvases have non-zero dimensions
+  - No visible "undefined", "NaN", "null" text in rendered content
+  - All tab panels activate on click
+  - Screenshots saved as artifacts for human review
+
+Output: data/visual_qa_report.json + screenshots in data/screenshots/
+Usage: python scripts/visual_qa.py [--screenshots]
+"""
+
+import json, sys, datetime, os
+from pathlib import Path
+
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:
+    print('pip install playwright && playwright install chromium')
+    sys.exit(1)
+
+ROOT       = Path(__file__).parent.parent
+HTML_FILE  = ROOT / 'index.html'
+RPT_FILE   = ROOT / 'data' / 'visual_qa_report.json'
+SCREEN_DIR = ROOT / 'data' / 'screenshots'
+
+TAB_IDS = [
+    'fc', 'gdp', 'jobs', 'unemp', 'wages', 'cpi',
+    'pce', 'yield', 'credit', 'banks', 'housing', 'oil',
+    'dict', 'stack', 'validator',
+]
+
+# Tab display names for reporting
+TAB_NAMES = {
+    'fc': 'Outlook', 'gdp': 'GDP', 'jobs': 'Jobs', 'unemp': 'Unemployment',
+    'wages': 'Wages', 'cpi': 'CPI', 'pce': 'PCE & Consumer', 'yield': 'Rates & Yields',
+    'credit': 'Credit', 'banks': 'Banking', 'housing': 'Housing', 'oil': 'Oil',
+    'dict': 'Sources', 'stack': 'Dashboard', 'validator': 'Validator',
+}
+
+PASS = 0
+FAIL = 0
+findings = []
+
+
+def _check(category, name, condition, detail='', severity='warning'):
+    global PASS, FAIL
+    result = {
+        'category': category,
+        'check': name,
+        'pass': bool(condition),
+        'severity': 'ok' if condition else severity,
+    }
+    if not condition and detail:
+        result['detail'] = detail
+    findings.append(result)
+    if condition:
+        PASS += 1
+    else:
+        FAIL += 1
+        print(f'  FAIL  [{category}] {name} — {detail}')
+
+
+def run_visual_qa(take_screenshots=False):
+    global PASS, FAIL, findings
+    PASS = 0
+    FAIL = 0
+    findings = []
+
+    print('[Agent 7 — Visual QA] Starting DOM-based quality checks...')
+
+    if not HTML_FILE.exists():
+        print('ERROR: index.html not found')
+        sys.exit(1)
+
+    if take_screenshots:
+        SCREEN_DIR.mkdir(parents=True, exist_ok=True)
+
+    with sync_playwright() as p:
+        # Use PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH env var if set, otherwise auto-detect
+        chrome_path = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH', '')
+        if not chrome_path:
+            # Try to find installed chromium
+            import glob
+            candidates = sorted(glob.glob(os.path.expanduser(
+                '~/.cache/ms-playwright/chromium-*/chrome-linux/chrome')), reverse=True)
+            if candidates:
+                chrome_path = candidates[0]
+        launch_args = {'headless': True}
+        if chrome_path and os.path.exists(chrome_path):
+            launch_args['executable_path'] = chrome_path
+        browser = p.chromium.launch(**launch_args)
+        context = browser.new_context(
+            viewport={'width': 1920, 'height': 1080},
+            device_scale_factor=2,
+        )
+        page = context.new_page()
+
+        # Collect console errors
+        console_errors = []
+        page.on('console', lambda msg: console_errors.append(
+            {'type': msg.type, 'text': msg.text}
+        ) if msg.type in ('error', 'warning') else None)
+
+        # Collect JS exceptions
+        js_errors = []
+        page.on('pageerror', lambda err: js_errors.append(str(err)))
+
+        # Load page
+        file_url = f'file://{HTML_FILE.resolve()}'
+        page.goto(file_url, wait_until='networkidle')
+        page.wait_for_timeout(1000)  # Let charts render
+
+        # ── Global checks ──────────────────────────────────────────
+        print('\n  ── Global Checks ──')
+
+        # Page title
+        title = page.title()
+        _check('global', 'Page has title', len(title) > 0, f'title="{title}"')
+
+        # Page loaded without crash
+        body_text = page.inner_text('body')
+        _check('global', 'Page body has content', len(body_text) > 100,
+               f'body length={len(body_text)}')
+
+        # JS errors
+        _check('global', 'No JS exceptions', len(js_errors) == 0,
+               f'{len(js_errors)} errors: {js_errors[:3]}', severity='critical')
+
+        # Console errors (filter out benign ones)
+        real_errors = [e for e in console_errors
+                       if e['type'] == 'error'
+                       and 'favicon' not in e['text'].lower()
+                       and 'net::ERR_FILE_NOT_FOUND' not in e['text']
+                       and 'net::ERR_FAILED' not in e['text']  # file:// CORS
+                       and 'Access to fetch' not in e['text']]  # file:// CORS
+        _check('global', 'No console errors', len(real_errors) == 0,
+               f'{len(real_errors)} errors: {[e["text"][:80] for e in real_errors[:3]]}')
+
+        # KPI strip exists and has tiles
+        kpi_strip = page.query_selector_all('.metric-row .m-tile, .kpi-strip .m-tile, [class*="kpi"] [class*="tile"]')
+        if not kpi_strip:
+            # Try broader selector
+            kpi_strip = page.evaluate('''() => {
+                const strip = document.querySelector('.metric-row');
+                return strip ? strip.children.length : 0;
+            }''')
+            _check('global', 'KPI strip has tiles',
+                   (isinstance(kpi_strip, int) and kpi_strip > 0) or len(kpi_strip) > 0,
+                   'No KPI tiles found')
+        else:
+            _check('global', 'KPI strip has tiles', len(kpi_strip) > 0,
+                   f'found {len(kpi_strip)} tiles')
+
+        # Nav buttons exist
+        nav_btns = page.query_selector_all('[data-tab]')
+        _check('global', 'Nav buttons present', len(nav_btns) >= 10,
+               f'found {len(nav_btns)} buttons, expected 15')
+
+        # ── Per-tab checks ─────────────────────────────────────────
+        print('\n  ── Tab Checks ──')
+
+        for tab_id in TAB_IDS:
+            tab_name = TAB_NAMES.get(tab_id, tab_id)
+
+            # Click nav button
+            btn = page.query_selector(f'[data-tab="{tab_id}"]')
+            if not btn:
+                _check(tab_name, 'Nav button exists', False, f'no button for data-tab="{tab_id}"')
+                continue
+
+            btn.click()
+            page.wait_for_timeout(500)  # Let tab build
+
+            # Check tab panel is visible
+            panel = page.query_selector(f'#tab-{tab_id}')
+            if not panel:
+                _check(tab_name, 'Tab panel exists', False, f'no #tab-{tab_id}')
+                continue
+
+            is_visible = panel.is_visible()
+            _check(tab_name, 'Tab panel visible', is_visible, 'panel hidden after click')
+
+            if not is_visible:
+                continue
+
+            # Check panel has content (not empty)
+            panel_text = panel.inner_text()
+            _check(tab_name, 'Tab has content', len(panel_text.strip()) > 20,
+                   f'only {len(panel_text.strip())} chars')
+
+            # Check for bad values in rendered text
+            bad_patterns = ['undefined', 'NaN', 'null', '[object Object]']
+            found_bad = [p for p in bad_patterns if p in panel_text]
+            _check(tab_name, 'No undefined/NaN/null values', len(found_bad) == 0,
+                   f'found: {found_bad}')
+
+            # Check for metric tiles in this tab
+            metric_rows = panel.query_selector_all('.metric-row')
+            if metric_rows:
+                for i, row in enumerate(metric_rows):
+                    tiles = row.query_selector_all('div')
+                    # Check tiles aren't empty
+                    row_text = row.inner_text()
+                    if row_text.strip():
+                        # Check for empty tile values
+                        empty_vals = row_text.count('""') + row_text.count("''")
+                        if empty_vals > 0:
+                            _check(tab_name, f'Metric row {i} no empty values',
+                                   False, f'{empty_vals} empty values')
+
+            # Check for chart canvases
+            canvases = panel.query_selector_all('canvas')
+            for i, canvas in enumerate(canvases):
+                box = canvas.bounding_box()
+                if box:
+                    has_size = box['width'] > 50 and box['height'] > 50
+                    _check(tab_name, f'Chart canvas {i} has size', has_size,
+                           f'{box["width"]:.0f}x{box["height"]:.0f}px')
+
+            # Check for panels (sub-sections)
+            panels = panel.query_selector_all('.panel')
+            for i, p in enumerate(panels[:10]):  # Limit to first 10
+                panel_title = p.query_selector('.panel-title')
+                if panel_title:
+                    title_text = panel_title.inner_text()
+                    _check(tab_name, f'Panel "{title_text[:40]}" has title',
+                           len(title_text.strip()) > 0, 'empty panel title')
+
+            # Take screenshot if requested
+            if take_screenshots:
+                # Scroll to top of tab
+                panel.evaluate('el => el.scrollIntoView()')
+                page.wait_for_timeout(200)
+                screenshot_path = SCREEN_DIR / f'{tab_id}.png'
+                page.screenshot(path=str(screenshot_path), full_page=True)
+
+        # ── Data integrity checks (in browser) ─────────────────────
+        print('\n  ── Data Integrity Checks ──')
+
+        # Check key JS constants are defined and populated
+        js_checks = page.evaluate('''() => {
+            const checks = {};
+
+            // Check KPIS
+            if (typeof KPIS !== 'undefined') {
+                checks.kpis_count = KPIS.length;
+                checks.kpis_empty = KPIS.filter(k => !k.val || k.val === '').length;
+                checks.kpis_has_nan = KPIS.some(k =>
+                    String(k.val).includes('NaN') || String(k.val).includes('undefined'));
+            } else {
+                checks.kpis_count = -1;
+            }
+
+            // Check chart data arrays
+            const charts = [
+                'CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
+                'OIL_ANNUAL', 'OIL_MONTHLY', 'HOUSING_MONTHLY'
+            ];
+            checks.charts = {};
+            for (const name of charts) {
+                try {
+                    const obj = eval(name);
+                    if (obj && obj.labels) {
+                        checks.charts[name] = {
+                            labels: obj.labels.length,
+                            has_data: Object.keys(obj).length > 1,
+                            empty_labels: obj.labels.filter(l => !l).length,
+                        };
+                    } else {
+                        checks.charts[name] = {error: 'no labels'};
+                    }
+                } catch(e) {
+                    checks.charts[name] = {error: e.message};
+                }
+            }
+
+            // Check VALIDATION_REPORT
+            try {
+                checks.validation = typeof VALIDATION_REPORT !== 'undefined'
+                    ? VALIDATION_REPORT.status || 'present'
+                    : 'missing';
+            } catch(e) {
+                checks.validation = 'error';
+            }
+
+            return checks;
+        }''')
+
+        # KPIS checks
+        kpis_count = js_checks.get('kpis_count', -1)
+        _check('data', 'KPIS defined', kpis_count > 0, f'count={kpis_count}')
+        if kpis_count > 0:
+            _check('data', 'KPIS all have values', js_checks.get('kpis_empty', 99) == 0,
+                   f'{js_checks.get("kpis_empty")} empty')
+            _check('data', 'KPIS no NaN/undefined', not js_checks.get('kpis_has_nan', True))
+
+        # Chart data checks
+        for chart_name, info in js_checks.get('charts', {}).items():
+            if 'error' in info:
+                _check('data', f'{chart_name} defined', False, info['error'])
+            else:
+                _check('data', f'{chart_name} has data',
+                       info.get('labels', 0) > 0 and info.get('has_data', False),
+                       f'{info.get("labels", 0)} labels')
+
+        # Validation report
+        _check('data', 'VALIDATION_REPORT present',
+               js_checks.get('validation') not in ('missing', 'error'),
+               js_checks.get('validation', 'unknown'))
+
+        browser.close()
+
+    # ── Build report ───────────────────────────────────────────────
+    report = {
+        'checked_at': datetime.datetime.utcnow().isoformat() + 'Z',
+        'status': 'PASS' if FAIL == 0 else 'WARN' if FAIL <= 3 else 'FAIL',
+        'summary': {
+            'total_checks': PASS + FAIL,
+            'passed': PASS,
+            'failed': FAIL,
+            'js_errors': len(js_errors),
+            'console_errors': len(real_errors),
+        },
+        'js_errors': js_errors[:10],
+        'console_errors': [e['text'][:200] for e in real_errors[:10]],
+        'findings': findings,
+    }
+
+    RPT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
+
+    # Summary
+    status_icon = '✅' if FAIL == 0 else '⚠️' if FAIL <= 3 else '❌'
+    print(f'\n[Agent 7] {status_icon} Visual QA {report["status"]} — '
+          f'{PASS}/{PASS+FAIL} checks passed, {FAIL} failed')
+    if js_errors:
+        print(f'  JS errors: {len(js_errors)}')
+    print(f'  Report saved to {RPT_FILE.name}')
+
+    if FAIL > 0:
+        print(f'\n  Failures:')
+        for f in findings:
+            if not f['pass']:
+                print(f'    [{f["category"]}] {f["check"]}: {f.get("detail", "")}')
+
+    return FAIL == 0
+
+
+if __name__ == '__main__':
+    screenshots = '--screenshots' in sys.argv
+    sys.exit(0 if run_visual_qa(take_screenshots=screenshots) else 1)
