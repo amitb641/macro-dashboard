@@ -1,12 +1,11 @@
 # Macro Dashboard — Claude Code Guidelines
 
 ## Branch Strategy
-- **Production branch**: `main`
-- **Development branch**: `dev` — ALL changes go here first, regardless of session
-- Never create new feature branches unless explicitly asked
-- Always check out `dev` at the start of a session: `git checkout dev && git pull origin dev`
-- Push to `dev` when work is complete
-- PRs are created from `dev` → `main` only when a batch of changes is ready for release
+- **Production branch**: `main` — small targeted fixes (1-2 file changes) go directly here
+- For small fixes, commit and push straight to `main`. Don't create feature branches for minor fixes — it creates unnecessary merge/rebase overhead.
+- Only use feature branches for multi-file features or changes that need review
+- Never create new branches without asking
+- Clean up stale remote branches after merging
 
 ## Project Architecture
 6-stage Python data pipeline:
@@ -51,9 +50,13 @@ Supporting scripts:
 - Data updates: auto-committed by CI as `Weekly update: YYYY-MM-DD`
 - Always commit and push before ending a session
 
+## Data Quality Checks
+- When fetching time series data, ensure fetch count covers the full range needed by the renderer (e.g., 12 months of monthly charts need ~60 weekly observations, not 6)
+- When aligning two series by label, check for null/None fill rates — >20% nulls indicates a fetch-count or alignment bug
+- Trace data path from collector → renderer to verify sufficiency before shipping
+
 ## Do NOT
-- Create new branches without asking
-- Modify `main` directly
+- Create new branches without asking (for small fixes, push directly to main)
 - Delete data files without snapshots
 - Add dependencies without updating the CI pip install step
 - Skip smoke tests before pushing
