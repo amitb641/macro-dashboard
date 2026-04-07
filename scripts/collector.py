@@ -202,8 +202,8 @@ def collect():
 
     print('  [Weekly] Gasoline + Mortgage...')
     data['gasoline']    = fred_obs('GASREGW', 30)     # Weekly retail gasoline $/gal (EIA via FRED)
-    data['mortgage30']  = fred_obs('MORTGAGE30US', 6)
-    data['mortgage15']  = fred_obs('MORTGAGE15US', 6)
+    data['mortgage30']  = fred_obs('MORTGAGE30US', 70)   # ~14 months weekly for 12-month chart
+    data['mortgage15']  = fred_obs('MORTGAGE15US', 70)
 
     # ── Monthly: labor, inflation, housing, GDP ───────────────────────
     # Pull 320 observations (~26 years) to build charts from 2000
