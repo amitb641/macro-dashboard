@@ -258,7 +258,7 @@ def _bls_latest(series_id):
             series = body['Results']['series'][0]['data']
             if series:
                 latest = series[0]
-                return f"{latest['periodName']} {latest['year']}", int(latest['value'])
+                return f"{latest['periodName']} {latest['year']}", round(float(latest['value']))
     except Exception:
         pass
     return None
@@ -358,7 +358,7 @@ def check_sources(data):
         result = _bls_latest('CES0000000001')
         if result:
             _, api_val = result
-            _verify('BLS Total Nonfarm (latest)', int(total_nfp[0]['value']), (None, api_val), 'jobs')
+            _verify('BLS Total Nonfarm (latest)', round(float(total_nfp[0]['value'])), (None, api_val), 'jobs')
 
     if apis_checked == 0:
         print('  ⚠  No API keys available — source verification skipped')
