@@ -263,18 +263,16 @@ def rebuild_charts(html, data):
         for obs in payems:
             yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
             by_ym[(yr, mo)] = obs['value']
-        labels, values, low, high = [], [], [], []
+        labels, values = [], []
         for yr in sorted(set(y for y, m in by_ym if y >= START_YEAR and y < today.year)):
             dec_cur = by_ym.get((yr, 12))
             dec_prev = by_ym.get((yr - 1, 12))
             if dec_cur is not None and dec_prev is not None:
                 labels.append(str(yr))
                 values.append(round(dec_cur - dec_prev))
-                low.append(None)
-                high.append(None)
         if labels:
             html = _inject_const(html, 'JOBS_ANNUAL', {
-                'labels': labels, 'data': values, 'low': low, 'high': high})
+                'labels': labels, 'data': values})
 
     # ── CLAIMS_WEEKLY ────────────────────────────────────────────────
     icsa = data.get('icsa', [])
@@ -458,12 +456,19 @@ def rebuild_charts(html, data):
         if cs_labels:
             # Use CS labels as base; fill mortgage where available
             mtg_by_lbl = dict(zip(mtg_labels, mtg_values))
-            mtg_aligned = [mtg_by_lbl.get(l, None) for l in cs_labels]
             # If CS is shorter than mortgage, extend with mortgage-only months
             extra_mtg_labels = [l for l in mtg_labels if l not in cs_labels]
-            all_labels = cs_labels + extra_mtg_labels
-            all_cs = cs_values + [cs_values[-1]] * len(extra_mtg_labels)  # hold last CS value
-            all_mtg = mtg_aligned + [mtg_by_lbl[l] for l in extra_mtg_labels]
+            combined_labels = cs_labels + extra_mtg_labels
+            combined_cs = cs_values + [cs_values[-1]] * len(extra_mtg_labels)
+            combined_mtg = [mtg_by_lbl.get(l, None) for l in cs_labels] + \
+                           [mtg_by_lbl[l] for l in extra_mtg_labels]
+            # Filter out entries where mortgage is None (alignment gap)
+            all_labels, all_cs, all_mtg = [], [], []
+            for lb, cs, mt in zip(combined_labels, combined_cs, combined_mtg):
+                if mt is not None:
+                    all_labels.append(lb)
+                    all_cs.append(cs)
+                    all_mtg.append(mt)
             html = _inject_const(html, 'HOUSING_MONTHLY', {
                 'labels': all_labels,
                 'caseShiller': all_cs,
