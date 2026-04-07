@@ -76,6 +76,7 @@ jobs:
         run: python scripts/renderer.py
 
       - name: Agent 6 — Validator
+        id: validator
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
@@ -84,6 +85,20 @@ jobs:
 
       - name: Agent 4b — Re-render (inject validation report)
         run: python scripts/renderer.py
+
+      - name: Gate — Block publish on critical validation failures
+        if: steps.validator.outcome == 'failure'
+        run: |
+          echo "❌ Validator detected critical data divergences."
+          echo "   Review data/validation_report.json for details."
+          echo "   Pipeline halted — fix data quality issues before publishing."
+          exit 1
+
+      - name: Snapshot — Rolling data backup (keep last 3)
+        run: python scripts/snapshot.py
+
+      - name: Version Tracker — Record pipeline run
+        run: python scripts/version_tracker.py
 
       - name: Agent 5 — Publisher
         env:
@@ -116,3 +131,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+
+      - name: Health Check — Verify deployed page
+        if: steps.deploy.outputs.page_url
+        run: python scripts/healthcheck.py "${{ steps.deploy.outputs.page_url }}"

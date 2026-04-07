@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "last_updated": "2026-04-07T03:41:57.114190Z",
+  "total_runs": 1,
+  "runs": [
+    {
+      "run_at": "2026-04-07T03:41:57.114190Z",
+      "git_sha": "b48003a",
+      "git_branch": "claude/validate-job-numbers-7GPc1",
+      "collected_at": "2026-04-05T05:59:20.625082Z",
+      "series_count": 65,
+      "collector_errors": 2,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-03-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-02-01",
+          "value": 327.46
+        },
+        "payrolls": {
+          "date": "2026-03-01",
+          "value": 158637.0
+        },
+        "treasury_10y": {
+          "date": "2026-04-02",
+          "value": 4.31
+        },
+        "fed_funds": {
+          "date": "2026-03-01",
+          "value": 3.64
+        }
+      },
+      "risk_level": "ELEVATED",
+      "alert_count": 1,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 20,
+        "passed": 17,
+        "failed": 3,
+        "skipped": 9,
+        "critical_divergences": 0
+      },
+      "html_size": 466486
+    }
+  ]
+}
