@@ -1384,11 +1384,8 @@ def render_inflation(html, data, vals, tabs):
     if pce is not None:
         html = patch_array_last(html, 'headline', pce, 1, scope_var='PCE_MONTHLY')
 
-    if core_pce is not None:
-        pce_core_s = data.get('pce_core')
-        pce_date = pce_core_s[0].get('date','') if pce_core_s else ''
-        pce_lbl = f"Core PCE {month_label(pce_date)}" if pce_date else 'Core PCE'
-        html = patch_kpi_full(html, 'Core PCE Dec 2025', pce_lbl, f'{core_pce:+.1f}%')
+    # Core PCE tile is fully dynamic — reads from PCE_MONTHLY.core at runtime
+    # No patch_kpi needed; renderer updates the JS constant via patch_array_last above
 
     if save is not None:
         html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_MONTHLY')

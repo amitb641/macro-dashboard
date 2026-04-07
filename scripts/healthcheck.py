@@ -100,7 +100,6 @@ if __name__ == '__main__':
         print('[Health Check] PASSED')
     else:
         print('[Health Check] FAILED — dashboard may be broken')
-        # Don't exit 1 — health check is advisory, not a gate
-        # The data is already committed; failing here won't help
 
-    sys.exit(0)
+    # Exit 1 on failure to trigger auto-rollback in CI
+    sys.exit(0 if ok else 1)
