@@ -1482,12 +1482,12 @@ def render_oil(html, data, vals, tabs):
         else:
             wti_sub = None
         html = patch_kpi(html, 'WTI — Latest', f'${wti:.1f}', wti_sub)
-        html = patch_array_last(html, 'wti', round(wti, 1), 1)
+        html = patch_array_last(html, 'wti', round(wti, 1), 1, scope_var='OIL_MONTHLY')
 
     if brent is not None:
         brent_sub = f'Spread: ${brent - wti:.1f}' if wti is not None else None
         html = patch_kpi(html, 'Brent — Latest', f'${brent:.1f}', brent_sub)
-        html = patch_array_last(html, 'brent', round(brent, 1), 1)
+        html = patch_array_last(html, 'brent', round(brent, 1), 1, scope_var='OIL_MONTHLY')
 
     oil_daily = data.get('oil_daily_chart')
     if oil_daily:
