@@ -257,7 +257,7 @@ def run_visual_qa(take_screenshots=False):
                 checks.kpis_count = -1;
             }
 
-            // Check chart data arrays
+            // Check chart data arrays — including data completeness
             const charts = [
                 'CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
                 'OIL_ANNUAL', 'OIL_MONTHLY', 'HOUSING_MONTHLY'
@@ -267,11 +267,22 @@ def run_visual_qa(take_screenshots=False):
                 try {
                     const obj = eval(name);
                     if (obj && obj.labels) {
-                        checks.charts[name] = {
+                        const info = {
                             labels: obj.labels.length,
                             has_data: Object.keys(obj).length > 1,
                             empty_labels: obj.labels.filter(l => !l).length,
+                            series: {},
                         };
+                        // Check each data series for null/empty gaps
+                        for (const [key, arr] of Object.entries(obj)) {
+                            if (key === 'labels') continue;
+                            if (Array.isArray(arr)) {
+                                const total = arr.length;
+                                const nulls = arr.filter(v => v === null || v === undefined || v === '').length;
+                                info.series[key] = {total, nulls, pct_filled: total > 0 ? Math.round((total - nulls) / total * 100) : 0};
+                            }
+                        }
+                        checks.charts[name] = info;
                     } else {
                         checks.charts[name] = {error: 'no labels'};
                     }
@@ -300,7 +311,7 @@ def run_visual_qa(take_screenshots=False):
                    f'{js_checks.get("kpis_empty")} empty')
             _check('data', 'KPIS no NaN/undefined', not js_checks.get('kpis_has_nan', True))
 
-        # Chart data checks
+        # Chart data checks — existence + completeness
         for chart_name, info in js_checks.get('charts', {}).items():
             if 'error' in info:
                 _check('data', f'{chart_name} defined', False, info['error'])
@@ -308,6 +319,16 @@ def run_visual_qa(take_screenshots=False):
                 _check('data', f'{chart_name} has data',
                        info.get('labels', 0) > 0 and info.get('has_data', False),
                        f'{info.get("labels", 0)} labels')
+                # Check each series for data completeness (>50% filled)
+                for series_name, series_info in info.get('series', {}).items():
+                    total = series_info.get('total', 0)
+                    nulls = series_info.get('nulls', 0)
+                    pct = series_info.get('pct_filled', 0)
+                    if total > 0:
+                        _check('data', f'{chart_name}.{series_name} completeness',
+                               pct >= 50,
+                               f'{nulls}/{total} values empty ({pct}% filled)',
+                               severity='warning')
 
         # Validation report
         _check('data', 'VALIDATION_REPORT present',
