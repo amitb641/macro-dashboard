@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-04-07T04:43:33.802973Z",
-  "status": "WARN",
+  "checked_at": "2026-04-07T05:22:41.996698Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 219,
-    "passed": 218,
-    "failed": 1,
+    "passed": 219,
+    "failed": 0,
     "js_errors": 1,
     "console_errors": 0
   },
@@ -1198,9 +1198,8 @@
     {
       "category": "Dashboard",
       "check": "No undefined/NaN/null values",
-      "pass": false,
-      "severity": "warning",
-      "detail": "found: ['undefined', 'NaN']"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "Dashboard",

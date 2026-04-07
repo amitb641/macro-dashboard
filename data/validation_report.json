@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-04-07T04:32:47.861421Z",
+  "validated_at": "2026-04-07T05:22:41.998292Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 245,
-    "passed": 243,
+    "total_checks": 240,
+    "passed": 238,
     "failed": 2,
     "skipped": 0,
     "critical_divergences": 0
@@ -187,7 +187,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-07T04:32:06.734804Z",
+      "collected_at": "2026-04-07T05:21:58.761384Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1402,36 +1402,6 @@
     },
     {
       "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcb5 Wages\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\uded2 CPI\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcb3 PCE\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcc8 Fed Rates\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udd17 Credit\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83c\udfe6 Banks\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
