@@ -165,7 +165,8 @@ def _inject_const(html, var_name, obj):
     # Match from 'const VAR_NAME = {' to next '};'
     pattern = rf'const {var_name}\s*=\s*\{{[\s\S]*?\}};'
     new_decl = f'const {var_name} = {new_json};'
-    new_html, n = re.subn(pattern, new_decl, html, count=1)
+    # Use lambda to avoid regex interpreting \u escapes in replacement
+    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
     if n:
         pts = len(obj.get('labels', []))
         applied.append(f'{var_name} rebuilt ({pts} pts from {START_YEAR})')
@@ -621,7 +622,7 @@ def rebuild_charts(html, data):
             bls_json = json.dumps({'labels': nfp_labels, 'bls': nfp_bls}, separators=(', ', ':'))
             pattern = r'const NFP_BLS_MOM\s*=\s*\{[\s\S]*?\};'
             new_decl = f'const NFP_BLS_MOM = {bls_json};'
-            new_html, n = re.subn(pattern, new_decl, html, count=1)
+            new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
             if n:
                 applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
                 html = new_html
@@ -668,8 +669,8 @@ def rebuild_charts(html, data):
             series = bls_sectors.get(ces_id, [])
             if len(series) >= 2:
                 # BLS data is newest-first
-                cur_val = int(series[0]['value'])
-                prev_val = int(series[1]['value'])
+                cur_val = round(float(series[0]['value']))
+                prev_val = round(float(series[1]['value']))
                 cur_period = series[0]['periodName'][:3].lower() + series[0]['year'][2:]
                 prev_period = series[1]['periodName'][:3].lower() + series[1]['year'][2:]
                 sector_mom_data[sector_name] = {
@@ -679,7 +680,7 @@ def rebuild_charts(html, data):
                 }
                 # Also compute prev MoM if 3+ observations
                 if len(series) >= 3:
-                    prev2_val = int(series[2]['value'])
+                    prev2_val = round(float(series[2]['value']))
                     sector_mom_data[sector_name]['prev_chg'] = prev_val - prev2_val
 
         # Read existing SECTOR_MOM sectors list from HTML
@@ -720,7 +721,7 @@ def rebuild_charts(html, data):
                                   f'  {cur_key}:  {json.dumps(cur_vals)}\n'
                                   f'}};')
                         pattern_sm = r'const SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
-                        new_html3, n3 = re.subn(pattern_sm, new_sm, html, count=1)
+                        new_html3, n3 = re.subn(pattern_sm, lambda m: new_sm, html, count=1)
                         if n3:
                             applied.append(f'SECTOR_MOM rebuilt ({updated_count} sectors, {prev_key} & {cur_key})')
                             html = new_html3
@@ -755,9 +756,9 @@ def rebuild_charts(html, data):
                 mo_name = obs.get('periodName', '')
                 mo = int(obs['date'][5:7]) if 'date' in obs else (12 if mo_name == 'December' else 0)
                 if yr == prev_yr and mo == 12:
-                    dec_cur = int(obs['value'])
+                    dec_cur = round(float(obs['value']))
                 elif yr == prev_yr - 1 and mo == 12:
-                    dec_prev = int(obs['value'])
+                    dec_prev = round(float(obs['value']))
             if dec_cur is not None and dec_prev is not None:
                 annual_chg = dec_cur - dec_prev
                 # Update the specific sector's latest year value in JOBS_SECTORS
@@ -1152,11 +1153,13 @@ def rebuild_treasury_data(html, data):
     dgs10_latest = data.get('dgs10')
     dgs2_latest = data.get('dgs2')
     if dgs10_latest and dgs2_latest:
+        t10_val = dgs10_latest['value'] if isinstance(dgs10_latest, dict) else dgs10_latest
+        t2_val = dgs2_latest['value'] if isinstance(dgs2_latest, dict) else dgs2_latest
         latest_lbl = month_label(datetime.date.today().strftime('%Y-%m-01'))
         common.append(latest_lbl)
-        dgs10.append(round(dgs10_latest, 2))
-        dgs2.append(round(dgs2_latest, 2))
-        spread.append(round(dgs10_latest - dgs2_latest, 2))
+        dgs10.append(round(t10_val, 2))
+        dgs2.append(round(t2_val, 2))
+        spread.append(round(t10_val - t2_val, 2))
 
     # Card 90+ DPD — preserve existing values (NY Fed quarterly, not in FRED)
     # Extract from current HTML
@@ -1619,12 +1622,13 @@ def update_shock_tracker(html, data, vals):
         "phases": phases
     }
 
-    new_json = json.dumps(tracker, separators=(', ', ':'))
+    new_json = json.dumps(tracker, separators=(', ', ':'), ensure_ascii=False)
     new_decl = f'const SHOCK_TRACKER = {new_json};'
     # SHOCK_TRACKER has nested arrays/objects — match up to the line
     # before '// OIL_DAILY' which always follows it
     pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\n\};\s*(?=\n// OIL_DAILY)'
-    new_html, n = re.subn(pattern, new_decl, html, count=1)
+    # Use lambda to avoid regex interpreting \u escapes in replacement string
+    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
     if n:
         applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
         html = new_html
@@ -1953,7 +1957,7 @@ def render():
             val_json = json.dumps(val_report, separators=(',', ':'))
             pattern_vr = r'const VALIDATION_REPORT\s*=\s*\{[\s\S]*?\};'
             new_vr = f'const VALIDATION_REPORT = {val_json};'
-            html, n_vr = re.subn(pattern_vr, new_vr, html, count=1)
+            html, n_vr = re.subn(pattern_vr, lambda m: new_vr, html, count=1)
             if n_vr:
                 applied.append(f'VALIDATION_REPORT injected ({val_report.get("status","?")})')
         except Exception as e:
