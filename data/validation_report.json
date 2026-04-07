@@ -1,22 +1,22 @@
 {
-  "validated_at": "2026-04-05T05:59:43.877726Z",
-  "status": "PASS",
+  "validated_at": "2026-04-07T03:31:56.497546Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 21,
-    "passed": 21,
-    "failed": 0,
-    "skipped": 0,
+    "total_checks": 20,
+    "passed": 17,
+    "failed": 3,
+    "skipped": 9,
     "critical_divergences": 0
   },
   "internal_consistency": [
     {
       "check": "OIL_ANNUAL WTI 2025",
-      "html_value": 65.4,
+      "html_value": 104.7,
       "source_value": 65.4,
-      "difference": 0.0,
+      "difference": 39.3,
       "tolerance": 0.5,
-      "severity": "ok",
-      "pass": true
+      "severity": "warning",
+      "pass": false
     },
     {
       "check": "FC_MACRO unemployment 2025",
@@ -31,92 +31,56 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "raw_data_value": 327.46,
-      "fresh_api_value": 327.46,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "raw_data_value": 333.512,
-      "fresh_api_value": 333.512,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 128.969,
-      "fresh_api_value": 128.969,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 128.394,
-      "fresh_api_value": 128.394,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.31,
-      "fresh_api_value": 4.31,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED FEDFUNDS",
-      "raw_data_value": 3.64,
-      "fresh_api_value": 3.64,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158637.0,
-      "fresh_api_value": 158637.0,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.46,
-      "fresh_api_value": 6.46,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158637,
-      "fresh_api_value": 158637,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     }
   ],
@@ -124,7 +88,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 35,
+      "age_days": 37,
       "max_lag_days": 45,
       "severity": "ok",
       "pass": true
@@ -132,7 +96,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-02-01",
-      "age_days": 63,
+      "age_days": 65,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -140,7 +104,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-02-01",
-      "age_days": 63,
+      "age_days": 65,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -148,23 +112,23 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-01-01",
-      "age_days": 94,
+      "age_days": 96,
       "max_lag_days": 95,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-01-01",
-      "age_days": 94,
+      "age_days": 96,
       "max_lag_days": 95,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 35,
+      "age_days": 37,
       "max_lag_days": 40,
       "severity": "ok",
       "pass": true
@@ -172,7 +136,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 94,
+      "age_days": 96,
       "max_lag_days": 100,
       "severity": "ok",
       "pass": true
@@ -180,7 +144,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-02",
-      "age_days": 3,
+      "age_days": 5,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -188,7 +152,7 @@
     {
       "check": "Collection recency",
       "collected_at": "2026-04-05T05:59:20.625082Z",
-      "age_hours": 0.0,
+      "age_hours": 45.5,
       "severity": "ok",
       "pass": true
     }
