@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-04-07T04:43:33.802973Z",
+  "checked_at": "2026-04-07T04:59:54.939319Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 219,
-    "passed": 218,
+    "total_checks": 232,
+    "passed": 231,
     "failed": 1,
     "js_errors": 1,
     "console_errors": 0
@@ -1198,9 +1198,8 @@
     {
       "category": "Dashboard",
       "check": "No undefined/NaN/null values",
-      "pass": false,
-      "severity": "warning",
-      "detail": "found: ['undefined', 'NaN']"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "Dashboard",
@@ -1288,7 +1287,31 @@
     },
     {
       "category": "data",
+      "check": "CPI_MONTHLY.headline completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "CPI_MONTHLY.core completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
       "check": "PCE_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "PCE_MONTHLY.headline completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "PCE_MONTHLY.core completeness",
       "pass": true,
       "severity": "ok"
     },
@@ -1300,7 +1323,25 @@
     },
     {
       "category": "data",
+      "check": "U_MONTHLY.data completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
       "check": "NFP_VS_ADP has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "NFP_VS_ADP.bls completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "NFP_VS_ADP.adp completeness",
       "pass": true,
       "severity": "ok"
     },
@@ -1312,7 +1353,31 @@
     },
     {
       "category": "data",
+      "check": "OIL_ANNUAL.wti completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "OIL_ANNUAL.brent completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
       "check": "OIL_MONTHLY has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "OIL_MONTHLY.wti completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "OIL_MONTHLY.brent completeness",
       "pass": true,
       "severity": "ok"
     },
@@ -1321,6 +1386,19 @@
       "check": "HOUSING_MONTHLY has data",
       "pass": true,
       "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "HOUSING_MONTHLY.caseShiller completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "HOUSING_MONTHLY.mortgage30 completeness",
+      "pass": false,
+      "severity": "warning",
+      "detail": "12/14 values empty (14% filled)"
     },
     {
       "category": "data",
