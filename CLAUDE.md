@@ -21,6 +21,7 @@ Supporting scripts:
 - `scripts/snapshot.py` — Rolling data backups (keep last 3)
 - `scripts/healthcheck.py` — Post-deploy page verification
 - `scripts/version_tracker.py` — Pipeline run audit trail
+- `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
 
 ## Key Files
 - `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
@@ -40,6 +41,7 @@ Supporting scripts:
 
 ## Testing
 - Run `python tests/test_smoke.py` before pushing — must be 29/29 pass
+- Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
 
