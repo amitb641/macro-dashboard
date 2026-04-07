@@ -16,7 +16,7 @@ except ImportError:
 
 
 REQUIRED_MARKERS = [
-    'MACRO DASHBOARD',          # Page title
+    'Macro Dashboard',          # Page title
     'const KPIS',               # KPI data loaded
     'const CPI_MONTHLY',        # CPI chart data
     'const U_MONTHLY',          # Unemployment chart data

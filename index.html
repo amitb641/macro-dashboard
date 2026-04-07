@@ -1415,7 +1415,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   /* Agents grid */
   .ma-agents {
-    display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:0;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:0;
   }
   .ma-agent {
     border-radius:11px; border:1px solid var(--border);
@@ -1485,7 +1485,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   @keyframes maFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
   @media(max-width:700px){
-    .ma-agents,.ma-arrows { grid-template-columns:repeat(2,1fr); }
+    .ma-agents { grid-template-columns:repeat(2,1fr); }
     .ma-arrow-cell::after { display:none; }
     .ma-outputs { grid-template-columns:1fr; }
   }
@@ -5366,18 +5366,19 @@ function buildStackTab(){
     <div class="stk-content">
       <div class="stk-overline">Architecture · Data · Deployment</div>
       <div class="stk-h1">How the <em>Dashboard Works</em></div>
-      <div class="stk-lead">An automated pipeline collects 40+ macro series from 7 government APIs, reasons with Claude AI, renders this dashboard, and independently validates every number against source — unattended, in under 3 minutes.</div>
+      <div class="stk-lead">A 7-agent automated pipeline collects 40+ macro series from government APIs, reasons with Claude AI, renders this dashboard, runs 242 independent quality checks (including DOM-based visual QA via headless Chromium), and auto-rolls back on failure — unattended, in under 3 minutes.</div>
       <div class="stk-pills">
         <span class="stk-pill" style="color:#336BCC;border-color:rgba(51,107,204,.25);background:#EBF2FF">Claude Sonnet 4.6</span>
-        <span class="stk-pill" style="color:#8878B8;border-color:rgba(136,120,184,.25);background:#F3F0FF">GitHub Actions</span>
+        <span class="stk-pill" style="color:#8878B8;border-color:rgba(136,120,184,.25);background:#F3F0FF">GitHub Actions CI/CD</span>
         <span class="stk-pill" style="color:#1A9E5A;border-color:rgba(13,122,74,.25);background:#ECFDF5">BLS · BEA · FRED · EIA</span>
-        <span class="stk-pill" style="color:#CC8A00;border-color:rgba(204,138,0,.25);background:#FEF3C7">&lt;3 min / run</span>
+        <span class="stk-pill" style="color:#059669;border-color:rgba(5,150,105,.25);background:#F0FDF9">242 Quality Checks</span>
+        <span class="stk-pill" style="color:#CC8A00;border-color:rgba(204,138,0,.25);background:#FEF3C7">~4 min / run</span>
       </div>
     </div>
   </div>
 
   <!-- ARCHITECTURE DIAGRAM -->
-  <div class="stk-section-title">6-agent architecture — data collection, analysis, rendering &amp; validation</div>
+  <div class="stk-section-title">7-agent architecture — data collection, analysis, rendering, validation &amp; visual QA</div>
   <div class="panel" style="margin-bottom:20px;padding:0;overflow:hidden">
   <style>
   .diag-wrap { padding:28px 24px 24px; background:#fff; }
@@ -5428,7 +5429,7 @@ function buildStackTab(){
 
   /* Agents grid */
   .ma-agents {
-    display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:0;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:0;
   }
   .ma-agent {
     border-radius:11px; border:1px solid var(--border);
@@ -5498,7 +5499,7 @@ function buildStackTab(){
   @keyframes maFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
   @media(max-width:700px){
-    .ma-agents,.ma-arrows { grid-template-columns:repeat(2,1fr); }
+    .ma-agents { grid-template-columns:repeat(2,1fr); }
     .ma-arrow-cell::after { display:none; }
     .ma-outputs { grid-template-columns:1fr; }
   }
@@ -5511,7 +5512,7 @@ function buildStackTab(){
       <span style="font-size:18px">⚙️</span>
       <div>
         <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 07, 2026 04:32 UTC</span>
-        <span class="ma-trigger-sub">briefing.yml · orchestrates all 6 agents in sequence · total runtime &lt;3 min</span>
+        <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
 
@@ -5662,151 +5663,263 @@ function buildStackTab(){
           <div class="ma-agent-icon">🛡️</div>
           <div class="ma-agent-name">Validator</div>
           <div class="ma-agent-file">validator.py</div>
-          <span class="ma-badge-nollm">No LLM</span>
+          <span class="ma-badge-nollm">4-Pass · 242 Checks</span>
         </div>
         <div class="ma-agent-body">
-          <div class="ma-agent-desc">Independent data quality agent. Verifies HTML vs raw data, spot-checks FRED/BLS APIs for revisions, flags stale series. Catches benchmark revisions automatically.</div>
+          <div class="ma-agent-desc">Unified 4-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (4) visual QA via Agent 7. Build gate blocks publish on critical failures.</div>
           <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: index.html + raw_data.json</div>
+            <div class="ma-agent-in">IN: index.html + raw_data.json + APIs</div>
             <div class="ma-agent-out">OUT: validation_report.json</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent 7 -->
+      <div class="ma-agent" style="animation-delay:.50s;border-color:rgba(14,116,144,.3);box-shadow:0 2px 12px rgba(14,116,144,.08)">
+        <div class="ma-agent-header" style="background:#F0FDFA">
+          <div class="ma-agent-accent" style="background:#0E7490"></div>
+          <div class="ma-agent-num">Agent 7</div>
+          <div class="ma-agent-icon">🔬</div>
+          <div class="ma-agent-name">Visual QA</div>
+          <div class="ma-agent-file">visual_qa.py</div>
+          <span class="ma-badge-nollm">Playwright · 224 DOM Checks</span>
+        </div>
+        <div class="ma-agent-body">
+          <div class="ma-agent-desc">Headless Chromium renders every tab, checks: JS errors, console errors, undefined/NaN values, chart canvas sizes, KPI tile integrity, panel content. Screenshots saved as CI artifacts.</div>
+          <div class="ma-agent-io">
+            <div class="ma-agent-in">IN: index.html (headless browser)</div>
+            <div class="ma-agent-out">OUT: visual_qa_report.json + PNGs</div>
           </div>
         </div>
       </div>
 
     </div>
 
-    <!-- FLOW ARROWS BETWEEN AGENTS -->
-    <div class="ma-arrows" style="margin-top:4px;margin-bottom:4px">
-      <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-      <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-      <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-      <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-      <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-      <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-    </div>
-
     <!-- DOWN ARROW -->
     <div class="ma-vconn">
       <div class="ma-vline"></div>
-      <div class="ma-vconn-lbl">three outputs</div>
+      <div class="ma-vconn-lbl">outputs + safety net</div>
     </div>
 
     <!-- OUTPUTS -->
-    <div class="ma-outputs">
+    <div class="ma-outputs" style="grid-template-columns:1fr 1fr">
       <div class="ma-output" style="border-color:rgba(51,107,204,.2);background:#EBF2FF">
         <div class="ma-output-icon">📊</div>
         <div>
           <div class="ma-output-title" style="color:#336BCC">This Dashboard</div>
-          <div class="ma-output-sub">dashboard.html updated in-place · 12 tabs refreshed · committed to GitHub · served as static page</div>
+          <div class="ma-output-sub">index.html updated in-place · 15 tabs refreshed · committed to GitHub · deployed to GitHub Pages</div>
         </div>
       </div>
       <div class="ma-output" style="border-color:rgba(13,122,74,.2);background:#ECFDF5">
         <div class="ma-output-icon">✉️</div>
         <div>
           <div class="ma-output-title" style="color:#1A9E5A">Weekly Briefing Email</div>
-          <div class="ma-output-sub">HTML email with macro summary, tab-by-tab headlines, key signal changes vs prior run</div>
+          <div class="ma-output-sub">HTML email with macro summary, tab-by-tab headlines, key signal changes vs prior run · via Resend API</div>
         </div>
       </div>
       <div class="ma-output" style="border-color:rgba(5,150,105,.2);background:#F0FDF9">
         <div class="ma-output-icon">🛡️</div>
         <div>
-          <div class="ma-output-title" style="color:#059669">Validation Report</div>
-          <div class="ma-output-sub">Independent quality checks: internal consistency, fresh API spot-checks, staleness detection — viewable in Validator tab</div>
+          <div class="ma-output-title" style="color:#059669">Validation Report (242 checks)</div>
+          <div class="ma-output-sub">4-pass quality gate: internal consistency, live API spot-checks, staleness, 224 DOM visual checks — viewable in Validator tab</div>
+        </div>
+      </div>
+      <div class="ma-output" style="border-color:rgba(136,120,184,.2);background:#F3F0FF">
+        <div class="ma-output-icon">🔄</div>
+        <div>
+          <div class="ma-output-title" style="color:#8878B8">Safety Net</div>
+          <div class="ma-output-sub">Rolling snapshots (keep 3) · post-deploy health check · auto-rollback on failure · pipeline version audit trail · failure alerts via GitHub Issues</div>
         </div>
       </div>
     </div>
 
     <!-- WHY NOTE -->
     <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10.5px;color:#92400E;line-height:1.6">
-      <strong>Why multi-agent?</strong> Only Agent 3 uses an LLM — Agents 1, 2, 4, 5 and 6 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) independently verifies every number against source APIs, catching BLS benchmark revisions and data staleness automatically. If any agent fails, the prior dashboard stays live untouched.
+      <strong>Why multi-agent?</strong> Only Agent 3 uses an LLM — Agents 1, 2, 4, 5, 6 and 7 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) runs a unified 4-pass quality gate — including Agent 7's 224 visual DOM checks via headless Chromium — catching data divergences, benchmark revisions, and rendering defects automatically. Critical failures block publish, and auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
     </div>
 
   </div>
   </div>
 
-  <!-- PIPELINE FLOW (compact node row kept below for quick ref) -->
-  <div class="stk-section-title">Pipeline — 5 stages, runs 1st of every month</div>
-  <div class="stk-flow">
-    <div class="stk-node">
-      <div class="stk-node-icon">🌐</div>
-      <div class="stk-node-num">Stage 1</div>
-      <div class="stk-node-name">Collect</div>
-      <div class="stk-node-sub">Pull 40 series from government APIs</div>
-      <div class="stk-node-tags">
-        <span class="stk-node-tag">BLS API</span>
-        <span class="stk-node-tag">BEA API</span>
-        <span class="stk-node-tag">FRED API</span>
-        <span class="stk-node-tag">EIA API</span>
+  <!-- PIPELINE FLOW -->
+  <div class="stk-section-title">Pipeline — 9 stages, Weekly Fri 8am ET + Monthly 2nd Sat 10am ET</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;padding:12px">
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#EBF2FF;border-radius:10px;border:1px solid rgba(51,107,204,.15)">
+      <span style="font-size:18px">📥</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#336BCC;margin-bottom:1px">1. Collect</div>
+        <div style="font-size:9px;color:#64748B">40+ series from BLS/BEA/FRED/EIA</div>
       </div>
     </div>
-    <div class="stk-node">
-      <div class="stk-node-icon">💾</div>
-      <div class="stk-node-num">Stage 2</div>
-      <div class="stk-node-name">Remember</div>
-      <div class="stk-node-sub">Diff against prior month snapshot</div>
-      <div class="stk-node-tags">
-        <span class="stk-node-tag">snapshot.json</span>
-        <span class="stk-node-tag">Git history</span>
-        <span class="stk-node-tag">Signal delta</span>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#ECFDF5;border-radius:10px;border:1px solid rgba(26,158,90,.15)">
+      <span style="font-size:18px">🔍</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#1A9E5A;margin-bottom:1px">2. Analyze</div>
+        <div style="font-size:9px;color:#64748B">Diff vs prior run, score signals</div>
       </div>
     </div>
-    <div class="stk-node">
-      <div class="stk-node-icon">🧠</div>
-      <div class="stk-node-num">Stage 3</div>
-      <div class="stk-node-name">Reason</div>
-      <div class="stk-node-sub">Claude reads signals, writes analysis</div>
-      <div class="stk-node-tags">
-        <span class="stk-node-tag" style="background:#F3F0FF;color:#8878B8;border-color:rgba(136,120,184,.25)">claude-sonnet-4-6</span>
-        <span class="stk-node-tag">~8K tokens</span>
-        <span class="stk-node-tag">JSON output</span>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F3F0FF;border-radius:10px;border:1px solid rgba(136,120,184,.2)">
+      <span style="font-size:18px">🧠</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#8878B8;margin-bottom:1px">3. AI Analyst</div>
+        <div style="font-size:9px;color:#64748B">Claude Sonnet writes commentary</div>
       </div>
     </div>
-    <div class="stk-node">
-      <div class="stk-node-icon">🖥️</div>
-      <div class="stk-node-num">Stage 4</div>
-      <div class="stk-node-name">Render</div>
-      <div class="stk-node-sub">Inject commentary into dashboard HTML</div>
-      <div class="stk-node-tags">
-        <span class="stk-node-tag">render_html()</span>
-        <span class="stk-node-tag">12 tab updates</span>
-        <span class="stk-node-tag">Git commit</span>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
+      <span style="font-size:18px">🖥️</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#CC8A00;margin-bottom:1px">4. Render</div>
+        <div style="font-size:9px;color:#64748B">Patch HTML: charts, KPIs, commentary</div>
       </div>
     </div>
-    <div class="stk-node">
-      <div class="stk-node-icon">📬</div>
-      <div class="stk-node-num">Stage 5</div>
-      <div class="stk-node-name">Deliver</div>
-      <div class="stk-node-sub">Briefing email via Gmail API</div>
-      <div class="stk-node-tags">
-        <span class="stk-node-tag">GitHub Actions</span>
-        <span class="stk-node-tag">Gmail OAuth</span>
-        <span class="stk-node-tag">briefing.yml</span>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0FDF9;border-radius:10px;border:1px solid rgba(5,150,105,.15)">
+      <span style="font-size:18px">🛡️</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (242 checks)</div>
+        <div style="font-size:9px;color:#64748B">4-pass quality gate + visual QA</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
+      <span style="font-size:18px">🖥️</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#CC8A00;margin-bottom:1px">6. Re-render</div>
+        <div style="font-size:9px;color:#64748B">Inject validation report into page</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF2F2;border-radius:10px;border:1px solid rgba(214,64,69,.15)">
+      <span style="font-size:18px">🚦</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#D64045;margin-bottom:1px">7. Build Gate</div>
+        <div style="font-size:9px;color:#64748B">Block publish on critical failures</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0F9FF;border-radius:10px;border:1px solid rgba(14,116,144,.15)">
+      <span style="font-size:18px">📬</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#0E7490;margin-bottom:1px">8. Publish + Deploy</div>
+        <div style="font-size:9px;color:#64748B">Email via Resend · GitHub Pages</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0">
+      <span style="font-size:18px">🔄</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#64748B;margin-bottom:1px">9. Health Check + Rollback</div>
+        <div style="font-size:9px;color:#94A3B8">Verify live page · auto-rollback on fail</div>
       </div>
     </div>
   </div>
 
   <!-- STATS -->
-  <div class="stk-stats">
+  <div class="stk-stats" style="grid-template-columns:repeat(5,1fr)">
     <div class="stk-stat">
-      <div class="stk-stat-val blue">40</div>
+      <div class="stk-stat-val blue">7</div>
+      <div class="stk-stat-lbl">Pipeline agents</div>
+    </div>
+    <div class="stk-stat">
+      <div class="stk-stat-val blue">40+</div>
       <div class="stk-stat-lbl">Data series tracked</div>
     </div>
     <div class="stk-stat">
-      <div class="stk-stat-val">&lt;3 min</div>
-      <div class="stk-stat-lbl">Full pipeline runtime</div>
+      <div class="stk-stat-val green">242</div>
+      <div class="stk-stat-lbl">Quality checks per run</div>
     </div>
     <div class="stk-stat">
-      <div class="stk-stat-val">12</div>
-      <div class="stk-stat-lbl">Dashboard tabs updated</div>
+      <div class="stk-stat-val">15</div>
+      <div class="stk-stat-lbl">Dashboard tabs</div>
+    </div>
+    <div class="stk-stat">
+      <div class="stk-stat-val">~4 min</div>
+      <div class="stk-stat-lbl">Full pipeline runtime</div>
+    </div>
+  </div>
+
+  <!-- CI/CD & SAFETY INFRASTRUCTURE -->
+  <div class="stk-section-title">CI/CD &amp; Safety Infrastructure — automated quality assurance</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+
+    <div class="panel" style="margin-bottom:0;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:16px">🧪</span>
+        <div style="font-size:12px;font-weight:700;color:var(--text)">Smoke Tests (PR Gate)</div>
+      </div>
+      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
+        29 offline tests run on every pull request. Generates synthetic fixture data and tests analyzer, renderer, validator, and snapshot logic — no API keys needed. Blocks merge on failure.
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#ECFDF5;color:#059669;border:1px solid rgba(5,150,105,.2)">29 tests</span>
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">smoke-tests.yml</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:16px">📋</span>
+        <div style="font-size:12px;font-weight:700;color:var(--text)">API Contract Tests</div>
+      </div>
+      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
+        Weekly (Tuesday 6am ET) verifies FRED, BLS, and EIA response schemas haven't changed. Tests expected keys, date formats, value types. Auto-creates GitHub Issue if format breaks.
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#EBF2FF;color:#336BCC;border:1px solid rgba(51,107,204,.2)">Weekly Tue</span>
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">api-contract.yml</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:16px">💾</span>
+        <div style="font-size:12px;font-weight:700;color:var(--text)">Rolling Snapshots</div>
+      </div>
+      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
+        Each pipeline run saves raw_data.json + validation_report.json to data/snapshots/. Keeps last 3 snapshots, auto-prunes older. Enables instant rollback to any recent good state.
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#FEF3C7;color:#CC8A00;border:1px solid rgba(204,138,0,.2)">Keep 3</span>
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">snapshot.py</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:0;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:16px">🔄</span>
+        <div style="font-size:12px;font-weight:700;color:var(--text)">Auto-Rollback + Alerts</div>
+      </div>
+      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
+        Post-deploy health check verifies the live page (HTTP 200, size, content markers). On failure: auto-restores last snapshot, re-renders, and re-deploys. Pipeline failures auto-create GitHub Issues.
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#FEF2F2;color:#D64045;border:1px solid rgba(214,64,69,.2)">Auto-heal</span>
+        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">healthcheck.py</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUPPORTING SCRIPTS -->
+  <div class="stk-section-title">Supporting Scripts — version tracking &amp; development workflow</div>
+  <div class="panel" style="margin-bottom:20px;padding:16px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">version_tracker.py</div>
+        <div style="font-size:10px;color:var(--text2);line-height:1.5">Records git SHA, branch, data freshness, validation status, and key indicator values each run. Rolling history of last 20 runs in pipeline_version.json.</div>
+      </div>
+      <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">CLAUDE.md</div>
+        <div style="font-size:10px;color:var(--text2);line-height:1.5">Centralized development conventions. Ensures all Claude Code sessions use the same branch strategy (dev → main), testing requirements, and commit conventions.</div>
+      </div>
+      <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">3 CI Workflows</div>
+        <div style="font-size:10px;color:var(--text2);line-height:1.5"><strong>briefing.yml</strong> — main pipeline (Fri + 2nd Sat) · <strong>smoke-tests.yml</strong> — PR gate (29 tests) · <strong>api-contract.yml</strong> — weekly API schema checks (Tue)</div>
+      </div>
     </div>
   </div>
 
   <!-- DATA STATUS TABLE -->
-  <div class="stk-section-title">Data sources &amp; freshness — 40 series across 12 tabs</div>
+  <div class="stk-section-title">Data sources &amp; freshness — 40+ series across 15 tabs</div>
   <div class="fc-note" style="margin-bottom:14px">
     <strong>Pipeline cadence:</strong>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
-      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Friday 8am ET — Collector + Analyzer + AI Commentary + Renderer + Email
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Friday 8am ET — Full 7-agent pipeline + validation + deploy
     </span>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
       <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#8878B8;background:#F3F0FF;border:1px solid rgba(136,120,184,.2)">Monthly Deep</span> 2nd Saturday 10am ET — captures Jobs (1st Fri) + CPI (~10th) + PCE (~28th prior month)
