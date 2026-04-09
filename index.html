@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-09T15:42:18Z";
+  var BUILD_V = "2026-04-09T17:47:14Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -1588,7 +1588,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">👷 Unemployment Commentary — Trends &amp; Risk Factors</div>
     <div class="fc-note" id="commentary-unemp">
-      <strong>Latest:</strong> U-3 at <strong>4.3%</strong> (Mar 2026), down from 4.4% in Feb — above the 2023 trough of 3.4% but below the historical average of ~5.7%. U-6 broad unemployment at <strong>7.9%</strong>. Mar payrolls printed <strong>+178K</strong> — the first negative month since the pandemic, driven by federal workforce reductions (DOGE) and tariff-exposed manufacturing. <strong>Weekly claims steady</strong> at 205000K (Mar'26), suggesting layoffs remain contained outside government. <strong>Sectoral divergence widening:</strong> Construction &amp; manufacturing unemployment rising; healthcare remains tight. Long-term unemployment (27+ weeks) ticking higher. <strong>2026 scenarios:</strong> Base 4.3–4.5% (GS/JPM); bear case 5.0–5.5% if tariff shock + federal cuts compound; bull case 4.0% if AI productivity accelerates. The Fed watches prime-age EPOP (~80.7%) as its cleanest signal.
+      <strong>Latest:</strong> U-3 at <strong>4.3%</strong> (Mar 2026), down from 4.4% in Feb — above the 2023 trough of 3.4% but below the historical average of ~5.7%. U-6 broad unemployment at <strong>7.9%</strong>. Mar payrolls printed <strong>+178K</strong>. <strong>Weekly claims steady</strong> at 219K (Apr'26), suggesting layoffs remain contained outside government. <strong>Sectoral divergence widening:</strong> Construction &amp; manufacturing unemployment rising; healthcare remains tight. Long-term unemployment (27+ weeks) ticking higher. <strong>2026 scenarios:</strong> Base 4.3–4.5% (GS/JPM); bear case 5.0–5.5% if tariff shock + federal cuts compound; bull case 4.0% if AI productivity accelerates. The Fed watches prime-age EPOP (~80.7%) as its cleanest signal.
     </div>
   </div>
 
@@ -5511,7 +5511,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 09, 2026 15:42 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 09, 2026 17:47 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
