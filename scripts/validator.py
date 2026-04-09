@@ -54,13 +54,17 @@ def _extract_js_const(html, var_name):
     if not m:
         return None
     raw = m.group(1)
-    # Convert JS to JSON-ish: handle unquoted keys, trailing commas
-    # Replace JS unquoted keys with quoted keys
+    # Try parsing as-is first (already valid JSON from renderer's _inject_const)
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    # Fallback: Convert JS to JSON-ish: handle unquoted keys, trailing commas
     raw = re.sub(r'(?<=[{,\n])\s*([a-zA-Z_]\w*)\s*:', r'"\1":', raw)
-    # Remove trailing commas before } or ]
     raw = re.sub(r',\s*([}\]])', r'\1', raw)
-    # Handle single quotes → double quotes (but not inside strings)
-    raw = raw.replace("'", '"')
+    # Only replace single quotes if no double-quoted strings contain them
+    if "\"" not in raw or "'" not in raw:
+        raw = raw.replace("'", '"')
     try:
         return json.loads(raw)
     except json.JSONDecodeError:
@@ -218,6 +222,34 @@ def check_internal(html, data, sig_vals):
                     if yr == prev_yr and mo == 12:
                         _check(f'FC_MACRO unemployment {prev_yr}', vals[1], obs['value'], 'rate')
                         break
+
+    # ── Chart data completeness — catch sparse/empty series ──
+    CHART_CONSTS = ['CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
+                    'OIL_ANNUAL', 'OIL_MONTHLY', 'HOUSING_MONTHLY']
+    for const_name in CHART_CONSTS:
+        obj = _extract_js_const(html, const_name)
+        if not obj:
+            continue
+        labels = obj.get('labels', [])
+        n_labels = len(labels)
+        if n_labels == 0:
+            continue
+        for key, arr in obj.items():
+            if key == 'labels' or not isinstance(arr, list):
+                continue
+            n_total = len(arr)
+            n_nulls = sum(1 for v in arr if v is None or v == '' or v == 'null')
+            pct_filled = round((n_total - n_nulls) / n_total * 100) if n_total > 0 else 0
+            is_ok = pct_filled >= 50
+            findings.append({
+                'check': f'{const_name}.{key} completeness',
+                'html_value': f'{n_total - n_nulls}/{n_total} filled',
+                'source_value': f'{pct_filled}% (min 50%)',
+                'difference': n_nulls,
+                'tolerance': n_total // 2,
+                'severity': 'ok' if is_ok else 'warning',
+                'pass': is_ok,
+            })
 
     return findings
 

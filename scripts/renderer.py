@@ -1319,6 +1319,47 @@ def render_labor(html, data, vals, tabs):
             html = re.sub(r"([A-Z][a-z]+'\d+) rate fell", f"{u_cur} rate fell", html, count=1)
             applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
 
+            # ── Auto-patch commentary values when Agent 3 doesn't refresh ──
+            u_cur_val = unrate_s[0].get('value')
+            u_prv_val = unrate_s[1].get('value')
+            u_cur_full = datetime.datetime.strptime(u_cur_d, '%Y-%m-%d').strftime('%b %Y')  # "Mar 2026"
+            u_prv_full = datetime.datetime.strptime(u_prv_d, '%Y-%m-%d').strftime('%b %Y')  # "Feb 2026"
+            if u_cur_val is not None and u_prv_val is not None:
+                # Update "U-3 at <strong>X.X%</strong> (Mon YYYY)" in commentary
+                html = re.sub(
+                    r'(U-3 at <strong>)\d+\.\d+%</strong> \([A-Z][a-z]+ \d{4}\)',
+                    rf'\g<1>{u_cur_val}%</strong> ({u_cur_full})',
+                    html, count=1)
+                # Update "up from X.X% in Mon" / "down from X.X% in Mon"
+                direction = 'up' if u_cur_val > u_prv_val else 'down'
+                html = re.sub(
+                    r'(up|down) from \d+\.\d+% in [A-Z][a-z]+',
+                    f'{direction} from {u_prv_val}% in {u_prv_full.split()[0]}',
+                    html, count=1)
+                applied.append(f'Commentary U-3 updated to {u_cur_val}% ({u_cur_full})')
+
+            # Update NFP in commentary (e.g. "Feb payrolls printed <strong>-92K</strong>")
+            if payems_s and len(payems_s) >= 2:
+                nfp_change = round(payems_s[0]['value'] - payems_s[1]['value'])
+                nfp_sign = '+' if nfp_change >= 0 else ''
+                nfp_lbl = month_label(payems_s[0]['date']).split("'")[0]  # "Mar"
+                html = re.sub(
+                    r'[A-Z][a-z]+ payrolls printed <strong>[^<]+</strong>',
+                    f'{nfp_lbl} payrolls printed <strong>{nfp_sign}{nfp_change}K</strong>',
+                    html, count=1)
+                applied.append(f'Commentary NFP updated to {nfp_sign}{nfp_change}K ({nfp_lbl})')
+
+            # Update weekly claims in commentary (e.g. "205K (Mar'26)")
+            if icsa_s:
+                icsa_v = round(float(icsa_s[0].get('value', 0)))
+                icsa_d = icsa_s[0].get('date', '')
+                if icsa_d:
+                    icsa_ml = month_label(icsa_d)
+                    html = re.sub(
+                        r'at \d+K \([A-Z][a-z]+\'\d+\)',
+                        f'at {icsa_v}K ({icsa_ml})',
+                        html, count=1)
+
     # ── Auto-update Jobs tab month references ────────────────────────
     # The Jobs tab has hardcoded month names in titles, legends, and tiles.
     # Derive current and prior month labels from PAYEMS data.
