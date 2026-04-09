@@ -55,6 +55,18 @@ Supporting scripts:
 - When aligning two series by label, check for null/None fill rates — >20% nulls indicates a fetch-count or alignment bug
 - Trace data path from collector → renderer to verify sufficiency before shipping
 
+## Agent Skills (Slash Commands)
+Custom development lifecycle commands are available in `.claude/commands/`:
+- `/spec` — Define what to build (spec before code)
+- `/plan` — Plan implementation as small, atomic tasks
+- `/build` — Implement one slice at a time with verification
+- `/test` — Run all test layers: smoke (29/29), renderer, visual QA (224)
+- `/review` — Code review checklist (correctness, safety, scope, pipeline integrity)
+- `/code-simplify` — Simplify code without changing behavior
+- `/ship` — Pre-flight checks, push, and post-ship verification
+
+Use these commands to follow a structured development lifecycle for all changes. For multi-step features, follow the flow: `/spec` → `/plan` → `/build` → `/test` → `/review` → `/ship`.
+
 ## Do NOT
 - Create new branches without asking (for small fixes, push directly to main)
 - Delete data files without snapshots
