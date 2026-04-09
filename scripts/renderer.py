@@ -1343,21 +1343,25 @@ def render_labor(html, data, vals, tabs):
                 nfp_change = round(payems_s[0]['value'] - payems_s[1]['value'])
                 nfp_sign = '+' if nfp_change >= 0 else ''
                 nfp_lbl = month_label(payems_s[0]['date']).split("'")[0]  # "Mar"
+                # Replace "Mon payrolls printed <strong>XK</strong> — stale narrative."
+                # Truncate up to next sentence boundary to remove stale context
                 html = re.sub(
-                    r'[A-Z][a-z]+ payrolls printed <strong>[^<]+</strong>',
-                    f'{nfp_lbl} payrolls printed <strong>{nfp_sign}{nfp_change}K</strong>',
+                    r'[A-Z][a-z]+ payrolls printed <strong>[^<]+</strong>[^<]*?(?=<strong>)',
+                    f'{nfp_lbl} payrolls printed <strong>{nfp_sign}{nfp_change}K</strong>. ',
                     html, count=1)
                 applied.append(f'Commentary NFP updated to {nfp_sign}{nfp_change}K ({nfp_lbl})')
 
             # Update weekly claims in commentary (e.g. "205K (Mar'26)")
             if icsa_s:
                 icsa_v = round(float(icsa_s[0].get('value', 0)))
+                # ICSA is in raw units (e.g. 205000), convert to K
+                icsa_k = round(icsa_v / 1000) if icsa_v > 1000 else icsa_v
                 icsa_d = icsa_s[0].get('date', '')
                 if icsa_d:
                     icsa_ml = month_label(icsa_d)
                     html = re.sub(
                         r'at \d+K \([A-Z][a-z]+\'\d+\)',
-                        f'at {icsa_v}K ({icsa_ml})',
+                        f'at {icsa_k}K ({icsa_ml})',
                         html, count=1)
 
     # ── Auto-update Jobs tab month references ────────────────────────
