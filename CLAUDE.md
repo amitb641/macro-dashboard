@@ -8,25 +8,27 @@
 - Clean up stale remote branches after merging
 
 ## Project Architecture
-6-stage Python data pipeline:
-1. `scripts/collector.py` — Pulls data from FRED, BLS, EIA APIs
-2. `scripts/analyzer.py` — Diffs raw data, scores signals
-3. `scripts/briefing_agent.py` — AI commentary (Claude Sonnet)
-4. `scripts/renderer.py` — Patches index.html with chart data (regex-based)
-5. `scripts/validator.py` — Independent data quality checks (3-pass)
-6. `scripts/publisher.py` — Email delivery via Resend
+8-agent Python data pipeline:
+1. `scripts/collector.py` — Agent 1: Pulls data from FRED, BLS, EIA APIs
+2. `scripts/analyzer.py` — Agent 2: Diffs raw data, scores signals
+3. `scripts/briefing_agent.py` — Agent 3: AI commentary (Claude Sonnet)
+4. `scripts/renderer.py` — Agent 4: Patches index.html with chart data (regex-based)
+5. `scripts/validator.py` — Agent 6: Independent data quality checks (5-pass)
+6. `scripts/publisher.py` — Agent 5: Email delivery via Resend
+7. `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
+8. `scripts/visual_review.py` — Agent 8: Vision-based chart review (Claude multimodal)
 
 Supporting scripts:
 - `scripts/snapshot.py` — Rolling data backups (keep last 3)
 - `scripts/healthcheck.py` — Post-deploy page verification
 - `scripts/version_tracker.py` — Pipeline run audit trail
-- `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
 
 ## Key Files
 - `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
 - `data/raw_data.json` — All collected API data
 - `data/signals.json` — Analyzer output
-- `data/validation_report.json` — Validator output
+- `data/validation_report.json` — Validator output (5-pass)
+- `data/visual_review_report.json` — Agent 8 vision review output
 - `data/pipeline_version.json` — Version tracking audit log
 - `.github/workflows/briefing.yml` — Main CI pipeline
 - `.github/workflows/smoke-tests.yml` — PR smoke tests
@@ -41,8 +43,10 @@ Supporting scripts:
 ## Testing
 - Run `python tests/test_smoke.py` before pushing — must be 29/29 pass
 - Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
+- Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
+- Validator runs 5 passes: internal consistency, source verification, staleness, visual QA, vision review
 
 ## Commit Conventions
 - Bug fixes: `Fix <what>: <detail>`

@@ -474,6 +474,7 @@ def check_staleness(data, collected_at):
 
 def check_visual():
     """Run DOM-based visual QA checks if Playwright is available.
+    Also captures screenshots for Agent 8 visual review.
     Returns list of findings from the visual QA agent."""
     try:
         # Add scripts dir to path for visual_qa import
@@ -487,12 +488,12 @@ def check_visual():
         visual_qa.FAIL = 0
         visual_qa.findings = []
 
-        # Run visual QA silently
+        # Run visual QA with screenshots (needed for Agent 8 visual review)
         import io
         old_stdout = sys.stdout
         sys.stdout = io.StringIO()
         try:
-            visual_qa.run_visual_qa(take_screenshots=False)
+            visual_qa.run_visual_qa(take_screenshots=True)
         except SystemExit:
             pass
         finally:
@@ -524,11 +525,40 @@ def check_visual():
         }]
 
 
-def build_report(internal, sources, staleness, visual=None):
+def check_visual_review():
+    """Run vision-based review using Claude's multimodal capability (Agent 8).
+    Analyzes screenshots for pixel-level visual defects.
+    Returns list of findings."""
+    try:
+        scripts_dir = str(Path(__file__).parent)
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+
+        import visual_review
+        return visual_review.get_findings_for_validator()
+    except ImportError:
+        return [{
+            'check': 'Visual Review (Agent 8)',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': 'visual_review.py not found',
+        }]
+    except Exception as e:
+        return [{
+            'check': 'Visual Review (Agent 8)',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': f'Visual review error: {e}',
+        }]
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
-    all_findings = internal + sources + staleness + visual
+    if vision_review is None:
+        vision_review = []
+    all_findings = internal + sources + staleness + visual + vision_review
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -555,6 +585,7 @@ def build_report(internal, sources, staleness, visual=None):
         'source_verification': sources,
         'staleness': staleness,
         'visual_qa': visual,
+        'visual_review': vision_review,
     }
     return report
 
@@ -613,8 +644,19 @@ def validate():
     else:
         print(f'  {vqa_pass} passed, {vqa_fail} failed')
 
+    # Pass 5: Visual Review — Claude vision analysis of screenshots (Agent 8)
+    print('\n  ── Pass 5: Visual Review (AI vision analysis — Agent 8) ──')
+    vision_review = check_visual_review()
+    vr_pass = sum(1 for f in vision_review if f.get('pass'))
+    vr_fail = sum(1 for f in vision_review if not f.get('pass') and f.get('severity') != 'skipped')
+    vr_skip = sum(1 for f in vision_review if f.get('severity') == 'skipped')
+    if vr_skip:
+        print(f'  Skipped ({vision_review[0].get("reason", "unavailable")})')
+    else:
+        print(f'  {vr_pass} passed, {vr_fail} failed')
+
     # Build and save report
-    report = build_report(internal, sources, staleness, visual)
+    report = build_report(internal, sources, staleness, visual, vision_review)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -628,7 +670,8 @@ def validate():
 
     # Print divergences for visibility
     for section_name, section in [('Internal', internal), ('Source', sources),
-                                   ('Staleness', staleness), ('Visual', visual)]:
+                                   ('Staleness', staleness), ('Visual', visual),
+                                   ('Vision', vision_review)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')
