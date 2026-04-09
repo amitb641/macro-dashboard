@@ -1,40 +1,40 @@
 {
-  "analyzed_at": "2026-04-08T15:14:54.588991Z",
+  "analyzed_at": "2026-04-09T15:41:55.258198Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
-  "flagged_count": 0,
+  "flagged_count": 1,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.84,
-    "dgs5": 3.98,
-    "dgs10": 4.34,
-    "dgs30": 4.89,
-    "ig_oas": 86,
-    "hy_oas": 312,
+    "dgs2": 3.81,
+    "dgs5": 3.95,
+    "dgs10": 4.33,
+    "dgs30": 4.9,
+    "ig_oas": 83,
+    "hy_oas": 294,
     "unrate": 4.3,
     "u6rate": 8.0,
     "nfp_level": 158637.0,
     "nfp_mom": 178,
-    "icsa": 205000.0,
-    "ccsa": 1857000.0,
+    "icsa": 219000.0,
+    "ccsa": 1794000.0,
     "wages_yoy": 3.38,
     "cpi_yoy": 2.43,
     "core_cpi_yoy": 2.47,
-    "pce_yoy": 2.83,
-    "core_pce_yoy": 3.06,
-    "saving_rate": 4.5,
+    "pce_yoy": 2.8,
+    "core_pce_yoy": 2.97,
+    "saving_rate": 4.0,
     "mortgage30": 6.46,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 0.91,
     "umcsent": 56.6,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
-    "wti": 104.69,
-    "brent": 121.88,
-    "gdp_growth_q": 0.7,
+    "wti": 114.58,
+    "brent": 138.21,
+    "gdp_growth_q": 0.5,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 50
+    "spread_10_2_bp": 52
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.34,
+      "value": 4.33,
       "delta": -0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 86,
-      "delta": 0,
+      "value": 83,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 312,
-      "delta": -1,
+      "value": 294,
+      "delta": -18,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -80,8 +80,8 @@
       "alert": null
     },
     "pce_yoy": {
-      "value": 2.83,
-      "delta": 0.0,
+      "value": 2.8,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -94,10 +94,10 @@
       "alert": null
     },
     "wti": {
-      "value": 104.69,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 114.58,
+      "delta": 9.89,
+      "direction": "rising",
+      "flagged": true,
       "alert": "alert"
     },
     "mortgage30": {
@@ -122,8 +122,8 @@
       "alert": null
     },
     "icsa": {
-      "value": 205000.0,
-      "delta": 0.0,
+      "value": 219000.0,
+      "delta": 14000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.84,
-      "delta": 0.0,
+      "value": 3.81,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.98,
-      "delta": -0.01,
+      "value": 3.95,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.89,
-      "delta": -0.02,
+      "value": 4.9,
+      "delta": 0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 50,
-      "delta": -1,
+      "value": 52,
+      "delta": 2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -178,8 +178,8 @@
       "alert": null
     },
     "core_pce_yoy": {
-      "value": 3.06,
-      "delta": 0.0,
+      "value": 2.97,
+      "delta": -0.09,
       "direction": "stable",
       "flagged": false,
       "alert": "watch"
@@ -192,8 +192,8 @@
       "alert": null
     },
     "saving_rate": {
-      "value": 4.5,
-      "delta": 0.0,
+      "value": 4.0,
+      "delta": -0.5,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -206,15 +206,15 @@
       "alert": null
     },
     "brent": {
-      "value": 121.88,
-      "delta": 0.0,
+      "value": 138.21,
+      "delta": 16.33,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "gdp_growth_q": {
-      "value": 0.7,
-      "delta": 0.0,
+      "value": 0.5,
+      "delta": -0.2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -227,8 +227,8 @@
       "alert": null
     },
     "ccsa": {
-      "value": 1857000.0,
-      "delta": 0.0,
+      "value": 1794000.0,
+      "delta": -63000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,7 +241,13 @@
       "alert": null
     }
   },
-  "headlines": [],
+  "headlines": [
+    {
+      "key": "wti",
+      "line": "wti: 114.58 (\u25b29.89 vs prior) [ALERT]",
+      "alert": "alert"
+    }
+  ],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
