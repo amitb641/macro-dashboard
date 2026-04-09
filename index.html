@@ -5366,19 +5366,19 @@ function buildStackTab(){
     <div class="stk-content">
       <div class="stk-overline">Architecture · Data · Deployment</div>
       <div class="stk-h1">How the <em>Dashboard Works</em></div>
-      <div class="stk-lead">A 7-agent automated pipeline collects 40+ macro series from government APIs, reasons with Claude AI, renders this dashboard, runs 242 independent quality checks (including DOM-based visual QA via headless Chromium), and auto-rolls back on failure — unattended, in under 3 minutes.</div>
+      <div class="stk-lead">An 8-agent automated pipeline collects 40+ macro series from government APIs, reasons with Claude AI, renders this dashboard, runs 254 independent quality checks (including DOM-based visual QA via headless Chromium and AI vision review via Claude multimodal), and auto-rolls back on failure — unattended, in under 4 minutes.</div>
       <div class="stk-pills">
         <span class="stk-pill" style="color:#336BCC;border-color:rgba(51,107,204,.25);background:#EBF2FF">Claude Sonnet 4.6</span>
         <span class="stk-pill" style="color:#8878B8;border-color:rgba(136,120,184,.25);background:#F3F0FF">GitHub Actions CI/CD</span>
         <span class="stk-pill" style="color:#1A9E5A;border-color:rgba(13,122,74,.25);background:#ECFDF5">BLS · BEA · FRED · EIA</span>
-        <span class="stk-pill" style="color:#059669;border-color:rgba(5,150,105,.25);background:#F0FDF9">242 Quality Checks</span>
+        <span class="stk-pill" style="color:#059669;border-color:rgba(5,150,105,.25);background:#F0FDF9">254 Quality Checks</span>
         <span class="stk-pill" style="color:#CC8A00;border-color:rgba(204,138,0,.25);background:#FEF3C7">~4 min / run</span>
       </div>
     </div>
   </div>
 
   <!-- ARCHITECTURE DIAGRAM -->
-  <div class="stk-section-title">7-agent architecture — data collection, analysis, rendering, validation &amp; visual QA</div>
+  <div class="stk-section-title">8-agent architecture — data collection, analysis, rendering, validation, visual QA &amp; AI vision review</div>
   <div class="panel" style="margin-bottom:20px;padding:0;overflow:hidden">
   <style>
   .diag-wrap { padding:28px 24px 24px; background:#fff; }
@@ -5663,10 +5663,10 @@ function buildStackTab(){
           <div class="ma-agent-icon">🛡️</div>
           <div class="ma-agent-name">Validator</div>
           <div class="ma-agent-file">validator.py</div>
-          <span class="ma-badge-nollm">4-Pass · 242 Checks</span>
+          <span class="ma-badge-nollm">5-Pass · 254 Checks</span>
         </div>
         <div class="ma-agent-body">
-          <div class="ma-agent-desc">Unified 4-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (4) visual QA via Agent 7. Build gate blocks publish on critical failures.</div>
+          <div class="ma-agent-desc">Unified 5-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (4) visual QA via Agent 7, (5) AI vision review via Agent 8. Build gate blocks publish on critical failures.</div>
           <div class="ma-agent-io">
             <div class="ma-agent-in">IN: index.html + raw_data.json + APIs</div>
             <div class="ma-agent-out">OUT: validation_report.json</div>
@@ -5685,10 +5685,29 @@ function buildStackTab(){
           <span class="ma-badge-nollm">Playwright · 224 DOM Checks</span>
         </div>
         <div class="ma-agent-body">
-          <div class="ma-agent-desc">Headless Chromium renders every tab, checks: JS errors, console errors, bad placeholder values, chart canvas sizes, KPI tile integrity, panel content. Screenshots saved as CI artifacts.</div>
+          <div class="ma-agent-desc">Headless Chromium renders every tab, checks: JS errors, console errors, bad placeholder values, chart canvas sizes, KPI tile integrity, panel content. Screenshots saved for Agent 8.</div>
           <div class="ma-agent-io">
             <div class="ma-agent-in">IN: index.html (headless browser)</div>
             <div class="ma-agent-out">OUT: visual_qa_report.json + PNGs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent 8 -->
+      <div class="ma-agent" style="animation-delay:.57s;border-color:rgba(136,120,184,.3);box-shadow:0 2px 12px rgba(136,120,184,.1)">
+        <div class="ma-agent-header" style="background:#FAFBFF">
+          <div class="ma-agent-accent" style="background:#8878B8"></div>
+          <div class="ma-agent-num">Agent 8</div>
+          <div class="ma-agent-icon">👁️</div>
+          <div class="ma-agent-name">Visual Review</div>
+          <div class="ma-agent-file">visual_review.py</div>
+          <span class="ma-badge-llm">claude-sonnet-4-6 · vision</span>
+        </div>
+        <div class="ma-agent-body">
+          <div class="ma-agent-desc">Sends per-tab screenshots to Claude's vision API for pixel-level defect detection: broken chart lines, empty data areas, overlapping labels, missing legends, blank tiles, formatting errors. Catches visual bugs invisible to DOM checks.</div>
+          <div class="ma-agent-io">
+            <div class="ma-agent-in">IN: screenshots from Agent 7</div>
+            <div class="ma-agent-out">OUT: visual_review_report.json</div>
           </div>
         </div>
       </div>
@@ -5720,8 +5739,8 @@ function buildStackTab(){
       <div class="ma-output" style="border-color:rgba(5,150,105,.2);background:#F0FDF9">
         <div class="ma-output-icon">🛡️</div>
         <div>
-          <div class="ma-output-title" style="color:#059669">Validation Report (242 checks)</div>
-          <div class="ma-output-sub">4-pass quality gate: internal consistency, live API spot-checks, staleness, 224 DOM visual checks — viewable in Validator tab</div>
+          <div class="ma-output-title" style="color:#059669">Validation Report (254 checks)</div>
+          <div class="ma-output-sub">5-pass quality gate: internal consistency, live API spot-checks, staleness, 224 DOM visual checks, AI vision review of 12 chart tabs — viewable in Validator tab</div>
         </div>
       </div>
       <div class="ma-output" style="border-color:rgba(136,120,184,.2);background:#F3F0FF">
@@ -5735,7 +5754,7 @@ function buildStackTab(){
 
     <!-- WHY NOTE -->
     <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10.5px;color:#92400E;line-height:1.6">
-      <strong>Why multi-agent?</strong> Only Agent 3 uses an LLM — Agents 1, 2, 4, 5, 6 and 7 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) runs a unified 4-pass quality gate — including Agent 7's 224 visual DOM checks via headless Chromium — catching data divergences, benchmark revisions, and rendering defects automatically. Critical failures block publish, and auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
+      <strong>Why multi-agent?</strong> Only Agents 3 and 8 use an LLM — Agents 1, 2, 4, 5, 6 and 7 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) runs a unified 5-pass quality gate — including Agent 7's 224 visual DOM checks via headless Chromium and Agent 8's AI vision review of every chart tab — catching data divergences, benchmark revisions, rendering defects, and pixel-level visual bugs automatically. Critical failures block publish, and auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
     </div>
 
   </div>
@@ -5775,8 +5794,8 @@ function buildStackTab(){
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0FDF9;border-radius:10px;border:1px solid rgba(5,150,105,.15)">
       <span style="font-size:18px">🛡️</span>
       <div>
-        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (242 checks)</div>
-        <div style="font-size:9px;color:#64748B">4-pass quality gate + visual QA</div>
+        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (254 checks)</div>
+        <div style="font-size:9px;color:#64748B">5-pass quality gate + visual QA + AI vision</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
@@ -5812,7 +5831,7 @@ function buildStackTab(){
   <!-- STATS -->
   <div class="stk-stats" style="grid-template-columns:repeat(5,1fr)">
     <div class="stk-stat">
-      <div class="stk-stat-val blue">7</div>
+      <div class="stk-stat-val blue">8</div>
       <div class="stk-stat-lbl">Pipeline agents</div>
     </div>
     <div class="stk-stat">
@@ -5820,7 +5839,7 @@ function buildStackTab(){
       <div class="stk-stat-lbl">Data series tracked</div>
     </div>
     <div class="stk-stat">
-      <div class="stk-stat-val green">242</div>
+      <div class="stk-stat-val green">254</div>
       <div class="stk-stat-lbl">Quality checks per run</div>
     </div>
     <div class="stk-stat">
@@ -5919,7 +5938,7 @@ function buildStackTab(){
   <div class="fc-note" style="margin-bottom:14px">
     <strong>Pipeline cadence:</strong>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
-      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Friday 8am ET — Full 7-agent pipeline + validation + deploy
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Friday 8am ET — Full 8-agent pipeline + validation + deploy
     </span>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
       <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#8878B8;background:#F3F0FF;border:1px solid rgba(136,120,184,.2)">Monthly Deep</span> 2nd Saturday 10am ET — captures Jobs (1st Fri) + CPI (~10th) + PCE (~28th prior month)
