@@ -260,7 +260,7 @@ def run_visual_qa(take_screenshots=False):
             // Check chart data arrays — including data completeness
             const charts = [
                 'CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
-                'OIL_ANNUAL', 'OIL_MONTHLY', 'HOUSING_MONTHLY'
+                'OIL_ANNUAL', 'OIL_MONTHLY', 'OIL_DAILY', 'HOUSING_MONTHLY'
             ];
             checks.charts = {};
             for (const name of charts) {
@@ -279,7 +279,16 @@ def run_visual_qa(take_screenshots=False):
                             if (Array.isArray(arr)) {
                                 const total = arr.length;
                                 const nulls = arr.filter(v => v === null || v === undefined || v === '').length;
-                                info.series[key] = {total, nulls, pct_filled: total > 0 ? Math.round((total - nulls) / total * 100) : 0};
+                                // Count interior nulls (null between two non-null values = broken line)
+                                let interior_nulls = 0;
+                                for (let i = 1; i < arr.length - 1; i++) {
+                                    if ((arr[i] === null || arr[i] === undefined || arr[i] === '') &&
+                                        arr.slice(0, i).some(v => v !== null && v !== undefined && v !== '') &&
+                                        arr.slice(i + 1).some(v => v !== null && v !== undefined && v !== '')) {
+                                        interior_nulls++;
+                                    }
+                                }
+                                info.series[key] = {total, nulls, interior_nulls, pct_filled: total > 0 ? Math.round((total - nulls) / total * 100) : 0};
                             }
                         }
                         checks.charts[name] = info;
@@ -328,6 +337,13 @@ def run_visual_qa(take_screenshots=False):
                         _check('data', f'{chart_name}.{series_name} completeness',
                                pct >= 50,
                                f'{nulls}/{total} values empty ({pct}% filled)',
+                               severity='warning')
+                    # Check for interior nulls (gaps between valid points = broken line)
+                    interior_nulls = series_info.get('interior_nulls', 0)
+                    if interior_nulls > 0:
+                        _check('data', f'{chart_name}.{series_name} line continuity',
+                               False,
+                               f'{interior_nulls} gap(s) between data points — line will break',
                                severity='warning')
 
         # Validation report

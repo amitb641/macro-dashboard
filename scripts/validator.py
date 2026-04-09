@@ -225,7 +225,7 @@ def check_internal(html, data, sig_vals):
 
     # ── Chart data completeness — catch sparse/empty series ──
     CHART_CONSTS = ['CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
-                    'OIL_ANNUAL', 'OIL_MONTHLY', 'HOUSING_MONTHLY']
+                    'OIL_ANNUAL', 'OIL_MONTHLY', 'OIL_DAILY', 'HOUSING_MONTHLY']
     for const_name in CHART_CONSTS:
         obj = _extract_js_const(html, const_name)
         if not obj:
@@ -250,6 +250,24 @@ def check_internal(html, data, sig_vals):
                 'severity': 'ok' if is_ok else 'warning',
                 'pass': is_ok,
             })
+            # Check for interior nulls (gaps between valid data = broken chart line)
+            interior = 0
+            for i in range(1, n_total - 1):
+                if arr[i] is None or arr[i] == '' or arr[i] == 'null':
+                    has_before = any(arr[j] is not None and arr[j] != '' for j in range(i))
+                    has_after = any(arr[j] is not None and arr[j] != '' for j in range(i + 1, n_total))
+                    if has_before and has_after:
+                        interior += 1
+            if interior > 0:
+                findings.append({
+                    'check': f'{const_name}.{key} line continuity',
+                    'html_value': f'{interior} interior gap(s)',
+                    'source_value': '0 gaps expected',
+                    'difference': interior,
+                    'tolerance': 0,
+                    'severity': 'warning',
+                    'pass': False,
+                })
 
     return findings
 
