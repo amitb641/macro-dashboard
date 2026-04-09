@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-04-09T15:41:55.258198Z",
+  "analyzed_at": "2026-04-09T18:08:50.966479Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.81,
@@ -24,7 +24,7 @@
     "pce_yoy": 2.8,
     "core_pce_yoy": 2.97,
     "saving_rate": 4.0,
-    "mortgage30": 6.46,
+    "mortgage30": 6.37,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 0.91,
     "umcsent": 56.6,
@@ -46,21 +46,21 @@
     },
     "dgs10": {
       "value": 4.33,
-      "delta": -0.01,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 83,
-      "delta": -3,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 294,
-      "delta": -18,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -81,7 +81,7 @@
     },
     "pce_yoy": {
       "value": 2.8,
-      "delta": -0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -95,14 +95,14 @@
     },
     "wti": {
       "value": 114.58,
-      "delta": 9.89,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "mortgage30": {
-      "value": 6.46,
-      "delta": 0.0,
+      "value": 6.37,
+      "delta": -0.09,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -123,7 +123,7 @@
     },
     "icsa": {
       "value": 219000.0,
-      "delta": 14000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -144,28 +144,28 @@
     },
     "dgs2": {
       "value": 3.81,
-      "delta": -0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 3.95,
-      "delta": -0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 4.9,
-      "delta": 0.01,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 52,
-      "delta": 2,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -179,7 +179,7 @@
     },
     "core_pce_yoy": {
       "value": 2.97,
-      "delta": -0.09,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": "watch"
@@ -193,7 +193,7 @@
     },
     "saving_rate": {
       "value": 4.0,
-      "delta": -0.5,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -207,14 +207,14 @@
     },
     "brent": {
       "value": 138.21,
-      "delta": 16.33,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "gdp_growth_q": {
       "value": 0.5,
-      "delta": -0.2,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -228,7 +228,7 @@
     },
     "ccsa": {
       "value": 1794000.0,
-      "delta": -63000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,13 +241,7 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "wti",
-      "line": "wti: 114.58 (\u25b29.89 vs prior) [ALERT]",
-      "alert": "alert"
-    }
-  ],
+  "headlines": [],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
