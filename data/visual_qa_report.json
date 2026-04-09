@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-04-09T17:48:00.175209Z",
-  "status": "PASS",
+  "checked_at": "2026-04-09T18:14:52.664179Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 232,
+    "total_checks": 233,
     "passed": 232,
-    "failed": 0,
+    "failed": 1,
     "js_errors": 1,
     "console_errors": 0
   },
@@ -1380,6 +1380,13 @@
       "check": "OIL_MONTHLY.brent completeness",
       "pass": true,
       "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "OIL_DAILY defined",
+      "pass": false,
+      "severity": "warning",
+      "detail": "OIL_DAILY is not defined"
     },
     {
       "category": "data",
