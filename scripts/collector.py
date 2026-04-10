@@ -135,8 +135,8 @@ def build_oil_daily(wti_series, brent_series):
 
     for d in all_dates:
         labels.append(d.strftime('%b %-d'))
-        wti_vals.append(wti_by_date.get(d))
-        brent_vals.append(brent_by_date.get(d))
+        wti_vals.append(wti_by_date.get(d) or (wti_vals[-1] if wti_vals else None))
+        brent_vals.append(brent_by_date.get(d) or (brent_vals[-1] if brent_vals else None))
 
     # Auto-generate move annotations: flag any day with |change| >= $2.50/bbl
     notes = []

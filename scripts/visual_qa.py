@@ -260,7 +260,7 @@ def run_visual_qa(take_screenshots=False):
             // Check chart data arrays — including data completeness
             const charts = [
                 'CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
-                'OIL_ANNUAL', 'OIL_MONTHLY', 'HOUSING_MONTHLY'
+                'OIL_ANNUAL', 'OIL_MONTHLY', 'OIL_DAILY', 'HOUSING_MONTHLY'
             ];
             checks.charts = {};
             for (const name of charts) {
