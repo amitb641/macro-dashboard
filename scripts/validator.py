@@ -224,8 +224,26 @@ def check_internal(html, data, sig_vals):
                         break
 
     # ── Chart data completeness — catch sparse/empty series ──
-    CHART_CONSTS = ['CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
-                    'OIL_ANNUAL', 'OIL_MONTHLY', 'OIL_DAILY', 'HOUSING_MONTHLY']
+    # ALL chart constants injected by renderer — comprehensive coverage
+    CHART_CONSTS = [
+        # Monthly charts
+        'CPI_MONTHLY', 'PCE_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP',
+        'HOUSING_MONTHLY', 'OIL_MONTHLY', 'SAVING_MONTHLY', 'UMCSENT_MONTHLY',
+        # Annual charts
+        'U_ANNUAL', 'CPI_ANNUAL', 'PCE_ANNUAL', 'WAGE_ANNUAL',
+        'JOBS_ANNUAL', 'SAVING_ANNUAL', 'OIL_ANNUAL',
+        # Daily / weekly
+        'OIL_DAILY', 'CLAIMS_WEEKLY',
+        # Rates & spreads
+        'GDP_TOTAL_DATA', 'FFR_DATA', 'MORTGAGE_DATA', 'SPREADS_DATA',
+        'TREASURY_DATA', 'OIL_SPREAD',
+        # Housing
+        'STARTS_DATA', 'HPI_DATA',
+        # Oil correlation
+        'OIL_VS_CPI', 'OIL_VS_SENTIMENT', 'OIL_VS_HY',
+        # Credit
+        'CREDIT_GROWTH', 'TDSP_HIST',
+    ]
     for const_name in CHART_CONSTS:
         obj = _extract_js_const(html, const_name)
         if not obj:
@@ -234,9 +252,13 @@ def check_internal(html, data, sig_vals):
         n_labels = len(labels)
         if n_labels == 0:
             continue
+
+        # Collect data arrays for sync check
+        data_arrays = {}
         for key, arr in obj.items():
             if key == 'labels' or not isinstance(arr, list):
                 continue
+            data_arrays[key] = arr
             n_total = len(arr)
             n_nulls = sum(1 for v in arr if v is None or v == '' or v == 'null')
             pct_filled = round((n_total - n_nulls) / n_total * 100) if n_total > 0 else 0
@@ -264,6 +286,32 @@ def check_internal(html, data, sig_vals):
                     'html_value': f'{interior} interior gap(s)',
                     'source_value': '0 gaps expected',
                     'difference': interior,
+                    'tolerance': 0,
+                    'severity': 'warning',
+                    'pass': False,
+                })
+            # Labels vs data array length mismatch
+            if n_total != n_labels:
+                findings.append({
+                    'check': f'{const_name}.{key} label sync',
+                    'html_value': f'{n_total} values',
+                    'source_value': f'{n_labels} labels',
+                    'difference': abs(n_total - n_labels),
+                    'tolerance': 0,
+                    'severity': 'warning',
+                    'pass': False,
+                })
+
+        # Multi-series sync: all data arrays should have same length
+        if len(data_arrays) > 1:
+            lengths = {k: len(v) for k, v in data_arrays.items()}
+            unique_lens = set(lengths.values())
+            if len(unique_lens) > 1:
+                findings.append({
+                    'check': f'{const_name} series length sync',
+                    'html_value': str(lengths),
+                    'source_value': 'All series same length',
+                    'difference': max(unique_lens) - min(unique_lens),
                     'tolerance': 0,
                     'severity': 'warning',
                     'pass': False,
