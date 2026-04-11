@@ -1,15 +1,15 @@
 {
-  "run_date": "2026-04-10",
-  "completed_at": "2026-04-10T14:53:56.735466Z",
+  "run_date": "2026-04-11",
+  "completed_at": "2026-04-11T14:40:31.868783Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "risk_posture": "Neutral",
   "macro_regime": "Expansion",
   "key_values": {
     "ffr": 3.64,
     "dgs10": 4.29,
-    "dgs2": 3.79,
+    "dgs2": 3.78,
     "ig_oas": 83,
     "hy_oas": 290,
     "unrate": 4.3,
@@ -20,10 +20,10 @@
   },
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.79,
-    "dgs5": 3.92,
+    "dgs2": 3.78,
+    "dgs5": 3.91,
     "dgs10": 4.29,
-    "dgs30": 4.89,
+    "dgs30": 4.9,
     "ig_oas": 83,
     "hy_oas": 290,
     "unrate": 4.3,
@@ -48,6 +48,6 @@
     "brent": 138.21,
     "gdp_growth_q": 0.5,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 50
+    "spread_10_2_bp": 51
   }
 }
