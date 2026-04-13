@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-04-12T14:43:10.844106Z",
+  "analyzed_at": "2026-04-13T15:18:18.887926Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 3,
@@ -10,8 +10,8 @@
     "dgs5": 3.91,
     "dgs10": 4.29,
     "dgs30": 4.9,
-    "ig_oas": 83,
-    "hy_oas": 290,
+    "ig_oas": 82,
+    "hy_oas": 294,
     "unrate": 4.3,
     "u6rate": 8.0,
     "nfp_level": 158637.0,
@@ -52,15 +52,15 @@
       "alert": null
     },
     "ig_oas": {
-      "value": 83,
-      "delta": 0,
+      "value": 82,
+      "delta": -1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 290,
-      "delta": 0,
+      "value": 294,
+      "delta": 4,
       "direction": "stable",
       "flagged": false,
       "alert": null
