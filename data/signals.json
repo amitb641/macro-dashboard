@@ -1,17 +1,17 @@
 {
-  "analyzed_at": "2026-04-13T15:18:18.887926Z",
+  "analyzed_at": "2026-04-14T15:17:39.113748Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 3,
   "flagged_count": 0,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.78,
-    "dgs5": 3.91,
-    "dgs10": 4.29,
-    "dgs30": 4.9,
+    "dgs2": 3.81,
+    "dgs5": 3.94,
+    "dgs10": 4.31,
+    "dgs30": 4.91,
     "ig_oas": 82,
-    "hy_oas": 294,
+    "hy_oas": 295,
     "unrate": 4.3,
     "u6rate": 8.0,
     "nfp_level": 158637.0,
@@ -34,7 +34,7 @@
     "brent": 138.21,
     "gdp_growth_q": 0.5,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 51
+    "spread_10_2_bp": 50
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.29,
-      "delta": 0.0,
+      "value": 4.31,
+      "delta": 0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 82,
-      "delta": -1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 294,
-      "delta": 4,
+      "value": 295,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.78,
-      "delta": 0.0,
+      "value": 3.81,
+      "delta": 0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.91,
-      "delta": 0.0,
+      "value": 3.94,
+      "delta": 0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.9,
-      "delta": 0.0,
+      "value": 4.91,
+      "delta": 0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 51,
-      "delta": 0,
+      "value": 50,
+      "delta": -1,
       "direction": "stable",
       "flagged": false,
       "alert": null

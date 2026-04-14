@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-11T14:40:31.366272Z",
+  "validated_at": "2026-04-14T15:18:29.683076Z",
   "status": "WARN",
   "summary": {
     "total_checks": 376,
-    "passed": 369,
-    "failed": 7,
+    "passed": 368,
+    "failed": 8,
     "skipped": 0,
     "critical_divergences": 0
   },
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.29,
-      "fresh_api_value": 4.29,
+      "raw_data_value": 4.31,
+      "fresh_api_value": 4.31,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -682,7 +682,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 41,
+      "age_days": 44,
       "max_lag_days": 45,
       "severity": "ok",
       "pass": true
@@ -690,7 +690,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 41,
+      "age_days": 44,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 41,
+      "age_days": 44,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -706,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 69,
+      "age_days": 72,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -714,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 69,
+      "age_days": 72,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,7 +722,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 41,
+      "age_days": 44,
       "max_lag_days": 40,
       "severity": "stale",
       "pass": false
@@ -730,22 +730,22 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 100,
+      "age_days": 103,
       "max_lag_days": 100,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-09",
-      "age_days": 2,
+      "age_days": 5,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-11T14:39:28.709338Z",
+      "collected_at": "2026-04-14T15:17:13.035185Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
