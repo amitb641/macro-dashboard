@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-14T15:18:29.683076Z",
+  "validated_at": "2026-04-17T12:59:07.594969Z",
   "status": "WARN",
   "summary": {
     "total_checks": 376,
-    "passed": 368,
-    "failed": 8,
+    "passed": 367,
+    "failed": 9,
     "skipped": 0,
     "critical_divergences": 0
   },
@@ -299,36 +299,36 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "30/30 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 15,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "26/26 filled",
+      "html_value": "30/30 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 15,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "17/26 filled",
-      "source_value": "65% (min 50%)",
-      "difference": 9,
-      "tolerance": 13,
+      "html_value": "19/30 filled",
+      "source_value": "63% (min 50%)",
+      "difference": 11,
+      "tolerance": 15,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes line continuity",
-      "html_value": "6 interior gap(s)",
+      "html_value": "8 interior gap(s)",
       "source_value": "0 gaps expected",
-      "difference": 6,
+      "difference": 8,
       "tolerance": 0,
       "severity": "warning",
       "pass": false
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.31,
-      "fresh_api_value": 4.31,
+      "raw_data_value": 4.29,
+      "fresh_api_value": 4.29,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -661,8 +661,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.37,
-      "fresh_api_value": 6.37,
+      "raw_data_value": 6.3,
+      "fresh_api_value": 6.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -682,15 +682,15 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 44,
+      "age_days": 47,
       "max_lag_days": 45,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 44,
+      "age_days": 47,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 44,
+      "age_days": 47,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -706,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 72,
+      "age_days": 75,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -714,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 72,
+      "age_days": 75,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,7 +722,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 44,
+      "age_days": 47,
       "max_lag_days": 40,
       "severity": "stale",
       "pass": false
@@ -730,22 +730,22 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 103,
+      "age_days": 106,
       "max_lag_days": 100,
       "severity": "stale",
       "pass": false
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-04-09",
-      "age_days": 5,
+      "latest_date": "2026-04-16",
+      "age_days": 1,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-14T15:17:13.035185Z",
+      "collected_at": "2026-04-17T12:57:37.110609Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
