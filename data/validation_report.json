@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-04-17T12:59:07.594969Z",
+  "validated_at": "2026-04-18T14:44:45.894280Z",
   "status": "WARN",
   "summary": {
     "total_checks": 376,
@@ -407,19 +407,19 @@
     },
     {
       "check": "SPREADS_DATA.ig completeness",
-      "html_value": "27/27 filled",
+      "html_value": "3/3 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 1,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SPREADS_DATA.hy completeness",
-      "html_value": "27/27 filled",
+      "html_value": "3/3 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 1,
       "severity": "ok",
       "pass": true
     },
@@ -542,19 +542,19 @@
     },
     {
       "check": "OIL_VS_HY.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "2/2 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 1,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_HY.hySpreads completeness",
-      "html_value": "26/26 filled",
+      "html_value": "2/2 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 1,
       "severity": "ok",
       "pass": true
     },
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.29,
-      "fresh_api_value": 4.29,
+      "raw_data_value": 4.32,
+      "fresh_api_value": 4.32,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -682,7 +682,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 47,
+      "age_days": 48,
       "max_lag_days": 45,
       "severity": "stale",
       "pass": false
@@ -690,7 +690,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 47,
+      "age_days": 48,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 47,
+      "age_days": 48,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -706,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 75,
+      "age_days": 76,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -714,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 75,
+      "age_days": 76,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,7 +722,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 47,
+      "age_days": 48,
       "max_lag_days": 40,
       "severity": "stale",
       "pass": false
@@ -730,7 +730,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 106,
+      "age_days": 107,
       "max_lag_days": 100,
       "severity": "stale",
       "pass": false
@@ -738,14 +738,14 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-16",
-      "age_days": 1,
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-17T12:57:37.110609Z",
+      "collected_at": "2026-04-18T14:43:36.537559Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
