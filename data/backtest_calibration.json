@@ -1,0 +1,1008 @@
+[
+  {
+    "shock": {
+      "id": "ukraine-2022",
+      "name": "2022 Ukraine invasion",
+      "shock_date": "2022-02-24",
+      "wti_pre": 92.1,
+      "wti_peak": 123.7,
+      "wti_peak_chg_pct": 34,
+      "notes": "Closest analog to 2026 scenario: post-pandemic demand + supply disruption."
+    },
+    "snapshots": [
+      "2022-03-10",
+      "2022-03-24",
+      "2022-04-21",
+      "2022-05-26",
+      "2022-08-25"
+    ],
+    "phases": [
+      {
+        "phase": "Pump Prices Spike",
+        "series": "GASREGW",
+        "kind": "level",
+        "expected_weeks": [
+          0,
+          2
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-07",
+            "latest_value": 4.102,
+            "pre_value": 3.53,
+            "now_value": 4.102,
+            "chg": 0.57,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-21",
+            "latest_value": 4.239,
+            "pre_value": 3.53,
+            "now_value": 4.239,
+            "chg": 0.71,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-18",
+            "latest_value": 4.066,
+            "pre_value": 3.53,
+            "now_value": 4.066,
+            "chg": 0.54,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-23",
+            "latest_value": 4.593,
+            "pre_value": 3.53,
+            "now_value": 4.593,
+            "chg": 1.06,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-22",
+            "latest_value": 3.88,
+            "pre_value": 3.53,
+            "now_value": 3.88,
+            "chg": 0.35,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Transport & Freight",
+        "series": "CUSR0000SETG",
+        "kind": "mma",
+        "expected_weeks": [
+          4,
+          6
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 251.317,
+            "post_mma": 82.7,
+            "pre_6mma": 3.0,
+            "delta_pp": 79.7,
+            "status": "ahead"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 251.317,
+            "post_mma": 82.7,
+            "pre_6mma": 3.0,
+            "delta_pp": 79.7,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 281.375,
+            "post_mma": 287.9,
+            "pre_6mma": 3.0,
+            "delta_pp": 284.9,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-01",
+            "latest_value": 301.254,
+            "post_mma": 126.9,
+            "pre_6mma": 3.0,
+            "delta_pp": 123.9,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-01",
+            "latest_value": 285.355,
+            "post_mma": -35.4,
+            "pre_6mma": 3.0,
+            "delta_pp": -38.4,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "CPI Energy Prints",
+        "series": "CPIENGSL",
+        "kind": "mma",
+        "expected_weeks": [
+          6,
+          10
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 303.099,
+            "post_mma": 216.9,
+            "pre_6mma": 30.8,
+            "delta_pp": 186.1,
+            "status": "ahead"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 303.099,
+            "post_mma": 216.9,
+            "pre_6mma": 30.8,
+            "delta_pp": 186.1,
+            "status": "ahead"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 295.455,
+            "post_mma": -26.4,
+            "pre_6mma": 30.8,
+            "delta_pp": -57.2,
+            "status": "on_schedule"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-01",
+            "latest_value": 309.052,
+            "post_mma": 71.6,
+            "pre_6mma": 30.8,
+            "delta_pp": 40.8,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-01",
+            "latest_value": 298.331,
+            "post_mma": -46.6,
+            "pre_6mma": 30.8,
+            "delta_pp": -77.4,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Food & Services",
+        "series": "CUSR0000SEFV",
+        "kind": "mma",
+        "expected_weeks": [
+          12,
+          20
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 321.689,
+            "post_mma": 3.1,
+            "pre_6mma": 7.6,
+            "delta_pp": -4.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 321.689,
+            "post_mma": 3.1,
+            "pre_6mma": 7.6,
+            "delta_pp": -4.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 323.559,
+            "post_mma": 7.2,
+            "pre_6mma": 7.6,
+            "delta_pp": -0.4,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-01",
+            "latest_value": 325.952,
+            "post_mma": 9.2,
+            "pre_6mma": 7.6,
+            "delta_pp": 1.6,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-01",
+            "latest_value": 334.212,
+            "post_mma": 10.9,
+            "pre_6mma": 7.6,
+            "delta_pp": 3.3,
+            "status": "confirmed"
+          }
+        ]
+      },
+      {
+        "phase": "Core Goods Inflation",
+        "series": "CPILFESL",
+        "kind": "yoy",
+        "expected_weeks": [
+          20,
+          32
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 289.056,
+            "yoy": 6.5,
+            "pre_yoy": 6.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 289.056,
+            "yoy": 6.5,
+            "pre_yoy": 6.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 290.514,
+            "yoy": 6.2,
+            "pre_yoy": 6.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-01",
+            "latest_value": 292.063,
+            "yoy": 6.0,
+            "pre_yoy": 6.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-01",
+            "latest_value": 296.535,
+            "yoy": 6.3,
+            "pre_yoy": 6.5,
+            "status": "on_schedule"
+          }
+        ]
+      },
+      {
+        "phase": "Consumer Sentiment Falls",
+        "series": "UMCSENT",
+        "kind": "level",
+        "expected_weeks": [
+          2,
+          6
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 59.4,
+            "pre_value": 62.8,
+            "now_value": 59.4,
+            "chg": 3.4,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 59.4,
+            "pre_value": 62.8,
+            "now_value": 59.4,
+            "chg": 3.4,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 65.2,
+            "pre_value": 62.8,
+            "now_value": 65.2,
+            "chg": -2.4,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-01",
+            "latest_value": 58.4,
+            "pre_value": 62.8,
+            "now_value": 58.4,
+            "chg": 4.4,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-01",
+            "latest_value": 58.2,
+            "pre_value": 62.8,
+            "now_value": 58.2,
+            "chg": 4.6,
+            "status": "confirmed"
+          }
+        ]
+      },
+      {
+        "phase": "Savings Drawdown",
+        "series": "PSAVERT",
+        "kind": "level",
+        "expected_weeks": [
+          8,
+          16
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 3.2,
+            "pre_value": 4.1,
+            "now_value": 3.2,
+            "chg": 0.9,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-03-01",
+            "latest_value": 3.2,
+            "pre_value": 4.1,
+            "now_value": 3.2,
+            "chg": 0.9,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 2.6,
+            "pre_value": 4.1,
+            "now_value": 2.6,
+            "chg": 1.5,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-05-01",
+            "latest_value": 2.6,
+            "pre_value": 4.1,
+            "now_value": 2.6,
+            "chg": 1.5,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-08-01",
+            "latest_value": 3.2,
+            "pre_value": 4.1,
+            "now_value": 3.2,
+            "chg": 0.9,
+            "status": "confirmed"
+          }
+        ]
+      },
+      {
+        "phase": "Delinquencies Climb",
+        "series": "DRCCLACBS",
+        "kind": "level",
+        "expected_weeks": [
+          20,
+          40
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2022-03-10",
+            "latest_obs_date": "2022-01-01",
+            "latest_value": 1.69,
+            "pre_value": 1.69,
+            "now_value": 1.69,
+            "chg": 0.0,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2022-03-24",
+            "latest_obs_date": "2022-01-01",
+            "latest_value": 1.69,
+            "pre_value": 1.69,
+            "now_value": 1.69,
+            "chg": 0.0,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2022-04-21",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 1.83,
+            "pre_value": 1.69,
+            "now_value": 1.83,
+            "chg": 0.14,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2022-05-26",
+            "latest_obs_date": "2022-04-01",
+            "latest_value": 1.83,
+            "pre_value": 1.69,
+            "now_value": 1.83,
+            "chg": 0.14,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2022-08-25",
+            "latest_obs_date": "2022-07-01",
+            "latest_value": 2.05,
+            "pre_value": 1.69,
+            "now_value": 2.05,
+            "chg": 0.36,
+            "status": "confirmed"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "shock": {
+      "id": "lehman-2008",
+      "name": "2008 Oil crash (peak-to-trough)",
+      "shock_date": "2008-07-01",
+      "wti_pre": 90.0,
+      "wti_peak": 145.29,
+      "wti_peak_chg_pct": 61,
+      "notes": "Inverse test case \u2014 prices collapsed into 2009. Tracker should NOT confirm ongoing shock transmission."
+    },
+    "snapshots": [
+      "2008-07-15",
+      "2008-07-29",
+      "2008-08-26",
+      "2008-09-30",
+      "2008-12-30"
+    ],
+    "phases": [
+      {
+        "phase": "Pump Prices Spike",
+        "series": "GASREGW",
+        "kind": "level",
+        "expected_weeks": [
+          0,
+          2
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-14",
+            "latest_value": 4.113,
+            "pre_value": 4.095,
+            "now_value": 4.113,
+            "chg": 0.02,
+            "status": "on_schedule"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-28",
+            "latest_value": 3.955,
+            "pre_value": 4.095,
+            "now_value": 3.955,
+            "chg": -0.14,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-25",
+            "latest_value": 3.685,
+            "pre_value": 4.095,
+            "now_value": 3.685,
+            "chg": -0.41,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-29",
+            "latest_value": 3.632,
+            "pre_value": 4.095,
+            "now_value": 3.632,
+            "chg": -0.46,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-29",
+            "latest_value": 1.613,
+            "pre_value": 4.095,
+            "now_value": 1.613,
+            "chg": -2.48,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Transport & Freight",
+        "series": "CUSR0000SETG",
+        "kind": "mma",
+        "expected_weeks": [
+          4,
+          6
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 262.819,
+            "post_mma": 20.3,
+            "pre_6mma": 18.1,
+            "delta_pp": 2.2,
+            "status": "ahead"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 262.819,
+            "post_mma": 20.3,
+            "pre_6mma": 18.1,
+            "delta_pp": 2.2,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-01",
+            "latest_value": 263.918,
+            "post_mma": 5.1,
+            "pre_6mma": 18.1,
+            "delta_pp": -13.0,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-01",
+            "latest_value": 260.328,
+            "post_mma": -15.2,
+            "pre_6mma": 18.1,
+            "delta_pp": -33.3,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-01",
+            "latest_value": 241.8,
+            "post_mma": -18.2,
+            "pre_6mma": 18.1,
+            "delta_pp": -36.3,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "CPI Energy Prints",
+        "series": "CPIENGSL",
+        "kind": "mma",
+        "expected_weeks": [
+          6,
+          10
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 271.149,
+            "post_mma": 50.4,
+            "pre_6mma": 34.9,
+            "delta_pp": 15.5,
+            "status": "ahead"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 271.149,
+            "post_mma": 50.4,
+            "pre_6mma": 34.9,
+            "delta_pp": 15.5,
+            "status": "ahead"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-01",
+            "latest_value": 262.566,
+            "post_mma": -32.0,
+            "pre_6mma": 34.9,
+            "delta_pp": -66.9,
+            "status": "on_schedule"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-01",
+            "latest_value": 260.125,
+            "post_mma": -10.6,
+            "pre_6mma": 34.9,
+            "delta_pp": -45.5,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-01",
+            "latest_value": 176.583,
+            "post_mma": -69.9,
+            "pre_6mma": 34.9,
+            "delta_pp": -104.8,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Food & Services",
+        "series": "CUSR0000SEFV",
+        "kind": "mma",
+        "expected_weeks": [
+          12,
+          20
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 216.376,
+            "post_mma": 7.9,
+            "pre_6mma": 4.6,
+            "delta_pp": 3.3,
+            "status": "ahead"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 216.376,
+            "post_mma": 7.9,
+            "pre_6mma": 4.6,
+            "delta_pp": 3.3,
+            "status": "ahead"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-01",
+            "latest_value": 217.063,
+            "post_mma": 3.9,
+            "pre_6mma": 4.6,
+            "delta_pp": -0.7,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-01",
+            "latest_value": 218.225,
+            "post_mma": 6.6,
+            "pre_6mma": 4.6,
+            "delta_pp": 2.0,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-01",
+            "latest_value": 220.684,
+            "post_mma": 3.6,
+            "pre_6mma": 4.6,
+            "delta_pp": -1.0,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Core Goods Inflation",
+        "series": "CPILFESL",
+        "kind": "yoy",
+        "expected_weeks": [
+          20,
+          32
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 215.965,
+            "yoy": 2.5,
+            "pre_yoy": 2.4,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 215.965,
+            "yoy": 2.5,
+            "pre_yoy": 2.4,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-01",
+            "latest_value": 216.393,
+            "yoy": 2.5,
+            "pre_yoy": 2.4,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-01",
+            "latest_value": 216.713,
+            "yoy": 2.4,
+            "pre_yoy": 2.4,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-01",
+            "latest_value": 216.925,
+            "yoy": 1.8,
+            "pre_yoy": 2.4,
+            "status": "confirmed"
+          }
+        ]
+      },
+      {
+        "phase": "Consumer Sentiment Falls",
+        "series": "UMCSENT",
+        "kind": "level",
+        "expected_weeks": [
+          2,
+          6
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 61.2,
+            "pre_value": 56.4,
+            "now_value": 61.2,
+            "chg": -4.8,
+            "status": "on_schedule"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 61.2,
+            "pre_value": 56.4,
+            "now_value": 61.2,
+            "chg": -4.8,
+            "status": "on_schedule"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-01",
+            "latest_value": 63.0,
+            "pre_value": 56.4,
+            "now_value": 63.0,
+            "chg": -6.6,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-01",
+            "latest_value": 70.3,
+            "pre_value": 56.4,
+            "now_value": 70.3,
+            "chg": -13.9,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-01",
+            "latest_value": 60.1,
+            "pre_value": 56.4,
+            "now_value": 60.1,
+            "chg": -3.7,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Savings Drawdown",
+        "series": "PSAVERT",
+        "kind": "level",
+        "expected_weeks": [
+          8,
+          16
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 3.6,
+            "pre_value": 4.6,
+            "now_value": 3.6,
+            "chg": 1.0,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 3.6,
+            "pre_value": 4.6,
+            "now_value": 3.6,
+            "chg": 1.0,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-08-01",
+            "latest_value": 3.1,
+            "pre_value": 4.6,
+            "now_value": 3.1,
+            "chg": 1.5,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-09-01",
+            "latest_value": 3.9,
+            "pre_value": 4.6,
+            "now_value": 3.9,
+            "chg": 0.7,
+            "status": "confirmed"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-12-01",
+            "latest_value": 5.8,
+            "pre_value": 4.6,
+            "now_value": 5.8,
+            "chg": -1.2,
+            "status": "not_yet"
+          }
+        ]
+      },
+      {
+        "phase": "Delinquencies Climb",
+        "series": "DRCCLACBS",
+        "kind": "level",
+        "expected_weeks": [
+          20,
+          40
+        ],
+        "snapshots": [
+          {
+            "weeks": 2,
+            "snapshot_date": "2008-07-15",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 4.8,
+            "pre_value": 4.9,
+            "now_value": 4.8,
+            "chg": -0.1,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 4,
+            "snapshot_date": "2008-07-29",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 4.8,
+            "pre_value": 4.9,
+            "now_value": 4.8,
+            "chg": -0.1,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 8,
+            "snapshot_date": "2008-08-26",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 4.8,
+            "pre_value": 4.9,
+            "now_value": 4.8,
+            "chg": -0.1,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 13,
+            "snapshot_date": "2008-09-30",
+            "latest_obs_date": "2008-07-01",
+            "latest_value": 4.8,
+            "pre_value": 4.9,
+            "now_value": 4.8,
+            "chg": -0.1,
+            "status": "not_yet"
+          },
+          {
+            "weeks": 26,
+            "snapshot_date": "2008-12-30",
+            "latest_obs_date": "2008-10-01",
+            "latest_value": 5.64,
+            "pre_value": 4.9,
+            "now_value": 5.64,
+            "chg": 0.74,
+            "status": "confirmed"
+          }
+        ]
+      }
+    ]
+  }
+]
