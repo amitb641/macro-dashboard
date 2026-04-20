@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U.S. Macro Dashboard — CEO Brief on Automation &amp; AI</title>
+<style>
+  :root {
+    --ink: #1A2533;
+    --sub: #334E68;
+    --muted: #64748B;
+    --accent: #1A9E5A;
+    --accent-warm: #CC8A00;
+    --rule: #E2E8F0;
+    --bg: #FAFBFC;
+    --panel: #FFFFFF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+    font-size: 15px;
+    padding: 40px 20px;
+  }
+  .wrap {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--panel);
+    padding: 48px 56px;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 36px 0 12px 0;
+    color: var(--ink);
+  }
+  h2:first-of-type { margin-top: 0; }
+  p { margin: 0 0 14px 0; }
+  strong { color: var(--ink); font-weight: 600; }
+  .lead {
+    font-size: 16px;
+    color: var(--sub);
+  }
+  .callout {
+    background: #F0F7FF;
+    border-left: 3px solid #336BCC;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--sub);
+    border-radius: 0 4px 4px 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    background: #F8FAFC;
+    font-weight: 600;
+    color: var(--sub);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  ol, ul { padding-left: 22px; margin: 12px 0; }
+  li { margin-bottom: 8px; }
+  .agent-list li { margin-bottom: 10px; }
+  .agent-name { font-weight: 600; color: var(--ink); }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 10px;
+    margin-left: 4px;
+    font-weight: 500;
+  }
+  .tag-det { background: #E8F5EE; color: #1A7F47; }
+  .tag-ai { background: #FFF4E0; color: #9C6A00; }
+  .fail-closed {
+    background: #FFF7ED;
+    border-left: 3px solid var(--accent-warm);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    border-radius: 0 4px 4px 0;
+  }
+  footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+  @media print {
+    body { background: white; padding: 0; }
+    .wrap { border: none; box-shadow: none; padding: 24px; max-width: none; }
+  }
+  @media (max-width: 600px) {
+    .wrap { padding: 28px 20px; }
+    body { padding: 20px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>U.S. Macro Dashboard — CEO Brief on Automation &amp; AI</h1>
+<div class="subtitle">How the 8-agent pipeline runs, validates, and publishes a weekly institutional macro read — without a human in the loop.</div>
+
+<h2>One-line summary</h2>
+<p class="lead">8 autonomous agents run this dashboard. 2 are AI-powered; 6 are deterministic. They coordinate via a GitHub Actions pipeline, check each other's work at three independent layers, and block publication if anything is wrong.</p>
+<div class="callout"><strong>No human writes a number. No human formats a chart.</strong> Human attention is reserved for improving the methodology, not running the system.</div>
+
+<h2>Why this split matters</h2>
+<p>A deliberate design choice: not everything is AI.</p>
+<p>AI is used where <em>judgment</em> helps — writing commentary that reflects nuance, or spotting visual defects a rulebook wouldn't catch. Deterministic code is used where <em>precision</em> matters — pulling data, computing signals, validating outputs against sources.</p>
+<p>This is the opposite of the common failure mode where teams force AI into every step and then struggle with hallucinations where the answer needed to be exact.</p>
+
+<table>
+  <thead>
+    <tr><th>Type</th><th>Agents</th><th>What they do</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Deterministic</strong></td>
+      <td>Collector, Analyzer, Renderer, Publisher, Validator, Visual QA</td>
+      <td>Pull data, compute signals, render HTML, run quality checks — output is reproducible</td>
+    </tr>
+    <tr>
+      <td><strong>AI (Claude)</strong></td>
+      <td>Briefing, Visual Review</td>
+      <td>Write analyst commentary, visually audit each chart — output is judgment</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>The team of 8</h2>
+<ol class="agent-list">
+  <li><span class="agent-name">Collector</span> <span class="tag tag-det">deterministic</span> — pulls 60+ macro series from FRED, BLS, EIA, and UMich every pipeline run. Retries on flake, carries forward on API outage.</li>
+  <li><span class="agent-name">Analyzer</span> <span class="tag tag-det">deterministic</span> — diffs new vs. prior data, scores risk signals, flags anomalies beyond historical norms.</li>
+  <li><span class="agent-name">Briefing</span> <span class="tag tag-ai">Claude Sonnet</span> — writes the monthly AI commentary on each tab. Reads the latest data, cross-references historical context, produces 2–3 sentence interpretive notes.</li>
+  <li><span class="agent-name">Renderer</span> <span class="tag tag-det">deterministic</span> — patches HTML with fresh data, rebuilds charts, injects vintage-pinned historical series.</li>
+  <li><span class="agent-name">Publisher</span> <span class="tag tag-det">deterministic</span> — emails briefing via Resend.</li>
+  <li><span class="agent-name">Validator</span> <span class="tag tag-det">deterministic</span> — runs 5 independent passes of data quality checks. Re-fetches headline values from FRED/BLS to verify no silent drift from source.</li>
+  <li><span class="agent-name">Visual QA</span> <span class="tag tag-det">deterministic</span> — opens the rendered page in a headless browser. Runs 224 structural checks: labels match data arrays, values in range, no null cells.</li>
+  <li><span class="agent-name">Visual Review</span> <span class="tag tag-ai">Claude multimodal</span> — actually looks at each chart. Flags "legend overlaps title," "two lines indistinguishable," "y-axis scale hides the trend."</li>
+</ol>
+
+<h2>Three layers of cross-checking</h2>
+<p>This is the most important architectural detail. When the pipeline runs, three independent agents verify from three different angles:</p>
+<ul>
+  <li><strong>Validator</strong> — does the dashboard match source APIs? (catches silent drift)</li>
+  <li><strong>Visual QA</strong> — does the HTML have the right structure? (catches missing/broken elements)</li>
+  <li><strong>Visual Review</strong> — does each chart look right to human eyes? (catches visual defects the rulebook wouldn't)</li>
+</ul>
+<div class="fail-closed">If any flags a critical issue, publication is blocked and the previous version auto-rolls back. <strong>The pipeline fails closed, not open.</strong></div>
+
+<h2>The credibility layer (shipped in v1.1.0)</h2>
+<ul>
+  <li><strong>METHODOLOGY.md</strong> — every threshold, rule, and formula is documented. When the Oil tab says "Phase 3 confirmed," the exact rule that fired is click-through-able.</li>
+  <li><strong>Backtest harness</strong> — rules were replayed against the 2022 Ukraine shock and 2008 Lehman-era collapse. First run caught a latent bug: the rule marked 2008's deflationary Core CPI drop as "confirmed inflation transmission" — wrong direction. Fixed and documented.</li>
+  <li><strong>Vintage pinning</strong> — BEA/BLS quietly revise historical data. The 2025 payroll benchmark alone rewrote 862,000 jobs. The dashboard now pins 7 Tier 1 series (GDP real + nominal, CPI, payrolls, wages, PCE headline + core) to ALFRED quarterly vintages.</li>
+</ul>
+
+<h2>Operational rhythm</h2>
+<ul>
+  <li><strong>Every Friday 8 AM ET:</strong> full pipeline runs automatically. ~2–3 minutes end to end.</li>
+  <li><strong>Every 2nd Saturday of the month:</strong> deep refresh catches Jobs + CPI releases in one pass.</li>
+  <li><strong>Manual triggers:</strong> any workflow runs on-demand through the GitHub Actions UI. No developer required.</li>
+</ul>
+
+<footer>U.S. Macro Dashboard · CEO Brief on Automation &amp; AI</footer>
+
+</div>
+</body>
+</html>
