@@ -24,6 +24,7 @@ Supporting scripts:
 - `scripts/version_tracker.py` — Pipeline run audit trail
 
 ## Key Files
+- `METHODOLOGY.md` — Source of truth for indicator definitions, formulas, thresholds, and confirmation logic. Update whenever a threshold or rule changes.
 - `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
 - `data/raw_data.json` — All collected API data
 - `data/signals.json` — Analyzer output
