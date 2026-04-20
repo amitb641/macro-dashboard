@@ -253,6 +253,14 @@ def check_internal(html, data, sig_vals):
         if n_labels == 0:
             continue
 
+        # Fields where sparse values (mostly null) are intentional — forecasts,
+        # annotation overlays, etc. Structured as {const.key: min_pct_filled}.
+        # Default threshold is 50%; overrides let us reflect design intent.
+        SPARSE_OK = {
+            'FFR_DATA.dots': 10,          # Fed dot plot: only forecast years populated
+            'OIL_DAILY.notes': 0,         # big-move annotations are sparse by design
+        }
+
         # Collect data arrays for sync check
         data_arrays = {}
         for key, arr in obj.items():
@@ -262,34 +270,37 @@ def check_internal(html, data, sig_vals):
             n_total = len(arr)
             n_nulls = sum(1 for v in arr if v is None or v == '' or v == 'null')
             pct_filled = round((n_total - n_nulls) / n_total * 100) if n_total > 0 else 0
-            is_ok = pct_filled >= 50
+            min_threshold = SPARSE_OK.get(f'{const_name}.{key}', 50)
+            is_ok = pct_filled >= min_threshold
             findings.append({
                 'check': f'{const_name}.{key} completeness',
                 'html_value': f'{n_total - n_nulls}/{n_total} filled',
-                'source_value': f'{pct_filled}% (min 50%)',
+                'source_value': f'{pct_filled}% (min {min_threshold}%)',
                 'difference': n_nulls,
                 'tolerance': n_total // 2,
                 'severity': 'ok' if is_ok else 'warning',
                 'pass': is_ok,
             })
-            # Interior nulls: gaps between valid data points = broken chart lines
-            interior = 0
-            for i in range(1, n_total - 1):
-                if arr[i] is None or arr[i] == '' or arr[i] == 'null':
-                    has_before = any(arr[j] is not None and arr[j] != '' for j in range(i))
-                    has_after = any(arr[j] is not None and arr[j] != '' for j in range(i + 1, n_total))
-                    if has_before and has_after:
-                        interior += 1
-            if interior > 0:
-                findings.append({
-                    'check': f'{const_name}.{key} line continuity',
-                    'html_value': f'{interior} interior gap(s)',
-                    'source_value': '0 gaps expected',
-                    'difference': interior,
-                    'tolerance': 0,
-                    'severity': 'warning',
-                    'pass': False,
-                })
+            # Interior nulls: gaps between valid data points = broken chart lines.
+            # Skip sparse-by-design fields (annotation overlays, forecasts).
+            if f'{const_name}.{key}' not in SPARSE_OK:
+                interior = 0
+                for i in range(1, n_total - 1):
+                    if arr[i] is None or arr[i] == '' or arr[i] == 'null':
+                        has_before = any(arr[j] is not None and arr[j] != '' for j in range(i))
+                        has_after = any(arr[j] is not None and arr[j] != '' for j in range(i + 1, n_total))
+                        if has_before and has_after:
+                            interior += 1
+                if interior > 0:
+                    findings.append({
+                        'check': f'{const_name}.{key} line continuity',
+                        'html_value': f'{interior} interior gap(s)',
+                        'source_value': '0 gaps expected',
+                        'difference': interior,
+                        'tolerance': 0,
+                        'severity': 'warning',
+                        'pass': False,
+                    })
             # Labels vs data array length mismatch
             if n_total != n_labels:
                 findings.append({
@@ -479,14 +490,19 @@ def check_staleness(data, collected_at):
     today = datetime.date.today()
 
     # Expected max lag (in days) from today for each series
+    # Thresholds calibrated to actual release cadences, not reference-month
+    # arithmetic: BLS drops NFP/UNRATE on the first Friday of the *following*
+    # month (so ~35-40d after ref-month start is typical, with reporting
+    # slippage adding ~2 weeks). Case-Shiller has a ~70d HPI lag + release
+    # around the last Tuesday of the following month.
     EXPECTED_LAGS = {
-        'unrate':    45,   # Monthly, ~1 month lag
+        'unrate':    55,   # BLS Employment Situation, 1st Fri of following month
         'cpi_all':   75,   # Monthly, ~2-3 week lag; can span 2 release cycles
         'cpi_core':  75,
         'pce':       95,   # Monthly, ~4 week lag; can span 2 release cycles
         'pce_core':  95,
-        'payems':    40,   # Monthly, ~1 week lag from reference period
-        'cs_hpi':   100,   # Monthly, ~2 month lag (Case-Shiller)
+        'payems':    55,   # BLS NFP, same release as UNRATE
+        'cs_hpi':   120,   # S&P CoreLogic Case-Shiller — ~70d data lag + release window
         'mortgage30': 10,  # Weekly
         # UMich Consumer Sentiment: prelim ~mid-month, final ~end-of-month.
         # Collector pulls UMich direct (tbcics.csv) which exposes the prelim
