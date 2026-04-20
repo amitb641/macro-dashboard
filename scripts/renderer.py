@@ -1604,6 +1604,52 @@ def update_shock_tracker(html, data, vals):
     cpi_trans_pre = _pre_shock_yoy(data.get('cpi_transport', [])) or 5.8
     food_away_pre = _pre_shock_yoy(data.get('cpi_food_away', [])) or 3.4
 
+    # ── MMA-based confirmation (post-shock MoM annualized vs pre-shock 6-MMA) ──
+    # Macro-standard methodology for shock pass-through. Immune to the YoY
+    # base-effect contamination (e.g. Mar'25 Transport trough inflated YoY).
+    def _latest_mom_ann(series):
+        """Latest single-month MoM change, annualized as compound rate.
+        Returns (yoy_ann_pct, latest_date, prior_value)."""
+        if not series or len(series) < 2: return None, None, None
+        cur, prev = series[0], series[1]
+        if not prev['value']: return None, None, None
+        ann = ((cur['value'] / prev['value']) ** 12 - 1) * 100
+        return round(ann, 1), cur['date'], prev['value']
+
+    def _pre_shock_6mom_ann(series, shock_iso='2026-03-01'):
+        """6-month trailing compound MoM, annualized, ending in last pre-shock
+        observation. Formula: (V[pre] / V[pre+6]) ** 2 − 1."""
+        if not series: return None
+        pre_idx = next((i for i, o in enumerate(series) if o['date'] < shock_iso), None)
+        if pre_idx is None or len(series) < pre_idx + 7: return None
+        cur, prior = series[pre_idx]['value'], series[pre_idx + 6]['value']
+        if not prior: return None
+        return round(((cur / prior) ** 2 - 1) * 100, 1)
+
+    def _mma_status(post_mma, pre_mma, expected_weeks, data_is_post_shock):
+        """Confirmation rule: latest post-shock MoM (annualized) vs pre-shock
+        6-MMA (annualized). Uses signed diff — inflation phases only confirm on
+        acceleration (diff > 0). A decel vs. pre-shock is 'not_yet', not 'ahead'.
+        Thresholds: > 0.5pp = moved, > 1.5pp = confirmed."""
+        if post_mma is None: return 'awaiting_data'
+        if pre_mma is None or not data_is_post_shock: return 'not_yet'
+        diff = post_mma - pre_mma  # signed; positive = accelerating above pre-shock
+        in_window     = expected_weeks[0] <= weeks <= expected_weeks[1]
+        past_window   = weeks > expected_weeks[1]
+        before_window = weeks < expected_weeks[0]
+        moved = diff > 0.5
+        if moved and before_window: return 'ahead'
+        if moved and (in_window or past_window):
+            return 'confirmed' if diff > 1.5 else 'emerging'
+        return 'on_schedule' if in_window else 'not_yet'
+
+    trans_mom_ann, trans_latest, trans_prev_val = _latest_mom_ann(data.get('cpi_transport', []))
+    trans_pre_mma = _pre_shock_6mom_ann(data.get('cpi_transport', []))
+    food_mom_ann,  food_latest,  food_prev_val  = _latest_mom_ann(data.get('cpi_food_away', []))
+    food_pre_mma  = _pre_shock_6mom_ann(data.get('cpi_food_away', []))
+    energy_mom_ann, energy_latest, energy_prev_val = _latest_mom_ann(data.get('cpiengsl', []))
+    energy_pre_mma = _pre_shock_6mom_ann(data.get('cpiengsl', []))
+
     def _mo_lbl(d):
         return datetime.datetime.strptime(d, '%Y-%m-%d').strftime("%b'%y") if d else ''
 
@@ -1648,49 +1694,104 @@ def update_shock_tracker(html, data, vals):
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
          "status": _status(gas_now, gas_pre, [0, 2], data_is_post_shock=gas_post),
-         "note": f"FRED GASREGW: ${gas_pre:.2f} \u2192 ${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now and gas_post else "Awaiting FRED GASREGW weekly retail gasoline data"
+         "note": f"FRED GASREGW: ${gas_pre:.2f} \u2192 ${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now and gas_post else "Awaiting FRED GASREGW weekly retail gasoline data",
+         "commentary": (
+             (f"Retail pumps moved within ~2 weeks of the WTI spike; +${round(gas_now-gas_pre,2)}/gal pass-through is roughly in line with the $0.24/gal-per-$10/bbl rule-of-thumb."
+              ) if gas_now and gas_post and gas_pre else "Awaiting weekly GASREGW release."
+         ),
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
          "metric": "CPI Transport Svcs YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
          "chg": round(cpi_trans_yoy - cpi_trans_pre, 1) if cpi_trans_yoy is not None else None,
-         "status": _status(cpi_trans_yoy, cpi_trans_pre, [4, 6],
-                           data_is_post_shock=(cpi_trans_date or '') >= shock),
+         "status": _mma_status(trans_mom_ann, trans_pre_mma, [4, 6],
+                               data_is_post_shock=(trans_latest or '') >= shock),
+         "post_mom_ann": trans_mom_ann, "pre_6mma": trans_pre_mma,
+         "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_prev_val} prior \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
+                    if trans_mom_ann is not None and trans_pre_mma is not None else
+                    "Awaiting CPI Transport Services history"),
          "note": (f"CPI Transport Svcs at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
-                  if cpi_trans_yoy is not None else "Awaiting CPI Transport Services data")
+                  if cpi_trans_yoy is not None else "Awaiting CPI Transport Services data"),
+         "commentary": (
+             ("Airfare + auto insurance renewals + shipping passing through. "
+              "Part of the YoY jump is base effect (Mar'25 trough); post-shock monthly pace is the cleaner signal."
+             ) if trans_mom_ann is not None and trans_pre_mma is not None and trans_mom_ann > trans_pre_mma + 0.5 else
+             ("Transport Services running at pre-shock pace \u2014 oil shock not yet visible in the monthly cadence."
+              if trans_mom_ann is not None else
+              "Needs 24 obs of CUSR0000SETG to compute post-shock vs pre-shock MMA."))
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201310", "expected_weeks": [6, 10],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
          "chg": round(cpi_energy_yoy - 0.4, 1) if cpi_energy_yoy is not None else None,
-         "status": _status(cpi_energy_yoy, 0.4, [6, 10], data_is_post_shock=cpi_post),
-         "note": f"CPI Energy at +{cpi_energy_yoy}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release"
+         "status": _mma_status(energy_mom_ann, energy_pre_mma, [6, 10],
+                               data_is_post_shock=(energy_latest or '') >= shock),
+         "post_mom_ann": energy_mom_ann, "pre_6mma": energy_pre_mma,
+         "detail": (f"{_mo_lbl(energy_latest)} vs prior month \u00b7 post-shock +{energy_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{energy_pre_mma}%"
+                    if energy_mom_ann is not None and energy_pre_mma is not None else
+                    "Awaiting CPI Energy history"),
+         "note": f"CPI Energy at +{cpi_energy_yoy}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release",
+         "commentary": (
+             ("Headline energy print absorbing the full WTI + gasoline spike \u2014 "
+              "single largest monthly move in the tracker. Feeds directly into April headline CPI."
+             ) if energy_mom_ann is not None and energy_pre_mma is not None and energy_mom_ann > energy_pre_mma + 5 else
+             ("CPI Energy tracking oil gently \u2014 passthrough slower than expected."
+              if energy_mom_ann is not None else
+              "No post-shock CPI Energy release yet."))
         },
         {"phase": "Food & Services Inflation", "expected": "Months 3\u20135", "expected_weeks": [12, 20],
          "metric": "CPI Food Away YoY", "pre": food_away_pre, "now": food_away_yoy,
          "chg": round(food_away_yoy - food_away_pre, 1) if food_away_yoy is not None else None,
-         "status": _status(food_away_yoy, food_away_pre, [12, 20],
-                           data_is_post_shock=(food_away_date or '') >= shock),
+         "status": _mma_status(food_mom_ann, food_pre_mma, [12, 20],
+                               data_is_post_shock=(food_latest or '') >= shock),
+         "post_mom_ann": food_mom_ann, "pre_6mma": food_pre_mma,
+         "detail": (f"{_mo_lbl(food_latest)} vs prior month \u00b7 post-shock +{food_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{food_pre_mma}%"
+                    if food_mom_ann is not None and food_pre_mma is not None else
+                    "Awaiting CPI Food Away history"),
          "note": (f"CPI Food Away at {food_away_yoy}% YoY ({_mo_lbl(food_away_date)})"
-                  if food_away_yoy is not None else "Awaiting CPI Food Away data")
+                  if food_away_yoy is not None else "Awaiting CPI Food Away data"),
+         "commentary": (
+             ("Restaurant prices decelerating slightly \u2014 menu changes typically lag oil by 3\u20135 months, "
+              "so the first real test will be May\u2013June prints."
+             ) if food_mom_ann is not None and food_pre_mma is not None and food_mom_ann < food_pre_mma + 0.5 else
+             ("Food Away accelerating above pre-shock pace \u2014 menu pass-through arriving earlier than expected."
+              if food_mom_ann is not None else
+              "Needs CPI Food Away history for the MMA comparison."))
         },
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
          "status": _status(core_cpi, 2.5, [20, 32], data_is_post_shock=cpi_post),
-         "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}"
+         "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}",
+         "commentary": "Manufacturing/chemicals absorb input costs over 5\u20138 months. Too early for this phase \u2014 energy input costs only began passing through in Mar'26 PPI."
         },
         {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
          "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),
          "status": _status(-umcsent, -56.6, [2, 6], data_is_post_shock=umcsent_post),
-         "note": f"UMich at {umcsent} \u2014 {'pre-shock baseline, awaiting Mar+ reading' if not umcsent_post else 'post-shock reading' + (' confirms decline' if umcsent < 55 else ', watching')}"
+         "note": f"UMich at {umcsent} \u2014 {'pre-shock baseline, awaiting Mar+ reading' if not umcsent_post else 'post-shock reading' + (' confirms decline' if umcsent < 55 else ', watching')}",
+         "commentary": (
+             ("Sharp drop in visible-inflation-sensitive households. Pump pain + media cycle around oil shock drove the print. "
+              "UMich often overshoots relative to actual spending changes."
+             ) if umcsent_post and umcsent is not None and umcsent < 55 else
+             ("Sentiment holding relative to pre-shock \u2014 consumer psychology not yet reflecting the spike."
+              if umcsent_post else
+              "Awaiting first post-shock sentiment reading."))
         },
         {"phase": "Savings Drawdown", "expected": "Months 2\u20134", "expected_weeks": [8, 16],
          "metric": "Personal Saving Rate", "pre": 4.5, "now": saving, "chg": round(saving - 4.5, 1),
          "status": _status(-saving, -4.5, [8, 16], data_is_post_shock=saving_post),
-         "note": f"Saving rate at {saving}% \u2014 {'pre-shock baseline' if not saving_post else 'stable so far' if saving >= 4.2 else 'declining'}"
+         "note": f"Saving rate at {saving}% \u2014 {'pre-shock baseline' if not saving_post else 'stable so far' if saving >= 4.2 else 'declining'}",
+         "commentary": (
+             "PSAVERT lags ~1 month so current data is still pre-shock. The fuel-cost bite on take-home pay won't show until May\u2013Jun prints."
+             if not saving_post else
+             ("Saving rate compressing as expected \u2014 liquid buffer erosion underway."
+              if saving < 4.2 else "Saving rate stable despite the pump hit; either absorbed via discretionary spending or income strong."))
         },
         {"phase": "Delinquencies Climb", "expected": "Months 5\u201310", "expected_weeks": [20, 40],
          "metric": "CC 90+ DPD Rate", "pre": 2.94, "now": cc_del, "chg": round(cc_del - 2.94, 2),
          "status": _status(cc_del, 2.94, [20, 40], data_is_post_shock=cc_post),
-         "note": f"CC delinquency at {cc_del}% \u2014 {'pre-shock data, too early' if not cc_post else 'monitoring for oil impact'}"
+         "note": f"CC delinquency at {cc_del}% \u2014 {'pre-shock data, too early' if not cc_post else 'monitoring for oil impact'}",
+         "commentary": (
+             "90+ DPD is quarterly (NY Fed HHDC) and lags 2\u20133 quarters. Current reading is pre-shock; first real look is Q3'26 release (Nov'26)."
+             if not cc_post else
+             "Credit stress surfacing earlier than typical; watch subprime segments first.")
         },
     ]
 
