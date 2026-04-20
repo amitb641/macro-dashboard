@@ -99,18 +99,6 @@ Use these commands to follow a structured development lifecycle for all changes.
 - Skip smoke tests before pushing
 
 ## Rollback Anchors
-Known-good baselines preserved as remote branches for recovery. Before a
-multi-commit refactor, create a fresh `backup/<tag>` branch at the current
-HEAD and push it — git tag pushes are sometimes blocked by the dev proxy,
-branches work. To roll main back: `git reset --hard backup/<tag>` then
-`git push --force-with-lease origin main`.
-
-- `backup/v1.0-shock-tracker-complete` → commit `e433997` (2026-04-20).
-  State: UMich direct source with prelim/final badge; Oil Impact Chain
-  with MMA-based confirmation, per-phase status_reason / detail /
-  commentary / source / base-effect callout, rich click-to-open popover;
-  Agent 6 Pass 3b SHOCK_TRACKER validation + Agent 7 DOM check;
-  TREASURY_DATA.card90 wired from cc_delinq; staleness thresholds
-  calibrated; Chart.js post-destroy guard. Last verified state before
-  industry-grade roadmap (METHODOLOGY.md, backtest harness, JSON-blob
-  refactor, ALFRED vintage pinning).
+Known-good baselines are tracked in `.claude/BACKUPS.md` (dedicated registry,
+not this generic file). Before multi-commit refactors, create a fresh
+`backup/<tag>` branch and log it there with what state it captures.
