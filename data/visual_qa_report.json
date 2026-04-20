@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-04-20T17:24:47.588006Z",
+  "checked_at": "2026-04-20T17:35:30.604450Z",
   "status": "WARN",
   "summary": {
     "total_checks": 292,
@@ -1750,7 +1750,7 @@
       "check": "VALIDATION_REPORT present",
       "pass": false,
       "severity": "warning",
-      "detail": "missing"
+      "detail": "error:Failed to fetch"
     },
     {
       "category": "data",

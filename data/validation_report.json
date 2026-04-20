@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-20T17:24:47.591739Z",
+  "validated_at": "2026-04-20T17:35:30.608258Z",
   "status": "WARN",
   "summary": {
     "total_checks": 390,
     "passed": 389,
     "failed": 1,
-    "skipped": 1,
+    "skipped": 0,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -652,8 +652,11 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158637.0,
+      "fresh_api_value": 158637.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -758,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-20T17:23:35.752437Z",
+      "collected_at": "2026-04-20T17:34:16.352578Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -2586,7 +2589,7 @@
       "check": "Visual: data \u2014 VALIDATION_REPORT present",
       "severity": "warning",
       "pass": false,
-      "detail": "missing"
+      "detail": "error:Failed to fetch"
     },
     {
       "check": "Visual: data \u2014 SHOCK_TRACKER oil tab present",
