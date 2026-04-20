@@ -2237,18 +2237,8 @@ def render():
     ver_file.write_text(json.dumps({"v": build_v}), encoding='utf-8')
     html = re.sub(r'var BUILD_V\s*=\s*"[^"]*"', f'var BUILD_V = "{build_v}"', html)
 
-    # ── Inject validation report into dashboard if available ──
-    if VAL_FILE.exists():
-        try:
-            val_report = json.loads(VAL_FILE.read_text())
-            val_json = json.dumps(val_report, separators=(',', ':'))
-            pattern_vr = r'const VALIDATION_REPORT\s*=\s*\{[\s\S]*?\};'
-            new_vr = f'const VALIDATION_REPORT = {val_json};'
-            html, n_vr = re.subn(pattern_vr, lambda m: new_vr, html, count=1)
-            if n_vr:
-                applied.append(f'VALIDATION_REPORT injected ({val_report.get("status","?")})')
-        except Exception as e:
-            warnings.append(f'Validation report inject: {e}')
+    # VALIDATION_REPORT is no longer inlined — dashboard fetches
+    # data/validation_report.json at runtime (see METHODOLOGY.md §5).
 
     HTML_FILE.write_text(html, encoding='utf-8')
 
