@@ -111,6 +111,22 @@ def run_visual_qa(take_screenshots=False):
         js_errors = []
         page.on('pageerror', lambda err: js_errors.append(str(err)))
 
+        # Browsers block fetch() from file:// origins (CORS). Route JSON
+        # data-blob fetches through Playwright and serve them from disk so
+        # post-v1.0.3 runtime-fetched data (VALIDATION_REPORT, etc.) can be
+        # verified in the visual-QA harness the same way it works on Pages.
+        data_dir = HTML_FILE.parent / 'data'
+        def _route_data(route, req):
+            import os
+            fname = os.path.basename(req.url.split('?')[0])
+            fpath = data_dir / fname
+            if fpath.exists():
+                route.fulfill(status=200, content_type='application/json',
+                              body=fpath.read_text(encoding='utf-8'))
+            else:
+                route.fulfill(status=404, body=f'Not found: {fname}')
+        page.route('**/data/*.json', _route_data)
+
         # Load page
         file_url = f'file://{HTML_FILE.resolve()}'
         page.goto(file_url, wait_until='networkidle')
