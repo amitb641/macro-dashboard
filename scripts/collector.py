@@ -406,8 +406,8 @@ def collect():
     data['dgs2_annual']       = fred_obs('DGS2', 30, freq='a')
     data['ig_oas_annual']     = fred_obs('BAMLC0A0CM', 30, freq='a')
     data['hy_oas_annual']     = fred_obs('BAMLH0A0HYM2', 30, freq='a')
-    data['wti_annual']        = fred_obs('DCOILWTICO', 30, freq='a')
-    data['brent_annual']      = fred_obs('DCOILBRENTEU', 30, freq='a')
+    data['wti_annual']        = fred_obs('DCOILWTICO', 40, freq='a')
+    data['brent_annual']      = fred_obs('DCOILBRENTEU', 40, freq='a')
     data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
     data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
     # Vintage-pinned copies for historical charts (see METHODOLOGY.md §5).

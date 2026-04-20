@@ -521,11 +521,13 @@ def rebuild_charts(html, data):
                 'labels': common, 'ig': ig, 'hy': hy})
 
     # ── OIL_ANNUAL ────────────────────────────────────────────────────
+    # Oil chart starts 1990 (title: "35-Year History"). Other annual charts
+    # share the global START_YEAR = 2000 default.
     wti_a = data.get('wti_annual', [])
     brent_a = data.get('brent_annual', [])
     if wti_a and brent_a:
-        w_labels, w_values = _annual_from_freq(wti_a, precision=1)
-        b_labels, b_values = _annual_from_freq(brent_a, precision=1)
+        w_labels, w_values = _annual_from_freq(wti_a, start_year=1990, precision=1)
+        b_labels, b_values = _annual_from_freq(brent_a, start_year=1990, precision=1)
         common = [l for l in w_labels if l in b_labels]
         wti = [w_values[w_labels.index(l)] for l in common]
         brent = [b_values[b_labels.index(l)] for l in common]
