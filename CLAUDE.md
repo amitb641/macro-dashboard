@@ -39,6 +39,27 @@ Supporting scripts:
 - FRED single-value endpoints return `{"date": "...", "value": 4.25}` dicts, not scalars
 - Running renderer twice on same HTML causes benign `patch_kpi` warnings (labels already updated)
 - PCE staleness warnings are genuine data lag (~95 day publication delay), not bugs
+- Regex-replace patterns in `renderer.py` must match the JSON shape the renderer *itself writes back* — `json.dumps(..., separators=(', ', ':'))` produces single-line output, so patterns requiring `\n};` will silently fail after the first run (see `update_shock_tracker`)
+- UMich Consumer Sentiment: collector pulls direct from `sca.isr.umich.edu/files/tbcics.csv` first (gives prelim ~2 weeks before FRED's embargoed final). `umcsent` entries carry a `status` field (`'preliminary'` or `'final'`) — renderer/KPI/validator all treat missing status as `'final'` for back-compat
+
+## Shock Tracker Data Contracts
+The Oil Impact Chain (`update_shock_tracker` in `renderer.py`) rebuilds `SHOCK_TRACKER` every run. Each phase reads from specific raw-data keys — if you change a key name or fetch count, the phase silently falls back to a hardcoded baseline. Audit the whole chain when touching any of these:
+
+| Phase | Metric | Raw-data key | YoY needs |
+|---|---|---|---|
+| Pump Prices Spike | Gasoline $/gal | `gasoline` (GASREGW weekly) | 2 obs — pre-shock + latest |
+| Transport & Freight | CPI Transport Svcs YoY | `cpi_transport` (CUSR0000SETG) | **24 obs** (13 for YoY + pre-shock) |
+| CPI Energy Prints | CPI Energy YoY | `cpiengsl` (CPIENGSL) | 13+ obs |
+| Food & Services | CPI Food Away YoY | `cpi_food_away` (CUSR0000SEFV) | **24 obs** (13 for YoY + pre-shock) |
+| Core Goods | Core CPI YoY | `vals['core_cpi_yoy']` scalar | — |
+| Consumer Sentiment | UMich | `vals['umcsent']` scalar | — |
+| Savings Drawdown | Saving Rate | `vals['saving_rate']` scalar + `data['psavert']` dates | — |
+| Delinquencies | CC 90+ DPD | `vals['cc_delinq']` scalar + `data['cc_delinq']` dates | — |
+
+Rules:
+- Any series feeding a YoY phase in the tracker must be collected with `limit>=24` (covers latest + year-ago + pre-shock baseline + buffer)
+- Post-shock gate: a phase only moves beyond `not_yet` when the series' latest date is `>= 2026-03-01`. The shock date is hardcoded in `update_shock_tracker`; update it if the scenario changes
+- After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
 
 ## Testing
 - Run `python tests/test_smoke.py` before pushing — must be 29/29 pass
