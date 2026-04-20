@@ -1170,20 +1170,29 @@ def rebuild_treasury_data(html, data):
         dgs2.append(round(t2_val, 2))
         spread.append(round(t10_val - t2_val, 2))
 
-    # Card 90+ DPD — preserve existing values (NY Fed quarterly, not in FRED)
-    # Extract from current HTML
-    card90_match = re.search(r'"card90":\s*\[([^\]]*)\]', html)
+    # Card 90+ DPD — compute annual averages from quarterly DRCCLACBS series
+    # so the red line in the Treasury/Card chart actually renders. Previously
+    # this field was preserved-from-HTML, which meant it stayed all-null after
+    # the seed HTML shipped with nulls.
+    cc_q = data.get('cc_delinq', [])
+    by_yr = {}
+    for obs in cc_q:
+        yr = int(obs['date'][:4])
+        by_yr.setdefault(yr, []).append(obs['value'])
+    # Annual avg where we have at least 2 quarters; otherwise null (line breaks
+    # cleanly rather than drawing through fabricated data).
+    card90_by_yr = {str(yr): round(sum(vs) / len(vs), 2)
+                    for yr, vs in by_yr.items() if len(vs) >= 2}
+    latest_cc = cc_q[0]['value'] if cc_q else None
     card90 = []
-    if card90_match:
-        import ast as _ast
-        try:
-            card90 = _ast.literal_eval(f'[{card90_match.group(1)}]')
-        except Exception:
-            card90 = []
-    # Pad/trim card90 to match labels length
-    while len(card90) < len(common):
-        card90.append(card90[-1] if card90 else None)
-    card90 = card90[:len(common)]
+    for lbl in common:
+        if lbl in card90_by_yr:
+            card90.append(card90_by_yr[lbl])
+        elif '\'' in lbl and latest_cc is not None:
+            # latest-month label (e.g. "Apr'26") — use most recent quarterly reading
+            card90.append(round(latest_cc, 2))
+        else:
+            card90.append(None)
 
     obj = {'labels': common, 'dgs10': dgs10, 'dgs2': dgs2, 'spread': spread, 'card90': card90}
     new_json = json.dumps(obj, separators=(', ', ':'))

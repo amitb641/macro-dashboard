@@ -352,7 +352,10 @@ def collect():
     print('  [Quarterly] GDP + Credit...')
     data['gdpc1']       = fred_obs('GDPC1',  12)
     data['gdp_growth']  = fred_obs('A191RL1Q225SBEA', 12)
-    data['cc_delinq']   = fred_obs('DRCCLACBS',  12)
+    # Card 90+ DPD (DRCCLACBS) — quarterly Fed release. Pull ~27 yrs of
+    # history (108 obs) so renderer.rebuild_treasury_data can populate the
+    # TREASURY_DATA.card90 line from 2000 onward, not just the last 3 yrs.
+    data['cc_delinq']   = fred_obs('DRCCLACBS',  108)
     data['mtg_delinq']  = fred_obs('DRSFRMACBS', 12)
     data['tdsp']        = fred_obs('TDSP',   30)   # Household Debt Service Ratio (% of disp. income)
 
