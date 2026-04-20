@@ -1668,6 +1668,27 @@ def update_shock_tracker(html, data, vals):
     def _mo_lbl(d):
         return datetime.datetime.strptime(d, '%Y-%m-%d').strftime("%b'%y") if d else ''
 
+    def _base_effect_note(series, pre_yoy, cur_yoy, pre_mma, post_mma):
+        """Compose a base-effect callout when the YoY change is big but the
+        monthly pace hasn't actually accelerated above pre-shock. Looks up the
+        year-ago index by DATE (not position) to dodge missing-month gaps."""
+        if not series or pre_yoy is None or cur_yoy is None:
+            return None
+        if pre_mma is None or post_mma is None:
+            return None
+        yoy_delta = cur_yoy - pre_yoy
+        mma_delta = post_mma - pre_mma
+        if yoy_delta <= 1.5 or mma_delta >= 1.0:
+            return None  # YoY isn't inflated relative to actual monthly pace
+        cur_date = series[0]['date']  # e.g. '2026-03-01'
+        target_mo = f"{int(cur_date[:4]) - 1}{cur_date[4:7]}"
+        ya_obs = next((o for o in series if o['date'][:7] == target_mo), None)
+        if not ya_obs:
+            return None
+        return (f"YoY jumped {pre_yoy}% \u2192 {cur_yoy}% (+{round(yoy_delta,1)}pp), "
+                f"but this is largely a base effect: {_mo_lbl(ya_obs['date'])} index "
+                f"{ya_obs['value']} was a local dip. Monthly pace is what matters.")
+
     core_cpi = vals.get('core_cpi_yoy', 2.5)
     umcsent = vals.get('umcsent', 56.6)
     saving = vals.get('saving_rate', 4.5)
@@ -1717,6 +1738,7 @@ def update_shock_tracker(html, data, vals):
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
          "status": _status(gas_now, gas_pre, [0, 2], data_is_post_shock=gas_post),
+         "source": "FRED GASREGW \u00b7 EIA weekly retail gasoline",
          "status_reason": (
              (f'Gasoline +${round(gas_now-gas_pre,2)}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%) vs pre-shock baseline — well beyond $0.50 confirmation threshold. Expected window: weeks 0\u20132.'
               ) if gas_now and gas_post and gas_pre else 'Awaiting weekly GASREGW release.'
@@ -1731,6 +1753,11 @@ def update_shock_tracker(html, data, vals):
          "metric": "CPI Transport Svcs YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
          "chg": round(cpi_trans_yoy - cpi_trans_pre, 1) if cpi_trans_yoy is not None else None,
          "status": trans_status, "status_reason": trans_reason,
+         "source": "FRED CUSR0000SETG \u00b7 BLS CPI Transportation Services (monthly)",
+         "base_effect_note": _base_effect_note(
+             data.get('cpi_transport', []), cpi_trans_pre, cpi_trans_yoy,
+             trans_pre_mma, trans_mom_ann
+         ),
          "post_mom_ann": trans_mom_ann, "pre_6mma": trans_pre_mma,
          "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_prev_val} prior \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
                     if trans_mom_ann is not None and trans_pre_mma is not None else
@@ -1749,6 +1776,11 @@ def update_shock_tracker(html, data, vals):
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
          "chg": round(cpi_energy_yoy - 0.4, 1) if cpi_energy_yoy is not None else None,
          "status": energy_status, "status_reason": energy_reason,
+         "source": "FRED CPIENGSL \u00b7 BLS CPI Energy (monthly)",
+         "base_effect_note": _base_effect_note(
+             data.get('cpiengsl', []), 0.4, cpi_energy_yoy,
+             energy_pre_mma, energy_mom_ann
+         ),
          "post_mom_ann": energy_mom_ann, "pre_6mma": energy_pre_mma,
          "detail": (f"{_mo_lbl(energy_latest)} vs prior month \u00b7 post-shock +{energy_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{energy_pre_mma}%"
                     if energy_mom_ann is not None and energy_pre_mma is not None else
@@ -1766,6 +1798,11 @@ def update_shock_tracker(html, data, vals):
          "metric": "CPI Food Away YoY", "pre": food_away_pre, "now": food_away_yoy,
          "chg": round(food_away_yoy - food_away_pre, 1) if food_away_yoy is not None else None,
          "status": food_status, "status_reason": food_reason,
+         "source": "FRED CUSR0000SEFV \u00b7 BLS CPI Food Away from Home (monthly)",
+         "base_effect_note": _base_effect_note(
+             data.get('cpi_food_away', []), food_away_pre, food_away_yoy,
+             food_pre_mma, food_mom_ann
+         ),
          "post_mom_ann": food_mom_ann, "pre_6mma": food_pre_mma,
          "detail": (f"{_mo_lbl(food_latest)} vs prior month \u00b7 post-shock +{food_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{food_pre_mma}%"
                     if food_mom_ann is not None and food_pre_mma is not None else
@@ -1783,6 +1820,7 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
          "status": _status(core_cpi, 2.5, [20, 32], data_is_post_shock=cpi_post),
+         "source": "FRED CPILFESL \u00b7 BLS CPI ex-Food & Energy (monthly)",
          "status_reason": (f'Expected window is weeks 20\u201332 (months 5\u20138 post-shock). We are at week {weeks} \u2014 far too early. Core CPI at {core_cpi}% is near the pre-shock 2.5% baseline.'),
          "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}",
          "commentary": "Manufacturing/chemicals absorb input costs over 5\u20138 months. Too early for this phase \u2014 energy input costs only began passing through in Mar'26 PPI."
@@ -1790,6 +1828,7 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
          "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),
          "status": _status(-umcsent, -56.6, [2, 6], data_is_post_shock=umcsent_post),
+         "source": "UMich Survey of Consumers (direct) \u00b7 prelim mid-month, final end-of-month",
          "status_reason": (
              f'UMich dropped from 56.6 to {umcsent} ({round(umcsent-56.6,1):+.1f}pt). Confirmation threshold: 0.5pt move. Expected window: weeks 2\u20136, currently at week {weeks}.'
              if umcsent_post else
@@ -1807,6 +1846,7 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Savings Drawdown", "expected": "Months 2\u20134", "expected_weeks": [8, 16],
          "metric": "Personal Saving Rate", "pre": 4.5, "now": saving, "chg": round(saving - 4.5, 1),
          "status": _status(-saving, -4.5, [8, 16], data_is_post_shock=saving_post),
+         "source": "FRED PSAVERT \u00b7 BEA Personal Saving Rate (monthly, ~1-mo lag)",
          "status_reason": (
              f'Latest PSAVERT reading ({_latest_date("psavert")}) is pre-shock. BEA releases with ~1-month lag, so the first post-shock print lands in ~May.'
              if not saving_post else
@@ -1822,6 +1862,7 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Delinquencies Climb", "expected": "Months 5\u201310", "expected_weeks": [20, 40],
          "metric": "CC 90+ DPD Rate", "pre": 2.94, "now": cc_del, "chg": round(cc_del - 2.94, 2),
          "status": _status(cc_del, 2.94, [20, 40], data_is_post_shock=cc_post),
+         "source": "NY Fed Household Debt & Credit Report \u00b7 CC 90+ DPD (quarterly)",
          "status_reason": (
              f'Latest CC 90+ DPD is quarterly (NY Fed HHDC), reading {_latest_date("cc_delinq")}. Pre-shock. Expected window: months 5\u201310 (weeks 20\u201340). First post-shock look is Q3\'26 release (~Nov\'26).'
              if not cc_post else
