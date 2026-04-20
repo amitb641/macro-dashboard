@@ -286,6 +286,9 @@ Pinned series (all share the same pin date within a cycle):
   across 10 months in past cycles)
 - **AHETPI monthly** (avg hourly earnings) — drives WAGE_ANNUAL (nominal +
   real-wage lines)
+- **PCEPI monthly** (PCE price index, headline) — drives PCE_ANNUAL headline
+- **PCEPILFE monthly** (core PCE) — drives PCE_ANNUAL core; Fed's preferred
+  inflation gauge, subject to periodic BEA comprehensive revisions
 
 Pin cadence is **quarterly** — pin date refreshes to the previous quarter
 end at each new quarter (Q2 pins to Mar 31, Q3 pins to Jun 30, etc.).
@@ -341,3 +344,5 @@ same ALFRED helper.
 | v1.0.3 | 2026-04-20 | JSON-blob data-layout proof-of-concept. `VALIDATION_REPORT` removed from inline `index.html` (-45KB) and now fetched at runtime from `data/validation_report.json` via a cached `fetchValidationReport()` helper. Cache is warmed at page load so tab-click and download-all capture see an already-resolved promise. Graceful failure mode: dedicated error panel if the fetch fails. Establishes the decoupled data/UI pattern for rolling out to the remaining ~40 inline constants in v1.2. `scripts/visual_qa.py` updated to await the fetch (async evaluate + `page.route` interception for file://-protocol CORS). |
 | v1.0.4 | 2026-04-20 | Vintage pin expanded to nominal GDP (`gdp_annual`). Closes a latent inconsistency in v1.0.2 where only the real line was pinned — any BEA revision to nominal GDP would have caused the real/nominal deflator to drift within a pin cycle. Both series now share the same pin date, rebuilt together each quarter. Pattern scales cleanly: each additional series needs one `fred_alfred_obs()` call + one line in the vintages dict + one renderer `or` fallback. |
 | v1.0.5 | 2026-04-20 | Vintage pin expanded to three Tier 1 monthly series feeding the long-history annual-aggregate charts: `cpi_all` (→ CPI_ANNUAL), `payems` (→ JOBS_ANNUAL), `ahetpi` (→ WAGE_ANNUAL). Rationale: these all pass through BLS annual benchmark and seasonal-adjustment revisions (the 2025 payroll benchmark alone rewrote ~862K jobs); the long chart surface now stays stable within each quarterly pin cycle. Current-period KPIs and 12-month mini-charts continue reading live data so freshness is unaffected. |
+| v1.0.6 | 2026-04-20 | Vintage pin expanded to PCE headline (`pce`) and core (`pce_core`). Fed's preferred inflation gauge; BEA does periodic methodology updates (most recently 2023 comprehensive revision) that restate multi-year history. PCE_ANNUAL chart now stays stable within a pin cycle. Brings the total pinned-series count to 7 (real + nominal GDP, CPI, payrolls, wages, PCE headline + core). |
+| v1.0.7 | 2026-04-20 | Surface vintage-pin state to users. Added `<p class="src vintage-note">` footnotes beneath the metric rows on the GDP (already had one), CPI, Jobs, Wages, and PCE tabs. A single page-load init populates all `.vintage-note` elements from the shared `GDP_VINTAGE_INFO` constant, so users see "Annual-chart data vintage: pinned to ALFRED as-of 2026-03-31 · refresh cadence: quarterly…" on every long-history chart surface. Makes the credibility work visible — previously only the GDP tab advertised the pin. |

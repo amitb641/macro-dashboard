@@ -1560,7 +1560,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ GDP ══ -->
 <div class="tab-panel" id="tab-gdp">
   <div class="metric-row" id="gdp-metrics"></div>
-  <p class="src" id="gdp-vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
+  <p class="src vintage-note" id="gdp-vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
   <div class="sort-row">
     <span class="sort-lbl">FILTER</span>
     <div id="group-filters" style="display:flex;flex-wrap:wrap;gap:6px"></div>
@@ -1673,6 +1673,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="cpi-metrics"></div>
+  <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
 
   <!-- Monthly MoM Charts -->
   <div class="two-up">
@@ -1730,6 +1731,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
 
   <div class="metric-row" id="wage-metrics"></div>
+  <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
 
   <!-- Monthly MoM Chart -->
   <div class="panel">
@@ -1777,6 +1779,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
+  <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
 
   <!-- Monthly MoM Charts -->
   <div class="two-up">
@@ -1838,6 +1841,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
   </div>
   <div class="metric-row" id="pce-metrics"></div>
+  <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
 
   <!-- ── SECTION 1: PCE Inflation ── -->
   <div class="two-up">
@@ -2861,17 +2865,24 @@ function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb
     {lbl:(L-1)+"yr Real CAGR", val:"+"+cagr+"%", sub:"Since 2000 · long-run trend capacity", col:"#336BCC"},
   ].map(m=>_mTile(m)).join("");
 
-  // Vintage-pin footnote (see METHODOLOGY.md §5)
-  var vn = document.getElementById("gdp-vintage-note");
-  if (vn && GDP_VINTAGE_INFO) {
-    if (GDP_VINTAGE_INFO.pinned && GDP_VINTAGE_INFO.pin_date) {
-      vn.innerHTML = "Data vintage: pinned to ALFRED as-of <strong>" + GDP_VINTAGE_INFO.pin_date +
-                     "</strong> · refresh cadence: " + (GDP_VINTAGE_INFO.refresh || "quarterly") +
-                     " · historical values are stable within each quarter. See METHODOLOGY.md §5.";
-    } else {
-      vn.innerHTML = "Data vintage: live (latest revised) — historical values may change on BEA benchmark revisions.";
-    }
+})();
+
+// Vintage-pin footnotes — populate every .vintage-note element on the page
+// from the shared GDP_VINTAGE_INFO constant. All pinned series (real GDP,
+// nominal GDP, CPI, PAYEMS, AHETPI, PCE, PCE core) share the same pin date
+// within a cycle, so one init handles CPI / JOBS / WAGES / PCE tabs too.
+// See METHODOLOGY.md §5.
+(function(){
+  var info = (typeof GDP_VINTAGE_INFO !== 'undefined') ? GDP_VINTAGE_INFO : null;
+  var msg;
+  if (info && info.pinned && info.pin_date) {
+    msg = "Annual-chart data vintage: pinned to ALFRED as-of <strong>" + info.pin_date +
+          "</strong> · refresh cadence: " + (info.refresh || "quarterly") +
+          " · historical values are stable within each quarter. See METHODOLOGY.md §5.";
+  } else {
+    msg = "Annual-chart data vintage: live (latest revised) — historical values may change on benchmark revisions.";
   }
+  document.querySelectorAll('.vintage-note').forEach(function(el){ el.innerHTML = msg; });
 })();
 
 // UNEMPLOYMENT TAB

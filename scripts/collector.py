@@ -422,12 +422,16 @@ def collect():
     data['cpi_all_pinned']      = fred_alfred_obs('CPIAUCSL', _pin, 320)
     data['payems_pinned']       = fred_alfred_obs('PAYEMS',   _pin, 320)
     data['ahetpi_pinned']       = fred_alfred_obs('AHETPI',   _pin, 320)
+    data['pce_pinned']          = fred_alfred_obs('PCEPI',    _pin, 320)
+    data['pce_core_pinned']     = fred_alfred_obs('PCEPILFE', _pin, 320)
     data['vintages'] = {
         'gdpc1_annual': {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
         'gdp_annual':   {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
         'cpi_all':      {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
         'payems':       {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
         'ahetpi':       {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
+        'pce':          {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
+        'pce_core':     {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
     }
     data['umcsent_annual']    = fred_obs('UMCSENT', 30, freq='a')
     data['cpiengsl']          = fred_obs('CPIENGSL', 320)

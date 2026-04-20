@@ -226,8 +226,11 @@ def rebuild_charts(html, data):
                 'avg3m': avg3m[0] if avg3m else None})
 
     # ── PCE_ANNUAL ────────────────────────────────────────────────────
-    pce = data.get('pce', [])
-    pce_core = data.get('pce_core', [])
+    # Pinned inputs: headline + core PCE (Fed's preferred inflation gauge).
+    # BEA does annual revisions + occasional methodology updates that restate
+    # multi-year history; pin stabilizes the long chart against those.
+    pce = data.get('pce_pinned') or data.get('pce', [])
+    pce_core = data.get('pce_core_pinned') or data.get('pce_core', [])
     if len(pce) >= 60 and len(pce_core) >= 60:
         h_labels, h_values = _dec_yoy(pce)
         c_labels, c_values = _dec_yoy(pce_core)
