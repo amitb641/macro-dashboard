@@ -308,34 +308,33 @@ def run_visual_qa(take_screenshots=False):
                 checks.validation = 'error';
             }
 
-            // Check SHOCK_TRACKER — oil impact chain structure.
-            // Different shape from charts (nested phases[]), so handled here.
+            // SHOCK_TRACKER DOM-based check: page-scope `const` isn't reachable
+            // via the Playwright evaluate function, so instead of eval()ing we
+            // confirm the rendered DOM contains the expected oil-impact phase
+            // titles and status pills. Structural JSON validation lives in the
+            // validator's text-based check_shock_tracker() instead.
             try {
-                if (typeof SHOCK_TRACKER === 'undefined') {
-                    checks.shock_tracker = {error: 'SHOCK_TRACKER undefined'};
-                } else {
-                    const st = SHOCK_TRACKER;
-                    const phases = Array.isArray(st.phases) ? st.phases : [];
-                    const required = ['phase', 'status', 'status_reason', 'source'];
-                    const per_phase = phases.map(p => ({
-                        phase: p.phase || '?',
-                        status: p.status || '?',
-                        missing: required.filter(k => !p[k]),
-                        has_commentary: !!p.commentary,
-                    }));
-                    checks.shock_tracker = {
-                        extracted: true,
-                        weeks_elapsed: st.weeks_elapsed,
-                        wti_chg_pct: st.wti_chg_pct,
-                        phase_count: phases.length,
-                        per_phase: per_phase,
-                        confirmed_count: phases.filter(p =>
-                            p.status === 'confirmed' || p.status === 'emerging'
-                        ).length,
-                    };
+                const tabOil = document.getElementById('tab-oil');
+                let phaseTitles = 0, statusPills = 0;
+                if (tabOil) {
+                    // Phase title text rendered from SHOCK_TRACKER mapping
+                    const titles = ['Pump prices spike','Transport & freight costs',
+                        'CPI Energy prints','Food & services inflation','Core goods inflation',
+                        'Consumer sentiment falls','Savings drawdown','Delinquencies climb'];
+                    const text = tabOil.textContent || '';
+                    phaseTitles = titles.filter(t => text.includes(t)).length;
+                    // Status pills render statusCfg.label strings
+                    ['Confirmed','Emerging','Not Yet','On Track','Ahead!','No Data']
+                        .forEach(l => { if (text.includes(l)) statusPills++; });
                 }
+                checks.shock_tracker_dom = {
+                    oil_tab_present: !!tabOil,
+                    phase_titles_found: phaseTitles,
+                    expected_phase_titles: 8,
+                    distinct_status_labels: statusPills,
+                };
             } catch(e) {
-                checks.shock_tracker = {error: e.message};
+                checks.shock_tracker_dom = {error: e.message};
             }
 
             return checks;
@@ -373,19 +372,18 @@ def run_visual_qa(take_screenshots=False):
                js_checks.get('validation') not in ('missing', 'error'),
                js_checks.get('validation', 'unknown'))
 
-        # Shock tracker DOM structure + per-phase field completeness
-        st = js_checks.get('shock_tracker', {})
-        if 'error' in st:
-            _check('data', 'SHOCK_TRACKER defined', False, st['error'], severity='critical')
+        # Shock tracker DOM rendering: text-based verification that the phases
+        # actually appear on the page. (Structural JSON check lives in the
+        # validator's check_shock_tracker(), which reads the raw HTML.)
+        stdom = js_checks.get('shock_tracker_dom', {})
+        if 'error' in stdom:
+            _check('data', 'SHOCK_TRACKER DOM rendered', False, stdom['error'], severity='warning')
         else:
-            _check('data', 'SHOCK_TRACKER extracted', st.get('extracted', False))
-            _check('data', 'SHOCK_TRACKER phase count == 8',
-                   st.get('phase_count') == 8, f'found {st.get("phase_count")}')
-            for i, pp in enumerate(st.get('per_phase', [])):
-                _check('data', f'SHOCK_TRACKER[{i}] {pp.get("phase","?")} required fields',
-                       not pp.get('missing'),
-                       f'missing={pp.get("missing")}' if pp.get('missing') else '',
-                       severity='warning')
+            _check('data', 'SHOCK_TRACKER oil tab present', stdom.get('oil_tab_present', False))
+            _check('data', 'SHOCK_TRACKER all 8 phase titles rendered',
+                   stdom.get('phase_titles_found') == 8,
+                   f'{stdom.get("phase_titles_found")}/8 titles found',
+                   severity='warning')
 
         browser.close()
 
