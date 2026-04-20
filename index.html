@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-20T06:29:25Z";
+  var BUILD_V = "2026-04-20T06:35:44Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -4368,9 +4368,17 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
         dataLine = '<span style="font-size:9px;color:#94A3B8;font-style:italic">' + tr.note + '</span>';
       }
 
-      // Detail line (YoY math breakdown) + commentary (macro color) — optional, only when fields present
-      var detailHtml = tr.detail ? '<div style="margin-top:2px;font-family:\'DM Mono\',monospace;font-size:8.5px;color:#94A3B8;line-height:1.35">' + tr.detail + '</div>' : '';
-      var commentaryHtml = tr.commentary ? '<div style="margin-top:3px;font-size:9.5px;color:#475569;line-height:1.45;font-style:italic">' + tr.commentary + '</div>' : '';
+      // Compact ⓘ tooltip consolidating math breakdown + macro color, so the
+      // row stays crisp. Native `title` attr = zero-CSS, zero-JS tooltip.
+      var tipParts = [];
+      if (tr.detail)     tipParts.push(tr.detail);
+      if (tr.commentary) tipParts.push(tr.commentary);
+      var infoBtn = tipParts.length ? (
+        ' <span title="' + tipParts.join('\n\n').replace(/"/g, '&quot;') +
+        '" style="display:inline-block;cursor:help;font-size:9px;color:#94A3B8;'
+        + 'border:1px solid #CBD5E1;border-radius:50%;width:13px;height:13px;'
+        + 'line-height:11px;text-align:center;vertical-align:middle;margin-left:3px">ⓘ</span>'
+      ) : '';
 
       html += '<div style="display:flex;gap:9px;align-items:flex-start;padding:6px 0;' + (isLast ? '' : 'border-bottom:1px solid var(--border)') + '">'
         // Icon
@@ -4382,9 +4390,7 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
         +     '<span style="font-size:10.5px;font-weight:600;color:var(--text)">' + s.title + '</span>'
         +   '</div>'
         +   '<div style="font-size:9.5px;color:var(--text2);line-height:1.4;margin-bottom:3px">' + s.desc + '</div>'
-        +   (dataLine ? '<div style="margin-top:2px">' + dataLine + '</div>' : '')
-        +   detailHtml
-        +   commentaryHtml
+        +   (dataLine ? '<div style="margin-top:2px">' + dataLine + infoBtn + '</div>' : '')
         + '</div>'
         // Status badge (right side)
         + '<div style="flex-shrink:0;text-align:center;min-width:64px">'
@@ -4393,18 +4399,25 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
         + '</div>';
     });
 
-    html += '<div style="font-size:9px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);line-height:1.55">'
-      + '<div style="font-weight:700;color:#475569;font-style:normal;margin-bottom:4px">How confirmation is determined</div>'
-      + '<div style="font-style:italic">'
-      + '<b>MMA</b> = Moving Monthly-rate Annualized (the compound month-over-month change, annualized to make magnitudes comparable across phases). '
-      + 'For CPI-index phases (Transport, Energy, Food Away) we compute two numbers: '
-      + '<b>post-shock pace</b> = the latest single-month MoM change annualized, i.e. (V<sub>latest</sub> / V<sub>prior</sub>)<sup>12</sup> − 1; '
-      + '<b>pre-shock 6-MMA</b> = compound monthly change over the six months ending in the last observation before Mar 1, 2026, annualized, i.e. (V<sub>Feb\'26</sub> / V<sub>Aug\'25</sub>)<sup>2</sup> − 1. '
-      + 'A phase is <b>Confirmed</b> when post-shock pace exceeds pre-shock 6-MMA by &gt; 1.5pp (and the expected window has arrived or passed), <b>Emerging</b> when 0.5\u20131.5pp, <b>On Track</b> when inside the window without material move, and <b>Not Yet</b> otherwise. '
-      + 'MMA is immune to the year-ago base-effect that can inflate simple YoY comparisons. '
-      + 'YoY numbers still appear as context only.'
-      + '</div>'
-      + '<div style="margin-top:6px;font-style:italic">Status auto-updated weekly \u00b7 pre-shock baselines locked to Feb\'26 \u00b7 Sources: EIA \u00b7 BLS CPI \u00b7 NY Fed \u00b7 Fed Z.1 \u00b7 SLOOS</div>'
+    // Compact footer: one italic line + a "How confirmation works ⓘ" tooltip
+    var methodTooltip = [
+      'MMA = Moving Monthly-rate Annualized (compound MoM change, annualized).',
+      '',
+      'Post-shock pace = latest MoM annualized: (V_latest / V_prior)^12 − 1',
+      'Pre-shock 6-MMA = 6-month compound MoM ending in last pre-shock obs,',
+      '  annualized: (V_Feb26 / V_Aug25)^2 − 1',
+      '',
+      'Confirmed: (post − pre) > +1.5pp (in or past expected window)',
+      'Emerging:  (post − pre) between +0.5 and +1.5pp',
+      'Not Yet:   insufficient move or before window',
+      '',
+      'Direction matters: a deceleration doesn\'t confirm an inflation phase.',
+      'MMA is immune to the year-ago base-effect that can contaminate YoY.'
+    ].join('\n').replace(/"/g, '&quot;');
+    html += '<div style="font-size:9px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-style:italic;line-height:1.5">'
+      + 'Status auto-updated weekly \u00b7 pre-shock baselines locked to Feb\'26 \u00b7 '
+      + 'Sources: EIA \u00b7 BLS CPI \u00b7 NY Fed \u00b7 Fed Z.1 \u00b7 SLOOS \u00b7 '
+      + '<span title="' + methodTooltip + '" style="cursor:help;border-bottom:1px dotted #94A3B8;font-style:normal">How confirmation works ⓘ</span>'
       + '</div>';
 
     el.innerHTML = html;
@@ -5555,7 +5568,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 06:29 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 06:35 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
