@@ -1,15 +1,15 @@
 {
-  "analyzed_at": "2026-04-20T18:18:03.007451Z",
+  "analyzed_at": "2026-04-20T21:03:03.492990Z",
   "risk_level": "ELEVATED",
   "alert_count": 1,
   "watch_count": 3,
   "flagged_count": 0,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.78,
-    "dgs5": 3.91,
-    "dgs10": 4.32,
-    "dgs30": 4.93,
+    "dgs2": 3.71,
+    "dgs5": 3.84,
+    "dgs10": 4.26,
+    "dgs30": 4.88,
     "ig_oas": 80,
     "hy_oas": 283,
     "unrate": 4.3,
@@ -34,7 +34,7 @@
     "brent": 123.28,
     "gdp_growth_q": 0.5,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 54
+    "spread_10_2_bp": 55
   },
   "signals": {
     "ffr": {
@@ -45,8 +45,8 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.32,
-      "delta": 0.0,
+      "value": 4.26,
+      "delta": -0.06,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.78,
-      "delta": 0.0,
+      "value": 3.71,
+      "delta": -0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.91,
-      "delta": 0.0,
+      "value": 3.84,
+      "delta": -0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.93,
-      "delta": 0.0,
+      "value": 4.88,
+      "delta": -0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 54,
-      "delta": 0,
+      "value": 55,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -245,6 +245,6 @@
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "ALFRED CPIAUCSL@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=CPIAUCSL&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=320&realtime_start=2026-03-31&realtime_end=2026-03-31"
+    "ALFRED PCEPI@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=320&realtime_start=2026-03-31&realtime_end=2026-03-31"
   ]
 }

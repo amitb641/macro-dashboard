@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-20T18:18:52.239586Z",
+  "validated_at": "2026-04-20T21:03:51.207909Z",
   "status": "PASS",
   "summary": {
     "total_checks": 393,
     "passed": 393,
     "failed": 0,
-    "skipped": 0,
+    "skipped": 4,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -290,19 +290,19 @@
     },
     {
       "check": "OIL_ANNUAL.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_ANNUAL.brent completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -616,29 +616,20 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 129.449,
-      "fresh_api_value": 129.449,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 128.859,
-      "fresh_api_value": 128.859,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.32,
-      "fresh_api_value": 4.32,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -661,11 +652,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.3,
-      "fresh_api_value": 6.3,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -761,7 +749,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-20T18:17:48.502232Z",
+      "collected_at": "2026-04-20T21:02:42.412624Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true

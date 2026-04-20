@@ -1,11 +1,11 @@
 {
-  "collected_at": "2026-04-20T18:17:48.502232Z",
+  "collected_at": "2026-04-20T21:02:42.412624Z",
   "series_count": 73,
   "error_count": 3,
   "errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "ALFRED CPIAUCSL@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=CPIAUCSL&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=320&realtime_start=2026-03-31&realtime_end=2026-03-31"
+    "ALFRED PCEPI@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=320&realtime_start=2026-03-31&realtime_end=2026-03-31"
   ],
   "data": {
     "ffr": {
@@ -13,26 +13,30 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-04-16",
+      "date": "2026-04-17",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-04-16",
-      "value": 3.78
+      "date": "2026-04-17",
+      "value": 3.71
     },
     "dgs5": {
-      "date": "2026-04-16",
-      "value": 3.91
+      "date": "2026-04-17",
+      "value": 3.84
     },
     "dgs10": {
-      "date": "2026-04-16",
-      "value": 4.32
+      "date": "2026-04-17",
+      "value": 4.26
     },
     "dgs30": {
-      "date": "2026-04-16",
-      "value": 4.93
+      "date": "2026-04-17",
+      "value": 4.88
     },
     "dgs10_hist": [
+      {
+        "date": "2026-04-17",
+        "value": 4.26
+      },
       {
         "date": "2026-04-16",
         "value": 4.32
@@ -264,13 +268,13 @@
       {
         "date": "2026-01-26",
         "value": 4.22
-      },
-      {
-        "date": "2026-01-23",
-        "value": 4.24
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-04-17",
+        "value": 3.71
+      },
       {
         "date": "2026-04-16",
         "value": 3.78
@@ -502,10 +506,6 @@
       {
         "date": "2026-01-26",
         "value": 3.56
-      },
-      {
-        "date": "2026-01-23",
-        "value": 3.6
       }
     ],
     "ig_oas": {
@@ -1614,7 +1614,7 @@
         null
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 20 18:17 UTC",
+      "updated": "Apr 20 21:02 UTC",
       "sessions": 30
     },
     "gasoline": [
@@ -25146,6 +25146,46 @@
       {
         "date": "1997-01-01",
         "value": 20.61
+      },
+      {
+        "date": "1996-01-01",
+        "value": 22.12
+      },
+      {
+        "date": "1995-01-01",
+        "value": 18.43
+      },
+      {
+        "date": "1994-01-01",
+        "value": 17.2
+      },
+      {
+        "date": "1993-01-01",
+        "value": 18.43
+      },
+      {
+        "date": "1992-01-01",
+        "value": 20.58
+      },
+      {
+        "date": "1991-01-01",
+        "value": 21.54
+      },
+      {
+        "date": "1990-01-01",
+        "value": 24.53
+      },
+      {
+        "date": "1989-01-01",
+        "value": 19.64
+      },
+      {
+        "date": "1988-01-01",
+        "value": 15.97
+      },
+      {
+        "date": "1987-01-01",
+        "value": 19.2
       }
     ],
     "brent_annual": [
@@ -25264,6 +25304,42 @@
       {
         "date": "1997-01-01",
         "value": 19.11
+      },
+      {
+        "date": "1996-01-01",
+        "value": 20.64
+      },
+      {
+        "date": "1995-01-01",
+        "value": 17.02
+      },
+      {
+        "date": "1994-01-01",
+        "value": 15.86
+      },
+      {
+        "date": "1993-01-01",
+        "value": 17.01
+      },
+      {
+        "date": "1992-01-01",
+        "value": 19.32
+      },
+      {
+        "date": "1991-01-01",
+        "value": 20.04
+      },
+      {
+        "date": "1990-01-01",
+        "value": 23.76
+      },
+      {
+        "date": "1989-01-01",
+        "value": 18.23
+      },
+      {
+        "date": "1988-01-01",
+        "value": 14.91
       }
     ],
     "gdpc1_annual": [
