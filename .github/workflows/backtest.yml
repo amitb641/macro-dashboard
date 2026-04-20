@@ -1,0 +1,77 @@
+name: Backtest — MMA Threshold Calibration
+
+# Runs the Oil Impact Chain backtest harness against historical shocks.
+# Manual-trigger only — this is a one-off calibration check, not routine CI.
+# Output: BACKTEST_REPORT.md + data/backtest_calibration.json committed back
+# to the triggering branch, plus uploaded as a run artifact.
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_results:
+        description: 'Commit BACKTEST_REPORT.md back to the branch'
+        required: false
+        default: 'true'
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Check FRED key is set
+        run: |
+          if [ -z "${{ secrets.FRED_API_KEY }}" ]; then
+            echo "::error::FRED_API_KEY secret not set — cannot run backtest"
+            exit 1
+          fi
+          echo "FRED key set ✓"
+
+      - name: Run backtest
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python scripts/backtest_shock.py
+
+      - name: Show report summary
+        run: |
+          echo "=== BACKTEST_REPORT.md (first 80 lines) ==="
+          head -80 BACKTEST_REPORT.md
+          echo ""
+          echo "=== Full report + JSON uploaded as artifacts ==="
+
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backtest-results
+          path: |
+            BACKTEST_REPORT.md
+            data/backtest_calibration.json
+          retention-days: 90
+
+      - name: Commit report back to branch
+        if: ${{ github.event.inputs.commit_results == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add BACKTEST_REPORT.md data/backtest_calibration.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update backtest report ($(date -u +%Y-%m-%d))"
+            git push
+          fi
