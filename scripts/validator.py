@@ -488,6 +488,10 @@ def check_staleness(data, collected_at):
         'payems':    40,   # Monthly, ~1 week lag from reference period
         'cs_hpi':   100,   # Monthly, ~2 month lag (Case-Shiller)
         'mortgage30': 10,  # Weekly
+        # UMich Consumer Sentiment: prelim ~mid-month, final ~end-of-month.
+        # Collector pulls UMich direct (tbcics.csv) which exposes the prelim
+        # before FRED's 1-month embargo. 35d covers both release windows.
+        'umcsent':   35,
     }
 
     for key, max_lag in EXPECTED_LAGS.items():
@@ -515,6 +519,26 @@ def check_staleness(data, collected_at):
             })
             if is_stale:
                 print(f'  ⏰ STALE: {key} — last update {series[0]["date"]} ({age_days}d ago, max {max_lag}d)')
+
+    # UMich release-status notice: prelim prints are subject to revision in
+    # the end-of-month final. Informational finding so consumers of the
+    # validation report know the latest sentiment point is not finalized.
+    umcsent = data.get('umcsent', [])
+    if umcsent and isinstance(umcsent, list):
+        latest = umcsent[0] if isinstance(umcsent[0], dict) else {}
+        status = latest.get('status')
+        if status:
+            findings.append({
+                'check': 'UMich Sentiment release status',
+                'latest_date': latest.get('date'),
+                'release_status': status,
+                'severity': 'info' if status == 'preliminary' else 'ok',
+                'pass': True,
+                'note': ('Preliminary — subject to revision in end-of-month final release'
+                         if status == 'preliminary' else 'Final release'),
+            })
+            if status == 'preliminary':
+                print(f'  ℹ️  UMich Sentiment {latest.get("date")} is PRELIMINARY — final expected end of month')
 
     # Check collection timestamp itself
     if collected_at:

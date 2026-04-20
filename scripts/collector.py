@@ -69,6 +69,48 @@ def fv(sid, limit=14):
     d = fred_obs(sid, limit); return d[0] if d else None
 
 
+# ── UMich Survey of Consumers (direct) ───────────────────────────────
+
+_UMICH_MONTHS = {'January':1,'February':2,'March':3,'April':4,'May':5,'June':6,
+                 'July':7,'August':8,'September':9,'October':10,'November':11,'December':12}
+
+def umich_fetch():
+    """Fetch monthly Consumer Sentiment Index direct from UMich.
+
+    Parses tbcics.csv (~13 months). Preliminary releases are marked in
+    column 0 as e.g. 'April (P)' — we surface that as status='preliminary'
+    so the dashboard can badge it. Publishing cadence is prelim mid-month,
+    final end-of-month; FRED republishes final only with a ~1 month lag,
+    so the direct source gives us ~2–6 weeks earlier visibility.
+    """
+    url = 'https://www.sca.isr.umich.edu/files/tbcics.csv'
+    headers = {'User-Agent': 'Mozilla/5.0 (compatible; MacroDashboard/1.0)'}
+    try:
+        r = requests.get(url, headers=headers, timeout=15)
+        r.raise_for_status()
+        rows = []
+        for line in r.text.splitlines():
+            parts = [p.strip() for p in line.split(',')]
+            if len(parts) < 5 or not parts[0] or not parts[1].isdigit():
+                continue
+            raw = parts[0]
+            is_prelim = '(P)' in raw
+            month_name = raw.replace('(P)', '').strip()
+            if month_name not in _UMICH_MONTHS:
+                continue
+            try:
+                value = float(parts[4])
+            except ValueError:
+                continue
+            date = f"{parts[1]}-{_UMICH_MONTHS[month_name]:02d}-01"
+            rows.append({'date': date, 'value': value,
+                         'status': 'preliminary' if is_prelim else 'final'})
+        rows.sort(key=lambda r: r['date'], reverse=True)
+        return rows
+    except Exception as e:
+        errors.append(f'UMich direct: {e}'); return []
+
+
 # ── BLS ───────────────────────────────────────────────────────────────
 
 def bls_fetch(series_ids):
@@ -235,7 +277,16 @@ def collect():
     data['payems']      = fred_obs('PAYEMS',     320)
     data['ahetpi']      = fred_obs('AHETPI',     320)
     data['jolts']       = fv('JTSJOL')
-    data['umcsent']     = fred_obs('UMCSENT',    30)   # UMich Consumer Sentiment (monthly)
+    # UMich Consumer Sentiment: direct source gives prelim flag + fresher data;
+    # FRED fills history older than the direct CSV's 13-month window (all final).
+    umich_direct = umich_fetch()
+    if umich_direct:
+        fred_umcsent = fred_obs('UMCSENT', 30)
+        umich_dates = {r['date'] for r in umich_direct}
+        fred_extras = [{**f, 'status': 'final'} for f in fred_umcsent if f['date'] not in umich_dates]
+        data['umcsent'] = sorted(umich_direct + fred_extras, key=lambda r: r['date'], reverse=True)
+    else:
+        data['umcsent'] = [{**r, 'status': 'final'} for r in fred_obs('UMCSENT', 30)]
     data['bls_sectors'] = bls_fetch([
         'CES0000000001',  # Total Nonfarm
         'CES1000000001',  # Mining & Energy (Mining and Logging)

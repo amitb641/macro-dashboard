@@ -321,12 +321,16 @@ def rebuild_charts(html, data):
         html = _inject_const(html, 'SAVING_MONTHLY', {'labels': m_labels, 'data': m_values})
 
     # ── UMCSENT_MONTHLY (last 12 months) ────────────────────────────
+    # statuses[] parallels data[]: 'preliminary' (UMich (P) flag) or 'final'.
+    # Chart uses the last entry's status to render a PRELIM badge.
     umcsent = data.get('umcsent', [])
     if len(umcsent) >= 12:
         monthly = sorted(umcsent[:12], key=lambda x: x['date'])  # oldest-first for chart
         m_labels = [_month_lbl(o['date']) for o in monthly]
         m_values = [round(o['value'], 1) for o in monthly]
-        html = _inject_const(html, 'UMCSENT_MONTHLY', {'labels': m_labels, 'data': m_values})
+        m_statuses = [o.get('status', 'final') for o in monthly]
+        html = _inject_const(html, 'UMCSENT_MONTHLY',
+                             {'labels': m_labels, 'data': m_values, 'statuses': m_statuses})
 
     # ── GDP_TOTAL_DATA ────────────────────────────────────────────────
     gdpc1_a = data.get('gdpc1_annual', [])
@@ -1875,8 +1879,10 @@ def rebuild_kpi_strip(html, data, vals):
             yoy_s = round(cur_s - umcsent[12]['value'], 1)
         lbl = f"UMich Sentiment {_mlbl(umcsent[0]['date'])}"
         yoy_str = f" · YoY: {yoy_s:+.1f}" if yoy_s is not None else ""
+        # Surface prelim/final flag from UMich direct feed so the KPI can badge it.
+        badge = 'PRELIM' if umcsent[0].get('status') == 'preliminary' else None
         cards.append({'lbl': lbl, 'val': f'{cur_s:.1f}', 'metric': 'umcsent',
-                      'delta': d_s, 'chg': f'{chg_s}',
+                      'delta': d_s, 'chg': f'{chg_s}', 'badge': badge,
                       'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
 
     # 10. Debt Service Ratio (TDSP)  (up = bad)
