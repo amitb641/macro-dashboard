@@ -1,49 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-04-20T18:03:13.146285Z",
+  "last_updated": "2026-04-20T18:18:52.571002Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-04-10T12:48:49.273538Z",
-      "git_sha": "3f67ec9",
-      "git_branch": "main",
-      "collected_at": "2026-04-10T12:47:37.173513Z",
-      "series_count": 65,
-      "collector_errors": 2,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-03-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-02-01",
-          "value": 327.46
-        },
-        "payrolls": {
-          "date": "2026-03-01",
-          "value": 158637.0
-        },
-        "treasury_10y": {
-          "date": "2026-04-08",
-          "value": 4.29
-        },
-        "fed_funds": {
-          "date": "2026-03-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "ELEVATED",
-      "alert_count": 2,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 376,
-        "passed": 370,
-        "failed": 6,
-        "skipped": 0,
-        "critical_divergences": 0
-      },
-      "html_size": 519453
-    },
     {
       "run_at": "2026-04-10T14:53:56.394126Z",
       "git_sha": "211b604",
@@ -854,6 +813,47 @@
         "critical_divergences": 0
       },
       "html_size": 491221
+    },
+    {
+      "run_at": "2026-04-20T18:18:52.571002Z",
+      "git_sha": "3e60fa4",
+      "git_branch": "main",
+      "collected_at": "2026-04-20T18:17:48.502232Z",
+      "series_count": 73,
+      "collector_errors": 3,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-03-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-03-01",
+          "value": 330.293
+        },
+        "payrolls": {
+          "date": "2026-03-01",
+          "value": 158637.0
+        },
+        "treasury_10y": {
+          "date": "2026-04-16",
+          "value": 4.32
+        },
+        "fed_funds": {
+          "date": "2026-03-01",
+          "value": 3.64
+        }
+      },
+      "risk_level": "ELEVATED",
+      "alert_count": 1,
+      "validation_status": "PASS",
+      "validation_summary": {
+        "total_checks": 393,
+        "passed": 393,
+        "failed": 0,
+        "skipped": 0,
+        "critical_divergences": 0
+      },
+      "html_size": 491868
     }
   ]
 }
