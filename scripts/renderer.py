@@ -1574,18 +1574,40 @@ def update_shock_tracker(html, data, vals):
             gas_pre = obs['value']; break
     # No estimates — only use real GASREGW data for status decisions
 
-    cpi_trans = 5.8  # CPI Transport Svcs baseline (Feb'26 from CPI_CAT_MOM)
-    cpi_energy_yoy = None
-    cpieng = data.get('cpiengsl', [])
-    if cpieng and len(cpieng) >= 13:
-        cur = cpieng[0]
+    # Compute YoY on a monthly CPI index series: latest obs vs same month prior year.
+    # Returns (yoy_pct, latest_date) or (None, None) when history is insufficient.
+    def _yoy_from_index_series(series):
+        if not series or len(series) < 13:
+            return None, None
+        cur = series[0]
         target_mo = f"{int(cur['date'][:4])-1}{cur['date'][4:7]}"
-        ya = [o for o in cpieng if o['date'][:7] == target_mo]
-        if ya:
-            cpi_energy_yoy = round((cur['value'] - ya[0]['value']) / ya[0]['value'] * 100, 1)
+        ya = next((o for o in series if o['date'][:7] == target_mo), None)
+        if not ya or not ya['value']:
+            return None, None
+        return round((cur['value'] - ya['value']) / ya['value'] * 100, 1), cur['date']
+
+    cpi_energy_yoy, _       = _yoy_from_index_series(data.get('cpiengsl', []))
+    cpi_trans_yoy, cpi_trans_date = _yoy_from_index_series(data.get('cpi_transport', []))
+    food_away_yoy, food_away_date = _yoy_from_index_series(data.get('cpi_food_away', []))
+
+    # Pre-shock baselines: YoY reading from the last observation before the shock.
+    def _pre_shock_yoy(series, shock_iso='2026-03-01'):
+        pre_obs = next((o for o in series if o['date'] < shock_iso), None)
+        if not pre_obs:
+            return None
+        target_mo = f"{int(pre_obs['date'][:4])-1}{pre_obs['date'][4:7]}"
+        ya = next((o for o in series if o['date'][:7] == target_mo), None)
+        if not ya or not ya['value']:
+            return None
+        return round((pre_obs['value'] - ya['value']) / ya['value'] * 100, 1)
+
+    cpi_trans_pre = _pre_shock_yoy(data.get('cpi_transport', [])) or 5.8
+    food_away_pre = _pre_shock_yoy(data.get('cpi_food_away', [])) or 3.4
+
+    def _mo_lbl(d):
+        return datetime.datetime.strptime(d, '%Y-%m-%d').strftime("%b'%y") if d else ''
 
     core_cpi = vals.get('core_cpi_yoy', 2.5)
-    food_away = 3.4  # baseline from CPI_CAT_MOM
     umcsent = vals.get('umcsent', 56.6)
     saving = vals.get('saving_rate', 4.5)
     cc_del = vals.get('cc_delinq', 2.94)
@@ -1629,9 +1651,12 @@ def update_shock_tracker(html, data, vals):
          "note": f"FRED GASREGW: ${gas_pre:.2f} \u2192 ${gas_now:.2f}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%)" if gas_now and gas_post else "Awaiting FRED GASREGW weekly retail gasoline data"
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
-         "metric": "CPI Transport Svcs YoY", "pre": cpi_trans, "now": cpi_trans, "chg": 0.0,
-         "status": _status(cpi_trans, cpi_trans, [4, 6], data_is_post_shock=cpi_post),
-         "note": "Data predates shock \u2014 next CPI print will be first test" if not cpi_post else f"CPI Transport at {cpi_trans}%"
+         "metric": "CPI Transport Svcs YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
+         "chg": round(cpi_trans_yoy - cpi_trans_pre, 1) if cpi_trans_yoy is not None else None,
+         "status": _status(cpi_trans_yoy, cpi_trans_pre, [4, 6],
+                           data_is_post_shock=(cpi_trans_date or '') >= shock),
+         "note": (f"CPI Transport Svcs at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
+                  if cpi_trans_yoy is not None else "Awaiting CPI Transport Services data")
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201310", "expected_weeks": [6, 10],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
@@ -1640,9 +1665,12 @@ def update_shock_tracker(html, data, vals):
          "note": f"CPI Energy at +{cpi_energy_yoy}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release"
         },
         {"phase": "Food & Services Inflation", "expected": "Months 3\u20135", "expected_weeks": [12, 20],
-         "metric": "CPI Food Away YoY", "pre": food_away, "now": food_away, "chg": 0.0,
-         "status": "not_yet",
-         "note": "Too early \u2014 food & services pass-through takes 3+ months"
+         "metric": "CPI Food Away YoY", "pre": food_away_pre, "now": food_away_yoy,
+         "chg": round(food_away_yoy - food_away_pre, 1) if food_away_yoy is not None else None,
+         "status": _status(food_away_yoy, food_away_pre, [12, 20],
+                           data_is_post_shock=(food_away_date or '') >= shock),
+         "note": (f"CPI Food Away at {food_away_yoy}% YoY ({_mo_lbl(food_away_date)})"
+                  if food_away_yoy is not None else "Awaiting CPI Food Away data")
         },
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
@@ -1675,9 +1703,10 @@ def update_shock_tracker(html, data, vals):
 
     new_json = json.dumps(tracker, separators=(', ', ':'), ensure_ascii=False)
     new_decl = f'const SHOCK_TRACKER = {new_json};'
-    # SHOCK_TRACKER has nested arrays/objects — match up to the line
-    # before '// OIL_DAILY' which always follows it
-    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\n\};\s*(?=\n// OIL_DAILY)'
+    # Match the full declaration whether the current HTML has it on a single
+    # line (typical — renderer writes single-line JSON) or multi-line.
+    # Anchor on the trailing '// OIL_DAILY' comment that always follows.
+    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\};(?=\s*\n\s*//\s*OIL_DAILY)'
     # Use lambda to avoid regex interpreting \u escapes in replacement string
     new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
     if n:

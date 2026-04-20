@@ -332,8 +332,10 @@ def collect():
     # CPI category detail for CPI_CAT_MOM auto-rebuild
     print('  [Monthly] CPI Categories (FRED)...')
     data['cpi_shelter']   = fred_obs('CUSR0000SAH1', 6)   # Shelter
-    data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 6)   # Food Away from Home
-    data['cpi_transport'] = fred_obs('CUSR0000SETG', 6)   # Transportation Services
+    # 24 obs on Food Away + Transport so the shock tracker can compute
+    # post-shock YoY (needs latest + 12-months-ago values).
+    data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 24)  # Food Away from Home
+    data['cpi_transport'] = fred_obs('CUSR0000SETG', 24)  # Transportation Services
     data['cpi_medical']   = fred_obs('CUSR0000SAM2', 6)   # Medical Care Services
     data['cpi_food_home'] = fred_obs('CUSR0000SAF11',6)   # Food at Home
     data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',6)  # New Vehicles
