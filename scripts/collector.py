@@ -409,15 +409,17 @@ def collect():
     data['wti_annual']        = fred_obs('DCOILWTICO', 30, freq='a')
     data['brent_annual']      = fred_obs('DCOILBRENTEU', 30, freq='a')
     data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
-    # Vintage-pinned copy for the long-history GDP chart. Pin rolls forward
-    # each quarter (see METHODOLOGY.md §5). Falls back to unpinned at render
-    # time if empty.
+    data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
+    # Vintage-pinned copies for the long-history GDP chart (both real and
+    # nominal). Pin rolls forward each quarter (see METHODOLOGY.md §5). Both
+    # series share the same pin date — keeps real/nominal deflator math stable.
     _gdp_pin = last_quarter_end()
     data['gdpc1_annual_pinned'] = fred_alfred_obs('GDPC1', _gdp_pin, 30, freq='a')
+    data['gdp_annual_pinned']   = fred_alfred_obs('GDP',   _gdp_pin, 30, freq='a')
     data['vintages'] = {
         'gdpc1_annual': {'pin_date': _gdp_pin, 'refresh_cadence': 'quarterly'},
+        'gdp_annual':   {'pin_date': _gdp_pin, 'refresh_cadence': 'quarterly'},
     }
-    data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
     data['umcsent_annual']    = fred_obs('UMCSENT', 30, freq='a')
     data['cpiengsl']          = fred_obs('CPIENGSL', 320)
     data['revolsl_annual']    = fred_obs('REVOLSL', 30, freq='a')

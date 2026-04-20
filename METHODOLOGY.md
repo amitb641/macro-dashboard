@@ -274,13 +274,18 @@ date. By fetching observations with `realtime_start = realtime_end =
 <vintage_date>`, we get the values exactly as they were published on
 that date — frozen against subsequent revisions.
 
-### Current scope (v1.0.2)
+### Current scope
 
-One series is pinned: **GDPC1 annual (real GDP)**. Pin cadence is
-**quarterly** — pin date refreshes to the previous quarter end at each
-new quarter (Q2 pins to Mar 31, Q3 pins to Jun 30, etc.). This gives
-within-quarter stability while still capturing new data releases at
-quarterly natural boundaries.
+Pinned series:
+- **GDPC1 annual** (real GDP)
+- **GDP annual** (nominal GDP) — added v1.0.4 to keep the real/nominal
+  deflator math consistent within a pin cycle
+
+Pin cadence is **quarterly** — pin date refreshes to the previous quarter
+end at each new quarter (Q2 pins to Mar 31, Q3 pins to Jun 30, etc.).
+This gives within-quarter stability while still capturing new data
+releases at quarterly natural boundaries. Both GDP series share the same
+pin date.
 
 Data flow:
 - `scripts/collector.py:fred_alfred_obs()` pulls the vintage-pinned
@@ -323,4 +328,5 @@ same ALFRED helper.
 | v1.0 | 2026-04-20 | Initial methodology documentation. Oil Impact Chain phases fully specified. Backtest harness and ALFRED vintage pinning scheduled for v1.1. |
 | v1.0.1 | 2026-04-20 | Calibration fixes from first backtest run (see `BACKTEST_REPORT.md`). Phase 3 (CPI Energy) expected window widened 6–10 → 6–14 to match observed 2022 Ukraine confirmation at +13w (CPI release lag). Non-MMA phases (§1.4) switched from `abs(chg)` to signed `chg` so opposite-direction moves no longer spuriously confirm — e.g. 2008 Core CPI deflation no longer marks "Confirmed" for an inflation shock. Smoothing of extreme MMA delta values deferred to v1.1. |
 | v1.0.2 | 2026-04-20 | Vintage pinning proof-of-concept (§5). GDP annual (`gdpc1_annual`) now pinned to ALFRED as-of previous quarter-end via new `fred_alfred_obs()` collector helper. Renderer prefers pinned data with fallback to live. `GDP_VINTAGE_INFO` footnote surfaces the pin date on the GDP tab. Establishes the pattern for rolling out to other Tier 1 headline series in v1.1. |
-| v1.0.3 | 2026-04-20 | JSON-blob data-layout proof-of-concept. `VALIDATION_REPORT` removed from inline `index.html` (-45KB) and now fetched at runtime from `data/validation_report.json` via a cached `fetchValidationReport()` helper. Cache is warmed at page load so tab-click and download-all capture see an already-resolved promise. Graceful failure mode: dedicated error panel if the fetch fails. Establishes the decoupled data/UI pattern for rolling out to the remaining ~40 inline constants in v1.2. |
+| v1.0.3 | 2026-04-20 | JSON-blob data-layout proof-of-concept. `VALIDATION_REPORT` removed from inline `index.html` (-45KB) and now fetched at runtime from `data/validation_report.json` via a cached `fetchValidationReport()` helper. Cache is warmed at page load so tab-click and download-all capture see an already-resolved promise. Graceful failure mode: dedicated error panel if the fetch fails. Establishes the decoupled data/UI pattern for rolling out to the remaining ~40 inline constants in v1.2. `scripts/visual_qa.py` updated to await the fetch (async evaluate + `page.route` interception for file://-protocol CORS). |
+| v1.0.4 | 2026-04-20 | Vintage pin expanded to nominal GDP (`gdp_annual`). Closes a latent inconsistency in v1.0.2 where only the real line was pinned — any BEA revision to nominal GDP would have caused the real/nominal deflator to drift within a pin cycle. Both series now share the same pin date, rebuilt together each quarter. Pattern scales cleanly: each additional series needs one `fred_alfred_obs()` call + one line in the vintages dict + one renderer `or` fallback. |

@@ -333,15 +333,17 @@ def rebuild_charts(html, data):
                              {'labels': m_labels, 'data': m_values, 'statuses': m_statuses})
 
     # ── GDP_TOTAL_DATA ────────────────────────────────────────────────
-    # Prefer vintage-pinned real GDP for historical stability (see
-    # METHODOLOGY.md §5). Falls back to live-revised if the pinned fetch
-    # failed so the chart never goes blank.
+    # Prefer vintage-pinned real + nominal GDP for historical stability (see
+    # METHODOLOGY.md §5). Both share the same pin date so the real/nominal
+    # deflator math doesn't drift. Falls back to live-revised on either line
+    # if its pinned fetch failed — chart never goes blank.
     gdpc1_pinned = data.get('gdpc1_annual_pinned', []) or []
+    gdp_pinned   = data.get('gdp_annual_pinned',   []) or []
     gdpc1_a = gdpc1_pinned or data.get('gdpc1_annual', [])
-    gdp_a = data.get('gdp_annual', [])
+    gdp_a   = gdp_pinned   or data.get('gdp_annual',   [])
     vintage_info = (data.get('vintages') or {}).get('gdpc1_annual') or {}
     gdp_vintage = {
-        'pinned': bool(gdpc1_pinned),
+        'pinned': bool(gdpc1_pinned and gdp_pinned),
         'pin_date': vintage_info.get('pin_date'),
         'refresh': vintage_info.get('refresh_cadence'),
     }

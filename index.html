@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-20T17:42:58Z";
+  var BUILD_V = "2026-04-20T17:50:15Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2658,7 +2658,7 @@ let activeGroup = "All";
 
 const GDP_TOTAL_DATA = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "nominal":[10.3, 10.6, 10.9, 11.5, 12.2, 13.0, 13.8, 14.5, 14.8, 14.5, 15.0, 15.6, 16.3, 16.9, 17.6, 18.3, 18.8, 19.6, 20.7, 21.5, 21.4, 23.7, 26.1, 27.8, 29.3, 30.8], "real":[14.1, 14.2, 14.5, 14.9, 15.4, 16.0, 16.4, 16.8, 16.8, 16.3, 16.8, 17.1, 17.4, 17.8, 18.3, 18.8, 19.1, 19.6, 20.2, 20.7, 20.3, 21.5, 22.1, 22.7, 23.4, 23.9]};
 // Vintage pin metadata for GDP (see METHODOLOGY.md §5). Rebuilt by renderer.
-const GDP_VINTAGE_INFO = {"pinned":true, "pin_date":"2026-03-31", "refresh":"quarterly"};
+const GDP_VINTAGE_INFO = {"pinned":false, "pin_date":"2026-03-31", "refresh":"quarterly"};
 
 // ── Shared trend pill renderer ────────────────────────────────────────
 // trendPill()    — UP = red (bad),  DOWN = green (good)  → inflation, unemployment, debt
@@ -5737,7 +5737,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 17:42 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 17:50 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
