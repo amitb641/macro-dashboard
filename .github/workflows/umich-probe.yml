@@ -1,0 +1,48 @@
+name: UMich Reachability Probe
+
+# Manual-only probe to verify which UMich Survey of Consumers endpoints
+# are reachable from GitHub Actions runners. Informs collector design
+# for prelim/final Consumer Sentiment ingestion.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe UMich endpoints
+        run: |
+          set +e
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+          URLS=(
+            "https://www.sca.isr.umich.edu/"
+            "https://data.sca.isr.umich.edu/"
+            "https://data.sca.isr.umich.edu/tables.php"
+            "https://data.sca.isr.umich.edu/fetchdoc.php?docid=24770"
+            "https://www.sca.isr.umich.edu/files/tbcics.csv"
+            "https://www.sca.isr.umich.edu/files/tbmics.csv"
+            "https://data.sca.isr.umich.edu/data-archive/mine.php"
+            "https://data.sca.isr.umich.edu/get-file.php?y=2026&m=4&f=Apr2026v1.pdf&k=40776"
+          )
+          for url in "${URLS[@]}"; do
+            echo "───────────────────────────────────────────"
+            echo "URL: $url"
+            curl -sS -o /tmp/body.html -D /tmp/headers.txt \
+              -A "$UA" --max-time 20 -L "$url"
+            echo "HTTP: $(head -1 /tmp/headers.txt)"
+            echo "Content-Type: $(grep -i '^content-type:' /tmp/headers.txt | head -1 | tr -d '\r')"
+            echo "Size: $(wc -c < /tmp/body.html) bytes"
+            echo "--- first 30 lines ---"
+            head -30 /tmp/body.html | sed 's/^/  /'
+          done
+
+      - name: Probe UMich home page for prelim/final label
+        run: |
+          set +e
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+          curl -sS -A "$UA" --max-time 20 https://www.sca.isr.umich.edu/ > /tmp/home.html
+          echo "=== Preliminary/Final markers on home page ==="
+          grep -oiE '(preliminary|final)[^<]{0,60}' /tmp/home.html | head -20 || echo "(none found)"
+          echo "=== Recent numeric index values ==="
+          grep -oE '[0-9]{2,3}\.[0-9]' /tmp/home.html | head -20 || echo "(none found)"
