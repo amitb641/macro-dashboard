@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-04-20T15:56:24.682748Z",
-  "status": "PASS",
+  "checked_at": "2026-04-20T17:24:47.588006Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 295,
-    "passed": 295,
-    "failed": 0,
+    "total_checks": 292,
+    "passed": 291,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -1242,24 +1242,6 @@
       "severity": "ok"
     },
     {
-      "category": "Validator",
-      "check": "Panel \"Pass 1: Internal Consistency\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 2: Source Verification\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 3: Data Staleness\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
       "category": "data",
       "check": "KPIS defined",
       "pass": true,
@@ -1766,8 +1748,9 @@
     {
       "category": "data",
       "check": "VALIDATION_REPORT present",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "missing"
     },
     {
       "category": "data",

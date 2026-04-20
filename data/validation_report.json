@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-20T15:56:24.686810Z",
-  "status": "PASS",
+  "validated_at": "2026-04-20T17:24:47.591739Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 393,
-    "passed": 393,
-    "failed": 0,
-    "skipped": 9,
+    "total_checks": 390,
+    "passed": 389,
+    "failed": 1,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -589,44 +589,65 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 330.293,
+      "fresh_api_value": 330.293,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 334.165,
+      "fresh_api_value": 334.165,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 129.449,
+      "fresh_api_value": 129.449,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 128.859,
+      "fresh_api_value": 128.859,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.32,
+      "fresh_api_value": 4.32,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -637,8 +658,11 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 6.3,
+      "fresh_api_value": 6.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -734,7 +758,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-20T15:55:05.331564Z",
+      "collected_at": "2026-04-20T17:23:35.752437Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -2055,24 +2079,6 @@
       "detail": ""
     },
     {
-      "check": "Visual: Validator \u2014 Panel \"Pass 1: Internal Consistency\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Validator \u2014 Panel \"Pass 2: Source Verification\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Validator \u2014 Panel \"Pass 3: Data Staleness\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
       "check": "Visual: data \u2014 KPIS defined",
       "severity": "ok",
       "pass": true,
@@ -2578,9 +2584,9 @@
     },
     {
       "check": "Visual: data \u2014 VALIDATION_REPORT present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "severity": "warning",
+      "pass": false,
+      "detail": "missing"
     },
     {
       "check": "Visual: data \u2014 SHOCK_TRACKER oil tab present",
