@@ -244,7 +244,7 @@ def run_visual_qa(take_screenshots=False):
         print('\n  ── Data Integrity Checks ──')
 
         # Check key JS constants are defined and populated
-        js_checks = page.evaluate('''() => {
+        js_checks = page.evaluate('''async () => {
             const checks = {};
 
             // Check KPIS
@@ -305,13 +305,20 @@ def run_visual_qa(take_screenshots=False):
                 }
             }
 
-            // Check VALIDATION_REPORT
+            // Check VALIDATION_REPORT — v1.0.3+ fetches data/validation_report.json
+            // at runtime (see METHODOLOGY.md §5). Falls back to inline const for
+            // pre-v1.0.3 HTMLs.
             try {
-                checks.validation = typeof VALIDATION_REPORT !== 'undefined'
-                    ? VALIDATION_REPORT.status || 'present'
-                    : 'missing';
+                if (typeof fetchValidationReport === 'function') {
+                    const report = await fetchValidationReport();
+                    checks.validation = (report && report.status) || 'present';
+                } else if (typeof VALIDATION_REPORT !== 'undefined') {
+                    checks.validation = VALIDATION_REPORT.status || 'present';
+                } else {
+                    checks.validation = 'missing';
+                }
             } catch(e) {
-                checks.validation = 'error';
+                checks.validation = 'error:' + (e && e.message ? e.message : e);
             }
 
             // SHOCK_TRACKER DOM-based check: page-scope `const` isn't reachable
@@ -380,10 +387,11 @@ def run_visual_qa(take_screenshots=False):
                                f'{nulls}/{total} empty ({pct}% filled, min {min_pct}%)',
                                severity='warning')
 
-        # Validation report
-        _check('data', 'VALIDATION_REPORT present',
-               js_checks.get('validation') not in ('missing', 'error'),
-               js_checks.get('validation', 'unknown'))
+        # Validation report — post-v1.0.3 this is fetched at runtime, so the
+        # check verifies the fetch resolves (not just that a const exists).
+        _val = js_checks.get('validation', 'unknown')
+        _val_ok = _val != 'missing' and not str(_val).startswith('error')
+        _check('data', 'VALIDATION_REPORT present', _val_ok, _val)
 
         # Shock tracker DOM rendering: text-based verification that the phases
         # actually appear on the page. (Structural JSON check lives in the
