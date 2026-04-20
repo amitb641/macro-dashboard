@@ -97,7 +97,7 @@ def fred_fetch(series_id, start_date=None, end_date=None, freq=None):
 PHASES = [
     {'phase': 'Pump Prices Spike',        'kind': 'level',    'series': 'GASREGW',       'expected_weeks': [0, 2],  'baseline_threshold': 0.50},
     {'phase': 'Transport & Freight',      'kind': 'mma',      'series': 'CUSR0000SETG',  'expected_weeks': [4, 6]},
-    {'phase': 'CPI Energy Prints',        'kind': 'mma',      'series': 'CPIENGSL',      'expected_weeks': [6, 10]},
+    {'phase': 'CPI Energy Prints',        'kind': 'mma',      'series': 'CPIENGSL',      'expected_weeks': [6, 14]},
     {'phase': 'Food & Services',          'kind': 'mma',      'series': 'CUSR0000SEFV',  'expected_weeks': [12, 20]},
     {'phase': 'Core Goods Inflation',     'kind': 'yoy',      'series': 'CPILFESL',      'expected_weeks': [20, 32], 'baseline_threshold': 0.5},
     {'phase': 'Consumer Sentiment Falls', 'kind': 'level',    'series': 'UMCSENT',       'expected_weeks': [2, 6],   'baseline_threshold': 0.5, 'sign': -1},
@@ -146,16 +146,21 @@ def mma_status(post_mma, pre_mma, weeks_elapsed, expected_weeks, data_is_post_sh
 
 
 def level_status(now, pre, weeks_elapsed, expected_weeks, threshold, data_is_post_shock, sign=1):
-    """Used for pump prices, sentiment, savings, delinquencies.
-    sign=-1 means shock predicts a DROP (flip the comparison)."""
+    """Used for pump prices, sentiment, savings, delinquencies, core CPI.
+    sign=-1 means shock predicts a DROP. chg is SIGNED after the sign flip —
+    opposite-direction moves never confirm (see METHODOLOGY.md §1.4).
+    Mirrors renderer.py:_status — keep in sync."""
     if now is None or pre is None: return 'awaiting_data'
     if not data_is_post_shock: return 'not_yet'
     chg = (now - pre) * sign  # positive = shock-consistent direction
-    in_window   = expected_weeks[0] <= weeks_elapsed <= expected_weeks[1]
-    past_window = weeks_elapsed > expected_weeks[1]
-    moved = chg > threshold
+    in_window     = expected_weeks[0] <= weeks_elapsed <= expected_weeks[1]
+    past_window   = weeks_elapsed > expected_weeks[1]
+    before_window = weeks_elapsed < expected_weeks[0]
+    moved = chg > 0.15
+    if moved and before_window:
+        return 'ahead'
     if moved and (in_window or past_window):
-        return 'confirmed'
+        return 'confirmed' if chg > threshold else 'emerging'
     return 'on_schedule' if in_window else 'not_yet'
 
 
@@ -229,10 +234,10 @@ def run_phase_for_shock(phase, shock, all_series):
                     pre_yoy = round((pre_obs['value'] - as_of[idx + 12]['value']) / as_of[idx + 12]['value'] * 100, 1)
             status = 'not_yet'
             if yoy is not None and pre_yoy is not None and data_is_post_shock:
-                chg = yoy - pre_yoy
+                chg = yoy - pre_yoy  # SIGNED — only confirm on acceleration, not deflation
                 in_window = phase['expected_weeks'][0] <= snap['weeks'] <= phase['expected_weeks'][1]
                 past_window = snap['weeks'] > phase['expected_weeks'][1]
-                if abs(chg) > phase['baseline_threshold'] and (in_window or past_window):
+                if chg > phase['baseline_threshold'] and (in_window or past_window):
                     status = 'confirmed'
                 elif in_window:
                     status = 'on_schedule'

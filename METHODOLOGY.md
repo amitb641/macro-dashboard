@@ -66,16 +66,24 @@ pace does *not* confirm the shock, even if the magnitude exceeds thresholds.
 ### 1.4 Confirmation tiers (non-MMA phases)
 
 Phases 1 (Pump Prices), 5 (Core CPI), 6 (Sentiment), 7 (Savings), 8
-(Delinquencies) use a simpler magnitude-delta rule against the pre-shock
-baseline value directly:
+(Delinquencies) use a signed-delta rule against the pre-shock baseline:
 
 ```
-chg = now − pre
-moved = |chg| > 0.15 (sub-threshold)
-confirmed = moved AND (in/past window) AND |chg| > 0.5
+chg = (now − pre) * sign           # sign = −1 for drop-expected phases
+moved = chg > 0.15                 # sub-threshold gate, SIGNED
+confirmed = moved AND (in/past window) AND chg > 0.5
 ```
 
-For Sentiment the sign is flipped (shock predicts a *drop*).
+`chg` is **signed**, not absolute. Opposite-direction moves never confirm,
+even if their magnitude exceeds the threshold. This prevents the tracker
+from marking "Confirmed" when a series moves the *wrong* way relative to
+shock expectations. Historical example: during the 2008 oil crash, Core CPI
+*dropped* 0.6pp from demand destruction + Lehman stress. An `abs(chg)`
+check would have marked Phase 5 "Confirmed" for inflation transmission —
+misleading, since the mechanism is deflationary. The signed rule correctly
+leaves it at `not_yet`. Drop-expected phases (Sentiment, Savings) handle
+direction via `sign=-1` so a shock-consistent drop still produces positive
+`chg`.
 
 ### 1.5 Base-effect auto-flag
 
@@ -129,8 +137,8 @@ was a local trough.
 | **Collector fetch** | 320 observations |
 | **Composition** | Gasoline (~65% weight), natural gas, fuel oil, electricity |
 | **Confirmation** | MMA (section 1.2–1.3) |
-| **Expected window** | Weeks 6–10 |
-| **Rationale** | First full BLS capture of post-shock gasoline prices lands in the CPI print covering the first fully-post-shock reference month (Mar 2026 data, published ~April 10). Headline inflation becomes "official" here. |
+| **Expected window** | Weeks 6–14 |
+| **Rationale** | First full BLS capture of post-shock gasoline prices lands in the CPI print covering the first fully-post-shock reference month (Mar 2026 data, published ~April 10). Headline inflation becomes "official" here. Window widened from 6–10 to 6–14 based on 2022 Ukraine backtest: CPI release lag (~4-6 weeks) means the April CPI print (at ~week 7) often misses threshold, with confirmation arriving in the May print (~week 13). |
 | **Known limitations** | Natural gas and electricity components move on longer cycles (utility filings), so the initial CPI Energy move will be gasoline-dominated. A second-wave component from utilities shows up 2–4 months later. |
 
 ### Phase 4: Food & Services Inflation
@@ -251,3 +259,4 @@ was a local trough.
 | Version | Date | Notes |
 |---|---|---|
 | v1.0 | 2026-04-20 | Initial methodology documentation. Oil Impact Chain phases fully specified. Backtest harness and ALFRED vintage pinning scheduled for v1.1. |
+| v1.0.1 | 2026-04-20 | Calibration fixes from first backtest run (see `BACKTEST_REPORT.md`). Phase 3 (CPI Energy) expected window widened 6–10 → 6–14 to match observed 2022 Ukraine confirmation at +13w (CPI release lag). Non-MMA phases (§1.4) switched from `abs(chg)` to signed `chg` so opposite-direction moves no longer spuriously confirm — e.g. 2008 Core CPI deflation no longer marks "Confirmed" for an inflation shock. Smoothing of extreme MMA delta values deferred to v1.1. |

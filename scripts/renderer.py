@@ -1704,7 +1704,10 @@ def update_shock_tracker(html, data, vals):
     cc_del = vals.get('cc_delinq', 2.94)
 
     def _status(now, pre, expected_weeks, data_is_post_shock=False):
-        """Determine phase status. Only confirm/emerge if data is post-shock."""
+        """Determine phase status. Only confirm/emerge if data is post-shock.
+        chg is SIGNED — positive = shock-consistent direction. Callers for drop-
+        expected phases (sentiment, savings) negate both inputs. Opposite-direction
+        moves never confirm (METHODOLOGY.md §1.4)."""
         if now is None:
             return 'awaiting_data'
         if pre is None:
@@ -1715,11 +1718,11 @@ def update_shock_tracker(html, data, vals):
         in_window = expected_weeks[0] <= weeks <= expected_weeks[1]
         past_window = weeks > expected_weeks[1]
         before_window = weeks < expected_weeks[0]
-        moved = abs(chg) > 0.15
+        moved = chg > 0.15
         if moved and before_window:
             return 'ahead'
         if moved and (in_window or past_window):
-            return 'confirmed' if abs(chg) > 0.5 else 'emerging'
+            return 'confirmed' if chg > 0.5 else 'emerging'
         return 'on_schedule' if in_window else 'not_yet'
 
     # Check which data readings are post-shock (date >= Mar 2026)
@@ -1736,7 +1739,7 @@ def update_shock_tracker(html, data, vals):
     # Now that `shock` is defined, resolve the MMA-phase statuses + reasons.
     trans_status, trans_reason = _mma_status(trans_mom_ann, trans_pre_mma, [4, 6],
                                              data_is_post_shock=(trans_latest or '') >= shock)
-    energy_status, energy_reason = _mma_status(energy_mom_ann, energy_pre_mma, [6, 10],
+    energy_status, energy_reason = _mma_status(energy_mom_ann, energy_pre_mma, [6, 14],
                                                data_is_post_shock=(energy_latest or '') >= shock)
     food_status, food_reason = _mma_status(food_mom_ann, food_pre_mma, [12, 20],
                                            data_is_post_shock=(food_latest or '') >= shock)
@@ -1781,7 +1784,7 @@ def update_shock_tracker(html, data, vals):
               if trans_mom_ann is not None else
               "Needs 24 obs of CUSR0000SETG to compute post-shock vs pre-shock MMA."))
         },
-        {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201310", "expected_weeks": [6, 10],
+        {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201314", "expected_weeks": [6, 14],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
          "chg": round(cpi_energy_yoy - 0.4, 1) if cpi_energy_yoy is not None else None,
          "status": energy_status, "status_reason": energy_reason,
