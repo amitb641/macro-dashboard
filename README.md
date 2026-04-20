@@ -27,6 +27,16 @@ Plus two reference tabs: **Sources** (glossary & data dictionary) and **Dashboar
 
 ---
 
+## Methodology & Calibration
+
+The Oil Impact Chain — the dashboard's shock-transmission tracker — is the most analytically consequential surface. Its confirmation rules (MMA thresholds, expected windows, pre-shock baselines) are specified explicitly and backtested.
+
+- **[METHODOLOGY.md](METHODOLOGY.md)** — Per-phase specification for all 8 tracker phases: metric, FRED/BLS series ID, formula, confirmation thresholds, expected window, rationale, known limitations. Source of truth when any threshold changes.
+- **[BACKTEST_REPORT.md](BACKTEST_REPORT.md)** — Phase rules replayed against 2022 Ukraine and 2008 Lehman-era oil shocks. Surfaces false positives and drives threshold calibration. Regenerated via the `Backtest — MMA Threshold Calibration` workflow.
+- **v1.0.1 calibration fixes** (April 2026): Phase 3 window widened `[6,10]→[6,14]` based on 2022 Ukraine confirmation landing at +13w (CPI release lag); non-MMA phases switched to signed-chg so opposite-direction moves can't spuriously confirm.
+
+---
+
 ## How It Works
 
 A five-stage pipeline runs Mon-Fri at 7 AM ET via GitHub Actions:
