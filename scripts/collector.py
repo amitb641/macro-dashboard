@@ -69,6 +69,45 @@ def fv(sid, limit=14):
     d = fred_obs(sid, limit); return d[0] if d else None
 
 
+# ── ALFRED (vintage-pinned FRED) ──────────────────────────────────────
+# See METHODOLOGY.md §5 for the vintage-pinning rationale.
+
+def last_quarter_end(today=None):
+    """End date of the previous quarter, as YYYY-MM-DD string.
+    e.g. if today=2026-04-20 (Q2) → '2026-03-31'."""
+    from calendar import monthrange
+    today = today or datetime.date.today()
+    quarter_of = (today.month - 1) // 3 + 1  # 1..4
+    if quarter_of == 1:
+        y, m = today.year - 1, 12
+    else:
+        y = today.year
+        m = (quarter_of - 1) * 3  # 3, 6, 9
+    return f'{y}-{m:02d}-{monthrange(y, m)[1]:02d}'
+
+
+def fred_alfred_obs(series_id, vintage_date, limit=14, freq=None):
+    """Pull AS-OF-vintage observations from ALFRED.
+    Returns values exactly as they were published on `vintage_date` — no
+    subsequent revisions. Falls back to [] on any failure so callers can
+    degrade to unpinned data without breaking the pipeline.
+    See https://alfred.stlouisfed.org/docs/api/alfred/"""
+    if not FRED_KEY:
+        errors.append(f'FRED key missing — ALFRED skipped {series_id}'); return []
+    params = {'series_id': series_id, 'api_key': FRED_KEY,
+              'file_type': 'json', 'sort_order': 'desc', 'limit': limit,
+              'realtime_start': vintage_date, 'realtime_end': vintage_date}
+    if freq: params['frequency'] = freq
+    try:
+        r = requests.get('https://api.stlouisfed.org/fred/series/observations',
+                         params=params, timeout=15)
+        r.raise_for_status()
+        return [{'date': o['date'], 'value': float(o['value'])}
+                for o in r.json().get('observations', []) if o['value'] != '.']
+    except Exception as e:
+        errors.append(f'ALFRED {series_id}@{vintage_date}: {e}'); return []
+
+
 # ── UMich Survey of Consumers (direct) ───────────────────────────────
 
 _UMICH_MONTHS = {'January':1,'February':2,'March':3,'April':4,'May':5,'June':6,
@@ -370,6 +409,14 @@ def collect():
     data['wti_annual']        = fred_obs('DCOILWTICO', 30, freq='a')
     data['brent_annual']      = fred_obs('DCOILBRENTEU', 30, freq='a')
     data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
+    # Vintage-pinned copy for the long-history GDP chart. Pin rolls forward
+    # each quarter (see METHODOLOGY.md §5). Falls back to unpinned at render
+    # time if empty.
+    _gdp_pin = last_quarter_end()
+    data['gdpc1_annual_pinned'] = fred_alfred_obs('GDPC1', _gdp_pin, 30, freq='a')
+    data['vintages'] = {
+        'gdpc1_annual': {'pin_date': _gdp_pin, 'refresh_cadence': 'quarterly'},
+    }
     data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
     data['umcsent_annual']    = fred_obs('UMCSENT', 30, freq='a')
     data['cpiengsl']          = fred_obs('CPIENGSL', 320)

@@ -333,8 +333,19 @@ def rebuild_charts(html, data):
                              {'labels': m_labels, 'data': m_values, 'statuses': m_statuses})
 
     # ── GDP_TOTAL_DATA ────────────────────────────────────────────────
-    gdpc1_a = data.get('gdpc1_annual', [])
+    # Prefer vintage-pinned real GDP for historical stability (see
+    # METHODOLOGY.md §5). Falls back to live-revised if the pinned fetch
+    # failed so the chart never goes blank.
+    gdpc1_pinned = data.get('gdpc1_annual_pinned', []) or []
+    gdpc1_a = gdpc1_pinned or data.get('gdpc1_annual', [])
     gdp_a = data.get('gdp_annual', [])
+    vintage_info = (data.get('vintages') or {}).get('gdpc1_annual') or {}
+    gdp_vintage = {
+        'pinned': bool(gdpc1_pinned),
+        'pin_date': vintage_info.get('pin_date'),
+        'refresh': vintage_info.get('refresh_cadence'),
+    }
+    html = _inject_const(html, 'GDP_VINTAGE_INFO', gdp_vintage)
     if gdpc1_a and gdp_a:
         r_labels, r_values = _annual_from_freq(gdpc1_a, precision=1, scale=0.001)
         n_labels, n_values = _annual_from_freq(gdp_a, precision=1, scale=0.001)

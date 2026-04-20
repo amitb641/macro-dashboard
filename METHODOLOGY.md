@@ -235,10 +235,12 @@ was a local trough.
 
 ## 4. Limitations of v1
 
-- **No vintage pinning.** FRED / BLS both silently revise historical data.
-  Charts labeled "historical" may change month-to-month. Future: snapshot
-  ALFRED vintages at collect time and serve pinned vintages for historical
-  panels.
+- **Vintage pinning — proof-of-concept only.** v1.0.2 pins the real GDP
+  historical series (`gdpc1_annual`) to an ALFRED as-of-vintage date so
+  the 25-year metric tiles don't shift on BEA benchmark revisions.
+  Remaining series (nominal GDP, CPI, payrolls, PCE, etc.) still use
+  latest revised values. Full rollout across all Tier 1 headline series
+  is scheduled for v1.1. See §5 for the current scope.
 - **Single-scenario backtest.** Current MMA thresholds (1.5pp confirmed,
   0.5pp emerging) are intuitive but not historically calibrated. Pending:
   `scripts/backtest_shock.py` against 2022 Ukraine, 2008 Lehman-era, 1990
@@ -254,9 +256,70 @@ was a local trough.
 
 ---
 
-## 5. Revision log
+## 5. Vintage pinning (v1.0.2 proof-of-concept)
+
+### The problem
+
+FRED and the underlying BEA / BLS sources silently revise historical data.
+BEA publishes annual and comprehensive benchmark revisions that can move
+GDP levels back five or more years. BLS does annual benchmark revisions
+for payrolls. A chart labeled "historical" on the dashboard today may
+show different values next month — a credibility risk when a reviewer
+asks "didn't GDP show 2.1% last week and now shows 1.9%?"
+
+### The fix
+
+ALFRED (Archival FRED) exposes FRED data as-of any historical publication
+date. By fetching observations with `realtime_start = realtime_end =
+<vintage_date>`, we get the values exactly as they were published on
+that date — frozen against subsequent revisions.
+
+### Current scope (v1.0.2)
+
+One series is pinned: **GDPC1 annual (real GDP)**. Pin cadence is
+**quarterly** — pin date refreshes to the previous quarter end at each
+new quarter (Q2 pins to Mar 31, Q3 pins to Jun 30, etc.). This gives
+within-quarter stability while still capturing new data releases at
+quarterly natural boundaries.
+
+Data flow:
+- `scripts/collector.py:fred_alfred_obs()` pulls the vintage-pinned
+  observations
+- `data/raw_data.json` carries two parallel arrays:
+  `gdpc1_annual` (live, latest revised) for KPI current-period values
+  and `gdpc1_annual_pinned` (vintage-pinned) for the 25-year historical
+  series used in metric-tile computations
+- `data['vintages']` records the pin date and cadence
+- `scripts/renderer.py` prefers pinned data for `GDP_TOTAL_DATA`, falls
+  back to live data if the pinned fetch returned empty
+- `GDP_VINTAGE_INFO` constant in `index.html` surfaces the pin date as a
+  footnote below the GDP metric tiles
+
+### Expansion plan (v1.1)
+
+Pin the remaining headline series that show ≥5-year historical chart
+surfaces: CPI annual, unemployment annual, wage annual, PCE annual,
+Fed funds annual. Each expansion requires a parallel `<series>_pinned`
+data array + renderer fallback. No methodology change — same pin cadence,
+same ALFRED helper.
+
+### Not pinned (intentionally)
+
+- Current-period KPIs — latest revised is what institutional consumers
+  quote in real time.
+- Shock-tracker phases — these explicitly model "how has the world
+  changed since the shock date," so they need the latest data, not a
+  pre-shock snapshot of history.
+- High-frequency daily series (WTI, Treasury yields) — ALFRED vintage
+  coverage is coarser (weekly-ish) and the revision risk for daily
+  market prices is effectively zero.
+
+---
+
+## 6. Revision log
 
 | Version | Date | Notes |
 |---|---|---|
 | v1.0 | 2026-04-20 | Initial methodology documentation. Oil Impact Chain phases fully specified. Backtest harness and ALFRED vintage pinning scheduled for v1.1. |
 | v1.0.1 | 2026-04-20 | Calibration fixes from first backtest run (see `BACKTEST_REPORT.md`). Phase 3 (CPI Energy) expected window widened 6–10 → 6–14 to match observed 2022 Ukraine confirmation at +13w (CPI release lag). Non-MMA phases (§1.4) switched from `abs(chg)` to signed `chg` so opposite-direction moves no longer spuriously confirm — e.g. 2008 Core CPI deflation no longer marks "Confirmed" for an inflation shock. Smoothing of extreme MMA delta values deferred to v1.1. |
+| v1.0.2 | 2026-04-20 | Vintage pinning proof-of-concept (§5). GDP annual (`gdpc1_annual`) now pinned to ALFRED as-of previous quarter-end via new `fred_alfred_obs()` collector helper. Renderer prefers pinned data with fallback to live. `GDP_VINTAGE_INFO` footnote surfaces the pin date on the GDP tab. Establishes the pattern for rolling out to other Tier 1 headline series in v1.1. |
