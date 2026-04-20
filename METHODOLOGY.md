@@ -276,16 +276,26 @@ that date — frozen against subsequent revisions.
 
 ### Current scope
 
-Pinned series:
-- **GDPC1 annual** (real GDP)
-- **GDP annual** (nominal GDP) — added v1.0.4 to keep the real/nominal
+Pinned series (all share the same pin date within a cycle):
+- **GDPC1 annual** (real GDP) — annual aggregate chart
+- **GDP annual** (nominal GDP) — annual aggregate chart; keeps real/nominal
   deflator math consistent within a pin cycle
+- **CPIAUCSL monthly** (headline CPI) — drives CPI_ANNUAL Dec-to-Dec YoY
+- **PAYEMS monthly** (total nonfarm payrolls) — drives JOBS_ANNUAL (protects
+  against BLS annual benchmark revisions, which have rewritten ~862K jobs
+  across 10 months in past cycles)
+- **AHETPI monthly** (avg hourly earnings) — drives WAGE_ANNUAL (nominal +
+  real-wage lines)
 
 Pin cadence is **quarterly** — pin date refreshes to the previous quarter
 end at each new quarter (Q2 pins to Mar 31, Q3 pins to Jun 30, etc.).
 This gives within-quarter stability while still capturing new data
-releases at quarterly natural boundaries. Both GDP series share the same
-pin date.
+releases at quarterly natural boundaries.
+
+**Current-period KPIs and monthly/YoY charts continue reading live
+(unpinned) data.** The pin applies only to the historical-aggregate
+computations, so the dashboard still updates on the latest BLS/BEA release
+for headline numbers, with historical lines held stable within a quarter.
 
 Data flow:
 - `scripts/collector.py:fred_alfred_obs()` pulls the vintage-pinned
@@ -330,3 +340,4 @@ same ALFRED helper.
 | v1.0.2 | 2026-04-20 | Vintage pinning proof-of-concept (§5). GDP annual (`gdpc1_annual`) now pinned to ALFRED as-of previous quarter-end via new `fred_alfred_obs()` collector helper. Renderer prefers pinned data with fallback to live. `GDP_VINTAGE_INFO` footnote surfaces the pin date on the GDP tab. Establishes the pattern for rolling out to other Tier 1 headline series in v1.1. |
 | v1.0.3 | 2026-04-20 | JSON-blob data-layout proof-of-concept. `VALIDATION_REPORT` removed from inline `index.html` (-45KB) and now fetched at runtime from `data/validation_report.json` via a cached `fetchValidationReport()` helper. Cache is warmed at page load so tab-click and download-all capture see an already-resolved promise. Graceful failure mode: dedicated error panel if the fetch fails. Establishes the decoupled data/UI pattern for rolling out to the remaining ~40 inline constants in v1.2. `scripts/visual_qa.py` updated to await the fetch (async evaluate + `page.route` interception for file://-protocol CORS). |
 | v1.0.4 | 2026-04-20 | Vintage pin expanded to nominal GDP (`gdp_annual`). Closes a latent inconsistency in v1.0.2 where only the real line was pinned — any BEA revision to nominal GDP would have caused the real/nominal deflator to drift within a pin cycle. Both series now share the same pin date, rebuilt together each quarter. Pattern scales cleanly: each additional series needs one `fred_alfred_obs()` call + one line in the vintages dict + one renderer `or` fallback. |
+| v1.0.5 | 2026-04-20 | Vintage pin expanded to three Tier 1 monthly series feeding the long-history annual-aggregate charts: `cpi_all` (→ CPI_ANNUAL), `payems` (→ JOBS_ANNUAL), `ahetpi` (→ WAGE_ANNUAL). Rationale: these all pass through BLS annual benchmark and seasonal-adjustment revisions (the 2025 payroll benchmark alone rewrote ~862K jobs); the long chart surface now stays stable within each quarterly pin cycle. Current-period KPIs and 12-month mini-charts continue reading live data so freshness is unaffected. |

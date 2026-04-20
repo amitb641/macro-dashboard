@@ -410,15 +410,24 @@ def collect():
     data['brent_annual']      = fred_obs('DCOILBRENTEU', 30, freq='a')
     data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
     data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
-    # Vintage-pinned copies for the long-history GDP chart (both real and
-    # nominal). Pin rolls forward each quarter (see METHODOLOGY.md §5). Both
-    # series share the same pin date — keeps real/nominal deflator math stable.
-    _gdp_pin = last_quarter_end()
-    data['gdpc1_annual_pinned'] = fred_alfred_obs('GDPC1', _gdp_pin, 30, freq='a')
-    data['gdp_annual_pinned']   = fred_alfred_obs('GDP',   _gdp_pin, 30, freq='a')
+    # Vintage-pinned copies for historical charts (see METHODOLOGY.md §5).
+    # Pin rolls forward each quarter. All pinned series share the same pin
+    # date so cross-series comparisons stay coherent within a pin cycle.
+    _pin = last_quarter_end()
+    data['gdpc1_annual_pinned'] = fred_alfred_obs('GDPC1',    _pin, 30,  freq='a')
+    data['gdp_annual_pinned']   = fred_alfred_obs('GDP',      _pin, 30,  freq='a')
+    # Monthly series feeding annual-aggregate charts (CPI_ANNUAL, JOBS_ANNUAL,
+    # WAGE_ANNUAL). Monthly/YoY current-period KPIs continue reading unpinned
+    # `cpi_all`, `payems`, `ahetpi` for freshness.
+    data['cpi_all_pinned']      = fred_alfred_obs('CPIAUCSL', _pin, 320)
+    data['payems_pinned']       = fred_alfred_obs('PAYEMS',   _pin, 320)
+    data['ahetpi_pinned']       = fred_alfred_obs('AHETPI',   _pin, 320)
     data['vintages'] = {
-        'gdpc1_annual': {'pin_date': _gdp_pin, 'refresh_cadence': 'quarterly'},
-        'gdp_annual':   {'pin_date': _gdp_pin, 'refresh_cadence': 'quarterly'},
+        'gdpc1_annual': {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
+        'gdp_annual':   {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
+        'cpi_all':      {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
+        'payems':       {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
+        'ahetpi':       {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
     }
     data['umcsent_annual']    = fred_obs('UMCSENT', 30, freq='a')
     data['cpiengsl']          = fred_obs('CPIENGSL', 320)

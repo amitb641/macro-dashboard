@@ -193,7 +193,9 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'U_ANNUAL', {'labels': labels, 'data': values})
 
     # ── CPI_ANNUAL (Dec-to-Dec only — monthly shown in CPI_MONTHLY) ───
-    cpi_all = data.get('cpi_all', [])
+    # Prefer vintage-pinned series for the historical annual aggregate; the
+    # current-period monthly/YoY values elsewhere continue to read live data.
+    cpi_all = data.get('cpi_all_pinned') or data.get('cpi_all', [])
     if len(cpi_all) >= 60:
         labels, values = _dec_yoy(cpi_all)
         # Compute 3-month moving average of monthly YoY rates
@@ -239,7 +241,8 @@ def rebuild_charts(html, data):
                 'labels': common_labels, 'headline': headline, 'core': core})
 
     # ── WAGE_ANNUAL ───────────────────────────────────────────────────
-    ahetpi = data.get('ahetpi', [])
+    # Pinned inputs (same rationale as CPI_ANNUAL above).
+    ahetpi = data.get('ahetpi_pinned') or data.get('ahetpi', [])
     if len(ahetpi) >= 60 and len(cpi_all) >= 60:
         w_labels, w_values = _dec_yoy(ahetpi)
         c_labels, c_values = _dec_yoy(cpi_all)
@@ -257,7 +260,10 @@ def rebuild_charts(html, data):
                 'labels': labels, 'nominal': nominal, 'real': real})
 
     # ── JOBS_ANNUAL ───────────────────────────────────────────────────
-    payems = data.get('payems', [])
+    # Pinned for historical stability against BLS annual benchmark revisions
+    # (the 2025 benchmark rewrote ~862K jobs across 2024; pin prevents that
+    # from silently restating numbers on the 25yr payrolls chart).
+    payems = data.get('payems_pinned') or data.get('payems', [])
     if len(payems) >= 60:
         by_ym = {}
         for obs in payems:

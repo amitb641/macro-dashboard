@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-20T17:50:15Z";
+  var BUILD_V = "2026-04-20T17:54:02Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -5737,7 +5737,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 17:50 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 17:54 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
