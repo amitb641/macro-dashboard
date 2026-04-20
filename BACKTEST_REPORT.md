@@ -1,6 +1,6 @@
 # Backtest Calibration Report
 
-Generated: 2026-04-20T15:14:27.035613Z
+Generated: 2026-04-20T15:52:32.083305Z
 
 This report replays the current Oil Impact Chain confirmation rules
 (see `METHODOLOGY.md`) against historical oil shocks to calibrate the
@@ -20,13 +20,13 @@ Phase status by weeks-elapsed snapshot:
 
 | Phase | Kind | +2w | +4w | +8w | +13w | +26w |
 |---|---|---|---|---|---|---|
-| Pump Prices Spike | level | ✅ confirmed | ✅ confirmed | ✅ confirmed | ✅ confirmed | ⏳ not_yet |
+| Pump Prices Spike | level | ✅ confirmed | ✅ confirmed | ✅ confirmed | ✅ confirmed | 🟡 emerging |
 | Transport & Freight | mma | 🔴 ahead | ✅ confirmed | ✅ confirmed | ✅ confirmed | ⏳ not_yet |
 | CPI Energy Prints | mma | 🔴 ahead | 🔴 ahead | 🟦 on_schedule | ✅ confirmed | ⏳ not_yet |
 | Food & Services | mma | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ✅ confirmed | ✅ confirmed |
 | Core Goods Inflation | yoy | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | 🟦 on_schedule |
 | Consumer Sentiment Falls | level | ✅ confirmed | ✅ confirmed | ⏳ not_yet | ✅ confirmed | ✅ confirmed |
-| Savings Drawdown | level | ⏳ not_yet | ⏳ not_yet | ✅ confirmed | ✅ confirmed | ✅ confirmed |
+| Savings Drawdown | level | 🔴 ahead | 🔴 ahead | ✅ confirmed | ✅ confirmed | ✅ confirmed |
 | Delinquencies Climb | level | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ✅ confirmed |
 
 <details><summary>Per-phase detail</summary>
@@ -37,7 +37,7 @@ Phase status by weeks-elapsed snapshot:
 - +4w (2022-03-24): **confirmed** · latest obs 2022-03-21 · pre_value=3.53 · now_value=4.239 · chg=0.71
 - +8w (2022-04-21): **confirmed** · latest obs 2022-04-18 · pre_value=3.53 · now_value=4.066 · chg=0.54
 - +13w (2022-05-26): **confirmed** · latest obs 2022-05-23 · pre_value=3.53 · now_value=4.593 · chg=1.06
-- +26w (2022-08-25): **not_yet** · latest obs 2022-08-22 · pre_value=3.53 · now_value=3.88 · chg=0.35
+- +26w (2022-08-25): **emerging** · latest obs 2022-08-22 · pre_value=3.53 · now_value=3.88 · chg=0.35
 
 ### Transport & Freight (CUSR0000SETG)
 
@@ -81,8 +81,8 @@ Phase status by weeks-elapsed snapshot:
 
 ### Savings Drawdown (PSAVERT)
 
-- +2w (2022-03-10): **not_yet** · latest obs 2022-03-01 · pre_value=4.1 · now_value=3.2 · chg=0.9
-- +4w (2022-03-24): **not_yet** · latest obs 2022-03-01 · pre_value=4.1 · now_value=3.2 · chg=0.9
+- +2w (2022-03-10): **ahead** · latest obs 2022-03-01 · pre_value=4.1 · now_value=3.2 · chg=0.9
+- +4w (2022-03-24): **ahead** · latest obs 2022-03-01 · pre_value=4.1 · now_value=3.2 · chg=0.9
 - +8w (2022-04-21): **confirmed** · latest obs 2022-04-01 · pre_value=4.1 · now_value=2.6 · chg=1.5
 - +13w (2022-05-26): **confirmed** · latest obs 2022-05-01 · pre_value=4.1 · now_value=2.6 · chg=1.5
 - +26w (2022-08-25): **confirmed** · latest obs 2022-08-01 · pre_value=4.1 · now_value=3.2 · chg=0.9
@@ -110,11 +110,11 @@ Phase status by weeks-elapsed snapshot:
 |---|---|---|---|---|---|---|
 | Pump Prices Spike | level | 🟦 on_schedule | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet |
 | Transport & Freight | mma | 🔴 ahead | ✅ confirmed | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet |
-| CPI Energy Prints | mma | 🔴 ahead | 🔴 ahead | 🟦 on_schedule | ⏳ not_yet | ⏳ not_yet |
+| CPI Energy Prints | mma | 🔴 ahead | 🔴 ahead | 🟦 on_schedule | 🟦 on_schedule | ⏳ not_yet |
 | Food & Services | mma | 🔴 ahead | 🔴 ahead | ⏳ not_yet | ✅ confirmed | ⏳ not_yet |
-| Core Goods Inflation | yoy | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ✅ confirmed |
+| Core Goods Inflation | yoy | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | 🟦 on_schedule |
 | Consumer Sentiment Falls | level | 🟦 on_schedule | 🟦 on_schedule | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet |
-| Savings Drawdown | level | ⏳ not_yet | ⏳ not_yet | ✅ confirmed | ✅ confirmed | ⏳ not_yet |
+| Savings Drawdown | level | 🔴 ahead | 🔴 ahead | ✅ confirmed | ✅ confirmed | ⏳ not_yet |
 | Delinquencies Climb | level | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ⏳ not_yet | ✅ confirmed |
 
 <details><summary>Per-phase detail</summary>
@@ -140,7 +140,7 @@ Phase status by weeks-elapsed snapshot:
 - +2w (2008-07-15): **ahead** · latest obs 2008-07-01 · post_mma=50.4 · pre_6mma=34.9 · delta_pp=15.5
 - +4w (2008-07-29): **ahead** · latest obs 2008-07-01 · post_mma=50.4 · pre_6mma=34.9 · delta_pp=15.5
 - +8w (2008-08-26): **on_schedule** · latest obs 2008-08-01 · post_mma=-32.0 · pre_6mma=34.9 · delta_pp=-66.9
-- +13w (2008-09-30): **not_yet** · latest obs 2008-09-01 · post_mma=-10.6 · pre_6mma=34.9 · delta_pp=-45.5
+- +13w (2008-09-30): **on_schedule** · latest obs 2008-09-01 · post_mma=-10.6 · pre_6mma=34.9 · delta_pp=-45.5
 - +26w (2008-12-30): **not_yet** · latest obs 2008-12-01 · post_mma=-69.9 · pre_6mma=34.9 · delta_pp=-104.8
 
 ### Food & Services (CUSR0000SEFV)
@@ -157,7 +157,7 @@ Phase status by weeks-elapsed snapshot:
 - +4w (2008-07-29): **not_yet** · latest obs 2008-07-01 · yoy=2.5 · pre_yoy=2.4
 - +8w (2008-08-26): **not_yet** · latest obs 2008-08-01 · yoy=2.5 · pre_yoy=2.4
 - +13w (2008-09-30): **not_yet** · latest obs 2008-09-01 · yoy=2.4 · pre_yoy=2.4
-- +26w (2008-12-30): **confirmed** · latest obs 2008-12-01 · yoy=1.8 · pre_yoy=2.4
+- +26w (2008-12-30): **on_schedule** · latest obs 2008-12-01 · yoy=1.8 · pre_yoy=2.4
 
 ### Consumer Sentiment Falls (UMCSENT)
 
@@ -169,8 +169,8 @@ Phase status by weeks-elapsed snapshot:
 
 ### Savings Drawdown (PSAVERT)
 
-- +2w (2008-07-15): **not_yet** · latest obs 2008-07-01 · pre_value=4.6 · now_value=3.6 · chg=1.0
-- +4w (2008-07-29): **not_yet** · latest obs 2008-07-01 · pre_value=4.6 · now_value=3.6 · chg=1.0
+- +2w (2008-07-15): **ahead** · latest obs 2008-07-01 · pre_value=4.6 · now_value=3.6 · chg=1.0
+- +4w (2008-07-29): **ahead** · latest obs 2008-07-01 · pre_value=4.6 · now_value=3.6 · chg=1.0
 - +8w (2008-08-26): **confirmed** · latest obs 2008-08-01 · pre_value=4.6 · now_value=3.1 · chg=1.5
 - +13w (2008-09-30): **confirmed** · latest obs 2008-09-01 · pre_value=4.6 · now_value=3.9 · chg=0.7
 - +26w (2008-12-30): **not_yet** · latest obs 2008-12-01 · pre_value=4.6 · now_value=5.8 · chg=-1.2

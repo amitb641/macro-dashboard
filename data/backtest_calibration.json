@@ -74,7 +74,7 @@
             "pre_value": 3.53,
             "now_value": 3.88,
             "chg": 0.35,
-            "status": "not_yet"
+            "status": "emerging"
           }
         ]
       },
@@ -145,7 +145,7 @@
         "kind": "mma",
         "expected_weeks": [
           6,
-          10
+          14
         ],
         "snapshots": [
           {
@@ -395,7 +395,7 @@
             "pre_value": 4.1,
             "now_value": 3.2,
             "chg": 0.9,
-            "status": "not_yet"
+            "status": "ahead"
           },
           {
             "weeks": 4,
@@ -405,7 +405,7 @@
             "pre_value": 4.1,
             "now_value": 3.2,
             "chg": 0.9,
-            "status": "not_yet"
+            "status": "ahead"
           },
           {
             "weeks": 8,
@@ -648,7 +648,7 @@
         "kind": "mma",
         "expected_weeks": [
           6,
-          10
+          14
         ],
         "snapshots": [
           {
@@ -689,7 +689,7 @@
             "post_mma": -10.6,
             "pre_6mma": 34.9,
             "delta_pp": -45.5,
-            "status": "not_yet"
+            "status": "on_schedule"
           },
           {
             "weeks": 26,
@@ -816,7 +816,7 @@
             "latest_value": 216.925,
             "yoy": 1.8,
             "pre_yoy": 2.4,
-            "status": "confirmed"
+            "status": "on_schedule"
           }
         ]
       },
@@ -898,7 +898,7 @@
             "pre_value": 4.6,
             "now_value": 3.6,
             "chg": 1.0,
-            "status": "not_yet"
+            "status": "ahead"
           },
           {
             "weeks": 4,
@@ -908,7 +908,7 @@
             "pre_value": 4.6,
             "now_value": 3.6,
             "chg": 1.0,
-            "status": "not_yet"
+            "status": "ahead"
           },
           {
             "weeks": 8,
