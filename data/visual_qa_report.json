@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-04-20T17:35:30.604450Z",
-  "status": "WARN",
+  "checked_at": "2026-04-20T17:42:58.352432Z",
+  "status": "PASS",
   "summary": {
-    "total_checks": 292,
-    "passed": 291,
-    "failed": 1,
+    "total_checks": 295,
+    "passed": 295,
+    "failed": 0,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -1242,6 +1242,24 @@
       "severity": "ok"
     },
     {
+      "category": "Validator",
+      "check": "Panel \"Pass 1: Internal Consistency\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 2: Source Verification\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 3: Data Staleness\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
       "category": "data",
       "check": "KPIS defined",
       "pass": true,
@@ -1748,9 +1766,8 @@
     {
       "category": "data",
       "check": "VALIDATION_REPORT present",
-      "pass": false,
-      "severity": "warning",
-      "detail": "error:Failed to fetch"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "data",

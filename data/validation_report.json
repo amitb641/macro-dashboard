@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-20T17:35:30.608258Z",
-  "status": "WARN",
+  "validated_at": "2026-04-20T17:42:58.356129Z",
+  "status": "PASS",
   "summary": {
-    "total_checks": 390,
-    "passed": 389,
-    "failed": 1,
+    "total_checks": 393,
+    "passed": 393,
+    "failed": 0,
     "skipped": 0,
     "critical_divergences": 0
   },
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-20T17:34:16.352578Z",
+      "collected_at": "2026-04-20T17:41:47.829468Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -2082,6 +2082,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Validator \u2014 Panel \"Pass 1: Internal Consistency\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 2: Source Verification\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3: Data Staleness\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: data \u2014 KPIS defined",
       "severity": "ok",
       "pass": true,
@@ -2587,9 +2605,9 @@
     },
     {
       "check": "Visual: data \u2014 VALIDATION_REPORT present",
-      "severity": "warning",
-      "pass": false,
-      "detail": "error:Failed to fetch"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: data \u2014 SHOCK_TRACKER oil tab present",
