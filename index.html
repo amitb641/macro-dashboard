@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-18T14:44:46Z";
+  var BUILD_V = "2026-04-20T05:19:02Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -1892,10 +1892,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- ── SECTION 3: Consumer Sentiment ── -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Consumer Sentiment — Last 12 Months</div>
+      <div class="panel-title">Consumer Sentiment — Last 12 Months<span id="umcsent-release-badge"></span></div>
       <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
       <div class="ch300"><canvas id="c-umcsent-monthly"></canvas></div>
-      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95.</p>
+      <p class="src">Source: University of Michigan Survey of Consumers (direct) with <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a> fallback. Pre-pandemic avg ~95.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
@@ -2625,14 +2625,26 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"CPI YoY Mar'26", "val":"3.3%", "metric":"cpi", "delta":0.86, "chg":"+0.9pp", "inv":true, "sub":"MoM: +0.87% \u00b7 YoY: 3.3% \u00b7 3M avg: 2.7% \u00b7 Prior: 2.4% (Feb'26)"}, {"lbl":"Core PCE Feb'26", "val":"3.0%", "metric":"pce", "delta":-0.08, "chg":"-0.1pp", "inv":true, "sub":"Prior: 3.0% (Jan'26)"}, {"lbl":"Wage Growth Mar'26", "val":"3.4%", "metric":"wages", "delta":-0.28, "chg":"-0.3pp", "sub":"Prior: 3.7% (Feb'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.32%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.78% \u00b7 Spread: +54bp"}, {"lbl":"Initial Claims Apr'26", "val":"219K", "metric":"claims", "delta":16000, "chg":"+16K", "inv":true, "sub":"Prior wk: 203K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "metric":"umcsent", "delta":0.2, "chg":"+0.2", "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"CPI YoY Mar'26", "val":"3.3%", "metric":"cpi", "delta":0.86, "chg":"+0.9pp", "inv":true, "sub":"MoM: +0.87% \u00b7 YoY: 3.3% \u00b7 3M avg: 2.7% \u00b7 Prior: 2.4% (Feb'26)"}, {"lbl":"Core PCE Feb'26", "val":"3.0%", "metric":"pce", "delta":-0.08, "chg":"-0.1pp", "inv":true, "sub":"Prior: 3.0% (Jan'26)"}, {"lbl":"Wage Growth Mar'26", "val":"3.4%", "metric":"wages", "delta":-0.28, "chg":"-0.3pp", "sub":"Prior: 3.7% (Feb'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.32%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.78% \u00b7 Spread: +54bp"}, {"lbl":"Initial Claims Apr'26", "val":"219K", "metric":"claims", "delta":16000, "chg":"+16K", "inv":true, "sub":"Prior wk: 203K (Mar'26)"}, {"lbl":"UMich Sentiment Feb'26", "val":"56.6", "metric":"umcsent", "delta":0.2, "chg":"+0.2", "badge":null, "sub":"MoM: +0.2 \u00b7 YoY: -8.1 \u00b7 Prior: 56.4 (Jan'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+function _releaseBadge(tag){
+  if(!tag) return '';
+  const up = String(tag).toUpperCase();
+  const isPrelim = up === 'PRELIM' || up === 'PRELIMINARY';
+  const color = isPrelim ? '#CC8A00' : '#1A9E5A';
+  const bg    = isPrelim ? '#fffbeb' : '#f0fdf4';
+  const bd    = isPrelim ? 'rgba(204,138,0,.22)' : 'rgba(13,122,74,.22)';
+  return `<span style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:10px;
+    font-size:8.5px;font-weight:700;letter-spacing:.06em;vertical-align:1px;
+    color:${color};background:${bg};border:1px solid ${bd}">${isPrelim ? 'PRELIM' : 'FINAL'}</span>`;
+}
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#635BFF');
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
   const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
   const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
   const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
-  return `<div class="kpi"><div class="kpi-lbl">${k.lbl}</div>
+  const b = _releaseBadge(k.badge);
+  return `<div class="kpi"><div class="kpi-lbl">${k.lbl}${b}</div>
   <div class="kpi-val" style="color:${col}">${k.val}${d}</div>
   <div class="kpi-sub">${k.sub}</div></div>`;
 }).join("");
@@ -3409,7 +3421,7 @@ const PCE_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2
 const PCE_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "headline":[2.4, 2.3, 2.5, 2.6, 2.6, 2.7, 2.8, 2.7, 2.8, 2.9, 2.8, 2.8], "core":[2.7, 2.6, 2.8, 2.8, 2.9, 2.9, 2.8, 2.8, 2.8, 3.0, 3.1, 3.0]};
 const SAVING_ANNUAL = {"labels":["2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
 const SAVING_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[5.1, 5.5, 4.9, 4.6, 4.5, 4.4, 4.3, 4.0, 4.0, 3.9, 4.5, 4.0]};
-const UMCSENT_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[57.0, 52.2, 52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6]};
+const UMCSENT_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26"], "data":[57.0, 52.2, 52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6], "statuses":["final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final"]};
 const PCE_CATS = [
   {cat:"Housing & Utilities",  y23:5.8,  y24:4.2,  y25:3.2},
   {cat:"Healthcare Services",  y23:3.8,  y24:3.4,  y25:3.1},
@@ -3691,11 +3703,27 @@ function buildPCETab(){
   }
 
   // UMich Consumer Sentiment — monthly (last 12 months, bar chart)
+  // Badge latest bar per release status: amber for preliminary, green for final
+  (function(){
+    const st = UMCSENT_MONTHLY.statuses || [];
+    const latestStatus = st.length ? st[st.length-1] : null;
+    const badgeEl = document.getElementById('umcsent-release-badge');
+    if(badgeEl && latestStatus){
+      const lbl = latestStatus === 'preliminary' ? 'PRELIM' : 'FINAL';
+      badgeEl.innerHTML = _releaseBadge(lbl);
+    }
+  })();
   new Chart(document.getElementById("c-umcsent-monthly").getContext("2d"),{
     type:"bar",
     data:{labels:UMCSENT_MONTHLY.labels,datasets:[{
       label:"Sentiment Index",data:UMCSENT_MONTHLY.data,
-      backgroundColor:UMCSENT_MONTHLY.data.map((v,i)=>i===UMCSENT_MONTHLY.data.length-1?"rgba(136,120,184,.85)":"rgba(136,120,184,.55)"),
+      backgroundColor:UMCSENT_MONTHLY.data.map((v,i)=>{
+        const isLast = i === UMCSENT_MONTHLY.data.length - 1;
+        const isPrelim = (UMCSENT_MONTHLY.statuses||[])[i] === 'preliminary';
+        if(isLast && isPrelim) return "rgba(204,138,0,.85)";    // amber = prelim
+        if(isLast) return "rgba(136,120,184,.85)";              // violet dark = final latest
+        return "rgba(136,120,184,.55)";                          // violet light = prior months
+      }),
       borderColor:"#8878B8",borderWidth:1,borderRadius:3
     },{
       label:"Pre-pandemic avg (~95)",data:UMCSENT_MONTHLY.labels.map(()=>95),
@@ -5203,7 +5231,7 @@ function buildStackTab(){
     ["💳 PCE",        "Core PCE",                       "BEA / FRED",          "Monthly",    "Jan 2026",  "Fed's preferred gauge"],
     ["💳 PCE",        "Personal Saving Rate",           "BEA / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls"],
     ["💳 PCE",        "Consumer Credit (G.19)",         "Fed / FRED",          "Monthly",    "Jan 2026",  "Agent auto-pulls ~5 wks after month"],
-    ["💳 PCE",        "UMich Consumer Sentiment",       "FRED UMCSENT",        "Monthly",    "Mar 2026",  "Agent auto-pulls · sca.isr.umich.edu"],
+    ["💳 PCE",        "UMich Consumer Sentiment",       "UMich (direct) → FRED fallback", "Monthly",    "Mar 2026",  "Prelim mid-month, Final end-of-month · sca.isr.umich.edu"],
     ["💳 PCE",        "Debt Service Ratio (TDSP)",      "FRED TDSP",           "Quarterly",  "Q3 2025",   "Agent auto-pulls · Fed Reserve Board"],
     ["📋 Jobs",       "ADP National Employment Report", "adpemploymentreport.com","Monthly", "Feb 2026",  "Manual — no public API"],
     ["📈 Fed Rates",  "2Y / 5Y / 10Y / 30Y Yields",    "FRED Treasury series","Monthly",    "Mar 2026",  "Agent pulls monthly avgs"],
@@ -5511,7 +5539,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 18, 2026 14:44 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 05:19 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
