@@ -559,6 +559,106 @@ def check_staleness(data, collected_at):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# PASS: SHOCK TRACKER STRUCTURE + CONSISTENCY
+#   Oil Impact Chain is the most consequential analytical surface we have,
+#   yet before this check it was only verified implicitly by the renderer
+#   writing it back. A silent regex break (which we've hit twice) froze
+#   the whole table at pre-shock baselines and no agent noticed.
+# ═══════════════════════════════════════════════════════════════════════
+
+def _extract_shock_tracker(html):
+    """Extract SHOCK_TRACKER JSON, anchored on trailing '// OIL_DAILY' comment
+    (the const is single-line nested JSON, so naive non-greedy regex fails)."""
+    m = re.search(r'const SHOCK_TRACKER\s*=\s*(\{[\s\S]*?\});(?=\s*\n\s*//\s*OIL_DAILY)', html)
+    if not m:
+        return None
+    try:
+        return json.loads(m.group(1))
+    except json.JSONDecodeError:
+        return None
+
+
+def check_shock_tracker(html):
+    """Validate SHOCK_TRACKER structure + per-phase required fields +
+    status-vs-MMA consistency. Emits one finding per phase so the
+    validation report shows exactly which row is misbehaving."""
+    findings = []
+    tracker = _extract_shock_tracker(html)
+
+    if tracker is None:
+        findings.append({
+            'check': 'SHOCK_TRACKER extractable',
+            'severity': 'critical',
+            'pass': False,
+            'reason': 'Cannot parse SHOCK_TRACKER from index.html (regex mismatch or malformed JSON)',
+        })
+        print('  🔴 SHOCK_TRACKER not extractable from HTML — likely regex break')
+        return findings
+
+    findings.append({'check': 'SHOCK_TRACKER extractable', 'severity': 'ok', 'pass': True})
+
+    phases = tracker.get('phases', [])
+    expected_n = 8
+    findings.append({
+        'check': 'SHOCK_TRACKER phase count',
+        'actual': len(phases),
+        'expected': expected_n,
+        'severity': 'ok' if len(phases) == expected_n else 'warning',
+        'pass': len(phases) == expected_n,
+    })
+
+    required = ['phase', 'status', 'status_reason', 'source', 'expected_weeks']
+    for i, p in enumerate(phases):
+        name = p.get('phase', f'phase[{i}]')
+
+        # Required fields non-empty
+        missing = [f for f in required if not p.get(f)]
+        findings.append({
+            'check': f'SHOCK_TRACKER[{i}] {name} required fields',
+            'missing': missing or None,
+            'severity': 'ok' if not missing else 'warning',
+            'pass': not missing,
+        })
+        if missing:
+            print(f'  ⚠  {name}: missing {missing}')
+
+        # MMA-phase consistency: status must match the post-vs-pre delta
+        post = p.get('post_mom_ann')
+        pre = p.get('pre_6mma')
+        status = p.get('status')
+        if post is not None and pre is not None:
+            diff = post - pre
+            if diff > 1.5:
+                ok = status in ('confirmed', 'ahead')
+            elif diff > 0.5:
+                ok = status in ('emerging', 'ahead')
+            elif diff < -0.5:
+                ok = status in ('not_yet', 'on_schedule', 'awaiting_data')
+            else:
+                ok = status in ('not_yet', 'on_schedule')
+            findings.append({
+                'check': f'SHOCK_TRACKER[{i}] {name} status consistent with MMA delta',
+                'status': status,
+                'post_minus_pre_pp': round(diff, 2),
+                'severity': 'ok' if ok else 'divergence',
+                'pass': ok,
+            })
+            if not ok:
+                print(f'  🔴 {name}: status={status} inconsistent with MMA Δ={diff:+.2f}pp')
+
+        # Sanity: if base-effect callout is set, we shouldn't be showing 'confirmed'
+        if p.get('base_effect_note') and status == 'confirmed':
+            findings.append({
+                'check': f'SHOCK_TRACKER[{i}] {name} base-effect/confirmed conflict',
+                'severity': 'warning',
+                'pass': False,
+                'note': 'base_effect_note is set but status=confirmed — these should not coexist',
+            })
+
+    return findings
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # REPORT GENERATION
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -642,13 +742,15 @@ def check_visual_review():
         }]
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None):
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
     if vision_review is None:
         vision_review = []
-    all_findings = internal + sources + staleness + visual + vision_review
+    if shock_tracker is None:
+        shock_tracker = []
+    all_findings = internal + sources + staleness + visual + vision_review + shock_tracker
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -674,6 +776,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None):
         'internal_consistency': internal,
         'source_verification': sources,
         'staleness': staleness,
+        'shock_tracker': shock_tracker,
         'visual_qa': visual,
         'visual_review': vision_review,
     }
@@ -723,6 +826,13 @@ def validate():
     else:
         print(f'  All series within expected freshness windows')
 
+    # Pass 3b: Shock tracker structure + MMA consistency
+    print('\n  ── Pass 3b: Shock Tracker Structure ──')
+    shock_tracker = check_shock_tracker(html)
+    st_pass = sum(1 for f in shock_tracker if f.get('pass'))
+    st_fail = sum(1 for f in shock_tracker if not f.get('pass'))
+    print(f'  {st_pass} passed, {st_fail} failed')
+
     # Pass 4: Visual QA (DOM checks via Playwright, if available)
     print('\n  ── Pass 4: Visual QA (DOM-based rendering checks) ──')
     visual = check_visual()
@@ -746,7 +856,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary

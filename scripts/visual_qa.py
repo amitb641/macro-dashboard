@@ -308,6 +308,36 @@ def run_visual_qa(take_screenshots=False):
                 checks.validation = 'error';
             }
 
+            // Check SHOCK_TRACKER — oil impact chain structure.
+            // Different shape from charts (nested phases[]), so handled here.
+            try {
+                if (typeof SHOCK_TRACKER === 'undefined') {
+                    checks.shock_tracker = {error: 'SHOCK_TRACKER undefined'};
+                } else {
+                    const st = SHOCK_TRACKER;
+                    const phases = Array.isArray(st.phases) ? st.phases : [];
+                    const required = ['phase', 'status', 'status_reason', 'source'];
+                    const per_phase = phases.map(p => ({
+                        phase: p.phase || '?',
+                        status: p.status || '?',
+                        missing: required.filter(k => !p[k]),
+                        has_commentary: !!p.commentary,
+                    }));
+                    checks.shock_tracker = {
+                        extracted: true,
+                        weeks_elapsed: st.weeks_elapsed,
+                        wti_chg_pct: st.wti_chg_pct,
+                        phase_count: phases.length,
+                        per_phase: per_phase,
+                        confirmed_count: phases.filter(p =>
+                            p.status === 'confirmed' || p.status === 'emerging'
+                        ).length,
+                    };
+                }
+            } catch(e) {
+                checks.shock_tracker = {error: e.message};
+            }
+
             return checks;
         }''')
 
@@ -342,6 +372,20 @@ def run_visual_qa(take_screenshots=False):
         _check('data', 'VALIDATION_REPORT present',
                js_checks.get('validation') not in ('missing', 'error'),
                js_checks.get('validation', 'unknown'))
+
+        # Shock tracker DOM structure + per-phase field completeness
+        st = js_checks.get('shock_tracker', {})
+        if 'error' in st:
+            _check('data', 'SHOCK_TRACKER defined', False, st['error'], severity='critical')
+        else:
+            _check('data', 'SHOCK_TRACKER extracted', st.get('extracted', False))
+            _check('data', 'SHOCK_TRACKER phase count == 8',
+                   st.get('phase_count') == 8, f'found {st.get("phase_count")}')
+            for i, pp in enumerate(st.get('per_phase', [])):
+                _check('data', f'SHOCK_TRACKER[{i}] {pp.get("phase","?")} required fields',
+                       not pp.get('missing'),
+                       f'missing={pp.get("missing")}' if pp.get('missing') else '',
+                       severity='warning')
 
         browser.close()
 
