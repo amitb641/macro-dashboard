@@ -1,6 +1,6 @@
 # Backtest Calibration Report
 
-Generated: 2026-04-20T15:52:32.083305Z
+Generated: 2026-04-20T17:03:40.621475Z
 
 This report replays the current Oil Impact Chain confirmation rules
 (see `METHODOLOGY.md`) against historical oil shocks to calibrate the
