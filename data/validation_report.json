@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-20T07:08:12.508849Z",
+  "validated_at": "2026-04-20T13:33:25.464072Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 380,
-    "passed": 371,
-    "failed": 9,
+    "total_checks": 395,
+    "passed": 388,
+    "failed": 7,
     "skipped": 0,
     "critical_divergences": 0
   },
@@ -461,12 +461,12 @@
     },
     {
       "check": "TREASURY_DATA.card90 completeness",
-      "html_value": "0/27 filled",
-      "source_value": "0% (min 50%)",
-      "difference": 27,
+      "html_value": "27/27 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
       "tolerance": 13,
-      "severity": "warning",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "OIL_SPREAD.spread completeness",
@@ -770,8 +770,91 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-20T07:07:12.205152Z",
+      "collected_at": "2026-04-20T13:32:05.058241Z",
       "age_hours": 0.0,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "shock_tracker": [
+    {
+      "check": "SHOCK_TRACKER extractable",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER phase count",
+      "actual": 8,
+      "expected": 8,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[0] Pump Prices Spike required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[1] Transport & Freight Costs required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[1] Transport & Freight Costs status consistent with MMA delta",
+      "status": "not_yet",
+      "post_minus_pre_pp": 0.4,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[2] CPI Energy Prints required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[2] CPI Energy Prints status consistent with MMA delta",
+      "status": "confirmed",
+      "post_minus_pre_pp": 238.9,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[3] Food & Services Inflation required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[3] Food & Services Inflation status consistent with MMA delta",
+      "status": "not_yet",
+      "post_minus_pre_pp": -1.3,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[4] Core Goods Inflation required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[5] Consumer Sentiment Falls required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[6] Savings Drawdown required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[7] Delinquencies Climb required fields",
+      "missing": null,
       "severity": "ok",
       "pass": true
     }
@@ -2399,9 +2482,9 @@
     },
     {
       "check": "Visual: data \u2014 TREASURY_DATA.card90 completeness",
-      "severity": "warning",
-      "pass": false,
-      "detail": "27/27 values empty (0% filled)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: data \u2014 OIL_SPREAD has data",
@@ -2537,6 +2620,18 @@
     },
     {
       "check": "Visual: data \u2014 VALIDATION_REPORT present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SHOCK_TRACKER oil tab present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SHOCK_TRACKER all 8 phase titles rendered",
       "severity": "ok",
       "pass": true,
       "detail": ""

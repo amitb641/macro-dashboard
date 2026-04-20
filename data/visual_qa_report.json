@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-04-20T07:08:12.504458Z",
+  "checked_at": "2026-04-20T13:33:25.460344Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 294,
-    "passed": 291,
-    "failed": 3,
+    "total_checks": 296,
+    "passed": 294,
+    "failed": 2,
     "js_errors": 1,
     "console_errors": 0
   },
@@ -1638,9 +1638,8 @@
     {
       "category": "data",
       "check": "TREASURY_DATA.card90 completeness",
-      "pass": false,
-      "severity": "warning",
-      "detail": "27/27 values empty (0% filled)"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "data",
@@ -1777,6 +1776,18 @@
     {
       "category": "data",
       "check": "VALIDATION_REPORT present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "SHOCK_TRACKER oil tab present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "SHOCK_TRACKER all 8 phase titles rendered",
       "pass": true,
       "severity": "ok"
     }
