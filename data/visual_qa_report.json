@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-04-18T14:44:45.890523Z",
+  "checked_at": "2026-04-20T05:36:41.816546Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 293,
-    "passed": 290,
+    "total_checks": 294,
+    "passed": 291,
     "failed": 3,
     "js_errors": 1,
     "console_errors": 0
@@ -753,7 +753,7 @@
     },
     {
       "category": "PCE & Consumer",
-      "check": "Panel \"Consumer Sentiment \u2014 Last 12 Months\" has title",
+      "check": "Panel \"Consumer Sentiment \u2014 Last 12 MonthsPRELI\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1402,6 +1402,12 @@
     {
       "category": "data",
       "check": "UMCSENT_MONTHLY.data completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "UMCSENT_MONTHLY.statuses completeness",
       "pass": true,
       "severity": "ok"
     },

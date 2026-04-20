@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-04-18T14:43:57.482085Z",
+  "analyzed_at": "2026-04-20T05:35:53.192601Z",
   "risk_level": "ELEVATED",
-  "alert_count": 2,
+  "alert_count": 1,
   "watch_count": 3,
-  "flagged_count": 0,
+  "flagged_count": 1,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.78,
@@ -27,7 +27,7 @@
     "mortgage30": 6.3,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 0.91,
-    "umcsent": 56.6,
+    "umcsent": 47.6,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
     "wti": 100.72,
@@ -46,21 +46,21 @@
     },
     "dgs10": {
       "value": 4.32,
-      "delta": 0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 81,
-      "delta": 1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 286,
-      "delta": 1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -129,11 +129,11 @@
       "alert": null
     },
     "umcsent": {
-      "value": 56.6,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": "alert"
+      "value": 47.6,
+      "delta": -9.0,
+      "direction": "falling",
+      "flagged": true,
+      "alert": null
     },
     "tdsp": {
       "value": 11.323096,
@@ -144,28 +144,28 @@
     },
     "dgs2": {
       "value": 3.78,
-      "delta": 0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 3.91,
-      "delta": 0.01,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 4.93,
-      "delta": 0.04,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 54,
-      "delta": 1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,7 +241,13 @@
       "alert": null
     }
   },
-  "headlines": [],
+  "headlines": [
+    {
+      "key": "umcsent",
+      "line": "umcsent: 47.60 (\u25bc9.00 vs prior)",
+      "alert": null
+    }
+  ],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
