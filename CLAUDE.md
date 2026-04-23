@@ -7,6 +7,12 @@
 - Never create new branches without asking
 - Clean up stale remote branches after merging
 
+## Local Dev Workflow
+- Dev worktree: `/home/user/macro-dashboard-dev` on branch `dev` (shares `.git` with main checkout via `git worktree`)
+- Preview server: `scripts/dev-preview.sh [port] [tab]` — defaults to `:8765`, optional tab hash (e.g. `banks`, `gdp`)
+- Iterate on `dev`, smoke-test, then cherry-pick or merge to `main` in the primary checkout
+- Teardown: `git worktree remove /home/user/macro-dashboard-dev`
+
 ## Project Architecture
 8-agent Python data pipeline:
 1. `scripts/collector.py` — Agent 1: Pulls data from FRED, BLS, EIA APIs
