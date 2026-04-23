@@ -1,11 +1,10 @@
 {
-  "collected_at": "2026-04-20T21:02:42.412624Z",
+  "collected_at": "2026-04-23T20:01:05.097876Z",
   "series_count": 73,
-  "error_count": 3,
+  "error_count": 2,
   "errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "ALFRED PCEPI@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=320&realtime_start=2026-03-31&realtime_end=2026-03-31"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
   ],
   "data": {
     "ffr": {
@@ -13,26 +12,34 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-04-17",
+      "date": "2026-04-21",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-04-17",
-      "value": 3.71
+      "date": "2026-04-21",
+      "value": 3.78
     },
     "dgs5": {
-      "date": "2026-04-17",
-      "value": 3.84
+      "date": "2026-04-21",
+      "value": 3.91
     },
     "dgs10": {
-      "date": "2026-04-17",
-      "value": 4.26
+      "date": "2026-04-21",
+      "value": 4.3
     },
     "dgs30": {
-      "date": "2026-04-17",
-      "value": 4.88
+      "date": "2026-04-21",
+      "value": 4.89
     },
     "dgs10_hist": [
+      {
+        "date": "2026-04-21",
+        "value": 4.3
+      },
+      {
+        "date": "2026-04-20",
+        "value": 4.26
+      },
       {
         "date": "2026-04-17",
         "value": 4.26
@@ -260,17 +267,17 @@
       {
         "date": "2026-01-28",
         "value": 4.26
-      },
-      {
-        "date": "2026-01-27",
-        "value": 4.24
-      },
-      {
-        "date": "2026-01-26",
-        "value": 4.22
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-04-21",
+        "value": 3.78
+      },
+      {
+        "date": "2026-04-20",
+        "value": 3.72
+      },
       {
         "date": "2026-04-17",
         "value": 3.71
@@ -498,25 +505,29 @@
       {
         "date": "2026-01-28",
         "value": 3.56
-      },
-      {
-        "date": "2026-01-27",
-        "value": 3.53
-      },
-      {
-        "date": "2026-01-26",
-        "value": 3.56
       }
     ],
     "ig_oas": {
-      "date": "2026-04-17",
-      "value": 0.8
+      "date": "2026-04-22",
+      "value": 0.79
     },
     "hy_oas": {
-      "date": "2026-04-17",
-      "value": 2.83
+      "date": "2026-04-22",
+      "value": 2.84
     },
     "ig_hist": [
+      {
+        "date": "2026-04-22",
+        "value": 0.79
+      },
+      {
+        "date": "2026-04-21",
+        "value": 0.8
+      },
+      {
+        "date": "2026-04-20",
+        "value": 0.81
+      },
       {
         "date": "2026-04-17",
         "value": 0.8
@@ -744,21 +755,21 @@
       {
         "date": "2026-01-31",
         "value": 0.75
-      },
-      {
-        "date": "2026-01-30",
-        "value": 0.74
-      },
-      {
-        "date": "2026-01-29",
-        "value": 0.74
-      },
-      {
-        "date": "2026-01-28",
-        "value": 0.73
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-04-22",
+        "value": 2.84
+      },
+      {
+        "date": "2026-04-21",
+        "value": 2.85
+      },
+      {
+        "date": "2026-04-20",
+        "value": 2.87
+      },
       {
         "date": "2026-04-17",
         "value": 2.83
@@ -986,21 +997,29 @@
       {
         "date": "2026-01-31",
         "value": 2.88
-      },
-      {
-        "date": "2026-01-30",
-        "value": 2.8
-      },
-      {
-        "date": "2026-01-29",
-        "value": 2.77
-      },
-      {
-        "date": "2026-01-28",
-        "value": 2.72
       }
     ],
     "wti_daily": [
+      {
+        "date": "2026-04-20",
+        "value": 91.06
+      },
+      {
+        "date": "2026-04-17",
+        "value": 85.91
+      },
+      {
+        "date": "2026-04-16",
+        "value": 96.46
+      },
+      {
+        "date": "2026-04-15",
+        "value": 93.04
+      },
+      {
+        "date": "2026-04-14",
+        "value": 93.07
+      },
       {
         "date": "2026-04-13",
         "value": 100.72
@@ -1220,29 +1239,29 @@
       {
         "date": "2026-01-23",
         "value": 60.7
-      },
-      {
-        "date": "2026-01-22",
-        "value": 59.24
-      },
-      {
-        "date": "2026-01-21",
-        "value": 60.38
-      },
-      {
-        "date": "2026-01-20",
-        "value": 60.3
-      },
-      {
-        "date": "2026-01-16",
-        "value": 59.4
-      },
-      {
-        "date": "2026-01-15",
-        "value": 59.13
       }
     ],
     "brent_daily": [
+      {
+        "date": "2026-04-20",
+        "value": 103.4
+      },
+      {
+        "date": "2026-04-17",
+        "value": 98.63
+      },
+      {
+        "date": "2026-04-16",
+        "value": 116.63
+      },
+      {
+        "date": "2026-04-15",
+        "value": 114.93
+      },
+      {
+        "date": "2026-04-14",
+        "value": 118.69
+      },
       {
         "date": "2026-04-13",
         "value": 123.28
@@ -1462,26 +1481,6 @@
       {
         "date": "2026-01-23",
         "value": 68.16
-      },
-      {
-        "date": "2026-01-22",
-        "value": 65.46
-      },
-      {
-        "date": "2026-01-21",
-        "value": 66.72
-      },
-      {
-        "date": "2026-01-20",
-        "value": 67.68
-      },
-      {
-        "date": "2026-01-19",
-        "value": 66.91
-      },
-      {
-        "date": "2026-01-16",
-        "value": 66.97
       }
     ],
     "oil_daily_chart": {
@@ -1515,7 +1514,12 @@
         "Apr 8",
         "Apr 9",
         "Apr 10",
-        "Apr 13"
+        "Apr 13",
+        "Apr 14",
+        "Apr 15",
+        "Apr 16",
+        "Apr 17",
+        "Apr 20"
       ],
       "wti": [
         71.13,
@@ -1547,7 +1551,12 @@
         96.17,
         99.62,
         98.34,
-        100.72
+        100.72,
+        93.07,
+        93.04,
+        96.46,
+        85.91,
+        91.06
       ],
       "brent": [
         77.24,
@@ -1579,7 +1588,12 @@
         122.11,
         119.03,
         119.07,
-        123.28
+        123.28,
+        118.69,
+        114.93,
+        116.63,
+        98.63,
+        103.4
       ],
       "notes": [
         null,
@@ -1611,13 +1625,22 @@
         "WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines",
         "WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",
         null,
-        null
+        null,
+        "WTI drop $7.7 (7.6%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI surge $3.4 (3.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $10.5 (10.9%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 20 21:02 UTC",
-      "sessions": 30
+      "updated": "Apr 23 20:01 UTC",
+      "sessions": 35
     },
     "gasoline": [
+      {
+        "date": "2026-04-20",
+        "value": 4.044
+      },
       {
         "date": "2026-04-13",
         "value": 4.123
@@ -1733,13 +1756,13 @@
       {
         "date": "2025-09-29",
         "value": 3.118
-      },
-      {
-        "date": "2025-09-22",
-        "value": 3.173
       }
     ],
     "mortgage30": [
+      {
+        "date": "2026-04-23",
+        "value": 6.23
+      },
       {
         "date": "2026-04-16",
         "value": 6.3
@@ -2015,13 +2038,13 @@
       {
         "date": "2024-12-26",
         "value": 6.85
-      },
-      {
-        "date": "2024-12-19",
-        "value": 6.72
       }
     ],
     "mortgage15": [
+      {
+        "date": "2026-04-23",
+        "value": 5.58
+      },
       {
         "date": "2026-04-16",
         "value": 5.65
@@ -2297,16 +2320,20 @@
       {
         "date": "2024-12-26",
         "value": 6.0
-      },
-      {
-        "date": "2024-12-19",
-        "value": 5.92
       }
     ],
     "icsa": [
       {
+        "date": "2026-04-18",
+        "value": 214000.0
+      },
+      {
+        "date": "2026-04-11",
+        "value": 208000.0
+      },
+      {
         "date": "2026-04-04",
-        "value": 219000.0
+        "value": 218000.0
       },
       {
         "date": "2026-03-28",
@@ -3335,20 +3362,20 @@
       {
         "date": "2021-05-01",
         "value": 517000.0
-      },
-      {
-        "date": "2021-04-24",
-        "value": 574000.0
-      },
-      {
-        "date": "2021-04-17",
-        "value": 566000.0
       }
     ],
     "ccsa": [
       {
+        "date": "2026-04-11",
+        "value": 1821000.0
+      },
+      {
+        "date": "2026-04-04",
+        "value": 1809000.0
+      },
+      {
         "date": "2026-03-28",
-        "value": 1794000.0
+        "value": 1787000.0
       },
       {
         "date": "2026-03-21",
@@ -4377,14 +4404,6 @@
       {
         "date": "2021-04-24",
         "value": 3767000.0
-      },
-      {
-        "date": "2021-04-17",
-        "value": 3776000.0
-      },
-      {
-        "date": "2021-04-10",
-        "value": 3779000.0
       }
     ],
     "unrate": [
