@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-20T21:03:51Z";
+  var BUILD_V = "2026-04-23T19:57:01Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -1939,34 +1939,34 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ BANK EARNINGS ══ -->
 <div class="tab-panel" id="tab-banks">
   <div class="fc-note" id="commentary-banks">
-    <strong>🏦 Big Bank Q4 2025 Earnings — January 13–15, 2026</strong> — The six largest U.S. banks reported strong Q4 2025 results. <strong>Tailwinds:</strong> record trading revenues, resurgent M&amp;A (global volume +42% to $5.1T in 2025), Wells Fargo asset cap removal, deregulation optimism. <strong>Headwinds intensifying into Q1'26:</strong> Core PCE re-acceleration to 3.1% complicates the rate outlook; Feb'26 payrolls at −92K raise credit loss concerns; JPM $2.2B Apple Card reserve build signals caution; proposed 10% credit card APR cap (Trump) threatens card economics. <strong>Consumer credit:</strong> NCO rates elevated vs. pre-pandemic — card specialists (SYF 5.4%, COF 4.9%) at 2011-era highs while diversified banks holding steady. <strong>2026 theme:</strong> "disciplined efficiency" — AI investment + expense control as NII normalizes post-rate-cuts.
+    <strong>🏦 Big Bank Q1 2026 Earnings — April 13–22, 2026</strong> — The largest U.S. banks delivered a blockbuster Q1 2026 led by record trading and reopening capital markets. <strong>Tailwinds:</strong> Big 5 trading revenue ~$43B (+17% YoY) with equities +26% to ~$19.9B; IB fees surged on M&amp;A rebound (GS advisory +89% YoY); JPM net income $16.5B (+13%); BofA NII +9% to $15.9B; Goldman EPS $17.55 (2nd highest ever); Citi equities a record $2.1B (+39%). <strong>Headwinds:</strong> Wells Fargo missed on revenue ($21.45B vs $21.77B est.) as NII stalled; Capital One adj EPS $4.42 vs $4.61 est. with NIM −39bps to 7.87%; JPM <em>trimmed</em> FY26 NII guide by $1.5B to ~$103B; provisions rose YoY on card credit. <strong>Consumer credit:</strong> card specialists still elevated (SYF expecting FY NCO peak in Q2; COF blended NCO 3.45%); diversified banks stable at 45–57bps (WFC 0.45%, BAC 0.55%, USB ~0.56%). <strong>2026 theme:</strong> "capital markets reopen" — trading/IB tailwind broad-based while NII normalizes and consumer credit bifurcates.
   </div>
   <div class="metric-row" id="bank-metrics"></div>
   <div class="panel">
-    <div class="panel-title">Big 6 Banks — Q4 2025 Earnings Comparison</div>
-    <div class="panel-sub">Full-year 2025 results from Q4 2025 earnings releases · Jan 13–15, 2026</div>
+    <div class="panel-title">Big 9 Banks — Q1 2026 Earnings Comparison</div>
+    <div class="panel-sub">Q1 2026 quarterly results · Apr 13–22, 2026 earnings releases</div>
     <div class="dtable-wrap"><table class="dtable" id="bank-tbl"></table></div>
-    <p class="src">Sources: Q4 2025 earnings releases from JPM, BAC, WFC, C, GS, USB (Jan 13–15, 2026). Full-year 2025 results.</p>
+    <p class="src">Sources: Q1 2026 earnings releases from JPM, BAC, WFC, C, GS, USB, COF, AXP, SYF (Apr 13–22, 2026). Quarterly results.</p>
   </div>
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">2026 NII Guidance — Full-Year Outlook ($B)</div>
-      <div class="panel-sub">Net Interest Income guidance from Q4 2025 earnings calls</div>
+      <div class="panel-title">FY2026 NII Guidance — Updated After Q1 Prints ($B)</div>
+      <div class="panel-sub">Net Interest Income guidance — JPM ↓$1.5B to ~$103B · BofA ↑ to +6–8% · WFC reaff. ~$50B</div>
       <div class="ch300"><canvas id="c-bank-nii"></canvas></div>
-      <p class="src">Source: Q4 2025 earnings calls from major U.S. banks (Jan 2026). Net Interest Income guidance.</p>
+      <p class="src">Source: Q1 2026 earnings calls from major U.S. banks (Apr 2026). Net Interest Income guidance updates.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Net Charge-Off Rates & Delinquency Outlook 2025–2026</div>
-      <div class="panel-sub">Consumer credit loss rates · Q4 2025 actuals & 2026 guidance</div>
+      <div class="panel-title">Net Charge-Off Rates — Q1 2026 Actuals & FY26 Outlook</div>
+      <div class="panel-sub">Consumer credit loss rates · Q1 2026 actuals & FY2026 guidance</div>
       <div class="ch300"><canvas id="c-bank-nco"></canvas></div>
-      <p class="src">Source: Q4 2025 earnings releases. Consumer credit loss rates and 2026 guidance.</p>
+      <p class="src">Source: Q1 2026 earnings releases. Consumer credit loss rates and FY26 guidance.</p>
     </div>
   </div>
   <div class="panel">
-    <div class="panel-title">Bank-by-Bank Earnings Commentary — Key Themes from Q4 2025 Calls</div>
-    <div class="panel-sub">Management commentary synthesis · Jan 13–15, 2026 earnings calls</div>
+    <div class="panel-title">Bank-by-Bank Earnings Commentary — Key Themes from Q1 2026 Calls</div>
+    <div class="panel-sub">Management commentary synthesis · Apr 13–22, 2026 earnings calls</div>
     <div id="bank-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:8px"></div>
-    <p class="src">Sources: JPMorgan Chase Q4 2025 (Jan 13, 2026); Bank of America Q4 2025 (Jan 14, 2026); Wells Fargo Q4 2025 (Jan 14, 2026); Citigroup Q4 2025 (Jan 14, 2026); Goldman Sachs Q4 2025 (Jan 15, 2026); U.S. Bancorp Q4 2025 (Jan 19, 2026); Capital One Q4 2025 (Jan 22, 2026); Synchrony Financial Q4 2025 (Jan 27, 2026); American Express Q4 2025 (Jan 30, 2026). All earnings calls and press releases. Trump 10% credit card APR cap proposed early 2026 — material risk to all card issuers. Capital One–Discover integration ongoing; Brex acquisition announced $5.15B Jan 22, 2026.</p>
+    <p class="src">Sources: Goldman Sachs Q1 2026 (Apr 13, 2026); JPMorgan Chase Q1 2026 (Apr 14, 2026); Wells Fargo Q1 2026 (Apr 14, 2026); Citigroup Q1 2026 (Apr 14, 2026); Bank of America Q1 2026 (Apr 15, 2026); U.S. Bancorp Q1 2026 (Apr 16, 2026); Capital One Q1 2026 (Apr 21, 2026); Synchrony Financial Q1 2026 (Apr 21, 2026); American Express Q1 2026 (Apr 17, 2026). All earnings calls and press releases. Trump 10% credit card APR cap still pending — material risk to all card issuers. Capital One–Discover integration ongoing; Brex integration progressing.</p>
   </div>
 </div>
 
@@ -3499,80 +3499,88 @@ const CONSUMER_TABLE = [
 // ════════════════════════════════════════════════════
 const BANK_RESULTS = [
   {name:"JPMorgan Chase",   ticker:"JPM",color:"#1e3a8a",
-   rev25:"$185B",ni25:"$57.5B",eps25:"$20.18",rotce:"20%",cet1:"14.5%",
-   nii_q4:"$25.1B",nco:"3.2% card",
-   nii26:"~$103B",expense26:"~$105B",nco26:"~3.4% card",loan_growth:"6–7% card",signal:"bull"},
+   rev25:"$50.5B",ni25:"$16.5B",eps25:"$5.94",rotce:"21%",cet1:"15.4%",
+   nii_q4:"~$23.4B",nco:"3.3% card",
+   nii26:"~$103B (↓$1.5B)",expense26:"~$105B",nco26:"~3.4% card",loan_growth:"Markets +20%",signal:"bull"},
   {name:"Bank of America",  ticker:"BAC",color:"#D64045",
-   rev25:"$113.1B",ni25:"$30.5B",eps25:"$3.81",rotce:"13%",cet1:"11.8%",
-   nii_q4:"$15.8B",nco:"0.57% consumer",
-   nii26:"+5–7% YoY",expense26:"200bps oper. lev.",nco26:"50–55bps TTC",loan_growth:"mid-single digit",signal:"bull"},
+   rev25:"$30.4B",ni25:"$8.6B",eps25:"$1.11",rotce:"16%",cet1:"11.8%",
+   nii_q4:"$15.9B",nco:"0.55% cons",
+   nii26:"+6–8% YoY (↑)",expense26:"+290bps oper. lev.",nco26:"50–55bps TTC",loan_growth:"mid-single digit",signal:"bull"},
   {name:"Wells Fargo",      ticker:"WFC",color:"#d97706",
-   rev25:"~$80B",ni25:"$19.7B",eps25:"$5.37 adj",rotce:"13.4%",cet1:"11.1%",
-   nii_q4:"$12.33B",nco:"1.37% consumer",
-   nii26:"~$50B",expense26:"~$55.7B",nco26:"N/A",loan_growth:"mid-single digit",signal:"neutral"},
+   rev25:"$21.45B",ni25:"$5.3B",eps25:"$1.60",rotce:"13.6%",cet1:"10.3%",
+   nii_q4:"~$11.6B",nco:"0.45% total",
+   nii26:"~$50B (reaff.)",expense26:"~$55.7B",nco26:"N/A",loan_growth:"+11% avg loans",signal:"neutral"},
   {name:"Citigroup",        ticker:"C",color:"#0284c7",
-   rev25:"~$82B",ni25:"$12.7B",eps25:"$6.35 adj",rotce:"6.7%",cet1:"13.7%",
-   nii_q4:"$15.67B",nco:"~2.1% card",
-   nii26:"Modest growth",expense26:"Declining",nco26:"N/A",loan_growth:"Services-led",signal:"bull"},
+   rev25:"$24.6B",ni25:"$5.8B",eps25:"$3.06",rotce:"~9%",cet1:"13.7%",
+   nii_q4:"~$15.5B",nco:"~2.1% card",
+   nii26:"+3–4% rev.",expense26:"Declining",nco26:"N/A",loan_growth:"Svcs/Markets",signal:"bull"},
   {name:"Goldman Sachs",    ticker:"GS",color:"#1d4ed8",
-   rev25:"$58.28B",ni25:"$17.18B",eps25:"$51.32",rotce:"15%",cet1:"14.4%",
-   nii_q4:"N/A",nco:"Apple exit",
-   nii26:"N/A",expense26:"Disciplined",nco26:"Consumer exited",loan_growth:"Alt. invest.",signal:"bull"},
+   rev25:"$17.2B",ni25:"$5.63B",eps25:"$17.55",rotce:"21.3%",cet1:"14.4%",
+   nii_q4:"$3.7B",nco:"Instit.",
+   nii26:"N/A",expense26:"Disciplined",nco26:"Consumer exited",loan_growth:"Loans $253B",signal:"bull"},
   {name:"Capital One",      ticker:"COF",color:"#8878B8",
-   rev25:"~$23.4B",ni25:"$9.5B adj",eps25:"$19.61 adj",rotce:"~14%",cet1:"13.6%",
-   nii_q4:"~$7.5B",nco:"4.93% dom. card",
-   nii26:"NIM ~8%+",expense26:"Integration costs",nco26:"~5% card",loan_growth:"Discover+Brex",signal:"bull"},
+   rev25:"$15.2B",ni25:"$2.2B",eps25:"$3.34 ($4.42 adj)",rotce:"~12%",cet1:"13.6%",
+   nii_q4:"~$9.4B",nco:"3.45% total",
+   nii26:"NIM 7.87%",expense26:"Integration costs",nco26:"~4.5% card",loan_growth:"Discover+Brex",signal:"neutral"},
   {name:"American Express", ticker:"AXP",color:"#059669",
-   rev25:"$72.2B",ni25:"~$10.1B",eps25:"$15.38 adj",rotce:"34% ROE",cet1:"N/A",
-   nii_q4:"~$4.1B",nco:"Best-in-class",
-   nii26:"+9–10% rev.",expense26:"Marketing +LSD",nco26:"Stable / low",loan_growth:"+7% billed biz",signal:"bull"},
+   rev25:"$18.9B",ni25:"$3.0B",eps25:"$4.28",rotce:"36% ROE",cet1:"N/A",
+   nii_q4:"~$4.3B",nco:"Best-in-class",
+   nii26:"+9–10% rev.",expense26:"Marketing +LSD",nco26:"Stable / low",loan_growth:"+8% billed biz",signal:"bull"},
   {name:"Synchrony",        ticker:"SYF",color:"#ea580c",
-   rev25:"~$15.1B",ni25:"~$2.8B",eps25:"$7.42 FY",rotce:"21.8% Q4",cet1:"13.4%",
-   nii_q4:"$3.79B",nco:"5.37% Q4",
-   nii26:"NII expand.",expense26:"Early retire prog.",nco26:"5.5–6.0%",loan_growth:"mid-single digit",signal:"neutral"},
+   rev25:"$4.77B",ni25:"$805M",eps25:"$2.27 adj",rotce:"~22%",cet1:"13.4%",
+   nii_q4:"$4.6B",nco:"~5.8% Q1",
+   nii26:"NIM 15.5%",expense26:"Early retire prog.",nco26:"<5.5% FY (peak Q2)",loan_growth:"mid-single digit",signal:"bull"},
   {name:"U.S. Bancorp",     ticker:"USB",color:"#0f766e",
-   rev25:"$28.54B",ni25:"$7.6B",eps25:"$4.62",rotce:"18.4%",cet1:"10.8%",
-   nii_q4:"$4.3B",nco:"0.54%",
+   rev25:"$7.3B",ni25:"$1.85B",eps25:"$1.18",rotce:"~19%",cet1:"10.8%",
+   nii_q4:"~$4.3B",nco:"~0.56%",
    nii26:"+4–6% rev.",expense26:"+200bps oper.lev",nco26:"N/A",loan_growth:"3–4% loans",signal:"bull"},
+  {name:"Barclays US (BCUS)", ticker:"BCS",color:"#1E4FA3",
+   rev25:"Q1 Apr 30",ni25:"Q1 Apr 30",eps25:"Q4'25: £1.52 adj",rotce:"~12% (BCUS)",cet1:"13.3%",
+   nii_q4:"NIM 11.6%",nco:"~5.2% Q4",
+   nii26:"BCUS recv. +10% YoY",expense26:"GM partnership ramp",nco26:"Elevated vs peers",loan_growth:"+10% YoY (GM add)",signal:"neutral"},
 ];
 
 const BANK_COMMENTARY = [
   {bank:"JPMorgan Chase",ceo:"Jamie Dimon, CEO",ticker:"JPM",color:"#1e3a8a",
-   quote:"Each line of business performed well. Markets revenue up 17%; Payments hit a record $5.1B. We're cautious — markets may be underappreciating potential hazards including sticky inflation and geopolitical volatility.",
-   credit:"Card NCO ~3.2% in 2025; guiding 3.4% for 2026. $2.2B Apple Card reserve build standard day-one accounting. Mortgage delinquencies at low end of historical range. Consumer resilient.",
-   outlook:"NII $103B, expenses $105B for 2026. Two Fed cuts assumed. AI, branches, crypto ecosystem all investment areas. Proposed 10% credit card APR cap would be 'an economic disaster.'"},
+   quote:"There is an increasingly complex set of risks — geopolitical tensions and wars, energy price volatility, trade uncertainty, large global fiscal deficits and elevated asset prices. The next credit cycle will be worse than people expect.",
+   credit:"Card NCO ~3.3% in Q1; FY guide 3.4%. Provisions rose YoY on card credit. Mortgage delinquencies still at low end of historical range. Dimon cautious on consumer late-cycle risks despite Q1 resilience.",
+   outlook:"FY26 NII trimmed $1.5B to ~$103B (all markets NII revision; non-markets held flat). Expenses ~$105B. Markets revenue record $11.6B (+20%) — FICC $7.1B (+21%), Equities $4.5B (+17%). IB fees +28% YoY, #1 on Dealogic."},
   {bank:"Bank of America",ceo:"Brian Moynihan, CEO",ticker:"BAC",color:"#D64045",
-   quote:"We delivered on our commitments with solid growth in revenue, earnings, and returns. Consumers and businesses proved resilient. We are bullish on the US economy in 2026 — risks remain, but the outlook is encouraging.",
-   credit:"Provision $1.3B Q4, down from $1.5B. NCOs declined. CRE office losses improving. Through-cycle NCO target: 50–55bps. Consumer credit broadly stable.",
-   outlook:"NII +5–7% in 2026. Operating leverage ~200bps. Loan growth mid-single digits. Q1 expenses ~4% higher YoY. Internal US GDP forecast: 2.6% for 2026."},
+   quote:"We expect NII to drop to bottom line. If it goes up, you'd expect us to see a higher end of the operating leverage range like we did this quarter. Trading had its highest-ever equities quarter amid the March oil shock.",
+   credit:"Provisions modestly higher YoY. Consumer NCO ~0.55% — stable. CRE office losses continuing to improve. Through-cycle NCO target: 50–55bps. Consumer credit broadly stable with resilient spend.",
+   outlook:"FY26 NII guide RAISED to +6–8% (from +5–7%). NII +9% Q1 to $15.9B. Operating leverage +290bps. Equities trading record $2.83B (+30%), IB +21% to $1.8B. ROTCE 16% (+200bps YoY)."},
   {bank:"Wells Fargo",ceo:"Charlie Scharf, CEO",ticker:"WFC",color:"#d97706",
-   quote:"The dedication of all at Wells Fargo has positioned us to enter 2026 in a position of strength. We are excited by the momentum and the opportunities ahead. Our regulatory transformation is complete.",
-   credit:"Net charge-offs declined 13% QoQ in Q4. Provision $1.04B as defensive reserve vs. potential economic cooling. CRE office portfolio 'lumpy' but manageable. Asset cap lifted June 2025.",
-   outlook:"NII 2026: ~$50B. Expenses ~$55.7B with $2.4B gross reductions. AI automating 30–35% of engineering tasks. Options clearing market entry H2 2026 to compete with BofA and GS."},
+   quote:"Our first-quarter results demonstrate strong operational leverage, with revenue growth outpacing expenses. We remain focused on executing our strategic initiatives to drive sustainable growth. Asset cap removal continues to open opportunities.",
+   credit:"NCO total 45bps — stable. Provision $1.135B (up YoY). Average loans +11% to $996B; deposits +7% to $1.4T. CET1 10.3%. Credit quality stable.",
+   outlook:"FY26 NII reaffirmed ~$50B (±) — $48B core + $2B markets NII. Revenue $21.45B missed $21.77B consensus on NII stagnation; shares fell ~5%. All segments grew: Consumer +7%, Commercial +7%, Wealth +14%. Returned $4B to holders."},
   {bank:"Citigroup",ceo:"Jane Fraser, CEO",ticker:"C",color:"#0284c7",
-   quote:"Our transformation is delivering results. We are committed to reaching our ROTCE target of at least 10% in 2026. The strategic pivot to Services and Wealth is bearing fruit — we are a fundamentally different bank.",
-   credit:"Provision lower than expected at ~$1.6B. Card delinquencies stabilizing. Russia asset sale $1.2B one-time charge impacted reported net income. NCL rate improving.",
-   outlook:"ROTCE target 10–11% for 2026. Revenue growth from TTS, Banking, Wealth. Banamex IPO in 2026. 20K workforce reduction nearly complete. Efficiency ratio in low 60s."},
+   quote:"We remain steadfast and focused on executing our transformation and confident in delivering our ROTCE target of 10% to 11% this year. Services — our crown jewel — had an exceptional first quarter. Markets delivered its best result in more than a decade.",
+   credit:"Card delinquencies stabilizing. Consumer resilient. Services — crown jewel — new mandates +40%, revenues +17%. Cross-border txns +12%, deposits +16%, AUC/AUA +20%.",
+   outlook:"Q1 ROTCE 13.1% · Revenue +14% · EPS $3.06 beat $2.64 est. Markets >$7B for first time in 10 years — FICC $5.2B (+13%), Equities record $2.1B (+39%). Net income $5.8B (+42% YoY). Laying out longer-term returns at Investor Day."},
   {bank:"Goldman Sachs",ceo:"David Solomon, CEO",ticker:"GS",color:"#1d4ed8",
-   quote:"We exited consumer banking entirely in 2025 — a critical pivot allowing us to focus capital on what we do best. The 2026 M&A and capital markets pipeline is constructive. One GS 3.0 is our AI-powered future.",
-   credit:"Apple Card transferred to held-for-sale ($2.26B markdown). Consumer loan exposure effectively zero post-transfer. Entire focus on institutional credit and financing.",
-   outlook:"M&A and capital markets acceleration in 2026. Industry Ventures acquisition (Jan 2026). AWM AUM: $3.1T+. Dividend +12.5% to $4.50/share. ROE target 14–16%."},
+   quote:"Goldman Sachs delivered very strong performance for our shareholders this quarter, even as market conditions became more volatile. Our clients continue to depend on us for high-quality execution amid the broader uncertainty. Disciplined risk management must remain core to how we operate.",
+   credit:"Consumer banking fully exited. Total loan portfolio $253B (growth in corporate/collateralized). Institutional credit focus.",
+   outlook:"Q1 revenue $17.2B (2nd-highest ever), EPS $17.55 (2nd-highest ever), ROE 19.8% / ROTCE 21.3%. Global Banking & Markets record $12.7B (segment ROE >22%). Advisory $1.5B (+89% YoY), #1 M&A league tables by $150B. Equities record $5.33B (+27%). $6.4B returned."},
   {bank:"Capital One",ceo:"Richard Fairbank, CEO & Founder",ticker:"COF",color:"#8878B8",
-   quote:"I'm struck by the number and quality of the opportunities we have before us. The Discover acquisition was transformational. The Brex deal is a hand-in-glove fit — accelerating our journey to build a banking and payments company.",
-   credit:"Domestic Card charge-off rate 4.93% in Q4, down 113bps YoY — improving trend. Coverage ratio 5.16%. $23.4B total allowance. Consumer macro resilient with tax refund tailwind in H1 2026.",
-   outlook:"Brex acquisition ($5.15B) accelerates corporate card + payments. Credit card migration to Discover network begins mid-2026. 10% APR cap 'would make credit much less available and could trigger recession.'"},
+   quote:"The U.S. consumer remained healthy, and the overall economy remained resilient through the first quarter. We still expect our earnings power on the other side of the Discover integration to be consistent with what we expected at the time we announced the deal, inclusive of the Brex and Hopper travel infrastructure.",
+   credit:"Total NCO 3.45% (Q1). Provision $4.1B · $3.8B net charge-offs + $230M reserve build. Excluding Discover, card volumes +8% YoY. Consumer macro resilient. Pleased with Discover's credit policies, bullish on bringing Discover onto COF tech/credit platform.",
+   outlook:"Q1 adj EPS $4.42 MISSED $4.61 est.; adj revenue $15.23B missed $15.37B. NIM 7.87% (−39bps). Debit conversion to Discover network completed. Brex + Hopper travel integration progressing. Net income $2.2B (+57% YoY)."},
   {bank:"American Express",ceo:"Stephen Squeri, Chairman & CEO",ticker:"AXP",color:"#059669",
-   quote:"2025 was a very strong year. Full-year revenues hit a record $72B, up 10%. We maintained excellent credit quality while investing in our Membership Model. We are well-positioned and feel good about the year ahead.",
-   credit:"Credit quality 'remarkably strong and stable' — delinquency rates flat all year. Write-off rates best-in-class across the industry. Provision $5.3B reflects loan growth not credit deterioration.",
-   outlook:"2026: revenue +9–10%, EPS $17.30–$17.90. Dividend +16% to $0.95/qtr. Platinum Card refresh driving engagement. $5B annual tech spend. Premium consumer spending bullish especially travel (+30% Q4)."},
-  {bank:"Synchrony",ceo:"Brian Doubles, CEO",ticker:"SYF",color:"#ea580c",
-   quote:"Synchrony ended the year with a strong Q4 performance. We are executing on key strategic priorities to grow and win new partners. Our goal is double-digit EPS growth — the Walmart partnership is the fastest-growing in company history.",
-   credit:"NCO rate 5.37% in Q4, down 108bps from 6.45% a year ago — significant improvement. Full-year 5.65%, within 5.5–6.0% long-term target. Delinquency and allowance rates stabilizing.",
-   outlook:"2026 EPS $9.10–$9.50. NCO rate 5.5–6.0%. Mid-single-digit loan receivables growth. Walmart OnePay digital platform expanding. Pay Later at 6,200+ merchants. NII expected to increase. No material tariff impact observed yet."},
+   quote:"We had a very strong start to the year. Revenue in the quarter grew 11%, or 10% on an FX-adjusted basis, and EPS was $4.28, up 18% over the prior year. Card member spending grew 10% on a reported basis — the highest quarterly growth in three years.",
+   credit:"Credit quality remains best-in-class. Write-off rates stable / low. Delinquency flat. Provision reflects loan growth, not deterioration.",
+   outlook:"FY26 REAFFIRMED: revenue +9–10%, EPS $17.30–$17.90. Platinum refresh driving accelerated spend with high retention post fee increase. Globally 70%+ of new accounts on fee-paying products. Gen Z/Millennial and premium travel (+T&E) leading growth. NFL deal announced."},
+  {bank:"Synchrony",ceo:"Brian Doubles, President & CEO",ticker:"SYF",color:"#ea580c",
+   quote:"We started the year with strong momentum and delivered first quarter financial results that included record first-quarter purchase volume of $43 billion, reflecting the enduring appeal of Synchrony's multiproduct suite.",
+   credit:"NCO ~5.8% in Q1; FY guide <5.5% (expects peak Q2). Payment rates up 50bps (14bps from tax refund seasonality). Delinquency / allowance stabilizing.",
+   outlook:"FY26 EPS $9.10–$9.50. Q1 EPS $2.27 adj (+20% YoY). NII +4% to $4.6B · NIM 15.5% (+76bps). Receivables mid-single-digit growth FY. Walmart OnePay, Bob's, RH ramping; $725M Lowe's commercial added April. Record $43B Q1 purchase volume."},
   {bank:"U.S. Bancorp",ceo:"Gunjan Kedia, CEO",ticker:"USB",color:"#0f766e",
-   quote:"We delivered record net revenue of $7.4B and 440 bps of positive operating leverage. Fee income exceeded our mid-single-digit target. Consumer deposit growth was record. Both credit and capital remain healthy.",
-   credit:"Net charge-off ratio improved to 0.54% — well below peers. Non-performing assets declined 13.2% YoY. Allowance $7.9B. Provision $577M. Credit quality improving across all portfolios.",
-   outlook:"2026 revenue +4–6%, >200bps operating leverage. NIM path to 3% by 2027 (currently 2.77%). BTIG acquisition (closes Q2 2026) adds $175–200M quarterly fee revenue. Payments mid-single-digit growth. Stablecoin cross-border pilot completed."},
+   quote:"We are very much committed to positive operating leverage and having it more driven by revenue growth here as we look into 2026. The priorities in terms of growth are very simply to continue to grow out our fee categories — we want to always be known as very heavy in fee mix, driving heavy returns.",
+   credit:"NCO ~0.56% — well below peers. Credit quality stable across portfolios. Provision moderate.",
+   outlook:"Q1 EPS $1.18 (+15% YoY), revenue $7.3B (+4.7%). NII +4.1% YoY; fee income +6.9% YoY. FY26 revenue +4–6% with >200bps operating leverage. Heavy fee mix focus — payments + capital markets + investment services momentum."},
+  {bank:"Barclays US (BCUS)",ceo:"C.S. Venkatakrishnan, Barclays Group CEO",ticker:"BCS",color:"#1E4FA3",
+   quote:"Our US Consumer Bank partnership cards business has grown faster than the overall market in 16 of the last 20 quarters. The GM partnership added meaningful scale at end of Q3 2025. Q1 2026 results scheduled 30 April 2026.",
+   credit:"Q4'25 BCUS NCO ~5.2% — elevated vs US diversified banks (card-heavy portfolio mix). Partnership card delinquency broadly in line with peer card specialists. Credit discipline on new originations.",
+   outlook:"Q1 2026 results PENDING (reports Apr 30). FY26 Barclays Group NII £8.1–8.3B. BCUS receivables +10% YoY / +5% QoQ as of Q4'25 (GM add ~half of growth). NIM improved to 11.6% Q4'25 on 2024 repricing + portfolio mix. General Motors partnership ramp continues."},
 ];
 
 // ════════════════════════════════════════════════════
@@ -3798,16 +3806,16 @@ function buildBanksTab(){
 
   const sectorNI=BANK_RESULTS.reduce((a,b)=>a+parseFloat(b.ni25.replace(/[^0-9.]/g,"")),0).toFixed(1);
   document.getElementById("bank-metrics").innerHTML = [
-    {lbl:"Big 9 Banks — FY2025 Net Income",val:"~$157B",  sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1A9E5A"},
-    {lbl:"JPM FY Revenue 2025",            val:"$185B",   sub:"Largest U.S. bank · up ~10% YoY",             col:"#1e3a8a"},
-    {lbl:"AmEx FY Revenue 2025",           val:"$72.2B",  sub:"Record; +10% YoY · ROE 34%",                 col:"#059669"},
-    {lbl:"Global M&A Volume 2025",         val:"$5.1T",   sub:"+42% YoY · best U.S. IB year since pandemic", col:"#8878B8"},
-    {lbl:"Synchrony NCO Rate Q4 2025",     val:"5.37%",   sub:"Down 108bps YoY · within 5.5–6% target",     col:"#ea580c"},
+    {lbl:"Big 9 Banks — Q1 2026 Net Income",val:"~$49.6B",sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1A9E5A"},
+    {lbl:"JPM Q1 2026 Revenue",            val:"$50.5B",  sub:"+10% YoY · Markets +20% to record $11.6B",   col:"#1e3a8a"},
+    {lbl:"Big 5 Q1 Trading Revenue",       val:"~$43B",   sub:"+17% YoY · Equities +26% to ~$19.9B",         col:"#8878B8"},
+    {lbl:"GS Q1 Advisory Revenue",         val:"$1.49B",  sub:"+89% YoY · M&A league tables #1",             col:"#1d4ed8"},
+    {lbl:"Synchrony NCO Rate Q1 2026",     val:"~5.8%",   sub:"Peak expected Q2 · FY guide <5.5%",           col:"#ea580c"},
     {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#D64045"},
   ].map(m=>_mTile(m)).join("");
 
   // Main comparison table
-  const hd2=["Bank","FY Rev","FY Net Income","EPS 2025","ROTCE","CET1","Q4 NII","NCO Rate","2026 NII/Rev Guide","2026 NCO/Note","Outlook"];
+  const hd2=["Bank","Q1 Rev","Q1 Net Income","Q1 EPS","ROTCE","CET1","Q1 NII","NCO Rate","FY26 NII/Rev Guide","FY26 NCO/Note","Outlook"];
   let h=`<thead><tr>${hd2.map((x,i)=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   BANK_RESULTS.forEach(r=>{
     const sig=r.signal==="bull"?"color:#1A9E5A":r.signal==="bear"?"color:#D64045":"color:#CC8A00";
@@ -3856,10 +3864,10 @@ function buildBanksTab(){
   new Chart(document.getElementById("c-bank-nco").getContext("2d"),{
     type:"bar",
     data:{
-      labels:["JPM Card 25A","JPM Card 26F","BofA Cons","COF Card 25A","Amex 25A","SYF Q4 25A","SYF 26F","WFC Cons","USB 25A","Pre-COVID"],
+      labels:["JPM Card Q1","JPM Card 26F","BofA Cons","COF Total Q1","Amex Q1","SYF Q1 26","SYF 26F","WFC Total","USB Q1","BCUS Q4'25","Pre-COVID"],
       datasets:[{
-        data:[3.2, 3.4, 0.57, 4.93, 1.1, 5.37, 5.75, 1.37, 0.54, 2.5],
-        backgroundColor:["#CC8A00cc","#D64045cc","#D6404566","#8878B8cc","#05966988","#ea580ccc","#ea580c88","#d9770688","#0f766ecc","#336BCCcc"],
+        data:[3.3, 3.4, 0.55, 3.45, 1.1, 5.8, 5.5, 0.45, 0.56, 5.2, 2.5],
+        backgroundColor:["#CC8A00cc","#D64045cc","#D6404566","#8878B8cc","#05966988","#ea580ccc","#ea580c88","#d9770688","#0f766ecc","#1E4FA3cc","#336BCCcc"],
         borderRadius:5
       }]
     },
@@ -4083,7 +4091,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // SHOCK_TRACKER — Expected vs actual oil shock transmission (injected by renderer)
-const SHOCK_TRACKER = {"shock_date":"2026-03-01", "weeks_elapsed":7, "wti_pre":65.4, "wti_now":100.7, "wti_chg_pct":54, "phases":[{"phase":"Pump Prices Spike", "expected":"Days 1–14", "expected_weeks":[0, 2], "metric":"Gasoline $/gal", "pre":2.937, "now":4.123, "chg":1.19, "status":"confirmed", "source":"FRED GASREGW · EIA weekly retail gasoline", "status_reason":"Gasoline +$1.19/gal (+40%) vs pre-shock baseline — well beyond $0.50 confirmation threshold. Expected window: weeks 0–2.", "note":"FRED GASREGW: $2.94 → $4.12/gal (+40%)", "commentary":"Retail pumps moved within ~2 weeks of the WTI spike; +$1.19/gal pass-through is roughly in line with the $0.24/gal-per-$10/bbl rule-of-thumb."}, {"phase":"Transport & Freight Costs", "expected":"Weeks 4–6", "expected_weeks":[4, 6], "metric":"CPI Transport Svcs YoY", "pre":5.0, "now":10.2, "chg":5.2, "status":"not_yet", "status_reason":"Monthly pace matches pre-shock baseline. Window: weeks 4–6.", "source":"FRED CUSR0000SETG · BLS CPI Transportation Services (monthly)", "base_effect_note":"YoY jumped 5.0% → 10.2% (+5.2pp), but this is largely a base effect: Mar'25 index 256.838 was a local dip. Monthly pace is what matters.", "post_mom_ann":19.9, "pre_6mma":19.5, "detail":"Mar'26 282.916 vs 278.662 prior · post-shock +19.9% ann. · pre-shock 6-MMA +19.5%", "note":"CPI Transport Svcs at 10.2% YoY (Mar'26)", "commentary":"Transport Services running at pre-shock pace — oil shock not yet visible in the monthly cadence."}, {"phase":"CPI Energy Prints", "expected":"Weeks 6–14", "expected_weeks":[6, 14], "metric":"CPI Energy YoY", "pre":0.4, "now":12.6, "chg":12.2, "status":"confirmed", "status_reason":"Post-shock pace +245.1% ann. exceeds pre-shock 6-MMA +6.2% by +238.9pp (>1.5pp threshold). We are in the expected window (weeks 6–14).", "source":"FRED CPIENGSL · BLS CPI Energy (monthly)", "base_effect_note":null, "post_mom_ann":245.1, "pre_6mma":6.2, "detail":"Mar'26 vs prior month · post-shock +245.1% ann. · pre-shock 6-MMA +6.2%", "note":"CPI Energy at +12.6% YoY", "commentary":"Headline energy print absorbing the full WTI + gasoline spike — single largest monthly move in the tracker. Feeds directly into April headline CPI."}, {"phase":"Food & Services Inflation", "expected":"Months 3–5", "expected_weeks":[12, 20], "metric":"CPI Food Away YoY", "pre":3.9, "now":3.8, "chg":-0.1, "status":"not_yet", "status_reason":"Too early — expected window starts 12–20.", "source":"FRED CUSR0000SEFV · BLS CPI Food Away from Home (monthly)", "base_effect_note":null, "post_mom_ann":2.9, "pre_6mma":4.2, "detail":"Mar'26 vs prior month · post-shock +2.9% ann. · pre-shock 6-MMA +4.2%", "note":"CPI Food Away at 3.8% YoY (Mar'26)", "commentary":"Restaurant prices decelerating slightly — menu changes typically lag oil by 3–5 months, so the first real test will be May–June prints."}, {"phase":"Core Goods Inflation", "expected":"Months 5–8", "expected_weeks":[20, 32], "metric":"Core CPI YoY", "pre":2.5, "now":2.6, "chg":0.1, "status":"not_yet", "source":"FRED CPILFESL · BLS CPI ex-Food & Energy (monthly)", "status_reason":"Expected window is weeks 20–32 (months 5–8 post-shock). We are at week 7 — far too early. Core CPI at 2.6% is near the pre-shock 2.5% baseline.", "note":"Core CPI at 2.6% — energy input costs tracking", "commentary":"Manufacturing/chemicals absorb input costs over 5–8 months. Too early for this phase — energy input costs only began passing through in Mar'26 PPI."}, {"phase":"Consumer Sentiment Falls", "expected":"Weeks 2–6", "expected_weeks":[2, 6], "metric":"UMich Sentiment", "pre":56.6, "now":47.6, "chg":-9.0, "status":"confirmed", "source":"UMich Survey of Consumers (direct) · prelim mid-month, final end-of-month", "status_reason":"UMich dropped from 56.6 to 47.6 (-9.0pt). Confirmation threshold: 0.5pt move. Expected window: weeks 2–6, currently at week 7.", "note":"UMich at 47.6 — post-shock reading confirms decline", "commentary":"Sharp drop in visible-inflation-sensitive households. Pump pain + media cycle around oil shock drove the print. UMich often overshoots relative to actual spending changes."}, {"phase":"Savings Drawdown", "expected":"Months 2–4", "expected_weeks":[8, 16], "metric":"Personal Saving Rate", "pre":4.5, "now":4.0, "chg":-0.5, "status":"not_yet", "source":"FRED PSAVERT · BEA Personal Saving Rate (monthly, ~1-mo lag)", "status_reason":"Latest PSAVERT reading (2026-02-01) is pre-shock. BEA releases with ~1-month lag, so the first post-shock print lands in ~May.", "note":"Saving rate at 4.0% — pre-shock baseline", "commentary":"PSAVERT lags ~1 month so current data is still pre-shock. The fuel-cost bite on take-home pay won't show until May–Jun prints."}, {"phase":"Delinquencies Climb", "expected":"Months 5–10", "expected_weeks":[20, 40], "metric":"CC 90+ DPD Rate", "pre":2.94, "now":2.94, "chg":0.0, "status":"not_yet", "source":"NY Fed Household Debt & Credit Report · CC 90+ DPD (quarterly)", "status_reason":"Latest CC 90+ DPD is quarterly (NY Fed HHDC), reading 2025-10-01. Pre-shock. Expected window: months 5–10 (weeks 20–40). First post-shock look is Q3'26 release (~Nov'26).", "note":"CC delinquency at 2.94% — pre-shock data, too early", "commentary":"90+ DPD is quarterly (NY Fed HHDC) and lags 2–3 quarters. Current reading is pre-shock; first real look is Q3'26 release (Nov'26)."}]};
+const SHOCK_TRACKER = {"shock_date":"2026-03-01", "weeks_elapsed":8, "wti_pre":65.4, "wti_now":100.7, "wti_chg_pct":54, "phases":[{"phase":"Pump Prices Spike", "expected":"Days 1–14", "expected_weeks":[0, 2], "metric":"Gasoline $/gal", "pre":2.937, "now":4.123, "chg":1.19, "status":"confirmed", "source":"FRED GASREGW · EIA weekly retail gasoline", "status_reason":"Gasoline +$1.19/gal (+40%) vs pre-shock baseline — well beyond $0.50 confirmation threshold. Expected window: weeks 0–2.", "note":"FRED GASREGW: $2.94 → $4.12/gal (+40%)", "commentary":"Retail pumps moved within ~2 weeks of the WTI spike; +$1.19/gal pass-through is roughly in line with the $0.24/gal-per-$10/bbl rule-of-thumb."}, {"phase":"Transport & Freight Costs", "expected":"Weeks 4–6", "expected_weeks":[4, 6], "metric":"CPI Transport Svcs YoY", "pre":5.0, "now":10.2, "chg":5.2, "status":"not_yet", "status_reason":"Monthly pace matches pre-shock baseline. Window: weeks 4–6.", "source":"FRED CUSR0000SETG · BLS CPI Transportation Services (monthly)", "base_effect_note":"YoY jumped 5.0% → 10.2% (+5.2pp), but this is largely a base effect: Mar'25 index 256.838 was a local dip. Monthly pace is what matters.", "post_mom_ann":19.9, "pre_6mma":19.5, "detail":"Mar'26 282.916 vs 278.662 prior · post-shock +19.9% ann. · pre-shock 6-MMA +19.5%", "note":"CPI Transport Svcs at 10.2% YoY (Mar'26)", "commentary":"Transport Services running at pre-shock pace — oil shock not yet visible in the monthly cadence."}, {"phase":"CPI Energy Prints", "expected":"Weeks 6–14", "expected_weeks":[6, 14], "metric":"CPI Energy YoY", "pre":0.4, "now":12.6, "chg":12.2, "status":"confirmed", "status_reason":"Post-shock pace +245.1% ann. exceeds pre-shock 6-MMA +6.2% by +238.9pp (>1.5pp threshold). We are in the expected window (weeks 6–14).", "source":"FRED CPIENGSL · BLS CPI Energy (monthly)", "base_effect_note":null, "post_mom_ann":245.1, "pre_6mma":6.2, "detail":"Mar'26 vs prior month · post-shock +245.1% ann. · pre-shock 6-MMA +6.2%", "note":"CPI Energy at +12.6% YoY", "commentary":"Headline energy print absorbing the full WTI + gasoline spike — single largest monthly move in the tracker. Feeds directly into April headline CPI."}, {"phase":"Food & Services Inflation", "expected":"Months 3–5", "expected_weeks":[12, 20], "metric":"CPI Food Away YoY", "pre":3.9, "now":3.8, "chg":-0.1, "status":"not_yet", "status_reason":"Too early — expected window starts 12–20.", "source":"FRED CUSR0000SEFV · BLS CPI Food Away from Home (monthly)", "base_effect_note":null, "post_mom_ann":2.9, "pre_6mma":4.2, "detail":"Mar'26 vs prior month · post-shock +2.9% ann. · pre-shock 6-MMA +4.2%", "note":"CPI Food Away at 3.8% YoY (Mar'26)", "commentary":"Restaurant prices decelerating slightly — menu changes typically lag oil by 3–5 months, so the first real test will be May–June prints."}, {"phase":"Core Goods Inflation", "expected":"Months 5–8", "expected_weeks":[20, 32], "metric":"Core CPI YoY", "pre":2.5, "now":2.6, "chg":0.1, "status":"not_yet", "source":"FRED CPILFESL · BLS CPI ex-Food & Energy (monthly)", "status_reason":"Expected window is weeks 20–32 (months 5–8 post-shock). We are at week 8 — far too early. Core CPI at 2.6% is near the pre-shock 2.5% baseline.", "note":"Core CPI at 2.6% — energy input costs tracking", "commentary":"Manufacturing/chemicals absorb input costs over 5–8 months. Too early for this phase — energy input costs only began passing through in Mar'26 PPI."}, {"phase":"Consumer Sentiment Falls", "expected":"Weeks 2–6", "expected_weeks":[2, 6], "metric":"UMich Sentiment", "pre":56.6, "now":47.6, "chg":-9.0, "status":"confirmed", "source":"UMich Survey of Consumers (direct) · prelim mid-month, final end-of-month", "status_reason":"UMich dropped from 56.6 to 47.6 (-9.0pt). Confirmation threshold: 0.5pt move. Expected window: weeks 2–6, currently at week 8.", "note":"UMich at 47.6 — post-shock reading confirms decline", "commentary":"Sharp drop in visible-inflation-sensitive households. Pump pain + media cycle around oil shock drove the print. UMich often overshoots relative to actual spending changes."}, {"phase":"Savings Drawdown", "expected":"Months 2–4", "expected_weeks":[8, 16], "metric":"Personal Saving Rate", "pre":4.5, "now":4.0, "chg":-0.5, "status":"not_yet", "source":"FRED PSAVERT · BEA Personal Saving Rate (monthly, ~1-mo lag)", "status_reason":"Latest PSAVERT reading (2026-02-01) is pre-shock. BEA releases with ~1-month lag, so the first post-shock print lands in ~May.", "note":"Saving rate at 4.0% — pre-shock baseline", "commentary":"PSAVERT lags ~1 month so current data is still pre-shock. The fuel-cost bite on take-home pay won't show until May–Jun prints."}, {"phase":"Delinquencies Climb", "expected":"Months 5–10", "expected_weeks":[20, 40], "metric":"CC 90+ DPD Rate", "pre":2.94, "now":2.94, "chg":0.0, "status":"not_yet", "source":"NY Fed Household Debt & Credit Report · CC 90+ DPD (quarterly)", "status_reason":"Latest CC 90+ DPD is quarterly (NY Fed HHDC), reading 2025-10-01. Pre-shock. Expected window: months 5–10 (weeks 20–40). First post-shock look is Q3'26 release (~Nov'26).", "note":"CC delinquency at 2.94% — pre-shock data, too early", "commentary":"90+ DPD is quarterly (NY Fed HHDC) and lags 2–3 quarters. Current reading is pre-shock; first real look is Q3'26 release (Nov'26)."}]};
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
 const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Mar 10","Mar 11","Mar 12","Mar 13","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 13"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65,83.71,86.8,95.61,98.48,93.39,96.01,96.12,96.11,98.71,89.33,93.18,91.51,96.18,101.26,104.69,102.86,101.9,113.23,114.01,114.58,96.17,99.62,98.34,100.72],"brent":[77.24,83.28,81.56,88.59,95.74,94.35,89.84,90.98,102.38,103.23,101.04,108.39,118.09,111.05,118.42,103.79,108.42,109.14,113.39,121.47,121.88,126.69,119.56,127.61,127.61,138.21,122.11,119.03,119.07,123.28],"notes":[null,"WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines","WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines","WTI drop $10.9 (11.6%) \u2014 pipeline updates this field with market headlines","WTI surge $3.1 (3.7%) \u2014 pipeline updates this field with market headlines","WTI surge $8.8 (10.1%) \u2014 pipeline updates this field with market headlines","WTI surge $2.9 (3.0%) \u2014 pipeline updates this field with market headlines","WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines","WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $2.6 (2.7%) \u2014 pipeline updates this field with market headlines","WTI drop $9.4 (9.5%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $4.7 (5.1%) \u2014 pipeline updates this field with market headlines","WTI surge $5.1 (5.3%) \u2014 pipeline updates this field with market headlines","WTI surge $3.4 (3.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $11.3 (11.1%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",null,null],"month":"Mar\u2013Apr 2026","updated":"Apr 20 21:02 UTC","sessions":30};
 
@@ -5748,7 +5756,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 20, 2026 21:03 UTC</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 23, 2026 19:57 UTC</span>
         <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
       </div>
     </div>
