@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-23T20:01:05.097876Z",
+  "collected_at": "2026-04-23T20:21:34.095216Z",
   "series_count": 73,
   "error_count": 2,
   "errors": [
@@ -12,26 +12,30 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-04-21",
+      "date": "2026-04-22",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-04-21",
-      "value": 3.78
+      "date": "2026-04-22",
+      "value": 3.79
     },
     "dgs5": {
-      "date": "2026-04-21",
+      "date": "2026-04-22",
       "value": 3.91
     },
     "dgs10": {
-      "date": "2026-04-21",
+      "date": "2026-04-22",
       "value": 4.3
     },
     "dgs30": {
-      "date": "2026-04-21",
-      "value": 4.89
+      "date": "2026-04-22",
+      "value": 4.9
     },
     "dgs10_hist": [
+      {
+        "date": "2026-04-22",
+        "value": 4.3
+      },
       {
         "date": "2026-04-21",
         "value": 4.3
@@ -263,13 +267,13 @@
       {
         "date": "2026-01-29",
         "value": 4.24
-      },
-      {
-        "date": "2026-01-28",
-        "value": 4.26
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-04-22",
+        "value": 3.79
+      },
       {
         "date": "2026-04-21",
         "value": 3.78
@@ -501,10 +505,6 @@
       {
         "date": "2026-01-29",
         "value": 3.53
-      },
-      {
-        "date": "2026-01-28",
-        "value": 3.56
       }
     ],
     "ig_oas": {
@@ -1633,7 +1633,7 @@
         "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 23 20:01 UTC",
+      "updated": "Apr 23 20:21 UTC",
       "sessions": 35
     },
     "gasoline": [
