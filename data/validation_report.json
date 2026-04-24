@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-24T18:42:45.704555Z",
-  "status": "PASS",
+  "validated_at": "2026-04-24T19:04:58.247914Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 393,
-    "passed": 393,
-    "failed": 0,
-    "skipped": 0,
+    "total_checks": 404,
+    "passed": 395,
+    "failed": 9,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-24T18:41:12.818201Z",
+      "collected_at": "2026-04-24T19:03:40.723459Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -847,6 +847,72 @@
       "check": "SHOCK_TRACKER[7] Delinquencies Climb required fields",
       "missing": null,
       "severity": "ok",
+      "pass": true
+    }
+  ],
+  "earnings_verbatim": [
+    {
+      "check": "bank_earnings.json (10 banks)",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "JPM: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/JPM.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "BAC: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/BAC.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "WFC: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/WFC.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "C: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/C.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "GS: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/GS.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "COF: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/COF.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "AXP: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/AXP.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "SYF: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/SYF.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "USB: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/USB.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "BCS: pending (reports 2026-04-30)",
+      "severity": "skipped",
       "pass": true
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-04-24T18:41:55.384344Z",
+  "analyzed_at": "2026-04-24T19:04:08.714667Z",
   "risk_level": "ELEVATED",
   "alert_count": 0,
   "watch_count": 4,
@@ -244,7 +244,6 @@
   "headlines": [],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "ALFRED GDP@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=30&realtime_start=2026-03-31&realtime_end=2026-03-31&frequency=a"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
   ]
 }
