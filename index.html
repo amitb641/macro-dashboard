@@ -1965,6 +1965,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Bank-by-Bank Earnings Commentary — Key Themes from Q1 2026 Calls</div>
     <div class="panel-sub">Management commentary synthesis · Apr 13–22, 2026 earnings calls</div>
+    <div id="bank-industry-themes" style="margin-bottom:16px"></div>
     <div id="bank-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:8px"></div>
     <p class="src">Sources: Goldman Sachs Q1 2026 (Apr 13, 2026); JPMorgan Chase Q1 2026 (Apr 14, 2026); Wells Fargo Q1 2026 (Apr 14, 2026); Citigroup Q1 2026 (Apr 14, 2026); Bank of America Q1 2026 (Apr 15, 2026); U.S. Bancorp Q1 2026 (Apr 16, 2026); Capital One Q1 2026 (Apr 21, 2026); Synchrony Financial Q1 2026 (Apr 21, 2026); American Express Q1 2026 (Apr 23, 2026). All earnings calls and press releases. Trump 10% credit card APR cap still pending — material risk to all card issuers. Capital One–Discover integration ongoing; Brex integration progressing.</p>
   </div>
@@ -3936,6 +3937,34 @@ function buildBanksTab(){
       scales:{x:{grid:{display:false},ticks:{color:"#7A8FA8",font:{size:9},maxRotation:35,minRotation:35},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
+
+  // Industry themes panel
+  const BANK_THEMES = [
+    {icon:"⚠️", color:"#CC8A00", title:"Tariff uncertainty named #1 macro risk across all calls",
+     body:"Every CEO cited tariff policy as the dominant uncertainty — but Q1 results showed little direct impact yet. Dimon: prepared for stagflation. Scharf: \"hard to predict the ultimate impact.\" Fraser: \"unclear macro environment ahead.\" Reserve builds (COF +$230M) signal caution rather than realized stress."},
+    {icon:"📈", color:"#1A9E5A", title:"Record trading revenue — markets benefited from volatility",
+     body:"Volatility created a windfall for trading desks. GS equities $5.33B (+27%, record), BAC equities $2.83B (+30%, record), Citi equities $2.1B (+39%, record), JPM markets $11.6B (+20%). CEOs uniformly noted clients turned to them for execution and hedging in a dislocated environment — \"a port in the storm\" (Fraser)."},
+    {icon:"👥", color:"#D64045", title:"Consumer bifurcation: premium resilient, lower-income under pressure",
+     body:"A consistent split emerged: affluent/premium consumers (AXP +10% spend, JPM card stable) holding firm, while lower-income households face rising stress from higher energy costs and rates. Scharf explicitly flagged \"bifurcation beneath the surface.\" Card NCOs normalizing at 3–6% depending on portfolio mix — no systemic spike, but direction is upward."},
+    {icon:"🤖", color:"#7c3aed", title:"AI adoption accelerating — efficiency gains real but competitive",
+     body:"Every CEO discussed AI, but Dimon's framing stood out: \"the benefits will be passed on to the marketplace\" — competitive pressure will erode individual firm ROE gains. BAC (~90 AI tools, Agentforce for advisors), WFC (Fargo: 1B+ interactions), Citi (\"deploying at scale\"), USB (\"AI native organization\"), COF (tech stack as moat) are the most operationally specific. AXP acquired Hyper (OpenAI-backed) for agentic expense management."},
+    {icon:"🔗", color:"#336BCC", title:"M&A and capital markets reopening — IB pipeline strongest since 2021",
+     body:"Solomon: M&A \"incredibly robust\" with pent-up demand. JPM IB fees +28%, GS advisory +89% YoY (#1 league tables), Citi IB +21%. Equity issuance paused briefly in March on Middle East uncertainty but resumed. CEOs broadly expect deal activity to accelerate as clarity returns — rate stability and strategic repositioning around tariffs driving corporate transactions."},
+  ];
+  document.getElementById("bank-industry-themes").innerHTML = `
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:700;color:var(--text);letter-spacing:.04em;margin-bottom:10px;text-transform:uppercase">Cross-Bank Industry Themes — Q1 2026 Earnings Calls</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${BANK_THEMES.map(t=>`
+          <div style="display:flex;gap:10px;align-items:flex-start">
+            <div style="font-size:16px;line-height:1;flex-shrink:0;margin-top:1px">${t.icon}</div>
+            <div>
+              <span style="font-size:11px;font-weight:700;color:${t.color}">${t.title}.</span>
+              <span style="font-size:10.5px;color:var(--text2);line-height:1.5"> ${t.body}</span>
+            </div>
+          </div>`).join("")}
+      </div>
+    </div>`;
 
   // Bank commentary cards
   const _srcBadge = (s) => {
