@@ -37,6 +37,49 @@ git checkout -b rescue backup/<tag>
 
 ## Baselines
 
+### `backup/pre-agent-9` — commit `cf1573e` (2026-04-24)
+
+**Captured state** — main immediately before Agent 9 (autonomous earnings
+agent) landed. Tier 2 + Tier 4 of the earnings refactor are included
+(bank_earnings.json, validator Pass 3c), but:
+
+- `scripts/earnings_agent.py` does NOT exist.
+- `.github/workflows/earnings_agent.yml` does NOT exist.
+- `data/earnings_calendar.json` does NOT exist.
+- Dashboard still reads "8 agents" / "5-pass validator".
+- Quarterly earnings updates are still manual: human edits
+  `data/bank_earnings.json` + drops transcript into
+  `data/transcripts/<Q>/<TICKER>.txt`, then renderer + validator
+  locally before commit.
+
+**Why preserved**: restore point if Agent 9 misbehaves in production
+(e.g. fetches the wrong transcript, Claude's extraction loops, or the
+daily cron conflicts with the weekly briefing pipeline). Since Agent 9
+runs on its own workflow, disabling it in the GitHub UI is usually
+sufficient — this branch is for the rare case where the validator or
+renderer changes it carries need to be reverted too.
+
+**Smoke test at baseline**: 24/25 pass locally (1 pre-existing Playwright
+failure, unchanged through all recent work).
+
+**Rollback**:
+```bash
+# Disable Agent 9 workflow only (preferred — preserves the validator gate)
+# via GitHub UI: Actions → Agent 9 — Earnings Agent → ⋯ → Disable workflow
+
+# Or revert the Agent 9 commit while keeping everything else
+git checkout main
+git revert <agent-9-sha>
+git push origin main
+
+# Or hard-rollback to pre-Agent-9 state
+git checkout main
+git reset --hard backup/pre-agent-9
+git push --force-with-lease origin main
+```
+
+---
+
 ### `backup/pre-earnings-refactor-2026-04-24` — commit `9c7c6ea` (2026-04-24)
 
 **Captured state** — main at CI Weekly Update 2026-04-24, immediately before the
