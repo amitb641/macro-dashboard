@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-04-24T19:04:58.247914Z",
+  "validated_at": "2026-04-24T20:23:26.406043Z",
   "status": "WARN",
   "summary": {
     "total_checks": 404,
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
+      "raw_data_value": 4.34,
+      "fresh_api_value": 4.34,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-24T19:03:40.723459Z",
+      "collected_at": "2026-04-24T20:22:18.250702Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
