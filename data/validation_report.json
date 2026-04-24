@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-04-24T20:23:26.406043Z",
+  "validated_at": "2026-04-24T20:50:34.692417Z",
   "status": "WARN",
   "summary": {
     "total_checks": 404,
@@ -254,19 +254,19 @@
     },
     {
       "check": "WAGE_ANNUAL.nominal completeness",
-      "html_value": "26/26 filled",
+      "html_value": "5/5 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "WAGE_ANNUAL.real completeness",
-      "html_value": "26/26 filled",
+      "html_value": "5/5 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-24T20:22:18.250702Z",
+      "collected_at": "2026-04-24T20:49:28.027722Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1440,7 +1440,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Wages \u2014 Panel \"Nominal vs Real Wage Growth \u2014 All Privat\" has title",
+      "check": "Visual: Wages \u2014 Panel \"Nominal vs Real Wage Growth \u2014 Annual His\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
