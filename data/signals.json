@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-04-24T20:49:44.110825Z",
+  "analyzed_at": "2026-04-24T21:04:17.003752Z",
   "risk_level": "ELEVATED",
   "alert_count": 0,
   "watch_count": 4,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.83,
@@ -109,9 +109,9 @@
     },
     "wages_yoy": {
       "value": 3.9,
-      "delta": 0.52,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": null
     },
     "cs_hpi_yoy": {
@@ -241,13 +241,7 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "wages_yoy",
-      "line": "wages_yoy: 3.90 (\u25b20.52 vs prior)",
-      "alert": null
-    }
-  ],
+  "headlines": [],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
