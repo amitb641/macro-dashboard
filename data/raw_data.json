@@ -1,10 +1,11 @@
 {
-  "collected_at": "2026-04-23T22:11:28.052496Z",
+  "collected_at": "2026-04-24T13:00:57.675235Z",
   "series_count": 73,
-  "error_count": 2,
+  "error_count": 3,
   "errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
+    "ALFRED GDPC1@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDPC1&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=30&realtime_start=2026-03-31&realtime_end=2026-03-31&frequency=a"
   ],
   "data": {
     "ffr": {
@@ -1633,7 +1634,7 @@
         "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 23 22:11 UTC",
+      "updated": "Apr 24 13:01 UTC",
       "sessions": 35
     },
     "gasoline": [

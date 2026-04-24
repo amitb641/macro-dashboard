@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-23T22:12:36.047763Z",
+  "validated_at": "2026-04-24T13:02:44.626524Z",
   "status": "PASS",
   "summary": {
     "total_checks": 393,
     "passed": 393,
     "failed": 0,
-    "skipped": 0,
+    "skipped": 3,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -589,11 +589,8 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -643,20 +640,14 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "raw_data_value": 3.64,
-      "fresh_api_value": 3.64,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158637.0,
-      "fresh_api_value": 158637.0,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -682,7 +673,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 53,
+      "age_days": 54,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -690,7 +681,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 53,
+      "age_days": 54,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,7 +689,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 53,
+      "age_days": 54,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -706,7 +697,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 81,
+      "age_days": 82,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -714,7 +705,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 81,
+      "age_days": 82,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,7 +713,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 53,
+      "age_days": 54,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -730,7 +721,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 112,
+      "age_days": 113,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -738,7 +729,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-23",
-      "age_days": 0,
+      "age_days": 1,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -746,7 +737,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-04-01",
-      "age_days": 22,
+      "age_days": 23,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -761,7 +752,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-23T22:11:28.052496Z",
+      "collected_at": "2026-04-24T13:00:57.675235Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
