@@ -1329,8 +1329,10 @@ def render_labor(html, data, vals, tabs):
 
     if wages is not None:
         html = patch_array_last(html, 'nominal', wages, 1, scope_var='WAGE_MONTHLY')
-        ahetpi_s = data.get('ahetpi')
-        wages_date = ahetpi_s[0].get('date','') if ahetpi_s else ''
+        # Prefer Atlanta Fed WGT date when available; AHETPI fallback otherwise.
+        atl = data.get('wage_growth_atl') or []
+        fallback = data.get('ahetpi') or []
+        wages_date = (atl[0] if atl else (fallback[0] if fallback else {})).get('date', '')
         wages_lbl = f"Nominal Wage Growth {month_label(wages_date)}" if wages_date else 'Nominal Wage Growth'
         html = patch_kpi_full(html, 'Nominal Wage Growth 2025', wages_lbl, f'{wages:+.1f}%')
 
@@ -2070,9 +2072,20 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
-    # 5. Wages — BLS AHETPI  (up = good)
+    # 5. Wages — Atlanta Fed Wage Growth Tracker 3MMA (up = good). Value is
+    # already YoY % for continuously-employed workers. Falls back to AHETPI-YoY
+    # only when the new series hasn't been collected yet.
+    atl_wgt = data.get('wage_growth_atl', [])
     ahetpi = data.get('ahetpi', [])
-    if ahetpi and len(ahetpi) >= 14:
+    if atl_wgt and len(atl_wgt) >= 2:
+        cur, prev = atl_wgt[0]['value'], atl_wgt[1]['value']
+        d = round(cur - prev, 2)
+        sign = '+' if d > 0 else ''
+        lbl = f"Wage Growth {_mlbl(atl_wgt[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'metric': 'wages',
+                      'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                      'sub': f"Prior: {prev:.1f}% ({_mlbl(atl_wgt[1]['date'])}) · Atlanta Fed WGT 3MMA"})
+    elif ahetpi and len(ahetpi) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(ahetpi)
         if yoy_cur is not None and yoy_prev is not None:
             d = round(yoy_cur - yoy_prev, 2)
@@ -2080,7 +2093,7 @@ def rebuild_kpi_strip(html, data, vals):
             lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'wages',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])})"})
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])}) · BLS AHETPI"})
 
     # 6. Fed Funds Rate
     ffr = data.get('ffr')

@@ -315,6 +315,12 @@ def collect():
     data['u6rate']      = fred_obs('U6RATE',     14)
     data['payems']      = fred_obs('PAYEMS',     320)
     data['ahetpi']      = fred_obs('AHETPI',     320)
+    # Atlanta Fed Wage Growth Tracker — 3-Month MA, Unweighted Median, Hourly,
+    # Overall. Measures wage growth for workers continuously employed over 12
+    # months (controls for composition effects that bias AHETPI).
+    # Used as the headline wage growth KPI; AHETPI retained for level charts
+    # and sector breakdowns (Atlanta Fed has no sector decomposition).
+    data['wage_growth_atl'] = fred_obs('FRBATLWGT3MMAUMHWGO', 60)
     data['jolts']       = fv('JTSJOL')
     # UMich Consumer Sentiment: direct source gives prelim flag + fresher data;
     # FRED fills history older than the direct CSV's 13-month window (all final).

@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-24T20:23:26Z";
+  var BUILD_V = "2026-04-24T20:28:59Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -1736,9 +1736,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Monthly MoM Chart -->
   <div class="panel">
     <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (12-Month Trend)</div>
-    <div class="panel-sub">Average Hourly Earnings YoY % · nominal (solid) vs real CPI-adjusted (dashed) · BLS CES</div>
+    <div class="panel-sub">Atlanta Fed Wage Growth Tracker 3MMA · nominal (solid) vs real CPI-adjusted (dashed) · tracks wage growth for continuously-employed workers (controls for composition)</div>
     <div class="ch300"><canvas id="c-wage-mom"></canvas></div>
-    <p class="src">Source: BLS Current Employment Statistics (CES), Average Hourly Earnings. Real wages = nominal minus CPI YoY. Monthly readings, seasonally adjusted.</p>
+    <p class="src">Source: Atlanta Fed Wage Growth Tracker — 3-Month Moving Average, Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>). Real wages = nominal minus CPI YoY. Atlanta Fed's tracker follows the same workers over 12 months, unlike BLS AHE which can be biased by composition shifts when the mix of workers in the sample changes.</p>
   </div>
 
   <!-- Annual Charts -->
@@ -2631,7 +2631,7 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"CPI YoY Mar'26", "val":"3.3%", "metric":"cpi", "delta":0.86, "chg":"+0.9pp", "inv":true, "sub":"MoM: +0.87% \u00b7 YoY: 3.3% \u00b7 3M avg: 2.7% \u00b7 Prior: 2.4% (Feb'26)"}, {"lbl":"Core PCE Feb'26", "val":"3.0%", "metric":"pce", "delta":-0.08, "chg":"-0.1pp", "inv":true, "sub":"Prior: 3.0% (Jan'26)"}, {"lbl":"Wage Growth Mar'26", "val":"3.4%", "metric":"wages", "delta":-0.28, "chg":"-0.3pp", "sub":"Prior: 3.7% (Feb'26)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.34%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.83% \u00b7 Spread: +51bp"}, {"lbl":"Initial Claims Apr'26", "val":"214K", "metric":"claims", "delta":6000, "chg":"+6K", "inv":true, "sub":"Prior wk: 208K (Apr'26)"}, {"lbl":"UMich Sentiment Apr'26", "val":"49.8", "metric":"umcsent", "delta":-3.5, "chg":"-3.5", "badge":null, "sub":"MoM: -3.5 \u00b7 YoY: -2.4 \u00b7 Prior: 53.3 (Mar'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
+const KPIS = [{"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"CPI YoY Mar'26", "val":"3.3%", "metric":"cpi", "delta":0.86, "chg":"+0.9pp", "inv":true, "sub":"MoM: +0.87% \u00b7 YoY: 3.3% \u00b7 3M avg: 2.7% \u00b7 Prior: 2.4% (Feb'26)"}, {"lbl":"Core PCE Feb'26", "val":"3.0%", "metric":"pce", "delta":-0.08, "chg":"-0.1pp", "inv":true, "sub":"Prior: 3.0% (Jan'26)"}, {"lbl":"Wage Growth Mar'26", "val":"3.4%", "metric":"wages", "delta":-0.28, "chg":"-0.3pp", "sub":"Prior: 3.7% (Feb'26) \u00b7 BLS AHETPI"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.34%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.83% \u00b7 Spread: +51bp"}, {"lbl":"Initial Claims Apr'26", "val":"214K", "metric":"claims", "delta":6000, "chg":"+6K", "inv":true, "sub":"Prior wk: 208K (Apr'26)"}, {"lbl":"UMich Sentiment Apr'26", "val":"49.8", "metric":"umcsent", "delta":-3.5, "chg":"-3.5", "badge":null, "sub":"MoM: -3.5 \u00b7 YoY: -2.4 \u00b7 Prior: 53.3 (Mar'26)"}, {"lbl":"Debt Service Ratio Oct'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Jul'25)"}];
 function _releaseBadge(tag){
   if(!tag) return '';
   const up = String(tag).toUpperCase();
@@ -3149,7 +3149,7 @@ function buildWagesTab(){
   var _wPeak = Math.max(...WAGE_ANNUAL.nominal);
   var _wPeakIdx = WAGE_ANNUAL.nominal.indexOf(_wPeak);
   document.getElementById("wage-metrics").innerHTML = [
-    {lbl:"Wage Growth "+WAGE_MONTHLY.labels[WAGE_MONTHLY.labels.length-1], val:"+"+_wLatest+"%", sub:"BLS nonfarm AHE nominal", col:"#336BCC"},
+    {lbl:"Wage Growth "+WAGE_MONTHLY.labels[WAGE_MONTHLY.labels.length-1], val:"+"+_wLatest+"%", sub:"Atlanta Fed WGT 3MMA", col:"#336BCC"},
     {lbl:"Full Year "+_wYr,         val:"+"+_wFY+"%",  sub:"YoY: "+(_wFY>=_wFYPrior?"+":"")+(_wFY-_wFYPrior).toFixed(1)+"pp vs +"+_wFYPrior+"% in "+_wYrP, col:"#CC8A00"},
     {lbl:"Monthly Avg "+_wYr,       val:"+"+_wAvg+"%", sub:"vs +"+_wFYPrior+"%/mo in "+_wYrP+" · normalizing", col:"#CC8A00"},
     {lbl:"Top Sector",             val:_shortName(_wTop.s), sub:"+"+_wTop[_wk]+"% YoY — fastest growing · "+_wYr, col:"#1A9E5A"},
@@ -3161,7 +3161,7 @@ function buildWagesTab(){
   new Chart(document.getElementById("c-wage-mom").getContext("2d"),{
     type:"line",
     data:{labels:WAGE_MONTHLY.labels,datasets:[
-      {label:"Nominal AHE YoY %",data:WAGE_MONTHLY.nominal,borderColor:"#1A9E5A",backgroundColor:"#1A9E5A15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Nominal Wage Growth (Atlanta Fed WGT 3MMA)",data:WAGE_MONTHLY.nominal,borderColor:"#1A9E5A",backgroundColor:"#1A9E5A15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
       {label:"Real (CPI-adj) YoY %",data:WAGE_MONTHLY.real,borderColor:"#336BCC",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
@@ -5441,9 +5441,10 @@ function buildStackTab(){
     ["👷 Unemp",      "U-3 Unemployment Rate",          "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "U-6 Underemployment",            "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Manual — no sector API"],
-    ["💵 Wages",      "Avg Hourly Earnings",            "BLS CES",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
-    ["💵 Wages",      "Wages by Sector",                "BLS CES",             "Annual",     "Jan 2026",  "Manual update each January"],
-    ["💵 Wages",      "Real Wage Growth",               "BLS CES + CPI",       "Monthly",    "Feb 2026",  "Computed: AHE − CPI YoY"],
+    ["💵 Wages",      "Wage Growth (headline)",         "Atlanta Fed WGT 3MMA (FRBATLWGT3MMAUMHWGO)", "Monthly", "Mar 2026", "Agent auto-pulls · continuously-employed workers, controls for composition"],
+    ["💵 Wages",      "Avg Hourly Earnings (level)",    "BLS CES AHETPI",      "Monthly",    "Mar 2026",  "Agent auto-pulls · used for $/hr level and historical context"],
+    ["💵 Wages",      "Wages by Sector",                "BLS CES",             "Annual",     "Jan 2026",  "Manual update each January · Atlanta Fed has no sector breakdown"],
+    ["💵 Wages",      "Real Wage Growth",               "Atlanta Fed WGT − CPI","Monthly",    "Mar 2026",  "Computed: nominal Atlanta Fed WGT − CPI YoY"],
     ["🛒 CPI",        "CPI-U All Items YoY",            "BLS CPI",             "Monthly",    "Feb 2026",  "Agent auto-pulls ~2 wks after month"],
     ["🛒 CPI",        "Core CPI (ex food & energy)",   "BLS CPI",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["🛒 CPI",        "CPI by Category (8 series)",    "BLS CPI",             "Monthly",    "Feb 2026",  "Agent pulls all 8 components"],
@@ -6448,7 +6449,7 @@ if(document.readyState === 'loading'){
         <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
         <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS CES</td><td>Mar 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates, weekly initial &amp; continued jobless claims</td><td>U-3 rate, U-6 rate, sector unemployment YoY, weekly claims</td><td>BLS CPS · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
-        <tr><td><strong>💵 Wages</strong></td><td>Average hourly earnings, real wage growth, sector wage differentials</td><td>AHE $/hr, nominal YoY %, real wage growth</td><td>BLS CES Table B-3</td><td>Feb 2026</td></tr>
+        <tr><td><strong>💵 Wages</strong></td><td>Headline wage growth (composition-adjusted), real wage growth, AHE $/hr level, sector differentials</td><td>Wage growth YoY %, AHE $/hr, real wage, sector YoY</td><td>Atlanta Fed WGT 3MMA (headline) · BLS CES AHETPI (level + sector)</td><td>Mar 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path, card issuer funding &amp; yield</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots, card yield %</td><td>Fed H.15 · FOMC SEP Dec 2025 · FDIC · Earnings</td><td>Mar 2026</td></tr>

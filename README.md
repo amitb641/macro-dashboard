@@ -155,7 +155,8 @@ Trigger the workflow from **Actions > Daily Macro Update > Run workflow**. Check
 All data comes from U.S. federal agencies, regulatory filings, and publicly reported bank earnings:
 
 - **BEA** — GDP, PCE, personal income
-- **BLS** — CPI, employment, wages (CES & CPS)
+- **BLS** — CPI, employment, average hourly earnings (CES & CPS)
+- **Atlanta Fed Wage Growth Tracker** — headline wage growth (FRBATLWGT3MMAUMHWGO, 3-Month MA, Unweighted Median Hourly). Composition-adjusted; measures year-over-year wage change for workers continuously employed over 12 months. Used as the primary wage-growth KPI; BLS AHE retained for $/hr levels, long-history charts, and sector breakdown.
 - **EIA** — Oil prices, U.S. production
 - **Federal Reserve** — Fed funds rate, Treasury yields, consumer credit (G.19), SLOOS
 - **NY Fed** — Household debt & credit, recession probability model

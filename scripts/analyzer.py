@@ -138,7 +138,11 @@ def analyze():
     ccsa = data.get('ccsa', [])
     v['ccsa']         = ccsa[0]['value'] if ccsa else None
 
-    v['wages_yoy']    = yoy(data.get('ahetpi', []))
+    # Prefer Atlanta Fed Wage Growth Tracker (FRBATLWGT3MMAUMHWGO) — value is
+    # already YoY %, no computation needed. Falls back to AHETPI-YoY only if
+    # the new series hasn't been fetched yet (first run after this change).
+    _atl_wgt = data.get('wage_growth_atl', [])
+    v['wages_yoy']    = _atl_wgt[0]['value'] if _atl_wgt else yoy(data.get('ahetpi', []))
     v['cpi_yoy']      = yoy(data.get('cpi_all', []))
     v['core_cpi_yoy'] = yoy(data.get('cpi_core', []))
     v['pce_yoy']      = yoy(data.get('pce', []))
