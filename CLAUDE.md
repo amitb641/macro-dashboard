@@ -34,7 +34,9 @@ Supporting scripts:
 - `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
 - `data/raw_data.json` — All collected API data
 - `data/signals.json` — Analyzer output
-- `data/validation_report.json` — Validator output (5-pass)
+- `data/bank_earnings.json` — Quarterly earnings commentary (source of truth for `BANK_COMMENTARY` in `index.html`; renderer patches it in via `update_bank_cards`)
+- `data/transcripts/<Quarter>/<TICKER>.txt` — Archived earnings-call transcripts; presence enables validator's verbatim gate (see Earnings Commentary rule)
+- `data/validation_report.json` — Validator output (6-pass)
 - `data/visual_review_report.json` — Agent 8 vision review output
 - `data/pipeline_version.json` — Version tracking audit log
 - `.github/workflows/briefing.yml` — Main CI pipeline
@@ -74,7 +76,7 @@ Rules:
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 5 passes: internal consistency, source verification, staleness, visual QA, vision review
+- Validator runs 6 passes: internal consistency, source verification, staleness, shock tracker, earnings commentary (verbatim), visual QA, vision review
 
 ## Commit Conventions
 - Bug fixes: `Fix <what>: <detail>`
@@ -101,6 +103,17 @@ Applies to `BANK_COMMENTARY`, `BANK_THEMES`, `BANK_RESULTS`, earnings-call panel
   2. Every numeric (NCO, NII, EPS, NIM, volumes) matches the company's released figure.
   3. Future-dated items (reports after today's date) are marked `Pending`.
   4. Source attribution in the panel footer lists each call date used.
+
+### Update Workflow (Q2 2026 onward)
+The earnings commentary is **data-driven** — do not hand-edit `index.html`. Flow:
+
+1. **Edit `data/bank_earnings.json`** — add/update each bank's `actual_report_date`, `transcript_url`, `quote`, and the 7 field entries (`economy`, `lending`, `cards_loans`, `macro`, `tech_ai`, `credit`, `outlook`). Set `status` to `reported` once actual data is in. Leave `pending` for banks whose call hasn't happened yet.
+2. **Archive the transcript** to `data/transcripts/<Quarter>/<TICKER>.txt` (e.g. `data/transcripts/Q2_2026/JPM.txt`) — plain text of the call is fine. This enables the validator's verbatim gate for this bank.
+3. **Run `python scripts/renderer.py`** — patches `BANK_COMMENTARY` in `index.html` from the JSON. Date with `(pending)` suffix is rendered automatically for banks whose `actual_report_date` is missing or in the future.
+4. **Run `python scripts/validator.py`** — Pass 3c (`check_earnings_verbatim`) verifies every quoted span in your JSON exists verbatim in the archived transcript. A mismatch is build-blocking (critical severity).
+5. **Update the panel footer `src=...` line** in `index.html` by hand for now (sources attribution — not yet automated).
+
+When the reporting date list changes quarter-to-quarter, update `expected_report_date` per bank in the JSON (single field, one place).
 
 ## Agent Skills (Slash Commands)
 Custom development lifecycle commands are available in `.claude/commands/`:

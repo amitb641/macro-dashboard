@@ -17,6 +17,7 @@ SIG_FILE  = ROOT / 'data' / 'signals.json'
 ANA_FILE  = ROOT / 'data' / 'analysis.json'
 OVR_FILE  = ROOT / 'data' / 'overrides.json'
 VAL_FILE  = ROOT / 'data' / 'validation_report.json'
+BANK_FILE = ROOT / 'data' / 'bank_earnings.json'
 
 applied  = []
 errors   = []
@@ -2157,6 +2158,63 @@ def rebuild_kpi_strip(html, data, vals):
         return html
 
 
+# Field order for the JS literal inside BANK_COMMENTARY —
+# must match the consumption pattern in index.html's bank-card template.
+_BANK_JS_FIELDS = ('bank', 'ceo', 'ticker', 'color', 'date', 'quote',
+                   'economy', 'lending', 'cards_loans', 'macro', 'src',
+                   'tech_ai', 'credit', 'outlook')
+
+
+def update_bank_cards(html):
+    """Rebuild BANK_COMMENTARY from data/bank_earnings.json.
+
+    Pending gating: banks with status=='pending' or no actual_report_date
+    get a '(pending)' suffix on the displayed date. Field contents are written
+    verbatim from the JSON — per CLAUDE.md's factuality rule, whoever edits
+    bank_earnings.json is responsible for sourcing every quoted string.
+    """
+    if not BANK_FILE.exists():
+        warnings.append('update_bank_cards: data/bank_earnings.json not found — skipping')
+        return html
+
+    bank_data = json.loads(BANK_FILE.read_text(encoding='utf-8'))
+    today = datetime.date.today().isoformat()
+
+    new_entries = []
+    reported = 0
+    for b in bank_data.get('banks', []):
+        actual = b.get('actual_report_date', '')
+        expected = b.get('expected_report_date', '')
+        status = (b.get('status') or '').lower()
+        is_pending = (status == 'pending') or not actual or (expected > today and not actual)
+        if not is_pending:
+            reported += 1
+
+        date_display = b.get('date') or expected or ''
+        if is_pending and '(pending)' not in date_display.lower():
+            date_display = f'{expected} (pending)' if expected else 'pending'
+
+        entry = {}
+        for k in _BANK_JS_FIELDS:
+            if k == 'date':
+                entry[k] = date_display
+            elif k in b:
+                entry[k] = b[k]
+        new_entries.append(entry)
+
+    new_json = json.dumps(new_entries, ensure_ascii=False, separators=(',', ':'))
+    new_decl = f'const BANK_COMMENTARY = {new_json};'
+    # Match both multi-line original and single-line renderer output.
+    pattern = re.compile(r'const BANK_COMMENTARY\s*=\s*\[[\s\S]*?\n?\];')
+    # Lambda replacement avoids regex backref interpretation of \u escapes.
+    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    if n:
+        applied.append(f'BANK_COMMENTARY rebuilt ({len(new_entries)} banks, {reported} reported)')
+        return new_html
+    warnings.append('update_bank_cards: BANK_COMMENTARY pattern not matched')
+    return html
+
+
 def update_meta(html):
     today = datetime.date.today().strftime('%B %d, %Y')
     utc   = datetime.datetime.utcnow().strftime('%H:%M UTC')
@@ -2241,6 +2299,13 @@ def render():
             print('  \u2705 Outlook/KPIs')
         except Exception as e:
             errors.append(f'Outlook: {e}')
+
+    try:
+        html = update_bank_cards(html)
+        print('  \u2705 Bank Earnings Cards')
+    except Exception as e:
+        errors.append(f'Bank Earnings: {e}')
+        print(f'  \u274c Bank Earnings: {e}')
 
     html = update_meta(html)
 

@@ -675,6 +675,143 @@ def check_shock_tracker(html):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# PASS: EARNINGS COMMENTARY VERBATIM CHECK
+#   Enforces CLAUDE.md's Earnings Commentary factuality rule:
+#   every quoted string in BANK_COMMENTARY must appear verbatim in the
+#   bank's archived transcript (when one exists). Catches paraphrases
+#   presented as direct quotes — the exact failure mode we hit in Q1 2026
+#   before the factuality rule was written down.
+# ═══════════════════════════════════════════════════════════════════════
+
+BANK_FILE = Path(__file__).parent.parent / 'data' / 'bank_earnings.json'
+TRANSCRIPTS_DIR = Path(__file__).parent.parent / 'data' / 'transcripts'
+_QUOTED_FIELDS = ('quote', 'economy', 'lending', 'cards_loans',
+                  'macro', 'tech_ai', 'credit', 'outlook')
+
+
+def _norm_for_match(s):
+    """Normalize whitespace + smart quotes so verbatim matching tolerates
+    common transcript encoding differences (straight vs curly quotes, line wraps)."""
+    s = s.replace('“', '"').replace('”', '"')
+    s = s.replace('‘', "'").replace('’', "'")
+    s = s.replace('—', '--').replace('–', '-')
+    # Collapse all whitespace runs to single space
+    return ' '.join(s.split())
+
+
+def check_earnings_verbatim():
+    """Validate data/bank_earnings.json and enforce verbatim quotes when
+    transcripts are archived.
+
+    Tiers:
+      1. JSON file parses and has required top-level fields.
+      2. Each bank has required identity fields (id, ticker, CEO, dates).
+      3. Reported banks with an archived transcript at
+         data/transcripts/<quarter>/<TICKER>.txt must have every "..."
+         substring in their fields appear in the transcript. Mismatches
+         are CRITICAL (build-blocking).
+      4. Reported banks WITHOUT an archived transcript get a warning only
+         — enables gradual adoption of the archive.
+    """
+    findings = []
+
+    if not BANK_FILE.exists():
+        findings.append({
+            'check': 'bank_earnings.json present',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': 'data/bank_earnings.json not yet created (pre-refactor state)',
+        })
+        return findings
+
+    try:
+        data = json.loads(BANK_FILE.read_text(encoding='utf-8'))
+    except json.JSONDecodeError as e:
+        findings.append({
+            'check': 'bank_earnings.json parse',
+            'severity': 'critical',
+            'pass': False,
+            'reason': f'JSON decode error: {e}',
+        })
+        return findings
+
+    banks = data.get('banks', [])
+    if not banks:
+        findings.append({'check': 'bank_earnings.json has banks',
+                         'severity': 'critical', 'pass': False,
+                         'reason': 'empty or missing banks[]'})
+        return findings
+    findings.append({'check': f'bank_earnings.json ({len(banks)} banks)',
+                     'severity': 'ok', 'pass': True})
+
+    # Quarter-scoped transcripts directory (e.g., "Q1 2026" -> "Q1_2026")
+    quarter = data.get('quarter', '').replace(' ', '_')
+    transcripts_qdir = TRANSCRIPTS_DIR / quarter if quarter else None
+
+    # Per-bank checks
+    required = ('id', 'bank', 'ticker', 'ceo', 'expected_report_date')
+    quoted_re = re.compile(r'"([^"]{15,})"')
+
+    for b in banks:
+        ticker = b.get('ticker', '?')
+
+        missing = [k for k in required if not b.get(k)]
+        if missing:
+            findings.append({
+                'check': f'{ticker}: required fields',
+                'severity': 'critical', 'pass': False,
+                'missing': missing,
+            })
+            continue
+
+        # Skip pending banks — by definition no transcript to verify against
+        if (b.get('status') or '').lower() == 'pending':
+            findings.append({
+                'check': f'{ticker}: pending (reports {b.get("expected_report_date")})',
+                'severity': 'skipped', 'pass': True,
+            })
+            continue
+
+        # Verbatim check only if transcript archive exists
+        if transcripts_qdir is None:
+            continue
+        transcript_path = transcripts_qdir / f'{ticker}.txt'
+        if not transcript_path.exists():
+            findings.append({
+                'check': f'{ticker}: transcript archived for verbatim check',
+                'severity': 'warning', 'pass': False,
+                'reason': f'no file at {transcript_path.relative_to(Path(__file__).parent.parent)} — enforcement skipped for this bank',
+            })
+            continue
+
+        transcript_norm = _norm_for_match(transcript_path.read_text(encoding='utf-8'))
+        mismatches = []
+        for field in _QUOTED_FIELDS:
+            val = b.get(field, '')
+            if not val:
+                continue
+            for quoted in quoted_re.findall(val):
+                if _norm_for_match(quoted) not in transcript_norm:
+                    mismatches.append({'field': field, 'quote_excerpt': quoted[:100]})
+
+        if mismatches:
+            findings.append({
+                'check': f'{ticker}: verbatim quotes in transcript',
+                'severity': 'critical', 'pass': False,
+                'mismatches': mismatches[:5],
+                'total_mismatches': len(mismatches),
+                'reason': f'{len(mismatches)} quoted span(s) not found verbatim in {transcript_path.name}',
+            })
+        else:
+            findings.append({
+                'check': f'{ticker}: verbatim quotes in transcript',
+                'severity': 'ok', 'pass': True,
+            })
+
+    return findings
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # REPORT GENERATION
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -758,7 +895,7 @@ def check_visual_review():
         }]
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None):
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -766,7 +903,9 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         vision_review = []
     if shock_tracker is None:
         shock_tracker = []
-    all_findings = internal + sources + staleness + visual + vision_review + shock_tracker
+    if earnings is None:
+        earnings = []
+    all_findings = internal + sources + staleness + visual + vision_review + shock_tracker + earnings
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -793,6 +932,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'source_verification': sources,
         'staleness': staleness,
         'shock_tracker': shock_tracker,
+        'earnings_verbatim': earnings,
         'visual_qa': visual,
         'visual_review': vision_review,
     }
@@ -849,6 +989,14 @@ def validate():
     st_fail = sum(1 for f in shock_tracker if not f.get('pass'))
     print(f'  {st_pass} passed, {st_fail} failed')
 
+    # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
+    print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
+    earnings = check_earnings_verbatim()
+    e_pass = sum(1 for f in earnings if f.get('pass'))
+    e_fail = sum(1 for f in earnings if not f.get('pass') and f.get('severity') != 'skipped')
+    e_skip = sum(1 for f in earnings if f.get('severity') == 'skipped')
+    print(f'  {e_pass} passed, {e_fail} failed, {e_skip} skipped')
+
     # Pass 4: Visual QA (DOM checks via Playwright, if available)
     print('\n  ── Pass 4: Visual QA (DOM-based rendering checks) ──')
     visual = check_visual()
@@ -872,7 +1020,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
