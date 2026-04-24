@@ -37,6 +37,46 @@ git checkout -b rescue backup/<tag>
 
 ## Baselines
 
+### `backup/pre-earnings-refactor-2026-04-24` — commit `9c7c6ea` (2026-04-24)
+
+**Captured state** — main at CI Weekly Update 2026-04-24, immediately before the
+earnings commentary structural refactor lands.
+
+- `BANK_COMMENTARY` is still a 101-line multi-line JS literal embedded in
+  `index.html` (lines ~3544–3645). Every bank card's quote/economy/lending/
+  cards_loans/macro/tech_ai/credit/outlook is hand-edited directly in HTML.
+- Validator is 5-pass (no earnings factuality gate). Paraphrased quotes and
+  fabricated figures can ship undetected — exactly the failure mode found in
+  Q1 2026 and corrected in commits `1763dff` and `efcfe79`.
+- `data/bank_earnings.json` does NOT exist.
+- `data/transcripts/` does NOT exist.
+- CLAUDE.md's Earnings Commentary Factuality Rule is present (added in
+  `43c3a62`) but enforcement is manual/review-only.
+
+**Why preserved**: restore point in case the data-driven refactor
+(`d7edd0a` onward) introduces a regression in how bank cards render, the
+validator blocks a legitimate weekly update, or we need to revert to the
+hand-edit flow for an emergency update.
+
+**Smoke test at baseline**: 24/25 pass locally (1 pre-existing Playwright
+failure, unchanged).
+
+**Rollback** (if the refactor has a latent bug we can't fix forward):
+```bash
+# Safe — preserves history with revert commits
+git checkout main
+git revert --no-commit 9c7c6ea..HEAD
+git commit -m "Revert to backup/pre-earnings-refactor-2026-04-24 baseline"
+git push origin main
+
+# Or hard — faster but rewrites history
+git checkout main
+git reset --hard backup/pre-earnings-refactor-2026-04-24
+git push --force-with-lease origin main
+```
+
+---
+
 ### `backup/v1.0-shock-tracker-complete` — commit `e433997` (2026-04-20)
 
 **Captured state** — full shock tracker rebuild + data validation rigor pass:
