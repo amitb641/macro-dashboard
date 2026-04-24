@@ -1738,20 +1738,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (12-Month Trend)</div>
     <div class="panel-sub">Atlanta Fed Wage Growth Tracker 3MMA · nominal (solid) vs real CPI-adjusted (dashed) · tracks wage growth for continuously-employed workers (controls for composition)</div>
     <div class="ch300"><canvas id="c-wage-mom"></canvas></div>
-    <p class="src">Source: Atlanta Fed Wage Growth Tracker — 3-Month Moving Average, Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>). Real wages = nominal minus CPI YoY. Atlanta Fed's tracker follows the same workers over 12 months, unlike BLS AHE which can be biased by composition shifts when the mix of workers in the sample changes.</p>
+    <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average, Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a>. Real wages = nominal minus CPI YoY. Atlanta Fed's tracker follows the same workers over 12 months, unlike BLS AHE which can be biased by composition shifts when the mix of workers in the sample changes.</p>
   </div>
 
   <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Nominal vs Real Wage Growth — All Private</div>
-      <div class="panel-sub">Avg hourly earnings YoY % · nominal (solid) vs real inflation-adj (dashed)</div>
+      <div class="panel-title">Nominal vs Real Wage Growth — Annual History</div>
+      <div class="panel-sub">Atlanta Fed WGT 3MMA · Dec reading per year (solid) vs real inflation-adjusted (dashed)</div>
       <div class="ch300"><canvas id="c-wage-line"></canvas></div>
-      <p class="src">Source: BLS Series CES0500000003 · Each year = average of 12 monthly YoY % readings. Real = nominal minus CPI. e.g. 2025: nominal +3.8%, real +1.1%.</p>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3MMA Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a> · nominal = each year's December 3MMA reading (annual headline rate for continuously-employed workers). Real = nominal minus CPI Dec-YoY. Falls back to BLS AHETPI Dec-YoY (vintage-pinned) until Atlanta Fed series is collected.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Avg Hourly Earnings by Sector — 2025 vs 2024</div>
-      <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3</div>
+      <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3 (Atlanta Fed WGT has no sector breakdown — this surface keeps BLS AHE)</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>2025 higher</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>2025 lower</span>
@@ -1763,9 +1763,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="panel">
     <div class="panel-title">Wage Growth by Sector — Annual Nominal %</div>
-    <div class="panel-sub">Avg hourly earnings YoY % · BLS CES Table B-3 · Note: real wages were negative in 2021–22 despite high nominal gains (peak CPI)</div>
+    <div class="panel-sub">BLS CES Table B-3 · sector-level AHE YoY · Atlanta Fed WGT has no sector decomposition, so this breakdown uses BLS · real wages were negative in 2021–22 despite high nominal gains (peak CPI)</div>
     <div class="dtable-wrap"><table class="dtable" id="wage-tbl"></table></div>
-    <p class="src">Source: BLS Series CES0500000003 (Avg Hourly Earnings, All Private, SA) · Each year = average of 12 monthly YoY % readings, e.g. 2025 nominal = (Jan + Feb + … + Dec YoY%) ÷ 12 = +3.8%. Real = nominal minus CPI.</p>
+    <p class="src">Source: BLS Series CES0500000003 (Avg Hourly Earnings, All Private, SA) · Each year = average of 12 monthly YoY % readings. Headline dashboard wage-growth number uses Atlanta Fed WGT 3MMA; this sector table stays on BLS AHE because Atlanta Fed does not publish sector-level wage growth.</p>
   </div>
 </div>
 
@@ -5441,7 +5441,7 @@ function buildStackTab(){
     ["👷 Unemp",      "U-3 Unemployment Rate",          "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "U-6 Underemployment",            "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Manual — no sector API"],
-    ["💵 Wages",      "Wage Growth (headline)",         "Atlanta Fed WGT 3MMA (FRBATLWGT3MMAUMHWGO)", "Monthly", "Mar 2026", "Agent auto-pulls · continuously-employed workers, controls for composition"],
+    ["💵 Wages",      "Wage Growth (headline)",         "<a href='https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO' target='_blank' rel='noopener'>Atlanta Fed WGT 3MMA (FRBATLWGT3MMAUMHWGO)</a>", "Monthly", "Mar 2026", "Agent auto-pulls · continuously-employed workers, controls for composition"],
     ["💵 Wages",      "Avg Hourly Earnings (level)",    "BLS CES AHETPI",      "Monthly",    "Mar 2026",  "Agent auto-pulls · used for $/hr level and historical context"],
     ["💵 Wages",      "Wages by Sector",                "BLS CES",             "Annual",     "Jan 2026",  "Manual update each January · Atlanta Fed has no sector breakdown"],
     ["💵 Wages",      "Real Wage Growth",               "Atlanta Fed WGT − CPI","Monthly",    "Mar 2026",  "Computed: nominal Atlanta Fed WGT − CPI YoY"],
@@ -6449,7 +6449,7 @@ if(document.readyState === 'loading'){
         <tr style="background:var(--bg2)"><td><strong>📊 GDP</strong></td><td>Real GDP growth by quarter and sector breakdown, 2026 forecast table</td><td>Real GDP % QoQ, sector GVA shares, forecast consensus</td><td>BEA NIPA Tables 1.1.1 &amp; GDP-by-Industry</td><td>Feb 2026</td></tr>
         <tr><td><strong>📋 Jobs</strong></td><td>Nonfarm payrolls — total and by sector, 2025 benchmark revision context</td><td>Monthly payrolls added, sector breakdown, annual avg</td><td>BLS CES</td><td>Mar 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates, weekly initial &amp; continued jobless claims</td><td>U-3 rate, U-6 rate, sector unemployment YoY, weekly claims</td><td>BLS CPS · DOL / FRED (ICSA, CCSA)</td><td>Mar 2026</td></tr>
-        <tr><td><strong>💵 Wages</strong></td><td>Headline wage growth (composition-adjusted), real wage growth, AHE $/hr level, sector differentials</td><td>Wage growth YoY %, AHE $/hr, real wage, sector YoY</td><td>Atlanta Fed WGT 3MMA (headline) · BLS CES AHETPI (level + sector)</td><td>Mar 2026</td></tr>
+        <tr><td><strong>💵 Wages</strong></td><td>Headline wage growth (composition-adjusted), real wage growth, AHE $/hr level, sector differentials</td><td>Wage growth YoY %, AHE $/hr, real wage, sector YoY</td><td><a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed WGT 3MMA</a> (headline) · BLS CES AHETPI (level + sector)</td><td>Mar 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path, card issuer funding &amp; yield</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots, card yield %</td><td>Fed H.15 · FOMC SEP Dec 2025 · FDIC · Earnings</td><td>Mar 2026</td></tr>

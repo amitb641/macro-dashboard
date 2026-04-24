@@ -245,23 +245,46 @@ def rebuild_charts(html, data):
                 'labels': common_labels, 'headline': headline, 'core': core})
 
     # ── WAGE_ANNUAL ───────────────────────────────────────────────────
-    # Pinned inputs (same rationale as CPI_ANNUAL above).
+    # Primary source: Atlanta Fed Wage Growth Tracker 3MMA (FRBATLWGT3MMAUMHWGO).
+    # Each monthly observation is already a YoY %, so annual-rate = the
+    # December reading of that year (3MMA measured at end-Q4 ≈ the year's
+    # headline wage-growth rate). Fallback: AHETPI Dec-to-Dec YoY (vintage-
+    # pinned) — keeps long-history continuity if the new series hasn't been
+    # collected yet.
+    atl_wgt = data.get('wage_growth_atl', [])
     ahetpi = data.get('ahetpi_pinned') or data.get('ahetpi', [])
-    if len(ahetpi) >= 60 and len(cpi_all) >= 60:
+    c_labels_all, c_values_all = (_dec_yoy(cpi_all) if len(cpi_all) >= 60 else ([], []))
+    labels, nominal, real = [], [], []
+    if atl_wgt and len(atl_wgt) >= 12 and c_labels_all:
+        # Group Atlanta Fed monthly values by year and pick each year's
+        # December reading (or latest month if Dec not yet available).
+        by_year = {}
+        for obs in atl_wgt:
+            y, m = obs['date'][:4], int(obs['date'][5:7])
+            # Prefer December; else keep the latest month seen for that year
+            if y not in by_year or by_year[y][0] < m:
+                by_year[y] = (m, obs['value'])
+        for y in sorted(by_year.keys()):
+            if y in c_labels_all:
+                n = round(by_year[y][1], 1)
+                c = c_values_all[c_labels_all.index(y)]
+                labels.append(y)
+                nominal.append(n)
+                real.append(round(n - c, 1))
+    elif len(ahetpi) >= 60 and c_labels_all:
+        # Fallback: AHETPI Dec-YoY
         w_labels, w_values = _dec_yoy(ahetpi)
-        c_labels, c_values = _dec_yoy(cpi_all)
-        labels, nominal, real = [], [], []
         for l in w_labels:
-            if l in c_labels:
+            if l in c_labels_all:
                 n = w_values[w_labels.index(l)]
-                c = c_values[c_labels.index(l)]
+                c = c_values_all[c_labels_all.index(l)]
                 labels.append(l)
                 nominal.append(n)
                 real.append(round(n - c, 1))
-        # Annual only — monthly shown in WAGE_MONTHLY
-        if labels:
-            html = _inject_const(html, 'WAGE_ANNUAL', {
-                'labels': labels, 'nominal': nominal, 'real': real})
+    # Annual only — monthly shown in WAGE_MONTHLY
+    if labels:
+        html = _inject_const(html, 'WAGE_ANNUAL', {
+            'labels': labels, 'nominal': nominal, 'real': real})
 
     # ── JOBS_ANNUAL ───────────────────────────────────────────────────
     # Pinned for historical stability against BLS annual benchmark revisions
