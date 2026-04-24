@@ -1,0 +1,119 @@
+{
+  "quarter": "Q2 2026",
+  "season": {"start": "2026-07-10", "end": "2026-08-05"},
+  "maintained_by": "human-in-the-loop",
+  "notes": "Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it.",
+  "banks": [
+    {
+      "ticker": "GS",
+      "bank": "Goldman Sachs",
+      "ceo": "David Solomon, CEO",
+      "color": "#1d4ed8",
+      "expected_report_date": "2026-07-13",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/13/goldman-sachs-gs-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-gs-earnings-call-transcript",
+        "https://www.goldmansachs.com/pressroom/press-releases/2026/2026-07-13-q2-results"
+      ]
+    },
+    {
+      "ticker": "JPM",
+      "bank": "JPMorgan Chase",
+      "ceo": "Jamie Dimon, CEO",
+      "color": "#1e3a8a",
+      "expected_report_date": "2026-07-14",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/14/jpmorgan-jpm-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-jpm-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "WFC",
+      "bank": "Wells Fargo",
+      "ceo": "Charlie Scharf, CEO",
+      "color": "#d97706",
+      "expected_report_date": "2026-07-14",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/14/wells-fargo-wfc-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-wfc-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "C",
+      "bank": "Citigroup",
+      "ceo": "Jane Fraser, CEO",
+      "color": "#0284c7",
+      "expected_report_date": "2026-07-14",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/14/citigroup-c-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-c-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "BAC",
+      "bank": "Bank of America",
+      "ceo": "Brian Moynihan, CEO",
+      "color": "#D64045",
+      "expected_report_date": "2026-07-15",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/15/bofa-bac-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-bac-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "USB",
+      "bank": "U.S. Bancorp",
+      "ceo": "Gunjan Kedia, CEO",
+      "color": "#0f766e",
+      "expected_report_date": "2026-07-16",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/16/us-bancorp-usb-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-usb-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "COF",
+      "bank": "Capital One",
+      "ceo": "Richard Fairbank, CEO & Founder",
+      "color": "#8878B8",
+      "expected_report_date": "2026-07-21",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/21/capital-one-cof-q2-2026-earnings-transcript/",
+        "https://seekingalpha.com/article/q2-2026-cof-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "SYF",
+      "bank": "Synchrony",
+      "ceo": "Brian Doubles, President & CEO",
+      "color": "#ea580c",
+      "expected_report_date": "2026-07-21",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/21/synchrony-syf-q2-2026-earnings-transcript/",
+        "https://seekingalpha.com/article/q2-2026-syf-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "AXP",
+      "bank": "American Express",
+      "ceo": "Stephen Squeri, Chairman & CEO",
+      "color": "#059669",
+      "expected_report_date": "2026-07-23",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/23/amex-axp-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/q2-2026-axp-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "BCS",
+      "bank": "Barclays US (BCUS)",
+      "ceo": "C.S. Venkatakrishnan, Barclays Group CEO",
+      "color": "#1E4FA3",
+      "expected_report_date": "2026-07-30",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/30/barclays-bcs-q2-2026-earnings-call-transcript/",
+        "https://home.barclays/investor-relations/results-and-reports/"
+      ]
+    }
+  ]
+}

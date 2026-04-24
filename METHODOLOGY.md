@@ -226,6 +226,15 @@ was a local trough.
 - **Validator Pass 3b** (`check_shock_tracker`) verifies SHOCK_TRACKER structure,
   required fields per phase, and status-vs-MMA consistency (confirmed phases
   must have delta > 1.5pp, etc.).
+- **Validator Pass 3c** (`check_earnings_verbatim`) enforces the earnings
+  commentary factuality rule: every `"…"` substring in each field of
+  `data/bank_earnings.json` must appear verbatim (modulo smart-quote /
+  dash / whitespace normalization) in the archived transcript at
+  `data/transcripts/<Quarter>/<TICKER>.txt`. A mismatch is CRITICAL severity
+  and blocks publish. Missing transcript → WARNING (enables gradual adoption;
+  content still ships but un-gated). This is the mechanical guardrail that
+  makes Agent 9's autonomous extraction safe — Claude can't fabricate a quote
+  and have it merge, because the validator would catch it first.
 - **Agent 7 Visual QA** performs DOM-based rendering checks to confirm the
   page actually renders what the JSON says it should.
 - **Agent 8 Visual Review** (when `ANTHROPIC_API_KEY` set) does vision-based

@@ -39,17 +39,39 @@ The Oil Impact Chain — the dashboard's shock-transmission tracker — is the m
 
 ## How It Works
 
-A five-stage pipeline runs Mon-Fri at 7 AM ET via GitHub Actions:
+A **9-agent pipeline** runs on two independent schedules:
+
+**Main pipeline** (`briefing.yml` — weekly Fri 8am ET + monthly 2nd Sat):
 
 ```
-Agent 1 — Collector    Pull latest data from FRED, BLS, and EIA APIs
-Agent 2 — Analyzer     Score risk signals, flag anomalies
-Agent 3 — Analyst      Monthly AI commentary via Claude (1st of month only)
-Agent 4 — Renderer     Patch live values into index.html charts & KPIs
-Agent 5 — Publisher    Send email briefing via Resend
+Agent 1 — Collector       Pull latest data from FRED, BLS, EIA APIs (no LLM)
+Agent 2 — Analyzer        Score risk signals, flag anomalies (no LLM)
+Agent 3 — Analyst         AI commentary via Claude Sonnet
+Agent 4 — Renderer        Patch live values into index.html charts/KPIs (no LLM)
+Agent 5 — Publisher       Commit + email briefing via Resend (no LLM)
+Agent 6 — Validator       6-pass build gate: data consistency, source verification,
+                          staleness, shock-tracker structure, earnings factuality,
+                          + Agent 7/8 reports (no LLM)
+Agent 7 — Visual QA       Headless Chromium, 224 DOM checks (no LLM)
+Agent 8 — Visual Review   Claude vision: per-tab screenshot defect detection
 ```
 
-The workflow auto-commits updated `index.html` and `data/` files on each run.
+**Earnings pipeline** (`earnings_agent.yml` — quarterly, earnings-season daily at 10pm UTC, days 10-28 of Jan/Apr/Jul/Oct):
+
+```
+Agent 9 — Earnings Agent  Reads data/earnings_calendar.json → fetches each bank's
+                          Q-transcript (IR site / Motley Fool / Seeking Alpha) →
+                          Claude Sonnet extracts 8 verbatim fields with a strict
+                          no-paraphrase schema → validator Pass 3c enforces that
+                          every "…" quote appears verbatim in the archived
+                          transcript → auto-commits to main when the gate passes,
+                          halts silently when it doesn't.
+                          Fully autonomous; never touches the weekly cadence.
+```
+
+The main workflow auto-commits updated `index.html` and `data/` files each run.
+Agent 9 commits per bank with messages like `Agent 9: Q2 2026 — JPM, BAC reported
+(auto-extracted)` so individual extractions are easy to revert.
 
 ---
 
@@ -57,19 +79,41 @@ The workflow auto-commits updated `index.html` and `data/` files on each run.
 
 ```
 index.html                  Single-page dashboard (HTML + CSS + JS + Chart.js)
+CLAUDE.md                   Codebase guidelines (branch strategy, gotchas,
+                            earnings factuality rule)
+METHODOLOGY.md              Indicator definitions, formulas, thresholds,
+                            validator-pass documentation
 data/
   raw_data.json             Latest API responses from Agent 1
   signals.json              Risk signals and anomaly flags from Agent 2
-  last_update.json          Run metadata, key values, timestamps
+  analysis.json             AI commentary from Agent 3
+  bank_earnings.json        Source of truth for bank commentary cards; Agent 9
+                            writes, renderer patches into index.html
+  earnings_calendar.json    Agent 9 input: per-quarter bank dates + transcript URLs
+  transcripts/<Q>/*.txt     Archived earnings transcripts — enables validator
+                            verbatim gate
+  validation_report.json    6-pass validator output (Agent 6)
+  visual_qa_report.json     224-check DOM report (Agent 7)
+  visual_review_report.json AI vision defect report (Agent 8)
+  snapshots/                Rolling data backups (last 3 runs)
 scripts/
   collector.py              Agent 1 — FRED / BLS / EIA data collection
   analyzer.py               Agent 2 — signal scoring and anomaly detection
-  briefing_agent.py         Agent 3 — Claude AI monthly commentary
+  briefing_agent.py         Agent 3 — Claude AI commentary
   renderer.py               Agent 4 — patches live data into index.html
   publisher.py              Agent 5 — email briefing via Resend
-  seed_history.py           One-time script to backfill historical chart arrays
+  validator.py              Agent 6 — 6-pass quality gate
+  visual_qa.py              Agent 7 — Playwright DOM checks
+  visual_review.py          Agent 8 — Claude vision review
+  earnings_agent.py         Agent 9 — autonomous quarterly earnings extraction
+  snapshot.py               Rolling snapshots (keep last 3)
+  healthcheck.py            Post-deploy verification
+  version_tracker.py        Pipeline run audit trail
+  seed_history.py           One-time backfill of historical chart arrays
 .github/workflows/
-  briefing.yml              Daily cron workflow definition
+  briefing.yml              Main pipeline (Agents 1-8, weekly + monthly)
+  earnings_agent.yml        Agent 9 quarterly cron (earnings-season only)
+  smoke-tests.yml           PR smoke tests
 ```
 
 ---
@@ -116,7 +160,7 @@ All data comes from U.S. federal agencies, regulatory filings, and publicly repo
 - **Federal Reserve** — Fed funds rate, Treasury yields, consumer credit (G.19), SLOOS
 - **NY Fed** — Household debt & credit, recession probability model
 - **FDIC** — Bank call reports, deposit data
-- **Bank earnings** — JPM, BAC, WFC, C, GS, USB, COF, DFS, SYF, BFH, AXP, BCS Q4 2025
+- **Bank earnings transcripts** — 10 banks (JPM, BAC, WFC, C, GS, USB, COF, SYF, AXP, BCS) auto-fetched quarterly by **Agent 9** from IR sites / Motley Fool / Seeking Alpha. CEO quotes verified verbatim via validator Pass 3c (`scripts/validator.py:check_earnings_verbatim`). See the Earnings Commentary Factuality Rule in `CLAUDE.md` for provenance requirements.
 - **Freddie Mac** — Primary Mortgage Market Survey
 - **S&P / Case-Shiller** — Home price indices
 - **Census Bureau** — Housing starts

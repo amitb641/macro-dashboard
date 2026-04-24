@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-24T19:04:58Z";
+  var BUILD_V = "2026-04-24T18:47:46Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -4096,7 +4096,7 @@ function buildOilTab(){
 // SHOCK_TRACKER — Expected vs actual oil shock transmission (injected by renderer)
 const SHOCK_TRACKER = {"shock_date":"2026-03-01", "weeks_elapsed":8, "wti_pre":65.4, "wti_now":91.1, "wti_chg_pct":39, "phases":[{"phase":"Pump Prices Spike", "expected":"Days 1–14", "expected_weeks":[0, 2], "metric":"Gasoline $/gal", "pre":2.937, "now":4.044, "chg":1.11, "status":"confirmed", "source":"FRED GASREGW · EIA weekly retail gasoline", "status_reason":"Gasoline +$1.11/gal (+38%) vs pre-shock baseline — well beyond $0.50 confirmation threshold. Expected window: weeks 0–2.", "note":"FRED GASREGW: $2.94 → $4.04/gal (+38%)", "commentary":"Retail pumps moved within ~2 weeks of the WTI spike; +$1.11/gal pass-through is roughly in line with the $0.24/gal-per-$10/bbl rule-of-thumb."}, {"phase":"Transport & Freight Costs", "expected":"Weeks 4–6", "expected_weeks":[4, 6], "metric":"CPI Transport Svcs YoY", "pre":5.0, "now":10.2, "chg":5.2, "status":"not_yet", "status_reason":"Monthly pace matches pre-shock baseline. Window: weeks 4–6.", "source":"FRED CUSR0000SETG · BLS CPI Transportation Services (monthly)", "base_effect_note":"YoY jumped 5.0% → 10.2% (+5.2pp), but this is largely a base effect: Mar'25 index 256.838 was a local dip. Monthly pace is what matters.", "post_mom_ann":19.9, "pre_6mma":19.5, "detail":"Mar'26 282.916 vs 278.662 prior · post-shock +19.9% ann. · pre-shock 6-MMA +19.5%", "note":"CPI Transport Svcs at 10.2% YoY (Mar'26)", "commentary":"Transport Services running at pre-shock pace — oil shock not yet visible in the monthly cadence."}, {"phase":"CPI Energy Prints", "expected":"Weeks 6–14", "expected_weeks":[6, 14], "metric":"CPI Energy YoY", "pre":0.4, "now":12.6, "chg":12.2, "status":"confirmed", "status_reason":"Post-shock pace +245.1% ann. exceeds pre-shock 6-MMA +6.2% by +238.9pp (>1.5pp threshold). We are in the expected window (weeks 6–14).", "source":"FRED CPIENGSL · BLS CPI Energy (monthly)", "base_effect_note":null, "post_mom_ann":245.1, "pre_6mma":6.2, "detail":"Mar'26 vs prior month · post-shock +245.1% ann. · pre-shock 6-MMA +6.2%", "note":"CPI Energy at +12.6% YoY", "commentary":"Headline energy print absorbing the full WTI + gasoline spike — single largest monthly move in the tracker. Feeds directly into April headline CPI."}, {"phase":"Food & Services Inflation", "expected":"Months 3–5", "expected_weeks":[12, 20], "metric":"CPI Food Away YoY", "pre":3.9, "now":3.8, "chg":-0.1, "status":"not_yet", "status_reason":"Too early — expected window starts 12–20.", "source":"FRED CUSR0000SEFV · BLS CPI Food Away from Home (monthly)", "base_effect_note":null, "post_mom_ann":2.9, "pre_6mma":4.2, "detail":"Mar'26 vs prior month · post-shock +2.9% ann. · pre-shock 6-MMA +4.2%", "note":"CPI Food Away at 3.8% YoY (Mar'26)", "commentary":"Restaurant prices decelerating slightly — menu changes typically lag oil by 3–5 months, so the first real test will be May–June prints."}, {"phase":"Core Goods Inflation", "expected":"Months 5–8", "expected_weeks":[20, 32], "metric":"Core CPI YoY", "pre":2.5, "now":2.6, "chg":0.1, "status":"not_yet", "source":"FRED CPILFESL · BLS CPI ex-Food & Energy (monthly)", "status_reason":"Expected window is weeks 20–32 (months 5–8 post-shock). We are at week 8 — far too early. Core CPI at 2.6% is near the pre-shock 2.5% baseline.", "note":"Core CPI at 2.6% — energy input costs tracking", "commentary":"Manufacturing/chemicals absorb input costs over 5–8 months. Too early for this phase — energy input costs only began passing through in Mar'26 PPI."}, {"phase":"Consumer Sentiment Falls", "expected":"Weeks 2–6", "expected_weeks":[2, 6], "metric":"UMich Sentiment", "pre":56.6, "now":49.8, "chg":-6.8, "status":"confirmed", "source":"UMich Survey of Consumers (direct) · prelim mid-month, final end-of-month", "status_reason":"UMich dropped from 56.6 to 49.8 (-6.8pt). Confirmation threshold: 0.5pt move. Expected window: weeks 2–6, currently at week 8.", "note":"UMich at 49.8 — post-shock reading confirms decline", "commentary":"Sharp drop in visible-inflation-sensitive households. Pump pain + media cycle around oil shock drove the print. UMich often overshoots relative to actual spending changes."}, {"phase":"Savings Drawdown", "expected":"Months 2–4", "expected_weeks":[8, 16], "metric":"Personal Saving Rate", "pre":4.5, "now":4.0, "chg":-0.5, "status":"not_yet", "source":"FRED PSAVERT · BEA Personal Saving Rate (monthly, ~1-mo lag)", "status_reason":"Latest PSAVERT reading (2026-02-01) is pre-shock. BEA releases with ~1-month lag, so the first post-shock print lands in ~May.", "note":"Saving rate at 4.0% — pre-shock baseline", "commentary":"PSAVERT lags ~1 month so current data is still pre-shock. The fuel-cost bite on take-home pay won't show until May–Jun prints."}, {"phase":"Delinquencies Climb", "expected":"Months 5–10", "expected_weeks":[20, 40], "metric":"CC 90+ DPD Rate", "pre":2.94, "now":2.94, "chg":0.0, "status":"not_yet", "source":"NY Fed Household Debt & Credit Report · CC 90+ DPD (quarterly)", "status_reason":"Latest CC 90+ DPD is quarterly (NY Fed HHDC), reading 2025-10-01. Pre-shock. Expected window: months 5–10 (weeks 20–40). First post-shock look is Q3'26 release (~Nov'26).", "note":"CC delinquency at 2.94% — pre-shock data, too early", "commentary":"90+ DPD is quarterly (NY Fed HHDC) and lags 2–3 quarters. Current reading is pre-shock; first real look is Q3'26 release (Nov'26)."}]};
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Mar 10","Mar 11","Mar 12","Mar 13","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 13","Apr 14","Apr 15","Apr 16","Apr 17","Apr 20"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65,83.71,86.8,95.61,98.48,93.39,96.01,96.12,96.11,98.71,89.33,93.18,91.51,96.18,101.26,104.69,102.86,101.9,113.23,114.01,114.58,96.17,99.62,98.34,100.72,93.07,93.04,96.46,85.91,91.06],"brent":[77.24,83.28,81.56,88.59,95.74,94.35,89.84,90.98,102.38,103.23,101.04,108.39,118.09,111.05,118.42,103.79,108.42,109.14,113.39,121.47,121.88,126.69,119.56,127.61,127.61,138.21,122.11,119.03,119.07,123.28,118.69,114.93,116.63,98.63,103.4],"notes":[null,"WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines","WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines","WTI drop $10.9 (11.6%) \u2014 pipeline updates this field with market headlines","WTI surge $3.1 (3.7%) \u2014 pipeline updates this field with market headlines","WTI surge $8.8 (10.1%) \u2014 pipeline updates this field with market headlines","WTI surge $2.9 (3.0%) \u2014 pipeline updates this field with market headlines","WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines","WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $2.6 (2.7%) \u2014 pipeline updates this field with market headlines","WTI drop $9.4 (9.5%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $4.7 (5.1%) \u2014 pipeline updates this field with market headlines","WTI surge $5.1 (5.3%) \u2014 pipeline updates this field with market headlines","WTI surge $3.4 (3.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $11.3 (11.1%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $7.7 (7.6%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $3.4 (3.7%) \u2014 pipeline updates this field with market headlines","WTI drop $10.5 (10.9%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"],"month":"Mar\u2013Apr 2026","updated":"Apr 24 19:03 UTC","sessions":35};
+const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Mar 10","Mar 11","Mar 12","Mar 13","Mar 16","Mar 17","Mar 18","Mar 19","Mar 20","Mar 23","Mar 24","Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 13","Apr 14","Apr 15","Apr 16","Apr 17","Apr 20"],"wti":[71.13,74.48,74.58,80.88,90.77,94.65,83.71,86.8,95.61,98.48,93.39,96.01,96.12,96.11,98.71,89.33,93.18,91.51,96.18,101.26,104.69,102.86,101.9,113.23,114.01,114.58,96.17,99.62,98.34,100.72,93.07,93.04,96.46,85.91,91.06],"brent":[77.24,83.28,81.56,88.59,95.74,94.35,89.84,90.98,102.38,103.23,101.04,108.39,118.09,111.05,118.42,103.79,108.42,109.14,113.39,121.47,121.88,126.69,119.56,127.61,127.61,138.21,122.11,119.03,119.07,123.28,118.69,114.93,116.63,98.63,103.4],"notes":[null,"WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines","WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines","WTI drop $10.9 (11.6%) \u2014 pipeline updates this field with market headlines","WTI surge $3.1 (3.7%) \u2014 pipeline updates this field with market headlines","WTI surge $8.8 (10.1%) \u2014 pipeline updates this field with market headlines","WTI surge $2.9 (3.0%) \u2014 pipeline updates this field with market headlines","WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines","WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $2.6 (2.7%) \u2014 pipeline updates this field with market headlines","WTI drop $9.4 (9.5%) \u2014 pipeline updates this field with market headlines","WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $4.7 (5.1%) \u2014 pipeline updates this field with market headlines","WTI surge $5.1 (5.3%) \u2014 pipeline updates this field with market headlines","WTI surge $3.4 (3.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $11.3 (11.1%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $7.7 (7.6%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $3.4 (3.7%) \u2014 pipeline updates this field with market headlines","WTI drop $10.5 (10.9%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"],"month":"Mar\u2013Apr 2026","updated":"Apr 24 15:56 UTC","sessions":35};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -5759,8 +5759,8 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron trigger: Weekly Fri 8am ET + Monthly 2nd Sat — Last run: April 24, 2026 19:04 UTC</span>
-        <span class="ma-trigger-sub">briefing.yml · orchestrates 7 agents + build gate + auto-rollback · total runtime &lt;3 min</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron triggers: Weekly Fri 8am ET · Monthly 2nd Sat · Earnings-season daily 10pm UTC (Jan/Apr/Jul/Oct, days 10-28)</span>
+        <span class="ma-trigger-sub">briefing.yml (8 main agents + build gate + auto-rollback, &lt;3 min) · earnings_agent.yml (Agent 9 quarterly) — last main-pipeline run: April 24, 2026</span>
       </div>
     </div>
 
@@ -5795,7 +5795,12 @@ function buildStackTab(){
       <div class="ma-source" style="animation-delay:.20s">
         <div class="ma-source-icon">📰</div>
         <div class="ma-source-name">Manual</div>
-        <div class="ma-source-sub">Bank earnings · NY Fed · NAR</div>
+        <div class="ma-source-sub">NY Fed · NAR · forecast institutions</div>
+      </div>
+      <div class="ma-source" style="animation-delay:.24s">
+        <div class="ma-source-icon">🏦</div>
+        <div class="ma-source-name">Earnings Transcripts</div>
+        <div class="ma-source-sub">10 banks · Q1/Q2/Q3/Q4 · auto-fetched by Agent 9</div>
       </div>
     </div>
 
@@ -5911,10 +5916,10 @@ function buildStackTab(){
           <div class="ma-agent-icon">🛡️</div>
           <div class="ma-agent-name">Validator</div>
           <div class="ma-agent-file">validator.py</div>
-          <span class="ma-badge-nollm">5-Pass · 254 Checks</span>
+          <span class="ma-badge-nollm">6-Pass · Build Gate</span>
         </div>
         <div class="ma-agent-body">
-          <div class="ma-agent-desc">Unified 5-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (4) visual QA via Agent 7, (5) AI vision review via Agent 8. Build gate blocks publish on critical failures.</div>
+          <div class="ma-agent-desc">Unified 6-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (3b) shock-tracker structure + MMA consistency, (3c) earnings commentary factuality — every "…" quote must verbatim-match an archived transcript, (4) visual QA via Agent 7, (5) AI vision review via Agent 8. Build gate blocks publish on critical failures.</div>
           <div class="ma-agent-io">
             <div class="ma-agent-in">IN: index.html + raw_data.json + APIs</div>
             <div class="ma-agent-out">OUT: validation_report.json</div>
@@ -5960,6 +5965,26 @@ function buildStackTab(){
         </div>
       </div>
 
+      <!-- Agent 9 — separate earnings-season pipeline -->
+      <div class="ma-agent" style="animation-delay:.64s;border-color:rgba(136,120,184,.3);box-shadow:0 2px 12px rgba(136,120,184,.1);grid-column:span 2;background:linear-gradient(to right,#FAFBFF 0%,#FDFCFA 100%)">
+        <div class="ma-agent-header" style="background:#FAFBFF">
+          <div class="ma-agent-accent" style="background:#8878B8"></div>
+          <div class="ma-agent-num">Agent 9</div>
+          <div class="ma-agent-icon">🏦</div>
+          <div class="ma-agent-name">Earnings Agent</div>
+          <div class="ma-agent-file">earnings_agent.py</div>
+          <span class="ma-badge-llm">claude-sonnet-4-6</span>
+          <span class="ma-badge-nollm" style="margin-left:6px">Quarterly · autonomous</span>
+        </div>
+        <div class="ma-agent-body">
+          <div class="ma-agent-desc">Autonomous quarterly pipeline for bank earnings commentary — runs on its own cron (10pm UTC, days 10-28 of Jan/Apr/Jul/Oct), does not touch the weekly briefing cadence. Reads <code>data/earnings_calendar.json</code> → fetches each bank's Q-transcript from IR/Motley Fool/Seeking Alpha → Claude Sonnet extracts 8 verbatim fields with a strict no-paraphrase schema → local substring check + validator Pass 3c gate → auto-commits to main when the gate passes, halts silently when it doesn't. The factuality rule is enforced mechanically, not by human review.</div>
+          <div class="ma-agent-io">
+            <div class="ma-agent-in">IN: earnings_calendar.json + transcript URLs</div>
+            <div class="ma-agent-out">OUT: bank_earnings.json + data/transcripts/&lt;Q&gt;/&lt;TICKER&gt;.txt + git commit</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- DOWN ARROW -->
@@ -5987,8 +6012,8 @@ function buildStackTab(){
       <div class="ma-output" style="border-color:rgba(5,150,105,.2);background:#F0FDF9">
         <div class="ma-output-icon">🛡️</div>
         <div>
-          <div class="ma-output-title" style="color:#059669">Validation Report (254 checks)</div>
-          <div class="ma-output-sub">5-pass quality gate: internal consistency, live API spot-checks, staleness, 224 DOM visual checks, AI vision review of 12 chart tabs — viewable in Validator tab</div>
+          <div class="ma-output-title" style="color:#059669">Validation Report (6-pass)</div>
+          <div class="ma-output-sub">Internal consistency · live API spot-checks · staleness · shock-tracker structure · earnings factuality (verbatim gate) · 224 DOM visual checks · AI vision review of 12 chart tabs — viewable in Validator tab</div>
         </div>
       </div>
       <div class="ma-output" style="border-color:rgba(136,120,184,.2);background:#F3F0FF">
@@ -6002,7 +6027,7 @@ function buildStackTab(){
 
     <!-- WHY NOTE -->
     <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10.5px;color:#92400E;line-height:1.6">
-      <strong>Why multi-agent?</strong> Only Agents 3 and 8 use an LLM — Agents 1, 2, 4, 5, 6 and 7 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) runs a unified 5-pass quality gate — including Agent 7's 224 visual DOM checks via headless Chromium and Agent 8's AI vision review of every chart tab — catching data divergences, benchmark revisions, rendering defects, and pixel-level visual bugs automatically. Critical failures block publish, and auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
+      <strong>Why multi-agent?</strong> Only Agents 3, 8 and 9 use an LLM — Agents 1, 2, 4, 5, 6 and 7 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) runs a unified 6-pass quality gate — internal consistency, live API spot-checks, staleness, shock-tracker structure, <strong>earnings-commentary factuality (verbatim quote gate)</strong>, plus Agent 7's 224 visual DOM checks and Agent 8's AI vision review of every chart tab. Agent 9 runs on its own cron (quarterly, earnings-season only) and uses the same validator gate before committing. Critical failures block publish; auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
     </div>
 
   </div>
@@ -6042,8 +6067,8 @@ function buildStackTab(){
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0FDF9;border-radius:10px;border:1px solid rgba(5,150,105,.15)">
       <span style="font-size:18px">🛡️</span>
       <div>
-        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (254 checks)</div>
-        <div style="font-size:9px;color:#64748B">5-pass quality gate + visual QA + AI vision</div>
+        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (6-pass)</div>
+        <div style="font-size:9px;color:#64748B">6-pass gate: data + shock tracker + earnings + visual + AI vision</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
@@ -6427,8 +6452,8 @@ if(document.readyState === 'loading'){
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td>BLS CPI-U (CUUR0000SA0 series)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td>BEA Personal Income &amp; Outlays · Fed G.19</td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path, card issuer funding &amp; yield</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots, card yield %</td><td>Fed H.15 · FOMC SEP Dec 2025 · FDIC · Earnings</td><td>Mar 2026</td></tr>
-        <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td>FRED ICE BofA · NY Fed HHDC · Bank earnings</td><td>Q4 2025</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>Big 5 bank earnings — net income, NII, ROTCE, CET1, 2026 NII guidance</td><td>Net income, NII, ROTCE %, CET1 %, 2026 NII guide</td><td>Q4 2025 earnings releases (Jan 2026)</td><td>Q4 2025</td></tr>
+        <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td>FRED ICE BofA · NY Fed HHDC · Bank earnings (Agent 9)</td><td>Q1 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>10-bank earnings commentary — NII, ROTCE, CET1, NCO, forward guidance + verbatim CEO quotes across 7 topic areas</td><td>Net income, NII, ROTCE %, CET1 %, FY26 NII guide, verbatim CEO commentary</td><td>Q1 2026 earnings transcripts (auto-fetched by Agent 9 during earnings weeks) · <code>data/bank_earnings.json</code></td><td>Q1 2026</td></tr>
         <tr><td><strong>🏠 Housing</strong></td><td>Home prices, mortgage rates, housing starts, affordability, metro table</td><td>HPI YoY, 30yr mortgage rate, starts, affordability index</td><td>Case-Shiller · FHFA · Census · Freddie Mac · NAR</td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛢️ Oil</strong></td><td>WTI/Brent prices, U.S. production, 2026 price outlook from 7 institutions</td><td>WTI/Brent $/bbl, U.S. mb/d, 2026 price range</td><td>EIA STEO Feb 2026 · GS · JPM · IEA · OPEC</td><td>Feb 2026</td></tr>
       </tbody>

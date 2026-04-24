@@ -14,15 +14,16 @@
 - Teardown: `git worktree remove /home/user/macro-dashboard-dev`
 
 ## Project Architecture
-8-agent Python data pipeline:
+9-agent Python data pipeline:
 1. `scripts/collector.py` — Agent 1: Pulls data from FRED, BLS, EIA APIs
 2. `scripts/analyzer.py` — Agent 2: Diffs raw data, scores signals
 3. `scripts/briefing_agent.py` — Agent 3: AI commentary (Claude Sonnet)
 4. `scripts/renderer.py` — Agent 4: Patches index.html with chart data (regex-based)
-5. `scripts/validator.py` — Agent 6: Independent data quality checks (5-pass)
+5. `scripts/validator.py` — Agent 6: Independent data quality checks (6-pass)
 6. `scripts/publisher.py` — Agent 5: Email delivery via Resend
 7. `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
 8. `scripts/visual_review.py` — Agent 8: Vision-based chart review (Claude multimodal)
+9. `scripts/earnings_agent.py` — Agent 9: Autonomous quarterly earnings — fetches transcripts, extracts verbatim fields via Claude Sonnet, gated by validator Pass 3c. Runs on its own cron (`earnings_agent.yml`, 10pm UTC during Jan/Apr/Jul/Oct weeks). **Never touches the weekly briefing cadence.**
 
 Supporting scripts:
 - `scripts/snapshot.py` — Rolling data backups (keep last 3)
@@ -34,12 +35,14 @@ Supporting scripts:
 - `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
 - `data/raw_data.json` — All collected API data
 - `data/signals.json` — Analyzer output
-- `data/bank_earnings.json` — Quarterly earnings commentary (source of truth for `BANK_COMMENTARY` in `index.html`; renderer patches it in via `update_bank_cards`)
-- `data/transcripts/<Quarter>/<TICKER>.txt` — Archived earnings-call transcripts; presence enables validator's verbatim gate (see Earnings Commentary rule)
+- `data/bank_earnings.json` — Quarterly earnings commentary (source of truth for `BANK_COMMENTARY` in `index.html`; renderer patches it in via `update_bank_cards`; Agent 9 writes it autonomously)
+- `data/earnings_calendar.json` — Per-quarter bank reporting dates + transcript URL candidates; Agent 9's input (maintained quarterly by a human)
+- `data/transcripts/<Quarter>/<TICKER>.txt` — Archived earnings-call transcripts (auto-saved by Agent 9); presence enables validator Pass 3c verbatim gate
 - `data/validation_report.json` — Validator output (6-pass)
 - `data/visual_review_report.json` — Agent 8 vision review output
 - `data/pipeline_version.json` — Version tracking audit log
-- `.github/workflows/briefing.yml` — Main CI pipeline
+- `.github/workflows/briefing.yml` — Main CI pipeline (Agents 1-8, weekly Fri + monthly 2nd Sat)
+- `.github/workflows/earnings_agent.yml` — Agent 9 cron (quarterly, earnings-season only — Jan/Apr/Jul/Oct days 10-28, 10pm UTC)
 - `.github/workflows/smoke-tests.yml` — PR smoke tests
 
 ## Known Gotchas
