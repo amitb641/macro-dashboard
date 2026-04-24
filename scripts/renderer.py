@@ -1991,6 +1991,13 @@ def rebuild_kpi_strip(html, data, vals):
     def _mlbl(date_str):
         return datetime.datetime.strptime(date_str, '%Y-%m-%d').strftime("%b'%y")
 
+    def _qlbl(date_str):
+        """Quarter label for start-of-quarter dates (FRED convention).
+        e.g. '2025-10-01' → "Q4'25", '2025-07-01' → "Q3'25"."""
+        y, m = int(date_str[:4]), int(date_str[5:7])
+        q = (m - 1) // 3 + 1
+        return f"Q{q}'{y % 100:02d}"
+
     def _mom(series, precision=1, pct=False):
         """Return (current, prior, delta_str, delta_num) from newest-first monthly series."""
         if not series or len(series) < 2:
@@ -2169,14 +2176,16 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d_s, 'chg': f'{chg_s}', 'badge': badge,
                       'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
 
-    # 10. Debt Service Ratio (TDSP)  (up = bad)
+    # 10. Debt Service Ratio (TDSP)  (up = bad). TDSP is QUARTERLY (FRED
+    # stores with start-of-quarter date — 2025-10-01 = Q4 2025), so use
+    # _qlbl here instead of _mlbl.
     tdsp = data.get('tdsp', [])
     if tdsp and len(tdsp) >= 2:
         cur_t, prev_t, chg_t, d_t = _mom(tdsp)
-        lbl = f"Debt Service Ratio {_mlbl(tdsp[0]['date'])}"
+        lbl = f"Debt Service Ratio {_qlbl(tdsp[0]['date'])}"
         cards.append({'lbl': lbl, 'val': f'{cur_t:.1f}%', 'metric': 'dsr',
                       'delta': d_t, 'chg': f'{chg_t}pp', 'inv': True,
-                      'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_mlbl(tdsp[1]['date'])})"})
+                      'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_qlbl(tdsp[1]['date'])})"})
 
     if not cards:
         return html
