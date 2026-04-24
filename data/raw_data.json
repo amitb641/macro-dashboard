@@ -1,11 +1,10 @@
 {
-  "collected_at": "2026-04-24T13:00:57.675235Z",
+  "collected_at": "2026-04-24T15:38:31.078777Z",
   "series_count": 73,
-  "error_count": 3,
+  "error_count": 2,
   "errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "ALFRED GDPC1@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDPC1&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=30&realtime_start=2026-03-31&realtime_end=2026-03-31&frequency=a"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
   ],
   "data": {
     "ffr": {
@@ -509,14 +508,18 @@
       }
     ],
     "ig_oas": {
-      "date": "2026-04-22",
-      "value": 0.79
+      "date": "2026-04-23",
+      "value": 0.8
     },
     "hy_oas": {
-      "date": "2026-04-22",
-      "value": 2.84
+      "date": "2026-04-23",
+      "value": 2.86
     },
     "ig_hist": [
+      {
+        "date": "2026-04-23",
+        "value": 0.8
+      },
       {
         "date": "2026-04-22",
         "value": 0.79
@@ -752,13 +755,13 @@
       {
         "date": "2026-02-02",
         "value": 0.74
-      },
-      {
-        "date": "2026-01-31",
-        "value": 0.75
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-04-23",
+        "value": 2.86
+      },
       {
         "date": "2026-04-22",
         "value": 2.84
@@ -994,10 +997,6 @@
       {
         "date": "2026-02-02",
         "value": 2.81
-      },
-      {
-        "date": "2026-01-31",
-        "value": 2.88
       }
     ],
     "wti_daily": [
@@ -1634,7 +1633,7 @@
         "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 24 13:01 UTC",
+      "updated": "Apr 24 15:38 UTC",
       "sessions": 35
     },
     "gasoline": [
@@ -8310,8 +8309,8 @@
     "umcsent": [
       {
         "date": "2026-04-01",
-        "value": 47.6,
-        "status": "preliminary"
+        "value": 49.8,
+        "status": "final"
       },
       {
         "date": "2026-03-01",
@@ -8461,11 +8460,6 @@
       {
         "date": "2023-10-01",
         "value": 63.8,
-        "status": "final"
-      },
-      {
-        "date": "2023-09-01",
-        "value": 67.8,
         "status": "final"
       }
     ],

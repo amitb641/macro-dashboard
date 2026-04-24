@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-04-24T13:01:54.820396Z",
+  "analyzed_at": "2026-04-24T15:38:47.769103Z",
   "risk_level": "ELEVATED",
   "alert_count": 0,
   "watch_count": 4,
@@ -10,8 +10,8 @@
     "dgs5": 3.91,
     "dgs10": 4.3,
     "dgs30": 4.9,
-    "ig_oas": 79,
-    "hy_oas": 284,
+    "ig_oas": 80,
+    "hy_oas": 286,
     "unrate": 4.3,
     "u6rate": 8.0,
     "nfp_level": 158637.0,
@@ -27,7 +27,7 @@
     "mortgage30": 6.23,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 0.91,
-    "umcsent": 47.6,
+    "umcsent": 49.8,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
     "wti": 91.06,
@@ -52,15 +52,15 @@
       "alert": null
     },
     "ig_oas": {
-      "value": 79,
-      "delta": 0,
+      "value": 80,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 284,
-      "delta": 0,
+      "value": 286,
+      "delta": 2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -129,8 +129,8 @@
       "alert": null
     },
     "umcsent": {
-      "value": 47.6,
-      "delta": 0.0,
+      "value": 49.8,
+      "delta": 2.2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -244,7 +244,6 @@
   "headlines": [],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "ALFRED GDPC1@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDPC1&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=30&realtime_start=2026-03-31&realtime_end=2026-03-31&frequency=a"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
   ]
 }
