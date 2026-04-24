@@ -87,6 +87,21 @@ Rules:
 - When aligning two series by label, check for null/None fill rates — >20% nulls indicates a fetch-count or alignment bug
 - Trace data path from collector → renderer to verify sufficiency before shipping
 
+## Earnings Commentary — Factuality Rule (project skill)
+Applies to `BANK_COMMENTARY`, `BANK_THEMES`, `BANK_RESULTS`, earnings-call panels in `index.html`, and any narrative block sourced from a company disclosure.
+
+- **Only real, attributable content.** Every CEO/CFO quote must be a verbatim excerpt from an actual earnings call transcript, press release, or 10-Q/10-K filed by that company. No paraphrases in quotation marks. No composed sentences written in an executive's voice.
+- **No implication, no fabrication.** Do not write forward-looking guidance, NCO rates, EPS, NIM, or headcount numbers unless the figure is published by the company. If a company hasn't reported yet (e.g. Barclays BCUS on Apr 30 before it happens), mark it `Pending` — do not pre-fill with estimates.
+- **Cite the source channel** via the `src` field tag (`Prepared` / `Q&A` / `Summary` / `Pending` / `FY25 Call`). If you can't point to a transcript line or filing page, the content doesn't ship.
+- **Verify before editing.** Before modifying a quote or figure in an earnings card, read the underlying source (transcript URL, press-release PDF, or 10-Q) and paste the matching snippet in the commit message. "Touched up wording" is not allowed — either the quote is verbatim or it becomes a non-quoted summary.
+- **When in doubt, remove — don't smooth.** If a sentence reads well but you can't source it, delete it rather than rephrasing it into plausibility.
+- **Structural redesigns need sources first.** Expanding the card schema (e.g. adding Performance Trends / Credit Performance / Regulation / Tech-AI sub-sections) requires sourced content for every new field per bank before any template change lands. Do not ship a new template populated with AI-generated filler.
+- **Auditing checklist** before any commit that touches this data:
+  1. Every `quote` field traces to a transcript line.
+  2. Every numeric (NCO, NII, EPS, NIM, volumes) matches the company's released figure.
+  3. Future-dated items (reports after today's date) are marked `Pending`.
+  4. Source attribution in the panel footer lists each call date used.
+
 ## Agent Skills (Slash Commands)
 Custom development lifecycle commands are available in `.claude/commands/`:
 - `/spec` — Define what to build (spec before code)
