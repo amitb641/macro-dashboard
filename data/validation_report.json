@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-04-24T21:13:31.559435Z",
+  "validated_at": "2026-04-25T14:48:01.510369Z",
   "status": "WARN",
   "summary": {
     "total_checks": 404,
@@ -682,7 +682,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 55,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -690,7 +690,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 55,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 55,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -706,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 82,
+      "age_days": 83,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -714,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 82,
+      "age_days": 83,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,7 +722,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 55,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -730,7 +730,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 113,
+      "age_days": 114,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -738,7 +738,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-23",
-      "age_days": 1,
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -746,7 +746,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-04-01",
-      "age_days": 23,
+      "age_days": 24,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-24T21:12:29.737540Z",
+      "collected_at": "2026-04-25T14:46:58.096721Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true

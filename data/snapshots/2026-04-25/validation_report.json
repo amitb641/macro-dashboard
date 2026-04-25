@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-20T05:36:41.820293Z",
+  "validated_at": "2026-04-25T14:48:01.510369Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 380,
-    "passed": 371,
+    "total_checks": 404,
+    "passed": 395,
     "failed": 9,
-    "skipped": 0,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -254,19 +254,19 @@
     },
     {
       "check": "WAGE_ANNUAL.nominal completeness",
-      "html_value": "26/26 filled",
+      "html_value": "5/5 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "WAGE_ANNUAL.real completeness",
-      "html_value": "26/26 filled",
+      "html_value": "5/5 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
@@ -290,57 +290,48 @@
     },
     {
       "check": "OIL_ANNUAL.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_ANNUAL.brent completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "30/30 filled",
+      "html_value": "35/35 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 15,
+      "tolerance": 17,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "30/30 filled",
+      "html_value": "35/35 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 15,
+      "tolerance": 17,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "19/30 filled",
-      "source_value": "63% (min 50%)",
-      "difference": 11,
-      "tolerance": 15,
+      "html_value": "23/35 filled",
+      "source_value": "66% (min 0%)",
+      "difference": 12,
+      "tolerance": 17,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "OIL_DAILY.notes line continuity",
-      "html_value": "8 interior gap(s)",
-      "source_value": "0 gaps expected",
-      "difference": 8,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
     },
     {
       "check": "CLAIMS_WEEKLY.initial completeness",
@@ -390,11 +381,11 @@
     {
       "check": "FFR_DATA.dots completeness",
       "html_value": "4/29 filled",
-      "source_value": "14% (min 50%)",
+      "source_value": "14% (min 10%)",
       "difference": 25,
       "tolerance": 14,
-      "severity": "warning",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "MORTGAGE_DATA.rate30 completeness",
@@ -461,12 +452,12 @@
     },
     {
       "check": "TREASURY_DATA.card90 completeness",
-      "html_value": "0/27 filled",
-      "source_value": "0% (min 50%)",
-      "difference": 27,
+      "html_value": "27/27 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
       "tolerance": 13,
-      "severity": "warning",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "OIL_SPREAD.spread completeness",
@@ -643,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.32,
-      "fresh_api_value": 4.32,
+      "raw_data_value": 4.34,
+      "fresh_api_value": 4.34,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -670,8 +661,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.3,
-      "fresh_api_value": 6.3,
+      "raw_data_value": 6.23,
+      "fresh_api_value": 6.23,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -691,15 +682,15 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 50,
-      "max_lag_days": 45,
-      "severity": "stale",
-      "pass": false
+      "age_days": 55,
+      "max_lag_days": 55,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 50,
+      "age_days": 55,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -707,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 50,
+      "age_days": 55,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -715,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 78,
+      "age_days": 83,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -723,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 78,
+      "age_days": 83,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -731,23 +722,23 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 50,
-      "max_lag_days": 40,
-      "severity": "stale",
-      "pass": false
+      "age_days": 55,
+      "max_lag_days": 55,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 109,
-      "max_lag_days": 100,
-      "severity": "stale",
-      "pass": false
+      "age_days": 114,
+      "max_lag_days": 120,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-04-16",
-      "age_days": 4,
+      "latest_date": "2026-04-23",
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -755,7 +746,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-04-01",
-      "age_days": 19,
+      "age_days": 24,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -763,16 +754,165 @@
     {
       "check": "UMich Sentiment release status",
       "latest_date": "2026-04-01",
-      "release_status": "preliminary",
-      "severity": "info",
+      "release_status": "final",
+      "severity": "ok",
       "pass": true,
-      "note": "Preliminary \u2014 subject to revision in end-of-month final release"
+      "note": "Final release"
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-20T05:35:37.696838Z",
+      "collected_at": "2026-04-25T14:46:58.096721Z",
       "age_hours": 0.0,
       "severity": "ok",
+      "pass": true
+    }
+  ],
+  "shock_tracker": [
+    {
+      "check": "SHOCK_TRACKER extractable",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER phase count",
+      "actual": 8,
+      "expected": 8,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[0] Pump Prices Spike required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[1] Transport & Freight Costs required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[1] Transport & Freight Costs status consistent with MMA delta",
+      "status": "not_yet",
+      "post_minus_pre_pp": 0.4,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[2] CPI Energy Prints required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[2] CPI Energy Prints status consistent with MMA delta",
+      "status": "confirmed",
+      "post_minus_pre_pp": 238.9,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[3] Food & Services Inflation required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[3] Food & Services Inflation status consistent with MMA delta",
+      "status": "not_yet",
+      "post_minus_pre_pp": -1.3,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[4] Core Goods Inflation required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[5] Consumer Sentiment Falls required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[6] Savings Drawdown required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[7] Delinquencies Climb required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "earnings_verbatim": [
+    {
+      "check": "bank_earnings.json (10 banks)",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "JPM: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/JPM.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "BAC: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/BAC.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "WFC: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/WFC.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "C: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/C.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "GS: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/GS.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "COF: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/COF.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "AXP: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/AXP.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "SYF: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/SYF.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "USB: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/USB.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "BCS: pending (reports 2026-04-30)",
+      "severity": "skipped",
       "pass": true
     }
   ],
@@ -1300,7 +1440,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Wages \u2014 Panel \"Nominal vs Real Wage Growth \u2014 All Privat\" has title",
+      "check": "Visual: Wages \u2014 Panel \"Nominal vs Real Wage Growth \u2014 Annual His\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1516,7 +1656,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsPRELI\" has title",
+      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1702,19 +1842,19 @@
       "detail": ""
     },
     {
-      "check": "Visual: Banking \u2014 Panel \"Big 6 Banks \u2014 Q4 2025 Earnings Compariso\" has title",
+      "check": "Visual: Banking \u2014 Panel \"Big 9 Banks \u2014 Q1 2026 Earnings Compariso\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: Banking \u2014 Panel \"2026 NII Guidance \u2014 Full-Year Outlook ($\" has title",
+      "check": "Visual: Banking \u2014 Panel \"FY2026 NII Guidance \u2014 Updated After Q1 P\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: Banking \u2014 Panel \"Net Charge-Off Rates & Delinquency Outlo\" has title",
+      "check": "Visual: Banking \u2014 Panel \"Net Charge-Off Rates \u2014 Q1 2026 Actuals &\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1858,7 +1998,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Oil \u2014 Panel \"WTI & Brent \u2014 35-Year History\" has title",
+      "check": "Visual: Oil \u2014 Panel \"WTI & Brent \u2014 Annual History\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2278,12 +2418,6 @@
       "detail": ""
     },
     {
-      "check": "Visual: data \u2014 OIL_DAILY defined",
-      "severity": "warning",
-      "pass": false,
-      "detail": "OIL_DAILY is not defined"
-    },
-    {
       "check": "Visual: data \u2014 CLAIMS_WEEKLY has data",
       "severity": "ok",
       "pass": true,
@@ -2333,9 +2467,9 @@
     },
     {
       "check": "Visual: data \u2014 FFR_DATA.dots completeness",
-      "severity": "warning",
-      "pass": false,
-      "detail": "25/29 values empty (14% filled)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: data \u2014 MORTGAGE_DATA has data",
@@ -2399,9 +2533,9 @@
     },
     {
       "check": "Visual: data \u2014 TREASURY_DATA.card90 completeness",
-      "severity": "warning",
-      "pass": false,
-      "detail": "27/27 values empty (0% filled)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: data \u2014 OIL_SPREAD has data",
@@ -2537,6 +2671,18 @@
     },
     {
       "check": "Visual: data \u2014 VALIDATION_REPORT present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SHOCK_TRACKER oil tab present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SHOCK_TRACKER all 8 phase titles rendered",
       "severity": "ok",
       "pass": true,
       "detail": ""
