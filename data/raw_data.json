@@ -1,9 +1,8 @@
 {
-  "collected_at": "2026-04-27T13:56:16.526317Z",
+  "collected_at": "2026-04-27T14:08:41.078936Z",
   "series_count": 77,
-  "error_count": 10,
+  "error_count": 9,
   "errors": [
-    "UMich direct: 404 Client Error: Not Found for url: https://www.sca.isr.umich.edu/files/tbcics.csv",
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
@@ -1641,7 +1640,7 @@
         "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 27 13:56 UTC",
+      "updated": "Apr 27 14:08 UTC",
       "sessions": 35
     },
     "gasoline": [
@@ -8553,6 +8552,11 @@
       "value": 6882.0
     },
     "umcsent": [
+      {
+        "date": "2026-04-01",
+        "value": 49.8,
+        "status": "final"
+      },
       {
         "date": "2026-03-01",
         "value": 53.3,

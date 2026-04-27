@@ -1,16 +1,14 @@
 {
-  "checked_at": "2026-04-27T13:57:34.915316Z",
+  "checked_at": "2026-04-27T14:09:57.528904Z",
   "status": "PASS",
   "summary": {
     "total_checks": 295,
     "passed": 295,
     "failed": 0,
-    "js_errors": 1,
+    "js_errors": 0,
     "console_errors": 0
   },
-  "js_errors": [
-    "_fmtMK is not defined"
-  ],
+  "js_errors": [],
   "console_errors": [],
   "findings": [
     {
@@ -753,7 +751,7 @@
     },
     {
       "category": "PCE & Consumer",
-      "check": "Panel \"Consumer Sentiment \u2014 Last 12 Months\" has title",
+      "check": "Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
       "pass": true,
       "severity": "ok"
     },

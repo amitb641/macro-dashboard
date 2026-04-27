@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-27T13:57:34.991789Z",
+  "validated_at": "2026-04-27T14:09:57.532607Z",
   "status": "WARN",
   "summary": {
     "total_checks": 412,
-    "passed": 400,
-    "failed": 12,
+    "passed": 401,
+    "failed": 11,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -745,15 +745,15 @@
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-03-01",
-      "age_days": 57,
+      "latest_date": "2026-04-01",
+      "age_days": 26,
       "max_lag_days": 35,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-03-01",
+      "latest_date": "2026-04-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-27T13:56:16.526317Z",
+      "collected_at": "2026-04-27T14:08:41.078936Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1769,7 +1769,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 Months\" has title",
+      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

@@ -1,7 +1,7 @@
 {
-  "analyzed_at": "2026-04-27T13:56:47.113856Z",
+  "analyzed_at": "2026-04-27T14:09:06.582848Z",
   "risk_level": "ELEVATED",
-  "alert_count": 1,
+  "alert_count": 0,
   "watch_count": 4,
   "flagged_count": 0,
   "values": {
@@ -27,7 +27,7 @@
     "mortgage30": 6.23,
     "housing_starts": 1487.0,
     "cs_hpi_yoy": 0.91,
-    "umcsent": 53.3,
+    "umcsent": 49.8,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
     "wti": 91.06,
@@ -129,11 +129,11 @@
       "alert": null
     },
     "umcsent": {
-      "value": 53.3,
-      "delta": 3.5,
+      "value": 49.8,
+      "delta": -3.5,
       "direction": "stable",
       "flagged": false,
-      "alert": "alert"
+      "alert": null
     },
     "tdsp": {
       "value": 11.323096,
@@ -243,7 +243,6 @@
   },
   "headlines": [],
   "raw_errors": [
-    "UMich direct: 404 Client Error: Not Found for url: https://www.sca.isr.umich.edu/files/tbcics.csv",
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
