@@ -3550,13 +3550,18 @@ function buildPCETab(){
   var _savLbl = SAVING_MONTHLY.labels[SAVING_MONTHLY.labels.length-1];
   var _crCardPCE = CREDIT_QUARTERLY.card[CREDIT_QUARTERLY.card.length-1];
   var _crQlbl = CREDIT_QUARTERLY.labels[CREDIT_QUARTERLY.labels.length-1];
+  var _sentLatest = UMCSENT_MONTHLY.data[UMCSENT_MONTHLY.data.length-1];
+  var _sentLbl = UMCSENT_MONTHLY.labels[UMCSENT_MONTHLY.labels.length-1];
+  // UMich thresholds: ≥70 healthy (green), 55–70 caution (amber), <55 stressed (red)
+  var _sentCol = _sentLatest >= 70 ? "#1A9E5A" : _sentLatest >= 55 ? "#CC8A00" : "#D64045";
+  // Tile order mirrors section order: Saving → Debt → Sentiment → PCE
   document.getElementById("pce-metrics").innerHTML = [
-    {lbl:"Core PCE "+_pceLbl,        val:"+"+_pceCore+"%",  sub:"Headline: "+_pceHL+"% · Fed target 2.0%",     col:"#CC8A00"},
-    {lbl:"Full Year 2025",         val:"2.6%",   sub:"Real PCE growth 2025 · BEA",                        col:"#CC8A00"},
     {lbl:"Personal Saving Rate",   val:_savLatest+"%",   sub:_savLbl+" · vs "+_savPrior+"% prior · "+(_savLatest>_savPrior?"trending up":"trending down"), col:"#1A9E5A"},
-    {lbl:"Consumer Strength",      val:"+2.6%",  sub:"Real PCE growth 2025 · spending solid",              col:"#1A9E5A"},
     {lbl:"Consumer Stress",        val:"CC DQ "+_crCardPCE+"%", sub:"90+ DPD · NY Fed/Equifax all issuers · "+_crQlbl, col:"#D64045"},
     {lbl:"Peak → Now",             val:"Debt $18.6T",sub:"Household debt +$4T from pre-pandemic · NY Fed", col:"#8878B8"},
+    {lbl:"Consumer Sentiment",     val:_sentLatest.toFixed(1), sub:_sentLbl+" · UMich · pre-pandemic avg ~95",  col:_sentCol},
+    {lbl:"Core PCE "+_pceLbl,        val:"+"+_pceCore+"%",  sub:"Headline: "+_pceHL+"% · Fed target 2.0%",     col:"#CC8A00"},
+    {lbl:"Full Year 2025",         val:"+2.6%",  sub:"Real PCE growth 2025 · BEA · spending solid",        col:"#CC8A00"},
   ].map(m=>_mTile(m)).join("");
 
   // ── PCE MoM Chart ──
