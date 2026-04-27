@@ -1009,6 +1009,34 @@ def patch_commentary(html, tab_id, text):
     return new_html
 
 
+def _patch_panel_legend_chips(html, panel_anchor, cur_label, prv_label):
+    """Update the three month-token legend chips inside a single MoM panel.
+
+    Scopes replacements to the ~1500 bytes after `panel_anchor` (a substring
+    that uniquely identifies the panel title) so we don't bleed into other
+    panels. Updates both the "<cur> accelerating/cooling/improved/worsened"
+    chips and the prior-month baseline chip (purple swatch #8878B8bb).
+    """
+    idx = html.find(panel_anchor)
+    if idx < 0:
+        warnings.append(f'_patch_panel_legend_chips: anchor "{panel_anchor}" not found')
+        return html
+    end = idx + 1500
+    chunk = html[idx:end]
+    # Current-month chips — phrasings vary by panel
+    chunk = re.sub(r"[A-Z][a-z]+'\d+(?= accelerating)", cur_label, chunk)
+    chunk = re.sub(r"[A-Z][a-z]+'\d+(?= cooling)", cur_label, chunk)
+    chunk = re.sub(r"[A-Z][a-z]+'\d+(?= rate rose)", cur_label, chunk)
+    chunk = re.sub(r"[A-Z][a-z]+'\d+(?= rate fell)", cur_label, chunk)
+    chunk = re.sub(r"[A-Z][a-z]+'\d+(?= improved vs)", cur_label, chunk)
+    chunk = re.sub(r"[A-Z][a-z]+'\d+(?= worsened vs)", cur_label, chunk)
+    # Prior-month baseline chip (purple swatch with no trailing word)
+    chunk = re.sub(
+        r"(background:#8878B8bb;display:inline-block\"></span>)[A-Z][a-z]+'\d+",
+        rf"\g<1>{prv_label}", chunk, count=1)
+    return html[:idx] + chunk + html[end:]
+
+
 def patch_var_last_label(html, var_name, new_label):
     idx = html.find(f'const {var_name} =')
     if idx < 0: idx = html.find(f'let {var_name} =')
@@ -1090,6 +1118,7 @@ def rebuild_u_sector_mom(html, data):
     """Rebuild U_SECTOR_MOM from BLS CPS sector unemployment data."""
     bls_unemp = data.get('bls_unemp_sectors', {})
     if not bls_unemp:
+        warnings.append('U_SECTOR_MOM rebuild SKIPPED — bls_unemp_sectors missing from raw data')
         return html
 
     SECTOR_MAP = {
@@ -1142,6 +1171,11 @@ def rebuild_u_sector_mom(html, data):
         if n:
             applied.append(f'U_SECTOR_MOM rebuilt ({len(sector_data)} sectors, {prv_k}/{cur_k})')
             html = new_html
+    else:
+        warnings.append(
+            f'U_SECTOR_MOM rebuild SKIPPED — only {len(sector_data)}/13 sectors '
+            f'had >=2 obs (need >=10). Chart will display stale data.'
+        )
 
     return html
 
@@ -1162,6 +1196,7 @@ def rebuild_cpi_cat_mom(html, data):
     ]
 
     entries = []
+    short = []
     for cat_name, data_key, color in CPI_CATS:
         series = data.get(data_key, [])
         yoys = _yoy_from_index(series, 2)
@@ -1172,6 +1207,8 @@ def rebuild_cpi_cat_mom(html, data):
                 yoys[0]['month_key']: yoys[0]['yoy'],  # current month
                 'color': color,
             })
+        else:
+            short.append(f'{data_key}(n={len(series)})')
 
     if len(entries) >= 8:
         new_json = json.dumps(entries, separators=(', ', ':'))
@@ -1181,6 +1218,12 @@ def rebuild_cpi_cat_mom(html, data):
             keys = [k for k in entries[0] if k not in ('cat', 'color')]
             applied.append(f'CPI_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
             html = new_html
+    else:
+        warnings.append(
+            f'CPI_CAT_MOM rebuild SKIPPED — only {len(entries)}/10 cats had '
+            f'>=13 obs for YoY (need >=8). Insufficient: {", ".join(short)}. '
+            f'Chart will display stale Jan/Feb data while title auto-updates.'
+        )
 
     return html
 
@@ -1190,7 +1233,7 @@ def rebuild_treasury_data(html, data):
     dgs10_ann = data.get('dgs10_annual', [])
     dgs2_ann = data.get('dgs2_annual', [])
     if not dgs10_ann or not dgs2_ann:
-        # Fall back to computing from daily history
+        warnings.append('TREASURY_DATA rebuild SKIPPED — dgs10_annual/dgs2_annual missing')
         return html
 
     today = datetime.date.today()
@@ -1198,6 +1241,7 @@ def rebuild_treasury_data(html, data):
     t2_labels, t2_vals = _annual_from_freq(dgs2_ann, precision=2)
 
     if not t10_labels:
+        warnings.append('TREASURY_DATA rebuild SKIPPED — _annual_from_freq returned empty for DGS10')
         return html
 
     # Align to common years
@@ -1257,12 +1301,14 @@ def rebuild_oil_prod_spread(html, data):
     wti_a = data.get('wti_annual', [])
     brent_a = data.get('brent_annual', [])
     if not wti_a or not brent_a:
+        warnings.append('OIL_SPREAD rebuild SKIPPED — wti_annual/brent_annual missing')
         return html
 
     w_labels, w_vals = _annual_from_freq(wti_a, start_year=2015, precision=1)
     b_labels, b_vals = _annual_from_freq(brent_a, start_year=2015, precision=1)
     common = [l for l in w_labels if l in b_labels]
     if not common:
+        warnings.append('OIL_SPREAD rebuild SKIPPED — no overlapping years between WTI and Brent annual data')
         return html
 
     wti = [w_vals[w_labels.index(l)] for l in common]
@@ -1378,8 +1424,7 @@ def render_labor(html, data, vals, tabs):
             html = re.sub(
                 r"(Change in unemployment rate vs prior month · BLS CPS · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                 rf"\g<1>{u_cur} vs {u_prv}", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) rate rose", f"{u_cur} rate rose", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) rate fell", f"{u_cur} rate fell", html, count=1)
+            html = _patch_panel_legend_chips(html, 'Unemployment by Sector', u_cur, u_prv)
             applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
 
             # ── Auto-patch commentary values when Agent 3 doesn't refresh ──
@@ -1448,15 +1493,14 @@ def render_labor(html, data, vals, tabs):
                 r'(BLS CES major sector breakdown · month-over-month net payroll change · sorted by )[A-Z][a-z]+\'\d+',
                 rf'\g<1>{cur_lbl}', html, count=1)
 
-            # Update sector legend labels
+            # Update sector legend labels (current-month + prior-month chips)
+            html = _patch_panel_legend_chips(html, 'Monthly Job Change by Sector', cur_lbl, prev_lbl)
+            # The "improved/worsened vs Mon" trailing word is short month name
+            short_prv = prev_lbl.split("'")[0]
             html = re.sub(
-                r"([A-Z][a-z]+'\d+) improved vs [A-Z][a-z]+",
-                f"{cur_lbl} improved vs {prev_lbl.split(chr(39))[0]}",
-                html, count=1)
+                r"(improved vs )[A-Z][a-z]+", rf"\g<1>{short_prv}", html, count=1)
             html = re.sub(
-                r"([A-Z][a-z]+'\d+) worsened vs [A-Z][a-z]+",
-                f"{cur_lbl} worsened vs {prev_lbl.split(chr(39))[0]}",
-                html, count=1)
+                r"(worsened vs )[A-Z][a-z]+", rf"\g<1>{short_prv}", html, count=1)
 
             # Update Jobs metric tile header
             html = re.sub(
@@ -1518,9 +1562,8 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"(YoY % by category · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+( · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{c_cur} vs {c_prv}\g<2>{c_cur}", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{c_cur} accelerating", html, count=1)
-            html = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{c_cur} cooling", html, count=1)
-            # Prior month legend label in CPI section — skip complex regex, not critical
+            # Scope chip updates to the CPI by Category panel only
+            html = _patch_panel_legend_chips(html, 'CPI by Category', c_cur, c_prv)
             html = re.sub(
                 r"(Monthly YoY % change by category\. )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                 rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
@@ -1540,13 +1583,7 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"(Real PCE spending growth by category · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{p_cur}", html, count=1)
-            # PCE legend labels — find within the PCE tab section only
-            pce_section = html.find('PCE by Category')
-            if pce_section > 0:
-                chunk = html[pce_section:pce_section+2000]
-                chunk = re.sub(r"([A-Z][a-z]+'\d+) accelerating", f"{p_cur} accelerating", chunk, count=1)
-                chunk = re.sub(r"([A-Z][a-z]+'\d+) cooling", f"{p_cur} cooling", chunk, count=1)
-                html = html[:pce_section] + chunk + html[pce_section+2000:]
+            html = _patch_panel_legend_chips(html, 'PCE by Category', p_cur, p_prv)
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     for tab in ('cpi', 'pce'):

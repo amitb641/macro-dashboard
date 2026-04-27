@@ -374,19 +374,20 @@ def collect():
     data['pce_core']    = fred_obs('PCEPILFE',  320)
     data['psavert']     = fred_obs('PSAVERT',   320)
 
-    # CPI category detail for CPI_CAT_MOM auto-rebuild
+    # CPI category detail for CPI_CAT_MOM auto-rebuild.
+    # All categories need >=13 obs so renderer's _yoy_from_index can compute
+    # latest YoY (current month + same month a year ago). 24 leaves headroom
+    # for the shock tracker's pre-shock baselines.
     print('  [Monthly] CPI Categories (FRED)...')
-    data['cpi_shelter']   = fred_obs('CUSR0000SAH1', 6)   # Shelter
-    # 24 obs on Food Away + Transport so the shock tracker can compute
-    # post-shock YoY (needs latest + 12-months-ago values).
+    data['cpi_shelter']   = fred_obs('CUSR0000SAH1', 24)  # Shelter
     data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 24)  # Food Away from Home
     data['cpi_transport'] = fred_obs('CUSR0000SETG', 24)  # Transportation Services
-    data['cpi_medical']   = fred_obs('CUSR0000SAM2', 6)   # Medical Care Services
-    data['cpi_food_home'] = fred_obs('CUSR0000SAF11',6)   # Food at Home
-    data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',6)  # New Vehicles
-    data['cpi_apparel']   = fred_obs('CUSR0000SAA',  6)   # Apparel
-    data['cpi_energy']    = fred_obs('CUSR0000SA0E', 6)   # Energy
-    data['cpi_used_cars'] = fred_obs('CUSR0000SETA02',6)  # Used Cars & Trucks
+    data['cpi_medical']   = fred_obs('CUSR0000SAM2', 24)  # Medical Care Services
+    data['cpi_food_home'] = fred_obs('CUSR0000SAF11',24)  # Food at Home
+    data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',24) # New Vehicles
+    data['cpi_apparel']   = fred_obs('CUSR0000SAA',  24)  # Apparel
+    data['cpi_energy']    = fred_obs('CUSR0000SA0E', 24)  # Energy
+    data['cpi_used_cars'] = fred_obs('CUSR0000SETA02',24) # Used Cars & Trucks
 
     print('  [Monthly] Housing...')
     data['houst']       = fred_obs('HOUST',      320)
