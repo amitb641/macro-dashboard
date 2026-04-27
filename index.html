@@ -3575,9 +3575,11 @@ function buildPCETab(){
   // ── PCE Category MoM Chart (dynamic keys) ──
   var _pceK = Object.keys(PCE_CAT_MOM[0]).filter(k=>k!=="cat");
   var _pceCurK = _pceK[_pceK.length-1], _pcePrvK = _pceK.length>1?_pceK[_pceK.length-2]:_pceCurK;
-  // Keys are "dec25"/"jan26" — _fmtMK is defined in the CPI block above.
-  var _pceCurL = _fmtMK(_pceCurK);
-  var _pcePrvL = _fmtMK(_pcePrvK);
+  // Keys are "dec25"/"jan26"; render "Dec'25"/"Jan'26" with year-suffix support.
+  // Helper duplicated from buildInflationTab — different function scope.
+  var _fmtMKp = function(k){var m=k.match(/^([a-z]+)(\d{0,2})$/);return m?(m[1].charAt(0).toUpperCase()+m[1].slice(1)+(m[2]?"'"+m[2]:"")):k;};
+  var _pceCurL = _fmtMKp(_pceCurK);
+  var _pcePrvL = _fmtMKp(_pcePrvK);
   var pceMom = [...PCE_CAT_MOM].sort((a,b)=>b[_pceCurK]-a[_pceCurK]);
   new Chart(document.getElementById("c-pce-cat-mom").getContext("2d"),{
     type:"bar",
