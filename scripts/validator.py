@@ -926,16 +926,20 @@ _MONTH_TO_KEY = {'jan':1,'feb':2,'mar':3,'apr':4,'may':5,'jun':6,
 
 def _extract_panel_title_months(html, anchor):
     """Find the panel-title containing `anchor` and return its month tokens
-    (ordered as written, e.g. [('Mar','26'), ('Feb','26')] for 'Mar'26 vs Feb'26')."""
+    (ordered as written, e.g. [('Mar','26'), ('Feb','26')]).
+    Scans both the panel-title and the panel-sub line (some panels keep the
+    month pair in the subtitle — e.g. Unemployment by Sector)."""
     idx = html.find(anchor)
     if idx < 0:
         return None
-    # Title line ends at the next </div>
+    # Cover panel-title + panel-sub: skip 2 closing </div> tags.
     end = html.find('</div>', idx)
     if end < 0:
         return None
-    title = html[idx:end]
-    return _MONTH_LBL_RE.findall(title)
+    end = html.find('</div>', end + 6)
+    if end < 0:
+        end = idx + 600
+    return _MONTH_LBL_RE.findall(html[idx:end])
 
 
 def _extract_panel_chip_months(html, anchor):

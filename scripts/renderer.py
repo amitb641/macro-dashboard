@@ -1413,6 +1413,11 @@ def render_labor(html, data, vals, tabs):
         html = patch_kpi_full(html, 'Initial Claims', icsa_lbl, f'{icsa_val/1000:.0f}K')
 
     # ── Auto-update Unemployment tab month references ──────────────
+    # The Unemployment-by-Sector chart panel title/chips are gated on
+    # rebuild_u_sector_mom succeeding (so the panel never advertises a
+    # newer month than the data const carries). Commentary updates below
+    # use unrate dates directly — they're not coupled to the sector chart.
+    u_rebuilt = any(s.startswith('U_SECTOR_MOM rebuilt') for s in applied)
     unrate_s = data.get('unrate', [])
     if unrate_s and len(unrate_s) >= 2:
         u_cur_d = unrate_s[0].get('date', '')
@@ -1421,11 +1426,12 @@ def render_labor(html, data, vals, tabs):
             u_cur = month_label(u_cur_d)
             u_prv = month_label(u_prv_d)
             u_prv_short = u_prv.split("'")[0]
-            html = re.sub(
-                r"(Change in unemployment rate vs prior month · BLS CPS · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
-                rf"\g<1>{u_cur} vs {u_prv}", html, count=1)
-            html = _patch_panel_legend_chips(html, 'Unemployment by Sector', u_cur, u_prv)
-            applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
+            if u_rebuilt:
+                html = re.sub(
+                    r"(Change in unemployment rate vs prior month · BLS CPS · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
+                    rf"\g<1>{u_cur} vs {u_prv}", html, count=1)
+                html = _patch_panel_legend_chips(html, 'Unemployment by Sector', u_cur, u_prv)
+                applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
 
             # ── Auto-patch commentary values when Agent 3 doesn't refresh ──
             u_cur_val = unrate_s[0].get('value')
@@ -1474,7 +1480,10 @@ def render_labor(html, data, vals, tabs):
 
     # ── Auto-update Jobs tab month references ────────────────────────
     # The Jobs tab has hardcoded month names in titles, legends, and tiles.
-    # Derive current and prior month labels from PAYEMS data.
+    # Sector-chart updates are gated on SECTOR_MOM having been rebuilt this
+    # run (rebuild_charts emits 'SECTOR_MOM rebuilt'). The Jobs metric tile
+    # header rolls from PAYEMS unconditionally — it's not bound to the chart.
+    sector_rebuilt = any(s.startswith('SECTOR_MOM rebuilt') for s in applied)
     payems_s = data.get('payems', [])
     if payems_s and len(payems_s) >= 2:
         cur_date = payems_s[0].get('date', '')
@@ -1484,23 +1493,24 @@ def render_labor(html, data, vals, tabs):
             prev_lbl = month_label(prev_date)  # e.g. "Feb'26"
             cur_upper = cur_lbl.upper()        # e.g. "MAR'26"
 
-            # Update sector chart title and subtitle
-            html = re.sub(
-                r'Monthly Job Change by Sector — [A-Z][a-z]+\'\d+ vs [A-Z][a-z]+\'\d+ \(thousands\)',
-                f"Monthly Job Change by Sector — {prev_lbl} vs {cur_lbl} (thousands)",
-                html, count=1)
-            html = re.sub(
-                r'(BLS CES major sector breakdown · month-over-month net payroll change · sorted by )[A-Z][a-z]+\'\d+',
-                rf'\g<1>{cur_lbl}', html, count=1)
+            if sector_rebuilt:
+                # Update sector chart title and subtitle
+                html = re.sub(
+                    r'Monthly Job Change by Sector — [A-Z][a-z]+\'\d+ vs [A-Z][a-z]+\'\d+ \(thousands\)',
+                    f"Monthly Job Change by Sector — {prev_lbl} vs {cur_lbl} (thousands)",
+                    html, count=1)
+                html = re.sub(
+                    r'(BLS CES major sector breakdown · month-over-month net payroll change · sorted by )[A-Z][a-z]+\'\d+',
+                    rf'\g<1>{cur_lbl}', html, count=1)
 
-            # Update sector legend labels (current-month + prior-month chips)
-            html = _patch_panel_legend_chips(html, 'Monthly Job Change by Sector', cur_lbl, prev_lbl)
-            # The "improved/worsened vs Mon" trailing word is short month name
-            short_prv = prev_lbl.split("'")[0]
-            html = re.sub(
-                r"(improved vs )[A-Z][a-z]+", rf"\g<1>{short_prv}", html, count=1)
-            html = re.sub(
-                r"(worsened vs )[A-Z][a-z]+", rf"\g<1>{short_prv}", html, count=1)
+                # Update sector legend labels (current-month + prior-month chips)
+                html = _patch_panel_legend_chips(html, 'Monthly Job Change by Sector', cur_lbl, prev_lbl)
+                # The "improved/worsened vs Mon" trailing word is short month name
+                short_prv = prev_lbl.split("'")[0]
+                html = re.sub(
+                    r"(improved vs )[A-Z][a-z]+", rf"\g<1>{short_prv}", html, count=1)
+                html = re.sub(
+                    r"(worsened vs )[A-Z][a-z]+", rf"\g<1>{short_prv}", html, count=1)
 
             # Update Jobs metric tile header
             html = re.sub(
@@ -1548,8 +1558,12 @@ def render_inflation(html, data, vals, tabs):
         html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_MONTHLY')
 
     # ── Auto-update CPI tab month references ────────────────────────
+    # Gated on rebuild_cpi_cat_mom succeeding, so title and data always roll
+    # together. If the rebuild was skipped (insufficient obs), title stays put
+    # so it can't drift past the data const.
+    cpi_rebuilt = any(s.startswith('CPI_CAT_MOM rebuilt') for s in applied)
     cpi_s = data.get('cpi_all', [])
-    if cpi_s and len(cpi_s) >= 2:
+    if cpi_rebuilt and cpi_s and len(cpi_s) >= 2:
         cpi_cur = cpi_s[0].get('date', '')
         cpi_prev = cpi_s[1].get('date', '')
         if cpi_cur and cpi_prev:
@@ -1569,22 +1583,11 @@ def render_inflation(html, data, vals, tabs):
                 rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
             applied.append(f'CPI tab month refs updated to {c_prv}/{c_cur}')
 
-    # ── Auto-update PCE tab month references ────────────────────────
-    pce_s = data.get('pce', [])
-    if pce_s and len(pce_s) >= 2:
-        p_cur_d = pce_s[0].get('date', '')
-        p_prv_d = pce_s[1].get('date', '')
-        if p_cur_d and p_prv_d:
-            p_cur = month_label(p_cur_d)
-            p_prv = month_label(p_prv_d)
-            html = re.sub(
-                r"PCE by Category — MoM Change \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
-                f"PCE by Category — MoM Change ({p_cur} vs {p_prv})", html, count=1)
-            html = re.sub(
-                r"(Real PCE spending growth by category · sorted by )[A-Z][a-z]+'\d+",
-                rf"\g<1>{p_cur}", html, count=1)
-            html = _patch_panel_legend_chips(html, 'PCE by Category', p_cur, p_prv)
-            applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
+    # ── PCE by Category month references ────────────────────────────
+    # No rebuild_pce_cat_mom exists — PCE category data is hand-maintained.
+    # Auto-rolling the title here would drift past the data const (the bug
+    # this whole module is trying to prevent). When PCE category fetching
+    # is added, mirror the CPI gate above.
 
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')
