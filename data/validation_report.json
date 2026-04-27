@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-04-25T14:48:01.510369Z",
+  "validated_at": "2026-04-27T13:57:34.991789Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 404,
-    "passed": 395,
-    "failed": 9,
+    "total_checks": 412,
+    "passed": 400,
+    "failed": 12,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -682,15 +682,15 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 55,
+      "age_days": 57,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 55,
+      "age_days": 57,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 55,
+      "age_days": 57,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -706,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-02-01",
-      "age_days": 83,
+      "age_days": 85,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -714,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-02-01",
-      "age_days": 83,
+      "age_days": 85,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,15 +722,15 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 55,
+      "age_days": 57,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-01-01",
-      "age_days": 114,
+      "age_days": 116,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -738,22 +738,22 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-23",
-      "age_days": 2,
+      "age_days": 4,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-04-01",
-      "age_days": 24,
+      "latest_date": "2026-03-01",
+      "age_days": 57,
       "max_lag_days": 35,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-04-01",
+      "latest_date": "2026-03-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-25T14:46:58.096721Z",
+      "collected_at": "2026-04-27T13:56:16.526317Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -846,6 +846,119 @@
     {
       "check": "SHOCK_TRACKER[7] Delinquencies Climb required fields",
       "missing": null,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "panel_data_consistency": [
+    {
+      "check": "CPI by Category \u2014 MoM Change: title months match CPI_CAT_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI by Category \u2014 MoM Change: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE by Category \u2014 MoM Change: title months match PCE_CAT_MOM keys",
+      "title_months": [
+        "dec",
+        "jan"
+      ],
+      "data_keys": [
+        "dec",
+        "jan"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE by Category \u2014 MoM Change: prior-month chip matches title",
+      "expected_prior": "Dec'25",
+      "chips_found": [
+        "Jan'26",
+        "Dec'25",
+        "Jan'26",
+        "Jan'26",
+        "Jan'26",
+        "Dec'25"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Monthly Job Change by Sector: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment by Sector \u2014 Monthly MoM Change (pp): title months match U_SECTOR_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment by Sector \u2014 Monthly MoM Change (pp): prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
       "severity": "ok",
       "pass": true
     }
@@ -1632,7 +1745,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"PCE by Category \u2014 MoM Change (Feb'26 vs \" has title",
+      "check": "Visual: PCE & Consumer \u2014 Panel \"PCE by Category \u2014 MoM Change (Jan'26 vs \" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1656,7 +1769,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
+      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 Months\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

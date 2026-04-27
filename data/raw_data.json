@@ -1,10 +1,18 @@
 {
-  "collected_at": "2026-04-25T14:46:58.096721Z",
-  "series_count": 74,
-  "error_count": 2,
+  "collected_at": "2026-04-27T13:56:16.526317Z",
+  "series_count": 77,
+  "error_count": 10,
   "errors": [
-    "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=6"
+    "UMich direct: 404 Client Error: Not Found for url: https://www.sca.isr.umich.edu/files/tbcics.csv",
+    "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DHLCRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHLCRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DIFSRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DIFSRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DFSARG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DFSARG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DRCARG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DRCARG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DTRSRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DTRSRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
+    "FRED DGOERG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGOERG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24"
   ],
   "data": {
     "ffr": {
@@ -1633,7 +1641,7 @@
         "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 25 14:47 UTC",
+      "updated": "Apr 27 13:56 UTC",
       "sessions": 35
     },
     "gasoline": [
@@ -8545,11 +8553,6 @@
       "value": 6882.0
     },
     "umcsent": [
-      {
-        "date": "2026-04-01",
-        "value": 49.8,
-        "status": "final"
-      },
       {
         "date": "2026-03-01",
         "value": 53.3,
@@ -18668,6 +18671,78 @@
       {
         "date": "2025-11-01",
         "value": 419.431
+      },
+      {
+        "date": "2025-09-01",
+        "value": 418.422
+      },
+      {
+        "date": "2025-08-01",
+        "value": 417.555
+      },
+      {
+        "date": "2025-07-01",
+        "value": 415.931
+      },
+      {
+        "date": "2025-06-01",
+        "value": 414.981
+      },
+      {
+        "date": "2025-05-01",
+        "value": 414.109
+      },
+      {
+        "date": "2025-04-01",
+        "value": 413.04
+      },
+      {
+        "date": "2025-03-01",
+        "value": 411.639
+      },
+      {
+        "date": "2025-02-01",
+        "value": 410.793
+      },
+      {
+        "date": "2025-01-01",
+        "value": 409.579
+      },
+      {
+        "date": "2024-12-01",
+        "value": 408.165
+      },
+      {
+        "date": "2024-11-01",
+        "value": 407.114
+      },
+      {
+        "date": "2024-10-01",
+        "value": 405.721
+      },
+      {
+        "date": "2024-09-01",
+        "value": 403.956
+      },
+      {
+        "date": "2024-08-01",
+        "value": 402.895
+      },
+      {
+        "date": "2024-07-01",
+        "value": 401.139
+      },
+      {
+        "date": "2024-06-01",
+        "value": 399.699
+      },
+      {
+        "date": "2024-05-01",
+        "value": 398.689
+      },
+      {
+        "date": "2024-04-01",
+        "value": 397.196
       }
     ],
     "cpi_food_away": [
@@ -18878,6 +18953,78 @@
       {
         "date": "2025-11-01",
         "value": 640.487
+      },
+      {
+        "date": "2025-09-01",
+        "value": 639.233
+      },
+      {
+        "date": "2025-08-01",
+        "value": 637.729
+      },
+      {
+        "date": "2025-07-01",
+        "value": 638.219
+      },
+      {
+        "date": "2025-06-01",
+        "value": 633.057
+      },
+      {
+        "date": "2025-05-01",
+        "value": 629.926
+      },
+      {
+        "date": "2025-04-01",
+        "value": 628.719
+      },
+      {
+        "date": "2025-03-01",
+        "value": 625.993
+      },
+      {
+        "date": "2025-02-01",
+        "value": 623.344
+      },
+      {
+        "date": "2025-01-01",
+        "value": 620.949
+      },
+      {
+        "date": "2024-12-01",
+        "value": 620.911
+      },
+      {
+        "date": "2024-11-01",
+        "value": 620.054
+      },
+      {
+        "date": "2024-10-01",
+        "value": 617.892
+      },
+      {
+        "date": "2024-09-01",
+        "value": 615.341
+      },
+      {
+        "date": "2024-08-01",
+        "value": 611.637
+      },
+      {
+        "date": "2024-07-01",
+        "value": 611.874
+      },
+      {
+        "date": "2024-06-01",
+        "value": 612.629
+      },
+      {
+        "date": "2024-05-01",
+        "value": 611.828
+      },
+      {
+        "date": "2024-04-01",
+        "value": 609.702
       }
     ],
     "cpi_food_home": [
@@ -18900,6 +19047,78 @@
       {
         "date": "2025-11-01",
         "value": 315.0
+      },
+      {
+        "date": "2025-09-01",
+        "value": 315.54
+      },
+      {
+        "date": "2025-08-01",
+        "value": 314.647
+      },
+      {
+        "date": "2025-07-01",
+        "value": 313.035
+      },
+      {
+        "date": "2025-06-01",
+        "value": 312.982
+      },
+      {
+        "date": "2025-05-01",
+        "value": 312.296
+      },
+      {
+        "date": "2025-04-01",
+        "value": 311.44
+      },
+      {
+        "date": "2025-03-01",
+        "value": 312.154
+      },
+      {
+        "date": "2025-02-01",
+        "value": 310.955
+      },
+      {
+        "date": "2025-01-01",
+        "value": 310.817
+      },
+      {
+        "date": "2024-12-01",
+        "value": 309.767
+      },
+      {
+        "date": "2024-11-01",
+        "value": 309.093
+      },
+      {
+        "date": "2024-10-01",
+        "value": 307.867
+      },
+      {
+        "date": "2024-09-01",
+        "value": 307.258
+      },
+      {
+        "date": "2024-08-01",
+        "value": 306.399
+      },
+      {
+        "date": "2024-07-01",
+        "value": 306.285
+      },
+      {
+        "date": "2024-06-01",
+        "value": 305.582
+      },
+      {
+        "date": "2024-05-01",
+        "value": 305.414
+      },
+      {
+        "date": "2024-04-01",
+        "value": 305.354
       }
     ],
     "cpi_new_veh": [
@@ -18926,6 +19145,78 @@
       {
         "date": "2025-10-01",
         "value": 178.609
+      },
+      {
+        "date": "2025-09-01",
+        "value": 178.527
+      },
+      {
+        "date": "2025-08-01",
+        "value": 178.245
+      },
+      {
+        "date": "2025-07-01",
+        "value": 177.842
+      },
+      {
+        "date": "2025-06-01",
+        "value": 177.778
+      },
+      {
+        "date": "2025-05-01",
+        "value": 178.286
+      },
+      {
+        "date": "2025-04-01",
+        "value": 178.763
+      },
+      {
+        "date": "2025-03-01",
+        "value": 178.631
+      },
+      {
+        "date": "2025-02-01",
+        "value": 178.473
+      },
+      {
+        "date": "2025-01-01",
+        "value": 178.538
+      },
+      {
+        "date": "2024-12-01",
+        "value": 178.489
+      },
+      {
+        "date": "2024-11-01",
+        "value": 177.837
+      },
+      {
+        "date": "2024-10-01",
+        "value": 177.045
+      },
+      {
+        "date": "2024-09-01",
+        "value": 177.203
+      },
+      {
+        "date": "2024-08-01",
+        "value": 177.068
+      },
+      {
+        "date": "2024-07-01",
+        "value": 177.066
+      },
+      {
+        "date": "2024-06-01",
+        "value": 177.313
+      },
+      {
+        "date": "2024-05-01",
+        "value": 177.504
+      },
+      {
+        "date": "2024-04-01",
+        "value": 178.188
       }
     ],
     "cpi_apparel": [],
@@ -18954,8 +19245,381 @@
       {
         "date": "2025-10-01",
         "value": 186.111
+      },
+      {
+        "date": "2025-09-01",
+        "value": 184.869
+      },
+      {
+        "date": "2025-08-01",
+        "value": 185.259
+      },
+      {
+        "date": "2025-07-01",
+        "value": 183.746
+      },
+      {
+        "date": "2025-06-01",
+        "value": 182.833
+      },
+      {
+        "date": "2025-05-01",
+        "value": 183.664
+      },
+      {
+        "date": "2025-04-01",
+        "value": 184.8
+      },
+      {
+        "date": "2025-03-01",
+        "value": 185.728
+      },
+      {
+        "date": "2025-02-01",
+        "value": 186.557
+      },
+      {
+        "date": "2025-01-01",
+        "value": 184.891
+      },
+      {
+        "date": "2024-12-01",
+        "value": 181.705
+      },
+      {
+        "date": "2024-11-01",
+        "value": 179.904
+      },
+      {
+        "date": "2024-10-01",
+        "value": 177.734
+      },
+      {
+        "date": "2024-09-01",
+        "value": 175.834
+      },
+      {
+        "date": "2024-08-01",
+        "value": 174.703
+      },
+      {
+        "date": "2024-07-01",
+        "value": 175.308
+      },
+      {
+        "date": "2024-06-01",
+        "value": 177.965
+      },
+      {
+        "date": "2024-05-01",
+        "value": 180.577
+      },
+      {
+        "date": "2024-04-01",
+        "value": 181.983
       }
     ],
+    "pce_housing": [],
+    "pce_healthcare": [],
+    "pce_financial": [],
+    "pce_food_svc": [],
+    "pce_recreation": [],
+    "pce_transport": [],
+    "pce_nondur": [
+      {
+        "date": "2026-02-01",
+        "value": 122.154
+      },
+      {
+        "date": "2026-01-01",
+        "value": 121.453
+      },
+      {
+        "date": "2025-12-01",
+        "value": 121.632
+      },
+      {
+        "date": "2025-11-01",
+        "value": 121.274
+      },
+      {
+        "date": "2025-10-01",
+        "value": 121.032
+      },
+      {
+        "date": "2025-09-01",
+        "value": 121.218
+      },
+      {
+        "date": "2025-08-01",
+        "value": 120.335
+      },
+      {
+        "date": "2025-07-01",
+        "value": 120.04
+      },
+      {
+        "date": "2025-06-01",
+        "value": 120.208
+      },
+      {
+        "date": "2025-05-01",
+        "value": 119.78
+      },
+      {
+        "date": "2025-04-01",
+        "value": 119.658
+      },
+      {
+        "date": "2025-03-01",
+        "value": 119.757
+      },
+      {
+        "date": "2025-02-01",
+        "value": 120.62
+      },
+      {
+        "date": "2025-01-01",
+        "value": 120.459
+      },
+      {
+        "date": "2024-12-01",
+        "value": 119.756
+      },
+      {
+        "date": "2024-11-01",
+        "value": 119.235
+      },
+      {
+        "date": "2024-10-01",
+        "value": 119.223
+      },
+      {
+        "date": "2024-09-01",
+        "value": 119.226
+      },
+      {
+        "date": "2024-08-01",
+        "value": 119.487
+      },
+      {
+        "date": "2024-07-01",
+        "value": 119.695
+      },
+      {
+        "date": "2024-06-01",
+        "value": 119.689
+      },
+      {
+        "date": "2024-05-01",
+        "value": 119.933
+      },
+      {
+        "date": "2024-04-01",
+        "value": 119.933
+      },
+      {
+        "date": "2024-03-01",
+        "value": 119.507
+      }
+    ],
+    "pce_durable": [
+      {
+        "date": "2026-02-01",
+        "value": 108.573
+      },
+      {
+        "date": "2026-01-01",
+        "value": 107.443
+      },
+      {
+        "date": "2025-12-01",
+        "value": 107.001
+      },
+      {
+        "date": "2025-11-01",
+        "value": 106.42
+      },
+      {
+        "date": "2025-10-01",
+        "value": 106.383
+      },
+      {
+        "date": "2025-09-01",
+        "value": 106.306
+      },
+      {
+        "date": "2025-08-01",
+        "value": 106.374
+      },
+      {
+        "date": "2025-07-01",
+        "value": 106.46
+      },
+      {
+        "date": "2025-06-01",
+        "value": 106.59
+      },
+      {
+        "date": "2025-05-01",
+        "value": 106.088
+      },
+      {
+        "date": "2025-04-01",
+        "value": 106.066
+      },
+      {
+        "date": "2025-03-01",
+        "value": 105.55
+      },
+      {
+        "date": "2025-02-01",
+        "value": 105.602
+      },
+      {
+        "date": "2025-01-01",
+        "value": 105.175
+      },
+      {
+        "date": "2024-12-01",
+        "value": 104.852
+      },
+      {
+        "date": "2024-11-01",
+        "value": 105.364
+      },
+      {
+        "date": "2024-10-01",
+        "value": 105.427
+      },
+      {
+        "date": "2024-09-01",
+        "value": 105.385
+      },
+      {
+        "date": "2024-08-01",
+        "value": 105.164
+      },
+      {
+        "date": "2024-07-01",
+        "value": 105.314
+      },
+      {
+        "date": "2024-06-01",
+        "value": 105.548
+      },
+      {
+        "date": "2024-05-01",
+        "value": 105.603
+      },
+      {
+        "date": "2024-04-01",
+        "value": 106.529
+      },
+      {
+        "date": "2024-03-01",
+        "value": 106.76
+      }
+    ],
+    "pce_food_home": [
+      {
+        "date": "2026-02-01",
+        "value": 131.412
+      },
+      {
+        "date": "2026-01-01",
+        "value": 131.061
+      },
+      {
+        "date": "2025-12-01",
+        "value": 130.757
+      },
+      {
+        "date": "2025-11-01",
+        "value": 130.218
+      },
+      {
+        "date": "2025-10-01",
+        "value": 130.236
+      },
+      {
+        "date": "2025-09-01",
+        "value": 130.252
+      },
+      {
+        "date": "2025-08-01",
+        "value": 129.672
+      },
+      {
+        "date": "2025-07-01",
+        "value": 129.072
+      },
+      {
+        "date": "2025-06-01",
+        "value": 129.209
+      },
+      {
+        "date": "2025-05-01",
+        "value": 128.87
+      },
+      {
+        "date": "2025-04-01",
+        "value": 128.647
+      },
+      {
+        "date": "2025-03-01",
+        "value": 129.005
+      },
+      {
+        "date": "2025-02-01",
+        "value": 128.425
+      },
+      {
+        "date": "2025-01-01",
+        "value": 128.44
+      },
+      {
+        "date": "2024-12-01",
+        "value": 128.032
+      },
+      {
+        "date": "2024-11-01",
+        "value": 127.716
+      },
+      {
+        "date": "2024-10-01",
+        "value": 127.389
+      },
+      {
+        "date": "2024-09-01",
+        "value": 127.183
+      },
+      {
+        "date": "2024-08-01",
+        "value": 126.878
+      },
+      {
+        "date": "2024-07-01",
+        "value": 126.803
+      },
+      {
+        "date": "2024-06-01",
+        "value": 126.667
+      },
+      {
+        "date": "2024-05-01",
+        "value": 126.553
+      },
+      {
+        "date": "2024-04-01",
+        "value": 126.49
+      },
+      {
+        "date": "2024-03-01",
+        "value": 126.607
+      }
+    ],
+    "pce_energy": [],
     "houst": [
       {
         "date": "2026-01-01",
