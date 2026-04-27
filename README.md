@@ -16,7 +16,7 @@ A single-page macro-economic dashboard covering 12 topics across the U.S. econom
 | **Unemployment** | U-3 / U-6 rates, sector unemployment, trend pills |
 | **Wages** | Average hourly earnings, real vs nominal growth, sector differentials |
 | **CPI** | Headline & core CPI, 10 component categories, category comparison chart |
-| **PCE & Consumer** | Core PCE (Fed's gauge), saving rate, household debt & delinquencies |
+| **Consumer & PCE** | Personal saving rate, household debt & delinquencies, consumer sentiment, PCE inflation |
 | **Fed Rates** | Fed funds rate history, FOMC dot plot, yield curve, card issuer funding & yield |
 | **Credit** | Delinquency rates, net charge-offs, SLOOS lending standards, credit growth |
 | **Banks** | Big 6 Q4 2025 earnings, NII guidance, charge-off outlook, commentary cards |

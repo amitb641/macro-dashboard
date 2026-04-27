@@ -1529,7 +1529,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <span class="nav-group-lbl">Inflation</span>
     <div class="nav-group-pills">
       <button class="nav-btn" data-tab="cpi"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M3 17V8l7-5.5L17 8v9H3z" fill="#FEF2F2"/><path d="M3 17V8l7-5.5L17 8v9H3z" fill="none" stroke="#EF4444" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 8h14" stroke="#EF4444" stroke-width="1.3"/><rect x="8" y="12" width="4" height="5" rx=".5" fill="#FECACA" stroke="#EF4444" stroke-width="1"/><path d="M10 9v1.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/><path d="M8.5 9.5l3 0" stroke="#EF4444" stroke-width="1.2" stroke-linecap="round"/></svg>CPI</button>
-      <button class="nav-btn" data-tab="pce"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="7.5" cy="16" r="1.5" fill="#F97316"/><circle cx="14" cy="16" r="1.5" fill="#F97316"/><path d="M2.5 3.5h2l1.8 8.5h8.4l2.3-5.5H7" fill="#FFF7ED" stroke="#F97316" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>PCE &amp; Consumer</button>
+      <button class="nav-btn" data-tab="pce"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="7.5" cy="16" r="1.5" fill="#F97316"/><circle cx="14" cy="16" r="1.5" fill="#F97316"/><path d="M2.5 3.5h2l1.8 8.5h8.4l2.3-5.5H7" fill="#FFF7ED" stroke="#F97316" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Consumer &amp; PCE</button>
     </div>
   </div>
   <div class="nav-group">
@@ -1835,7 +1835,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-pce">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">💳 PCE &amp; Consumer Commentary — Spending Health &amp; Household Stress</div>
+    <div class="panel-title">💳 Consumer &amp; PCE Commentary — Spending Health &amp; Household Stress</div>
     <div class="fc-note" id="commentary-pce">
       <strong>Latest:</strong> Core PCE re-accelerated to <strong>+3.1% YoY</strong> (Jan'26), up from +3.0% in Dec'25 — running above the Fed's 2% target for 49+ consecutive months. Real consumer spending grew <strong>+2.8%</strong> in 2025 but momentum is fading. <strong>Saving rate 4.5%</strong> (Jan'26) — ticking up from Dec's 4.0%, suggesting consumers are pulling back. <strong>Household debt $18.0T</strong>; mortgage manageable due to locked-in 3% rates; <strong>credit card + auto delinquencies rising</strong> — card 90+ DPD at 11.3%. <strong>DSR at 11.3%</strong> of disposable income and climbing. <strong>Sentiment collapsed:</strong> UMich at 56.6 (Feb'26), down sharply from 73.0 in 2024 — tariff anxiety and inflation expectations driving pessimism. <strong>Consumer bifurcation intensifying:</strong> Top 40% (asset-owners) spending robustly; bottom 40% cutting discretionary.
     </div>
@@ -1843,7 +1843,55 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="metric-row" id="pce-metrics"></div>
   <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
 
-  <!-- ── SECTION 1: PCE Inflation ── -->
+  <!-- ── SECTION 1: Personal Saving Rate ── -->
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Personal Saving Rate — Last 12 Months</div>
+      <div class="panel-sub">BEA Personal Income &amp; Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
+      <div class="ch300"><canvas id="c-saving-monthly"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Personal Saving Rate — Annual Averages (2000–2025)</div>
+      <div class="panel-sub">Annual avg of monthly saving rate · BEA · COVID spike 2020: 15.1%</div>
+      <div class="ch300"><canvas id="c-saving-annual"></canvas></div>
+      <p class="src">Source: BEA Personal Income &amp; Outlays. Annual average of monthly personal saving rate.</p>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: Consumer Debt & Stress ── -->
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Household Debt &amp; Delinquencies — NY Fed Data</div>
+      <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
+      <div class="ch300"><canvas id="c-debt-bar"></canvas></div>
+      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025 (Equifax). Note: NY Fed/Equifax figures cover all credit card issuers (banks, credit unions, fintech, retail). Fed Board series (FRED RCCCBACTDPD90P) covers commercial banks only and reports ~7.8% — lower due to tighter bank underwriting standards.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
+      <div class="panel-sub">Household debt service payments as % of disposable income · Federal Reserve Board · Quarterly</div>
+      <div class="ch300"><canvas id="c-tdsp-line"></canvas></div>
+      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~11.3%.</p>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: Consumer Sentiment ── -->
+  <div class="two-up">
+    <div class="panel">
+      <div class="panel-title">Consumer Sentiment — Last 12 Months<span id="umcsent-release-badge"></span></div>
+      <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
+      <div class="ch300"><canvas id="c-umcsent-monthly"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers (direct) with <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a> fallback. Pre-pandemic avg ~95.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
+      <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
+      <div class="ch300"><canvas id="c-umcsent-annual"></canvas></div>
+      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: PCE Inflation ── -->
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">PCE Price Index — Monthly Headline vs Core YoY %</div>
@@ -1875,54 +1923,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-sub">Inflation-adjusted consumer spending growth · BEA</div>
       <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-pce-cat"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
-    </div>
-  </div>
-
-  <!-- ── SECTION 2: Savings & Spending ── -->
-  <div class="two-up">
-    <div class="panel">
-      <div class="panel-title">Personal Saving Rate — Last 12 Months</div>
-      <div class="panel-sub">BEA Personal Income &amp; Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
-      <div class="ch300"><canvas id="c-saving-monthly"></canvas></div>
-      <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
-    </div>
-    <div class="panel">
-      <div class="panel-title">Personal Saving Rate — Annual Averages (2000–2025)</div>
-      <div class="panel-sub">Annual avg of monthly saving rate · BEA · COVID spike 2020: 15.1%</div>
-      <div class="ch300"><canvas id="c-saving-annual"></canvas></div>
-      <p class="src">Source: BEA Personal Income &amp; Outlays. Annual average of monthly personal saving rate.</p>
-    </div>
-  </div>
-
-  <!-- ── SECTION 3: Consumer Sentiment ── -->
-  <div class="two-up">
-    <div class="panel">
-      <div class="panel-title">Consumer Sentiment — Last 12 Months<span id="umcsent-release-badge"></span></div>
-      <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
-      <div class="ch300"><canvas id="c-umcsent-monthly"></canvas></div>
-      <p class="src">Source: University of Michigan Survey of Consumers (direct) with <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a> fallback. Pre-pandemic avg ~95.</p>
-    </div>
-    <div class="panel">
-      <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
-      <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
-      <div class="ch300"><canvas id="c-umcsent-annual"></canvas></div>
-      <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
-    </div>
-  </div>
-
-  <!-- ── SECTION 4: Consumer Debt & Stress ── -->
-  <div class="two-up">
-    <div class="panel">
-      <div class="panel-title">Household Debt &amp; Delinquencies — NY Fed Data</div>
-      <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
-      <div class="ch300"><canvas id="c-debt-bar"></canvas></div>
-      <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025 (Equifax). Note: NY Fed/Equifax figures cover all credit card issuers (banks, credit unions, fintech, retail). Fed Board series (FRED RCCCBACTDPD90P) covers commercial banks only and reports ~7.8% — lower due to tighter bank underwriting standards.</p>
-    </div>
-    <div class="panel">
-      <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
-      <div class="panel-sub">Household debt service payments as % of disposable income · Federal Reserve Board · Quarterly</div>
-      <div class="ch300"><canvas id="c-tdsp-line"></canvas></div>
-      <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~11.3%.</p>
     </div>
   </div>
 
@@ -6446,7 +6446,7 @@ if(document.readyState === 'loading'){
         <tr style="background:var(--bg2)"><td><strong>👷 Unemployment</strong></td><td>U-3 headline and U-6 broad unemployment, sector rates, weekly initial &amp; continued jobless claims</td><td>U-3 rate, U-6 rate, sector unemployment YoY, weekly claims</td><td><a href="https://www.bls.gov/cps/" target="_blank" rel="noopener">BLS CPS</a> · <a href="https://oui.doleta.gov/unemploy/claims.asp" target="_blank" rel="noopener">DOL</a> / <a href="https://fred.stlouisfed.org/series/ICSA" target="_blank" rel="noopener">FRED ICSA</a>, <a href="https://fred.stlouisfed.org/series/CCSA" target="_blank" rel="noopener">CCSA</a></td><td>Mar 2026</td></tr>
         <tr><td><strong>💵 Wages</strong></td><td>Headline wage growth (composition-adjusted), real wage growth, AHE $/hr level, sector differentials</td><td>Wage growth YoY %, AHE $/hr, real wage, sector YoY</td><td><a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed WGT 3MMA</a> (headline) · <a href="https://fred.stlouisfed.org/series/AHETPI" target="_blank" rel="noopener">BLS CES AHETPI</a> (level + sector)</td><td>Mar 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td><a href="https://www.bls.gov/cpi/" target="_blank" rel="noopener">BLS CPI-U</a> · <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">FRED CPIAUCSL</a> · <a href="https://fred.stlouisfed.org/series/CPILFESL" target="_blank" rel="noopener">CPILFESL</a> (core)</td><td>Jan 2026</td></tr>
-        <tr><td><strong>💳 PCE &amp; Consumer</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td><a href="https://www.bea.gov/data/income-saving/personal-income" target="_blank" rel="noopener">BEA Personal Income &amp; Outlays</a> (<a href="https://fred.stlouisfed.org/series/PCEPI" target="_blank" rel="noopener">PCEPI</a>, <a href="https://fred.stlouisfed.org/series/PCEPILFE" target="_blank" rel="noopener">PCEPILFE</a>) · <a href="https://www.federalreserve.gov/releases/g19/" target="_blank" rel="noopener">Fed G.19</a></td><td>Jan 2026</td></tr>
+        <tr><td><strong>💳 Consumer &amp; PCE</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td><a href="https://www.bea.gov/data/income-saving/personal-income" target="_blank" rel="noopener">BEA Personal Income &amp; Outlays</a> (<a href="https://fred.stlouisfed.org/series/PCEPI" target="_blank" rel="noopener">PCEPI</a>, <a href="https://fred.stlouisfed.org/series/PCEPILFE" target="_blank" rel="noopener">PCEPILFE</a>) · <a href="https://www.federalreserve.gov/releases/g19/" target="_blank" rel="noopener">Fed G.19</a></td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path, card issuer funding &amp; yield</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots, card yield %</td><td><a href="https://www.federalreserve.gov/releases/h15/" target="_blank" rel="noopener">Fed H.15</a> · <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC SEP Dec 2025</a> · <a href="https://www.fdic.gov/" target="_blank" rel="noopener">FDIC</a> · Earnings</td><td>Mar 2026</td></tr>
         <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td><a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">FRED ICE BofA</a> · <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed HHDC</a> · Bank earnings (Agent 9)</td><td>Q1 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>10-bank earnings commentary — NII, ROTCE, CET1, NCO, forward guidance + verbatim CEO quotes across 7 topic areas</td><td>Net income, NII, ROTCE %, CET1 %, FY26 NII guide, verbatim CEO commentary</td><td>Q1 2026 earnings transcripts (auto-fetched by Agent 9 during earnings weeks) · <code>data/bank_earnings.json</code></td><td>Q1 2026</td></tr>
@@ -6573,7 +6573,7 @@ const SIGNAL_THRESHOLDS = [
 // ════════════════════════════════════════════════════
 var TAB_NAMES = {
   fc:"Outlook", gdp:"GDP", jobs:"Jobs", unemp:"Unemployment",
-  wages:"Wages", cpi:"CPI", pce:"PCE & Consumer", yield:"Fed Rates",
+  wages:"Wages", cpi:"CPI", pce:"Consumer & PCE", yield:"Fed Rates",
   credit:"Credit", banks:"Banks", housing:"Housing", oil:"Oil",
   dict:"Sources", stack:"Dashboard"
 };

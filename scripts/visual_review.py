@@ -41,7 +41,7 @@ CHART_TABS = [
 
 TAB_NAMES = {
     'fc': 'Outlook', 'gdp': 'GDP', 'jobs': 'Jobs', 'unemp': 'Unemployment',
-    'wages': 'Wages', 'cpi': 'CPI', 'pce': 'PCE & Consumer', 'yield': 'Rates & Yields',
+    'wages': 'Wages', 'cpi': 'CPI', 'pce': 'Consumer & PCE', 'yield': 'Rates & Yields',
     'credit': 'Credit', 'banks': 'Banking', 'housing': 'Housing', 'oil': 'Oil',
 }
 
