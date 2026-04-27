@@ -1,8 +1,9 @@
 {
-  "collected_at": "2026-04-27T14:31:42.129891Z",
+  "collected_at": "2026-04-27T15:05:21.809956Z",
   "series_count": 77,
-  "error_count": 9,
+  "error_count": 10,
   "errors": [
+    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
@@ -1480,14 +1481,6 @@
       {
         "date": "2026-01-27",
         "value": 70.28
-      },
-      {
-        "date": "2026-01-26",
-        "value": 67.7
-      },
-      {
-        "date": "2026-01-23",
-        "value": 68.16
       }
     ],
     "oil_daily_chart": {
@@ -1640,7 +1633,7 @@
         "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 27 14:32 UTC",
+      "updated": "Apr 27 15:05 UTC",
       "sessions": 35
     },
     "gasoline": [
