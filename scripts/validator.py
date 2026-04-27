@@ -895,7 +895,145 @@ def check_visual_review():
         }]
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None):
+# ═══════════════════════════════════════════════════════════════════════
+# PASS 3d: PANEL TITLE ↔ DATA MONTH CONSISTENCY
+#   Catches the failure mode where the renderer's title-update regex
+#   succeeds (rolling "Mar'26 vs Feb'26") but the underlying JS data const
+#   (e.g. CPI_CAT_MOM) silently failed to rebuild — leaving the chart
+#   plotting last month's data under this month's title. Same drift can hit
+#   hardcoded legend chips (purple #8878B8bb prior-month swatch).
+# ═══════════════════════════════════════════════════════════════════════
+
+# Each entry: (panel_anchor, js_const_name, key_extractor)
+# key_extractor returns the list of month tokens (e.g. ['feb','mar']) found
+# in the data const. If empty, the const isn't month-keyed and the check is
+# skipped for that const.
+_PANEL_DATA_MAP = [
+    ('CPI by Category — MoM Change', 'CPI_CAT_MOM',
+     lambda obj: [k for k in (obj[0] if obj else {}) if k not in ('cat', 'color')]),
+    ('PCE by Category — MoM Change', 'PCE_CAT_MOM',
+     lambda obj: [k for k in (obj[0] if obj else {}) if k not in ('cat', 'color')]),
+    ('Monthly Job Change by Sector', 'SECTOR_MOM',
+     lambda obj: [k for k in (obj or {}) if k != 'sectors']),
+    ('Unemployment by Sector — Monthly MoM Change (pp)', 'U_SECTOR_MOM',
+     lambda obj: [k for k in (obj or {}) if k != 'sectors']),
+]
+
+_MONTH_LBL_RE = re.compile(r"([A-Z][a-z]+)'(\d{2})")
+_MONTH_TO_KEY = {'jan':1,'feb':2,'mar':3,'apr':4,'may':5,'jun':6,
+                 'jul':7,'aug':8,'sep':9,'oct':10,'nov':11,'dec':12}
+
+
+def _extract_panel_title_months(html, anchor):
+    """Find the panel-title containing `anchor` and return its month tokens
+    (ordered as written, e.g. [('Mar','26'), ('Feb','26')] for 'Mar'26 vs Feb'26')."""
+    idx = html.find(anchor)
+    if idx < 0:
+        return None
+    # Title line ends at the next </div>
+    end = html.find('</div>', idx)
+    if end < 0:
+        return None
+    title = html[idx:end]
+    return _MONTH_LBL_RE.findall(title)
+
+
+def _extract_panel_chip_months(html, anchor):
+    """Return month tokens found inside legend chips in the ~1500 bytes
+    after the panel anchor (covers panel-title + sub + legend row)."""
+    idx = html.find(anchor)
+    if idx < 0:
+        return None
+    chunk = html[idx: idx + 1500]
+    # Pull only the legend-chip area (inside flex span)
+    return _MONTH_LBL_RE.findall(chunk)
+
+
+def check_panel_data_consistency(html):
+    """Pass 3d: verify each MoM panel's title month tokens match the months
+    encoded in the underlying JS data const + the prior-month legend chip."""
+    findings = []
+    for anchor, var_name, key_fn in _PANEL_DATA_MAP:
+        title_months = _extract_panel_title_months(html, anchor)
+        if not title_months:
+            findings.append({
+                'check': f'Panel anchor "{anchor}" present',
+                'severity': 'warning',
+                'pass': False,
+                'reason': 'Panel not found in HTML — anchor may have changed',
+            })
+            continue
+
+        # Title months as lowercase short keys, ordered current-first then prior
+        # Convention varies: CPI/PCE titles read "Cur vs Prv"; Sector reads "Prv vs Cur"
+        # Normalize: pick the two month tokens; assume the LATER calendar month is "current"
+        if len(title_months) < 2:
+            findings.append({
+                'check': f'{anchor}: title has 2 month tokens',
+                'severity': 'warning',
+                'pass': False,
+                'reason': f'Title only has {len(title_months)} month tokens',
+            })
+            continue
+        m1, m2 = title_months[0], title_months[1]
+        keys = {m1[0].lower(), m2[0].lower()}
+
+        # Data const month keys
+        const_obj = _extract_js_const(html, var_name)
+        if const_obj is None:
+            findings.append({
+                'check': f'{anchor}: data const {var_name} extractable',
+                'severity': 'warning',
+                'pass': False,
+                'reason': f'Could not parse const {var_name} from HTML',
+            })
+            continue
+        data_keys = set(k.lower()[:3] for k in (key_fn(const_obj) or []))
+        if not data_keys:
+            # Const not month-keyed (e.g. SECTOR_MOM uses different shape)
+            findings.append({
+                'check': f'{anchor}: {var_name} month-keyed',
+                'severity': 'skipped',
+                'pass': True,
+                'reason': 'data const not month-keyed in this schema',
+            })
+        else:
+            ok = keys == data_keys
+            findings.append({
+                'check': f'{anchor}: title months match {var_name} keys',
+                'title_months': sorted(keys),
+                'data_keys': sorted(data_keys),
+                'severity': 'ok' if ok else 'divergence',
+                'pass': ok,
+            })
+            if not ok:
+                print(f'  🔴 {anchor}: title={sorted(keys)} vs data={sorted(data_keys)} — title-data drift')
+
+        # Prior-month legend chip — should equal the EARLIER calendar month
+        chip_months = _extract_panel_chip_months(html, anchor)
+        if chip_months:
+            # Determine the earlier of the two title months by year+month
+            def to_int(tok):
+                return int(tok[1]) * 12 + _MONTH_TO_KEY.get(tok[0].lower()[:3], 0)
+            prv_token = m1 if to_int(m1) < to_int(m2) else m2
+            prv_str = f"{prv_token[0]}'{prv_token[1]}"
+            # Last chip in the legend row is the prior-month baseline
+            chip_strs = [f"{m}'{y}" for m, y in chip_months]
+            ok = prv_str in chip_strs
+            findings.append({
+                'check': f'{anchor}: prior-month chip matches title',
+                'expected_prior': prv_str,
+                'chips_found': chip_strs,
+                'severity': 'ok' if ok else 'divergence',
+                'pass': ok,
+            })
+            if not ok:
+                print(f'  🔴 {anchor}: prior-month chip "{prv_str}" not found in legend chips {chip_strs}')
+
+    return findings
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -905,7 +1043,9 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         shock_tracker = []
     if earnings is None:
         earnings = []
-    all_findings = internal + sources + staleness + visual + vision_review + shock_tracker + earnings
+    if panel_data is None:
+        panel_data = []
+    all_findings = internal + sources + staleness + visual + vision_review + shock_tracker + earnings + panel_data
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -932,6 +1072,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'source_verification': sources,
         'staleness': staleness,
         'shock_tracker': shock_tracker,
+        'panel_data_consistency': panel_data,
         'earnings_verbatim': earnings,
         'visual_qa': visual,
         'visual_review': vision_review,
@@ -989,6 +1130,13 @@ def validate():
     st_fail = sum(1 for f in shock_tracker if not f.get('pass'))
     print(f'  {st_pass} passed, {st_fail} failed')
 
+    # Pass 3d: Panel title ↔ data const month consistency
+    print('\n  ── Pass 3d: Panel Title vs Data Const Month Consistency ──')
+    panel_data = check_panel_data_consistency(html)
+    pd_pass = sum(1 for f in panel_data if f.get('pass'))
+    pd_fail = sum(1 for f in panel_data if not f.get('pass') and f.get('severity') != 'skipped')
+    print(f'  {pd_pass} passed, {pd_fail} failed')
+
     # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
     print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
     earnings = check_earnings_verbatim()
@@ -1020,7 +1168,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -1035,7 +1183,8 @@ def validate():
     # Print divergences for visibility
     for section_name, section in [('Internal', internal), ('Source', sources),
                                    ('Staleness', staleness), ('Visual', visual),
-                                   ('Vision', vision_review)]:
+                                   ('Vision', vision_review),
+                                   ('PanelData', panel_data)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')
