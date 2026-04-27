@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-27T12:58:56Z";
+  var BUILD_V = "2026-04-27T13:48:15Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -1861,7 +1861,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
-      <div class="panel-sub">Real PCE spending growth by category · sorted by Jan'26 rate · BEA</div>
+      <div class="panel-sub">PCE Price Index YoY by category · sorted by Jan'26 rate · BEA</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Jan'26 accelerating</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Jan'26 cooling</span>
@@ -2438,16 +2438,16 @@ const CPI_CATS = [
   {cat:"Used Cars & Trucks",    color:"#00C9A7", c21:37.3, c22:3.0,  c23:-5.0, c24:1.6,  c25:0.8},
 ];
 const CPI_CAT_MOM = [
-  {cat:"Shelter / Housing",     jan:4.5, feb:4.3, color:"#8878B8"},
-  {cat:"Food Away from Home",   jan:3.5, feb:3.4, color:"#1A9E5A"},
-  {cat:"Transportation Svcs",   jan:6.2, feb:5.8, color:"#CC5DE8"},
-  {cat:"Medical Care Svcs",     jan:3.0, feb:3.0, color:"#FF6B9D"},
-  {cat:"Core CPI (ex F&E)",     jan:2.5, feb:2.5, color:"#F76707"},
-  {cat:"Food at Home",          jan:1.9, feb:2.1, color:"#51CF66"},
-  {cat:"New Vehicles",          jan:0.8, feb:0.4, color:"#4DABF7"},
-  {cat:"Apparel",               jan:0.5, feb:0.3, color:"#FCC419"},
-  {cat:"Energy (all)",          jan:1.0, feb:-0.2, color:"#FFB84C"},
-  {cat:"Used Cars & Trucks",    jan:1.0, feb:0.8, color:"#00C9A7"},
+  {cat:"Shelter / Housing",     jan26:4.5, feb26:4.3, color:"#8878B8"},
+  {cat:"Food Away from Home",   jan26:3.5, feb26:3.4, color:"#1A9E5A"},
+  {cat:"Transportation Svcs",   jan26:6.2, feb26:5.8, color:"#CC5DE8"},
+  {cat:"Medical Care Svcs",     jan26:3.0, feb26:3.0, color:"#FF6B9D"},
+  {cat:"Core CPI (ex F&E)",     jan26:2.5, feb26:2.5, color:"#F76707"},
+  {cat:"Food at Home",          jan26:1.9, feb26:2.1, color:"#51CF66"},
+  {cat:"New Vehicles",          jan26:0.8, feb26:0.4, color:"#4DABF7"},
+  {cat:"Apparel",               jan26:0.5, feb26:0.3, color:"#FCC419"},
+  {cat:"Energy (all)",          jan26:1.0, feb26:-0.2, color:"#FFB84C"},
+  {cat:"Used Cars & Trucks",    jan26:1.0, feb26:0.8, color:"#00C9A7"},
 ];
 
 // ── WAGES ────────────────────────────────────────────
@@ -3065,8 +3065,11 @@ function buildCPITab(){
   // ── CPI Category MoM Chart — bar + dot (dynamic keys) ──
   var _cpiK = Object.keys(CPI_CAT_MOM[0]).filter(k=>k!=="cat"&&k!=="color");
   var _cpiCurK = _cpiK[_cpiK.length-1], _cpiPrvK = _cpiK.length>1?_cpiK[_cpiK.length-2]:_cpiCurK;
-  var _cpiCurL = _cpiCurK.charAt(0).toUpperCase()+_cpiCurK.slice(1)+"'26";
-  var _cpiPrvL = _cpiPrvK.charAt(0).toUpperCase()+_cpiPrvK.slice(1)+"'26";
+  // Keys are "feb26"/"mar26" (3-letter month + 2-digit year). Falls back to
+  // "feb" (no year) for back-compat with hand-edited consts.
+  var _fmtMK = function(k){var m=k.match(/^([a-z]+)(\d{0,2})$/);return m?(m[1].charAt(0).toUpperCase()+m[1].slice(1)+(m[2]?"'"+m[2]:"")):k;};
+  var _cpiCurL = _fmtMK(_cpiCurK);
+  var _cpiPrvL = _fmtMK(_cpiPrvK);
   var cpiMom = [...CPI_CAT_MOM].sort((a,b)=>b[_cpiCurK]-a[_cpiCurK]);
   new Chart(document.getElementById("c-cpi-cat-mom").getContext("2d"),{
     type:"bar",
@@ -3462,16 +3465,16 @@ const PCE_CATS = [
   {cat:"Energy Goods",         y23:-5.2, y24:-1.8, y25:-2.8},
 ];
 const PCE_CAT_MOM = [
-  {cat:"Housing & Utilities",  dec:3.3, jan:3.4},
-  {cat:"Healthcare Services",  dec:3.0, jan:3.2},
-  {cat:"Financial Services",   dec:4.4, jan:4.6},
-  {cat:"Food Services",        dec:4.0, jan:4.2},
-  {cat:"Recreation Services",  dec:3.7, jan:3.9},
-  {cat:"Transportation Svcs",  dec:5.0, jan:5.2},
-  {cat:"Nondurable Goods",     dec:1.6, jan:1.9},
-  {cat:"Durable Goods",        dec:0.4, jan:0.8},
-  {cat:"Food & Bev (Grocery)", dec:2.9, jan:3.2},
-  {cat:"Energy Goods",         dec:-2.4,jan:-1.8},
+  {cat:"Housing & Utilities",  dec25:3.3, jan26:3.4},
+  {cat:"Healthcare Services",  dec25:3.0, jan26:3.2},
+  {cat:"Financial Services",   dec25:4.4, jan26:4.6},
+  {cat:"Food Services",        dec25:4.0, jan26:4.2},
+  {cat:"Recreation Services",  dec25:3.7, jan26:3.9},
+  {cat:"Transportation Svcs",  dec25:5.0, jan26:5.2},
+  {cat:"Nondurable Goods",     dec25:1.6, jan26:1.9},
+  {cat:"Durable Goods",        dec25:0.4, jan26:0.8},
+  {cat:"Food & Bev (Grocery)", dec25:2.9, jan26:3.2},
+  {cat:"Energy Goods",         dec25:-2.4,jan26:-1.8},
 ];
 const DEBT_DATA = {
   labels:["Mortgage","Auto Loans","Credit Cards","Student Loans","HELOC","Other"],
@@ -3583,8 +3586,9 @@ function buildPCETab(){
   // ── PCE Category MoM Chart (dynamic keys) ──
   var _pceK = Object.keys(PCE_CAT_MOM[0]).filter(k=>k!=="cat");
   var _pceCurK = _pceK[_pceK.length-1], _pcePrvK = _pceK.length>1?_pceK[_pceK.length-2]:_pceCurK;
-  var _pceCurL = _pceCurK.charAt(0).toUpperCase()+_pceCurK.slice(1)+"'26";
-  var _pcePrvL = _pcePrvK.charAt(0).toUpperCase()+_pcePrvK.slice(1)+"'25";
+  // Keys are "dec25"/"jan26" — _fmtMK is defined in the CPI block above.
+  var _pceCurL = _fmtMK(_pceCurK);
+  var _pcePrvL = _fmtMK(_pcePrvK);
   var pceMom = [...PCE_CAT_MOM].sort((a,b)=>b[_pceCurK]-a[_pceCurK]);
   new Chart(document.getElementById("c-pce-cat-mom").getContext("2d"),{
     type:"bar",

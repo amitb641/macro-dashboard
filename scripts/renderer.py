@@ -923,6 +923,7 @@ def rebuild_charts(html, data):
     # ── Category MoM auto-rebuilders ─────────────────────────────────
     html = rebuild_u_sector_mom(html, data)
     html = rebuild_cpi_cat_mom(html, data)
+    html = rebuild_pce_cat_mom(html, data)
     html = rebuild_treasury_data(html, data)
     html = rebuild_oil_prod_spread(html, data)
 
@@ -1109,7 +1110,9 @@ def _yoy_from_index(series, n=2):
         ya = next((o for o in series if o['date'] == target), None)
         if ya and ya['value']:
             yoy = round((cur['value'] - ya['value']) / ya['value'] * 100, 1)
-            month_key = datetime.datetime.strptime(cur_date, '%Y-%m-%d').strftime('%b').lower()
+            # Include 2-digit year so the chart's JS can render "Feb'26" without
+            # hardcoding the year. Pass 3d already truncates to the first 3 chars.
+            month_key = datetime.datetime.strptime(cur_date, '%Y-%m-%d').strftime('%b%y').lower()
             results.append({'month_key': month_key, 'yoy': yoy, 'date': cur_date})
     return results
 
@@ -1223,6 +1226,55 @@ def rebuild_cpi_cat_mom(html, data):
             f'CPI_CAT_MOM rebuild SKIPPED — only {len(entries)}/10 cats had '
             f'>=13 obs for YoY (need >=8). Insufficient: {", ".join(short)}. '
             f'Chart will display stale Jan/Feb data while title auto-updates.'
+        )
+
+    return html
+
+
+def rebuild_pce_cat_mom(html, data):
+    """Rebuild PCE_CAT_MOM from FRED PCE category price-index series.
+    Mirrors rebuild_cpi_cat_mom; uses BEA Table 2.4.4U price indexes (the
+    same family as PCEPI) so the chart is consistent with the headline
+    PCE inflation tile."""
+    PCE_CATS = [
+        ('Housing & Utilities',  'pce_housing'),
+        ('Healthcare Services',  'pce_healthcare'),
+        ('Financial Services',   'pce_financial'),
+        ('Food Services',        'pce_food_svc'),
+        ('Recreation Services',  'pce_recreation'),
+        ('Transportation Svcs',  'pce_transport'),
+        ('Nondurable Goods',     'pce_nondur'),
+        ('Durable Goods',        'pce_durable'),
+        ('Food & Bev (Grocery)', 'pce_food_home'),
+        ('Energy Goods',         'pce_energy'),
+    ]
+
+    entries = []
+    short = []
+    for cat_name, data_key in PCE_CATS:
+        series = data.get(data_key, [])
+        yoys = _yoy_from_index(series, 2)
+        if len(yoys) >= 2:
+            entries.append({
+                'cat': cat_name,
+                yoys[1]['month_key']: yoys[1]['yoy'],
+                yoys[0]['month_key']: yoys[0]['yoy'],
+            })
+        else:
+            short.append(f'{data_key}(n={len(series)})')
+
+    if len(entries) >= 8:
+        new_json = json.dumps(entries, separators=(', ', ':'))
+        pattern = r'const PCE_CAT_MOM\s*=\s*\[[\s\S]*?\];'
+        new_html, n = re.subn(pattern, f'const PCE_CAT_MOM = {new_json};', html, count=1)
+        if n:
+            keys = [k for k in entries[0] if k != 'cat']
+            applied.append(f'PCE_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
+            html = new_html
+    else:
+        warnings.append(
+            f'PCE_CAT_MOM rebuild SKIPPED — only {len(entries)}/10 cats had '
+            f'>=13 obs for YoY (need >=8). Insufficient: {", ".join(short)}.'
         )
 
     return html
@@ -1583,11 +1635,25 @@ def render_inflation(html, data, vals, tabs):
                 rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
             applied.append(f'CPI tab month refs updated to {c_prv}/{c_cur}')
 
-    # ── PCE by Category month references ────────────────────────────
-    # No rebuild_pce_cat_mom exists — PCE category data is hand-maintained.
-    # Auto-rolling the title here would drift past the data const (the bug
-    # this whole module is trying to prevent). When PCE category fetching
-    # is added, mirror the CPI gate above.
+    # ── Auto-update PCE tab month references ────────────────────────
+    # Gated on rebuild_pce_cat_mom succeeding so title and PCE_CAT_MOM
+    # data const always roll together.
+    pce_rebuilt = any(s.startswith('PCE_CAT_MOM rebuilt') for s in applied)
+    pce_s = data.get('pce', [])
+    if pce_rebuilt and pce_s and len(pce_s) >= 2:
+        p_cur_d = pce_s[0].get('date', '')
+        p_prv_d = pce_s[1].get('date', '')
+        if p_cur_d and p_prv_d:
+            p_cur = month_label(p_cur_d)
+            p_prv = month_label(p_prv_d)
+            html = re.sub(
+                r"PCE by Category — MoM Change \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
+                f"PCE by Category — MoM Change ({p_cur} vs {p_prv})", html, count=1)
+            html = re.sub(
+                r"(PCE Price Index YoY by category · sorted by )[A-Z][a-z]+'\d+",
+                rf"\g<1>{p_cur}", html, count=1)
+            html = _patch_panel_legend_chips(html, 'PCE by Category', p_cur, p_prv)
+            applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')

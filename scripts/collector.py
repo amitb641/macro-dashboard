@@ -389,6 +389,22 @@ def collect():
     data['cpi_energy']    = fred_obs('CUSR0000SA0E', 24)  # Energy
     data['cpi_used_cars'] = fred_obs('CUSR0000SETA02',24) # Used Cars & Trucks
 
+    # PCE category price indexes (BEA Table 2.4.4U via FRED) for
+    # PCE_CAT_MOM auto-rebuild. 'G' suffix = price index (matches headline
+    # PCEPI), not real quantity ('A' would be real PCE spending). 24 obs
+    # so _yoy_from_index can compute latest YoY for each category.
+    print('  [Monthly] PCE Categories (FRED)...')
+    data['pce_housing']   = fred_obs('DHUTRG3M086SBEA', 24)  # Housing & Utilities
+    data['pce_healthcare']= fred_obs('DHLCRG3M086SBEA', 24)  # Healthcare Services
+    data['pce_financial'] = fred_obs('DIFSRG3M086SBEA', 24)  # Financial Services & Insurance
+    data['pce_food_svc']  = fred_obs('DFSARG3M086SBEA', 24)  # Food Services & Accommodations
+    data['pce_recreation']= fred_obs('DRCARG3M086SBEA', 24)  # Recreation Services
+    data['pce_transport'] = fred_obs('DTRSRG3M086SBEA', 24)  # Transportation Services
+    data['pce_nondur']    = fred_obs('DNDGRG3M086SBEA', 24)  # Nondurable Goods
+    data['pce_durable']   = fred_obs('DDURRG3M086SBEA', 24)  # Durable Goods
+    data['pce_food_home'] = fred_obs('DFXARG3M086SBEA', 24)  # Food & Bev (off-premises)
+    data['pce_energy']    = fred_obs('DGOERG3M086SBEA', 24)  # Gasoline & Other Energy Goods
+
     print('  [Monthly] Housing...')
     data['houst']       = fred_obs('HOUST',      320)
     data['houst1f']     = fred_obs('HOUST1F',    320)
