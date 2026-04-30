@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-04-30T14:13:37.233422Z",
+  "collected_at": "2026-04-30T16:05:59.896362Z",
   "series_count": 77,
   "error_count": 9,
   "errors": [
@@ -1660,7 +1660,7 @@
         null
       ],
       "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 30 14:13 UTC",
+      "updated": "Apr 30 16:06 UTC",
       "sessions": 40
     },
     "gasoline": [
@@ -1786,6 +1786,10 @@
       }
     ],
     "mortgage30": [
+      {
+        "date": "2026-04-30",
+        "value": 6.3
+      },
       {
         "date": "2026-04-23",
         "value": 6.23
@@ -2061,13 +2065,13 @@
       {
         "date": "2025-01-02",
         "value": 6.91
-      },
-      {
-        "date": "2024-12-26",
-        "value": 6.85
       }
     ],
     "mortgage15": [
+      {
+        "date": "2026-04-30",
+        "value": 5.64
+      },
       {
         "date": "2026-04-23",
         "value": 5.58
@@ -2343,10 +2347,6 @@
       {
         "date": "2025-01-02",
         "value": 6.13
-      },
-      {
-        "date": "2024-12-26",
-        "value": 6.0
       }
     ],
     "icsa": [

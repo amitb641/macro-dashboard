@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-30T14:15:07.822143Z",
+  "validated_at": "2026-04-30T16:07:28.320252Z",
   "status": "WARN",
   "summary": {
     "total_checks": 419,
     "passed": 408,
     "failed": 11,
-    "skipped": 1,
+    "skipped": 3,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -598,11 +598,8 @@
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "raw_data_value": 330.293,
-      "fresh_api_value": 330.293,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -652,17 +649,14 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158637.0,
-      "fresh_api_value": 158637.0,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.23,
-      "fresh_api_value": 6.23,
+      "raw_data_value": 6.3,
+      "fresh_api_value": 6.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -737,8 +731,8 @@
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-04-23",
-      "age_days": 7,
+      "latest_date": "2026-04-30",
+      "age_days": 0,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -761,7 +755,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-30T14:13:37.233422Z",
+      "collected_at": "2026-04-30T16:05:59.896362Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true

@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-04-30T14:14:19.883012Z",
+  "analyzed_at": "2026-04-30T16:06:37.974921Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
@@ -24,7 +24,7 @@
     "pce_yoy": 3.5,
     "core_pce_yoy": 3.2,
     "saving_rate": 3.6,
-    "mortgage30": 6.23,
+    "mortgage30": 6.3,
     "housing_starts": 1502.0,
     "cs_hpi_yoy": 0.66,
     "umcsent": 49.8,
@@ -60,7 +60,7 @@
     },
     "hy_oas": {
       "value": 282,
-      "delta": -3,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -101,8 +101,8 @@
       "alert": "alert"
     },
     "mortgage30": {
-      "value": 6.23,
-      "delta": 0.0,
+      "value": 6.3,
+      "delta": 0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
