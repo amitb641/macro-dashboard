@@ -1037,7 +1037,170 @@ def check_panel_data_consistency(html):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None):
+# ═══════════════════════════════════════════════════════════════════════
+# PASS 3e: CROSS-SURFACE METRIC CONSISTENCY
+#   Same metric (e.g. NFP MoM Mar'26) gets rendered on multiple surfaces:
+#   the top KPI strip, a tab-specific tile, the chart's data const, and
+#   commentary prose. Each surface used to derive its value independently,
+#   so any one of them could drift from the source-of-truth raw series
+#   and show a different number than the others. (We hit this with the
+#   Jobs tile reading SECTOR_MOM sum = 188K while everything else read
+#   PAYEMS = 178K.) This pass picks the raw series as truth and checks
+#   every surface agrees within a small tolerance.
+# ═══════════════════════════════════════════════════════════════════════
+
+def _kpi_value(html, label_substring):
+    """Find a KPIS entry whose lbl contains `label_substring` and return the
+    numeric portion of its `val` (e.g. '+178K' -> 178, '4.3%' -> 4.3)."""
+    kpis = _extract_js_const(html, 'KPIS')
+    if not isinstance(kpis, list):
+        return None
+    for k in kpis:
+        lbl = (k.get('lbl') or '')
+        if label_substring.lower() in lbl.lower():
+            val = (k.get('val') or '').replace(',', '').replace('$', '')
+            m = re.search(r'-?\d+\.?\d*', val)
+            if m:
+                return float(m.group(0))
+    return None
+
+
+def _commentary_match(html, tab_id, pattern, group=1):
+    """Find regex `pattern` inside the commentary block for `tab_id` and
+    return the matched group as float (or None)."""
+    marker = f'id="commentary-{tab_id}"'
+    idx = html.find(marker)
+    if idx < 0:
+        return None
+    end = html.find('</div>', idx)
+    chunk = html[idx:end] if end > idx else html[idx:idx + 3000]
+    m = re.search(pattern, chunk)
+    if not m:
+        return None
+    try:
+        return float(m.group(group))
+    except (ValueError, IndexError):
+        return None
+
+
+def _const_array_last(html, var_name, key):
+    """Return the last numeric element of `const VAR.key` (for object-shape
+    consts) or `const VAR[-1]` (for array-shape consts)."""
+    obj = _extract_js_const(html, var_name)
+    if obj is None:
+        return None
+    if isinstance(obj, dict):
+        arr = obj.get(key)
+    elif isinstance(obj, list) and key is None:
+        arr = obj
+    else:
+        return None
+    if not isinstance(arr, list) or not arr:
+        return None
+    return arr[-1]
+
+
+def check_metric_consistency(html, data, sig_vals):
+    """Pass 3e: cross-surface numeric consistency for canonical metrics.
+
+    Compares values rendered on multiple surfaces (KPI strip, JS data
+    const, commentary text) against each other. Catches the bug class
+    where one surface derives a metric independently and drifts from the
+    others (e.g. Jobs tile summing SECTOR_MOM = 188K while everything
+    else read PAYEMS = 178K). Raw-data-vs-rendered drift is a separate
+    concern handled by Pass 1 (check_internal).
+
+    Each metric lists 2+ surfaces; the first non-None is treated as the
+    reference and the rest must agree within `tol`.
+    """
+    findings = []
+
+    metrics = [
+        ('NFP MoM latest (K)',
+         [
+             ('NFP_BLS_MOM.bls[-1]',  _const_array_last(html, 'NFP_BLS_MOM', 'bls')),
+             ('KPIS Jobs tile',       _kpi_value(html, 'Jobs')),
+             ('Commentary payrolls',  _commentary_match(
+                 html, 'unemp', r'payrolls printed <strong>([+-]?\d+)K')),
+         ],
+         5),  # ±5K — tile rounding tolerance
+
+        ('Unemployment rate (%)',
+         [
+             ('U_MONTHLY.data[-1]',  _const_array_last(html, 'U_MONTHLY', 'data')),
+             ('KPIS Unemployment',   _kpi_value(html, 'Unemployment')),
+             ('Commentary U-3',      _commentary_match(
+                 html, 'unemp', r'U-3 at <strong>(\d+\.\d+)%</strong>')),
+         ],
+         0.1),
+
+        ('CPI YoY latest (%)',
+         [
+             ('CPI_MONTHLY.headline[-1]', _const_array_last(html, 'CPI_MONTHLY', 'headline')),
+             ('KPIS CPI YoY',             _kpi_value(html, 'CPI YoY')),
+         ],
+         0.15),
+
+        ('Core PCE YoY latest (%)',
+         [
+             ('PCE_MONTHLY.core[-1]',  _const_array_last(html, 'PCE_MONTHLY', 'core')),
+             ('KPIS Core PCE',         _kpi_value(html, 'Core PCE')),
+         ],
+         0.15),
+
+        ('UMich sentiment latest',
+         [
+             ('UMCSENT_MONTHLY.data[-1]', _const_array_last(html, 'UMCSENT_MONTHLY', 'data')),
+             ('KPIS UMich Sentiment',     _kpi_value(html, 'UMich Sentiment')),
+         ],
+         0.5),
+    ]
+
+    for name, surfaces, tol in metrics:
+        # Coerce to floats; skip MISSING surfaces.
+        parsed = []
+        surface_vals = {}
+        for sname, sval in surfaces:
+            if sval is None:
+                surface_vals[sname] = 'MISSING'
+                continue
+            try:
+                sv = float(sval)
+            except (TypeError, ValueError):
+                surface_vals[sname] = f'unparseable: {sval}'
+                continue
+            surface_vals[sname] = sv
+            parsed.append((sname, sv))
+
+        if len(parsed) < 2:
+            findings.append({
+                'check': f'{name}: ≥2 surfaces extractable',
+                'surfaces': surface_vals,
+                'severity': 'skipped',
+                'pass': True,
+                'reason': f'only {len(parsed)} surface(s) extractable; cross-check needs ≥2',
+            })
+            continue
+
+        ref_name, ref_val = parsed[0]
+        diverged = [(s, v) for s, v in parsed[1:] if abs(v - ref_val) > tol]
+
+        ok = not diverged
+        findings.append({
+            'check': f'{name}: surfaces agree within ±{tol} (ref: {ref_name})',
+            'reference': ref_val,
+            'surfaces': surface_vals,
+            'severity': 'ok' if ok else 'divergence',
+            'pass': ok,
+        })
+        if not ok:
+            for s, v in diverged:
+                print(f'  🔴 {name}: {s}={v} vs {ref_name}={ref_val} (Δ={v - ref_val:+.2f}, tol±{tol})')
+
+    return findings
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1049,7 +1212,10 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         earnings = []
     if panel_data is None:
         panel_data = []
-    all_findings = internal + sources + staleness + visual + vision_review + shock_tracker + earnings + panel_data
+    if metric_consistency is None:
+        metric_consistency = []
+    all_findings = (internal + sources + staleness + visual + vision_review +
+                    shock_tracker + earnings + panel_data + metric_consistency)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1077,6 +1243,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'staleness': staleness,
         'shock_tracker': shock_tracker,
         'panel_data_consistency': panel_data,
+        'metric_consistency': metric_consistency,
         'earnings_verbatim': earnings,
         'visual_qa': visual,
         'visual_review': vision_review,
@@ -1141,6 +1308,13 @@ def validate():
     pd_fail = sum(1 for f in panel_data if not f.get('pass') and f.get('severity') != 'skipped')
     print(f'  {pd_pass} passed, {pd_fail} failed')
 
+    # Pass 3e: Cross-surface metric consistency
+    print('\n  ── Pass 3e: Cross-Surface Metric Consistency ──')
+    metric_consistency = check_metric_consistency(html, data, sig_vals)
+    mc_pass = sum(1 for f in metric_consistency if f.get('pass'))
+    mc_fail = sum(1 for f in metric_consistency if not f.get('pass') and f.get('severity') != 'skipped')
+    print(f'  {mc_pass} passed, {mc_fail} failed')
+
     # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
     print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
     earnings = check_earnings_verbatim()
@@ -1172,7 +1346,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -1188,7 +1362,8 @@ def validate():
     for section_name, section in [('Internal', internal), ('Source', sources),
                                    ('Staleness', staleness), ('Visual', visual),
                                    ('Vision', vision_review),
-                                   ('PanelData', panel_data)]:
+                                   ('PanelData', panel_data),
+                                   ('MetricConsistency', metric_consistency)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')
