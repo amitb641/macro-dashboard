@@ -1154,6 +1154,24 @@ def check_metric_consistency(html, data, sig_vals):
              ('KPIS UMich Sentiment',     _kpi_value(html, 'UMich Sentiment')),
          ],
          0.5),
+
+        # Fed Funds + 10Y: yield-tab tiles read from KPIS at runtime, so the
+        # KPIS value vs raw data is the single thing to keep aligned. We
+        # compare KPIS to the source-of-truth data series here as a single
+        # surface check (raw is the second surface).
+        ('Fed Funds latest (%)',
+         [
+             ('KPIS Fed Funds',  _kpi_value(html, 'Fed Funds')),
+             ('data["ffr"]',     (data.get('ffr') or {}).get('value') if isinstance(data.get('ffr'), dict) else None),
+         ],
+         0.05),
+
+        ('10Y Treasury latest (%)',
+         [
+             ('KPIS 10Y Treasury', _kpi_value(html, '10Y Treasury')),
+             ('data["dgs10"]',     (data.get('dgs10') or {}).get('value') if isinstance(data.get('dgs10'), dict) else None),
+         ],
+         0.05),
     ]
 
     for name, surfaces, tol in metrics:

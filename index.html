@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-04-30T13:47:09Z";
+  var BUILD_V = "2026-04-30T14:04:24Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2620,7 +2620,7 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"CPI YoY Mar'26", "val":"3.3%", "metric":"cpi", "delta":0.86, "chg":"+0.9pp", "inv":true, "sub":"MoM: +0.87% \u00b7 YoY: 3.3% \u00b7 3M avg: 2.7% \u00b7 Prior: 2.4% (Feb'26)"}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Prior: 3.0% (Feb'26)"}, {"lbl":"Wage Growth Mar'26", "val":"3.9%", "metric":"wages", "delta":0.2, "chg":"+0.2pp", "sub":"Prior: 3.7% (Feb'26) \u00b7 Atlanta Fed WGT 3MMA"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.36%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.84% \u00b7 Spread: +52bp"}, {"lbl":"Initial Claims Apr'26", "val":"189K", "metric":"claims", "delta":-26000, "chg":"-26K", "inv":true, "sub":"Prior wk: 215K (Apr'26)"}, {"lbl":"UMich Sentiment Apr'26", "val":"49.8", "metric":"umcsent", "delta":-3.5, "chg":"-3.5", "badge":null, "sub":"MoM: -3.5 \u00b7 YoY: -2.4 \u00b7 Prior: 53.3 (Mar'26)"}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)"}];
+const KPIS = [{"lbl":"Jobs Mar'26", "val":"+178K", "metric":"jobs", "delta":311, "chg":"+311K", "sub":"Prior: -133K (Feb'26)"}, {"lbl":"Initial Claims Apr'26", "val":"189K", "metric":"claims", "delta":-26000, "chg":"-26K", "inv":true, "sub":"Prior wk: 215K (Apr'26)"}, {"lbl":"Unemployment Mar'26", "val":"4.3%", "metric":"unemp", "delta":-0.1, "chg":"-0.1pp", "inv":true, "sub":"Prior: 4.4% (Feb'26)"}, {"lbl":"Wage Growth Mar'26", "val":"3.9%", "metric":"wages", "delta":0.2, "chg":"+0.2pp", "sub":"Prior: 3.7% (Feb'26) \u00b7 Atlanta Fed WGT 3MMA"}, {"lbl":"CPI YoY Mar'26", "val":"3.3%", "metric":"cpi", "delta":0.86, "chg":"+0.9pp", "inv":true, "sub":"MoM: +0.87% \u00b7 YoY: 3.3% \u00b7 3M avg: 2.7% \u00b7 Prior: 2.4% (Feb'26)"}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Prior: 3.0% (Feb'26)"}, {"lbl":"UMich Sentiment Apr'26", "val":"49.8", "metric":"umcsent", "delta":-3.5, "chg":"-3.5", "badge":null, "sub":"MoM: -3.5 \u00b7 YoY: -2.4 \u00b7 Prior: 53.3 (Mar'26)"}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)"}, {"lbl":"Fed Funds Mar'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury Apr'26", "val":"4.36%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 3.84% \u00b7 Spread: +52bp"}];
 function _releaseBadge(tag){
   if(!tag) return '';
   const up = String(tag).toUpperCase();
@@ -5081,11 +5081,21 @@ const YIELD_TABLE = [
 function buildYieldTab(){
   if(builtTabs.yield) return; builtTabs.yield=1;
 
+  // Read FFR + 10Y from KPIS so the tiles can never drift from the top strip
+  // (renderer rebuilds KPIS once from raw data; tiles just mirror it).
+  var _ffrKpi = KPIS.find(function(k){return k.metric==="rate"&&k.lbl.indexOf("Fed Funds")===0;}) || {};
+  var _t10Kpi = KPIS.find(function(k){return k.metric==="rate"&&k.lbl.indexOf("10Y Treasury")===0;}) || {};
+  var _ffrVal = _ffrKpi.val || "—";
+  var _ffrLbl = _ffrKpi.lbl || "Fed Funds Rate";
+  var _t10Val = _t10Kpi.val || "—";
+  var _t10Lbl = _t10Kpi.lbl || "10Y Treasury";
+  var _t10Sub = _t10Kpi.sub || "";
+
   document.getElementById("yield-metrics").innerHTML = [
-    {lbl:"Fed Funds Rate (Feb'26)", val:"3.64%",   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#336BCC"},
+    {lbl:_ffrLbl,                    val:_ffrVal,   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#336BCC"},
     {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#1A9E5A"},
     {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#CC8A00"},
-    {lbl:"10Y Treasury Apr'26",    val:"4.36%",   sub:"2Y: 3.84% · Spread: +52bp",col:"#8878B8"},
+    {lbl:_t10Lbl,                    val:_t10Val,   sub:_t10Sub.replace(/^Daily(?: · )?/, "") || "Daily yield · live",col:"#8878B8"},
 
   ].map(m=>_mTile(m)).join("");
 

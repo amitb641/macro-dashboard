@@ -2142,16 +2142,11 @@ def rebuild_kpi_strip(html, data, vals):
 
     cards = []
 
-    # 1. Unemployment  (up = bad)
-    unrate = data.get('unrate', [])
-    if unrate and len(unrate) >= 2:
-        cur, prev, chg, d = _mom(unrate)
-        lbl = f"Unemployment {_mlbl(unrate[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'metric': 'unemp',
-                      'delta': d, 'chg': f'{chg}pp', 'inv': True,
-                      'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
+    # Card order mirrors tab nav (Jobs → Wages → CPI → Consumer & PCE → Fed
+    # Rates) so the strip reads top-to-bottom of the dashboard. Initial Claims
+    # sits next to Jobs since both are labor-market timeliness signals.
 
-    # 2. NFP Jobs (MoM change)  (up = good)
+    # 1. NFP Jobs (MoM change)  (up = good)
     payems = data.get('payems', [])
     if payems and len(payems) >= 3:
         cur_chg = round(payems[0]['value'] - payems[1]['value'])
@@ -2163,7 +2158,50 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d, 'chg': f'{sign}{d:.0f}K',
                       'sub': f"Prior: {prev_chg:+.0f}K ({_mlbl(payems[1]['date'])})"})
 
-    # 3. CPI YoY — with 3M avg + MoM + YoY in sub
+    # 2. Initial Claims (weekly)  (up = bad) — paired with Jobs
+    icsa = data.get('icsa', [])
+    if icsa and len(icsa) >= 2:
+        cur, prev = icsa[0]['value'], icsa[1]['value']
+        d = round(cur - prev)
+        sign = '+' if d > 0 else ''
+        lbl = f"Initial Claims {_mlbl(icsa[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'metric': 'claims',
+                      'delta': d, 'chg': f'{sign}{d/1000:.0f}K', 'inv': True,
+                      'sub': f"Prior wk: {prev/1000:.0f}K ({_mlbl(icsa[1]['date'])})"})
+
+    # 3. Unemployment  (up = bad)
+    unrate = data.get('unrate', [])
+    if unrate and len(unrate) >= 2:
+        cur, prev, chg, d = _mom(unrate)
+        lbl = f"Unemployment {_mlbl(unrate[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'metric': 'unemp',
+                      'delta': d, 'chg': f'{chg}pp', 'inv': True,
+                      'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
+
+    # 4. Wages — Atlanta Fed Wage Growth Tracker 3MMA (up = good). Value is
+    # already YoY % for continuously-employed workers. Falls back to AHETPI-YoY
+    # only when the new series hasn't been collected yet.
+    atl_wgt = data.get('wage_growth_atl', [])
+    ahetpi = data.get('ahetpi', [])
+    if atl_wgt and len(atl_wgt) >= 2:
+        cur, prev = atl_wgt[0]['value'], atl_wgt[1]['value']
+        d = round(cur - prev, 2)
+        sign = '+' if d > 0 else ''
+        lbl = f"Wage Growth {_mlbl(atl_wgt[0]['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'metric': 'wages',
+                      'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                      'sub': f"Prior: {prev:.1f}% ({_mlbl(atl_wgt[1]['date'])}) · Atlanta Fed WGT 3MMA"})
+    elif ahetpi and len(ahetpi) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(ahetpi)
+        if yoy_cur is not None and yoy_prev is not None:
+            d = round(yoy_cur - yoy_prev, 2)
+            sign = '+' if d > 0 else ''
+            lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'wages',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])}) · BLS AHETPI"})
+
+    # 5. CPI YoY — with 3M avg + MoM + YoY in sub
     cpi = data.get('cpi_all', [])
     if cpi and len(cpi) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(cpi)
@@ -2196,7 +2234,7 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
 
-    # 4. Core PCE YoY  (up = bad)
+    # 6. Core PCE YoY  (up = bad)
     pce_core = data.get('pce_core', [])
     if pce_core and len(pce_core) >= 14:
         yoy_cur, yoy_prev = _yoy_pair(pce_core)
@@ -2208,66 +2246,7 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
-    # 5. Wages — Atlanta Fed Wage Growth Tracker 3MMA (up = good). Value is
-    # already YoY % for continuously-employed workers. Falls back to AHETPI-YoY
-    # only when the new series hasn't been collected yet.
-    atl_wgt = data.get('wage_growth_atl', [])
-    ahetpi = data.get('ahetpi', [])
-    if atl_wgt and len(atl_wgt) >= 2:
-        cur, prev = atl_wgt[0]['value'], atl_wgt[1]['value']
-        d = round(cur - prev, 2)
-        sign = '+' if d > 0 else ''
-        lbl = f"Wage Growth {_mlbl(atl_wgt[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur:.1f}%', 'metric': 'wages',
-                      'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                      'sub': f"Prior: {prev:.1f}% ({_mlbl(atl_wgt[1]['date'])}) · Atlanta Fed WGT 3MMA"})
-    elif ahetpi and len(ahetpi) >= 14:
-        yoy_cur, yoy_prev = _yoy_pair(ahetpi)
-        if yoy_cur is not None and yoy_prev is not None:
-            d = round(yoy_cur - yoy_prev, 2)
-            sign = '+' if d > 0 else ''
-            lbl = f"Wage Growth {_mlbl(ahetpi[0]['date'])}"
-            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'wages',
-                          'delta': d, 'chg': f'{sign}{d:.1f}pp',
-                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])}) · BLS AHETPI"})
-
-    # 6. Fed Funds Rate
-    ffr = data.get('ffr')
-    if ffr and isinstance(ffr, dict):
-        v = ffr['value']
-        # Derive FOMC target range from effective rate (round down to nearest 0.25)
-        lower = math.floor(v * 4) / 4
-        upper = lower + 0.25
-        lbl = f"Fed Funds {_mlbl(ffr['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{v:.2f}%', 'metric': 'rate',
-                      'delta': 0, 'chg': '',
-                      'sub': f"FOMC range: {lower:.2f}–{upper:.2f}% · Effective rate"})
-
-    # 7. 10Y Treasury
-    dgs10 = data.get('dgs10')
-    dgs2 = data.get('dgs2')
-    if dgs10 and isinstance(dgs10, dict):
-        spr = ''
-        if dgs2 and isinstance(dgs2, dict):
-            bp = round((dgs10['value'] - dgs2['value']) * 100)
-            spr = f" · 2Y: {dgs2['value']:.2f}% · Spread: {bp:+d}bp"
-        lbl = f"10Y Treasury {_mlbl(dgs10['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{dgs10["value"]:.2f}%', 'metric': 'rate',
-                      'delta': 0, 'chg': '',
-                      'sub': f"Daily{spr}"})
-
-    # 8. Initial Claims (weekly)  (up = bad)
-    icsa = data.get('icsa', [])
-    if icsa and len(icsa) >= 2:
-        cur, prev = icsa[0]['value'], icsa[1]['value']
-        d = round(cur - prev)
-        sign = '+' if d > 0 else ''
-        lbl = f"Initial Claims {_mlbl(icsa[0]['date'])}"
-        cards.append({'lbl': lbl, 'val': f'{cur/1000:.0f}K', 'metric': 'claims',
-                      'delta': d, 'chg': f'{sign}{d/1000:.0f}K', 'inv': True,
-                      'sub': f"Prior wk: {prev/1000:.0f}K ({_mlbl(icsa[1]['date'])})"})
-
-    # 9. Consumer Sentiment (UMich)  (up = good)
+    # 7. Consumer Sentiment (UMich)  (up = good)
     umcsent = data.get('umcsent', [])
     if umcsent and len(umcsent) >= 2:
         cur_s, prev_s, chg_s, d_s = _mom(umcsent)
@@ -2282,7 +2261,7 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d_s, 'chg': f'{chg_s}', 'badge': badge,
                       'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
 
-    # 10. Debt Service Ratio (TDSP)  (up = bad). TDSP is QUARTERLY (FRED
+    # 8. Debt Service Ratio (TDSP)  (up = bad). TDSP is QUARTERLY (FRED
     # stores with start-of-quarter date — 2025-10-01 = Q4 2025), so use
     # _qlbl here instead of _mlbl.
     tdsp = data.get('tdsp', [])
@@ -2292,6 +2271,31 @@ def rebuild_kpi_strip(html, data, vals):
         cards.append({'lbl': lbl, 'val': f'{cur_t:.1f}%', 'metric': 'dsr',
                       'delta': d_t, 'chg': f'{chg_t}pp', 'inv': True,
                       'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_qlbl(tdsp[1]['date'])})"})
+
+    # 9. Fed Funds Rate
+    ffr = data.get('ffr')
+    if ffr and isinstance(ffr, dict):
+        v = ffr['value']
+        # Derive FOMC target range from effective rate (round down to nearest 0.25)
+        lower = math.floor(v * 4) / 4
+        upper = lower + 0.25
+        lbl = f"Fed Funds {_mlbl(ffr['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{v:.2f}%', 'metric': 'rate',
+                      'delta': 0, 'chg': '',
+                      'sub': f"FOMC range: {lower:.2f}–{upper:.2f}% · Effective rate"})
+
+    # 10. 10Y Treasury
+    dgs10 = data.get('dgs10')
+    dgs2 = data.get('dgs2')
+    if dgs10 and isinstance(dgs10, dict):
+        spr = ''
+        if dgs2 and isinstance(dgs2, dict):
+            bp = round((dgs10['value'] - dgs2['value']) * 100)
+            spr = f" · 2Y: {dgs2['value']:.2f}% · Spread: {bp:+d}bp"
+        lbl = f"10Y Treasury {_mlbl(dgs10['date'])}"
+        cards.append({'lbl': lbl, 'val': f'{dgs10["value"]:.2f}%', 'metric': 'rate',
+                      'delta': 0, 'chg': '',
+                      'sub': f"Daily{spr}"})
 
     if not cards:
         return html
