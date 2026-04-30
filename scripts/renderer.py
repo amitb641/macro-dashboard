@@ -1655,6 +1655,50 @@ def render_inflation(html, data, vals, tabs):
             html = _patch_panel_legend_chips(html, 'PCE by Category', p_cur, p_prv)
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
+    # ── Auto-patch PCE commentary numbers ────────────────────────────
+    # Mirrors the U-3/NFP commentary patches in render_labor — keeps the
+    # static prose current when Agent 3 (briefing) hasn't refreshed it.
+    pce_core_s = data.get('pce_core', [])
+    if pce_core_s and len(pce_core_s) >= 14:
+        yoy_cur, yoy_prev = None, None
+        # Reuse the same calendar-month YoY logic as rebuild_kpi_strip
+        def _find_yoy(series, idx):
+            if len(series) <= idx: return None
+            d = datetime.datetime.strptime(series[idx]['date'], '%Y-%m-%d')
+            for o in series:
+                od = datetime.datetime.strptime(o['date'], '%Y-%m-%d')
+                if od.year == d.year - 1 and od.month == d.month and o['value']:
+                    return round((series[idx]['value'] - o['value']) / o['value'] * 100, 1)
+            return None
+        yoy_cur = _find_yoy(pce_core_s, 0)
+        yoy_prev = _find_yoy(pce_core_s, 1)
+        cur_full = datetime.datetime.strptime(pce_core_s[0]['date'], '%Y-%m-%d').strftime("%b'%y")
+        prv_full = datetime.datetime.strptime(pce_core_s[1]['date'], '%Y-%m-%d').strftime("%b'%y")
+        if yoy_cur is not None and yoy_prev is not None:
+            direction = 'up' if yoy_cur > yoy_prev else 'down'
+            # "Core PCE re-accelerated to <strong>+X.X% YoY</strong> (Mon'YY), up from +X.X% in Mon'YY"
+            html = re.sub(
+                r"(Core PCE [a-z\-]+ to <strong>)\+\d+\.\d+% YoY</strong> \([A-Z][a-z]+'\d+\), (?:up|down) from \+\d+\.\d+% in [A-Z][a-z]+'\d+",
+                rf"\g<1>+{yoy_cur:.1f}% YoY</strong> ({cur_full}), {direction} from +{yoy_prev:.1f}% in {prv_full}",
+                html, count=1)
+            applied.append(f'Commentary Core PCE updated to +{yoy_cur:.1f}% ({cur_full})')
+
+    psv = data.get('psavert', [])
+    if psv and len(psv) >= 2:
+        sav_cur = round(float(psv[0]['value']), 1)
+        sav_prev = round(float(psv[1]['value']), 1)
+        sav_cur_lbl = datetime.datetime.strptime(psv[0]['date'], '%Y-%m-%d').strftime("%b'%y")
+        sav_prv_short = datetime.datetime.strptime(psv[1]['date'], '%Y-%m-%d').strftime("%b")
+        direction = 'up' if sav_cur > sav_prev else 'down'
+        # "Saving rate X.X%</strong> (Mon'YY) — ticking up/down from Mon's X.X%"
+        new_h, n = re.subn(
+            r"(Saving rate )\d+\.\d+%</strong> \([A-Z][a-z]+'\d+\) — ticking (?:up|down) from [A-Z][a-z]+'s \d+\.\d+%",
+            rf"\g<1>{sav_cur}%</strong> ({sav_cur_lbl}) — ticking {direction} from {sav_prv_short}'s {sav_prev}%",
+            html, count=1)
+        if n:
+            html = new_h
+            applied.append(f'Commentary saving rate updated to {sav_cur}% ({sav_cur_lbl})')
+
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')
         if txt: html = patch_commentary(html, tab, txt)
@@ -2246,7 +2290,21 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
 
-    # 7. Consumer Sentiment (UMich)  (up = good)
+    # 7. Headline PCE YoY  (up = bad). Paired with Core PCE — when headline
+    # detaches from core (e.g. an oil shock pushing energy through), the gap
+    # is itself a signal worth seeing on the strip.
+    pce_h = data.get('pce', [])
+    if pce_h and len(pce_h) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(pce_h)
+        if yoy_cur is not None and yoy_prev is not None:
+            d = round(yoy_cur - yoy_prev, 2)
+            sign = '+' if d > 0 else ''
+            lbl = f"Headline PCE {_mlbl(pce_h[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'pce',
+                          'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
+                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_h[1]['date'])}) · BEA PCEPI"})
+
+    # 8. Consumer Sentiment (UMich)  (up = good)
     umcsent = data.get('umcsent', [])
     if umcsent and len(umcsent) >= 2:
         cur_s, prev_s, chg_s, d_s = _mom(umcsent)
@@ -2261,7 +2319,7 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d_s, 'chg': f'{chg_s}', 'badge': badge,
                       'sub': f"MoM: {chg_s}{yoy_str} · Prior: {prev_s:.1f} ({_mlbl(umcsent[1]['date'])})"})
 
-    # 8. Debt Service Ratio (TDSP)  (up = bad). TDSP is QUARTERLY (FRED
+    # 9. Debt Service Ratio (TDSP)  (up = bad). TDSP is QUARTERLY (FRED
     # stores with start-of-quarter date — 2025-10-01 = Q4 2025), so use
     # _qlbl here instead of _mlbl.
     tdsp = data.get('tdsp', [])
@@ -2272,7 +2330,7 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d_t, 'chg': f'{chg_t}pp', 'inv': True,
                       'sub': f"% of disp. income · Prior: {prev_t:.1f}% ({_qlbl(tdsp[1]['date'])})"})
 
-    # 9. Fed Funds Rate
+    # 10. Fed Funds Rate
     ffr = data.get('ffr')
     if ffr and isinstance(ffr, dict):
         v = ffr['value']
@@ -2284,7 +2342,7 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': 0, 'chg': '',
                       'sub': f"FOMC range: {lower:.2f}–{upper:.2f}% · Effective rate"})
 
-    # 10. 10Y Treasury
+    # 11. 10Y Treasury
     dgs10 = data.get('dgs10')
     dgs2 = data.get('dgs2')
     if dgs10 and isinstance(dgs10, dict):
