@@ -2222,6 +2222,31 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d, 'chg': f'{chg}pp', 'inv': True,
                       'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
 
+    # 3b. Sahm Rule (up ≥ +0.5pp = recession trigger). Defined as the
+    # 3-month average U-rate minus the lowest 3-month average from the
+    # prior 12 months. Has fired in 9 of 11 NBER recessions since 1948.
+    if unrate and len(unrate) >= 15:
+        # Newest-first series → take latest 3 for current avg
+        recent3 = sum(o['value'] for o in unrate[:3]) / 3
+        # Compute rolling 3-mo avg for each of the prior 12 months and find min
+        rolling = []
+        for i in range(1, 13):
+            window = unrate[i:i + 3]
+            if len(window) == 3:
+                rolling.append(sum(o['value'] for o in window) / 3)
+        if rolling:
+            min_prior = min(rolling)
+            sahm = round(recent3 - min_prior, 2)
+            sign = '+' if sahm > 0 else ''
+            # Triggered when ≥ +0.5pp; flag color codes the urgency
+            triggered = sahm >= 0.5
+            cards.append({'lbl': f"Sahm Rule {_mlbl(unrate[0]['date'])}",
+                          'val': f'{sign}{sahm:.2f}pp',
+                          'metric': 'unemp',
+                          'delta': sahm, 'chg': 'TRIGGERED' if triggered else 'OK',
+                          'inv': True,
+                          'sub': f"3M avg {recent3:.2f}% − 12M low {min_prior:.2f}% · trigger ≥ +0.5pp"})
+
     # 4. Wages — Atlanta Fed Wage Growth Tracker 3MMA (up = good). Value is
     # already YoY % for continuously-employed workers. Falls back to AHETPI-YoY
     # only when the new series hasn't been collected yet.
