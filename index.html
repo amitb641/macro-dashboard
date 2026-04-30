@@ -3235,8 +3235,11 @@ function buildJobsTab(){
   var _jFYPrior = JOBS_ANNUAL.data[JOBS_ANNUAL.data.length-2];
   var _jAvg = Math.round(_jFY/12);
   var _jAvgPrior = Math.round(_jFYPrior/12);
-  var _jLatest = SECTOR_MOM[_smCur].reduce((a,b)=>a+b,0);
-  var _jPrior = SECTOR_MOM[_smPrv].reduce((a,b)=>a+b,0);
+  // Tile uses headline NFP (PAYEMS) — same source as top KPI strip and
+  // commentary. Summing SECTOR_MOM gives a different number because the 13
+  // sectors don't cover every BLS super-sector (Wholesale, Other Svcs, etc.).
+  var _jLatest = NFP_BLS_MOM.bls[NFP_BLS_MOM.bls.length-1];
+  var _jPrior = NFP_BLS_MOM.bls[NFP_BLS_MOM.bls.length-2];
   var _jChgPct = _jFYPrior!==0?Math.round(((_jFY-_jFYPrior)/_jFYPrior)*100):0;
   // Filter to main sectors only (no sub-sectors with → prefix)
   var _jMainSectors = JOBS_SECTORS.filter(function(s){return !s.s.startsWith("→");});
