@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-04-30T13:46:20.630292Z",
+  "analyzed_at": "2026-04-30T14:14:19.883012Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
-  "flagged_count": 2,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.84,
@@ -11,7 +11,7 @@
     "dgs10": 4.36,
     "dgs30": 4.94,
     "ig_oas": 81,
-    "hy_oas": 285,
+    "hy_oas": 282,
     "unrate": 4.3,
     "u6rate": 8.0,
     "nfp_level": 158637.0,
@@ -46,21 +46,21 @@
     },
     "dgs10": {
       "value": 4.36,
-      "delta": 0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 81,
-      "delta": 1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 285,
-      "delta": -1,
+      "value": 282,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -81,9 +81,9 @@
     },
     "pce_yoy": {
       "value": 3.5,
-      "delta": 0.7,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": null
     },
     "nfp_mom": {
@@ -95,9 +95,9 @@
     },
     "wti": {
       "value": 99.89,
-      "delta": 8.83,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "mortgage30": {
@@ -116,14 +116,14 @@
     },
     "cs_hpi_yoy": {
       "value": 0.66,
-      "delta": -0.25,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "icsa": {
       "value": 189000.0,
-      "delta": -25000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -144,28 +144,28 @@
     },
     "dgs2": {
       "value": 3.84,
-      "delta": 0.01,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 3.97,
-      "delta": 0.01,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 4.94,
-      "delta": 0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 52,
-      "delta": 1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -179,7 +179,7 @@
     },
     "core_pce_yoy": {
       "value": 3.2,
-      "delta": 0.23,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": "alert"
@@ -193,28 +193,28 @@
     },
     "saving_rate": {
       "value": 3.6,
-      "delta": -0.4,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "housing_starts": {
       "value": 1502.0,
-      "delta": 15.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "brent": {
       "value": 113.89,
-      "delta": 10.49,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "gdp_growth_q": {
       "value": 2.0,
-      "delta": 1.5,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -228,7 +228,7 @@
     },
     "ccsa": {
       "value": 1785000.0,
-      "delta": -36000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,18 +241,7 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "pce_yoy",
-      "line": "pce_yoy: 3.50 (\u25b20.70 vs prior)",
-      "alert": null
-    },
-    {
-      "key": "wti",
-      "line": "wti: 99.89 (\u25b28.83 vs prior) [ALERT]",
-      "alert": "alert"
-    }
-  ],
+  "headlines": [],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",

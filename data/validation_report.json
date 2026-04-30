@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-30T13:47:09.702312Z",
+  "validated_at": "2026-04-30T14:15:07.822143Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 417,
-    "passed": 406,
+    "total_checks": 419,
+    "passed": 408,
     "failed": 11,
-    "skipped": 2,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -589,8 +589,11 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -758,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-30T13:45:51.110623Z",
+      "collected_at": "2026-04-30T14:13:37.233422Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1009,6 +1012,26 @@
       "surfaces": {
         "UMCSENT_MONTHLY.data[-1]": 49.8,
         "KPIS UMich Sentiment": 49.8
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Fed Funds latest (%): surfaces agree within \u00b10.05 (ref: KPIS Fed Funds)",
+      "reference": 3.64,
+      "surfaces": {
+        "KPIS Fed Funds": 3.64,
+        "data[\"ffr\"]": 3.64
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
+      "reference": 4.36,
+      "surfaces": {
+        "KPIS 10Y Treasury": 4.36,
+        "data[\"dgs10\"]": 4.36
       },
       "severity": "ok",
       "pass": true
