@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-24T13:02:44.626524Z",
-  "status": "PASS",
+  "validated_at": "2026-04-30T13:47:09.702312Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 393,
-    "passed": 393,
-    "failed": 0,
-    "skipped": 3,
+    "total_checks": 417,
+    "passed": 406,
+    "failed": 11,
+    "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -29,8 +29,8 @@
     },
     {
       "check": "PCE headline YoY (latest)",
-      "html_value": 2.8,
-      "source_value": 2.8,
+      "html_value": 3.5,
+      "source_value": 3.5,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -38,8 +38,8 @@
     },
     {
       "check": "PCE core YoY (latest)",
-      "html_value": 3.0,
-      "source_value": 3.0,
+      "html_value": 3.2,
+      "source_value": 3.2,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -74,8 +74,8 @@
     },
     {
       "check": "Case-Shiller YoY (latest)",
-      "html_value": 0.9,
-      "source_value": 0.9,
+      "html_value": 0.7,
+      "source_value": 0.7,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -254,19 +254,19 @@
     },
     {
       "check": "WAGE_ANNUAL.nominal completeness",
-      "html_value": "26/26 filled",
+      "html_value": "5/5 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "WAGE_ANNUAL.real completeness",
-      "html_value": "26/26 filled",
+      "html_value": "5/5 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
@@ -308,28 +308,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "35/35 filled",
+      "html_value": "40/40 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 17,
+      "tolerance": 20,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "35/35 filled",
+      "html_value": "40/40 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 17,
+      "tolerance": 20,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "23/35 filled",
-      "source_value": "66% (min 0%)",
-      "difference": 12,
-      "tolerance": 17,
+      "html_value": "25/40 filled",
+      "source_value": "62% (min 0%)",
+      "difference": 15,
+      "tolerance": 20,
       "severity": "ok",
       "pass": true
     },
@@ -613,8 +613,8 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 129.449,
-      "fresh_api_value": 129.449,
+      "raw_data_value": 130.344,
+      "fresh_api_value": 130.344,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -622,8 +622,8 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 128.859,
-      "fresh_api_value": 128.859,
+      "raw_data_value": 129.279,
+      "fresh_api_value": 129.279,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -631,8 +631,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
+      "raw_data_value": 4.36,
+      "fresh_api_value": 4.36,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -640,14 +640,20 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158637.0,
+      "fresh_api_value": 158637.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -673,15 +679,15 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 60,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 60,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -689,23 +695,23 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 60,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce",
-      "latest_date": "2026-02-01",
-      "age_days": 82,
+      "latest_date": "2026-03-01",
+      "age_days": 60,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_core",
-      "latest_date": "2026-02-01",
-      "age_days": 82,
+      "latest_date": "2026-03-01",
+      "age_days": 60,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -713,15 +719,15 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 54,
+      "age_days": 60,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cs_hpi",
-      "latest_date": "2026-01-01",
-      "age_days": 113,
+      "latest_date": "2026-02-01",
+      "age_days": 88,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -729,7 +735,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-23",
-      "age_days": 1,
+      "age_days": 7,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -737,7 +743,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-04-01",
-      "age_days": 23,
+      "age_days": 29,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -745,14 +751,14 @@
     {
       "check": "UMich Sentiment release status",
       "latest_date": "2026-04-01",
-      "release_status": "preliminary",
-      "severity": "info",
+      "release_status": "final",
+      "severity": "ok",
       "pass": true,
-      "note": "Preliminary \u2014 subject to revision in end-of-month final release"
+      "note": "Final release"
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-24T13:00:57.675235Z",
+      "collected_at": "2026-04-30T13:45:51.110623Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -838,6 +844,239 @@
       "check": "SHOCK_TRACKER[7] Delinquencies Climb required fields",
       "missing": null,
       "severity": "ok",
+      "pass": true
+    }
+  ],
+  "panel_data_consistency": [
+    {
+      "check": "CPI by Category \u2014 MoM Change: title months match CPI_CAT_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI by Category \u2014 MoM Change: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE by Category \u2014 MoM Change: title months match PCE_CAT_MOM keys",
+      "title_months": [
+        "dec",
+        "jan"
+      ],
+      "data_keys": [
+        "dec",
+        "jan"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE by Category \u2014 MoM Change: prior-month chip matches title",
+      "expected_prior": "Dec'25",
+      "chips_found": [
+        "Jan'26",
+        "Dec'25",
+        "Jan'26",
+        "Jan'26",
+        "Jan'26",
+        "Dec'25"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Monthly Job Change by Sector: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment by Sector \u2014 Monthly MoM Change (pp): title months match U_SECTOR_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment by Sector \u2014 Monthly MoM Change (pp): prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "metric_consistency": [
+    {
+      "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
+      "reference": 178.0,
+      "surfaces": {
+        "NFP_BLS_MOM.bls[-1]": 178.0,
+        "KPIS Jobs tile": 178.0,
+        "Commentary payrolls": 178.0
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment rate (%): surfaces agree within \u00b10.1 (ref: U_MONTHLY.data[-1])",
+      "reference": 4.3,
+      "surfaces": {
+        "U_MONTHLY.data[-1]": 4.3,
+        "KPIS Unemployment": 4.3,
+        "Commentary U-3": 4.3
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI YoY latest (%): surfaces agree within \u00b10.15 (ref: CPI_MONTHLY.headline[-1])",
+      "reference": 3.3,
+      "surfaces": {
+        "CPI_MONTHLY.headline[-1]": 3.3,
+        "KPIS CPI YoY": 3.3
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
+      "reference": 3.2,
+      "surfaces": {
+        "PCE_MONTHLY.core[-1]": 3.2,
+        "KPIS Core PCE": 3.2
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
+      "reference": 49.8,
+      "surfaces": {
+        "UMCSENT_MONTHLY.data[-1]": 49.8,
+        "KPIS UMich Sentiment": 49.8
+      },
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "earnings_verbatim": [
+    {
+      "check": "bank_earnings.json (10 banks)",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "JPM: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/JPM.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "BAC: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/BAC.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "WFC: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/WFC.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "C: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/C.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "GS: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/GS.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "COF: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/COF.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "AXP: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/AXP.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "SYF: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/SYF.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "USB: transcript archived for verbatim check",
+      "severity": "warning",
+      "pass": false,
+      "reason": "no file at data/transcripts/Q1_2026/USB.txt \u2014 enforcement skipped for this bank"
+    },
+    {
+      "check": "BCS: pending (reports 2026-04-30)",
+      "severity": "skipped",
       "pass": true
     }
   ],
@@ -1365,7 +1604,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Wages \u2014 Panel \"Nominal vs Real Wage Growth \u2014 All Privat\" has title",
+      "check": "Visual: Wages \u2014 Panel \"Nominal vs Real Wage Growth \u2014 Annual His\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1461,139 +1700,139 @@
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Tab panel visible",
+      "check": "Visual: Consumer & PCE \u2014 Tab panel visible",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Tab has content",
+      "check": "Visual: Consumer & PCE \u2014 Tab has content",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 No undefined/NaN/null values",
+      "check": "Visual: Consumer & PCE \u2014 No undefined/NaN/null values",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 0 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 0 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 1 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 1 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 2 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 2 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 3 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 3 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 4 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 4 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 5 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 5 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 6 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 6 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 7 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 7 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 8 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 8 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Chart canvas 9 has size",
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 9 has size",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"\ud83d\udcb3 PCE & Consumer Commentary \u2014 Spending H\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"\ud83d\udcb3 Consumer & PCE Commentary \u2014 Spending H\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"PCE Price Index \u2014 Monthly Headline vs Co\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Personal Saving Rate \u2014 Last 12 Months\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"PCE Price Index \u2014 Annual Headline vs Cor\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Personal Saving Rate \u2014 Annual Averages (\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"PCE by Category \u2014 MoM Change (Feb'26 vs \" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Household Debt & Delinquencies \u2014 NY Fed \" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"PCE by Category \u2014 Annual Growth 2023 vs \" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Debt Service Ratio (TDSP) \u2014 % of Disposa\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Personal Saving Rate \u2014 Last 12 Months\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Personal Saving Rate \u2014 Annual Averages (\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Annual (2000\u20132025)\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsPRELI\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE Price Index \u2014 Monthly Headline vs Co\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Consumer Sentiment \u2014 Annual (2000\u20132025)\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE Price Index \u2014 Annual Headline vs Cor\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: PCE & Consumer \u2014 Panel \"Household Debt & Delinquencies \u2014 NY Fed \" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Category \u2014 MoM Change (Jan'26 vs \" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

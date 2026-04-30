@@ -1,40 +1,40 @@
 {
-  "analyzed_at": "2026-04-27T15:06:08.234061Z",
+  "analyzed_at": "2026-04-30T13:46:20.630292Z",
   "risk_level": "ELEVATED",
-  "alert_count": 0,
-  "watch_count": 4,
-  "flagged_count": 0,
+  "alert_count": 2,
+  "watch_count": 2,
+  "flagged_count": 2,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.83,
-    "dgs5": 3.96,
-    "dgs10": 4.34,
-    "dgs30": 4.92,
-    "ig_oas": 80,
-    "hy_oas": 286,
+    "dgs2": 3.84,
+    "dgs5": 3.97,
+    "dgs10": 4.36,
+    "dgs30": 4.94,
+    "ig_oas": 81,
+    "hy_oas": 285,
     "unrate": 4.3,
     "u6rate": 8.0,
     "nfp_level": 158637.0,
     "nfp_mom": 178,
-    "icsa": 214000.0,
-    "ccsa": 1821000.0,
+    "icsa": 189000.0,
+    "ccsa": 1785000.0,
     "wages_yoy": 3.9,
     "cpi_yoy": 3.29,
     "core_cpi_yoy": 2.6,
-    "pce_yoy": 2.8,
-    "core_pce_yoy": 2.97,
-    "saving_rate": 4.0,
+    "pce_yoy": 3.5,
+    "core_pce_yoy": 3.2,
+    "saving_rate": 3.6,
     "mortgage30": 6.23,
-    "housing_starts": 1487.0,
-    "cs_hpi_yoy": 0.91,
+    "housing_starts": 1502.0,
+    "cs_hpi_yoy": 0.66,
     "umcsent": 49.8,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
-    "wti": 91.06,
-    "brent": 103.4,
-    "gdp_growth_q": 0.5,
+    "wti": 99.89,
+    "brent": 113.89,
+    "gdp_growth_q": 2.0,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 51
+    "spread_10_2_bp": 52
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.34,
-      "delta": 0.0,
+      "value": 4.36,
+      "delta": 0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 80,
-      "delta": 0,
+      "value": 81,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 286,
-      "delta": 0,
+      "value": 285,
+      "delta": -1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -80,10 +80,10 @@
       "alert": "watch"
     },
     "pce_yoy": {
-      "value": 2.8,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 3.5,
+      "delta": 0.7,
+      "direction": "rising",
+      "flagged": true,
       "alert": null
     },
     "nfp_mom": {
@@ -94,11 +94,11 @@
       "alert": null
     },
     "wti": {
-      "value": 91.06,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": "watch"
+      "value": 99.89,
+      "delta": 8.83,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "alert"
     },
     "mortgage30": {
       "value": 6.23,
@@ -115,15 +115,15 @@
       "alert": null
     },
     "cs_hpi_yoy": {
-      "value": 0.91,
-      "delta": 0.0,
+      "value": 0.66,
+      "delta": -0.25,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "icsa": {
-      "value": 214000.0,
-      "delta": 0.0,
+      "value": 189000.0,
+      "delta": -25000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.83,
-      "delta": 0.0,
+      "value": 3.84,
+      "delta": 0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.96,
-      "delta": 0.0,
+      "value": 3.97,
+      "delta": 0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.92,
-      "delta": 0.0,
+      "value": 4.94,
+      "delta": 0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 51,
-      "delta": 0,
+      "value": 52,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -178,11 +178,11 @@
       "alert": null
     },
     "core_pce_yoy": {
-      "value": 2.97,
-      "delta": 0.0,
+      "value": 3.2,
+      "delta": 0.23,
       "direction": "stable",
       "flagged": false,
-      "alert": "watch"
+      "alert": "alert"
     },
     "u6rate": {
       "value": 8.0,
@@ -192,29 +192,29 @@
       "alert": null
     },
     "saving_rate": {
-      "value": 4.0,
-      "delta": 0.0,
+      "value": 3.6,
+      "delta": -0.4,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "housing_starts": {
-      "value": 1487.0,
-      "delta": 0.0,
+      "value": 1502.0,
+      "delta": 15.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "brent": {
-      "value": 103.4,
-      "delta": 0.0,
+      "value": 113.89,
+      "delta": 10.49,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "gdp_growth_q": {
-      "value": 0.5,
-      "delta": 0.0,
+      "value": 2.0,
+      "delta": 1.5,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -227,8 +227,8 @@
       "alert": null
     },
     "ccsa": {
-      "value": 1821000.0,
-      "delta": 0.0,
+      "value": 1785000.0,
+      "delta": -36000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,9 +241,19 @@
       "alert": null
     }
   },
-  "headlines": [],
+  "headlines": [
+    {
+      "key": "pce_yoy",
+      "line": "pce_yoy: 3.50 (\u25b20.70 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "wti",
+      "line": "wti: 99.89 (\u25b28.83 vs prior) [ALERT]",
+      "alert": "alert"
+    }
+  ],
   "raw_errors": [
-    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
     "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
