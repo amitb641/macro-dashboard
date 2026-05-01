@@ -319,10 +319,10 @@ def collect():
         data['ccsa']    = prior_ccsa
 
     print('  [Monthly] Labor...')
-    data['unrate']      = fred_obs('UNRATE',     320)
+    data['unrate']      = fred_obs('UNRATE',     480)
     data['u6rate']      = fred_obs('U6RATE',     14)
-    data['payems']      = fred_obs('PAYEMS',     320)
-    data['ahetpi']      = fred_obs('AHETPI',     320)
+    data['payems']      = fred_obs('PAYEMS',     480)
+    data['ahetpi']      = fred_obs('AHETPI',     480)
     # Atlanta Fed Wage Growth Tracker — 3-Month MA, Unweighted Median, Hourly,
     # Overall. Measures wage growth for workers continuously employed over 12
     # months (controls for composition effects that bias AHETPI).
@@ -376,11 +376,11 @@ def collect():
     ])
 
     print('  [Monthly] Inflation...')
-    data['cpi_all']     = fred_obs('CPIAUCSL',  320)
-    data['cpi_core']    = fred_obs('CPILFESL',  320)
-    data['pce']         = fred_obs('PCEPI',     320)
-    data['pce_core']    = fred_obs('PCEPILFE',  320)
-    data['psavert']     = fred_obs('PSAVERT',   320)
+    data['cpi_all']     = fred_obs('CPIAUCSL',  480)
+    data['cpi_core']    = fred_obs('CPILFESL',  480)
+    data['pce']         = fred_obs('PCEPI',     480)
+    data['pce_core']    = fred_obs('PCEPILFE',  480)
+    data['psavert']     = fred_obs('PSAVERT',   480)
 
     # CPI category detail for CPI_CAT_MOM auto-rebuild.
     # All categories need >=13 obs so renderer's _yoy_from_index can compute
@@ -413,10 +413,10 @@ def collect():
     data['pce_energy']   = fred_obs('DNRGRG3M086SBEA', 24)  # Energy goods & services
 
     print('  [Monthly] Housing...')
-    data['houst']       = fred_obs('HOUST',      320)
-    data['houst1f']     = fred_obs('HOUST1F',    320)
-    data['permit']      = fred_obs('PERMIT',     320)
-    data['cs_hpi']      = fred_obs('CSUSHPISA',  320)
+    data['houst']       = fred_obs('HOUST',      480)
+    data['houst1f']     = fred_obs('HOUST1F',    480)
+    data['permit']      = fred_obs('PERMIT',     480)
+    data['cs_hpi']      = fred_obs('CSUSHPISA',  480)
 
     print('  [Quarterly] GDP + Credit...')
     data['gdpc1']       = fred_obs('GDPC1',  12)
@@ -453,11 +453,11 @@ def collect():
     # Monthly series feeding annual-aggregate charts (CPI_ANNUAL, JOBS_ANNUAL,
     # WAGE_ANNUAL). Monthly/YoY current-period KPIs continue reading unpinned
     # `cpi_all`, `payems`, `ahetpi` for freshness.
-    data['cpi_all_pinned']      = fred_alfred_obs('CPIAUCSL', _pin, 320)
-    data['payems_pinned']       = fred_alfred_obs('PAYEMS',   _pin, 320)
-    data['ahetpi_pinned']       = fred_alfred_obs('AHETPI',   _pin, 320)
-    data['pce_pinned']          = fred_alfred_obs('PCEPI',    _pin, 320)
-    data['pce_core_pinned']     = fred_alfred_obs('PCEPILFE', _pin, 320)
+    data['cpi_all_pinned']      = fred_alfred_obs('CPIAUCSL', _pin, 480)
+    data['payems_pinned']       = fred_alfred_obs('PAYEMS',   _pin, 480)
+    data['ahetpi_pinned']       = fred_alfred_obs('AHETPI',   _pin, 480)
+    data['pce_pinned']          = fred_alfred_obs('PCEPI',    _pin, 480)
+    data['pce_core_pinned']     = fred_alfred_obs('PCEPILFE', _pin, 480)
     data['vintages'] = {
         'gdpc1_annual': {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
         'gdp_annual':   {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
@@ -468,14 +468,14 @@ def collect():
         'pce_core':     {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
     }
     data['umcsent_annual']    = fred_obs('UMCSENT', 40, freq='a')
-    data['cpiengsl']          = fred_obs('CPIENGSL', 320)
+    data['cpiengsl']          = fred_obs('CPIENGSL', 480)
     data['revolsl_annual']    = fred_obs('REVOLSL', 40, freq='a')
     data['nonrevsl_annual']   = fred_obs('NONREVSL', 40, freq='a')
 
     # Monthly oil for OIL_MONTHLY chart (from 2000)
     print('  [History] Monthly oil prices...')
-    data['wti_monthly']       = fred_obs('DCOILWTICO', 320, freq='m')
-    data['brent_monthly']     = fred_obs('DCOILBRENTEU', 320, freq='m')
+    data['wti_monthly']       = fred_obs('DCOILWTICO', 480, freq='m')
+    data['brent_monthly']     = fred_obs('DCOILBRENTEU', 480, freq='m')
 
     # ── Carry forward: fill failed series from prior run ─────────────
     try:
