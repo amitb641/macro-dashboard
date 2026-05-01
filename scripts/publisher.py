@@ -13,6 +13,9 @@ No LLM used. Final stage.
 import os, json, base64, datetime, sys, re
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _models import SONNET
+
 try:
     import requests
 except ImportError:
@@ -371,7 +374,7 @@ def build_email(sig, ana, today_str, prev_log):
   <!-- Footer -->
   <div style="background:#F8FAFC;padding:10px 28px;border-top:1px solid #f1f5f9">
     <p style="font-size:10px;color:#94A3B8;margin:0">
-      5-agent pipeline · claude-sonnet-4-6 · FRED · BLS · EIA · {utc}
+      11-agent pipeline · {SONNET} · FRED · BLS · EIA · {utc}
     </p>
   </div>
 

@@ -15,6 +15,9 @@ try:
 except ImportError:
     print('pip install requests'); sys.exit(1)
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _models import SONNET
+
 ANTHROPIC_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
 ROOT     = Path(__file__).parent.parent
@@ -171,7 +174,7 @@ def call_claude(prompt: str) -> dict:
     if not ANTHROPIC_KEY:
         print('  ⚠  No ANTHROPIC_API_KEY — using static fallback')
         return _fallback()
-    print('  Calling claude-sonnet-4-6...')
+    print(f'  Calling {SONNET}...')
     import time
     last_err = None
     for attempt in range(3):
@@ -188,7 +191,7 @@ def call_claude(prompt: str) -> dict:
                     'content-type': 'application/json',
                 },
                 json={
-                    'model': 'claude-sonnet-4-6',
+                    'model': SONNET,
                     'max_tokens': 2000,
                     'system': SYSTEM,
                     'messages': [{'role': 'user', 'content': prompt}],

@@ -26,6 +26,9 @@ try:
 except ImportError:
     print('pip install requests'); sys.exit(1)
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _models import SONNET_VISION
+
 ANTHROPIC_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
 ROOT        = Path(__file__).parent.parent
@@ -107,7 +110,7 @@ def _call_claude_vision(image_b64: str, tab_name: str) -> list:
                     'content-type': 'application/json',
                 },
                 json={
-                    'model': 'claude-sonnet-4-6',
+                    'model': SONNET_VISION,
                     'max_tokens': 1500,
                     'system': SYSTEM_PROMPT,
                     'messages': [{

@@ -64,6 +64,9 @@ except ImportError:
     print('ERROR: anthropic SDK not installed. Run: pip install anthropic')
     sys.exit(2)
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _models import SONNET
+
 
 # ── CONSTANTS ─────────────────────────────────────────────────────────
 ROOT           = Path(__file__).parent.parent
@@ -73,7 +76,7 @@ TRANSCRIPTS    = ROOT / 'data' / 'transcripts'
 RENDERER       = ROOT / 'scripts' / 'renderer.py'
 VALIDATOR      = ROOT / 'scripts' / 'validator.py'
 
-CLAUDE_MODEL   = 'claude-sonnet-4-6'
+CLAUDE_MODEL   = SONNET
 CLAUDE_MAX_TOK = 4000
 FETCH_TIMEOUT  = 30
 USER_AGENT     = 'Mozilla/5.0 (macro-dashboard-earnings-agent)'

@@ -15,7 +15,7 @@
 
 ## Project Architecture
 11-agent Python data pipeline:
-0. `scripts/preflight.py` — Agent 0: Pre-flight validates every FRED series_id used by collector returns ≥1 obs. Halts pipeline immediately on any 4xx so downstream agents never run on poisoned data. (Self-verification — `docs/SELF_VERIFICATION.md`.)
+0. `scripts/preflight.py` — Agent 0: Pre-flight validates external dependencies before pipeline runs: every FRED series_id used by collector returns ≥1 obs, and every Claude model ID in `scripts/_models.py` is served by Anthropic's `/v1/models`. Halts pipeline immediately on any 4xx. (Self-verification — `docs/SELF_VERIFICATION.md`.) Model IDs are centralised in `scripts/_models.py` (single source of truth) and imported by every agent that calls Anthropic.
 1. `scripts/collector.py` — Agent 1: Pulls data from FRED, BLS, EIA APIs
 2. `scripts/analyzer.py` — Agent 2: Diffs raw data, scores signals
 3. `scripts/briefing_agent.py` — Agent 3: AI commentary (Claude Sonnet)

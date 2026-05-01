@@ -52,9 +52,10 @@ jobs:
           ls scripts/
           ls data/ || echo "data/ missing"
 
-      - name: Agent 0 — Pre-flight (FRED series ID validation)
+      - name: Agent 0 — Pre-flight (FRED + Anthropic model validation)
         env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FRED_API_KEY:      ${{ secrets.FRED_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/preflight.py
 
       - name: Agent 1 — Collector
