@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stack Tab Redesign — Layered Ribbon Mockup</title>
+<style>
+  :root {
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --border-soft: #F1F5F9;
+    --text: #0F172A;
+    --text2: #475569;
+    --text3: #94A3B8;
+    --accent-pre: #DC2626;
+    --accent-data: #336BCC;
+    --accent-ai: #8878B8;
+    --accent-render: #CC8A00;
+    --accent-validate: #059669;
+    --accent-repair: #D97706;
+    --accent-deliver: #0E7490;
+    --accent-off: #6366F1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+    margin: 0; padding: 32px 40px;
+    background: var(--bg); color: var(--text);
+    max-width: 1280px; margin-inline: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -.01em; }
+  .subhead { color: var(--text2); font-size: 13px; margin: 0 0 28px; }
+
+  /* ─── HERO STATUS BANNER ─── */
+  .hero {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    color: #fff; border-radius: 16px; padding: 22px 28px;
+    margin-bottom: 24px;
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, .15);
+  }
+  .hero-left h2 {
+    font-size: 14px; font-weight: 600; margin: 0 0 6px;
+    color: #94A3B8; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .hero-title { font-size: 26px; font-weight: 700; margin: 0; letter-spacing: -.02em; }
+  .hero-meta {
+    margin-top: 10px; display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; color: #CBD5E1;
+  }
+  .hero-meta b { color: #fff; font-weight: 600; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(16, 185, 129, .15); color: #10B981;
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #10B981; box-shadow: 0 0 8px #10B981;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+  .hero-right {
+    text-align: right; display: flex; flex-direction: column; gap: 8px;
+  }
+  .hero-stat { font-size: 11px; color: #94A3B8; }
+  .hero-stat b { color: #fff; font-size: 18px; font-weight: 700; display: block; }
+
+  /* ─── DATA SOURCES STRIP ─── */
+  .sources {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
+    margin-bottom: 28px;
+  }
+  .source {
+    background: var(--surface); border: 1px solid var(--border-soft);
+    border-radius: 10px; padding: 10px 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .source-icon { font-size: 18px; }
+  .source-name { font-size: 11px; font-weight: 700; color: var(--text); }
+  .source-sub { font-size: 9px; color: var(--text3); margin-top: 1px; }
+
+  /* ─── PIPELINE RIBBONS ─── */
+  .ribbons { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .ribbon {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    transition: box-shadow .15s ease;
+  }
+  .ribbon:hover { box-shadow: 0 4px 12px rgba(15, 23, 42, .04); }
+  .ribbon-head {
+    display: grid; grid-template-columns: 36px auto 1fr auto auto; gap: 14px;
+    align-items: center; padding: 14px 18px;
+    cursor: pointer; user-select: none;
+  }
+  .ribbon-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #fff; font-weight: 700;
+  }
+  .ribbon-meta h3 {
+    font-size: 13px; font-weight: 700; margin: 0; letter-spacing: -.005em;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .ribbon-meta .agent-list {
+    font-size: 11px; color: var(--text3); margin-top: 2px;
+  }
+  .ribbon-summary {
+    font-size: 12px; color: var(--text2); line-height: 1.5;
+  }
+  .ribbon-status {
+    font-size: 10px; padding: 3px 8px; border-radius: 6px;
+    font-weight: 700; letter-spacing: .04em;
+  }
+  .ribbon-status.ok { background: #ECFDF5; color: #059669; }
+  .ribbon-status.warn { background: #FEF3C7; color: #92400E; }
+  .ribbon-status.observe { background: #FFFBEB; color: #B45309; }
+  .ribbon-toggle {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--border-soft);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--text2);
+    transition: transform .2s ease;
+  }
+  .ribbon.expanded .ribbon-toggle { transform: rotate(90deg); }
+
+  .ribbon-body {
+    display: none;
+    padding: 0 18px 18px 68px; border-top: 1px solid var(--border-soft);
+    margin-top: 0; padding-top: 14px;
+  }
+  .ribbon.expanded .ribbon-body { display: block; }
+
+  .agent-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;
+  }
+  .agent-card {
+    background: #FBFCFD; border: 1px solid var(--border-soft);
+    border-radius: 10px; padding: 12px 14px;
+    border-left: 3px solid;
+  }
+  .agent-card-head {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  }
+  .agent-num {
+    font-size: 9px; font-weight: 700;
+    background: var(--text); color: #fff;
+    padding: 2px 6px; border-radius: 4px; letter-spacing: .04em;
+  }
+  .agent-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .agent-file {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 10px; color: var(--text3);
+  }
+  .agent-badge {
+    margin-left: auto;
+    font-size: 9px; padding: 2px 6px; border-radius: 4px;
+    font-weight: 700; letter-spacing: .04em;
+  }
+  .badge-llm { background: #F3F0FF; color: #8878B8; }
+  .badge-nollm { background: #ECFDF5; color: #059669; }
+  .agent-desc { font-size: 11px; color: var(--text2); line-height: 1.55; }
+  .agent-io {
+    margin-top: 8px; font-size: 10px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  }
+  .agent-io > div {
+    background: #fff; padding: 4px 8px; border-radius: 4px;
+    color: var(--text3); border: 1px solid var(--border-soft);
+  }
+  .agent-io b { color: var(--text2); font-weight: 600; }
+
+  /* ─── PASSES TABLE (inside Validation ribbon) ─── */
+  .passes {
+    margin-top: 12px; background: #fff;
+    border: 1px solid var(--border-soft); border-radius: 10px; overflow: hidden;
+  }
+  .passes-head {
+    background: #F0FDF9; padding: 8px 14px;
+    font-size: 11px; font-weight: 700; color: #059669;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .passes-list { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .pass-cell {
+    padding: 10px 14px;
+    border-right: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .pass-cell:nth-child(3n) { border-right: none; }
+  .pass-num {
+    font-size: 9px; font-weight: 700; color: #059669;
+    background: #ECFDF5; padding: 1px 5px; border-radius: 3px;
+    display: inline-block; margin-bottom: 4px; letter-spacing: .04em;
+  }
+  .pass-name { font-size: 11px; font-weight: 700; color: var(--text); }
+  .pass-detail { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+  /* ─── FOOTER STATS + WHY ─── */
+  .stats {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
+    margin-bottom: 18px;
+  }
+  .stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .stat-val {
+    font-size: 24px; font-weight: 700; line-height: 1;
+    margin-bottom: 6px; letter-spacing: -.02em;
+  }
+  .stat-val.blue { color: #336BCC; }
+  .stat-val.green { color: #059669; }
+  .stat-lbl { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+
+  .why {
+    background: #FFFBEB; border: 1px solid #FEF3C7; border-left: 3px solid #CC8A00;
+    border-radius: 10px; padding: 14px 18px; font-size: 12px; color: #92400E;
+    line-height: 1.65;
+  }
+  .why b { color: #78350F; }
+
+  /* ─── DEFENSE LAYER CALLOUT ─── */
+  .defense-banner {
+    background: linear-gradient(135deg, #FEF2F2 0%, #FFFBEB 100%);
+    border: 1px solid #FCA5A5;
+    border-radius: 12px; padding: 14px 18px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .defense-icon { font-size: 24px; }
+  .defense-text {
+    font-size: 11px; color: #7F1D1D; line-height: 1.5;
+  }
+  .defense-text b { color: #991B1B; }
+
+  .footnote {
+    text-align: center; font-size: 10px; color: var(--text3); margin-top: 28px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Stack — Pipeline Architecture</h1>
+<p class="subhead">11-agent macro data pipeline · self-verifying · runs Saturday 12:00 UTC + monthly 2nd Saturday</p>
+
+<!-- ────────────────────────────── HERO STATUS BANNER ────────────────────────────── -->
+<div class="hero">
+  <div class="hero-left">
+    <h2>Pipeline Status</h2>
+    <h3 class="hero-title">All systems nominal</h3>
+    <div class="hero-meta">
+      <span><b>Last run</b> 2 min ago · PASS</span>
+      <span class="status-pill"><span class="status-dot"></span>HEALTHY</span>
+      <span><b>Next run</b> Sat 12:00 UTC</span>
+      <span><b>Last commit</b> 1cfa23d · weekly update</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stat"><b>462<span style="color:#94A3B8;font-size:14px">/477</span></b>checks passed</div>
+    <div class="hero-stat" style="font-size:10px;color:#94A3B8">3 critical · 12 warnings · 0 stale</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────── DATA SOURCES ────────────────────────────── -->
+<div class="sources">
+  <div class="source"><span class="source-icon">📊</span><div><div class="source-name">BLS API</div><div class="source-sub">Jobs · CPI · Wages</div></div></div>
+  <div class="source"><span class="source-icon">🏛️</span><div><div class="source-name">BEA API</div><div class="source-sub">GDP · PCE · Income</div></div></div>
+  <div class="source"><span class="source-icon">🏦</span><div><div class="source-name">FRED API</div><div class="source-sub">Yields · Spreads</div></div></div>
+  <div class="source"><span class="source-icon">⛽</span><div><div class="source-name">EIA API</div><div class="source-sub">Oil · Gas · Production</div></div></div>
+  <div class="source"><span class="source-icon">🏦</span><div><div class="source-name">Earnings</div><div class="source-sub">10 banks · transcripts</div></div></div>
+  <div class="source"><span class="source-icon">📰</span><div><div class="source-name">Manual</div><div class="source-sub">NY Fed · NAR</div></div></div>
+</div>
+
+<!-- ────────────────────────────── DEFENSE LAYER CALLOUT ────────────────────────────── -->
+<div class="defense-banner">
+  <div class="defense-icon">🛡️</div>
+  <div class="defense-text">
+    <b>Self-verification stack (added May 2026):</b> Agent 0 pre-flights every external dependency; validator runs 9 quality passes including <b>schema contract</b>, <b>seed drift</b>, and <b>collector errors</b>; Agent 10 surfaces accumulated drift into a rolling log. The architecture is designed so the same bug class can never silently ship twice.
+  </div>
+</div>
+
+<!-- ────────────────────────────── PIPELINE RIBBONS ────────────────────────────── -->
+<div class="ribbons">
+
+  <!-- ─── PRE-FLIGHT ─── -->
+  <div class="ribbon expanded" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-pre)">🛂</div>
+      <div class="ribbon-meta">
+        <h3>Pre-flight</h3>
+        <div class="agent-list">Agent 0</div>
+      </div>
+      <div class="ribbon-summary">Validates 52 FRED IDs + 3 Claude model IDs against live catalogs. Halts pipeline upstream of any 4xx so downstream agents never run on broken dependencies.</div>
+      <span class="ribbon-status ok">PASS · 36s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-pre)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 0</span>
+            <span class="agent-name">Pre-flight</span>
+            <span class="agent-file">preflight.py</span>
+            <span class="agent-badge badge-nollm">No LLM</span>
+          </div>
+          <div class="agent-desc">Extracts every series_id literal from collector.py + every model ID from _models.py. Pings FRED's observation endpoint and Anthropic's /v1/models. 700ms throttle stays under FRED's 120 req/min limit. Halts pipeline on any 4xx.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> collector.py, _models.py</div>
+            <div><b>OUT:</b> ✅ proceed | ❌ exit 1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ACQUISITION ─── -->
+  <div class="ribbon" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-data)">📥</div>
+      <div class="ribbon-meta">
+        <h3>Data Acquisition</h3>
+        <div class="agent-list">Agent 1</div>
+      </div>
+      <div class="ribbon-summary">Pulls 79 series from BLS, BEA, FRED, EIA. Built-in 429 retry with exponential backoff; carry-forward for transient failures.</div>
+      <span class="ribbon-status ok">PASS · 21s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-data)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 1</span>
+            <span class="agent-name">Collector</span>
+            <span class="agent-file">collector.py</span>
+            <span class="agent-badge badge-nollm">No LLM</span>
+          </div>
+          <div class="agent-desc">Pulls daily, weekly, monthly, quarterly, and historical series. Normalizes units, applies SA flags, retries 429/5xx with exponential backoff (30/60/90s for rate limits, 1/2/4s for 5xx). Carry-forward fallback when transient failures persist.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> API keys + series IDs</div>
+            <div><b>OUT:</b> raw_data.json</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ANALYSIS ─── -->
+  <div class="ribbon" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-ai)">🧠</div>
+      <div class="ribbon-meta">
+        <h3>Analysis & Commentary</h3>
+        <div class="agent-list">Agent 2 + Agent 3</div>
+      </div>
+      <div class="ribbon-summary">Diff-and-score signal changes (Agent 2). AI commentary refresh via Claude Sonnet, scoped to tabs whose data actually moved (Agent 3).</div>
+      <span class="ribbon-status ok">PASS · 8s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:#1A9E5A">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 2</span>
+            <span class="agent-name">Analyzer</span>
+            <span class="agent-file">analyzer.py</span>
+            <span class="agent-badge badge-nollm">No LLM</span>
+          </div>
+          <div class="agent-desc">Diffs current raw data against prior snapshot. Scores threshold-crossing signals (e.g. CPI +0.2pp triggers refresh). Tags directional deltas. Emits headlines.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> raw_data.json</div>
+            <div><b>OUT:</b> signals.json</div>
+          </div>
+        </div>
+        <div class="agent-card" style="border-left-color:var(--accent-ai)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 3</span>
+            <span class="agent-name">Analyst</span>
+            <span class="agent-file">briefing_agent.py</span>
+            <span class="agent-badge badge-llm">claude-sonnet-4-6</span>
+          </div>
+          <div class="agent-desc">Smart refresh — only regenerates commentary for tabs whose underlying data moved beyond noise threshold. Returns structured JSON with risk posture, regime, KPI updates, and per-tab analysis. 4096 max_tokens; carry-forward on parse failure.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> signals.json</div>
+            <div><b>OUT:</b> analysis.json</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── RENDERING ─── -->
+  <div class="ribbon" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-render)">🖥️</div>
+      <div class="ribbon-meta">
+        <h3>Rendering</h3>
+        <div class="agent-list">Agent 4</div>
+      </div>
+      <div class="ribbon-summary">Patches index.html in-place. Rebuilds 40+ chart consts from raw data, updates KPI strip, injects AI commentary, rolls panel month labels.</div>
+      <span class="ribbon-status ok">PASS · 12s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-render)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 4</span>
+            <span class="agent-name">Renderer</span>
+            <span class="agent-file">renderer.py</span>
+            <span class="agent-badge badge-nollm">No LLM</span>
+          </div>
+          <div class="agent-desc">Regex-based HTML patcher. Rebuilds annual + monthly chart constants from raw data, patches MoM deltas into KPI tiles, injects Claude commentary into tab panels, auto-rolls "Mar'26 vs Feb'26"-style date labels. Self-correcting against historical revisions.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> raw_data.json + analysis.json</div>
+            <div><b>OUT:</b> index.html (patched)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── VALIDATION (the big one) ─── -->
+  <div class="ribbon expanded" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-validate)">🛡️</div>
+      <div class="ribbon-meta">
+        <h3>Validation Stack</h3>
+        <div class="agent-list">Agent 6 (9 passes) · Agent 7 · Agent 8</div>
+      </div>
+      <div class="ribbon-summary">Independent quality gate. Build-blocking: critical divergences halt publish. 480+ checks per run including DOM visual + AI vision review.</div>
+      <span class="ribbon-status ok">PASS · 38s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-validate)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 6</span>
+            <span class="agent-name">Validator</span>
+            <span class="agent-file">validator.py</span>
+            <span class="agent-badge badge-nollm">9-pass · gate</span>
+          </div>
+          <div class="agent-desc">Independent verification of all dashboard numbers. Build gate — critical divergences halt publish.</div>
+        </div>
+        <div class="agent-card" style="border-left-color:#0E7490">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 7</span>
+            <span class="agent-name">Visual QA</span>
+            <span class="agent-file">visual_qa.py</span>
+            <span class="agent-badge badge-nollm">295 DOM checks</span>
+          </div>
+          <div class="agent-desc">Headless Chromium per-tab. JS errors, canvas sizes, KPI integrity. Saves screenshots for Agent 8.</div>
+        </div>
+        <div class="agent-card" style="border-left-color:var(--accent-ai)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 8</span>
+            <span class="agent-name">Vision Review</span>
+            <span class="agent-file">visual_review.py</span>
+            <span class="agent-badge badge-llm">claude-sonnet-4-6 · vision</span>
+          </div>
+          <div class="agent-desc">Screenshots → Claude vision API. Catches broken chart lines, overlapping labels, blank tiles invisible to DOM checks.</div>
+        </div>
+      </div>
+
+      <div class="passes">
+        <div class="passes-head">9 validator passes (Agent 6)</div>
+        <div class="passes-list">
+          <div class="pass-cell"><span class="pass-num">PASS 1</span><div class="pass-name">Internal Consistency</div><div class="pass-detail">HTML values vs raw_data.json</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 2</span><div class="pass-name">Source Verification</div><div class="pass-detail">Live API spot-checks</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 3</span><div class="pass-name">Staleness</div><div class="pass-detail">Series freshness windows</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 3b</span><div class="pass-name">Shock Tracker</div><div class="pass-detail">Structure + MMA consistency</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 3c</span><div class="pass-name">Earnings Verbatim</div><div class="pass-detail">Quotes match transcripts</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 3d</span><div class="pass-name">Panel ↔ Data Months</div><div class="pass-detail">Title labels match consts</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 3e</span><div class="pass-name">Cross-Surface Metrics</div><div class="pass-detail">Same value everywhere</div></div>
+          <div class="pass-cell" style="background:#FEFCE8"><span class="pass-num">PASS 3f ⭐</span><div class="pass-name">Schema Contract</div><div class="pass-detail">Renderer reads ↔ collector writes</div></div>
+          <div class="pass-cell" style="background:#FEFCE8"><span class="pass-num">PASS 3g ⭐</span><div class="pass-name">Seed Drift</div><div class="pass-detail">Static seeds vs recompute</div></div>
+          <div class="pass-cell" style="background:#FEFCE8"><span class="pass-num">PASS 3h ⭐</span><div class="pass-name">Collector Errors</div><div class="pass-detail">FRED/BLS 4xx surfaced</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 4</span><div class="pass-name">Visual QA</div><div class="pass-detail">295 DOM rendering checks</div></div>
+          <div class="pass-cell"><span class="pass-num">PASS 5</span><div class="pass-name">Vision Review</div><div class="pass-detail">AI screenshot analysis</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SELF-CORRECTION ─── -->
+  <div class="ribbon" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-repair)">🔧</div>
+      <div class="ribbon-meta">
+        <h3>Self-Correction</h3>
+        <div class="agent-list">Agent 10</div>
+      </div>
+      <div class="ribbon-summary">Reads validator output, surfaces accumulated drift into a structured rolling log. Observer mode v1 — passive, no automated fixes.</div>
+      <span class="ribbon-status observe">OBSERVE · 1s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-repair)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 10</span>
+            <span class="agent-name">Repair Agent</span>
+            <span class="agent-file">repair_agent.py</span>
+            <span class="agent-badge badge-nollm">Observer v1</span>
+          </div>
+          <div class="agent-desc">Reads validation_report.json after every run. Prints structured per-section summary into the run log; appends to rolling data/repair_log.md (capped at 50 entries). Always exit 0 — never blocks. <b>Min 3-week observation</b> before any fix-writing logic ships, per design rule.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> validation_report.json</div>
+            <div><b>OUT:</b> repair_log.md (rolling)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DELIVERY ─── -->
+  <div class="ribbon" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-deliver)">📬</div>
+      <div class="ribbon-meta">
+        <h3>Delivery</h3>
+        <div class="agent-list">Agent 5</div>
+      </div>
+      <div class="ribbon-summary">Commits patched HTML to GitHub, deploys to Pages, sends weekly briefing email via Resend. Auto-rollback on health check failure.</div>
+      <span class="ribbon-status ok">PASS · 7s</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-deliver)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 5</span>
+            <span class="agent-name">Publisher</span>
+            <span class="agent-file">publisher.py</span>
+            <span class="agent-badge badge-nollm">No LLM</span>
+          </div>
+          <div class="agent-desc">Builds Resend HTML email with macro summary + tab headlines + signal changes. Commits dashboard to main, GitHub Pages auto-deploys. Post-deploy healthcheck verifies the page; auto-rollback on failure restores the last known-good snapshot.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> dashboard.html + analysis.json</div>
+            <div><b>OUT:</b> email + git commit + Pages deploy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── OFF-CYCLE ─── -->
+  <div class="ribbon" onclick="this.classList.toggle('expanded')">
+    <div class="ribbon-head">
+      <div class="ribbon-icon" style="background:var(--accent-off)">🏦</div>
+      <div class="ribbon-meta">
+        <h3>Off-Cycle: Earnings Pipeline</h3>
+        <div class="agent-list">Agent 9 · runs quarterly, doesn't touch weekly cadence</div>
+      </div>
+      <div class="ribbon-summary">Autonomous quarterly bank earnings agent. Fetches transcripts, extracts 8 verbatim fields via Claude, gated by validator Pass 3c.</div>
+      <span class="ribbon-status ok">SCHEDULED · next Jul 10</span>
+      <div class="ribbon-toggle">›</div>
+    </div>
+    <div class="ribbon-body">
+      <div class="agent-grid">
+        <div class="agent-card" style="border-left-color:var(--accent-off)">
+          <div class="agent-card-head">
+            <span class="agent-num">AGENT 9</span>
+            <span class="agent-name">Earnings Agent</span>
+            <span class="agent-file">earnings_agent.py</span>
+            <span class="agent-badge badge-llm">claude-sonnet-4-6</span>
+          </div>
+          <div class="agent-desc">Own cron (10pm UTC, days 10-28 of Jan/Apr/Jul/Oct). Reads earnings_calendar.json → fetches per-bank Q-transcript from IR/Motley Fool/Seeking Alpha → Claude extracts 8 verbatim fields with strict no-paraphrase schema → local substring check + validator Pass 3c gate → auto-commits to main when gate passes, halts silently when it doesn't. Factuality enforced mechanically.</div>
+          <div class="agent-io">
+            <div><b>IN:</b> earnings_calendar.json</div>
+            <div><b>OUT:</b> bank_earnings.json + transcripts/</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ────────────────────────────── STATS + WHY ────────────────────────────── -->
+<div class="stats">
+  <div class="stat"><div class="stat-val blue">11</div><div class="stat-lbl">Pipeline agents</div></div>
+  <div class="stat"><div class="stat-val blue">79</div><div class="stat-lbl">Data series tracked</div></div>
+  <div class="stat"><div class="stat-val green">480+</div><div class="stat-lbl">Quality checks per run</div></div>
+  <div class="stat"><div class="stat-val">15</div><div class="stat-lbl">Dashboard tabs</div></div>
+  <div class="stat"><div class="stat-val">~4 min</div><div class="stat-lbl">Full pipeline runtime</div></div>
+</div>
+
+<div class="why">
+  <b>Why multi-agent?</b> Only Agents 3, 8, 9 use an LLM — everything else is pure Python with no AI cost. Each agent is independently testable and independently failable. The self-verification stack (Agent 0 + Pass 3f/3g/3h + Agent 10) was added in May 2026 after a six-bug audit found the same failure class shipping repeatedly: rebuilds silently failing → static seeds rendered as fresh. The architecture is now designed so that class can never recur — every external dependency is pre-flight validated, every renderer key has a static-analyzed contract with the collector, and every static seed is recomputed each run.
+</div>
+
+<p class="footnote">Mockup · Layered Ribbon design · 2026-05-01 · click any ribbon to expand/collapse</p>
+
+</body>
+</html>
