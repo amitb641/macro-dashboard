@@ -45,7 +45,7 @@ Briefing chain ─┼─ Agent 1 (collector)
                 └─ Agent 8 (visual review) Pass 3i (unit consistency)  — proposed
 
 Off-cycle ──────┬─ Agent 9 (earnings)              [existing, validator-gated]
-                └─ Agent 10 (repair) [proposed] ── Tier 2/3: validator-gated, writes PRs
+                └─ Agent 10 (repair)  ✅ live ── observer mode v1 (passive, no fixes yet)
 ```
 
 Key principle from Agent 9: autonomous agents run **off-cycle**, are
@@ -99,9 +99,10 @@ weird outage.
 3. **Tier 1 Pass 3g extension — broaden coverage** (next). Currently only FC_MACRO is checked; extend to other "data-shaped" seeds like commentary numerics, panel KPI fallback values. Each addition is a small per-target function; aim for one new target per PR so each ships independently.
 4. **Tier 1 Pass 3i — unit consistency.** Add a `units` map alongside the collector key list (`{'cpi_apparel': 'index', 'ig_oas': 'pct', ...}`). Renderer reads from it; rebuild functions assert expected unit. Estimated ~200 LOC plus per-series annotations.
 5. ✅ **Agent 0 (pre-flight).** `scripts/preflight.py` runs as the first step in `briefing.yml`. Extracts every FRED series_id literal from `collector.py` and pings each one with limit=1. Any 4xx halts the pipeline before Agent 1 wastes a fetch. Defense-in-depth alongside Pass 3h: Agent 0 fails upstream, 3h surfaces anything that slipped through. Bypass for local dev: `PREFLIGHT_SKIP=1`.
-6. **Agent 10 skeleton — passive observation only.** Cron that reads `validation_report.json` and posts a Slack/issue comment summarizing failures. **No fix-writing for at least 3 weeks** to confirm the trigger signal is clean.
-7. **Agent 10 fix-proposal mode.** Add Claude API calls; produces draft PRs with `auto-fix-proposal` label. Human reviews each.
-8. **Agent 10 auto-merge for narrow classes only.** Only ID swaps that re-fetch successfully. Always reversible. Always logged.
+6. ✅ **Agent 10 v1 — passive observer.** `scripts/repair_agent.py` runs `if: always()` after Agent 6 (validator) in `briefing.yml`. Reads `validation_report.json`, prints a structured per-section summary into the CI run log, and appends to a rolling `data/repair_log.md` (capped at 50 entries on disk). No automated fixes. **Observation phase: minimum 3 weeks of weekly runs** before any fix-writing logic is added — per the design rule that autonomous-fix systems must first prove their trigger signal is clean.
+7. **Agent 10 v2 — GitHub surface.** Add post-summary integration: post a comment on the latest commit, or open/update a tracking issue, on any FAIL/WARN status. Still no fix-writing.
+8. **Agent 10 v3 — fix-proposal mode.** Add Claude API calls. Map failure type → fix template (bad FRED ID → search FRED catalog; schema mismatch → propose rename; seed drift → propose rebuild). Produces draft PRs with `auto-fix-proposal` label. Human reviews each.
+9. **Agent 10 v4 — narrow auto-merge.** Only for ID-swap class fixes that pass re-fetch verification. Always reversible. Always logged.
 
 ## Writing rules for the next contributor
 

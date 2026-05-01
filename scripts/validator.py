@@ -1353,6 +1353,7 @@ def check_seed_drift(html, data):
                 'pass': False, 'severity': sev,
                 'seed': seed, 'expected': expected,
                 'diverged': diverged,
+                'note': '; '.join(diverged),
             })
             for d in diverged:
                 print(f'  🔴 FC_MACRO.{act_key} ({yr}): {d}')

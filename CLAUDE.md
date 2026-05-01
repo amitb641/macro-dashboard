@@ -14,7 +14,7 @@
 - Teardown: `git worktree remove /home/user/macro-dashboard-dev`
 
 ## Project Architecture
-10-agent Python data pipeline:
+11-agent Python data pipeline:
 0. `scripts/preflight.py` — Agent 0: Pre-flight validates every FRED series_id used by collector returns ≥1 obs. Halts pipeline immediately on any 4xx so downstream agents never run on poisoned data. (Self-verification — `docs/SELF_VERIFICATION.md`.)
 1. `scripts/collector.py` — Agent 1: Pulls data from FRED, BLS, EIA APIs
 2. `scripts/analyzer.py` — Agent 2: Diffs raw data, scores signals
@@ -25,6 +25,7 @@
 7. `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
 8. `scripts/visual_review.py` — Agent 8: Vision-based chart review (Claude multimodal)
 9. `scripts/earnings_agent.py` — Agent 9: Autonomous quarterly earnings — fetches transcripts, extracts verbatim fields via Claude Sonnet, gated by validator Pass 3c. Runs on its own cron (`earnings_agent.yml`, 10pm UTC during Jan/Apr/Jul/Oct weeks). **Never touches the weekly briefing cadence.**
+10. `scripts/repair_agent.py` — Agent 10: Repair agent (observer mode v1). Reads `data/validation_report.json` after every CI run, surfaces critical/warning/stale findings into a structured summary in the run log + rolling `data/repair_log.md`. **No automated fixes** — passive observer per `docs/SELF_VERIFICATION.md` design rule (≥3 weeks observation before any fix-writing). Runs `if: always()` after Agent 6 so it surfaces failures even when the validator gate halts the pipeline.
 
 Supporting scripts:
 - `scripts/snapshot.py` — Rolling data backups (keep last 3)

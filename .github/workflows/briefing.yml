@@ -90,6 +90,11 @@ jobs:
         run: python scripts/validator.py
         continue-on-error: true
 
+      - name: Agent 10 — Repair Agent (observer mode)
+        if: always()
+        run: python scripts/repair_agent.py
+        continue-on-error: true
+
       - name: Agent 4b — Re-render (inject validation report)
         run: python scripts/renderer.py
 
