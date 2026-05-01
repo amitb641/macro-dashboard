@@ -1232,21 +1232,15 @@ def rebuild_cpi_cat_mom(html, data):
 
 
 def rebuild_pce_cat_mom(html, data):
-    """Rebuild PCE_CAT_MOM from FRED PCE category price-index series.
-    Mirrors rebuild_cpi_cat_mom; uses BEA Table 2.4.4U price indexes (the
-    same family as PCEPI) so the chart is consistent with the headline
-    PCE inflation tile."""
+    """Rebuild PCE_CAT_MOM from the 4 top-level PCE component price-index
+    series (Goods/Services/Food/Energy). BEA publishes these monthly; the
+    detailed sub-category splits are quarterly only, which is why the chart
+    used to silently skip — six of the prior IDs had no monthly equivalent."""
     PCE_CATS = [
-        ('Housing & Utilities',  'pce_housing'),
-        ('Healthcare Services',  'pce_healthcare'),
-        ('Financial Services',   'pce_financial'),
-        ('Food Services',        'pce_food_svc'),
-        ('Recreation Services',  'pce_recreation'),
-        ('Transportation Svcs',  'pce_transport'),
-        ('Nondurable Goods',     'pce_nondur'),
-        ('Durable Goods',        'pce_durable'),
-        ('Food & Bev (Grocery)', 'pce_food_home'),
-        ('Energy Goods',         'pce_energy'),
+        ('Goods',    'pce_goods'),
+        ('Services', 'pce_services'),
+        ('Food',     'pce_food'),
+        ('Energy',   'pce_energy'),
     ]
 
     entries = []
@@ -1263,7 +1257,7 @@ def rebuild_pce_cat_mom(html, data):
         else:
             short.append(f'{data_key}(n={len(series)})')
 
-    if len(entries) >= 8:
+    if len(entries) == len(PCE_CATS):
         new_json = json.dumps(entries, separators=(', ', ':'))
         pattern = r'const PCE_CAT_MOM\s*=\s*\[[\s\S]*?\];'
         new_html, n = re.subn(pattern, f'const PCE_CAT_MOM = {new_json};', html, count=1)
@@ -1273,8 +1267,8 @@ def rebuild_pce_cat_mom(html, data):
             html = new_html
     else:
         warnings.append(
-            f'PCE_CAT_MOM rebuild SKIPPED — only {len(entries)}/10 cats had '
-            f'>=13 obs for YoY (need >=8). Insufficient: {", ".join(short)}.'
+            f'PCE_CAT_MOM rebuild SKIPPED — only {len(entries)}/{len(PCE_CATS)} '
+            f'components had >=13 obs for YoY. Insufficient: {", ".join(short)}.'
         )
 
     return html
@@ -1647,12 +1641,12 @@ def render_inflation(html, data, vals, tabs):
             p_cur = month_label(p_cur_d)
             p_prv = month_label(p_prv_d)
             html = re.sub(
-                r"PCE by Category — MoM Change \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
-                f"PCE by Category — MoM Change ({p_cur} vs {p_prv})", html, count=1)
+                r"PCE by Component — YoY % \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
+                f"PCE by Component — YoY % ({p_cur} vs {p_prv})", html, count=1)
             html = re.sub(
-                r"(PCE Price Index YoY by category · sorted by )[A-Z][a-z]+'\d+",
+                r"(PCE chain-type price index by component · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{p_cur}", html, count=1)
-            html = _patch_panel_legend_chips(html, 'PCE by Category', p_cur, p_prv)
+            html = _patch_panel_legend_chips(html, 'PCE by Component', p_cur, p_prv)
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     # ── Auto-patch PCE commentary numbers ────────────────────────────
