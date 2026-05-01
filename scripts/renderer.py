@@ -1194,7 +1194,7 @@ def rebuild_cpi_cat_mom(html, data):
         ('Food at Home',        'cpi_food_home', '#51CF66'),
         ('New Vehicles',        'cpi_new_veh',   '#4DABF7'),
         ('Apparel',             'cpi_apparel',   '#FCC419'),
-        ('Energy (all)',        'cpi_energy',    '#FFB84C'),
+        ('Energy (all)',        'cpiengsl',      '#FFB84C'),
         ('Used Cars & Trucks',  'cpi_used_cars', '#00C9A7'),
     ]
 

@@ -385,8 +385,9 @@ def collect():
     data['cpi_medical']   = fred_obs('CUSR0000SAM2', 24)  # Medical Care Services
     data['cpi_food_home'] = fred_obs('CUSR0000SAF11',24)  # Food at Home
     data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',24) # New Vehicles
-    data['cpi_apparel']   = fred_obs('CUSR0000SAA',  24)  # Apparel
-    data['cpi_energy']    = fred_obs('CUSR0000SA0E', 24)  # Energy
+    data['cpi_apparel']   = fred_obs('CPIAPPSL',     24)  # Apparel (SA)
+    # cpi_energy bucket sources from cpiengsl above (CPIENGSL, 320 obs); no
+    # separate fetch needed. The bad CUSR0000SA0E ID returned 400s for months.
     data['cpi_used_cars'] = fred_obs('CUSR0000SETA02',24) # Used Cars & Trucks
 
     # PCE top-level component price indexes (BEA Table 2.3.4 via FRED) for
