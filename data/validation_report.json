@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-01T03:59:34.862761Z",
+  "validated_at": "2026-05-01T12:50:50.587191Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 476,
-    "passed": 465,
-    "failed": 11,
+    "total_checks": 481,
+    "passed": 468,
+    "failed": 13,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -92,7 +92,7 @@
     },
     {
       "check": "CPI_MONTHLY.headline completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -101,7 +101,7 @@
     },
     {
       "check": "CPI_MONTHLY.core completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -110,7 +110,7 @@
     },
     {
       "check": "PCE_MONTHLY.headline completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -119,7 +119,7 @@
     },
     {
       "check": "PCE_MONTHLY.core completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -128,7 +128,7 @@
     },
     {
       "check": "U_MONTHLY.data completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -137,7 +137,7 @@
     },
     {
       "check": "NFP_VS_ADP.bls completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -154,8 +154,26 @@
       "pass": true
     },
     {
+      "check": "NFP_VS_ADP.adp label sync",
+      "html_value": "12 values",
+      "source_value": "13 labels",
+      "difference": 1,
+      "tolerance": 0,
+      "severity": "warning",
+      "pass": false
+    },
+    {
+      "check": "NFP_VS_ADP series length sync",
+      "html_value": "{'bls': 13, 'adp': 12}",
+      "source_value": "All series same length",
+      "difference": 1,
+      "tolerance": 0,
+      "severity": "warning",
+      "pass": false
+    },
+    {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -164,7 +182,7 @@
     },
     {
       "check": "HOUSING_MONTHLY.mortgage30 completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -191,7 +209,7 @@
     },
     {
       "check": "SAVING_MONTHLY.data completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -200,7 +218,7 @@
     },
     {
       "check": "UMCSENT_MONTHLY.data completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -209,7 +227,7 @@
     },
     {
       "check": "UMCSENT_MONTHLY.statuses completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -761,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-01T03:56:15.391025Z",
+      "collected_at": "2026-05-01T12:48:53.078230Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -970,7 +988,7 @@
       "surfaces": {
         "NFP_BLS_MOM.bls[-1]": 178.0,
         "KPIS Jobs tile": 178.0,
-        "Commentary payrolls": 178.0
+        "Commentary payrolls": "MISSING"
       },
       "severity": "ok",
       "pass": true
@@ -981,7 +999,7 @@
       "surfaces": {
         "U_MONTHLY.data[-1]": 4.3,
         "KPIS Unemployment": 4.3,
-        "Commentary U-3": 4.3
+        "Commentary U-3": "MISSING"
       },
       "severity": "ok",
       "pass": true
@@ -1862,7 +1880,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Unemployment \u2014 Panel \"Monthly Unemployment Rate \u2014 12-Month Tre\" has title",
+      "check": "Visual: Unemployment \u2014 Panel \"Monthly Unemployment Rate \u2014 13-Month Tre\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2012,7 +2030,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"Monthly CPI \u2014 Headline vs Core YoY % (12\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Monthly CPI \u2014 Headline vs Core YoY % (13\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2126,7 +2144,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Personal Saving Rate \u2014 Last 12 Months\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Personal Saving Rate \u2014 Last 13 Months\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2150,7 +2168,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2667,6 +2685,24 @@
     },
     {
       "check": "Visual: Validator \u2014 Panel \"Pass 3: Data Staleness\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3f: Schema Contract\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3g: Seed Drift\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3h: Collector Errors\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

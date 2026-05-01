@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-05-01T03:59:34.713919Z",
+  "checked_at": "2026-05-01T12:50:50.581410Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 295,
-    "passed": 295,
+    "total_checks": 298,
+    "passed": 298,
     "failed": 0,
     "js_errors": 0,
     "console_errors": 0
@@ -451,7 +451,7 @@
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Monthly Unemployment Rate \u2014 12-Month Tre\" has title",
+      "check": "Panel \"Monthly Unemployment Rate \u2014 13-Month Tre\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -601,7 +601,7 @@
     },
     {
       "category": "CPI",
-      "check": "Panel \"Monthly CPI \u2014 Headline vs Core YoY % (12\" has title",
+      "check": "Panel \"Monthly CPI \u2014 Headline vs Core YoY % (13\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -715,7 +715,7 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Personal Saving Rate \u2014 Last 12 Months\" has title",
+      "check": "Panel \"Personal Saving Rate \u2014 Last 13 Months\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -739,7 +739,7 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
+      "check": "Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1256,6 +1256,24 @@
     {
       "category": "Validator",
       "check": "Panel \"Pass 3: Data Staleness\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 3f: Schema Contract\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 3g: Seed Drift\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Validator",
+      "check": "Panel \"Pass 3h: Collector Errors\" has title",
       "pass": true,
       "severity": "ok"
     },
