@@ -500,6 +500,29 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'PCE_MONTHLY', {
                 'labels': h_labels, 'headline': h_values, 'core': c_values[:len(h_values)]})
 
+    # ── WAGE_MONTHLY (last 13 months) ───────────────────────────────
+    # Source: Atlanta Fed Wage Growth Tracker 3MMA (FRBATLWGT3MMAUMHWGO);
+    # value is already a YoY %. Real = nominal − CPI YoY for the same month.
+    atl_wgt_m = data.get('wage_growth_atl', [])
+    cpi_all_m = data.get('cpi_all', [])
+    if len(atl_wgt_m) >= 13 and len(cpi_all_m) >= 13 + 12:
+        cpi_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                     for o in cpi_all_m}
+        labels_w, nom_w, real_w = [], [], []
+        for obs in reversed(atl_wgt_m[:13]):  # newest-first → reverse to oldest-first
+            d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+            nom = round(obs['value'], 1)
+            cpi_now = cpi_by_ym.get((d.year, d.month))
+            cpi_prev = cpi_by_ym.get((d.year - 1, d.month))
+            real = round(nom - (cpi_now - cpi_prev) / cpi_prev * 100, 1) \
+                   if cpi_now and cpi_prev else None
+            labels_w.append(d.strftime("%b'%y"))
+            nom_w.append(nom)
+            real_w.append(real)
+        if labels_w:
+            html = _inject_const(html, 'WAGE_MONTHLY', {
+                'labels': labels_w, 'nominal': nom_w, 'real': real_w})
+
     # ── U_MONTHLY (rolling 13-month unemployment rate) ────────────────
     unrate_m = data.get('unrate', [])
     if len(unrate_m) >= 13:

@@ -1885,7 +1885,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">PCE Price Index — Monthly Headline vs Core YoY %</div>
-      <div class="panel-sub">Last 12 months · BEA · Fed's preferred inflation gauge · 2% target shown</div>
+      <div class="panel-sub">Last 13 months · BEA · Fed's preferred inflation gauge · 2% target shown</div>
       <div class="ch300"><canvas id="c-pce-mom"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge.</p>
     </div>
@@ -2419,7 +2419,7 @@ const CPI_CAT_MOM = [{"cat":"Shelter / Housing", "feb26":3.0, "mar26":3.0, "colo
 
 // ── WAGES ────────────────────────────────────────────
 const WAGE_ANNUAL = {"labels":["2021", "2022", "2023", "2024", "2025"], "nominal":[4.5, 6.1, 5.2, 4.2, 3.7], "real":[-2.7, -0.3, 1.9, 1.3, 1.0]};
-const WAGE_MONTHLY = {labels:["Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26","Mar'26"],nominal:[3.9,4.0,3.9,3.8,3.7,3.6,3.5,3.4,3.3,3.4,3.4,3.9],real:[1.6,1.5,1.3,1.0,1.2,1.2,0.9,0.7,0.6,1.0,0.9,1.0]};
+const WAGE_MONTHLY = {"labels":["Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"], "nominal":[4.3, 4.3, 4.3, 4.3, 4.1, 4.1, 4.0, 4.1, 4.0, 3.7, 3.6, 3.7, 3.9], "real":[1.5, 1.9, 2.0, 1.9, 1.4, 1.4, 1.1, 1.1, 1.3, 1.0, 1.2, 1.3, 0.6]};
 const WAGE_SECTORS = [
   {s:"Airline Pilots & Crew",      color:"#0984E3", w21:3.2, w22:7.8, w23:9.4, w24:5.2, w25:4.1, hr24:89.5},
   {s:"Information/Tech",           color:"#20C997", w21:5.8, w22:5.5, w23:4.1, w24:3.6, w25:2.8, hr24:56.8},
@@ -3584,7 +3584,7 @@ function buildPCETab(){
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
 
-  // Saving rate — monthly (last 12 months, bar chart)
+  // Saving rate — monthly (last 13 months, bar chart)
   new Chart(document.getElementById("c-saving-monthly").getContext("2d"),{
     type:"bar",
     data:{labels:SAVING_MONTHLY.labels,datasets:[{
@@ -3666,7 +3666,7 @@ function buildPCETab(){
     });
   }
 
-  // UMich Consumer Sentiment — monthly (last 12 months, bar chart)
+  // UMich Consumer Sentiment — monthly (last 13 months, bar chart)
   // Badge latest bar per release status: amber for preliminary, green for final
   (function(){
     const st = UMCSENT_MONTHLY.statuses || [];
