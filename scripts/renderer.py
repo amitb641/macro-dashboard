@@ -25,6 +25,14 @@ warnings = []
 
 START_YEAR = 2000   # all charts start from this year
 
+# Single source of truth for the rolling-monthly trend window. Every chart
+# that shows a "last N months" view (CPI, PCE, U-3, Wage, Saving, Sentiment,
+# Housing, NFP-vs-ADP) rebuilds N entries from this constant. Bumping it
+# auto-updates the panel titles too via _patch_trend_window_titles.
+# Does NOT affect: NFP_BLS_MOM (24mo by design), shock-tracker windows
+# (different methodology), Sahm Rule trailing 12-month low (Fed's rule).
+MONTHLY_TREND_WINDOW = 13
+
 
 # ── CHART HISTORY HELPERS ─────────────────────────────────────────────
 
@@ -95,11 +103,13 @@ def _latest_yoy(monthly_series):
     return lbl, yoy
 
 
-def _monthly_yoy_series(monthly_series, n_months=13):
+def _monthly_yoy_series(monthly_series, n_months=None):
     """Compute YoY% for the last n_months from monthly index data (newest-first).
     Returns (labels, values) where labels are "Mon'YY" strings.
-    Default 13 months — gives a full year-over-year visual span (latest plus
-    same month a year ago) on the rolling trend charts."""
+    Default = MONTHLY_TREND_WINDOW — gives a full year-over-year visual span
+    (latest plus same month a year ago) on the rolling trend charts."""
+    if n_months is None:
+        n_months = MONTHLY_TREND_WINDOW
     if not monthly_series or len(monthly_series) < 13 + n_months:
         return [], []
     # Build date→value lookup
@@ -123,9 +133,12 @@ def _monthly_yoy_series(monthly_series, n_months=13):
     return labels, values
 
 
-def _monthly_avg_by_month(weekly_series, n_months=13):
+def _monthly_avg_by_month(weekly_series, n_months=None):
     """Compute monthly averages from weekly data (newest-first).
-    Returns (labels, avg_values) for the last n_months complete months."""
+    Returns (labels, avg_values) for the last n_months complete months.
+    Default n_months = MONTHLY_TREND_WINDOW."""
+    if n_months is None:
+        n_months = MONTHLY_TREND_WINDOW
     if not weekly_series:
         return [], []
     from collections import defaultdict
@@ -203,9 +216,45 @@ def _month_lbl(date_str):
     return datetime.datetime.strptime(date_str, '%Y-%m-%d').strftime("%b'%y")
 
 
+def _patch_trend_window_titles(html):
+    """Roll panel titles + JS comments to match MONTHLY_TREND_WINDOW.
+    Single source of truth: bumping MONTHLY_TREND_WINDOW automatically updates
+    every chart's title text on the next render. Patterns are explicit per
+    panel to avoid clobbering legitimate non-chart-window references like the
+    Sahm Rule's 'trailing 12-month low' or the NY Fed's '12-month-ahead'
+    recession probability."""
+    n = MONTHLY_TREND_WINDOW
+    # Panel titles using "X-Month Trend"
+    for prefix in [r'Monthly Unemployment Rate — ',
+                   r'Monthly CPI — Headline vs Core YoY % \(',
+                   r'Monthly Wage Growth — Nominal vs Real YoY % \(']:
+        html = re.sub(rf'({prefix})\d+(-Month Trend)',
+                      lambda m: f'{m.group(1)}{n}{m.group(2)}', html)
+    # Housing — "(X-Month)" w/o "Trend"
+    html = re.sub(r'(Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate \()\d+(-Month\))',
+                  lambda m: f'{m.group(1)}{n}{m.group(2)}', html)
+    # "Last X Months" panel titles (Saving Rate, Consumer Sentiment)
+    for prefix in [r'Personal Saving Rate — Last ',
+                   r'Consumer Sentiment — Last ']:
+        html = re.sub(rf'({prefix})\d+( Months)',
+                      lambda m: f'{m.group(1)}{n}{m.group(2)}', html)
+    # PCE panel-sub: "Last X months · BEA · Fed's preferred..."
+    html = re.sub(r'(panel-sub">Last )\d+( months · BEA · Fed)',
+                  lambda m: f'{m.group(1)}{n}{m.group(2)}', html)
+    # JS comments
+    html = re.sub(r'(// Saving rate — monthly \(last )\d+( months, bar chart\))',
+                  lambda m: f'{m.group(1)}{n}{m.group(2)}', html)
+    html = re.sub(r'(// UMich Consumer Sentiment — monthly \(last )\d+( months, bar chart\))',
+                  lambda m: f'{m.group(1)}{n}{m.group(2)}', html)
+    return html
+
+
 def rebuild_charts(html, data):
     """Rebuild all chart arrays from collected historical data (from 2000)."""
     today = datetime.date.today()
+    # Roll panel titles to match the current trend window first — so titles
+    # and rebuilt data consts can never disagree.
+    html = _patch_trend_window_titles(html)
 
     # ── U_ANNUAL (annual averages only — monthly shown in U_MONTHLY) ──
     unrate = data.get('unrate', [])
@@ -368,8 +417,8 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'SAVING_ANNUAL', {'labels': labels, 'data': values})
 
     # ── SAVING_MONTHLY (last 13 months) ──────────────────────────────
-    if len(psavert) >= 13:
-        monthly = sorted(psavert[:13], key=lambda x: x['date'])  # oldest-first for chart
+    if len(psavert) >= MONTHLY_TREND_WINDOW:
+        monthly = sorted(psavert[:MONTHLY_TREND_WINDOW], key=lambda x: x['date'])  # oldest-first for chart
         m_labels = [_month_lbl(o['date']) for o in monthly]
         m_values = [round(o['value'], 1) for o in monthly]
         html = _inject_const(html, 'SAVING_MONTHLY', {'labels': m_labels, 'data': m_values})
@@ -378,8 +427,8 @@ def rebuild_charts(html, data):
     # statuses[] parallels data[]: 'preliminary' (UMich (P) flag) or 'final'.
     # Chart uses the last entry's status to render a PRELIM badge.
     umcsent = data.get('umcsent', [])
-    if len(umcsent) >= 13:
-        monthly = sorted(umcsent[:13], key=lambda x: x['date'])  # oldest-first for chart
+    if len(umcsent) >= MONTHLY_TREND_WINDOW:
+        monthly = sorted(umcsent[:MONTHLY_TREND_WINDOW], key=lambda x: x['date'])  # oldest-first for chart
         m_labels = [_month_lbl(o['date']) for o in monthly]
         m_values = [round(o['value'], 1) for o in monthly]
         m_statuses = [o.get('status', 'final') for o in monthly]
@@ -477,8 +526,8 @@ def rebuild_charts(html, data):
     cpi_all_m = data.get('cpi_all', [])
     cpi_core_m = data.get('cpi_core', [])
     if len(cpi_all_m) >= 25 and len(cpi_core_m) >= 25:
-        h_labels, h_values = _monthly_yoy_series(cpi_all_m, 13)
-        c_labels, c_values = _monthly_yoy_series(cpi_core_m, 13)
+        h_labels, h_values = _monthly_yoy_series(cpi_all_m, MONTHLY_TREND_WINDOW)
+        c_labels, c_values = _monthly_yoy_series(cpi_core_m, MONTHLY_TREND_WINDOW)
         # Align to same labels (they should match)
         if h_labels and h_labels == c_labels:
             html = _inject_const(html, 'CPI_MONTHLY', {
@@ -491,8 +540,8 @@ def rebuild_charts(html, data):
     pce_m = data.get('pce', [])
     pce_core_m = data.get('pce_core', [])
     if len(pce_m) >= 25 and len(pce_core_m) >= 25:
-        h_labels, h_values = _monthly_yoy_series(pce_m, 13)
-        c_labels, c_values = _monthly_yoy_series(pce_core_m, 13)
+        h_labels, h_values = _monthly_yoy_series(pce_m, MONTHLY_TREND_WINDOW)
+        c_labels, c_values = _monthly_yoy_series(pce_core_m, MONTHLY_TREND_WINDOW)
         if h_labels and h_labels == c_labels:
             html = _inject_const(html, 'PCE_MONTHLY', {
                 'labels': h_labels, 'headline': h_values, 'core': c_values})
@@ -505,11 +554,11 @@ def rebuild_charts(html, data):
     # value is already a YoY %. Real = nominal − CPI YoY for the same month.
     atl_wgt_m = data.get('wage_growth_atl', [])
     cpi_all_m = data.get('cpi_all', [])
-    if len(atl_wgt_m) >= 13 and len(cpi_all_m) >= 13 + 12:
+    if len(atl_wgt_m) >= MONTHLY_TREND_WINDOW and len(cpi_all_m) >= MONTHLY_TREND_WINDOW + 12:
         cpi_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
                      for o in cpi_all_m}
         labels_w, nom_w, real_w = [], [], []
-        for obs in reversed(atl_wgt_m[:13]):  # newest-first → reverse to oldest-first
+        for obs in reversed(atl_wgt_m[:MONTHLY_TREND_WINDOW]):  # newest-first → reverse to oldest-first
             d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
             nom = round(obs['value'], 1)
             cpi_now = cpi_by_ym.get((d.year, d.month))
@@ -525,10 +574,10 @@ def rebuild_charts(html, data):
 
     # ── U_MONTHLY (rolling 13-month unemployment rate) ────────────────
     unrate_m = data.get('unrate', [])
-    if len(unrate_m) >= 13:
+    if len(unrate_m) >= MONTHLY_TREND_WINDOW:
         # Unemployment rate is already a rate, not an index — no YoY needed
         labels_u, values_u = [], []
-        for i in range(min(13, len(unrate_m))):
+        for i in range(min(MONTHLY_TREND_WINDOW, len(unrate_m))):
             obs = unrate_m[i]
             d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
             labels_u.append(d.strftime("%b'%y"))
@@ -543,9 +592,9 @@ def rebuild_charts(html, data):
     cs_hpi_m = data.get('cs_hpi', [])
     mortgage30_m = data.get('mortgage30', [])
     if len(cs_hpi_m) >= 25:
-        cs_labels, cs_values = _monthly_yoy_series(cs_hpi_m, 13)
+        cs_labels, cs_values = _monthly_yoy_series(cs_hpi_m, MONTHLY_TREND_WINDOW)
         # Get monthly-averaged mortgage rates
-        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, 13)
+        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, MONTHLY_TREND_WINDOW)
         # Align to Case-Shiller labels (CS has pub lag, mortgage is more current)
         if cs_labels:
             # Use CS labels as base; fill mortgage where available
@@ -732,8 +781,8 @@ def rebuild_charts(html, data):
                 html = new_html
 
             # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP)
-            bls_12 = nfp_bls[-13:]
-            lbl_12 = nfp_labels[-13:]
+            bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
+            lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
             # Extract existing ADP array from HTML to preserve it
             adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
             if adp_match:
@@ -2365,7 +2414,7 @@ def rebuild_kpi_strip(html, data, vals):
     if umcsent and len(umcsent) >= 2:
         cur_s, prev_s, chg_s, d_s = _mom(umcsent)
         yoy_s = None
-        if len(umcsent) >= 13:
+        if len(umcsent) >= MONTHLY_TREND_WINDOW:
             yoy_s = round(cur_s - umcsent[12]['value'], 1)
         lbl = f"UMich Sentiment {_mlbl(umcsent[0]['date'])}"
         yoy_str = f" · YoY: {yoy_s:+.1f}" if yoy_s is not None else ""
