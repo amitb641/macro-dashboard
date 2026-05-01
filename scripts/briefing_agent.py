@@ -192,7 +192,7 @@ def call_claude(prompt: str) -> dict:
                 },
                 json={
                     'model': SONNET,
-                    'max_tokens': 2000,
+                    'max_tokens': 4096,
                     'system': SYSTEM,
                     'messages': [{'role': 'user', 'content': prompt}],
                 },
@@ -202,7 +202,16 @@ def call_claude(prompt: str) -> dict:
             text = r.json()['content'][0]['text'].strip()
             if text.startswith('```'): text = text.split('```')[1]
             if text.startswith('json'): text = text[4:]
-            return json.loads(text.strip())
+            try:
+                return json.loads(text.strip())
+            except json.JSONDecodeError as je:
+                # Truncation or escaping bug — log the tail of the response so
+                # the cause is obvious in the next run instead of just a "char N"
+                # offset that requires reproducing locally.
+                snippet = text[max(0, je.pos - 200):je.pos + 100]
+                print(f'  ⚠  JSON parse failed at char {je.pos}: {je.msg}')
+                print(f'  ⚠  context (±200 chars around failure):\n{snippet!r}')
+                raise
         except Exception as e:
             last_err = e
             print(f'  ❌ Claude call failed (attempt {attempt+1}/3): {e}')
