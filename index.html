@@ -5781,7 +5781,7 @@ function buildStackTab(){
     <div class="ma-trigger">
       <span style="font-size:18px">⚙️</span>
       <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron triggers: Weekly Fri 8am ET · Monthly 2nd Sat · Earnings-season daily 10pm UTC (Jan/Apr/Jul/Oct, days 10-28)</span>
+        <span class="ma-trigger-label">GitHub Actions — Cron triggers: Weekly Sat 8am ET · Monthly 2nd Sat · Earnings-season daily 10pm UTC (Jan/Apr/Jul/Oct, days 10-28)</span>
         <span class="ma-trigger-sub">briefing.yml (Agent 0 pre-flight + 8 main agents + build gate + Agent 10 observer + auto-rollback, &lt;3 min) · earnings_agent.yml (Agent 9 quarterly) — last main-pipeline run: April 24, 2026</span>
       </div>
     </div>
@@ -6094,7 +6094,7 @@ function buildStackTab(){
   </div>
 
   <!-- PIPELINE FLOW -->
-  <div class="stk-section-title">Pipeline — 11 stages, Weekly Fri 8am ET + Monthly 2nd Sat 10am ET</div>
+  <div class="stk-section-title">Pipeline — 11 stages, Weekly Sat 8am ET + Monthly 2nd Sat 10am ET</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;padding:12px">
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF2F2;border-radius:10px;border:1px solid rgba(220,38,38,.15)">
       <span style="font-size:18px">🛂</span>
@@ -6275,7 +6275,7 @@ function buildStackTab(){
       </div>
       <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
         <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">3 CI Workflows</div>
-        <div style="font-size:10px;color:var(--text2);line-height:1.5"><strong>briefing.yml</strong> — main pipeline (Fri + 2nd Sat) · <strong>smoke-tests.yml</strong> — PR gate (29 tests) · <strong>api-contract.yml</strong> — weekly API schema checks (Tue)</div>
+        <div style="font-size:10px;color:var(--text2);line-height:1.5"><strong>briefing.yml</strong> — main pipeline (Sat weekly + 2nd Sat monthly) · <strong>smoke-tests.yml</strong> — PR gate (29 tests) · <strong>api-contract.yml</strong> — weekly API schema checks (Tue)</div>
       </div>
     </div>
   </div>
@@ -6285,7 +6285,7 @@ function buildStackTab(){
   <div class="fc-note" style="margin-bottom:14px">
     <strong>Pipeline cadence:</strong>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
-      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Friday 8am ET — Full 8-agent pipeline + validation + deploy
+      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Saturday 8am ET — Full 11-agent pipeline + validation + deploy
     </span>
     <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
       <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#8878B8;background:#F3F0FF;border:1px solid rgba(136,120,184,.2)">Monthly Deep</span> 2nd Saturday 10am ET — captures Jobs (1st Fri) + CPI (~10th) + PCE (~28th prior month)
@@ -6623,7 +6623,7 @@ if(document.readyState === 'loading'){
 <script>
 // ── Data status definitions ───────────────────────────────────────────
 // type: "live"    = FRED API, refreshes every page load + 15min
-//       "weekly"  = pipeline runs every Friday 8am ET via GitHub Actions cron
+//       "weekly"  = pipeline runs every Saturday 8am ET via GitHub Actions cron
 //       "monthly" = 2nd Saturday deep refresh captures Jobs + CPI + PCE
 //       "quarterly"= manual update after earnings / govt releases
 //       "manual"  = ad-hoc, no schedule
@@ -6932,7 +6932,7 @@ function _captureAndDownload(TAB_IDS, origTabId){
 
 
 <div class="footer">
-  Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4'25 Earnings. Pipeline: Weekly Fri 8am ET + Monthly 2nd Sat 10am ET · Collector → Analyzer → Claude AI Commentary → Renderer → Email. All commentaries dynamically generated from live data. 2025 = actual. 2026F = consensus midpoint.
+  Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4'25 Earnings. Pipeline: Weekly Sat 8am ET + Monthly 2nd Sat 10am ET · Pre-flight → Collector → Analyzer → Claude AI Commentary → Renderer → Validator (9-pass) → Email → Repair Agent. All commentaries dynamically generated from live data. 2025 = actual. 2026F = consensus midpoint.
 </div>
 </body>
 </html>

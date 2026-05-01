@@ -2,8 +2,8 @@ name: Weekly Macro Update
 
 on:
   schedule:
-    # Weekly data pull: every Friday 8am ET (12:00 UTC)
-    - cron: '0 12 * * 5'
+    # Weekly data pull: every Saturday 8am ET (12:00 UTC)
+    - cron: '0 12 * * 6'
     # Monthly deep refresh: 2nd Saturday 10am ET (14:00 UTC)
     # Captures Jobs (1st Fri) + CPI (~10th-13th) in one AI pass
     - cron: '0 14 8-14 * 6'

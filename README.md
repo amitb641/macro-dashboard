@@ -39,9 +39,9 @@ The Oil Impact Chain — the dashboard's shock-transmission tracker — is the m
 
 ## How It Works
 
-A **9-agent pipeline** runs on two independent schedules:
+A **11-agent pipeline** runs on two independent schedules:
 
-**Main pipeline** (`briefing.yml` — weekly Fri 8am ET + monthly 2nd Sat):
+**Main pipeline** (`briefing.yml` — weekly Sat 8am ET + monthly 2nd Sat):
 
 ```
 Agent 1 — Collector       Pull latest data from FRED, BLS, EIA APIs (no LLM)
