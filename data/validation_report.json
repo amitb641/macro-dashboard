@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-01T12:50:50.587191Z",
+  "validated_at": "2026-05-01T13:20:41.181614Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
@@ -191,19 +191,19 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "316/316 filled",
+      "html_value": "320/320 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 158,
+      "tolerance": 160,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "316/316 filled",
+      "html_value": "320/320 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 158,
+      "tolerance": 160,
       "severity": "ok",
       "pass": true
     },
@@ -371,55 +371,55 @@
     },
     {
       "check": "GDP_TOTAL_DATA.nominal completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "GDP_TOTAL_DATA.real completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "FFR_DATA.actual completeness",
-      "html_value": "26/29 filled",
-      "source_value": "90% (min 50%)",
+      "html_value": "36/39 filled",
+      "source_value": "92% (min 50%)",
       "difference": 3,
-      "tolerance": 14,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "FFR_DATA.dots completeness",
-      "html_value": "4/29 filled",
-      "source_value": "14% (min 10%)",
-      "difference": 25,
-      "tolerance": 14,
+      "html_value": "4/39 filled",
+      "source_value": "10% (min 10%)",
+      "difference": 35,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "MORTGAGE_DATA.rate30 completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "MORTGAGE_DATA.ffr completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -443,37 +443,37 @@
     },
     {
       "check": "TREASURY_DATA.dgs10 completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.dgs2 completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.spread completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.card90 completeness",
-      "html_value": "27/27 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 13,
+      "html_value": "28/37 filled",
+      "source_value": "76% (min 50%)",
+      "difference": 9,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -506,7 +506,7 @@
     },
     {
       "check": "HPI_DATA.cs completeness",
-      "html_value": "26/26 filled",
+      "html_value": "27/27 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 13,
@@ -515,7 +515,7 @@
     },
     {
       "check": "HPI_DATA.fhfa completeness",
-      "html_value": "26/26 filled",
+      "html_value": "27/27 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 13,
@@ -542,19 +542,19 @@
     },
     {
       "check": "OIL_VS_SENTIMENT.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_SENTIMENT.sentiment completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -578,19 +578,19 @@
     },
     {
       "check": "CREDIT_GROWTH.revolving completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "CREDIT_GROWTH.nonrevolving completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-01T12:48:53.078230Z",
+      "collected_at": "2026-05-01T13:18:40.864377Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
