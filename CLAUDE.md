@@ -14,7 +14,8 @@
 - Teardown: `git worktree remove /home/user/macro-dashboard-dev`
 
 ## Project Architecture
-9-agent Python data pipeline:
+10-agent Python data pipeline:
+0. `scripts/preflight.py` — Agent 0: Pre-flight validates every FRED series_id used by collector returns ≥1 obs. Halts pipeline immediately on any 4xx so downstream agents never run on poisoned data. (Self-verification — `docs/SELF_VERIFICATION.md`.)
 1. `scripts/collector.py` — Agent 1: Pulls data from FRED, BLS, EIA APIs
 2. `scripts/analyzer.py` — Agent 2: Diffs raw data, scores signals
 3. `scripts/briefing_agent.py` — Agent 3: AI commentary (Claude Sonnet)

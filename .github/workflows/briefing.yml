@@ -52,6 +52,11 @@ jobs:
           ls scripts/
           ls data/ || echo "data/ missing"
 
+      - name: Agent 0 — Pre-flight (FRED series ID validation)
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python scripts/preflight.py
+
       - name: Agent 1 — Collector
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}

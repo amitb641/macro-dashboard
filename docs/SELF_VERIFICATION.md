@@ -33,7 +33,7 @@ The current pipeline is a 9-agent linear chain plus one off-cycle agent
 validator and one new off-cycle agent following the Agent 9 pattern.
 
 ```
-                ┌─ Agent 0 (Sentinel) [proposed] ── Pass 3h-pre: pre-flight FRED IDs
+                ┌─ Agent 0 (Pre-flight)  ✅ live ── Validates FRED IDs upstream
                 │
 Briefing chain ─┼─ Agent 1 (collector)
                 ├─ Agent 2 (analyzer)
@@ -98,7 +98,7 @@ weird outage.
 2. ✅ **Tier 1 Pass 3g** — seed drift, narrow scope (FC_MACRO.actNN). Catches historical revisions of GDP/U/CPI/Wage/FFR seeds.
 3. **Tier 1 Pass 3g extension — broaden coverage** (next). Currently only FC_MACRO is checked; extend to other "data-shaped" seeds like commentary numerics, panel KPI fallback values. Each addition is a small per-target function; aim for one new target per PR so each ships independently.
 4. **Tier 1 Pass 3i — unit consistency.** Add a `units` map alongside the collector key list (`{'cpi_apparel': 'index', 'ig_oas': 'pct', ...}`). Renderer reads from it; rebuild functions assert expected unit. Estimated ~200 LOC plus per-series annotations.
-5. **Agent 0 (pre-flight Sentinel).** Standalone YAML cron that pings every FRED/BLS series ID via HEAD request before the Friday briefing run. Halts if any 400. Optional — Pass 3h surfaces the same info post-hoc, just earlier failure detection.
+5. ✅ **Agent 0 (pre-flight).** `scripts/preflight.py` runs as the first step in `briefing.yml`. Extracts every FRED series_id literal from `collector.py` and pings each one with limit=1. Any 4xx halts the pipeline before Agent 1 wastes a fetch. Defense-in-depth alongside Pass 3h: Agent 0 fails upstream, 3h surfaces anything that slipped through. Bypass for local dev: `PREFLIGHT_SKIP=1`.
 6. **Agent 10 skeleton — passive observation only.** Cron that reads `validation_report.json` and posts a Slack/issue comment summarizing failures. **No fix-writing for at least 3 weeks** to confirm the trigger signal is clean.
 7. **Agent 10 fix-proposal mode.** Add Claude API calls; produces draft PRs with `auto-fix-proposal` label. Human reviews each.
 8. **Agent 10 auto-merge for narrow classes only.** Only ID swaps that re-fetch successfully. Always reversible. Always logged.
