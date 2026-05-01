@@ -82,32 +82,48 @@ def check_anthropic_models(timeout: int = 10) -> tuple[bool, str, list[str]]:
     return True, f'{len(ALL_MODEL_IDS)} model(s) verified against {len(served_ids)} served', []
 
 
-def check_fred_id(sid: str, timeout: int = 10) -> tuple[bool, str]:
-    """Returns (ok, status_msg). True = series exists and returns data."""
-    if not FRED_KEY:
-        return True, 'skipped (no FRED_API_KEY)'
-    try:
-        r = requests.get(
-            'https://api.stlouisfed.org/fred/series/observations',
-            params={
-                'series_id': sid,
-                'api_key': FRED_KEY,
-                'file_type': 'json',
-                'limit': 1,
-                'sort_order': 'desc',
-            },
-            timeout=timeout,
-        )
-    except Exception as e:
-        return False, f'network error: {e}'
+def check_fred_id(sid: str, timeout: int = 10) -> tuple[str, str]:
+    """Validate one FRED series_id. Returns (status, msg) where status is:
+      'ok'      — 200 with observations, ID is valid
+      'fatal'   — 4xx, ID is genuinely bad (halt pipeline)
+      'warn'    — 5xx after retries, transient FRED server issue
+      'skipped' — no API key (local dev mode)
 
-    if r.status_code != 200:
-        return False, f'{r.status_code} {r.reason}'
-    body = r.json()
-    obs = body.get('observations', [])
-    if not obs:
-        return False, '200 OK but no observations'
-    return True, f"200 OK (latest {obs[0].get('date', '?')})"
+    Retries 5xx up to 3 times with backoff so a transient FRED hiccup
+    doesn't kill the pipeline (run #119 surfaced this — PCEPILFE and
+    DGDSRG3M086SBEA both returned 500 mid-batch despite being live IDs)."""
+    if not FRED_KEY:
+        return 'skipped', 'skipped (no FRED_API_KEY)'
+
+    params = {
+        'series_id': sid, 'api_key': FRED_KEY,
+        'file_type': 'json', 'limit': 1, 'sort_order': 'desc',
+    }
+    last_status = None
+    for attempt in range(3):
+        try:
+            r = requests.get(
+                'https://api.stlouisfed.org/fred/series/observations',
+                params=params, timeout=timeout)
+        except Exception as e:
+            return 'warn', f'network error: {e}'
+
+        if r.status_code == 200:
+            obs = r.json().get('observations', [])
+            if not obs:
+                return 'fatal', '200 OK but no observations'
+            return 'ok', f"200 OK (latest {obs[0].get('date', '?')})"
+
+        if 400 <= r.status_code < 500:
+            return 'fatal', f'{r.status_code} {r.reason}'
+
+        # 5xx — transient, retry
+        last_status = f'{r.status_code} {r.reason}'
+        if attempt < 2:
+            time.sleep(2 * (attempt + 1))  # 2s, 4s
+
+    # Exhausted retries on 5xx — warn, don't halt
+    return 'warn', f'{last_status} (after 3 attempts)'
 
 
 def main() -> int:
@@ -145,13 +161,17 @@ def main() -> int:
     ids = extract_fred_ids(src)
     print(f'[Agent 0] Pre-flight: checking {len(ids)} FRED series IDs...')
 
-    bad: list[tuple[str, str]] = []
+    bad: list[tuple[str, str]] = []     # 4xx — real config error, halts pipeline
+    transient: list[tuple[str, str]] = []  # 5xx after retries — warn, continue
     t0 = time.time()
     for sid in ids:
-        ok, msg = check_fred_id(sid)
-        if ok:
+        status, msg = check_fred_id(sid)
+        if status == 'ok' or status == 'skipped':
             print(f'  ✅ {sid}: {msg}')
-        else:
+        elif status == 'warn':
+            print(f'  ⚠  {sid}: {msg} (transient, not halting)')
+            transient.append((sid, msg))
+        elif status == 'fatal':
             print(f'  ❌ {sid}: {msg}')
             if sid not in _ALLOWLIST_FAIL:
                 bad.append((sid, msg))
@@ -171,6 +191,12 @@ def main() -> int:
         print('\nFix: update scripts/collector.py with valid FRED IDs, or add '
               'them to _ALLOWLIST_FAIL in scripts/preflight.py if intentional.')
         return 1
+
+    if transient:
+        print(f'\n[Agent 0] ⚠  {len(transient)} transient FRED 5xx error(s) — '
+              f'continuing (collector has its own 429/5xx retry logic):')
+        for sid, msg in transient:
+            print(f'  - {sid}: {msg}')
 
     print(f'[Agent 0] ✅ All {len(ids)} series IDs valid')
     return 0
