@@ -59,15 +59,17 @@ never extend or block the weekly briefing pipeline.
 | Pass | Status | What it does | Bug class caught |
 |---|---|---|---|
 | 3f — schema contract | ✅ live | Static-analyzes `collector.py` writes vs `renderer.py` reads; flags every key the renderer reads with no collector writer | #3 (renamed key drift) |
+| 3g — seed drift | ✅ live | Recomputes FC_MACRO.actNN from raw data each run, compares to seed; flags > per-metric tolerance | #4 (act24 historical drift) |
 | 3h — collector errors | ✅ live | Surfaces `raw_data['errors']` (FRED/BLS 4xx) as critical findings | #1, #2 (bad FRED IDs) |
-| 3g — seed drift | proposed | For every `const X = {...}` that has a rebuild path, recompute from raw data and compare; flag drift > tolerance | #4 (act24 historical drift) |
 | 3i — unit consistency | proposed | Decorate each series with `unit` tag (`pct`, `bps`, `index`); renderer asserts at point-of-use | #5 (% vs bps mismatch) |
 
-**Currently implemented (3f + 3h):**
-- `check_schema_contract()` in `scripts/validator.py` — regex-extracts key writes from collector and reads from renderer; cross-checks. ~50 LOC.
-- `check_collector_errors(raw)` in `scripts/validator.py` — parses `raw_data['errors']` for FRED/BLS API failures by series ID. ~30 LOC.
-- Both feed into `build_report` and surface as critical for FAIL status.
-- Whitelist: `_NON_COLLECTOR_KEYS = {'banks'}` (comes from `bank_earnings.json`, not raw_data).
+**Currently implemented (3f + 3g + 3h):**
+- `check_schema_contract()` — regex-extracts key writes from collector and reads from renderer; cross-checks. ~50 LOC.
+- `check_seed_drift(html, data)` — recomputes FC_MACRO.actNN from `gdpc1_annual` / `unrate` / `cpi_all` / `ahetpi` / `fedfunds_annual`, compares against the seed parsed out of index.html; per-metric tolerance dict (`_FC_DRIFT_TOLERANCE`). 1 metric drifted = warning, ≥2 = critical. ~80 LOC.
+- `check_collector_errors(raw)` — parses `raw_data['errors']` for FRED/BLS API failures by series ID. ~30 LOC.
+- All feed into `build_report` and surface in `data/validation_report.json` under `schema_contract` / `seed_drift` / `collector_errors` keys. Critical-severity findings push status to FAIL via the existing `CRITICAL_THRESHOLD` gate.
+- Whitelists: `_NON_COLLECTOR_KEYS = {'banks'}` (sourced from `bank_earnings.json`).
+- Tolerances: GDP ±0.15pp, Unemployment ±0.10pp, CPI ±0.15pp, Wage ±0.20pp, FFR ±0.10pp.
 
 ### Tier 2 — LLM-assisted fix proposals
 
@@ -92,13 +94,14 @@ weird outage.
 
 ## Recommended sequencing
 
-1. ✅ **Tier 1 Passes 3f + 3h** (this commit). Covers most of what was hand-fixed in the May 1 audit. Zero LLM cost, deterministic, fast.
-2. **Tier 1 Pass 3g — seed drift.** Crawl every `const X = {...}` in `index.html`; for those with a known rebuild path in `renderer.py`, recompute from `raw_data` and compare. Flag drift > tolerance as critical. Estimated ~150 LOC. Will catch the next FC_MACRO-class drift the day it diverges.
-3. **Tier 1 Pass 3i — unit consistency.** Add a `units` map alongside the collector key list (`{'cpi_apparel': 'index', 'ig_oas': 'pct', ...}`). Renderer reads from it; rebuild functions assert expected unit. Estimated ~200 LOC plus per-series annotations.
-4. **Agent 0 (pre-flight Sentinel).** Standalone YAML cron that pings every FRED/BLS series ID via HEAD request before the Friday briefing run. Halts if any 400. Optional — Pass 3h surfaces the same info post-hoc, just earlier failure detection.
-5. **Agent 10 skeleton — passive observation only.** Cron that reads `validation_report.json` and posts a Slack/issue comment summarizing failures. **No fix-writing for at least 3 weeks** to confirm the trigger signal is clean.
-6. **Agent 10 fix-proposal mode.** Add Claude API calls; produces draft PRs with `auto-fix-proposal` label. Human reviews each.
-7. **Agent 10 auto-merge for narrow classes only.** Only ID swaps that re-fetch successfully. Always reversible. Always logged.
+1. ✅ **Tier 1 Passes 3f + 3h** — schema contract + collector errors. Covers the bad-FRED-ID and renamed-key bug classes.
+2. ✅ **Tier 1 Pass 3g** — seed drift, narrow scope (FC_MACRO.actNN). Catches historical revisions of GDP/U/CPI/Wage/FFR seeds.
+3. **Tier 1 Pass 3g extension — broaden coverage** (next). Currently only FC_MACRO is checked; extend to other "data-shaped" seeds like commentary numerics, panel KPI fallback values. Each addition is a small per-target function; aim for one new target per PR so each ships independently.
+4. **Tier 1 Pass 3i — unit consistency.** Add a `units` map alongside the collector key list (`{'cpi_apparel': 'index', 'ig_oas': 'pct', ...}`). Renderer reads from it; rebuild functions assert expected unit. Estimated ~200 LOC plus per-series annotations.
+5. **Agent 0 (pre-flight Sentinel).** Standalone YAML cron that pings every FRED/BLS series ID via HEAD request before the Friday briefing run. Halts if any 400. Optional — Pass 3h surfaces the same info post-hoc, just earlier failure detection.
+6. **Agent 10 skeleton — passive observation only.** Cron that reads `validation_report.json` and posts a Slack/issue comment summarizing failures. **No fix-writing for at least 3 weeks** to confirm the trigger signal is clean.
+7. **Agent 10 fix-proposal mode.** Add Claude API calls; produces draft PRs with `auto-fix-proposal` label. Human reviews each.
+8. **Agent 10 auto-merge for narrow classes only.** Only ID swaps that re-fetch successfully. Always reversible. Always logged.
 
 ## Writing rules for the next contributor
 

@@ -1269,6 +1269,103 @@ def check_schema_contract():
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# PASS 3g: SEED DRIFT
+#   For every static seed in index.html that has a known recompute path
+#   from raw_data, recompute and compare. Catches the FC_MACRO act24
+#   historical drift bug — values seeded at write time and never refreshed
+#   by a renderer rebuild. Surface narrows over time as more seeds get
+#   wired to live recompute paths.
+# ═══════════════════════════════════════════════════════════════════════
+
+# Drift tolerance per metric type, in the metric's native units.
+# Pp = percentage points; values smaller than tolerance don't trip the check.
+_FC_DRIFT_TOLERANCE = {
+    'GDP':  0.15,   # rounding + revision noise
+    'U':    0.10,   # unemployment is reported to 0.1pp
+    'CPI':  0.15,
+    'Wage': 0.20,   # AHETPI revisions a bit larger
+    'FFR':  0.10,
+}
+
+
+def _fc_macro_expected(data, yr):
+    """Recompute the 5-element FC_MACRO.actNN array for calendar year `yr`
+    from raw_data, mirroring update_fc_macro in renderer.py exactly."""
+    gdp_by_yr = {int(o['date'][:4]): o['value']
+                 for o in (data.get('gdpc1_annual', []) or [])}
+    unrate_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                    for o in (data.get('unrate', []) or [])}
+    cpi_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                 for o in (data.get('cpi_all', []) or [])}
+    ahe_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                 for o in (data.get('ahetpi', []) or [])}
+    ffr_by_yr = {int(o['date'][:4]): o['value']
+                 for o in (data.get('fedfunds_annual', []) or [])}
+
+    gdp = None
+    if yr in gdp_by_yr and (yr - 1) in gdp_by_yr:
+        gdp = round((gdp_by_yr[yr] - gdp_by_yr[yr - 1]) / gdp_by_yr[yr - 1] * 100, 1)
+    u = round(unrate_by_ym[(yr, 12)], 1) if (yr, 12) in unrate_by_ym else None
+    cd, cp = cpi_by_ym.get((yr, 12)), cpi_by_ym.get((yr - 1, 12))
+    cpi = round((cd - cp) / cp * 100, 1) if cd and cp else None
+    ad, ap = ahe_by_ym.get((yr, 12)), ahe_by_ym.get((yr - 1, 12))
+    wage = round((ad - ap) / ap * 100, 1) if ad and ap else None
+    ffr = round(ffr_by_yr[yr], 1) if yr in ffr_by_yr else None
+    return [gdp, u, cpi, wage, ffr]
+
+
+def check_seed_drift(html, data):
+    """Pass 3g — Compare static seeds in index.html against fresh recompute."""
+    findings = []
+    labels = ['GDP', 'U', 'CPI', 'Wage', 'FFR']
+
+    # FC_MACRO.actNN — historical actuals; revised by BEA/BLS over time
+    fc_block = re.search(r'const FC_MACRO\s*=\s*\{[^}]+\}', html, re.DOTALL)
+    if not fc_block:
+        findings.append({
+            'check': 'FC_MACRO block present',
+            'pass': False, 'severity': 'warning',
+            'note': 'const FC_MACRO not found in index.html',
+        })
+        return findings
+
+    for m in re.finditer(r'(act(\d{2})):\s*\[([^\]]+)\]', fc_block.group(0)):
+        act_key, yy = m.group(1), m.group(2)
+        yr = 2000 + int(yy)
+        try:
+            seed = [float(v.strip()) for v in m.group(3).split(',')]
+        except ValueError:
+            continue
+        expected = _fc_macro_expected(data, yr)
+
+        diverged = []
+        for i, (s, e) in enumerate(zip(seed, expected)):
+            if e is None:
+                continue  # No source data for this metric — can't verify
+            tol = _FC_DRIFT_TOLERANCE.get(labels[i], 0.15)
+            if abs(s - e) > tol:
+                diverged.append(f'{labels[i]}: seed={s} expected={e} (Δ{e - s:+.2f}, tol±{tol})')
+
+        if diverged:
+            sev = 'critical' if len(diverged) >= 2 else 'warning'
+            findings.append({
+                'check': f'Seed drift: FC_MACRO.{act_key} (yr={yr})',
+                'pass': False, 'severity': sev,
+                'seed': seed, 'expected': expected,
+                'diverged': diverged,
+            })
+            for d in diverged:
+                print(f'  🔴 FC_MACRO.{act_key} ({yr}): {d}')
+        else:
+            findings.append({
+                'check': f'Seed drift: FC_MACRO.{act_key} (yr={yr})',
+                'pass': True, 'severity': 'ok',
+                'seed': seed, 'expected': expected,
+            })
+    return findings
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # PASS 3h: COLLECTOR ERRORS (runtime fetch failures)
 #   Surface FRED/BLS 400-class errors as critical findings. The collector
 #   already records these in raw_data['errors']; without this pass they
@@ -1307,7 +1404,7 @@ def check_collector_errors(raw):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None):
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1325,9 +1422,11 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         schema_contract = []
     if collector_errors is None:
         collector_errors = []
+    if seed_drift is None:
+        seed_drift = []
     all_findings = (internal + sources + staleness + visual + vision_review +
                     shock_tracker + earnings + panel_data + metric_consistency +
-                    schema_contract + collector_errors)
+                    schema_contract + collector_errors + seed_drift)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1359,6 +1458,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'earnings_verbatim': earnings,
         'schema_contract': schema_contract,
         'collector_errors': collector_errors,
+        'seed_drift': seed_drift,
         'visual_qa': visual,
         'visual_review': vision_review,
     }
@@ -1436,6 +1536,13 @@ def validate():
     sc_fail = sum(1 for f in schema_contract if not f.get('pass'))
     print(f'  {sc_pass} passed, {sc_fail} failed')
 
+    # Pass 3g: Seed drift (FC_MACRO.actNN vs fresh recompute)
+    print('\n  ── Pass 3g: Seed Drift (static seeds vs raw data) ──')
+    seed_drift = check_seed_drift(html, data)
+    sd_pass = sum(1 for f in seed_drift if f.get('pass'))
+    sd_fail = sum(1 for f in seed_drift if not f.get('pass'))
+    print(f'  {sd_pass} passed, {sd_fail} failed')
+
     # Pass 3h: Collector errors (FRED/BLS 4xx surfaced from raw_data['errors'])
     print('\n  ── Pass 3h: Collector Errors (API fetch failures) ──')
     collector_errors = check_collector_errors(raw)
@@ -1474,7 +1581,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -1493,7 +1600,8 @@ def validate():
                                    ('PanelData', panel_data),
                                    ('MetricConsistency', metric_consistency),
                                    ('SchemaContract', schema_contract),
-                                   ('CollectorErrors', collector_errors)]:
+                                   ('CollectorErrors', collector_errors),
+                                   ('SeedDrift', seed_drift)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')

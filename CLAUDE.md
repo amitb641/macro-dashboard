@@ -79,7 +79,7 @@ Rules:
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 8 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **collector errors** (3h), earnings commentary (verbatim), visual QA, vision review
+- Validator runs 9 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g), **collector errors** (3h), earnings commentary (verbatim), visual QA, vision review
 
 ## Commit Conventions
 - Bug fixes: `Fix <what>: <detail>`
