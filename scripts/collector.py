@@ -39,7 +39,9 @@ errors = []
 
 def fred_obs(series_id, limit=14, freq=None):
     """Return list of {date,value} newest first, no missing values.
-    Retries up to 3 times with exponential backoff on 5xx errors."""
+    Retries up to 3 times with exponential backoff on 5xx and 429 (rate
+    limit) errors. FRED's documented limit is 120 req/min per key; pre-flight
+    + bulk fetch can briefly push past that, so we wait it out."""
     if not FRED_KEY:
         errors.append(f'FRED key missing — skipped {series_id}'); return []
     params = {'series_id': series_id, 'api_key': FRED_KEY,
@@ -55,6 +57,12 @@ def fred_obs(series_id, limit=14, freq=None):
                     for o in r.json().get('observations', []) if o['value'] != '.']
         except requests.exceptions.HTTPError as e:
             last_err = e
+            if r.status_code == 429 and attempt < 3:
+                # Rate limited — wait long enough to fall out of FRED's 60s window
+                wait = 30 * (attempt + 1)  # 30s, 60s, 90s
+                print(f'    ↻ FRED {series_id}: 429 rate limited, retry {attempt+1}/3 in {wait}s')
+                time.sleep(wait)
+                continue
             if r.status_code >= 500 and attempt < 3:
                 wait = 2 ** attempt  # 1s, 2s, 4s
                 print(f'    ↻ FRED {series_id}: {r.status_code}, retry {attempt+1}/3 in {wait}s')

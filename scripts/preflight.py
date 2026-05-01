@@ -98,8 +98,11 @@ def main() -> int:
             print(f'  ❌ {sid}: {msg}')
             if sid not in _ALLOWLIST_FAIL:
                 bad.append((sid, msg))
-        # Light throttle — FRED tolerates ~120 req/min; 25ms = ≤40/sec
-        time.sleep(0.025)
+        # FRED's documented limit is 120 req/min per key. Pre-flight + Agent 1
+        # collector run back-to-back add up to ~130 calls in <60s, which trips
+        # 429s on the last few. 700ms throttle = ≤86 req/min, leaves headroom
+        # for the collector's ~80 calls in the same rolling window.
+        time.sleep(0.7)
 
     elapsed = time.time() - t0
     print(f'[Agent 0] Checked {len(ids)} IDs in {elapsed:.1f}s')

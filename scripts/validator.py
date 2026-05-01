@@ -914,7 +914,7 @@ def check_visual_review():
 _PANEL_DATA_MAP = [
     ('CPI by Category — MoM Change', 'CPI_CAT_MOM',
      lambda obj: [k for k in (obj[0] if obj else {}) if k not in ('cat', 'color')]),
-    ('PCE by Category — MoM Change', 'PCE_CAT_MOM',
+    ('PCE by Component — YoY %', 'PCE_CAT_MOM',
      lambda obj: [k for k in (obj[0] if obj else {}) if k not in ('cat', 'color')]),
     ('Monthly Job Change by Sector', 'SECTOR_MOM',
      lambda obj: [k for k in (obj or {}) if k != 'sectors']),
