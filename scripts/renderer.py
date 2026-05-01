@@ -95,9 +95,11 @@ def _latest_yoy(monthly_series):
     return lbl, yoy
 
 
-def _monthly_yoy_series(monthly_series, n_months=12):
+def _monthly_yoy_series(monthly_series, n_months=13):
     """Compute YoY% for the last n_months from monthly index data (newest-first).
-    Returns (labels, values) where labels are "Mon'YY" strings."""
+    Returns (labels, values) where labels are "Mon'YY" strings.
+    Default 13 months — gives a full year-over-year visual span (latest plus
+    same month a year ago) on the rolling trend charts."""
     if not monthly_series or len(monthly_series) < 13 + n_months:
         return [], []
     # Build date→value lookup
@@ -121,7 +123,7 @@ def _monthly_yoy_series(monthly_series, n_months=12):
     return labels, values
 
 
-def _monthly_avg_by_month(weekly_series, n_months=12):
+def _monthly_avg_by_month(weekly_series, n_months=13):
     """Compute monthly averages from weekly data (newest-first).
     Returns (labels, avg_values) for the last n_months complete months."""
     if not weekly_series:
@@ -365,19 +367,19 @@ def rebuild_charts(html, data):
         if labels:
             html = _inject_const(html, 'SAVING_ANNUAL', {'labels': labels, 'data': values})
 
-    # ── SAVING_MONTHLY (last 12 months) ──────────────────────────────
-    if len(psavert) >= 12:
-        monthly = sorted(psavert[:12], key=lambda x: x['date'])  # oldest-first for chart
+    # ── SAVING_MONTHLY (last 13 months) ──────────────────────────────
+    if len(psavert) >= 13:
+        monthly = sorted(psavert[:13], key=lambda x: x['date'])  # oldest-first for chart
         m_labels = [_month_lbl(o['date']) for o in monthly]
         m_values = [round(o['value'], 1) for o in monthly]
         html = _inject_const(html, 'SAVING_MONTHLY', {'labels': m_labels, 'data': m_values})
 
-    # ── UMCSENT_MONTHLY (last 12 months) ────────────────────────────
+    # ── UMCSENT_MONTHLY (last 13 months) ────────────────────────────
     # statuses[] parallels data[]: 'preliminary' (UMich (P) flag) or 'final'.
     # Chart uses the last entry's status to render a PRELIM badge.
     umcsent = data.get('umcsent', [])
-    if len(umcsent) >= 12:
-        monthly = sorted(umcsent[:12], key=lambda x: x['date'])  # oldest-first for chart
+    if len(umcsent) >= 13:
+        monthly = sorted(umcsent[:13], key=lambda x: x['date'])  # oldest-first for chart
         m_labels = [_month_lbl(o['date']) for o in monthly]
         m_values = [round(o['value'], 1) for o in monthly]
         m_statuses = [o.get('status', 'final') for o in monthly]
@@ -475,8 +477,8 @@ def rebuild_charts(html, data):
     cpi_all_m = data.get('cpi_all', [])
     cpi_core_m = data.get('cpi_core', [])
     if len(cpi_all_m) >= 25 and len(cpi_core_m) >= 25:
-        h_labels, h_values = _monthly_yoy_series(cpi_all_m, 12)
-        c_labels, c_values = _monthly_yoy_series(cpi_core_m, 12)
+        h_labels, h_values = _monthly_yoy_series(cpi_all_m, 13)
+        c_labels, c_values = _monthly_yoy_series(cpi_core_m, 13)
         # Align to same labels (they should match)
         if h_labels and h_labels == c_labels:
             html = _inject_const(html, 'CPI_MONTHLY', {
@@ -489,8 +491,8 @@ def rebuild_charts(html, data):
     pce_m = data.get('pce', [])
     pce_core_m = data.get('pce_core', [])
     if len(pce_m) >= 25 and len(pce_core_m) >= 25:
-        h_labels, h_values = _monthly_yoy_series(pce_m, 12)
-        c_labels, c_values = _monthly_yoy_series(pce_core_m, 12)
+        h_labels, h_values = _monthly_yoy_series(pce_m, 13)
+        c_labels, c_values = _monthly_yoy_series(pce_core_m, 13)
         if h_labels and h_labels == c_labels:
             html = _inject_const(html, 'PCE_MONTHLY', {
                 'labels': h_labels, 'headline': h_values, 'core': c_values})
@@ -498,12 +500,12 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'PCE_MONTHLY', {
                 'labels': h_labels, 'headline': h_values, 'core': c_values[:len(h_values)]})
 
-    # ── U_MONTHLY (rolling 12-month unemployment rate) ────────────────
+    # ── U_MONTHLY (rolling 13-month unemployment rate) ────────────────
     unrate_m = data.get('unrate', [])
-    if len(unrate_m) >= 12:
+    if len(unrate_m) >= 13:
         # Unemployment rate is already a rate, not an index — no YoY needed
         labels_u, values_u = [], []
-        for i in range(min(12, len(unrate_m))):
+        for i in range(min(13, len(unrate_m))):
             obs = unrate_m[i]
             d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
             labels_u.append(d.strftime("%b'%y"))
@@ -518,9 +520,9 @@ def rebuild_charts(html, data):
     cs_hpi_m = data.get('cs_hpi', [])
     mortgage30_m = data.get('mortgage30', [])
     if len(cs_hpi_m) >= 25:
-        cs_labels, cs_values = _monthly_yoy_series(cs_hpi_m, 12)
+        cs_labels, cs_values = _monthly_yoy_series(cs_hpi_m, 13)
         # Get monthly-averaged mortgage rates
-        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, 12)
+        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, 13)
         # Align to Case-Shiller labels (CS has pub lag, mortgage is more current)
         if cs_labels:
             # Use CS labels as base; fill mortgage where available
@@ -706,9 +708,9 @@ def rebuild_charts(html, data):
                 applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
                 html = new_html
 
-            # Also update BLS side of NFP_VS_ADP (12-month chart, preserving ADP)
-            bls_12 = nfp_bls[-12:]
-            lbl_12 = nfp_labels[-12:]
+            # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP)
+            bls_12 = nfp_bls[-13:]
+            lbl_12 = nfp_labels[-13:]
             # Extract existing ADP array from HTML to preserve it
             adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
             if adp_match:

@@ -1596,7 +1596,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Row 1: Monthly Rate (left) | Sector MoM (right) -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Monthly Unemployment Rate — 12-Month Trend</div>
+      <div class="panel-title">Monthly Unemployment Rate — 13-Month Trend</div>
       <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
       <div class="ch300"><canvas id="c-unemp-monthly"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
@@ -1678,7 +1678,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Monthly MoM Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Monthly CPI — Headline vs Core YoY % (12-Month Trend)</div>
+      <div class="panel-title">Monthly CPI — Headline vs Core YoY % (13-Month Trend)</div>
       <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
       <div class="ch300"><canvas id="c-cpi-mom"></canvas></div>
       <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference.</p>
@@ -1735,7 +1735,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Monthly MoM Chart -->
   <div class="panel">
-    <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (12-Month Trend)</div>
+    <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (13-Month Trend)</div>
     <div class="panel-sub">Atlanta Fed Wage Growth Tracker 3MMA · nominal (solid) vs real CPI-adjusted (dashed) · tracks wage growth for continuously-employed workers (controls for composition)</div>
     <div class="ch300"><canvas id="c-wage-mom"></canvas></div>
     <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average, Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a>. Real wages = nominal minus CPI YoY. Atlanta Fed's tracker follows the same workers over 12 months, unlike BLS AHE which can be biased by composition shifts when the mix of workers in the sample changes.</p>
@@ -1846,7 +1846,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- ── SECTION 1: Personal Saving Rate ── -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Personal Saving Rate — Last 12 Months</div>
+      <div class="panel-title">Personal Saving Rate — Last 13 Months</div>
       <div class="panel-sub">BEA Personal Income &amp; Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
       <div class="ch300"><canvas id="c-saving-monthly"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
@@ -1878,7 +1878,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- ── SECTION 3: Consumer Sentiment ── -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Consumer Sentiment — Last 12 Months<span id="umcsent-release-badge"></span></div>
+      <div class="panel-title">Consumer Sentiment — Last 13 Months<span id="umcsent-release-badge"></span></div>
       <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
       <div class="ch300"><canvas id="c-umcsent-monthly"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers (direct) with <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a> fallback. Pre-pandemic avg ~95.</p>
@@ -2230,7 +2230,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Monthly Trend Chart -->
   <div class="panel">
-    <div class="panel-title">Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate (12-Month)</div>
+    <div class="panel-title">Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate (13-Month)</div>
     <div class="panel-sub">Case-Shiller National HPI YoY % (left axis) · 30yr fixed mortgage rate (right axis) · monthly</div>
     <div class="ch300"><canvas id="c-housing-mom"></canvas></div>
     <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Inverse relationship: higher rates suppress demand → slower price growth.</p>
