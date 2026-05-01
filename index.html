@@ -1908,15 +1908,15 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">PCE by Category — MoM Change (Jan'26 vs Dec'25)</div>
-      <div class="panel-sub">PCE Price Index YoY by category · sorted by Jan'26 rate · BEA</div>
+      <div class="panel-title">PCE by Component — YoY % (Mar'26 vs Feb'26)</div>
+      <div class="panel-sub">PCE chain-type price index by component · sorted by Mar'26 rate · BEA</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Jan'26 accelerating</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Jan'26 cooling</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Dec'25</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Mar'26 accelerating</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 cooling</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-pce-cat-mom"></canvas></div>
-      <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
+      <p class="src">Source: BEA Personal Income &amp; Outlays (Table 2.3.4U). Monthly chain-type price index, top-level components.</p>
     </div>
     <div class="panel">
       <div class="panel-title">PCE by Category — Annual Growth 2023 vs 2024 vs 2025</div>
@@ -3457,16 +3457,10 @@ const PCE_CATS = [
   {cat:"Energy Goods",         y23:-5.2, y24:-1.8, y25:-2.8},
 ];
 const PCE_CAT_MOM = [
-  {cat:"Housing & Utilities",  dec25:3.3, jan26:3.4},
-  {cat:"Healthcare Services",  dec25:3.0, jan26:3.2},
-  {cat:"Financial Services",   dec25:4.4, jan26:4.6},
-  {cat:"Food Services",        dec25:4.0, jan26:4.2},
-  {cat:"Recreation Services",  dec25:3.7, jan26:3.9},
-  {cat:"Transportation Svcs",  dec25:5.0, jan26:5.2},
-  {cat:"Nondurable Goods",     dec25:1.6, jan26:1.9},
-  {cat:"Durable Goods",        dec25:0.4, jan26:0.8},
-  {cat:"Food & Bev (Grocery)", dec25:2.9, jan26:3.2},
-  {cat:"Energy Goods",         dec25:-2.4,jan26:-1.8},
+  {cat:"Goods",    feb26:0.8, mar26:1.2},
+  {cat:"Services", feb26:3.5, mar26:3.6},
+  {cat:"Food",     feb26:3.0, mar26:3.2},
+  {cat:"Energy",   feb26:8.0, mar26:11.5},
 ];
 const DEBT_DATA = {
   labels:["Mortgage","Auto Loans","Credit Cards","Student Loans","HELOC","Other"],
