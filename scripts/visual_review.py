@@ -107,7 +107,7 @@ def _call_claude_vision(image_b64: str, tab_name: str) -> list:
                     'content-type': 'application/json',
                 },
                 json={
-                    'model': 'claude-sonnet-4-6-20250514',
+                    'model': 'claude-sonnet-4-6',
                     'max_tokens': 1500,
                     'system': SYSTEM_PROMPT,
                     'messages': [{

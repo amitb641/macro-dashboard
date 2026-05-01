@@ -188,7 +188,7 @@ def call_claude(prompt: str) -> dict:
                     'content-type': 'application/json',
                 },
                 json={
-                    'model': 'claude-sonnet-4-6-20250514',
+                    'model': 'claude-sonnet-4-6',
                     'max_tokens': 2000,
                     'system': SYSTEM,
                     'messages': [{'role': 'user', 'content': prompt}],
