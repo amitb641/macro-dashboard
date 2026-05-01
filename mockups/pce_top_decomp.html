@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCE Top-Level Decomposition — Mockup Options</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; margin:24px; background:#F7F8FA; color:#1F2937; max-width:1200px; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  .sub { color:#64748B; font-size:13px; margin-bottom:24px; }
+  .opt { background:#fff; border:1px solid #E2E8F0; border-radius:10px; padding:18px 20px 14px; margin-bottom:22px; }
+  .opt h2 { font-size:14px; margin:0 0 2px; color:#0F172A; letter-spacing:.3px; }
+  .opt .why { font-size:12px; color:#64748B; margin:0 0 12px; }
+  .chart-wrap { position:relative; height:260px; }
+  .small-multiples { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .small-multiples .mini { height:140px; }
+  .mini-title { font-size:11px; color:#475569; margin-bottom:2px; text-align:center; font-weight:600; }
+  .mock-tag { display:inline-block; background:#FEF3C7; color:#92400E; font-size:10px; padding:2px 6px; border-radius:4px; margin-left:8px; vertical-align:middle; }
+  .footnote { font-size:11px; color:#94A3B8; margin-top:6px; }
+</style>
+</head>
+<body>
+
+<h1>PCE Top-Level Decomposition <span class="mock-tag">MOCK — illustrative YoY values</span></h1>
+<p class="sub">FRED series: <code>DGDSRG3M086SBEA</code> (Goods), <code>DSERRG3M086SBEA</code> (Services), <code>DFXARG3M086SBEA</code> (Food), <code>DNRGRG3M086SBEA</code> (Energy). Latest = Mar 2026 (released Apr 30, 2026).</p>
+
+<!-- ───────────────── Option A — 4-bar MoM (replaces PCE_CAT_MOM) ───────────────── -->
+<div class="opt">
+  <h2>Option A — Replace 10-cat bar with coarser 4-bucket bar</h2>
+  <p class="why">Same chart slot as today's <code>PCE_CAT_MOM</code>, but shows the canonical PCE decomposition (Goods/Services/Food/Energy) instead of 10 sub-categories. Cleaner story; loses granularity.</p>
+  <div class="chart-wrap"><canvas id="optA"></canvas></div>
+</div>
+
+<!-- ───────────────── Option B — 4-line trend (parallel to PCE_MONTHLY) ───────────────── -->
+<div class="opt">
+  <h2>Option B — 12-month YoY trend, 4 lines (new chart, sits next to PCE_MONTHLY)</h2>
+  <p class="why">Shows divergence over time — Energy spike, Services sticky, Goods near zero. Story-rich. Adds a new chart instead of replacing one.</p>
+  <div class="chart-wrap"><canvas id="optB"></canvas></div>
+</div>
+
+<!-- ───────────────── Option C — Goods vs Services dual-line ───────────────── -->
+<div class="opt">
+  <h2>Option C — Goods vs Services only (two-line, Food/Energy as KPI tiles)</h2>
+  <p class="why">Focuses on the analytical headline: services inflation is sticky, goods is flat/deflating. Food + Energy promoted to standalone KPI tiles in the strip above. Tightest visual.</p>
+  <div class="chart-wrap"><canvas id="optC"></canvas></div>
+</div>
+
+<!-- ───────────────── Option D — small multiples ───────────────── -->
+<div class="opt">
+  <h2>Option D — Small multiples (4 mini sparklines, one per component)</h2>
+  <p class="why">All 4 components, each with its own y-scale (Energy needs ±15% range, Goods ±2%). Best for dense info; each is independently readable. More vertical space.</p>
+  <div class="small-multiples">
+    <div><div class="mini-title">Goods</div><div class="mini"><canvas id="optD1"></canvas></div></div>
+    <div><div class="mini-title">Services</div><div class="mini"><canvas id="optD2"></canvas></div></div>
+    <div><div class="mini-title">Food</div><div class="mini"><canvas id="optD3"></canvas></div></div>
+    <div><div class="mini-title">Energy</div><div class="mini"><canvas id="optD4"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ───────────────── Option E — stacked contribution bars ───────────────── -->
+<div class="opt">
+  <h2>Option E — Monthly contribution-to-headline stacked bars</h2>
+  <p class="why">Each bar = one month's headline PCE YoY, stacked by component contribution (weighted by share). Most analytically rigorous — shows what's actually driving the headline. Hardest to compute (needs nominal weights).</p>
+  <div class="chart-wrap"><canvas id="optE"></canvas></div>
+  <p class="footnote">Note: requires nominal-share weights from BEA Table 2.4.5; not in current pipeline.</p>
+</div>
+
+<script>
+// ─── MOCK YoY data — illustrative shape, NOT real. Replace with computed values. ───
+const LABELS = ["Apr'25","May'25","Jun'25","Jul'25","Aug'25","Sep'25","Oct'25","Nov'25","Dec'25","Jan'26","Feb'26","Mar'26"];
+const GOODS    = [-0.4,-0.3,-0.1, 0.1, 0.2, 0.3, 0.5, 0.7, 0.9, 1.1, 1.4, 1.7];
+const SERVICES = [ 3.6, 3.6, 3.5, 3.5, 3.4, 3.4, 3.4, 3.4, 3.5, 3.5, 3.5, 3.6];
+const FOOD     = [ 1.8, 2.0, 2.2, 2.3, 2.4, 2.5, 2.5, 2.6, 2.8, 3.0, 3.1, 3.2];
+const ENERGY   = [-3.5,-2.0, 0.5, 2.0, 4.0, 5.5, 7.0, 8.5,10.0,11.5,13.0,15.0];
+
+const COLORS = { goods:"#336BCC", services:"#D64045", food:"#1A9E5A", energy:"#E08533" };
+
+// Option A — bar
+new Chart(document.getElementById('optA'), {
+  type:'bar',
+  data:{ labels:["Goods","Services","Food","Energy"],
+    datasets:[
+      {label:"Feb'26", data:[GOODS[10], SERVICES[10], FOOD[10], ENERGY[10]], backgroundColor:"#94A3B8"},
+      {label:"Mar'26", data:[GOODS[11], SERVICES[11], FOOD[11], ENERGY[11]], backgroundColor:"#1F2937"}
+    ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'top'}, title:{display:false} },
+    scales:{ y:{ ticks:{ callback:v=>v+"%"} } } }
+});
+
+// Option B — 4 lines
+new Chart(document.getElementById('optB'), {
+  type:'line',
+  data:{ labels:LABELS,
+    datasets:[
+      {label:"Goods",    data:GOODS,    borderColor:COLORS.goods,    borderWidth:2, tension:.3, pointRadius:3},
+      {label:"Services", data:SERVICES, borderColor:COLORS.services, borderWidth:2.5, tension:.3, pointRadius:3},
+      {label:"Food",     data:FOOD,     borderColor:COLORS.food,     borderWidth:2, tension:.3, pointRadius:3},
+      {label:"Energy",   data:ENERGY,   borderColor:COLORS.energy,   borderWidth:2, tension:.3, pointRadius:3}
+    ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'top'} },
+    scales:{ y:{ ticks:{ callback:v=>v+"%"} } } }
+});
+
+// Option C — Goods vs Services
+new Chart(document.getElementById('optC'), {
+  type:'line',
+  data:{ labels:LABELS,
+    datasets:[
+      {label:"Services YoY", data:SERVICES, borderColor:COLORS.services, backgroundColor:COLORS.services+"20", borderWidth:2.5, tension:.3, pointRadius:4, fill:true},
+      {label:"Goods YoY",    data:GOODS,    borderColor:COLORS.goods,    backgroundColor:COLORS.goods+"20",    borderWidth:2.5, tension:.3, pointRadius:4, fill:true}
+    ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'top'} },
+    scales:{ y:{ ticks:{ callback:v=>v+"%"} } } }
+});
+
+// Option D — small multiples
+function mini(id, data, color){
+  new Chart(document.getElementById(id), {
+    type:'line',
+    data:{ labels:LABELS, datasets:[{ data, borderColor:color, backgroundColor:color+"25", borderWidth:2, tension:.3, pointRadius:0, fill:true }] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{enabled:true} },
+      scales:{ y:{ ticks:{ font:{size:9}, callback:v=>v+"%"} }, x:{ ticks:{ display:false }, grid:{ display:false } } } }
+  });
+}
+mini('optD1', GOODS,    COLORS.goods);
+mini('optD2', SERVICES, COLORS.services);
+mini('optD3', FOOD,     COLORS.food);
+mini('optD4', ENERGY,   COLORS.energy);
+
+// Option E — stacked contribution (mock weights)
+const W = { goods:0.31, services:0.65, food:0.08, energy:0.04 }; // illustrative
+const contrib = (s, w) => s.map(v => +(v*w).toFixed(2));
+new Chart(document.getElementById('optE'), {
+  type:'bar',
+  data:{ labels:LABELS,
+    datasets:[
+      {label:"Services contrib", data:contrib(SERVICES, W.services), backgroundColor:COLORS.services, stack:'a'},
+      {label:"Goods contrib",    data:contrib(GOODS,    W.goods),    backgroundColor:COLORS.goods,    stack:'a'},
+      {label:"Food contrib",     data:contrib(FOOD,     W.food),     backgroundColor:COLORS.food,     stack:'a'},
+      {label:"Energy contrib",   data:contrib(ENERGY,   W.energy),   backgroundColor:COLORS.energy,   stack:'a'}
+    ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'top'} },
+    scales:{ x:{stacked:true}, y:{stacked:true, ticks:{ callback:v=>v+"pp"} } } }
+});
+</script>
+
+</body>
+</html>
