@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-01T00:56:54.836767Z",
+  "validated_at": "2026-05-01T03:59:34.862761Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 418,
-    "passed": 406,
-    "failed": 12,
+    "total_checks": 476,
+    "passed": 465,
+    "failed": 11,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -407,19 +407,19 @@
     },
     {
       "check": "SPREADS_DATA.ig completeness",
-      "html_value": "3/3 filled",
+      "html_value": "4/4 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 1,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SPREADS_DATA.hy completeness",
-      "html_value": "3/3 filled",
+      "html_value": "4/4 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 1,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
@@ -542,7 +542,7 @@
     },
     {
       "check": "OIL_VS_HY.wti completeness",
-      "html_value": "2/2 filled",
+      "html_value": "3/3 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 1,
@@ -551,7 +551,7 @@
     },
     {
       "check": "OIL_VS_HY.hySpreads completeness",
-      "html_value": "2/2 filled",
+      "html_value": "3/3 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 1,
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-01T00:55:49.023736Z",
+      "collected_at": "2026-05-01T03:56:15.391025Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -883,10 +883,31 @@
       "pass": true
     },
     {
-      "check": "Panel anchor \"PCE by Category \u2014 MoM Change\" present",
-      "severity": "warning",
-      "pass": false,
-      "reason": "Panel not found in HTML \u2014 anchor may have changed"
+      "check": "PCE by Component \u2014 YoY %: title months match PCE_CAT_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE by Component \u2014 YoY %: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
@@ -1080,6 +1101,325 @@
       "check": "BCS: pending (reports 2026-04-30)",
       "severity": "skipped",
       "pass": true
+    }
+  ],
+  "schema_contract": [
+    {
+      "check": "Schema contract: data['ahetpi']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ahetpi_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['bls_sectors']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['bls_unemp_sectors']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['brent_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['brent_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cc_delinq']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ccsa']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_all']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_all_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_core']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_food_away']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_transport']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpiengsl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cs_hpi']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs10']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs10_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs2']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs2_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['fedfunds_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ffr']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gasoline']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdp_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdp_annual_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdpc1_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdpc1_annual_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['houst']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['houst1f']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hy_oas']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hy_oas_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['icsa']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ig_oas']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ig_oas_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['mortgage30']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['mortgage30_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['nonrevsl_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['oil_daily_chart']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['payems']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['payems_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_core']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_core_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['psavert']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['revolsl_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['tdsp']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['u6rate']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['umcsent']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['umcsent_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['unrate']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['vintages']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wage_growth_atl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_monthly']",
+      "pass": true,
+      "severity": "ok"
+    }
+  ],
+  "collector_errors": [
+    {
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
+    }
+  ],
+  "seed_drift": [
+    {
+      "check": "Seed drift: FC_MACRO.act24 (yr=2024)",
+      "pass": true,
+      "severity": "ok",
+      "seed": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ],
+      "expected": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ]
+    },
+    {
+      "check": "Seed drift: FC_MACRO.act25 (yr=2025)",
+      "pass": true,
+      "severity": "ok",
+      "seed": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ],
+      "expected": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ]
     }
   ],
   "visual_qa": [
