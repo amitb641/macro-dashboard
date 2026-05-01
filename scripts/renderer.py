@@ -833,13 +833,15 @@ def rebuild_charts(html, data):
     prev_yr = datetime.date.today().year - 1
     act_key = f'act{str(prev_yr)[2:]}'  # e.g. "act25"
     fc_vals = []
-    # 1. Real GDP — use latest annual from gdp_real series if available
-    gdp_r = data.get('gdp_real_annual', data.get('gdp_real', []))
+    # 1. Real GDP — annual % growth computed from gdpc1_annual levels
+    # (chained-2017 dollars; we want the YoY %, not the level).
+    gdp_a = data.get('gdpc1_annual', [])
+    gdp_by_yr = {int(o['date'][:4]): o['value']
+                 for o in (gdp_a if isinstance(gdp_a, list) else [])}
     gdp_val = None
-    for obs in (gdp_r if isinstance(gdp_r, list) else []):
-        if int(obs['date'][:4]) == prev_yr:
-            gdp_val = round(obs['value'], 1)
-            break
+    if prev_yr in gdp_by_yr and (prev_yr - 1) in gdp_by_yr:
+        cur, prev = gdp_by_yr[prev_yr], gdp_by_yr[prev_yr - 1]
+        gdp_val = round((cur - prev) / prev * 100, 1)
     fc_vals.append(gdp_val)
     # 2. Unemployment — Dec of prev_yr
     unrate_s = data.get('unrate', [])
@@ -870,13 +872,13 @@ def rebuild_charts(html, data):
     ahe_dec_prev = ahe_by_ym.get((prev_yr - 1, 12))
     wage_val = round((ahe_dec - ahe_dec_prev) / ahe_dec_prev * 100, 1) if ahe_dec and ahe_dec_prev else None
     fc_vals.append(wage_val)
-    # 5. Fed Funds Rate — annual average
-    ffr_s = data.get('ffr_monthly', data.get('ffr_annual', []))
-    ffr_vals_yr = []
-    for obs in (ffr_s if isinstance(ffr_s, list) else []):
+    # 5. Fed Funds Rate — annual average (fedfunds_annual is already 1 obs/yr)
+    ffr_a = data.get('fedfunds_annual', [])
+    ffr_val = None
+    for obs in (ffr_a if isinstance(ffr_a, list) else []):
         if int(obs['date'][:4]) == prev_yr:
-            ffr_vals_yr.append(obs['value'])
-    ffr_val = round(sum(ffr_vals_yr) / len(ffr_vals_yr), 1) if ffr_vals_yr else None
+            ffr_val = round(obs['value'], 1)
+            break
     fc_vals.append(ffr_val)
     # Only update if we have at least 3 non-None values
     non_none = [v for v in fc_vals if v is not None]
