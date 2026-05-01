@@ -160,6 +160,25 @@ def _annual_from_freq(annual_series, start_year=START_YEAR, precision=1, scale=1
     return labels, values
 
 
+def _annual_avg_from_monthly(monthly_series, start_year=START_YEAR, precision=1, scale=1):
+    """Aggregate a monthly FRED series to annual averages. Returns (labels, values).
+    Used when FRED's freq='a' aggregation is unreliable (e.g. BAML OAS series)."""
+    if not monthly_series:
+        return [], []
+    today = datetime.date.today()
+    by_year = {}
+    for obs in monthly_series:
+        yr = int(obs['date'][:4])
+        if yr >= start_year and yr < today.year:
+            by_year.setdefault(yr, []).append(obs['value'])
+    labels, values = [], []
+    for yr in sorted(by_year):
+        avg = sum(by_year[yr]) / len(by_year[yr])
+        labels.append(str(yr))
+        values.append(round(avg * scale, precision))
+    return labels, values
+
+
 def _inject_const(html, var_name, obj):
     """Replace const VAR_NAME = {...}; in HTML with new data."""
     new_json = json.dumps(obj, separators=(', ', ':'))
@@ -525,21 +544,23 @@ def rebuild_charts(html, data):
                 'mortgage30': all_mtg})
 
     # ── SPREADS_DATA ──────────────────────────────────────────────────
-    ig_a = data.get('ig_oas_annual', [])
-    hy_a = data.get('hy_oas_annual', [])
-    if ig_a and hy_a:
-        i_labels, i_values = _annual_from_freq(ig_a, precision=0)
-        h_labels, h_values = _annual_from_freq(hy_a, precision=0)
+    # OAS series are stored in FRED as percent (0.81 = 81 bps); chart uses
+    # basis points throughout, so scale=100 on annual aggregation matches
+    # the analyzer's *100 conversion for the latest scalar.
+    ig_m = data.get('ig_oas_monthly', [])
+    hy_m = data.get('hy_oas_monthly', [])
+    if ig_m and hy_m:
+        i_labels, i_values = _annual_avg_from_monthly(ig_m, precision=0, scale=100)
+        h_labels, h_values = _annual_avg_from_monthly(hy_m, precision=0, scale=100)
         common = [l for l in i_labels if l in h_labels]
         ig = [int(i_values[i_labels.index(l)]) for l in common]
         hy = [int(h_values[h_labels.index(l)]) for l in common]
-        # Append latest daily value
         ig_latest = data.get('ig_oas')
         hy_latest = data.get('hy_oas')
         if ig_latest and hy_latest:
             common.append(today.strftime("%b'%y"))
-            ig.append(round(ig_latest.get('value', 0)))
-            hy.append(round(hy_latest.get('value', 0)))
+            ig.append(round(ig_latest.get('value', 0) * 100))
+            hy.append(round(hy_latest.get('value', 0) * 100))
         if common:
             html = _inject_const(html, 'SPREADS_DATA', {
                 'labels': common, 'ig': ig, 'hy': hy})
@@ -617,9 +638,10 @@ def rebuild_charts(html, data):
                 'labels': common, 'wti': wti, 'sentiment': sentiment})
 
     # ── OIL_VS_HY ─────────────────────────────────────────────────────
-    if wti_a and hy_a:
+    # hy_oas_monthly is in percent; chart wants basis points (scale=100).
+    if wti_a and hy_m:
         w_labels, w_values = _annual_from_freq(wti_a, precision=0)
-        h_labels, h_values = _annual_from_freq(hy_a, precision=0)
+        h_labels, h_values = _annual_avg_from_monthly(hy_m, precision=0, scale=100)
         common = [l for l in w_labels if l in h_labels]
         wti = [w_values[w_labels.index(l)] for l in common]
         hy_spreads = [int(h_values[h_labels.index(l)]) for l in common]
@@ -829,66 +851,54 @@ def rebuild_charts(html, data):
             applied.append(f'JOBS_SECTORS.{yr_key} updated ({updated_sectors} sectors)')
 
     # ── FC_MACRO actuals (auto-update from FRED data) ─────────────────
-    # FC_MACRO.act25 = [Real GDP %, Unemployment %, CPI %, Wage Growth %, FFR %]
-    prev_yr = datetime.date.today().year - 1
-    act_key = f'act{str(prev_yr)[2:]}'  # e.g. "act25"
-    fc_vals = []
-    # 1. Real GDP — annual % growth computed from gdpc1_annual levels
-    # (chained-2017 dollars; we want the YoY %, not the level).
-    gdp_a = data.get('gdpc1_annual', [])
+    # FC_MACRO.actNN = [Real GDP %, Unemployment %, CPI %, Wage Growth %, FFR %]
+    # Patches every actNN key found in the declaration so historical revisions
+    # (BEA/BLS commonly revise prior-year prints) flow through automatically.
     gdp_by_yr = {int(o['date'][:4]): o['value']
-                 for o in (gdp_a if isinstance(gdp_a, list) else [])}
-    gdp_val = None
-    if prev_yr in gdp_by_yr and (prev_yr - 1) in gdp_by_yr:
-        cur, prev = gdp_by_yr[prev_yr], gdp_by_yr[prev_yr - 1]
-        gdp_val = round((cur - prev) / prev * 100, 1)
-    fc_vals.append(gdp_val)
-    # 2. Unemployment — Dec of prev_yr
-    unrate_s = data.get('unrate', [])
-    u_val = None
-    for obs in unrate_s:
-        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
-        if yr == prev_yr and mo == 12:
-            u_val = round(obs['value'], 1)
-            break
-    fc_vals.append(u_val)
-    # 3. CPI — Dec YoY
-    cpi_s = data.get('cpi_all', [])
-    cpi_by_ym = {}
-    for obs in cpi_s:
-        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
-        cpi_by_ym[(yr, mo)] = obs['value']
-    cpi_dec = cpi_by_ym.get((prev_yr, 12))
-    cpi_dec_prev = cpi_by_ym.get((prev_yr - 1, 12))
-    cpi_val = round((cpi_dec - cpi_dec_prev) / cpi_dec_prev * 100, 1) if cpi_dec and cpi_dec_prev else None
-    fc_vals.append(cpi_val)
-    # 4. Wage Growth — Dec YoY from AHETPI
-    ahetpi_s = data.get('ahetpi', [])
-    ahe_by_ym = {}
-    for obs in ahetpi_s:
-        yr, mo = int(obs['date'][:4]), int(obs['date'][5:7])
-        ahe_by_ym[(yr, mo)] = obs['value']
-    ahe_dec = ahe_by_ym.get((prev_yr, 12))
-    ahe_dec_prev = ahe_by_ym.get((prev_yr - 1, 12))
-    wage_val = round((ahe_dec - ahe_dec_prev) / ahe_dec_prev * 100, 1) if ahe_dec and ahe_dec_prev else None
-    fc_vals.append(wage_val)
-    # 5. Fed Funds Rate — annual average (fedfunds_annual is already 1 obs/yr)
-    ffr_a = data.get('fedfunds_annual', [])
-    ffr_val = None
-    for obs in (ffr_a if isinstance(ffr_a, list) else []):
-        if int(obs['date'][:4]) == prev_yr:
-            ffr_val = round(obs['value'], 1)
-            break
-    fc_vals.append(ffr_val)
-    # Only update if we have at least 3 non-None values
-    non_none = [v for v in fc_vals if v is not None]
-    if len(non_none) >= 3:
-        # Build the replacement array, keeping existing values for None entries
-        existing_match = re.search(rf'{re.escape(act_key)}:\s*\[([^\]]+)\]', html)
-        if existing_match:
-            existing_vals = [float(v.strip()) for v in existing_match.group(1).split(',')]
-            final_vals = [fc_vals[i] if fc_vals[i] is not None else existing_vals[i]
-                         for i in range(min(len(fc_vals), len(existing_vals)))]
+                 for o in (data.get('gdpc1_annual', []) or [])}
+    unrate_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                    for o in (data.get('unrate', []) or [])}
+    cpi_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                 for o in (data.get('cpi_all', []) or [])}
+    ahe_by_ym = {(int(o['date'][:4]), int(o['date'][5:7])): o['value']
+                 for o in (data.get('ahetpi', []) or [])}
+    ffr_by_yr = {int(o['date'][:4]): o['value']
+                 for o in (data.get('fedfunds_annual', []) or [])}
+
+    def _fc_actuals_for_year(yr):
+        """Return [GDP%, U%, CPI%, Wage%, FFR%] for calendar year `yr`, with
+        None for any metric that lacks the required source data."""
+        # Real GDP YoY % from chained-2017 dollar levels
+        gdp = None
+        if yr in gdp_by_yr and (yr - 1) in gdp_by_yr:
+            gdp = round((gdp_by_yr[yr] - gdp_by_yr[yr - 1]) / gdp_by_yr[yr - 1] * 100, 1)
+        # Unemployment rate, Dec of yr
+        u = round(unrate_by_ym[(yr, 12)], 1) if (yr, 12) in unrate_by_ym else None
+        # CPI Dec-over-Dec YoY
+        cpi_dec, cpi_prev = cpi_by_ym.get((yr, 12)), cpi_by_ym.get((yr - 1, 12))
+        cpi = round((cpi_dec - cpi_prev) / cpi_prev * 100, 1) if cpi_dec and cpi_prev else None
+        # Wage growth, AHETPI Dec-over-Dec YoY
+        ahe_dec, ahe_prev = ahe_by_ym.get((yr, 12)), ahe_by_ym.get((yr - 1, 12))
+        wage = round((ahe_dec - ahe_prev) / ahe_prev * 100, 1) if ahe_dec and ahe_prev else None
+        # FFR annual average
+        ffr = round(ffr_by_yr[yr], 1) if yr in ffr_by_yr else None
+        return [gdp, u, cpi, wage, ffr]
+
+    # Find every actNN: [...] inside FC_MACRO and patch each
+    fc_block_re = re.search(r'const FC_MACRO\s*=\s*\{[^}]+\}', html, re.DOTALL)
+    if fc_block_re:
+        fc_block = fc_block_re.group(0)
+        for m in re.finditer(r'(act(\d{2})):\s*\[([^\]]+)\]', fc_block):
+            act_key, yy, existing_str = m.group(1), m.group(2), m.group(3)
+            yr = 2000 + int(yy)
+            new_vals = _fc_actuals_for_year(yr)
+            if sum(v is not None for v in new_vals) < 3:
+                continue  # not enough data — leave seed alone
+            existing_vals = [float(v.strip()) for v in existing_str.split(',')]
+            final_vals = [new_vals[i] if new_vals[i] is not None else existing_vals[i]
+                          for i in range(min(len(new_vals), len(existing_vals)))]
+            if final_vals == existing_vals:
+                continue  # no change
             new_arr = ', '.join(str(v) for v in final_vals)
             pat_fc = rf'({re.escape(act_key)}:\s*\[)[^\]]+(\])'
             new_html5, n5 = re.subn(pat_fc, rf'\g<1>{new_arr}\2', html, count=1)

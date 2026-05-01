@@ -380,8 +380,10 @@ def collect():
     # for the shock tracker's pre-shock baselines.
     print('  [Monthly] CPI Categories (FRED)...')
     data['cpi_shelter']   = fred_obs('CUSR0000SAH1', 24)  # Shelter
-    data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 24)  # Food Away from Home
-    data['cpi_transport'] = fred_obs('CUSR0000SETG', 24)  # Transportation Services
+    # 30 obs leaves margin above the 24 that the shock-tracker YoY+pre-shock
+    # math requires (13 YoY + ~11 buffer); avoids borderline n=23 from FRED lag.
+    data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 30)  # Food Away from Home
+    data['cpi_transport'] = fred_obs('CUSR0000SETG', 30)  # Transportation Services
     data['cpi_medical']   = fred_obs('CUSR0000SAM2', 24)  # Medical Care Services
     data['cpi_food_home'] = fred_obs('CUSR0000SAF11',24)  # Food at Home
     data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',24) # New Vehicles
@@ -424,8 +426,12 @@ def collect():
     data['mortgage30_annual'] = fred_obs('MORTGAGE30US', 30, freq='a')
     data['dgs10_annual']      = fred_obs('DGS10', 30, freq='a')
     data['dgs2_annual']       = fred_obs('DGS2', 30, freq='a')
-    data['ig_oas_annual']     = fred_obs('BAMLC0A0CM', 30, freq='a')
-    data['hy_oas_annual']     = fred_obs('BAMLH0A0HYM2', 30, freq='a')
+    # FRED's freq='a' aggregation only returns 2 obs for these daily series
+    # (cause unclear — works fine for FEDFUNDS). Fetch monthly instead and
+    # aggregate to annual averages locally in the renderer; gives full
+    # 30-year history reliably.
+    data['ig_oas_monthly']    = fred_obs('BAMLC0A0CM', 360, freq='m')
+    data['hy_oas_monthly']    = fred_obs('BAMLH0A0HYM2', 360, freq='m')
     data['wti_annual']        = fred_obs('DCOILWTICO', 40, freq='a')
     data['brent_annual']      = fred_obs('DCOILBRENTEU', 40, freq='a')
     data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
