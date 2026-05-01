@@ -5407,6 +5407,15 @@ async function buildValidatorTab(){
     {label:"Reason", key:"reason", width:"180px"},
   ];
 
+  // Generic 3-column table for the lightweight self-verification passes
+  // (schema contract / seed drift / collector errors). Renders status,
+  // check name, and a single `note` description column.
+  var noteCols = [
+    {label:"Check", key:"check", width:"260px"},
+    {label:"Status", align:"center", width:"60px", render:function(f,c,i){return '<span style="color:'+c+'">'+i+'</span>';}},
+    {label:"Detail", width:"auto", render:function(f){return f.note||f.reason||f.detail||'—';}},
+  ];
+
   panel.innerHTML = headerHtml + tilesHtml
     + findingsTable("Pass 1: Internal Consistency",
         "Compares rendered dashboard values against raw_data.json source data",
@@ -5417,10 +5426,20 @@ async function buildValidatorTab(){
     + findingsTable("Pass 3: Data Staleness",
         "Checks if series are within expected freshness windows",
         rpt.staleness, staleCols)
+    + findingsTable("Pass 3f: Schema Contract",
+        "Static analysis: every key the renderer reads from raw_data must be written by the collector. Catches renamed-key drift before it ships.",
+        rpt.schema_contract, noteCols)
+    + findingsTable("Pass 3g: Seed Drift",
+        "Recomputes static seeds (FC_MACRO actuals) from raw data each run; flags drift > per-metric tolerance against the value rendered into index.html.",
+        rpt.seed_drift, noteCols)
+    + findingsTable("Pass 3h: Collector Errors",
+        "Surfaces FRED/BLS 4xx/5xx errors recorded by Agent 1 (collector) into critical findings — no more silent skips on bad series IDs.",
+        rpt.collector_errors, noteCols)
     + '<div class="fc-note" style="margin-top:12px;font-size:11px;color:#7A8FA8">'
     + '<strong>How it works:</strong> Agent 6 (Validator) runs after the renderer and independently verifies all dashboard numbers. '
-    + 'Pass 1 checks internal consistency (HTML vs raw data). Pass 2 makes fresh API calls to FRED/BLS to catch data revisions. '
-    + 'Pass 3 flags stale series beyond expected publication lags. Report is saved to <code>data/validation_report.json</code>.'
+    + 'Passes 1–3 check rendered consistency, fresh API revisions, and staleness. '
+    + 'The self-verification passes (3f schema contract · 3g seed drift · 3h collector errors) catch the bug class where rebuilds silently fail and stale seeds get rendered as fresh — see <code>docs/SELF_VERIFICATION.md</code>. '
+    + 'Report is saved to <code>data/validation_report.json</code>; Agent 10 (repair, observer mode) appends a structured per-run summary to <code>data/repair_log.md</code>.'
     + '</div>';
 }
 
@@ -5763,7 +5782,7 @@ function buildStackTab(){
       <span style="font-size:18px">⚙️</span>
       <div>
         <span class="ma-trigger-label">GitHub Actions — Cron triggers: Weekly Fri 8am ET · Monthly 2nd Sat · Earnings-season daily 10pm UTC (Jan/Apr/Jul/Oct, days 10-28)</span>
-        <span class="ma-trigger-sub">briefing.yml (8 main agents + build gate + auto-rollback, &lt;3 min) · earnings_agent.yml (Agent 9 quarterly) — last main-pipeline run: April 24, 2026</span>
+        <span class="ma-trigger-sub">briefing.yml (Agent 0 pre-flight + 8 main agents + build gate + Agent 10 observer + auto-rollback, &lt;3 min) · earnings_agent.yml (Agent 9 quarterly) — last main-pipeline run: April 24, 2026</span>
       </div>
     </div>
 
@@ -5813,8 +5832,27 @@ function buildStackTab(){
       <div class="ma-vconn-lbl">40+ series → Agent 1</div>
     </div>
 
-    <!-- 5 AGENTS -->
+    <!-- 11 AGENTS -->
     <div class="ma-agents">
+
+      <!-- Agent 0 — Pre-flight -->
+      <div class="ma-agent" style="animation-delay:.04s;border-color:rgba(220,38,38,.25);box-shadow:0 2px 12px rgba(220,38,38,.08)">
+        <div class="ma-agent-header" style="background:#FEF2F2">
+          <div class="ma-agent-accent" style="background:#DC2626"></div>
+          <div class="ma-agent-num">Agent 0</div>
+          <div class="ma-agent-icon">🛂</div>
+          <div class="ma-agent-name">Pre-flight</div>
+          <div class="ma-agent-file">preflight.py</div>
+          <span class="ma-badge-nollm">No LLM · Halts pipeline on failure</span>
+        </div>
+        <div class="ma-agent-body">
+          <div class="ma-agent-desc">Validates every FRED series_id used by the collector (~52 IDs) returns ≥1 obs before the pipeline runs. Halts immediately on any 4xx so downstream agents never run on poisoned data. Defense-in-depth alongside validator Pass 3h: Agent 0 fails upstream, Pass 3h surfaces anything that slipped through.</div>
+          <div class="ma-agent-io">
+            <div class="ma-agent-in">IN: collector.py source (extracts IDs)</div>
+            <div class="ma-agent-out">OUT: ✅ proceed | ❌ exit 1</div>
+          </div>
+        </div>
+      </div>
 
       <!-- Agent 1 -->
       <div class="ma-agent" style="animation-delay:.08s">
@@ -5919,10 +5957,10 @@ function buildStackTab(){
           <div class="ma-agent-icon">🛡️</div>
           <div class="ma-agent-name">Validator</div>
           <div class="ma-agent-file">validator.py</div>
-          <span class="ma-badge-nollm">6-Pass · Build Gate</span>
+          <span class="ma-badge-nollm">9-Pass · Build Gate</span>
         </div>
         <div class="ma-agent-body">
-          <div class="ma-agent-desc">Unified 6-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (3b) shock-tracker structure + MMA consistency, (3c) earnings commentary factuality — every "…" quote must verbatim-match an archived transcript, (4) visual QA via Agent 7, (5) AI vision review via Agent 8. Build gate blocks publish on critical failures.</div>
+          <div class="ma-agent-desc">Unified 9-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (3b) shock-tracker structure + MMA consistency, (3c) earnings commentary factuality — every "…" quote must verbatim-match an archived transcript, (3d) panel-title vs data-const month consistency, (3e) cross-surface metric consistency, <strong>(3f) schema contract — every renderer key must have a collector writer</strong>, <strong>(3g) seed drift — static seeds recomputed from raw data each run</strong>, <strong>(3h) collector errors — surfaces FRED/BLS 4xx as critical findings</strong>, (4) visual QA via Agent 7, (5) AI vision review via Agent 8. Build gate blocks publish on critical failures.</div>
           <div class="ma-agent-io">
             <div class="ma-agent-in">IN: index.html + raw_data.json + APIs</div>
             <div class="ma-agent-out">OUT: validation_report.json</div>
@@ -5988,6 +6026,25 @@ function buildStackTab(){
         </div>
       </div>
 
+      <!-- Agent 10 — Repair Agent (observer mode) -->
+      <div class="ma-agent" style="animation-delay:.71s;border-color:rgba(217,119,6,.3);box-shadow:0 2px 12px rgba(217,119,6,.1);grid-column:span 2;background:linear-gradient(to right,#FFFBEB 0%,#FEF3C7 100%)">
+        <div class="ma-agent-header" style="background:#FFFBEB">
+          <div class="ma-agent-accent" style="background:#D97706"></div>
+          <div class="ma-agent-num">Agent 10</div>
+          <div class="ma-agent-icon">🔧</div>
+          <div class="ma-agent-name">Repair Agent</div>
+          <div class="ma-agent-file">repair_agent.py</div>
+          <span class="ma-badge-nollm">No LLM (yet) · Observer mode v1</span>
+        </div>
+        <div class="ma-agent-body">
+          <div class="ma-agent-desc">Self-correction layer (observer mode v1 — passive, no automated fixes). Runs <code>if: always()</code> after Agent 6 so it surfaces failures even when the build gate halts publishing. Reads <code>data/validation_report.json</code>, prints a structured per-section summary into the CI run log, and appends to a rolling <code>data/repair_log.md</code> (capped at 50 entries). Per the design rule, must run for ≥3 weeks of weekly cycles before any fix-writing logic is added — every autonomous-fix system that hasn't first observed its trigger signal ends up auto-merging garbage during the first weird outage. v2/v3/v4 (GitHub surface → fix proposals → narrow auto-merge) gated on that observation phase.</div>
+          <div class="ma-agent-io">
+            <div class="ma-agent-in">IN: validation_report.json</div>
+            <div class="ma-agent-out">OUT: structured summary in run log + data/repair_log.md</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- DOWN ARROW -->
@@ -6015,8 +6072,8 @@ function buildStackTab(){
       <div class="ma-output" style="border-color:rgba(5,150,105,.2);background:#F0FDF9">
         <div class="ma-output-icon">🛡️</div>
         <div>
-          <div class="ma-output-title" style="color:#059669">Validation Report (6-pass)</div>
-          <div class="ma-output-sub">Internal consistency · live API spot-checks · staleness · shock-tracker structure · earnings factuality (verbatim gate) · 224 DOM visual checks · AI vision review of 12 chart tabs — viewable in Validator tab</div>
+          <div class="ma-output-title" style="color:#059669">Validation Report (9-pass)</div>
+          <div class="ma-output-sub">Internal consistency · source verification · staleness · shock-tracker · panel-data · metric consistency · <strong>schema contract · seed drift · collector errors</strong> · earnings factuality · 224 DOM visual checks · AI vision review — viewable in Validator tab</div>
         </div>
       </div>
       <div class="ma-output" style="border-color:rgba(136,120,184,.2);background:#F3F0FF">
@@ -6030,15 +6087,22 @@ function buildStackTab(){
 
     <!-- WHY NOTE -->
     <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10.5px;color:#92400E;line-height:1.6">
-      <strong>Why multi-agent?</strong> Only Agents 3, 8 and 9 use an LLM — Agents 1, 2, 4, 5, 6 and 7 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. Agent 6 (Validator) runs a unified 6-pass quality gate — internal consistency, live API spot-checks, staleness, shock-tracker structure, <strong>earnings-commentary factuality (verbatim quote gate)</strong>, plus Agent 7's 224 visual DOM checks and Agent 8's AI vision review of every chart tab. Agent 9 runs on its own cron (quarterly, earnings-season only) and uses the same validator gate before committing. Critical failures block publish; auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
+      <strong>Why multi-agent?</strong> Only Agents 3, 8 and 9 use an LLM — Agents 0, 1, 2, 4, 5, 6, 7 and 10 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. <strong>Self-verification stack:</strong> Agent 0 (pre-flight) validates every FRED ID upstream of Agent 1; Agent 6 runs a 9-pass quality gate including <strong>schema contract</strong> (renderer reads ↔ collector writes), <strong>seed drift</strong> (FC_MACRO actuals recomputed each run), and <strong>collector errors</strong> (FRED/BLS 4xx surfaced as critical), alongside the existing internal/source/staleness/shock-tracker/panel/metric/earnings passes plus Agent 7's 224 DOM checks and Agent 8's AI vision review. Agent 9 runs on its own cron (quarterly) and uses the same validator gate. Agent 10 (repair, observer mode v1) reads the validation report after every run and surfaces accumulated drift into a rolling log. Critical failures block publish; auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
     </div>
 
   </div>
   </div>
 
   <!-- PIPELINE FLOW -->
-  <div class="stk-section-title">Pipeline — 9 stages, Weekly Fri 8am ET + Monthly 2nd Sat 10am ET</div>
+  <div class="stk-section-title">Pipeline — 11 stages, Weekly Fri 8am ET + Monthly 2nd Sat 10am ET</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;padding:12px">
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF2F2;border-radius:10px;border:1px solid rgba(220,38,38,.15)">
+      <span style="font-size:18px">🛂</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:1px">0. Pre-flight</div>
+        <div style="font-size:9px;color:#64748B">Validate FRED IDs · halt on 4xx</div>
+      </div>
+    </div>
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#EBF2FF;border-radius:10px;border:1px solid rgba(51,107,204,.15)">
       <span style="font-size:18px">📥</span>
       <div>
@@ -6070,8 +6134,8 @@ function buildStackTab(){
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0FDF9;border-radius:10px;border:1px solid rgba(5,150,105,.15)">
       <span style="font-size:18px">🛡️</span>
       <div>
-        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (6-pass)</div>
-        <div style="font-size:9px;color:#64748B">6-pass gate: data + shock tracker + earnings + visual + AI vision</div>
+        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (9-pass)</div>
+        <div style="font-size:9px;color:#64748B">9-pass gate: data + schema contract + seed drift + collector errors + visual + AI vision</div>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
@@ -6102,12 +6166,19 @@ function buildStackTab(){
         <div style="font-size:9px;color:#94A3B8">Verify live page · auto-rollback on fail</div>
       </div>
     </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FFFBEB;border-radius:10px;border:1px solid rgba(217,119,6,.2)">
+      <span style="font-size:18px">🔧</span>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#D97706;margin-bottom:1px">10. Repair (observer)</div>
+        <div style="font-size:9px;color:#64748B">Reads validation report · rolling log</div>
+      </div>
+    </div>
   </div>
 
   <!-- STATS -->
   <div class="stk-stats" style="grid-template-columns:repeat(5,1fr)">
     <div class="stk-stat">
-      <div class="stk-stat-val blue">8</div>
+      <div class="stk-stat-val blue">11</div>
       <div class="stk-stat-lbl">Pipeline agents</div>
     </div>
     <div class="stk-stat">
@@ -6115,7 +6186,7 @@ function buildStackTab(){
       <div class="stk-stat-lbl">Data series tracked</div>
     </div>
     <div class="stk-stat">
-      <div class="stk-stat-val green">254</div>
+      <div class="stk-stat-val green">480+</div>
       <div class="stk-stat-lbl">Quality checks per run</div>
     </div>
     <div class="stk-stat">
