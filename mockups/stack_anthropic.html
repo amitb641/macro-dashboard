@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stack — Pipeline Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #F5F1EB;     /* warm cream — Anthropic site bg */
+    --paper:     #FAF7F2;     /* slightly lighter card surface */
+    --ink:       #181614;     /* near-black charcoal */
+    --ink2:      #3D362F;
+    --ink3:      #6E665D;
+    --rule:      #DDD6CB;     /* hairline rule color */
+    --rule-soft: #EAE3D5;
+    --accent:    #CC785C;     /* Anthropic terracotta */
+    --accent-bg: #F4E4DC;
+    --serif:     "Source Serif 4", "Tiempos Headline", "Charter", Georgia, serif;
+    --sans:      "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono:      "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: var(--sans); margin: 0;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 880px; margin: 0 auto; padding: 64px 48px 96px;
+  }
+
+  /* ─── EDITORIAL HEADER ─── */
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--accent); letter-spacing: .12em;
+    text-transform: uppercase; font-weight: 500;
+    margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: 44px; line-height: 1.1; letter-spacing: -.015em;
+    margin: 0 0 18px;
+  }
+  .lede {
+    font-family: var(--serif); font-size: 19px; line-height: 1.55;
+    color: var(--ink2); margin: 0 0 8px; font-weight: 400;
+  }
+  .meta {
+    font-size: 13px; color: var(--ink3); margin: 0 0 56px;
+    padding-bottom: 28px; border-bottom: 1px solid var(--rule);
+    display: flex; gap: 18px; flex-wrap: wrap;
+  }
+  .meta b { color: var(--ink2); font-weight: 600; }
+
+  /* ─── STATUS LINE ─── */
+  .status {
+    display: flex; align-items: baseline; gap: 12px;
+    font-size: 14px; margin-bottom: 56px;
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #2D8659;
+    align-self: center;
+  }
+  .status-dot.live { box-shadow: 0 0 0 0 rgba(45,134,89,.5); animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(45,134,89,.5); }
+    50% { box-shadow: 0 0 0 8px rgba(45,134,89,0); }
+  }
+  .status-text { color: var(--ink2); }
+  .status-text b { color: var(--ink); font-weight: 600; }
+
+  /* ─── SECTION HEADINGS ─── */
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: 22px; letter-spacing: -.005em;
+    margin: 56px 0 20px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+  }
+  h2 .num {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--accent); margin-right: 14px;
+    font-weight: 500; vertical-align: 4px;
+  }
+  h3 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: 17px; letter-spacing: -.005em;
+    margin: 28px 0 6px; color: var(--ink);
+  }
+  h3 .agent-tag {
+    font-family: var(--mono); font-size: 11px;
+    background: var(--rule-soft); color: var(--ink3);
+    padding: 1px 6px; border-radius: 3px;
+    margin-left: 10px; font-weight: 500;
+    vertical-align: 2px;
+  }
+  h3 .agent-tag.ai {
+    background: var(--accent-bg); color: var(--accent);
+  }
+
+  p { margin: 0 0 14px; font-size: 15px; color: var(--ink2); }
+  p code, .meta code {
+    font-family: var(--mono); font-size: 13px;
+    background: var(--rule-soft); padding: 1px 5px; border-radius: 3px;
+    color: var(--ink); font-weight: 500;
+  }
+
+  /* ─── ARCHITECTURE OVERVIEW DIAGRAM ─── */
+  .overview {
+    background: var(--paper); border: 1px solid var(--rule);
+    border-radius: 4px; padding: 28px 32px;
+    margin: 24px 0 8px;
+  }
+  .overview-flow {
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    gap: 6px; align-items: center; margin: 4px 0;
+  }
+  .step {
+    text-align: center; font-family: var(--mono); font-size: 10px;
+    color: var(--ink3); letter-spacing: .04em;
+    padding: 10px 4px; border: 1px solid var(--rule);
+    border-radius: 3px; background: var(--bg);
+    line-height: 1.4;
+  }
+  .step b {
+    display: block; font-family: var(--sans);
+    font-weight: 600; color: var(--ink); font-size: 11px;
+    margin-bottom: 3px; letter-spacing: 0;
+  }
+  .step.gate { border-color: var(--accent); color: var(--accent); }
+  .step.gate b { color: var(--accent); }
+  .arrow { color: var(--ink3); font-size: 14px; text-align: center; }
+  .overview-cap {
+    font-size: 12px; color: var(--ink3); margin-top: 16px;
+    font-style: italic; text-align: center;
+  }
+
+  /* ─── DEFENSE CALLOUT ─── */
+  .pull-quote {
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 22px; margin: 32px 0;
+    font-family: var(--serif); font-size: 18px; line-height: 1.5;
+    color: var(--ink2); font-style: italic;
+  }
+  .pull-quote b { color: var(--ink); font-style: normal; font-weight: 600; }
+  .pull-quote .src {
+    display: block; font-family: var(--mono); font-size: 11px;
+    color: var(--ink3); margin-top: 8px; font-style: normal;
+    letter-spacing: .04em;
+  }
+
+  /* ─── AGENT BLOCK ─── */
+  .agent-section {
+    margin-bottom: 4px;
+  }
+  .agent-meta {
+    font-family: var(--mono); font-size: 11px; color: var(--ink3);
+    margin-bottom: 8px; display: flex; gap: 14px;
+  }
+  .agent-meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .agent-meta .ok::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #2D8659; }
+  .agent-meta .observe::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* ─── PASSES TABLE ─── */
+  .passes-table {
+    border: 1px solid var(--rule); border-radius: 4px; overflow: hidden;
+    margin: 20px 0 8px;
+  }
+  .passes-table table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .passes-table th {
+    text-align: left; font-family: var(--mono); font-weight: 500;
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink3); padding: 10px 14px;
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+  }
+  .passes-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink2);
+  }
+  .passes-table tr:last-child td { border-bottom: none; }
+  .passes-table tr.new td:first-child { color: var(--accent); font-weight: 600; }
+  .passes-table tr.new {
+    background: linear-gradient(to right, var(--accent-bg) 0%, var(--accent-bg) 4px, transparent 4px);
+  }
+  .passes-table td:first-child {
+    font-family: var(--mono); font-size: 12px; color: var(--ink); width: 80px;
+  }
+  .passes-table td:nth-child(2) {
+    font-weight: 600; color: var(--ink); width: 200px;
+  }
+
+  /* ─── INLINE STATS RIBBON ─── */
+  .stats-ribbon {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0; margin: 32px 0; padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .stat-cell {
+    text-align: center; padding: 0 12px;
+    border-right: 1px solid var(--rule-soft);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--serif); font-size: 32px; font-weight: 600;
+    line-height: 1; color: var(--ink); letter-spacing: -.015em;
+  }
+  .stat-num.accent { color: var(--accent); }
+  .stat-lbl {
+    font-family: var(--mono); font-size: 10px; color: var(--ink3);
+    letter-spacing: .08em; text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* ─── FOOTNOTE ─── */
+  .footnote {
+    margin-top: 56px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px; color: var(--ink3);
+    font-family: var(--mono); letter-spacing: .02em;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ─── HEADER ─── -->
+  <p class="eyebrow">Pipeline Architecture · v2.1</p>
+  <h1>An eleven-agent pipeline for macro data,<br>designed to verify itself.</h1>
+  <p class="lede">Three external data sources, six deterministic Python agents, three Claude-driven agents, two off-cycle workers, and a nine-pass validator that doubles as the build gate.</p>
+  <p class="meta">
+    <span><b>Cadence</b> Saturday 12:00 UTC · monthly 2nd Sat 14:00 UTC</span>
+    <span><b>Runtime</b> ~4 minutes</span>
+    <span><b>Quality checks</b> 480+ per run</span>
+  </p>
+
+  <!-- ─── STATUS ─── -->
+  <div class="status">
+    <span class="status-dot live"></span>
+    <span class="status-text">
+      <b>All systems nominal.</b> Last run <code>1cfa23d</code> passed 462 of 477 checks (3 critical, 12 warnings) two minutes ago. Next scheduled run in 5d 8h.
+    </span>
+  </div>
+
+  <!-- ─── OVERVIEW ─── -->
+  <h2><span class="num">01</span>Overview</h2>
+  <p>Each agent has a single, narrow responsibility and reads only the artefacts produced by the agents preceding it. None of the AI agents touch raw data; none of the deterministic agents touch model output. Failures at any stage are surfaced by the validator and gated by the publisher — nothing reaches GitHub Pages or the briefing email until the validator returns <code>PASS</code>.</p>
+
+  <div class="overview">
+    <div class="overview-flow">
+      <div class="step gate"><b>0</b>Pre-flight</div>
+      <div class="arrow">→</div>
+      <div class="step"><b>1</b>Collect</div>
+      <div class="step"><b>2</b>Analyze</div>
+      <div class="step"><b>3</b>Commentary</div>
+      <div class="step"><b>4</b>Render</div>
+      <div class="step gate"><b>6</b>Validate</div>
+      <div class="step"><b>5</b>Publish</div>
+    </div>
+    <div class="overview-cap">Off-cycle: Agent 9 (earnings, quarterly) · Agent 10 (repair, observer mode after every run) · Agents 7+8 (visual QA + AI vision review) within Agent 6's gate</div>
+  </div>
+
+  <div class="pull-quote">
+    The architecture is now designed so that the same bug class — a rebuild silently failing while a stale seed continues to ship — can never recur. Every external dependency is pre-flight validated, every renderer key is statically contracted against the collector, and every static seed is recomputed from raw data on every run.
+    <span class="src">— docs/SELF_VERIFICATION.md, May 2026 audit</span>
+  </div>
+
+  <!-- ─── AGENT-BY-AGENT ─── -->
+  <h2><span class="num">02</span>The agents</h2>
+
+  <h3>Agent 0 · Pre-flight <span class="agent-tag">preflight.py</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 36s</span><span>p95 38s</span></div>
+  <p>Validates external dependencies before the pipeline runs. Extracts every FRED <code>series_id</code> literal from the collector source and pings each one with <code>limit=1</code>. Verifies every Claude model ID in <code>scripts/_models.py</code> against Anthropic's <code>/v1/models</code> catalog. Halts the pipeline immediately on any 4xx so downstream agents never run on broken dependencies.</p>
+
+  <h3>Agent 1 · Collector <span class="agent-tag">collector.py</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 21s</span><span>79 series</span></div>
+  <p>Pulls all 79 macro series via public APIs — daily yields and credit spreads, weekly mortgage and gasoline, monthly inflation and labor, quarterly GDP. Retries 429 and 5xx with exponential backoff. Carries forward the prior snapshot's value when a series transiently fails so a one-off network blip never blanks a chart.</p>
+
+  <h3>Agent 2 · Analyzer <span class="agent-tag">analyzer.py</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 1s</span></div>
+  <p>Diffs the current snapshot against the previous run. Scores threshold-crossing signal changes (CPI moving more than 0.1pp, IG OAS moving more than 3bp, etc.) and emits a list of headlines. The output is what tells Agent 3 which tabs need fresh commentary.</p>
+
+  <h3>Agent 3 · Analyst <span class="agent-tag ai">claude-sonnet-4-6</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 7s</span><span>4096 max_tokens</span></div>
+  <p>Smart refresh — only regenerates commentary for tabs whose underlying data has moved past noise threshold. Returns structured JSON with risk posture, macro regime, KPI updates, and per-tab analysis. On parse failure carries forward the prior run's commentary instead of blanking it.</p>
+
+  <h3>Agent 4 · Renderer <span class="agent-tag">renderer.py</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 12s</span></div>
+  <p>Regex-based HTML patcher. Rebuilds chart constants, KPI strip values, panel titles, and AI commentary blocks directly into <code>index.html</code>. The renderer is the source of truth for what each chart shows; the static seeds in HTML exist only as fallbacks for when the rebuild fails. Pass 3g now verifies that fallback path can never silently take over.</p>
+
+  <h3>Agent 6 · Validator <span class="agent-tag">validator.py · build gate</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 38s</span><span>462 checks</span></div>
+  <p>The build gate. Runs nine independent passes (full table below), aggregates findings into <code>data/validation_report.json</code>, and exits non-zero if any critical divergence is found — which halts the publisher before the dashboard can ship with bad data.</p>
+
+  <div class="passes-table">
+    <table>
+      <thead>
+        <tr><th>Pass</th><th>Name</th><th>What it verifies</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>3.1</td><td>Internal Consistency</td><td>Rendered HTML values agree with raw_data.json source</td></tr>
+        <tr><td>3.2</td><td>Source Verification</td><td>Live API spot-checks against FRED/BLS</td></tr>
+        <tr><td>3.3</td><td>Staleness</td><td>Series within expected publication windows</td></tr>
+        <tr><td>3.b</td><td>Shock Tracker</td><td>Structure + month-over-month annualised consistency</td></tr>
+        <tr><td>3.c</td><td>Earnings Verbatim</td><td>Every quoted span matches an archived transcript</td></tr>
+        <tr><td>3.d</td><td>Panel ↔ Data Months</td><td>Title labels match the const they display</td></tr>
+        <tr><td>3.e</td><td>Cross-Surface Metrics</td><td>The same value appears identically everywhere</td></tr>
+        <tr class="new"><td>3.f ★</td><td>Schema Contract</td><td>Every renderer key has a corresponding collector writer</td></tr>
+        <tr class="new"><td>3.g ★</td><td>Seed Drift</td><td>Static seeds recomputed from raw data each run</td></tr>
+        <tr class="new"><td>3.h ★</td><td>Collector Errors</td><td>FRED/BLS 4xx surfaced as critical findings</td></tr>
+        <tr><td>4</td><td>Visual QA</td><td>295 DOM rendering checks via headless Chromium (Agent 7)</td></tr>
+        <tr><td>5</td><td>Vision Review</td><td>AI screenshot analysis via Claude vision (Agent 8)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Agent 5 · Publisher <span class="agent-tag">publisher.py</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 7s</span></div>
+  <p>Commits the rendered <code>index.html</code> to <code>main</code>, deploys to GitHub Pages, and sends the weekly briefing email via Resend. A post-deploy healthcheck verifies the live page; auto-rollback restores the last known-good snapshot if the page fails to load.</p>
+
+  <h3>Agent 7 · Visual QA <span class="agent-tag">visual_qa.py · 295 DOM checks</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>last run 22s</span></div>
+  <p>Headless Chromium walks every tab. Verifies JS executes without errors, charts render to non-zero canvas dimensions, KPI tiles contain real numbers rather than placeholders. Captures screenshots that Agent 8 then analyses.</p>
+
+  <h3>Agent 8 · Vision Review <span class="agent-tag ai">claude-sonnet-4-6 · vision</span></h3>
+  <div class="agent-meta"><span class="ok">healthy</span><span>per-tab screenshot analysis</span></div>
+  <p>Sends each tab screenshot to Claude's vision API for pixel-level defect detection — broken chart lines, overlapping axis labels, blank panels. Catches the visual bugs that pure DOM checks miss.</p>
+
+  <h3>Agent 9 · Earnings <span class="agent-tag ai">claude-sonnet-4-6</span></h3>
+  <div class="agent-meta"><span>quarterly · own cron</span><span>next: Jul 10</span></div>
+  <p>Autonomous quarterly bank earnings pipeline. Runs on its own cron during earnings weeks, fetches each bank's transcript, has Claude extract eight verbatim fields under a strict no-paraphrase schema, and gates the result through validator Pass 3c. Never touches the weekly cadence.</p>
+
+  <h3>Agent 10 · Repair Agent <span class="agent-tag">repair_agent.py · observer v1</span></h3>
+  <div class="agent-meta"><span class="observe">observer mode</span><span>3-week observation window</span></div>
+  <p>Reads the validation report after every pipeline run and surfaces accumulated drift into a structured rolling log. Currently passive — no automated fixes. Per project policy, observer mode runs for at least three weeks before any fix-writing logic is shipped, so the trigger signal can be evaluated before the agent acts on it.</p>
+
+  <!-- ─── METRICS ─── -->
+  <h2><span class="num">03</span>By the numbers</h2>
+
+  <div class="stats-ribbon">
+    <div class="stat-cell"><div class="stat-num accent">11</div><div class="stat-lbl">Agents</div></div>
+    <div class="stat-cell"><div class="stat-num">79</div><div class="stat-lbl">Data series</div></div>
+    <div class="stat-cell"><div class="stat-num">480+</div><div class="stat-lbl">Checks / run</div></div>
+    <div class="stat-cell"><div class="stat-num">15</div><div class="stat-lbl">Dashboard tabs</div></div>
+    <div class="stat-cell"><div class="stat-num">~4m</div><div class="stat-lbl">Pipeline runtime</div></div>
+  </div>
+
+  <p>Of the eleven agents, only three call an LLM (Agents 3, 8, 9). The remaining eight are pure Python with no inference cost. Each agent is independently testable and independently failable — a Claude outage degrades commentary freshness but the dashboard still ships with carry-forward content; a FRED outage halts at Agent 0 with a clear actionable error rather than silently producing wrong charts.</p>
+
+  <p class="footnote">design notes · architecture v2.1 · 2026-05-01 · self-verification stack added per docs/SELF_VERIFICATION.md</p>
+
+</div>
+
+</body>
+</html>

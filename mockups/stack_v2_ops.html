@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stack v2 — Operations Dashboard</title>
+<style>
+  :root {
+    --bg: #FAFBFC;
+    --surface: #FFFFFF;
+    --border: #E8EAED;
+    --border-soft: #F1F3F5;
+    --text: #0B0F19;
+    --text2: #4B5563;
+    --text3: #9AA0A6;
+    --accent: #635BFF;
+    --ok: #10B981;
+    --warn: #F59E0B;
+    --fail: #EF4444;
+    --skip: #9CA3AF;
+    --observe: #B45309;
+    --mono: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+    margin: 0; padding: 28px 32px;
+    background: var(--bg); color: var(--text);
+    max-width: 1400px; margin-inline: auto;
+    -webkit-font-smoothing: antialiased; font-size: 13px;
+  }
+  h1 { font-size: 18px; margin: 0 0 4px; letter-spacing: -.005em; }
+  .subhead { color: var(--text2); font-size: 12px; margin: 0 0 22px; }
+  .school { color: var(--text3); font-size: 11px; margin: 0 0 22px; font-style: italic; }
+
+  /* ─── TELEMETRY HEADER ─── */
+  .telemetry {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px;
+    margin-bottom: 20px;
+  }
+  .tile {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .tile-label {
+    font-size: 10px; color: var(--text3); font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .tile-value {
+    font-size: 22px; font-weight: 700; line-height: 1; letter-spacing: -.01em;
+  }
+  .tile-sub {
+    font-size: 10px; color: var(--text3); margin-top: 4px;
+    font-family: var(--mono);
+  }
+  .tile.ok .tile-value { color: var(--ok); }
+  .tile.warn .tile-value { color: var(--warn); }
+
+  /* Run history sparkbars */
+  .sparkbars { display: flex; gap: 2px; align-items: flex-end; height: 22px; margin-top: 6px; }
+  .sparkbars .bar {
+    flex: 1; background: var(--ok); border-radius: 1px;
+    min-height: 4px; transition: opacity .15s;
+  }
+  .sparkbars .bar.fail { background: var(--fail); }
+  .sparkbars .bar.warn { background: var(--warn); }
+
+  /* ─── MAIN GRID: SIDEBAR + AGENT GRID ─── */
+  .layout {
+    display: grid; grid-template-columns: 280px 1fr; gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  /* SIDEBAR — RUN HISTORY */
+  .sidebar {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; height: fit-content;
+  }
+  .sidebar-title {
+    font-size: 11px; font-weight: 700; color: var(--text);
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sidebar-title .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ok); animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
+  .runs { display: flex; flex-direction: column; gap: 1px; }
+  .run {
+    display: grid; grid-template-columns: 8px 1fr auto; gap: 8px;
+    padding: 7px 8px; border-radius: 6px; align-items: center;
+    cursor: pointer; transition: background .12s;
+    font-size: 11px;
+  }
+  .run:hover { background: var(--border-soft); }
+  .run-status {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ok);
+  }
+  .run-status.fail { background: var(--fail); }
+  .run-status.warn { background: var(--warn); }
+  .run-meta {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .run-commit {
+    font-family: var(--mono); font-size: 10px; color: var(--text2);
+  }
+  .run-time {
+    font-size: 10px; color: var(--text3); font-family: var(--mono);
+  }
+  .run-dur {
+    font-size: 10px; color: var(--text3); font-family: var(--mono);
+  }
+
+  /* AGENT GRID */
+  .agents {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    align-content: start;
+  }
+  .phase-divider {
+    grid-column: 1 / -1; padding: 10px 4px 4px;
+    font-size: 10px; font-weight: 700; color: var(--text3);
+    text-transform: uppercase; letter-spacing: .08em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .phase-divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .agent {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+    transition: border-color .12s;
+  }
+  .agent:hover { border-color: var(--accent); }
+  .agent-row1 {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--ok); flex-shrink: 0;
+  }
+  .status-dot.warn { background: var(--warn); }
+  .status-dot.fail { background: var(--fail); }
+  .status-dot.skip { background: var(--skip); }
+  .status-dot.observe { background: var(--observe); }
+
+  .agent-num {
+    font-family: var(--mono); font-size: 9px; color: var(--text3);
+    background: var(--border-soft); padding: 1px 5px; border-radius: 3px;
+  }
+  .agent-name { font-size: 13px; font-weight: 700; }
+  .agent-llm-badge {
+    margin-left: auto; font-size: 9px; padding: 2px 6px; border-radius: 3px;
+    font-weight: 700; letter-spacing: .04em;
+  }
+  .agent-llm-badge.llm { background: #F3F0FF; color: #6D28D9; }
+  .agent-desc {
+    font-size: 11px; color: var(--text2); line-height: 1.5;
+    margin-bottom: 8px; min-height: 32px;
+  }
+  .agent-stats {
+    display: flex; gap: 14px; padding-top: 8px;
+    border-top: 1px solid var(--border-soft);
+    font-family: var(--mono); font-size: 10px;
+  }
+  .stat-pair { display: flex; flex-direction: column; gap: 2px; }
+  .stat-pair-lbl { color: var(--text3); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
+  .stat-pair-val { color: var(--text); font-weight: 600; }
+
+  .mini-spark {
+    display: flex; gap: 1.5px; align-items: flex-end; height: 16px; flex: 1;
+  }
+  .mini-spark .b {
+    flex: 1; background: var(--ok); border-radius: .5px; min-height: 3px; opacity: .85;
+  }
+  .mini-spark .b.fail { background: var(--fail); }
+
+  /* ─── BOTTOM: PASSES + WHY ─── */
+  .footrow {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 14px;
+  }
+  .passes {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .passes-head {
+    font-size: 11px; font-weight: 700; color: var(--ok);
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px;
+  }
+  .pass-list {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  }
+  .pass-item {
+    padding: 7px 9px; border: 1px solid var(--border-soft);
+    border-radius: 6px; display: flex; gap: 8px; align-items: center;
+  }
+  .pass-num {
+    font-family: var(--mono); font-size: 9px; color: var(--text3);
+    flex-shrink: 0; min-width: 30px;
+  }
+  .pass-name { font-size: 11px; font-weight: 600; }
+  .pass-item.new { background: #FFFBEB; border-color: #FEF3C7; }
+  .pass-item.new .pass-num { color: #92400E; }
+
+  .why {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; font-size: 11px;
+    color: var(--text2); line-height: 1.55;
+  }
+  .why-title {
+    font-size: 11px; font-weight: 700; color: var(--text);
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+  }
+  .why b { color: var(--text); }
+</style>
+</head>
+<body>
+
+<h1>Stack — Operations Dashboard</h1>
+<p class="subhead">11-agent macro pipeline · live telemetry · 480+ checks per run</p>
+<p class="school">design lineage: Stripe / Vercel / Datadog · live state visible · time-aware · run history first-class</p>
+
+<!-- ─── TELEMETRY ─── -->
+<div class="telemetry">
+  <div class="tile ok">
+    <div class="tile-label">Last Run</div>
+    <div class="tile-value">PASS</div>
+    <div class="tile-sub">2 min ago · 4m 12s</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">7-Day Success</div>
+    <div class="tile-value">94%</div>
+    <div class="tile-sub">15/16 runs</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">P95 Duration</div>
+    <div class="tile-value">4m 38s</div>
+    <div class="tile-sub">±42s vs 30d</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">Checks</div>
+    <div class="tile-value">462<span style="font-size:14px;color:var(--text3)">/477</span></div>
+    <div class="tile-sub">3 critical · 12 warn</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">Next Run</div>
+    <div class="tile-value" style="font-size:14px">Sat 12:00</div>
+    <div class="tile-sub">in 5d 8h · cron</div>
+  </div>
+  <div class="tile">
+    <div class="tile-label">Recent Runs</div>
+    <div class="sparkbars">
+      <div class="bar" style="height:60%"></div>
+      <div class="bar" style="height:75%"></div>
+      <div class="bar" style="height:50%"></div>
+      <div class="bar fail" style="height:40%"></div>
+      <div class="bar" style="height:65%"></div>
+      <div class="bar" style="height:80%"></div>
+      <div class="bar warn" style="height:55%"></div>
+      <div class="bar" style="height:70%"></div>
+      <div class="bar" style="height:62%"></div>
+      <div class="bar" style="height:68%"></div>
+    </div>
+    <div class="tile-sub">last 10 runs · duration</div>
+  </div>
+</div>
+
+<!-- ─── LAYOUT: SIDEBAR + AGENTS ─── -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-title">Recent Runs <span class="live-dot"></span></div>
+    <div class="runs">
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">1cfa23d · 2m</div></div><div class="run-dur">4m 12s</div></div>
+      <div class="run"><div class="run-status fail"></div><div class="run-meta"><div>Manual trigger</div><div class="run-commit">f3f65f7 · 18m</div></div><div class="run-dur">2m 5s</div></div>
+      <div class="run"><div class="run-status fail"></div><div class="run-meta"><div>Manual trigger</div><div class="run-commit">d2622f5 · 32m</div></div><div class="run-dur">2m 5s</div></div>
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">422f0a4 · 1d</div></div><div class="run-dur">3m 51s</div></div>
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">837a9d4 · 2d</div></div><div class="run-dur">3m 47s</div></div>
+      <div class="run"><div class="run-status warn"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">9a2d5c9 · 4d</div></div><div class="run-dur">4m 22s</div></div>
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">53eb765 · 4d</div></div><div class="run-dur">3m 58s</div></div>
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">dbb51f2 · 4d</div></div><div class="run-dur">3m 45s</div></div>
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">d31420a · 4d</div></div><div class="run-dur">3m 52s</div></div>
+      <div class="run"><div class="run-status"></div><div class="run-meta"><div>Weekly update</div><div class="run-commit">2d76bd8 · 4d</div></div><div class="run-dur">3m 48s</div></div>
+    </div>
+  </div>
+
+  <!-- AGENT GRID -->
+  <div class="agents">
+    <div class="phase-divider">Pre-flight</div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A0</span>
+        <span class="agent-name">Pre-flight</span>
+      </div>
+      <div class="agent-desc">Validates 52 FRED IDs + 3 Claude model IDs against live catalogs. Halts pipeline on any 4xx.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">36s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">P95</div><div class="stat-pair-val">38s</div></div>
+        <div class="mini-spark">
+          <div class="b" style="height:80%"></div><div class="b" style="height:85%"></div><div class="b" style="height:75%"></div><div class="b" style="height:80%"></div><div class="b" style="height:90%"></div><div class="b" style="height:85%"></div><div class="b" style="height:78%"></div><div class="b" style="height:82%"></div><div class="b" style="height:88%"></div><div class="b" style="height:80%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-divider">Acquisition · Analysis</div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A1</span>
+        <span class="agent-name">Collector</span>
+      </div>
+      <div class="agent-desc">Pulls 79 series from BLS/BEA/FRED/EIA. 429 + 5xx retry with backoff. Carry-forward fallback.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">21s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">P95</div><div class="stat-pair-val">28s</div></div>
+        <div class="mini-spark"><div class="b" style="height:60%"></div><div class="b" style="height:70%"></div><div class="b" style="height:55%"></div><div class="b" style="height:65%"></div><div class="b fail" style="height:90%"></div><div class="b" style="height:62%"></div><div class="b" style="height:58%"></div><div class="b" style="height:65%"></div><div class="b" style="height:60%"></div><div class="b" style="height:55%"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A2</span>
+        <span class="agent-name">Analyzer</span>
+      </div>
+      <div class="agent-desc">Diffs raw vs prior snapshot, scores threshold-crossing signals, emits headlines for Agent 3.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">1s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">P95</div><div class="stat-pair-val">2s</div></div>
+        <div class="mini-spark"><div class="b" style="height:30%"></div><div class="b" style="height:35%"></div><div class="b" style="height:32%"></div><div class="b" style="height:40%"></div><div class="b" style="height:30%"></div><div class="b" style="height:35%"></div><div class="b" style="height:38%"></div><div class="b" style="height:32%"></div><div class="b" style="height:30%"></div><div class="b" style="height:30%"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A3</span>
+        <span class="agent-name">Analyst</span>
+        <span class="agent-llm-badge llm">LLM</span>
+      </div>
+      <div class="agent-desc">Smart refresh — only regens commentary for tabs with material data moves. Sonnet 4.6, 4096 max_tokens.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">7s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">P95</div><div class="stat-pair-val">12s</div></div>
+        <div class="mini-spark"><div class="b" style="height:40%"></div><div class="b" style="height:45%"></div><div class="b fail" style="height:90%"></div><div class="b fail" style="height:90%"></div><div class="b" style="height:50%"></div><div class="b" style="height:48%"></div><div class="b" style="height:45%"></div><div class="b" style="height:50%"></div><div class="b" style="height:42%"></div><div class="b" style="height:45%"></div></div>
+      </div>
+    </div>
+
+    <div class="phase-divider">Render · Validate</div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A4</span>
+        <span class="agent-name">Renderer</span>
+      </div>
+      <div class="agent-desc">Patches index.html — rebuilds 40+ chart consts, KPI strip, panel labels. Self-correcting against revisions.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">12s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">P95</div><div class="stat-pair-val">14s</div></div>
+        <div class="mini-spark"><div class="b" style="height:55%"></div><div class="b" style="height:60%"></div><div class="b" style="height:58%"></div><div class="b" style="height:62%"></div><div class="b" style="height:55%"></div><div class="b" style="height:58%"></div><div class="b" style="height:60%"></div><div class="b" style="height:55%"></div><div class="b" style="height:58%"></div><div class="b" style="height:55%"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A6</span>
+        <span class="agent-name">Validator</span>
+      </div>
+      <div class="agent-desc">9-pass quality gate — internal, source, staleness, schema, drift, errors, panel, metric, earnings. Build gate.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">38s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">Checks</div><div class="stat-pair-val">462</div></div>
+        <div class="mini-spark"><div class="b" style="height:70%"></div><div class="b" style="height:72%"></div><div class="b" style="height:75%"></div><div class="b" style="height:80%"></div><div class="b" style="height:78%"></div><div class="b" style="height:82%"></div><div class="b" style="height:85%"></div><div class="b" style="height:80%"></div><div class="b" style="height:78%"></div><div class="b" style="height:80%"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A7</span>
+        <span class="agent-name">Visual QA</span>
+      </div>
+      <div class="agent-desc">Headless Chromium per tab. JS errors, canvas integrity, KPI tile content. 295 DOM checks.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">22s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">Checks</div><div class="stat-pair-val">295</div></div>
+        <div class="mini-spark"><div class="b" style="height:60%"></div><div class="b" style="height:62%"></div><div class="b" style="height:65%"></div><div class="b" style="height:68%"></div><div class="b" style="height:62%"></div><div class="b" style="height:65%"></div><div class="b" style="height:68%"></div><div class="b" style="height:62%"></div><div class="b" style="height:65%"></div><div class="b" style="height:60%"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot skip"></span>
+        <span class="agent-num">A8</span>
+        <span class="agent-name">Vision Review</span>
+        <span class="agent-llm-badge llm">LLM</span>
+      </div>
+      <div class="agent-desc">Claude vision API on per-tab screenshots. Detects pixel-level defects DOM checks miss.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">skip</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">Checks</div><div class="stat-pair-val">0</div></div>
+        <div class="mini-spark"><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div></div>
+      </div>
+    </div>
+
+    <div class="phase-divider">Self-Correct · Deliver · Off-Cycle</div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot observe"></span>
+        <span class="agent-num">A10</span>
+        <span class="agent-name">Repair Agent</span>
+      </div>
+      <div class="agent-desc">Reads validation report, surfaces drift into rolling log. Observer mode v1 — passive, no auto-fixes.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">1s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">Mode</div><div class="stat-pair-val">obs.</div></div>
+        <div class="mini-spark"><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div><div class="b" style="height:30%;background:var(--observe)"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot"></span>
+        <span class="agent-num">A5</span>
+        <span class="agent-name">Publisher</span>
+      </div>
+      <div class="agent-desc">Resend email + git commit + Pages deploy. Post-deploy healthcheck → auto-rollback on failure.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">7s</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">P95</div><div class="stat-pair-val">11s</div></div>
+        <div class="mini-spark"><div class="b" style="height:45%"></div><div class="b" style="height:48%"></div><div class="b" style="height:45%"></div><div class="b" style="height:50%"></div><div class="b" style="height:48%"></div><div class="b" style="height:50%"></div><div class="b" style="height:48%"></div><div class="b" style="height:45%"></div><div class="b" style="height:48%"></div><div class="b" style="height:45%"></div></div>
+      </div>
+    </div>
+
+    <div class="agent">
+      <div class="agent-row1">
+        <span class="status-dot skip"></span>
+        <span class="agent-num">A9</span>
+        <span class="agent-name">Earnings</span>
+        <span class="agent-llm-badge llm">LLM</span>
+      </div>
+      <div class="agent-desc">Quarterly autonomous bank earnings. Own cron. Claude verbatim extraction with Pass 3c gate.</div>
+      <div class="agent-stats">
+        <div class="stat-pair"><div class="stat-pair-lbl">Next</div><div class="stat-pair-val">Jul 10</div></div>
+        <div class="stat-pair"><div class="stat-pair-lbl">Last</div><div class="stat-pair-val">10/10</div></div>
+        <div class="mini-spark"><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div><div class="b" style="height:50%;background:var(--skip)"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PASSES + WHY ─── -->
+<div class="footrow">
+  <div class="passes">
+    <div class="passes-head">Validator · 9 passes · 480+ checks/run</div>
+    <div class="pass-list">
+      <div class="pass-item"><span class="pass-num">3.1</span><span class="pass-name">Internal Consistency</span></div>
+      <div class="pass-item"><span class="pass-num">3.2</span><span class="pass-name">Source Verification</span></div>
+      <div class="pass-item"><span class="pass-num">3.3</span><span class="pass-name">Staleness</span></div>
+      <div class="pass-item"><span class="pass-num">3.b</span><span class="pass-name">Shock Tracker</span></div>
+      <div class="pass-item"><span class="pass-num">3.c</span><span class="pass-name">Earnings Verbatim</span></div>
+      <div class="pass-item"><span class="pass-num">3.d</span><span class="pass-name">Panel ↔ Data</span></div>
+      <div class="pass-item"><span class="pass-num">3.e</span><span class="pass-name">Cross-Surface Metrics</span></div>
+      <div class="pass-item new"><span class="pass-num">3.f</span><span class="pass-name">Schema Contract ★</span></div>
+      <div class="pass-item new"><span class="pass-num">3.g</span><span class="pass-name">Seed Drift ★</span></div>
+      <div class="pass-item new"><span class="pass-num">3.h</span><span class="pass-name">Collector Errors ★</span></div>
+      <div class="pass-item"><span class="pass-num">4</span><span class="pass-name">Visual QA (DOM)</span></div>
+      <div class="pass-item"><span class="pass-num">5</span><span class="pass-name">Vision Review (AI)</span></div>
+    </div>
+  </div>
+
+  <div class="why">
+    <div class="why-title">Why multi-agent</div>
+    Only Agents 3, 8, 9 use an LLM — everything else is pure Python. Each agent independently testable, independently failable. The <b>self-verification stack</b> (Agent 0 + Pass 3f/g/h + Agent 10) was added May 2026 after a six-bug audit. The architecture is now designed so that bug class can never recur.
+  </div>
+</div>
+
+</body>
+</html>
