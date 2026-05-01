@@ -1,15 +1,15 @@
 {
-  "analyzed_at": "2026-04-30T16:06:37.974921Z",
+  "analyzed_at": "2026-05-01T00:56:05.306093Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
   "flagged_count": 0,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.84,
-    "dgs5": 3.97,
-    "dgs10": 4.36,
-    "dgs30": 4.94,
+    "dgs2": 3.92,
+    "dgs5": 4.05,
+    "dgs10": 4.42,
+    "dgs30": 4.98,
     "ig_oas": 81,
     "hy_oas": 282,
     "unrate": 4.3,
@@ -34,7 +34,7 @@
     "brent": 113.89,
     "gdp_growth_q": 2.0,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 52
+    "spread_10_2_bp": 50
   },
   "signals": {
     "ffr": {
@@ -45,8 +45,8 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.36,
-      "delta": 0.0,
+      "value": 4.42,
+      "delta": 0.06,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -102,7 +102,7 @@
     },
     "mortgage30": {
       "value": 6.3,
-      "delta": 0.07,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.84,
-      "delta": 0.0,
+      "value": 3.92,
+      "delta": 0.08,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 3.97,
-      "delta": 0.0,
+      "value": 4.05,
+      "delta": 0.08,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.94,
-      "delta": 0.0,
+      "value": 4.98,
+      "delta": 0.04,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 52,
-      "delta": 0,
+      "value": 50,
+      "delta": -2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -244,13 +244,6 @@
   "headlines": [],
   "raw_errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DHLCRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHLCRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DIFSRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DIFSRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DFSARG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DFSARG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DRCARG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DRCARG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DTRSRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DTRSRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DGOERG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGOERG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24"
   ]
 }

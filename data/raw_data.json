@@ -1,17 +1,10 @@
 {
-  "collected_at": "2026-04-30T16:05:59.896362Z",
-  "series_count": 77,
-  "error_count": 9,
+  "collected_at": "2026-05-01T00:55:49.023736Z",
+  "series_count": 78,
+  "error_count": 2,
   "errors": [
     "FRED CUSR0000SAA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DHUTRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHUTRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DHLCRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DHLCRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DIFSRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DIFSRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DFSARG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DFSARG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DRCARG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DRCARG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DTRSRG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DTRSRG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24",
-    "FRED DGOERG3M086SBEA: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGOERG3M086SBEA&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24"
+    "FRED CUSR0000SA0E: 400 Client Error: Bad Request for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SA0E&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=24"
   ],
   "data": {
     "ffr": {
@@ -19,26 +12,30 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-04-28",
+      "date": "2026-04-29",
       "value": 3.64
     },
     "dgs2": {
-      "date": "2026-04-28",
-      "value": 3.84
+      "date": "2026-04-29",
+      "value": 3.92
     },
     "dgs5": {
-      "date": "2026-04-28",
-      "value": 3.97
+      "date": "2026-04-29",
+      "value": 4.05
     },
     "dgs10": {
-      "date": "2026-04-28",
-      "value": 4.36
+      "date": "2026-04-29",
+      "value": 4.42
     },
     "dgs30": {
-      "date": "2026-04-28",
-      "value": 4.94
+      "date": "2026-04-29",
+      "value": 4.98
     },
     "dgs10_hist": [
+      {
+        "date": "2026-04-29",
+        "value": 4.42
+      },
       {
         "date": "2026-04-28",
         "value": 4.36
@@ -270,13 +267,13 @@
       {
         "date": "2026-02-05",
         "value": 4.21
-      },
-      {
-        "date": "2026-02-04",
-        "value": 4.29
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-04-29",
+        "value": 3.92
+      },
       {
         "date": "2026-04-28",
         "value": 3.84
@@ -508,10 +505,6 @@
       {
         "date": "2026-02-05",
         "value": 3.47
-      },
-      {
-        "date": "2026-02-04",
-        "value": 3.57
       }
     ],
     "ig_oas": {
@@ -1659,8 +1652,8 @@
         null,
         null
       ],
-      "month": "Mar\u2013Apr 2026",
-      "updated": "Apr 30 16:06 UTC",
+      "month": "Mar\u2013May 2026",
+      "updated": "May 01 00:55 UTC",
       "sessions": 40
     },
     "gasoline": [
@@ -19343,209 +19336,203 @@
         "value": 181.983
       }
     ],
-    "pce_housing": [],
-    "pce_healthcare": [],
-    "pce_financial": [],
-    "pce_food_svc": [],
-    "pce_recreation": [],
-    "pce_transport": [],
-    "pce_nondur": [
+    "pce_goods": [
       {
         "date": "2026-03-01",
-        "value": 124.568
+        "value": 118.935
       },
       {
         "date": "2026-02-01",
-        "value": 122.146
+        "value": 117.254
       },
       {
         "date": "2026-01-01",
-        "value": 121.447
+        "value": 116.394
       },
       {
         "date": "2025-12-01",
-        "value": 121.632
+        "value": 116.346
       },
       {
         "date": "2025-11-01",
-        "value": 121.274
+        "value": 115.903
       },
       {
         "date": "2025-10-01",
-        "value": 121.032
+        "value": 115.738
       },
       {
         "date": "2025-09-01",
-        "value": 121.218
+        "value": 115.825
       },
       {
         "date": "2025-08-01",
-        "value": 120.335
+        "value": 115.299
       },
       {
         "date": "2025-07-01",
-        "value": 120.04
+        "value": 115.147
       },
       {
         "date": "2025-06-01",
-        "value": 120.208
+        "value": 115.3
       },
       {
         "date": "2025-05-01",
-        "value": 119.78
+        "value": 114.844
       },
       {
         "date": "2025-04-01",
-        "value": 119.658
+        "value": 114.762
       },
       {
         "date": "2025-03-01",
-        "value": 119.757
+        "value": 114.627
       },
       {
         "date": "2025-02-01",
-        "value": 120.62
+        "value": 115.184
       },
       {
         "date": "2025-01-01",
-        "value": 120.459
+        "value": 114.921
       },
       {
         "date": "2024-12-01",
-        "value": 119.756
+        "value": 114.36
       },
       {
         "date": "2024-11-01",
-        "value": 119.235
+        "value": 114.233
       },
       {
         "date": "2024-10-01",
-        "value": 119.223
+        "value": 114.248
       },
       {
         "date": "2024-09-01",
-        "value": 119.226
+        "value": 114.234
       },
       {
         "date": "2024-08-01",
-        "value": 119.487
+        "value": 114.313
       },
       {
         "date": "2024-07-01",
-        "value": 119.695
+        "value": 114.5
       },
       {
         "date": "2024-06-01",
-        "value": 119.689
+        "value": 114.585
       },
       {
         "date": "2024-05-01",
-        "value": 119.933
+        "value": 114.759
       },
       {
         "date": "2024-04-01",
-        "value": 119.933
+        "value": 115.106
       }
     ],
-    "pce_durable": [
+    "pce_services": [
       {
         "date": "2026-03-01",
-        "value": 109.007
+        "value": 135.967
       },
       {
         "date": "2026-02-01",
-        "value": 108.556
+        "value": 135.529
       },
       {
         "date": "2026-01-01",
-        "value": 107.435
+        "value": 135.237
       },
       {
         "date": "2025-12-01",
-        "value": 107.001
+        "value": 134.623
       },
       {
         "date": "2025-11-01",
-        "value": 106.42
+        "value": 134.21
       },
       {
         "date": "2025-10-01",
-        "value": 106.383
+        "value": 133.869
       },
       {
         "date": "2025-09-01",
-        "value": 106.306
+        "value": 133.452
       },
       {
         "date": "2025-08-01",
-        "value": 106.374
+        "value": 133.22
       },
       {
         "date": "2025-07-01",
-        "value": 106.46
+        "value": 132.795
       },
       {
         "date": "2025-06-01",
-        "value": 106.59
+        "value": 132.386
       },
       {
         "date": "2025-05-01",
-        "value": 106.088
+        "value": 132.071
       },
       {
         "date": "2025-04-01",
-        "value": 106.066
+        "value": 131.767
       },
       {
         "date": "2025-03-01",
-        "value": 105.55
+        "value": 131.519
       },
       {
         "date": "2025-02-01",
-        "value": 105.602
+        "value": 131.198
       },
       {
         "date": "2025-01-01",
-        "value": 105.175
+        "value": 130.571
       },
       {
         "date": "2024-12-01",
-        "value": 104.852
+        "value": 130.198
       },
       {
         "date": "2024-11-01",
-        "value": 105.364
+        "value": 129.744
       },
       {
         "date": "2024-10-01",
-        "value": 105.427
+        "value": 129.521
       },
       {
         "date": "2024-09-01",
-        "value": 105.385
+        "value": 129.027
       },
       {
         "date": "2024-08-01",
-        "value": 105.164
+        "value": 128.569
       },
       {
         "date": "2024-07-01",
-        "value": 105.314
+        "value": 128.242
       },
       {
         "date": "2024-06-01",
-        "value": 105.548
+        "value": 127.901
       },
       {
         "date": "2024-05-01",
-        "value": 105.603
+        "value": 127.522
       },
       {
         "date": "2024-04-01",
-        "value": 106.529
+        "value": 127.335
       }
     ],
-    "pce_food_home": [
+    "pce_food": [
       {
         "date": "2026-03-01",
         "value": 131.225
@@ -19643,7 +19630,104 @@
         "value": 126.49
       }
     ],
-    "pce_energy": [],
+    "pce_energy": [
+      {
+        "date": "2026-03-01",
+        "value": 153.189
+      },
+      {
+        "date": "2026-02-01",
+        "value": 137.31
+      },
+      {
+        "date": "2026-01-01",
+        "value": 136.243
+      },
+      {
+        "date": "2025-12-01",
+        "value": 138.75
+      },
+      {
+        "date": "2025-11-01",
+        "value": 138.401
+      },
+      {
+        "date": "2025-10-01",
+        "value": 136.029
+      },
+      {
+        "date": "2025-09-01",
+        "value": 136.389
+      },
+      {
+        "date": "2025-08-01",
+        "value": 134.128
+      },
+      {
+        "date": "2025-07-01",
+        "value": 133.085
+      },
+      {
+        "date": "2025-06-01",
+        "value": 134.54
+      },
+      {
+        "date": "2025-05-01",
+        "value": 133.307
+      },
+      {
+        "date": "2025-04-01",
+        "value": 134.607
+      },
+      {
+        "date": "2025-03-01",
+        "value": 133.876
+      },
+      {
+        "date": "2025-02-01",
+        "value": 137.635
+      },
+      {
+        "date": "2025-01-01",
+        "value": 137.457
+      },
+      {
+        "date": "2024-12-01",
+        "value": 135.766
+      },
+      {
+        "date": "2024-11-01",
+        "value": 132.566
+      },
+      {
+        "date": "2024-10-01",
+        "value": 132.505
+      },
+      {
+        "date": "2024-09-01",
+        "value": 132.85
+      },
+      {
+        "date": "2024-08-01",
+        "value": 134.268
+      },
+      {
+        "date": "2024-07-01",
+        "value": 135.62
+      },
+      {
+        "date": "2024-06-01",
+        "value": 136.253
+      },
+      {
+        "date": "2024-05-01",
+        "value": 138.523
+      },
+      {
+        "date": "2024-04-01",
+        "value": 140.49
+      }
+    ],
     "houst": [
       {
         "date": "2026-03-01",

@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-30T16:07:28.320252Z",
+  "validated_at": "2026-05-01T00:56:54.836767Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 419,
-    "passed": 408,
-    "failed": 11,
-    "skipped": 3,
+    "total_checks": 418,
+    "passed": 406,
+    "failed": 12,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -173,19 +173,19 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "315/315 filled",
+      "html_value": "316/316 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 157,
+      "tolerance": 158,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "315/315 filled",
+      "html_value": "316/316 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 157,
+      "tolerance": 158,
       "severity": "ok",
       "pass": true
     },
@@ -598,8 +598,11 @@
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 330.293,
+      "fresh_api_value": 330.293,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -631,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.36,
-      "fresh_api_value": 4.36,
+      "raw_data_value": 4.42,
+      "fresh_api_value": 4.42,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -649,8 +652,11 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158637.0,
+      "fresh_api_value": 158637.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -676,7 +682,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 61,
       "max_lag_days": 55,
       "severity": "stale",
       "pass": false
@@ -684,7 +690,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 61,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -692,7 +698,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 61,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -700,7 +706,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 61,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -708,7 +714,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 61,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -716,7 +722,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 61,
       "max_lag_days": 55,
       "severity": "stale",
       "pass": false
@@ -724,7 +730,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 88,
+      "age_days": 89,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -732,7 +738,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-30",
-      "age_days": 0,
+      "age_days": 1,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -740,7 +746,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-04-01",
-      "age_days": 29,
+      "age_days": 30,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -755,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-30T16:05:59.896362Z",
+      "collected_at": "2026-05-01T00:55:49.023736Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -877,31 +883,10 @@
       "pass": true
     },
     {
-      "check": "PCE by Category \u2014 MoM Change: title months match PCE_CAT_MOM keys",
-      "title_months": [
-        "dec",
-        "jan"
-      ],
-      "data_keys": [
-        "dec",
-        "jan"
-      ],
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "PCE by Category \u2014 MoM Change: prior-month chip matches title",
-      "expected_prior": "Dec'25",
-      "chips_found": [
-        "Jan'26",
-        "Dec'25",
-        "Jan'26",
-        "Jan'26",
-        "Jan'26",
-        "Dec'25"
-      ],
-      "severity": "ok",
-      "pass": true
+      "check": "Panel anchor \"PCE by Category \u2014 MoM Change\" present",
+      "severity": "warning",
+      "pass": false,
+      "reason": "Panel not found in HTML \u2014 anchor may have changed"
     },
     {
       "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
@@ -1022,10 +1007,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.36,
+      "reference": 4.42,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.36,
-        "data[\"dgs10\"]": 4.36
+        "KPIS 10Y Treasury": 4.42,
+        "data[\"dgs10\"]": 4.42
       },
       "severity": "ok",
       "pass": true
@@ -1849,7 +1834,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Category \u2014 MoM Change (Jan'26 vs \" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Mar'26 vs Feb'\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
