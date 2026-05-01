@@ -23,7 +23,7 @@ applied  = []
 errors   = []
 warnings = []
 
-START_YEAR = 2000   # all charts start from this year
+START_YEAR = 1990   # all annual/historical charts start from this year
 
 # Single source of truth for the rolling-monthly trend window. Every chart
 # that shows a "last N months" view (CPI, PCE, U-3, Wage, Saving, Sentiment,
@@ -250,7 +250,7 @@ def _patch_trend_window_titles(html):
 
 
 def rebuild_charts(html, data):
-    """Rebuild all chart arrays from collected historical data (from 2000)."""
+    """Rebuild all chart arrays from collected historical data (from START_YEAR)."""
     today = datetime.date.today()
     # Roll panel titles to match the current trend window first — so titles
     # and rebuilt data consts can never disagree.
@@ -409,7 +409,7 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'CLAIMS_WEEKLY', {
                 'labels': labels, 'initial': initial, 'continued': continued})
 
-    # ── SAVING_ANNUAL (annual averages from 2000) ─────────────────────
+    # ── SAVING_ANNUAL (annual averages from START_YEAR) ───────────────
     psavert = data.get('psavert', [])
     if len(psavert) >= 60:
         labels, values = _annual_avg(psavert)
@@ -640,13 +640,13 @@ def rebuild_charts(html, data):
                 'labels': common, 'ig': ig, 'hy': hy})
 
     # ── OIL_ANNUAL ────────────────────────────────────────────────────
-    # Oil chart starts 1990 (title: "35-Year History"). Other annual charts
-    # share the global START_YEAR = 2000 default.
+    # All annual charts share the global START_YEAR — oil's "35-year history"
+    # title now flows from the constant, no hardcoded year override needed.
     wti_a = data.get('wti_annual', [])
     brent_a = data.get('brent_annual', [])
     if wti_a and brent_a:
-        w_labels, w_values = _annual_from_freq(wti_a, start_year=1990, precision=1)
-        b_labels, b_values = _annual_from_freq(brent_a, start_year=1990, precision=1)
+        w_labels, w_values = _annual_from_freq(wti_a, precision=1)
+        b_labels, b_values = _annual_from_freq(brent_a, precision=1)
         common = [l for l in w_labels if l in b_labels]
         wti = [w_values[w_labels.index(l)] for l in common]
         brent = [b_values[b_labels.index(l)] for l in common]
@@ -1436,6 +1436,10 @@ def rebuild_oil_prod_spread(html, data):
         warnings.append('OIL_SPREAD rebuild SKIPPED — wti_annual/brent_annual missing')
         return html
 
+    # OIL_SPREAD intentionally uses a shorter window than the global
+    # START_YEAR — the WTI–Brent spread is structurally narrow before
+    # ~2011 (pre-shale-boom) and including those years would compress
+    # the recent regime visually. Hardcoded 2015 by design.
     w_labels, w_vals = _annual_from_freq(wti_a, start_year=2015, precision=1)
     b_labels, b_vals = _annual_from_freq(brent_a, start_year=2015, precision=1)
     common = [l for l in w_labels if l in b_labels]

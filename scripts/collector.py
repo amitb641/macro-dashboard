@@ -430,10 +430,10 @@ def collect():
 
     # ── Annual history for chart rebuilding (from 2000) ──────────────
     print('  [History] Annual chart series...')
-    data['fedfunds_annual']   = fred_obs('FEDFUNDS', 30, freq='a')
-    data['mortgage30_annual'] = fred_obs('MORTGAGE30US', 30, freq='a')
-    data['dgs10_annual']      = fred_obs('DGS10', 30, freq='a')
-    data['dgs2_annual']       = fred_obs('DGS2', 30, freq='a')
+    data['fedfunds_annual']   = fred_obs('FEDFUNDS', 40, freq='a')
+    data['mortgage30_annual'] = fred_obs('MORTGAGE30US', 40, freq='a')
+    data['dgs10_annual']      = fred_obs('DGS10', 40, freq='a')
+    data['dgs2_annual']       = fred_obs('DGS2', 40, freq='a')
     # FRED's freq='a' aggregation only returns 2 obs for these daily series
     # (cause unclear — works fine for FEDFUNDS). Fetch monthly instead and
     # aggregate to annual averages locally in the renderer; gives full
@@ -442,14 +442,14 @@ def collect():
     data['hy_oas_monthly']    = fred_obs('BAMLH0A0HYM2', 360, freq='m')
     data['wti_annual']        = fred_obs('DCOILWTICO', 40, freq='a')
     data['brent_annual']      = fred_obs('DCOILBRENTEU', 40, freq='a')
-    data['gdpc1_annual']      = fred_obs('GDPC1', 30, freq='a')
-    data['gdp_annual']        = fred_obs('GDP', 30, freq='a')
+    data['gdpc1_annual']      = fred_obs('GDPC1', 40, freq='a')
+    data['gdp_annual']        = fred_obs('GDP', 40, freq='a')
     # Vintage-pinned copies for historical charts (see METHODOLOGY.md §5).
     # Pin rolls forward each quarter. All pinned series share the same pin
     # date so cross-series comparisons stay coherent within a pin cycle.
     _pin = last_quarter_end()
-    data['gdpc1_annual_pinned'] = fred_alfred_obs('GDPC1',    _pin, 30,  freq='a')
-    data['gdp_annual_pinned']   = fred_alfred_obs('GDP',      _pin, 30,  freq='a')
+    data['gdpc1_annual_pinned'] = fred_alfred_obs('GDPC1',    _pin, 40,  freq='a')
+    data['gdp_annual_pinned']   = fred_alfred_obs('GDP',      _pin, 40,  freq='a')
     # Monthly series feeding annual-aggregate charts (CPI_ANNUAL, JOBS_ANNUAL,
     # WAGE_ANNUAL). Monthly/YoY current-period KPIs continue reading unpinned
     # `cpi_all`, `payems`, `ahetpi` for freshness.
@@ -467,10 +467,10 @@ def collect():
         'pce':          {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
         'pce_core':     {'pin_date': _pin, 'refresh_cadence': 'quarterly'},
     }
-    data['umcsent_annual']    = fred_obs('UMCSENT', 30, freq='a')
+    data['umcsent_annual']    = fred_obs('UMCSENT', 40, freq='a')
     data['cpiengsl']          = fred_obs('CPIENGSL', 320)
-    data['revolsl_annual']    = fred_obs('REVOLSL', 30, freq='a')
-    data['nonrevsl_annual']   = fred_obs('NONREVSL', 30, freq='a')
+    data['revolsl_annual']    = fred_obs('REVOLSL', 40, freq='a')
+    data['nonrevsl_annual']   = fred_obs('NONREVSL', 40, freq='a')
 
     # Monthly oil for OIL_MONTHLY chart (from 2000)
     print('  [History] Monthly oil prices...')
