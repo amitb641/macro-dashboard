@@ -19,7 +19,7 @@
 2. `scripts/analyzer.py` — Agent 2: Diffs raw data, scores signals
 3. `scripts/briefing_agent.py` — Agent 3: AI commentary (Claude Sonnet)
 4. `scripts/renderer.py` — Agent 4: Patches index.html with chart data (regex-based)
-5. `scripts/validator.py` — Agent 6: Independent data quality checks (6-pass)
+5. `scripts/validator.py` — Agent 6: Independent data quality checks (8-pass)
 6. `scripts/publisher.py` — Agent 5: Email delivery via Resend
 7. `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
 8. `scripts/visual_review.py` — Agent 8: Vision-based chart review (Claude multimodal)
@@ -79,7 +79,7 @@ Rules:
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 6 passes: internal consistency, source verification, staleness, shock tracker, earnings commentary (verbatim), visual QA, vision review
+- Validator runs 8 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **collector errors** (3h), earnings commentary (verbatim), visual QA, vision review
 
 ## Commit Conventions
 - Bug fixes: `Fix <what>: <detail>`

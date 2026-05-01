@@ -852,7 +852,10 @@ def check_visual():
                 'detail': f.get('detail', ''),
             })
         return results
-    except ImportError:
+    except (ImportError, SystemExit):
+        # visual_qa.py does sys.exit(1) at import time when Playwright is
+        # missing; treat that as a skip so the validator can still write its
+        # report (CI has Playwright; this matters for local dev).
         return [{
             'check': 'Visual QA',
             'severity': 'skipped',
@@ -1218,7 +1221,93 @@ def check_metric_consistency(html, data, sig_vals):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None):
+# ═══════════════════════════════════════════════════════════════════════
+# PASS 3f: SCHEMA CONTRACT (static analysis)
+#   Verify every key the renderer reads from raw_data is written by the
+#   collector. Catches renamed-key drift like the gdp_real_annual /
+#   gdpc1_annual mismatch where the renderer silently fell back to [].
+# ═══════════════════════════════════════════════════════════════════════
+
+# Keys the renderer reads from sources other than raw_data.json (so absence
+# from collector writes is expected, not a bug).
+_NON_COLLECTOR_KEYS = {
+    'banks',  # Comes from data/bank_earnings.json (Agent 9)
+}
+
+
+def check_schema_contract():
+    """Pass 3f — Static-analyze collector + renderer for key contract drift."""
+    findings = []
+    scripts_dir = Path(__file__).resolve().parent
+    coll_src = (scripts_dir / 'collector.py').read_text(encoding='utf-8')
+    rend_src = (scripts_dir / 'renderer.py').read_text(encoding='utf-8')
+
+    # Writes: data['xxx'] = ...   |   data["xxx"] = ...
+    coll_writes = set(re.findall(r"data\[['\"]([a-z_0-9]+)['\"]\]\s*=", coll_src))
+    # Reads: data.get('xxx', ...) AND data['xxx']<not-equals-sign>
+    rend_reads = set(re.findall(r"data\.get\(\s*['\"]([a-z_0-9]+)['\"]", rend_src))
+    rend_reads |= set(re.findall(r"data\[['\"]([a-z_0-9]+)['\"]\][^=]", rend_src))
+
+    for key in sorted(rend_reads):
+        if key in _NON_COLLECTOR_KEYS:
+            continue
+        ok = key in coll_writes
+        finding = {
+            'check': f'Schema contract: data[{key!r}]',
+            'pass': ok,
+            'severity': 'ok' if ok else 'critical',
+        }
+        if not ok:
+            finding['note'] = (
+                f"renderer reads data['{key}'] but collector never writes it; "
+                f"renderer will silently fall back to [] and any chart sourced "
+                f"from this key will hold its static seed forever"
+            )
+            print(f'  🔴 Schema contract: data[{key!r}] — no collector writer')
+        findings.append(finding)
+    return findings
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# PASS 3h: COLLECTOR ERRORS (runtime fetch failures)
+#   Surface FRED/BLS 400-class errors as critical findings. The collector
+#   already records these in raw_data['errors']; without this pass they
+#   sat unread for months while charts silently rendered partial data.
+# ═══════════════════════════════════════════════════════════════════════
+
+def check_collector_errors(raw):
+    """Pass 3h — Surface API errors recorded by the collector during fetch."""
+    findings = []
+    errs = raw.get('errors', []) or []
+    if not errs:
+        findings.append({
+            'check': 'Collector errors: none recorded',
+            'pass': True, 'severity': 'ok',
+        })
+        return findings
+
+    for err in errs:
+        # Match patterns like 'FRED <id>: 400 Client Error' / 'BLS <id>: ...'
+        m = re.match(r'^(FRED|BLS|EIA)\s+([A-Z0-9_]+):\s*(\d+)?\s*(.+)$', err)
+        if m:
+            api, sid, code, msg = m.group(1), m.group(2), m.group(3), m.group(4)
+            sev = 'critical' if code and code.startswith('4') else 'warning'
+            findings.append({
+                'check': f'{api} fetch: {sid}',
+                'pass': False, 'severity': sev,
+                'note': f'{code or ""} {msg}'.strip(),
+            })
+            print(f'  🔴 {api} {sid}: {code or ""} {msg[:80]}')
+        else:
+            findings.append({
+                'check': 'Collector error',
+                'pass': False, 'severity': 'warning',
+                'note': err[:240],
+            })
+    return findings
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1232,8 +1321,13 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         panel_data = []
     if metric_consistency is None:
         metric_consistency = []
+    if schema_contract is None:
+        schema_contract = []
+    if collector_errors is None:
+        collector_errors = []
     all_findings = (internal + sources + staleness + visual + vision_review +
-                    shock_tracker + earnings + panel_data + metric_consistency)
+                    shock_tracker + earnings + panel_data + metric_consistency +
+                    schema_contract + collector_errors)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1263,6 +1357,8 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'panel_data_consistency': panel_data,
         'metric_consistency': metric_consistency,
         'earnings_verbatim': earnings,
+        'schema_contract': schema_contract,
+        'collector_errors': collector_errors,
         'visual_qa': visual,
         'visual_review': vision_review,
     }
@@ -1333,6 +1429,20 @@ def validate():
     mc_fail = sum(1 for f in metric_consistency if not f.get('pass') and f.get('severity') != 'skipped')
     print(f'  {mc_pass} passed, {mc_fail} failed')
 
+    # Pass 3f: Schema contract — renderer reads vs collector writes (static)
+    print('\n  ── Pass 3f: Schema Contract (collector ↔ renderer keys) ──')
+    schema_contract = check_schema_contract()
+    sc_pass = sum(1 for f in schema_contract if f.get('pass'))
+    sc_fail = sum(1 for f in schema_contract if not f.get('pass'))
+    print(f'  {sc_pass} passed, {sc_fail} failed')
+
+    # Pass 3h: Collector errors (FRED/BLS 4xx surfaced from raw_data['errors'])
+    print('\n  ── Pass 3h: Collector Errors (API fetch failures) ──')
+    collector_errors = check_collector_errors(raw)
+    ce_pass = sum(1 for f in collector_errors if f.get('pass'))
+    ce_fail = sum(1 for f in collector_errors if not f.get('pass'))
+    print(f'  {ce_pass} passed, {ce_fail} failed')
+
     # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
     print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
     earnings = check_earnings_verbatim()
@@ -1364,7 +1474,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -1381,7 +1491,9 @@ def validate():
                                    ('Staleness', staleness), ('Visual', visual),
                                    ('Vision', vision_review),
                                    ('PanelData', panel_data),
-                                   ('MetricConsistency', metric_consistency)]:
+                                   ('MetricConsistency', metric_consistency),
+                                   ('SchemaContract', schema_contract),
+                                   ('CollectorErrors', collector_errors)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')
