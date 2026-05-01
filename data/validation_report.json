@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-01T13:20:41.181614Z",
+  "validated_at": "2026-05-01T13:31:04.033268Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
     "passed": 468,
     "failed": 13,
-    "skipped": 1,
+    "skipped": 6,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -191,19 +191,19 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "320/320 filled",
+      "html_value": "436/436 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 160,
+      "tolerance": 218,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "320/320 filled",
+      "html_value": "436/436 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 160,
+      "tolerance": 218,
       "severity": "ok",
       "pass": true
     },
@@ -236,37 +236,37 @@
     },
     {
       "check": "U_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "CPI_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "PCE_ANNUAL.headline completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "PCE_ANNUAL.core completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -290,19 +290,19 @@
     },
     {
       "check": "JOBS_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SAVING_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -488,55 +488,55 @@
     },
     {
       "check": "STARTS_DATA.sf completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "STARTS_DATA.mf completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "HPI_DATA.cs completeness",
-      "html_value": "27/27 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "HPI_DATA.fhfa completeness",
-      "html_value": "27/27 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_CPI.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_CPI.cpiEnergy completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -607,11 +607,8 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -625,29 +622,20 @@
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "raw_data_value": 334.165,
-      "fresh_api_value": 334.165,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 130.344,
-      "fresh_api_value": 130.344,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 129.279,
-      "fresh_api_value": 129.279,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -661,11 +649,8 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "raw_data_value": 3.64,
-      "fresh_api_value": 3.64,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -779,7 +764,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-01T13:18:40.864377Z",
+      "collected_at": "2026-05-01T13:29:05.647183Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
