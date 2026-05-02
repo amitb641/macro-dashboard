@@ -1,49 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-01T13:31:04.469582Z",
+  "last_updated": "2026-05-02T12:55:46.658785Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-04-24T15:57:57.635930Z",
-      "git_sha": "c5da2d3",
-      "git_branch": "main",
-      "collected_at": "2026-04-24T15:56:38.599022Z",
-      "series_count": 73,
-      "collector_errors": 2,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-03-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-03-01",
-          "value": 330.293
-        },
-        "payrolls": {
-          "date": "2026-03-01",
-          "value": 158637.0
-        },
-        "treasury_10y": {
-          "date": "2026-04-22",
-          "value": 4.3
-        },
-        "fed_funds": {
-          "date": "2026-03-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "ELEVATED",
-      "alert_count": 0,
-      "validation_status": "PASS",
-      "validation_summary": {
-        "total_checks": 393,
-        "passed": 393,
-        "failed": 0,
-        "skipped": 0,
-        "critical_divergences": 0
-      },
-      "html_size": 515843
-    },
     {
       "run_at": "2026-04-24T18:42:46.057419Z",
       "git_sha": "efcfe79",
@@ -846,6 +805,55 @@
         "critical_divergences": 0
       },
       "html_size": 532856
+    },
+    {
+      "run_at": "2026-05-02T12:55:46.658785Z",
+      "git_sha": "d3fadba",
+      "git_branch": "main",
+      "collected_at": "2026-05-02T12:54:23.549269Z",
+      "series_count": 79,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-03-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-03-01",
+          "value": 330.293
+        },
+        "payrolls": {
+          "date": "2026-03-01",
+          "value": 158637.0
+        },
+        "treasury_10y": {
+          "date": "2026-04-30",
+          "value": 4.4
+        },
+        "fed_funds": {
+          "date": "2026-04-01",
+          "value": 3.64
+        }
+      },
+      "risk_level": "ELEVATED",
+      "alert_count": 2,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 481,
+        "passed": 468,
+        "failed": 13,
+        "skipped": 1,
+        "critical_divergences": 0
+      },
+      "html_size": 533083,
+      "data_changes": [
+        {
+          "indicator": "treasury_10y",
+          "old": 4.42,
+          "new": 4.4,
+          "delta": -0.02
+        }
+      ]
     }
   ]
 }

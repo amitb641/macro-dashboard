@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-01T13:31:04.033268Z",
+  "validated_at": "2026-05-02T12:55:46.202250Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
     "passed": 468,
     "failed": 13,
-    "skipped": 6,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -607,8 +607,11 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -622,26 +625,35 @@
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 334.165,
+      "fresh_api_value": 334.165,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 130.344,
+      "fresh_api_value": 130.344,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 129.279,
+      "fresh_api_value": 129.279,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.42,
-      "fresh_api_value": 4.42,
+      "raw_data_value": 4.4,
+      "fresh_api_value": 4.4,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -649,8 +661,11 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -685,7 +700,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-03-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 55,
       "severity": "stale",
       "pass": false
@@ -693,7 +708,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -701,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -709,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -717,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -725,7 +740,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-03-01",
-      "age_days": 61,
+      "age_days": 62,
       "max_lag_days": 55,
       "severity": "stale",
       "pass": false
@@ -733,7 +748,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 89,
+      "age_days": 90,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -741,7 +756,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-04-30",
-      "age_days": 1,
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -749,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-04-01",
-      "age_days": 30,
+      "age_days": 31,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -764,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-01T13:29:05.647183Z",
+      "collected_at": "2026-05-02T12:54:23.549269Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1031,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.42,
+      "reference": 4.4,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.42,
-        "data[\"dgs10\"]": 4.42
+        "KPIS 10Y Treasury": 4.4,
+        "data[\"dgs10\"]": 4.4
       },
       "severity": "ok",
       "pass": true
