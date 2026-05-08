@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-04-30T13:47:09.702312Z",
+  "validated_at": "2026-05-08T15:29:03.596924Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 417,
-    "passed": 406,
-    "failed": 11,
-    "skipped": 2,
+    "total_checks": 481,
+    "passed": 469,
+    "failed": 12,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -56,8 +56,8 @@
     },
     {
       "check": "NFP BLS MoM (latest)",
-      "html_value": 178,
-      "source_value": 178,
+      "html_value": 115,
+      "source_value": 115,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -92,7 +92,7 @@
     },
     {
       "check": "CPI_MONTHLY.headline completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -101,7 +101,7 @@
     },
     {
       "check": "CPI_MONTHLY.core completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -110,7 +110,7 @@
     },
     {
       "check": "PCE_MONTHLY.headline completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -119,7 +119,7 @@
     },
     {
       "check": "PCE_MONTHLY.core completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -128,7 +128,7 @@
     },
     {
       "check": "U_MONTHLY.data completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -137,7 +137,7 @@
     },
     {
       "check": "NFP_VS_ADP.bls completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -154,8 +154,26 @@
       "pass": true
     },
     {
+      "check": "NFP_VS_ADP.adp label sync",
+      "html_value": "12 values",
+      "source_value": "13 labels",
+      "difference": 1,
+      "tolerance": 0,
+      "severity": "warning",
+      "pass": false
+    },
+    {
+      "check": "NFP_VS_ADP series length sync",
+      "html_value": "{'bls': 13, 'adp': 12}",
+      "source_value": "All series same length",
+      "difference": 1,
+      "tolerance": 0,
+      "severity": "warning",
+      "pass": false
+    },
+    {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -164,7 +182,7 @@
     },
     {
       "check": "HOUSING_MONTHLY.mortgage30 completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -173,25 +191,25 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "315/315 filled",
+      "html_value": "436/436 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 157,
+      "tolerance": 218,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "315/315 filled",
+      "html_value": "436/436 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 157,
+      "tolerance": 218,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SAVING_MONTHLY.data completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -200,7 +218,7 @@
     },
     {
       "check": "UMCSENT_MONTHLY.data completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -209,7 +227,7 @@
     },
     {
       "check": "UMCSENT_MONTHLY.statuses completeness",
-      "html_value": "12/12 filled",
+      "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 6,
@@ -218,37 +236,37 @@
     },
     {
       "check": "U_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "CPI_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "PCE_ANNUAL.headline completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "PCE_ANNUAL.core completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -272,19 +290,19 @@
     },
     {
       "check": "JOBS_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SAVING_ANNUAL.data completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -308,28 +326,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "40/40 filled",
+      "html_value": "45/45 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 20,
+      "tolerance": 22,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "40/40 filled",
+      "html_value": "45/45 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 20,
+      "tolerance": 22,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "25/40 filled",
-      "source_value": "62% (min 0%)",
-      "difference": 15,
-      "tolerance": 20,
+      "html_value": "29/45 filled",
+      "source_value": "64% (min 0%)",
+      "difference": 16,
+      "tolerance": 22,
       "severity": "ok",
       "pass": true
     },
@@ -353,109 +371,109 @@
     },
     {
       "check": "GDP_TOTAL_DATA.nominal completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "GDP_TOTAL_DATA.real completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "FFR_DATA.actual completeness",
-      "html_value": "26/29 filled",
-      "source_value": "90% (min 50%)",
+      "html_value": "36/39 filled",
+      "source_value": "92% (min 50%)",
       "difference": 3,
-      "tolerance": 14,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "FFR_DATA.dots completeness",
-      "html_value": "4/29 filled",
-      "source_value": "14% (min 10%)",
-      "difference": 25,
-      "tolerance": 14,
+      "html_value": "4/39 filled",
+      "source_value": "10% (min 10%)",
+      "difference": 35,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "MORTGAGE_DATA.rate30 completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "MORTGAGE_DATA.ffr completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SPREADS_DATA.ig completeness",
-      "html_value": "3/3 filled",
+      "html_value": "4/4 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 1,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "SPREADS_DATA.hy completeness",
-      "html_value": "3/3 filled",
+      "html_value": "4/4 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 1,
+      "tolerance": 2,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.dgs10 completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.dgs2 completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.spread completeness",
-      "html_value": "27/27 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "TREASURY_DATA.card90 completeness",
-      "html_value": "27/27 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 13,
+      "html_value": "28/37 filled",
+      "source_value": "76% (min 50%)",
+      "difference": 9,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -470,79 +488,79 @@
     },
     {
       "check": "STARTS_DATA.sf completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "STARTS_DATA.mf completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "HPI_DATA.cs completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "HPI_DATA.fhfa completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_CPI.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_CPI.cpiEnergy completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_SENTIMENT.wti completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_SENTIMENT.sentiment completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_VS_HY.wti completeness",
-      "html_value": "2/2 filled",
+      "html_value": "3/3 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 1,
@@ -551,7 +569,7 @@
     },
     {
       "check": "OIL_VS_HY.hySpreads completeness",
-      "html_value": "2/2 filled",
+      "html_value": "3/3 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 1,
@@ -560,19 +578,19 @@
     },
     {
       "check": "CREDIT_GROWTH.revolving completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "CREDIT_GROWTH.nonrevolving completeness",
-      "html_value": "26/26 filled",
+      "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 13,
+      "tolerance": 18,
       "severity": "ok",
       "pass": true
     },
@@ -589,8 +607,11 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -649,8 +670,8 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158637.0,
-      "fresh_api_value": 158637.0,
+      "raw_data_value": 158736.0,
+      "fresh_api_value": 158736.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -658,8 +679,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.23,
-      "fresh_api_value": 6.23,
+      "raw_data_value": 6.37,
+      "fresh_api_value": 6.37,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -667,8 +688,8 @@
     },
     {
       "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158637,
-      "fresh_api_value": 158637,
+      "raw_data_value": 158736,
+      "fresh_api_value": 158736,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -678,16 +699,16 @@
   "staleness": [
     {
       "check": "Staleness: unrate",
-      "latest_date": "2026-03-01",
-      "age_days": 60,
+      "latest_date": "2026-04-01",
+      "age_days": 37,
       "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 68,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -695,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 68,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -703,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 68,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -711,54 +732,54 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 60,
+      "age_days": 68,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: payems",
-      "latest_date": "2026-03-01",
-      "age_days": 60,
+      "latest_date": "2026-04-01",
+      "age_days": 37,
       "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 88,
+      "age_days": 96,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-04-23",
-      "age_days": 7,
+      "latest_date": "2026-05-07",
+      "age_days": 1,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-04-01",
-      "age_days": 29,
+      "latest_date": "2026-05-01",
+      "age_days": 7,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-04-01",
-      "release_status": "final",
-      "severity": "ok",
+      "latest_date": "2026-05-01",
+      "release_status": "preliminary",
+      "severity": "info",
       "pass": true,
-      "note": "Final release"
+      "note": "Preliminary \u2014 subject to revision in end-of-month final release"
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-04-30T13:45:51.110623Z",
+      "collected_at": "2026-05-08T15:27:14.021283Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -880,28 +901,28 @@
       "pass": true
     },
     {
-      "check": "PCE by Category \u2014 MoM Change: title months match PCE_CAT_MOM keys",
+      "check": "PCE by Component \u2014 YoY %: title months match PCE_CAT_MOM keys",
       "title_months": [
-        "dec",
-        "jan"
+        "feb",
+        "mar"
       ],
       "data_keys": [
-        "dec",
-        "jan"
+        "feb",
+        "mar"
       ],
       "severity": "ok",
       "pass": true
     },
     {
-      "check": "PCE by Category \u2014 MoM Change: prior-month chip matches title",
-      "expected_prior": "Dec'25",
+      "check": "PCE by Component \u2014 YoY %: prior-month chip matches title",
+      "expected_prior": "Feb'26",
       "chips_found": [
-        "Jan'26",
-        "Dec'25",
-        "Jan'26",
-        "Jan'26",
-        "Jan'26",
-        "Dec'25"
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
       ],
       "severity": "ok",
       "pass": true
@@ -909,11 +930,11 @@
     {
       "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
       "title_months": [
-        "feb",
+        "apr",
         "mar"
       ],
       "data_keys": [
-        "feb",
+        "apr",
         "mar"
       ],
       "severity": "ok",
@@ -921,14 +942,14 @@
     },
     {
       "check": "Monthly Job Change by Sector: prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Mar'26",
       "chips_found": [
-        "Feb'26",
         "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
       ],
       "severity": "ok",
       "pass": true
@@ -963,11 +984,11 @@
   "metric_consistency": [
     {
       "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
-      "reference": 178.0,
+      "reference": 115.0,
       "surfaces": {
-        "NFP_BLS_MOM.bls[-1]": 178.0,
-        "KPIS Jobs tile": 178.0,
-        "Commentary payrolls": 178.0
+        "NFP_BLS_MOM.bls[-1]": 115.0,
+        "KPIS Jobs tile": 115.0,
+        "Commentary payrolls": "MISSING"
       },
       "severity": "ok",
       "pass": true
@@ -978,7 +999,7 @@
       "surfaces": {
         "U_MONTHLY.data[-1]": 4.3,
         "KPIS Unemployment": 4.3,
-        "Commentary U-3": 4.3
+        "Commentary U-3": "MISSING"
       },
       "severity": "ok",
       "pass": true
@@ -1005,10 +1026,30 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 49.8,
+      "reference": 48.2,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 49.8,
-        "KPIS UMich Sentiment": 49.8
+        "UMCSENT_MONTHLY.data[-1]": 48.2,
+        "KPIS UMich Sentiment": 48.2
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Fed Funds latest (%): surfaces agree within \u00b10.05 (ref: KPIS Fed Funds)",
+      "reference": 3.64,
+      "surfaces": {
+        "KPIS Fed Funds": 3.64,
+        "data[\"ffr\"]": 3.64
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
+      "reference": 4.36,
+      "surfaces": {
+        "KPIS 10Y Treasury": 4.36,
+        "data[\"dgs10\"]": 4.36
       },
       "severity": "ok",
       "pass": true
@@ -1078,6 +1119,326 @@
       "check": "BCS: pending (reports 2026-04-30)",
       "severity": "skipped",
       "pass": true
+    }
+  ],
+  "schema_contract": [
+    {
+      "check": "Schema contract: data['ahetpi']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ahetpi_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['bls_sectors']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['bls_unemp_sectors']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['brent_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['brent_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cc_delinq']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ccsa']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_all']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_all_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_core']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_food_away']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_transport']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpiengsl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cs_hpi']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs10']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs10_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs2']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs2_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['fedfunds_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ffr']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gasoline']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdp_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdp_annual_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdpc1_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdpc1_annual_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['houst']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['houst1f']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hy_oas']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hy_oas_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['icsa']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ig_oas']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ig_oas_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['mortgage30']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['mortgage30_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['nonrevsl_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['oil_daily_chart']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['payems']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['payems_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_core']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_core_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['psavert']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['revolsl_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['tdsp']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['u6rate']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['umcsent']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['umcsent_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['unrate']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['vintages']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wage_growth_atl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_monthly']",
+      "pass": true,
+      "severity": "ok"
+    }
+  ],
+  "collector_errors": [
+    {
+      "check": "Collector error",
+      "pass": false,
+      "severity": "warning",
+      "note": "ALFRED GDP@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=40&realtime_start=2026-0"
+    }
+  ],
+  "seed_drift": [
+    {
+      "check": "Seed drift: FC_MACRO.act24 (yr=2024)",
+      "pass": true,
+      "severity": "ok",
+      "seed": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ],
+      "expected": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ]
+    },
+    {
+      "check": "Seed drift: FC_MACRO.act25 (yr=2025)",
+      "pass": true,
+      "severity": "ok",
+      "seed": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ],
+      "expected": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ]
     }
   ],
   "visual_qa": [
@@ -1442,7 +1803,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Jobs \u2014 Panel \"Monthly Job Change by Sector \u2014 Feb'26 vs\" has title",
+      "check": "Visual: Jobs \u2014 Panel \"Monthly Job Change by Sector \u2014 Mar'26 vs\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1520,7 +1881,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Unemployment \u2014 Panel \"Monthly Unemployment Rate \u2014 12-Month Tre\" has title",
+      "check": "Visual: Unemployment \u2014 Panel \"Monthly Unemployment Rate \u2014 13-Month Tre\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1670,7 +2031,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"Monthly CPI \u2014 Headline vs Core YoY % (12\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Monthly CPI \u2014 Headline vs Core YoY % (13\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1784,7 +2145,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Personal Saving Rate \u2014 Last 12 Months\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Personal Saving Rate \u2014 Last 13 Months\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1808,7 +2169,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 12 MonthsFINAL\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -1832,7 +2193,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Category \u2014 MoM Change (Jan'26 vs \" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Mar'26 vs Feb'\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2325,6 +2686,24 @@
     },
     {
       "check": "Visual: Validator \u2014 Panel \"Pass 3: Data Staleness\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3f: Schema Contract\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3g: Seed Drift\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"Pass 3h: Collector Errors\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

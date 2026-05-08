@@ -1,21 +1,21 @@
 {
-  "analyzed_at": "2026-05-02T14:53:42.279486Z",
+  "analyzed_at": "2026-05-08T15:27:44.043842Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
-  "flagged_count": 0,
+  "flagged_count": 1,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.88,
-    "dgs5": 4.02,
-    "dgs10": 4.4,
-    "dgs30": 4.98,
-    "ig_oas": 81,
-    "hy_oas": 283,
+    "dgs2": 3.87,
+    "dgs5": 3.99,
+    "dgs10": 4.36,
+    "dgs30": 4.94,
+    "ig_oas": 79,
+    "hy_oas": 279,
     "unrate": 4.3,
-    "u6rate": 8.0,
-    "nfp_level": 158637.0,
-    "nfp_mom": 178,
+    "u6rate": 8.2,
+    "nfp_level": 158736.0,
+    "nfp_mom": 115,
     "icsa": 189000.0,
     "ccsa": 1785000.0,
     "wages_yoy": 3.9,
@@ -24,17 +24,17 @@
     "pce_yoy": 3.5,
     "core_pce_yoy": 3.2,
     "saving_rate": 3.6,
-    "mortgage30": 6.3,
+    "mortgage30": 6.37,
     "housing_starts": 1502.0,
     "cs_hpi_yoy": 0.66,
-    "umcsent": 49.8,
+    "umcsent": 48.2,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
-    "wti": 99.89,
-    "brent": 113.89,
+    "wti": 109.76,
+    "brent": 118.26,
     "gdp_growth_q": 2.0,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 52
+    "spread_10_2_bp": 49
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.4,
-      "delta": 0.0,
+      "value": 4.36,
+      "delta": -0.04,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 81,
-      "delta": 0,
+      "value": 79,
+      "delta": -2,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 283,
-      "delta": 0,
+      "value": 279,
+      "delta": -4,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -87,22 +87,22 @@
       "alert": null
     },
     "nfp_mom": {
-      "value": 178,
-      "delta": 0,
+      "value": 115,
+      "delta": -63,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "wti": {
-      "value": 99.89,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 109.76,
+      "delta": 9.87,
+      "direction": "rising",
+      "flagged": true,
       "alert": "alert"
     },
     "mortgage30": {
-      "value": 6.3,
-      "delta": 0.0,
+      "value": 6.37,
+      "delta": 0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -129,8 +129,8 @@
       "alert": null
     },
     "umcsent": {
-      "value": 49.8,
-      "delta": 0.0,
+      "value": 48.2,
+      "delta": -1.6,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.88,
-      "delta": 0.0,
+      "value": 3.87,
+      "delta": -0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.02,
-      "delta": 0.0,
+      "value": 3.99,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.98,
-      "delta": 0.0,
+      "value": 4.94,
+      "delta": -0.04,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 52,
-      "delta": 0,
+      "value": 49,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -185,8 +185,8 @@
       "alert": "alert"
     },
     "u6rate": {
-      "value": 8.0,
-      "delta": 0.0,
+      "value": 8.2,
+      "delta": 0.2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -206,8 +206,8 @@
       "alert": null
     },
     "brent": {
-      "value": 113.89,
-      "delta": 0.0,
+      "value": 118.26,
+      "delta": 4.37,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,6 +241,14 @@
       "alert": null
     }
   },
-  "headlines": [],
-  "raw_errors": []
+  "headlines": [
+    {
+      "key": "wti",
+      "line": "wti: 109.76 (\u25b29.87 vs prior) [ALERT]",
+      "alert": "alert"
+    }
+  ],
+  "raw_errors": [
+    "ALFRED GDP@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=40&realtime_start=2026-03-31&realtime_end=2026-03-31&frequency=a"
+  ]
 }
