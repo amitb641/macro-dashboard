@@ -1,3 +1,38 @@
+## Repair Agent — 2026-05-09T13:02:31.593067Z
+
+- **Status**: WARN
+- **Total checks**: 481
+- **Passed**: 469
+- **Failed**: 12
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **FRED fetch: DGS2** — 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=60
+
+### Internal consistency
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **NFP_VS_ADP.adp label sync** — 
+- ⚠️ **NFP_VS_ADP series length sync** — 
+
+### Earnings verbatim
+_0 critical · 9 warning · 0 stale_
+
+- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
+- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
+- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
+- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
+- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
+- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
+- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
+- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
+- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
+
+
+---
+
 ## Repair Agent — 2026-05-08T15:29:03.596924Z
 
 - **Status**: WARN

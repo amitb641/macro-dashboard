@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-08T15:29:03.596924Z",
+  "validated_at": "2026-05-09T13:02:31.593067Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.36,
-      "fresh_api_value": 4.36,
+      "raw_data_value": 4.41,
+      "fresh_api_value": 4.41,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -700,7 +700,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 37,
+      "age_days": 38,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -708,7 +708,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 68,
+      "age_days": 69,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 68,
+      "age_days": 69,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 68,
+      "age_days": 69,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 68,
+      "age_days": 69,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,7 +740,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 37,
+      "age_days": 38,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -748,7 +748,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 96,
+      "age_days": 97,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -756,7 +756,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-07",
-      "age_days": 1,
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 7,
+      "age_days": 8,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-08T15:27:14.021283Z",
+      "collected_at": "2026-05-09T13:00:40.996400Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.36,
+      "reference": 4.41,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.36,
-        "data[\"dgs10\"]": 4.36
+        "KPIS 10Y Treasury": 4.41,
+        "data[\"dgs10\"]": 4.41
       },
       "severity": "ok",
       "pass": true
@@ -1395,10 +1395,10 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector error",
+      "check": "FRED fetch: DGS2",
       "pass": false,
       "severity": "warning",
-      "note": "ALFRED GDP@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=40&realtime_start=2026-0"
+      "note": "500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=60"
     }
   ],
   "seed_drift": [
