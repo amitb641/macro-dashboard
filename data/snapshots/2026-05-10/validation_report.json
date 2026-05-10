@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-02T12:55:46.202250Z",
+  "validated_at": "2026-05-10T14:58:56.960288Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
-    "passed": 468,
-    "failed": 13,
+    "passed": 470,
+    "failed": 11,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -56,8 +56,8 @@
     },
     {
       "check": "NFP BLS MoM (latest)",
-      "html_value": 178,
-      "source_value": 178,
+      "html_value": 115,
+      "source_value": 115,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -326,28 +326,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "40/40 filled",
+      "html_value": "45/45 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 20,
+      "tolerance": 22,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "40/40 filled",
+      "html_value": "45/45 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 20,
+      "tolerance": 22,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "25/40 filled",
-      "source_value": "62% (min 0%)",
-      "difference": 15,
-      "tolerance": 20,
+      "html_value": "29/45 filled",
+      "source_value": "64% (min 0%)",
+      "difference": 16,
+      "tolerance": 22,
       "severity": "ok",
       "pass": true
     },
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.4,
-      "fresh_api_value": 4.4,
+      "raw_data_value": 4.41,
+      "fresh_api_value": 4.41,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -670,8 +670,8 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158637.0,
-      "fresh_api_value": 158637.0,
+      "raw_data_value": 158736.0,
+      "fresh_api_value": 158736.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -679,8 +679,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.3,
-      "fresh_api_value": 6.3,
+      "raw_data_value": 6.37,
+      "fresh_api_value": 6.37,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -688,8 +688,8 @@
     },
     {
       "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158637,
-      "fresh_api_value": 158637,
+      "raw_data_value": 158736,
+      "fresh_api_value": 158736,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -699,16 +699,16 @@
   "staleness": [
     {
       "check": "Staleness: unrate",
-      "latest_date": "2026-03-01",
-      "age_days": 62,
+      "latest_date": "2026-04-01",
+      "age_days": 39,
       "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 62,
+      "age_days": 70,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 62,
+      "age_days": 70,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 62,
+      "age_days": 70,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,54 +732,54 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 62,
+      "age_days": 70,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: payems",
-      "latest_date": "2026-03-01",
-      "age_days": 62,
+      "latest_date": "2026-04-01",
+      "age_days": 39,
       "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 90,
+      "age_days": 98,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-04-30",
-      "age_days": 2,
+      "latest_date": "2026-05-07",
+      "age_days": 3,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-04-01",
-      "age_days": 31,
+      "latest_date": "2026-05-01",
+      "age_days": 9,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-04-01",
-      "release_status": "final",
-      "severity": "ok",
+      "latest_date": "2026-05-01",
+      "release_status": "preliminary",
+      "severity": "info",
       "pass": true,
-      "note": "Final release"
+      "note": "Preliminary \u2014 subject to revision in end-of-month final release"
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-02T12:54:23.549269Z",
+      "collected_at": "2026-05-10T14:57:54.856682Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -930,11 +930,11 @@
     {
       "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
       "title_months": [
-        "feb",
+        "apr",
         "mar"
       ],
       "data_keys": [
-        "feb",
+        "apr",
         "mar"
       ],
       "severity": "ok",
@@ -942,14 +942,14 @@
     },
     {
       "check": "Monthly Job Change by Sector: prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Mar'26",
       "chips_found": [
-        "Feb'26",
         "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
       ],
       "severity": "ok",
       "pass": true
@@ -984,10 +984,10 @@
   "metric_consistency": [
     {
       "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
-      "reference": 178.0,
+      "reference": 115.0,
       "surfaces": {
-        "NFP_BLS_MOM.bls[-1]": 178.0,
-        "KPIS Jobs tile": 178.0,
+        "NFP_BLS_MOM.bls[-1]": 115.0,
+        "KPIS Jobs tile": 115.0,
         "Commentary payrolls": "MISSING"
       },
       "severity": "ok",
@@ -1026,10 +1026,10 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 49.8,
+      "reference": 48.2,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 49.8,
-        "KPIS UMich Sentiment": 49.8
+        "UMCSENT_MONTHLY.data[-1]": 48.2,
+        "KPIS UMich Sentiment": 48.2
       },
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.4,
+      "reference": 4.41,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.4,
-        "data[\"dgs10\"]": 4.4
+        "KPIS 10Y Treasury": 4.41,
+        "data[\"dgs10\"]": 4.41
       },
       "severity": "ok",
       "pass": true
@@ -1802,7 +1802,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Jobs \u2014 Panel \"Monthly Job Change by Sector \u2014 Feb'26 vs\" has title",
+      "check": "Visual: Jobs \u2014 Panel \"Monthly Job Change by Sector \u2014 Mar'26 vs\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2168,7 +2168,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

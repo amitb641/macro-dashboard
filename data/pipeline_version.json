@@ -1,49 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-09T14:56:53.750529Z",
+  "last_updated": "2026-05-10T14:58:57.368598Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-04-24T21:05:07.339553Z",
-      "git_sha": "0d7e832",
-      "git_branch": "main",
-      "collected_at": "2026-04-24T21:03:52.404258Z",
-      "series_count": 74,
-      "collector_errors": 2,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-03-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-03-01",
-          "value": 330.293
-        },
-        "payrolls": {
-          "date": "2026-03-01",
-          "value": 158637.0
-        },
-        "treasury_10y": {
-          "date": "2026-04-23",
-          "value": 4.34
-        },
-        "fed_funds": {
-          "date": "2026-03-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "ELEVATED",
-      "alert_count": 0,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 404,
-        "passed": 395,
-        "failed": 9,
-        "skipped": 1,
-        "critical_divergences": 0
-      },
-      "html_size": 523044
-    },
     {
       "run_at": "2026-04-24T21:13:31.927038Z",
       "git_sha": "a28f667",
@@ -833,6 +792,47 @@
       "git_sha": "31abf88",
       "git_branch": "main",
       "collected_at": "2026-05-09T14:55:56.517632Z",
+      "series_count": 79,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-04-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-03-01",
+          "value": 330.293
+        },
+        "payrolls": {
+          "date": "2026-04-01",
+          "value": 158736.0
+        },
+        "treasury_10y": {
+          "date": "2026-05-07",
+          "value": 4.41
+        },
+        "fed_funds": {
+          "date": "2026-04-01",
+          "value": 3.64
+        }
+      },
+      "risk_level": "ELEVATED",
+      "alert_count": 2,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 481,
+        "passed": 470,
+        "failed": 11,
+        "skipped": 1,
+        "critical_divergences": 0
+      },
+      "html_size": 533679
+    },
+    {
+      "run_at": "2026-05-10T14:58:57.368598Z",
+      "git_sha": "29f947f",
+      "git_branch": "main",
+      "collected_at": "2026-05-10T14:57:54.856682Z",
       "series_count": 79,
       "collector_errors": 0,
       "key_values": {
