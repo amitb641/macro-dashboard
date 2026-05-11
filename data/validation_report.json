@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-10T14:58:56.960288Z",
+  "validated_at": "2026-05-11T16:36:44.772977Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
-    "passed": 470,
-    "failed": 11,
-    "skipped": 1,
+    "passed": 469,
+    "failed": 12,
+    "skipped": 5,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -625,11 +625,8 @@
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "raw_data_value": 334.165,
-      "fresh_api_value": 334.165,
-      "difference": 0.0,
-      "tolerance": 0.5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -652,11 +649,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.41,
-      "fresh_api_value": 4.41,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -670,20 +664,14 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158736.0,
-      "fresh_api_value": 158736.0,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.37,
-      "fresh_api_value": 6.37,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -700,7 +688,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 39,
+      "age_days": 40,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -708,7 +696,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-03-01",
-      "age_days": 70,
+      "age_days": 71,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +704,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-03-01",
-      "age_days": 70,
+      "age_days": 71,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +712,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 70,
+      "age_days": 71,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +720,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 70,
+      "age_days": 71,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,7 +728,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 39,
+      "age_days": 40,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -748,7 +736,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 98,
+      "age_days": 99,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -756,7 +744,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-07",
-      "age_days": 3,
+      "age_days": 4,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +752,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 9,
+      "age_days": 10,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -779,7 +767,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-10T14:57:54.856682Z",
+      "collected_at": "2026-05-11T16:35:28.593943Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1395,9 +1383,10 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector errors: none recorded",
-      "pass": true,
-      "severity": "ok"
+      "check": "Collector error",
+      "pass": false,
+      "severity": "warning",
+      "note": "ALFRED PAYEMS@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PAYEMS&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start"
     }
   ],
   "seed_drift": [

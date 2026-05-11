@@ -1,9 +1,9 @@
 {
-  "collected_at": "2026-05-08T15:27:14.021283Z",
+  "collected_at": "2026-05-11T16:35:28.593943Z",
   "series_count": 79,
   "error_count": 1,
   "errors": [
-    "ALFRED GDP@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=40&realtime_start=2026-03-31&realtime_end=2026-03-31&frequency=a"
+    "ALFRED PAYEMS@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PAYEMS&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2026-03-31"
   ],
   "data": {
     "ffr": {
@@ -11,26 +11,30 @@
       "value": 3.64
     },
     "dff": {
-      "date": "2026-05-06",
-      "value": 3.64
+      "date": "2026-05-07",
+      "value": 3.63
     },
     "dgs2": {
-      "date": "2026-05-06",
-      "value": 3.87
+      "date": "2026-05-07",
+      "value": 3.92
     },
     "dgs5": {
-      "date": "2026-05-06",
-      "value": 3.99
+      "date": "2026-05-07",
+      "value": 4.04
     },
     "dgs10": {
-      "date": "2026-05-06",
-      "value": 4.36
+      "date": "2026-05-07",
+      "value": 4.41
     },
     "dgs30": {
-      "date": "2026-05-06",
-      "value": 4.94
+      "date": "2026-05-07",
+      "value": 4.97
     },
     "dgs10_hist": [
+      {
+        "date": "2026-05-07",
+        "value": 4.41
+      },
       {
         "date": "2026-05-06",
         "value": 4.36
@@ -262,13 +266,13 @@
       {
         "date": "2026-02-13",
         "value": 4.04
-      },
-      {
-        "date": "2026-02-12",
-        "value": 4.09
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-05-07",
+        "value": 3.92
+      },
       {
         "date": "2026-05-06",
         "value": 3.87
@@ -500,21 +504,21 @@
       {
         "date": "2026-02-13",
         "value": 3.4
-      },
-      {
-        "date": "2026-02-12",
-        "value": 3.47
       }
     ],
     "ig_oas": {
-      "date": "2026-05-07",
+      "date": "2026-05-08",
       "value": 0.79
     },
     "hy_oas": {
-      "date": "2026-05-07",
-      "value": 2.79
+      "date": "2026-05-08",
+      "value": 2.81
     },
     "ig_hist": [
+      {
+        "date": "2026-05-08",
+        "value": 0.79
+      },
       {
         "date": "2026-05-07",
         "value": 0.79
@@ -750,13 +754,13 @@
       {
         "date": "2026-02-17",
         "value": 0.8
-      },
-      {
-        "date": "2026-02-16",
-        "value": 0.79
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-05-08",
+        "value": 2.81
+      },
       {
         "date": "2026-05-07",
         "value": 2.79
@@ -991,10 +995,6 @@
       },
       {
         "date": "2026-02-17",
-        "value": 2.94
-      },
-      {
-        "date": "2026-02-16",
         "value": 2.94
       }
     ],
@@ -1672,7 +1672,7 @@
         "WTI surge $4.4 (4.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013May 2026",
-      "updated": "May 08 15:27 UTC",
+      "updated": "May 11 16:35 UTC",
       "sessions": 45
     },
     "gasoline": [
@@ -34264,10 +34264,6 @@
       {
         "date": "2023-06-01",
         "value": 1.37
-      },
-      {
-        "date": "2023-05-01",
-        "value": 1.45
       }
     ],
     "hy_oas_monthly": [
@@ -34410,10 +34406,6 @@
       {
         "date": "2023-06-01",
         "value": 4.29
-      },
-      {
-        "date": "2023-05-01",
-        "value": 4.67
       }
     ],
     "wti_annual": [

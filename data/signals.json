@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-05-10T14:58:12.650073Z",
+  "analyzed_at": "2026-05-11T16:36:00.305858Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 2,
@@ -11,7 +11,7 @@
     "dgs10": 4.41,
     "dgs30": 4.97,
     "ig_oas": 79,
-    "hy_oas": 279,
+    "hy_oas": 281,
     "unrate": 4.3,
     "u6rate": 8.2,
     "nfp_level": 158736.0,
@@ -59,8 +59,8 @@
       "alert": null
     },
     "hy_oas": {
-      "value": 279,
-      "delta": 0,
+      "value": 281,
+      "delta": 2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -242,5 +242,7 @@
     }
   },
   "headlines": [],
-  "raw_errors": []
+  "raw_errors": [
+    "ALFRED PAYEMS@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PAYEMS&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2026-03-31"
+  ]
 }
