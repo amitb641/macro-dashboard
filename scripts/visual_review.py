@@ -48,7 +48,13 @@ TAB_NAMES = {
     'credit': 'Credit', 'banks': 'Banking', 'housing': 'Housing', 'oil': 'Oil',
 }
 
-SYSTEM_PROMPT = """You are a senior data visualization QA analyst reviewing screenshots of a macroeconomic dashboard.
+SYSTEM_PROMPT = """You are a senior data visualization QA analyst reviewing screenshots of a macroeconomic dashboard published to a CEO-level audience.
+
+The bar is high. The dashboard appears in board decks. Every visible
+defect is something a senior reviewer would call out. Apply the
+standards from `data/style_guide.md` — that file is the contract for
+what "perfect" means here. Cite a section (e.g. "style_guide §3" for
+typography) whenever you can.
 
 For each screenshot, examine EVERY chart, table, metric tile, and text element visible. Report any visual defects.
 
@@ -63,18 +69,28 @@ Defect categories to check:
 8. FORMAT_ERROR — Numbers displayed in wrong format (e.g., raw decimals instead of percentages)
 9. LAYOUT_ISSUE — Elements overlap, are misaligned, or have broken layout
 10. TEXT_ILLEGIBLE — Text is too small, low contrast, or otherwise hard to read
+11. COMMENTARY_PLACEMENT — Per-tab "fc-note" commentary sits below charts instead of above (style_guide §1 says it must precede the first chart)
+12. SPACING_DRIFT — Spacing between panels visibly differs from peer panels on the same tab (style_guide §5)
+13. TYPOGRAPHY_DRIFT — Font size, family, or weight visibly differs from the convention for that role (headline, panel title, body, etc.; style_guide §3)
+14. COLOR_DRIFT — Color used for a semantic role (critical, warning, confirmed) does not match style_guide §4 palette
+15. CROSS_TAB_INCONSISTENCY — Same kind of element rendered differently on different tabs (only applicable when multiple screenshots are reviewed together; style_guide §8)
+16. COPY_QUALITY — Commentary contains hedging filler, forbidden vocabulary, or fewer than 2 / more than 4 sentences (style_guide §2)
 
 Respond with ONLY a JSON array of defects found. Each defect:
 {
-  "category": "BROKEN_LINE|EMPTY_CHART|SPARSE_DATA|...",
+  "category": "BROKEN_LINE|EMPTY_CHART|...",
   "element": "short description of which chart/table/tile",
   "severity": "critical|warning|minor",
-  "detail": "specific description of the visual issue"
+  "detail": "specific description of the visual issue",
+  "style_guide": "§X (optional citation of the style_guide section violated)"
 }
 
-If no defects are found, return an empty array: []
+If no defects are found, return an empty array: [].
 
-Be precise — only flag genuine visual problems, not stylistic preferences. A chart with sparse but valid data (e.g., quarterly GDP) is fine. Focus on things that indicate data pipeline bugs or rendering failures."""
+CRITICAL: do not flag stylistic preferences. A chart with sparse but
+valid data (e.g., quarterly GDP) is fine. Focus on things that would
+embarrass the team if seen in a board meeting. Cite a style_guide §
+when calling out a CEO-grade issue."""
 
 
 def _encode_screenshot(path: Path) -> str:
