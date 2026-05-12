@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-12T19:09:34Z";
+  var BUILD_V = "2026-05-12T19:43:21Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -5614,7 +5614,7 @@ function buildStackTab(){
     <div class="stk-content">
       <div class="stk-overline">Architecture · Data · Deployment</div>
       <div class="stk-h1">How the <em>Dashboard Works</em></div>
-      <div class="stk-lead">The economy is printing 2.0% annualized real GDP growth, which masks a deteriorating underlying composition: hiring is decelerating, the savings buffer has thinned to 3.6%, and credit card delinquencies at 2.9% are signaling early consumer stress. Core PCE at 3.2% is 120bp above target, and with WTI at $109.8 the odds of headline re-acceleration into summer are non-trivial, keeping the Fed on hold despite softening growth. The yield curve at +48bp has normalized technically but the normalization reflects re-pricing of a 'higher for longer' regime rather than a growth re-acceleration signal. Risk assets are priced for outcomes that require simultaneous disinflation and a soft landing — a narrowing probability set given current data.</div>
+      <div class="stk-lead">An 11-stage pipeline — a pre-flight dependency verifier plus 10 specialized agents — collects 40+ macro series from FRED, BLS, EIA, and UMich, scores signals against post-shock confirmation rules, drafts AI commentary with Claude Sonnet, and patches this dashboard. The output is then cross-validated across 9 data-quality passes, 224 Playwright DOM checks, and Claude multimodal vision review; quarterly bank earnings-call transcripts are archived autonomously with verbatim quote extraction (validator-gated), and a passive repair observer surfaces failures into a rolling log — unattended, in ~4 minutes per weekly run.</div>
       <div class="stk-pills">
         <span class="stk-pill" style="color:#336BCC;border-color:rgba(51,107,204,.25);background:#EBF2FF">Claude Sonnet 4.6</span>
         <span class="stk-pill" style="color:#8878B8;border-color:rgba(136,120,184,.25);background:#F3F0FF">GitHub Actions CI/CD</span>
@@ -5626,7 +5626,7 @@ function buildStackTab(){
   </div>
 
   <!-- ARCHITECTURE DIAGRAM -->
-  <div class="stk-section-title">8-agent architecture — data collection, analysis, rendering, validation, visual QA &amp; AI vision review</div>
+  <div class="stk-section-title">11-stage architecture — pre-flight, collection, analysis, AI commentary, rendering, publishing, validation, visual QA, vision review, earnings extraction &amp; repair observability</div>
   <div class="panel" style="margin-bottom:20px;padding:0;overflow:hidden">
   <style>
   .diag-wrap { padding:28px 24px 24px; background:#fff; }
