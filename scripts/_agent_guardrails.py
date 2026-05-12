@@ -64,6 +64,8 @@ LLM_WRITABLE_PATHS = frozenset({
     'data/repair_log.md',             # existing observer log
     'data/known_normal.json',         # learned baselines (Stage 10b+)
     'data/signal_rationales.json',    # Phase 2 signal-explainer output
+    'data/editorial_report.json',     # Phase 2.5 editorial audit output
+    'data/ceo_grade_verdict.json',    # CEO-grade gate aggregated verdict
 })
 
 # Files an LLM agent may READ. Broad — reasoning needs context. The risk
@@ -153,16 +155,26 @@ def bounded_llm_call(
     max_tokens: int = 1024,
     purpose: str,
     temperature: float = 0.2,
+    validator: 'Optional[callable]' = None,
 ) -> Optional[str]:
     """The ONLY way agentic code should call Claude. Wraps:
       - Budget check (raises BudgetExhausted if over cap)
       - HTTP call with retries (matches briefing_agent.py pattern)
       - Audit logging to agent_memory.jsonl
+      - Optional output-validator (zero-fail-rate hook)
 
     Returns the response text, or None if guardrails disabled the call.
 
     `purpose` is a short label (e.g. 'diagnose:staleness') logged with
     the memory entry. It's how humans grep the audit log later.
+
+    `validator` (optional) is `callable(response: str) -> bool`. When
+    provided, the LLM response must satisfy `validator(response) is
+    True` or it is logged-and-discarded (returns None). Callers
+    treating None as "skip" gain near-zero-fail-rate behaviour:
+    malformed outputs never propagate downstream. The validator is
+    called inside the retry loop — a failed validation triggers a
+    retry with the same prompt before giving up.
     """
     if is_disabled():
         return None
@@ -212,6 +224,30 @@ def bounded_llm_call(
             body = r.json()
             text = body['content'][0]['text'].strip()
             usage = body.get('usage', {})
+            # Output validator gate — zero-fail-rate guarantee for callers.
+            if validator is not None:
+                try:
+                    ok = bool(validator(text))
+                except Exception as ve:
+                    ok = False
+                    log_llm_call(
+                        purpose=purpose, model=model, prompt=prompt,
+                        system=system, response=text, usage=usage,
+                        elapsed_sec=round(time.time() - started, 2),
+                        call_index=_CALL_COUNT['n'],
+                        error=f'validator_raised: {ve!r}',
+                    )
+                if not ok:
+                    last_err = RuntimeError(f'validator_rejected response on attempt {attempt+1}')
+                    # Log the rejected output before retrying.
+                    log_llm_call(
+                        purpose=purpose, model=model, prompt=prompt,
+                        system=system, response=text, usage=usage,
+                        elapsed_sec=round(time.time() - started, 2),
+                        call_index=_CALL_COUNT['n'],
+                        error='validator_rejected',
+                    )
+                    continue
             log_llm_call(
                 purpose=purpose, model=model, prompt=prompt,
                 system=system, response=text, usage=usage,
@@ -223,7 +259,10 @@ def bounded_llm_call(
             last_err = e
             continue
 
-    # All retries failed — log the failure and surface it.
+    # All retries failed. When a validator was supplied, returning None
+    # is the contract — callers treat it as "skip this finding" rather
+    # than crashing the run. Without a validator, raise the original
+    # transport error.
     log_llm_call(
         purpose=purpose, model=model, prompt=prompt,
         system=system, response=None, usage={},
@@ -231,6 +270,8 @@ def bounded_llm_call(
         call_index=_CALL_COUNT['n'],
         error=repr(last_err),
     )
+    if validator is not None:
+        return None
     raise RuntimeError(f'bounded_llm_call({purpose}) failed after retries: {last_err}')
 
 
