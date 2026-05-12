@@ -1,17 +1,17 @@
 {
-  "analyzed_at": "2026-05-11T16:36:00.305858Z",
-  "risk_level": "ELEVATED",
-  "alert_count": 2,
-  "watch_count": 2,
-  "flagged_count": 0,
+  "analyzed_at": "2026-05-12T16:24:55.649242Z",
+  "risk_level": "HIGH",
+  "alert_count": 3,
+  "watch_count": 1,
+  "flagged_count": 1,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.92,
-    "dgs5": 4.04,
-    "dgs10": 4.41,
-    "dgs30": 4.97,
-    "ig_oas": 79,
-    "hy_oas": 281,
+    "dgs2": 3.9,
+    "dgs5": 4.02,
+    "dgs10": 4.38,
+    "dgs30": 4.95,
+    "ig_oas": 78,
+    "hy_oas": 279,
     "unrate": 4.3,
     "u6rate": 8.2,
     "nfp_level": 158736.0,
@@ -19,8 +19,8 @@
     "icsa": 189000.0,
     "ccsa": 1785000.0,
     "wages_yoy": 3.9,
-    "cpi_yoy": 3.29,
-    "core_cpi_yoy": 2.6,
+    "cpi_yoy": 3.78,
+    "core_cpi_yoy": 2.74,
     "pce_yoy": 3.5,
     "core_pce_yoy": 3.2,
     "saving_rate": 3.6,
@@ -34,7 +34,7 @@
     "brent": 118.26,
     "gdp_growth_q": 2.0,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 49
+    "spread_10_2_bp": 48
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.41,
-      "delta": 0.0,
+      "value": 4.38,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 79,
-      "delta": 0,
+      "value": 78,
+      "delta": -1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 281,
-      "delta": 2,
+      "value": 279,
+      "delta": -2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -73,11 +73,11 @@
       "alert": null
     },
     "cpi_yoy": {
-      "value": 3.29,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": "watch"
+      "value": 3.78,
+      "delta": 0.49,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "alert"
     },
     "pce_yoy": {
       "value": 3.5,
@@ -143,36 +143,36 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.92,
-      "delta": 0.0,
+      "value": 3.9,
+      "delta": -0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.04,
-      "delta": 0.0,
+      "value": 4.02,
+      "delta": -0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.97,
-      "delta": 0.0,
+      "value": 4.95,
+      "delta": -0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 49,
-      "delta": 0,
+      "value": 48,
+      "delta": -1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "core_cpi_yoy": {
-      "value": 2.6,
-      "delta": 0.0,
+      "value": 2.74,
+      "delta": 0.14,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,8 +241,12 @@
       "alert": null
     }
   },
-  "headlines": [],
-  "raw_errors": [
-    "ALFRED PAYEMS@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PAYEMS&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2026-03-31"
-  ]
+  "headlines": [
+    {
+      "key": "cpi_yoy",
+      "line": "cpi_yoy: 3.78 (\u25b20.49 vs prior) [ALERT]",
+      "alert": "alert"
+    }
+  ],
+  "raw_errors": []
 }
