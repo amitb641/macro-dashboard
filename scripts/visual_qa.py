@@ -248,7 +248,7 @@ def run_visual_qa(take_screenshots=False):
             # to single elements, not relative position).
             # Skips tabs that have no commentary-<tab> element (fc/Outlook
             # uses commentary-gdp by design; gdp/stack/validator/dict
-            # have no per-tab commentary).
+            # have no per-tab commentary). style_guide §1.
             commentary = panel.query_selector(f'#commentary-{tab_id}')
             if commentary and canvases:
                 c_box = commentary.bounding_box()
@@ -261,6 +261,50 @@ def run_visual_qa(take_screenshots=False):
                         f'commentary y={c_box["y"]:.0f}, '
                         f'first canvas y={first_canvas_box["y"]:.0f}',
                     )
+
+            # ── Typography rhythm: commentary copy length 2–4 sentences ──
+            # style_guide §2: commentary is 2–4 sentences. Outside that band
+            # is a CEO-grade defect (one sentence reads thin; >4 is a wall).
+            # Sentence count is approximated by counting '.', '!', '?'
+            # outside numbers (BAD: "$3.5B" counts the "." — we strip
+            # digits-around-dot first).
+            if commentary:
+                txt = (commentary.inner_text() or '').strip()
+                # Strip decimal points inside numbers so "$3.5B" doesn't
+                # inflate the sentence count.
+                import re as _re
+                cleaned = _re.sub(r'(?<=\d)\.(?=\d)', '', txt)
+                sentence_count = sum(cleaned.count(c) for c in '.!?')
+                in_band = 2 <= sentence_count <= 4
+                _check(
+                    tab_name, 'Commentary sentence count in [2,4]', in_band,
+                    f'{sentence_count} sentences (style_guide §2)',
+                )
+
+            # ── Color drift: no ad-hoc rgb() colors on commentary copy ──
+            # style_guide §4: commentary uses --text2. Catches the case
+            # where someone hardcodes a color that drifts from the palette.
+            if commentary:
+                color = page.evaluate(
+                    'el => getComputedStyle(el).color',
+                    commentary,
+                )
+                # Allowed resolved colors for commentary copy (style_guide §4).
+                # Keep this set in sync with the --text2 / --text variants
+                # declared on `:root` in index.html. The check fires when a
+                # hand-edit drifts the commentary to an off-palette color.
+                allowed_colors = {
+                    'rgb(51, 78, 104)',   # #334E68 — current --text2
+                    'rgb(13, 27, 42)',    # #0D1B2A — --text (when commentary
+                                          #                 escapes its var)
+                    'rgb(122, 144, 168)', # #7A8FA8 — --muted (panel-level
+                                          #                 commentary tints)
+                }
+                _check(
+                    tab_name, 'Commentary color matches palette',
+                    color in allowed_colors,
+                    f'computed color {color!r} (style_guide §4)',
+                )
 
             # Check for panels (sub-sections)
             panels = panel.query_selector_all('.panel')

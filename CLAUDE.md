@@ -60,6 +60,8 @@ Supporting modules (read by agentic components):
 - `scripts/_agent_memory.py` — Append-only JSONL audit log writer at `data/agent_memory.jsonl`. Capped at 2000 entries (rolling FIFO).
 - `scripts/_signal_rationales.py` — **Phase 2 explainer** (post-analyzer narrative augmentation). When `AGENT_EXPLAINER_ENABLED=1` + `ANTHROPIC_API_KEY` are set, reads `data/signals.json` + `data/raw_data.json` and emits a Claude-authored rationale per flagged signal to `data/signal_rationales.json` (separate artifact — does NOT mutate signals.json, renderer is unchanged). Same guardrails as Agent 10. Read-only narrative; never recommends actions.
 - `scripts/inspect_agent_memory.py` — CLI for reviewing the audit log (`python scripts/inspect_agent_memory.py --tail 20 --full` etc.). Read-only.
+- `scripts/_editorial_review.py` — **Phase 2.5 editorial auditor**. Reviews every per-tab commentary in `index.html` + briefing-agent commentary fields in `signals.json` against `data/style_guide.md` §2 (length, vocabulary, factual grounding). Deterministic linters run first (length, forbidden vocab, hedging filler, fabricated-numeric detection); LLM tone/factuality pass is opt-in via `AGENT_EDITORIAL_REVIEW_ENABLED=1` and uses two-LLM critique (Sonnet audits, Opus critiques) before any "critical" verdict is promoted. Output: `data/editorial_report.json`. Read-only — never modifies commentary.
+- `scripts/ceo_grade_gate.py` — **CEO-grade pre-deploy gate**. Deterministic orchestrator that reads the verdict artifacts from validator, visual_qa, vision_review, editorial_review, and today's repair incident report and produces one go/no-go decision in `data/ceo_grade_verdict.json`. No LLM calls of its own — replay-safe and idempotent. Use `--strict` to treat warnings as gate-blocking on publication days. Exit codes: 0=PASS/WARN, 2=FAIL, 3=SKIP (missing layer), 4=internal error.
 - `data/playbook.md` — Human-curated reasoning context. Pipeline cadence, source publish lag tables, noise floors per series, common-cause patterns, forbidden recommendations. Agents cite §X.Y when justifying diagnoses; when this and an LLM disagree, this file wins.
 - `data/known_normal.json` — Machine-readable mirror of playbook baselines (publish lag, noise floors, shock-tracker min obs counts, model routing).
 
@@ -85,6 +87,8 @@ Supporting scripts:
 - `data/incident_reports/<YYYY-MM-DD>.md` — Per-run incident reports written by the Repair Diagnostician when Stage 10a is enabled.
 - `data/signal_rationales.json` — Per-signal Claude-authored rationales (Phase 2 explainer output, only present when `AGENT_EXPLAINER_ENABLED=1`).
 - `data/style_guide.md` — Human-curated visual contract (layout, typography, color, spacing, cross-tab consistency rules). Read by Agent 8 vision review; cited by Agent 7 DOM checks.
+- `data/editorial_report.json` — Per-piece editorial-review findings (deterministic linters + optional LLM audit). Read by `ceo_grade_gate.py`.
+- `data/ceo_grade_verdict.json` — Aggregated go/no-go verdict across validator + visual_qa + vision_review + editorial + repair_incident. Read this in publish-step CI.
 - `.github/workflows/briefing.yml` — Main CI pipeline (Agents 1-8, weekly Fri + monthly 2nd Sat)
 - `.github/workflows/earnings_agent.yml` — Agent 9 cron (quarterly, earnings-season only — Jan/Apr/Jul/Oct days 10-28, 10pm UTC)
 - `.github/workflows/smoke-tests.yml` — PR smoke tests
@@ -123,7 +127,8 @@ Rules:
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 9 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g), **collector errors** (3h), earnings commentary (verbatim), visual QA, vision review
+- Validator runs 10 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), earnings commentary (verbatim), visual QA, vision review
+- CEO-grade gate (`python scripts/ceo_grade_gate.py`) aggregates the verdicts into a single PASS/WARN/FAIL/SKIP decision and writes `data/ceo_grade_verdict.json` — this is the publish-readiness contract
 
 ## Commit Conventions
 - Bug fixes: `Fix <what>: <detail>`

@@ -1405,7 +1405,80 @@ def check_collector_errors(raw):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None):
+def check_cross_source(data):
+    """Pass 3i — Cross-source agreement check.
+
+    The dashboard aggregates from FRED, BLS, BEA, and EIA. FRED republishes
+    upstream BLS/BEA series — so the value on FRED for, e.g., UNRATE
+    should match the underlying BLS value to within rounding. A
+    divergence indicates one of:
+      - One side has not yet published a revision.
+      - Collector pulled stale/cached data from one path.
+      - Upstream publishing bug.
+
+    Cheap, low-noise: only checks 4 anchor series. Network-gated by the
+    same FRED_KEY / BLS_KEY presence the rest of the validator uses.
+    No-op (returns 'skipped' findings) when keys are missing — never
+    blocks CI.
+    """
+    findings = []
+
+    # Pairs of (anchor_series_in_raw_data, FRED id, BLS id, tolerance_pct).
+    # Anchor series is what the collector stored under `data[<key>]`.
+    pairs = [
+        ('unrate',    'UNRATE',     'LNS14000000', 0.05),
+        ('cpi_all',   'CPIAUCSL',   'CUUR0000SA0', 0.001),
+        ('core_cpi',  'CPILFESL',   'CUUR0000SA0L1E', 0.001),
+    ]
+
+    if not FRED_KEY or not BLS_KEY:
+        findings.append({
+            'check': 'Cross-source agreement: FRED+BLS keys',
+            'pass': True, 'severity': 'skipped',
+            'note': 'Keys not configured — cross-source check skipped',
+        })
+        return findings
+
+    for anchor_key, fred_id, bls_id, tol_frac in pairs:
+        f = _fred_latest(fred_id)
+        b = _bls_latest(bls_id)
+        if not f or not b:
+            findings.append({
+                'check':    f'Cross-source: {anchor_key} (FRED vs BLS)',
+                'pass':     True,
+                'severity': 'skipped',
+                'note':     f'one side unavailable (fred={bool(f)}, bls={bool(b)})',
+            })
+            continue
+        _, fv = f
+        _, bv = b
+        diff = abs(fv - bv)
+        # Tolerance is the larger of (fraction of value, absolute floor 0.05).
+        # Floor keeps the check sane for small-magnitude rates (e.g.
+        # unemployment 4.3% — 5% fractional tolerance ≈ 0.2pp).
+        tol = max(tol_frac * abs(bv), 0.05)
+        agrees = diff <= tol
+        findings.append({
+            'check':    f'Cross-source: {anchor_key} (FRED vs BLS)',
+            'pass':     agrees,
+            'severity': 'ok' if agrees else 'warning',
+            'metric':   anchor_key,
+            'fred':     fv,
+            'bls':      bv,
+            'diff':     round(diff, 4),
+            'tol':      round(tol, 4),
+            'note':     None if agrees else (
+                f'FRED {fv} vs BLS {bv} (Δ={diff:.4f}, tol={tol:.4f}). '
+                f'One side may be stale or revised.'
+            ),
+        })
+        if not agrees:
+            print(f'  ⚠ {anchor_key}: FRED={fv} BLS={bv} Δ={diff:.4f}')
+
+    return findings
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1425,9 +1498,12 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         collector_errors = []
     if seed_drift is None:
         seed_drift = []
+    if cross_source is None:
+        cross_source = []
     all_findings = (internal + sources + staleness + visual + vision_review +
                     shock_tracker + earnings + panel_data + metric_consistency +
-                    schema_contract + collector_errors + seed_drift)
+                    schema_contract + collector_errors + seed_drift +
+                    cross_source)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1462,6 +1538,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'seed_drift': seed_drift,
         'visual_qa': visual,
         'visual_review': vision_review,
+        'cross_source': cross_source,
     }
     return report
 
@@ -1551,6 +1628,14 @@ def validate():
     ce_fail = sum(1 for f in collector_errors if not f.get('pass'))
     print(f'  {ce_pass} passed, {ce_fail} failed')
 
+    # Pass 3i: Cross-source agreement (FRED vs BLS for shared anchor metrics)
+    print('\n  ── Pass 3i: Cross-Source Agreement (FRED vs BLS) ──')
+    cross_source = check_cross_source(data)
+    cs_pass = sum(1 for f in cross_source if f.get('pass') and f.get('severity') != 'skipped')
+    cs_fail = sum(1 for f in cross_source if not f.get('pass'))
+    cs_skip = sum(1 for f in cross_source if f.get('severity') == 'skipped')
+    print(f'  {cs_pass} passed, {cs_fail} failed, {cs_skip} skipped')
+
     # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
     print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
     earnings = check_earnings_verbatim()
@@ -1582,7 +1667,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary

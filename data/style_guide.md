@@ -91,13 +91,19 @@ Pass 3e (numeric cross-surface consistency).
 ```
 --accent   #336BCC   primary brand blue
 --accent2  #8878B8   secondary lavender (AI / LLM-driven surfaces)
---text     #1E293B   primary text
---text2    #64748B   body / commentary text
---muted    #94A3B8   labels, sources, metadata
+--text     #0D1B2A   primary text
+--text2    #334E68   body / commentary text (rgb 51, 78, 104)
+--muted    #7A8FA8   labels, sources, metadata (rgb 122, 144, 168)
+--dim      #94A3B8   de-emphasised metadata / placeholders
 --border   #E2E8F0   default borders
 --bg       #F7F9FC   page background
 --card     #FFFFFF   panel background
 ```
+
+These values are the **rendered ground truth** (resolved via getComputedStyle in
+`scripts/visual_qa.py::Commentary color matches palette`). Any change to the
+CSS variables on line ~406 of `index.html` MUST be mirrored here AND in the
+check's `allowed_colors` set, or the check will fire on the next CI run.
 
 Semantic colors (severity / direction):
 - 🔴 **Critical / shock / risk**: `#D64045` (red 600)
