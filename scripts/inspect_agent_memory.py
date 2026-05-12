@@ -1,0 +1,155 @@
+#!/usr/bin/env python3
+"""
+Agent Memory Inspector — CLI for reviewing the audit log.
+
+Reads `data/agent_memory.jsonl` and prints filtered, human-readable
+summaries of past agentic LLM calls. Useful when triaging incidents,
+auditing cost spikes, or replaying what the diagnostician said about a
+particular finding.
+
+Usage
+=====
+    # Aggregate stats across the full file
+    python scripts/inspect_agent_memory.py
+
+    # Last 20 entries (newest last)
+    python scripts/inspect_agent_memory.py --tail 20
+
+    # Filter by agent name
+    python scripts/inspect_agent_memory.py --agent repair --tail 10
+
+    # Filter by purpose substring (e.g. all 'diagnose:Staleness' calls)
+    python scripts/inspect_agent_memory.py --purpose Staleness --full
+
+    # Show prompts and full responses (verbose). Otherwise prints summary.
+    python scripts/inspect_agent_memory.py --tail 5 --full
+
+This tool is READ-ONLY by design — it never modifies the log. The 2000-
+entry rolling cap is enforced by `_agent_memory.log_llm_call()` itself.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+MEMORY_FILE = ROOT / 'data' / 'agent_memory.jsonl'
+
+
+def load_entries() -> list[dict]:
+    if not MEMORY_FILE.exists():
+        return []
+    out: list[dict] = []
+    for line in MEMORY_FILE.read_text(encoding='utf-8').splitlines():
+        if not line.strip():
+            continue
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return out
+
+
+def aggregate(entries: list[dict]) -> dict:
+    total = len(entries)
+    by_agent: dict[str, int] = {}
+    by_model: dict[str, int] = {}
+    by_purpose: dict[str, int] = {}
+    errors = 0
+    in_tokens = 0
+    out_tokens = 0
+    for e in entries:
+        by_agent[e.get('agent', '?')]   = by_agent.get(e.get('agent', '?'), 0) + 1
+        by_model[e.get('model', '?')]   = by_model.get(e.get('model', '?'), 0) + 1
+        # Purpose prefix (before first colon) — gives a useful bucket.
+        purpose = (e.get('purpose') or '?').split(':', 1)[0]
+        by_purpose[purpose] = by_purpose.get(purpose, 0) + 1
+        if 'error' in e:
+            errors += 1
+        usage = e.get('usage') or {}
+        in_tokens  += usage.get('input_tokens', 0) or 0
+        out_tokens += usage.get('output_tokens', 0) or 0
+    return {
+        'total':       total,
+        'by_agent':    by_agent,
+        'by_model':    by_model,
+        'by_purpose':  by_purpose,
+        'errors':      errors,
+        'input_tokens':  in_tokens,
+        'output_tokens': out_tokens,
+    }
+
+
+def fmt_entry(e: dict, full: bool) -> str:
+    head = (
+        f'[{e.get("ts","?")}] {e.get("agent","?")}/{e.get("purpose","?")} '
+        f'· {e.get("model","?")} · {e.get("elapsed_sec","?")}s'
+    )
+    usage = e.get('usage') or {}
+    if usage:
+        head += f' · in={usage.get("input_tokens","?")} out={usage.get("output_tokens","?")}'
+    if 'error' in e:
+        head += f' · ERROR: {e["error"][:120]}'
+        return head
+    if not full:
+        # Compact one-liner — show first line of response.
+        resp = (e.get('response') or '').strip().split('\n', 1)[0]
+        return head + (f'\n    → {resp[:140]}' if resp else '')
+    # Full mode — prompt + response
+    body = [
+        head,
+        '  ─── system ───',
+        '  ' + (e.get('system_truncated') or '(none)').replace('\n', '\n  '),
+        '  ─── prompt ───',
+        '  ' + (e.get('prompt_truncated') or '(none)').replace('\n', '\n  '),
+        '  ─── response ───',
+        '  ' + (e.get('response') or '(none)').replace('\n', '\n  '),
+    ]
+    return '\n'.join(body)
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--agent',   help='Filter by agent name (e.g. repair, explainer)')
+    p.add_argument('--purpose', help='Filter by purpose substring (e.g. Staleness)')
+    p.add_argument('--tail',    type=int, default=0,
+                   help='Show last N entries instead of aggregate stats')
+    p.add_argument('--full',    action='store_true',
+                   help='Show full prompts and responses (otherwise summary lines)')
+    args = p.parse_args(argv)
+
+    entries = load_entries()
+    if args.agent:
+        entries = [e for e in entries if e.get('agent') == args.agent]
+    if args.purpose:
+        needle = args.purpose.lower()
+        entries = [e for e in entries if needle in (e.get('purpose') or '').lower()]
+
+    if args.tail:
+        for e in entries[-args.tail:]:
+            print(fmt_entry(e, args.full))
+            print()
+        return 0
+
+    # Default: aggregate stats
+    agg = aggregate(entries)
+    print(f'Agent Memory — {MEMORY_FILE.relative_to(ROOT)}')
+    print(f'Total entries: {agg["total"]}')
+    print(f'Errors:        {agg["errors"]}')
+    print(f'Tokens:        {agg["input_tokens"]:,} in · {agg["output_tokens"]:,} out')
+    print()
+    for label, m in [('By agent', agg['by_agent']),
+                     ('By model', agg['by_model']),
+                     ('By purpose-prefix', agg['by_purpose'])]:
+        print(f'{label}:')
+        for k, v in sorted(m.items(), key=lambda kv: -kv[1]):
+            print(f'  {v:>6}  {k}')
+        print()
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

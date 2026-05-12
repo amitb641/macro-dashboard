@@ -176,17 +176,29 @@ When you reason about a finding:
      collector."
   4. Never recommend any action on the forbidden list in playbook §5.
 
+If you are shown RECURRENCE context (prior runs that flagged this same
+check), use it:
+  - If the check is recurring (seen in 3+ recent runs), upgrade the
+    recommendation from "monitor" to "investigate root cause" and call
+    out the recurrence in the rationale.
+  - If a prior diagnosis already proposed a fix and the issue is still
+    present, that's strong evidence the fix wasn't applied OR didn't
+    work — say so in the rationale.
+  - If this is a first-time finding, say so explicitly so reviewers
+    know not to over-react to a single noisy run.
+
 Output format — produce EXACTLY this Markdown structure and nothing else:
 
 ### Finding: <one-line finding name>
 **Severity**: <critical | warning | stale | informational>
 **Confidence**: <high | medium | low>
+**Recurrence**: <one short phrase, e.g. "first observed" | "seen 4/5 runs since 2026-04-12" | "recurring; prior fix did not resolve">
 **Root cause (hypothesis)**: <2-3 sentences>
 **Playbook citation**: <§X.Y or "none — see Gap" below>
 **Recommended next step**:
 - <one-line action OR "Monitor only — see Rationale">
 
-**Rationale**: <2-4 sentences. Tie the recommendation to the citation.>
+**Rationale**: <2-4 sentences. Tie the recommendation to the citation AND the recurrence context if present.>
 **Gap (if any)**: <what additional context would raise your confidence>
 """
 
@@ -216,6 +228,85 @@ def _load_context() -> tuple[str, str]:
     if KNOWN_NORMAL.exists():
         normals = KNOWN_NORMAL.read_text(encoding='utf-8')[:8000]
     return playbook, normals
+
+
+def _recurrence_history(check_name: str, max_runs: int = 10) -> dict:
+    """Look back through repair_log.md + incident_reports/ for prior
+    mentions of this check. Returns a compact summary the diagnostician
+    can use to spot recurrence patterns.
+
+    Returns:
+        {
+          'runs_seen_in':  3,            # of last `max_runs`
+          'total_runs':    7,            # how many runs the log covers
+          'last_seen':     '2026-05-04', # date of most recent mention
+          'prior_recommendations': [...] # up to 3 past Markdown blurbs
+        }
+    """
+    out: dict = {
+        'runs_seen_in': 0,
+        'total_runs': 0,
+        'last_seen': None,
+        'prior_recommendations': [],
+    }
+    if not check_name:
+        return out
+
+    # Pass 1 — observer log gives us run-level cadence.
+    if LOG_FILE.exists():
+        log = LOG_FILE.read_text(encoding='utf-8')
+        # repair_log.md headers look like: `## Repair Agent — 2026-05-12T...`
+        runs = log.split('## Repair Agent —')[1:max_runs + 1]
+        out['total_runs'] = len(runs)
+        for run in runs:
+            if check_name in run:
+                out['runs_seen_in'] += 1
+                if out['last_seen'] is None:
+                    # First non-empty line of the run starts with " <ISO date>"
+                    head = run.lstrip().split('\n', 1)[0].strip()
+                    out['last_seen'] = head[:10] if len(head) >= 10 else head
+
+    # Pass 2 — prior LLM diagnoses, if any, for richer recurrence context.
+    if INCIDENT_DIR.exists():
+        # Newest first by filename (YYYY-MM-DD.md sorts lexicographically).
+        files = sorted(
+            (p for p in INCIDENT_DIR.glob('*.md') if p.is_file()),
+            reverse=True,
+        )[:max_runs]
+        for path in files:
+            text = path.read_text(encoding='utf-8')
+            # Each diagnosis starts with `### Finding: <name>` — pull the
+            # block that mentions our check_name.
+            blocks = text.split('### Finding:')
+            for block in blocks[1:]:
+                first_line = block.split('\n', 1)[0]
+                if check_name and check_name in first_line:
+                    snippet = ('### Finding:' + block).strip()
+                    # Keep blurb short; 800 chars covers the structured fields.
+                    out['prior_recommendations'].append(snippet[:800])
+                    break
+            if len(out['prior_recommendations']) >= 3:
+                break
+
+    return out
+
+
+def _format_recurrence(history: dict) -> str:
+    """Render a recurrence-history dict as a compact prompt fragment."""
+    if history['total_runs'] == 0:
+        return 'RECURRENCE: no prior log entries (first observed run for this agent).'
+    n, tot = history['runs_seen_in'], history['total_runs']
+    if n == 0:
+        return f'RECURRENCE: not seen in last {tot} observer runs. First-time finding.'
+    lines = [
+        f'RECURRENCE: seen in {n} of last {tot} runs. Last seen: {history["last_seen"] or "?"}.',
+    ]
+    if history['prior_recommendations']:
+        lines.append('PRIOR DIAGNOSES (most recent first):')
+        for blurb in history['prior_recommendations']:
+            lines.append('---')
+            lines.append(blurb)
+    return '\n'.join(lines)
 
 
 def diagnose_findings(report) -> str:
@@ -257,12 +348,17 @@ def diagnose_findings(report) -> str:
 
     for label, finding, severity in findings_to_diagnose[:MAX_FINDINGS_PER_RUN]:
         finding_json = _format_finding(label, finding, severity)
+        recurrence = _recurrence_history(finding.get('check', ''))
+        recurrence_block = _format_recurrence(recurrence)
         prompt = (
             f'PLAYBOOK (truncated):\n{playbook}\n\n'
             f'KNOWN NORMAL BASELINES (JSON):\n{normals}\n\n'
             f'FINDING (JSON):\n{finding_json}\n\n'
+            f'{recurrence_block}\n\n'
             f'Diagnose this finding using the format specified in the '
-            f'system prompt. Cite a playbook section or downgrade confidence.'
+            f'system prompt. Cite a playbook section or downgrade confidence. '
+            f'If RECURRENCE shows the issue is recurring, reflect that in '
+            f'your severity / recommendation / rationale.'
         )
         try:
             response = bounded_llm_call(

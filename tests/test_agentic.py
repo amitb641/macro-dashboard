@@ -283,5 +283,218 @@ class TestRepairAgentObserverMode(unittest.TestCase):
                          'diagnose_findings must return empty string when disabled')
 
 
+# ──────────────────────────────────────────────────────────────────────
+# Memory-aware diagnostician (recurrence detection)
+# ──────────────────────────────────────────────────────────────────────
+
+class TestRecurrenceHistory(unittest.TestCase):
+    """Verify the recurrence helper reads observer log + prior incidents
+    correctly. Pure file-IO; no LLM calls."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        for mod in ('_agent_guardrails', '_agent_memory', 'repair_agent'):
+            sys.modules.pop(mod, None)
+        import repair_agent as ra
+        self.ra = ra
+        self._saved_log = ra.LOG_FILE
+        self._saved_inc = ra.INCIDENT_DIR
+        ra.LOG_FILE     = Path(self._tmp.name) / 'repair_log.md'
+        ra.INCIDENT_DIR = Path(self._tmp.name) / 'incident_reports'
+        ra.INCIDENT_DIR.mkdir()
+
+    def tearDown(self):
+        self.ra.LOG_FILE     = self._saved_log
+        self.ra.INCIDENT_DIR = self._saved_inc
+
+    def test_no_history_returns_zeros(self):
+        h = self.ra._recurrence_history('pce.age')
+        self.assertEqual(h['runs_seen_in'], 0)
+        self.assertEqual(h['total_runs'], 0)
+        self.assertIsNone(h['last_seen'])
+        self.assertEqual(h['prior_recommendations'], [])
+
+    def test_log_run_counting(self):
+        self.ra.LOG_FILE.write_text(
+            '## Repair Agent — 2026-05-12T10:00:00\n\n'
+            'something pce.age 95d old\n\n'
+            '---\n\n'
+            '## Repair Agent — 2026-05-05T10:00:00\n\n'
+            'something else pce.age 88d old\n\n'
+            '---\n\n'
+            '## Repair Agent — 2026-04-28T10:00:00\n\n'
+            'unrelated\n\n',
+            encoding='utf-8',
+        )
+        h = self.ra._recurrence_history('pce.age')
+        self.assertEqual(h['total_runs'], 3)
+        self.assertEqual(h['runs_seen_in'], 2)
+        self.assertTrue(h['last_seen'].startswith('2026-05-12'))
+
+    def test_prior_incidents_collected(self):
+        (self.ra.INCIDENT_DIR / '2026-05-05.md').write_text(
+            '# header\n\n### Finding: pce.age stale\n'
+            '**Severity**: stale\n**Confidence**: medium\n'
+            '**Root cause**: BEA publishes PCE with a long lag.\n'
+            '**Playbook citation**: §2.2\n\n',
+            encoding='utf-8',
+        )
+        h = self.ra._recurrence_history('pce.age')
+        self.assertEqual(len(h['prior_recommendations']), 1)
+        self.assertIn('§2.2', h['prior_recommendations'][0])
+
+    def test_format_recurrence_first_time(self):
+        h = {'runs_seen_in': 0, 'total_runs': 5, 'last_seen': None,
+             'prior_recommendations': []}
+        self.assertIn('First-time finding', self.ra._format_recurrence(h))
+
+    def test_format_recurrence_recurring(self):
+        h = {'runs_seen_in': 3, 'total_runs': 5, 'last_seen': '2026-05-12',
+             'prior_recommendations': ['### Finding: X\n**Recommended**: foo']}
+        s = self.ra._format_recurrence(h)
+        self.assertIn('3 of last 5', s)
+        self.assertIn('PRIOR DIAGNOSES', s)
+
+
+# ──────────────────────────────────────────────────────────────────────
+# Signal Rationales explainer (Phase 2)
+# ──────────────────────────────────────────────────────────────────────
+
+class TestSignalRationales(unittest.TestCase):
+
+    def setUp(self):
+        for k in ('AGENT_DISABLE_ALL', 'AGENT_EXPLAINER_ENABLED',
+                  'ANTHROPIC_API_KEY'):
+            os.environ.pop(k, None)
+        for mod in ('_agent_guardrails', '_signal_rationales'):
+            sys.modules.pop(mod, None)
+
+    def test_disabled_by_default(self):
+        import _signal_rationales as sr
+        self.assertFalse(sr._is_enabled())
+
+    def test_enabled_when_flags_set(self):
+        os.environ['AGENT_EXPLAINER_ENABLED'] = '1'
+        os.environ['ANTHROPIC_API_KEY'] = 'sk-test'
+        import _signal_rationales as sr
+        self.assertTrue(sr._is_enabled())
+
+    def test_kill_switch_overrides_opt_in(self):
+        os.environ['AGENT_DISABLE_ALL'] = '1'
+        os.environ['AGENT_EXPLAINER_ENABLED'] = '1'
+        os.environ['ANTHROPIC_API_KEY'] = 'sk-test'
+        import _signal_rationales as sr
+        self.assertFalse(sr._is_enabled())
+
+    def test_flagged_signal_filter(self):
+        import _signal_rationales as sr
+        signals = {
+            'ffr':       {'value': 3.64, 'flagged': False, 'alert': None},
+            'unrate':    {'value': 4.5,  'flagged': True,  'alert': None},
+            'cpi_yoy':   {'value': 3.5,  'flagged': False, 'alert': 'warning'},
+            'noise':     'not-a-dict',
+        }
+        out = sr._flagged_signals(signals)
+        names = [name for name, _ in out]
+        self.assertIn('unrate', names)
+        self.assertIn('cpi_yoy', names)
+        self.assertNotIn('ffr', names)
+        self.assertNotIn('noise', names)
+        self.assertEqual(names[0], 'cpi_yoy')
+
+    def test_raw_context_handles_missing_series(self):
+        import _signal_rationales as sr
+        s = sr._raw_context_for('nonexistent', {})
+        self.assertIn('no raw_data', s)
+
+    def test_raw_context_scalar_shape(self):
+        import _signal_rationales as sr
+        s = sr._raw_context_for('ffr', {'ffr': {'date': '2026-05-01', 'value': 3.64}})
+        self.assertIn('3.64', s)
+        self.assertIn('2026-05-01', s)
+
+    def test_raw_context_list_shape(self):
+        import _signal_rationales as sr
+        series = [{'date': f'2026-0{i}-01', 'value': i} for i in range(1, 8)]
+        s = sr._raw_context_for('series', {'series': series})
+        self.assertIn('most recent 6', s)
+
+    def test_extract_cite_finds_section(self):
+        import _signal_rationales as sr
+        self.assertEqual(sr._extract_cite('see §4.2 for details'), '§4.2')
+        self.assertEqual(sr._extract_cite('matches §3 baseline'), '§3')
+        self.assertEqual(sr._extract_cite('no citation here'), '')
+
+    def test_output_path_on_allowlist(self):
+        import _agent_guardrails as g
+        g.assert_path_allowlisted('data/signal_rationales.json')
+
+
+# ──────────────────────────────────────────────────────────────────────
+# Memory inspector CLI
+# ──────────────────────────────────────────────────────────────────────
+
+class TestMemoryInspector(unittest.TestCase):
+
+    def setUp(self):
+        for mod in ('inspect_agent_memory',):
+            sys.modules.pop(mod, None)
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        import inspect_agent_memory as ins
+        self._saved = ins.MEMORY_FILE
+        ins.MEMORY_FILE = Path(self._tmp.name) / 'agent_memory.jsonl'
+        self.ins = ins
+
+    def tearDown(self):
+        self.ins.MEMORY_FILE = self._saved
+
+    def test_load_empty(self):
+        self.assertEqual(self.ins.load_entries(), [])
+
+    def test_aggregate_counts(self):
+        rows = [
+            {'agent': 'repair', 'purpose': 'diagnose:Staleness',
+             'model': 'claude-sonnet-4-6',
+             'usage': {'input_tokens': 100, 'output_tokens': 50}},
+            {'agent': 'repair', 'purpose': 'diagnose:Schema',
+             'model': 'claude-sonnet-4-6',
+             'usage': {'input_tokens': 80, 'output_tokens': 40},
+             'error': 'boom'},
+            {'agent': 'explainer', 'purpose': 'explain:cpi',
+             'model': 'claude-sonnet-4-6',
+             'usage': {'input_tokens': 60, 'output_tokens': 30}},
+        ]
+        self.ins.MEMORY_FILE.write_text(
+            '\n'.join(json.dumps(r) for r in rows) + '\n',
+            encoding='utf-8',
+        )
+        entries = self.ins.load_entries()
+        self.assertEqual(len(entries), 3)
+        agg = self.ins.aggregate(entries)
+        self.assertEqual(agg['total'], 3)
+        self.assertEqual(agg['errors'], 1)
+        self.assertEqual(agg['input_tokens'], 240)
+        self.assertEqual(agg['output_tokens'], 120)
+        self.assertEqual(agg['by_agent']['repair'], 2)
+        self.assertEqual(agg['by_agent']['explainer'], 1)
+        self.assertEqual(agg['by_purpose']['diagnose'], 2)
+        self.assertEqual(agg['by_purpose']['explain'], 1)
+
+    def test_fmt_entry_summary_vs_full(self):
+        e = {'ts': 't', 'agent': 'a', 'purpose': 'p', 'model': 'm',
+             'elapsed_sec': 0.1, 'usage': {'input_tokens': 5, 'output_tokens': 2},
+             'system_truncated': 'SYS', 'prompt_truncated': 'PROMPT',
+             'response': 'RESP'}
+        short = self.ins.fmt_entry(e, full=False)
+        self.assertIn('RESP', short)
+        self.assertNotIn('SYS', short)
+        full = self.ins.fmt_entry(e, full=True)
+        self.assertIn('SYS', full)
+        self.assertIn('PROMPT', full)
+        self.assertIn('RESP', full)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
