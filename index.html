@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-12T20:55:50Z";
+  var BUILD_V = "2026-05-12T21:16:06Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2012,6 +2012,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="metric-row" id="oil-metrics"></div>
 
+  <div class="fc-note" id="commentary-oil" style="margin-bottom:12px">WTI at $109.8 and Brent at $118.3 represent a significant macro shock vector — at these levels, energy is a direct tax on consumers and a cost-push inflation driver that undermines Fed disinflation progress. A sustained Brent print above $115 historically transmits into CPI headline within 6-8 weeks, threatening another inflation re-acceleration. This is the single highest-conviction risk flag in the current environment; PMs with energy underweights should reassess.</div>
+
   <!-- SECTION 1: Price & Supply -->
   <div class="stk-section-title" style="margin-top:4px">📈 Section 1 — Price &amp; Supply</div>
   <div class="two-up" style="margin-bottom:16px">
@@ -2031,7 +2033,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- SECTION 2: Inflation Transmission -->
   <div class="stk-section-title">🔥 Section 2 — Inflation Transmission</div>
-  <div class="fc-note" id="commentary-oil" style="margin-bottom:12px">WTI at $109.8 and Brent at $118.3 represent a significant macro shock vector — at these levels, energy is a direct tax on consumers and a cost-push inflation driver that undermines Fed disinflation progress. A sustained Brent print above $115 historically transmits into CPI headline within 6-8 weeks, threatening another inflation re-acceleration. This is the single highest-conviction risk flag in the current environment; PMs with energy underweights should reassess.</div>
   <div class="two-up" style="margin-bottom:16px;align-items:stretch">
     <div class="panel" style="display:flex;flex-direction:column">
       <div style="display:inline-flex;align-items:center;gap:5px;background:#FEF2F2;border:1px solid rgba(214,64,69,.3);border-radius:5px;padding:3px 9px;margin-bottom:7px">

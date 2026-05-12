@@ -239,6 +239,29 @@ def run_visual_qa(take_screenshots=False):
                     _check(tab_name, f'Chart canvas {i} has size', has_size,
                            f'{box["width"]:.0f}x{box["height"]:.0f}px')
 
+            # ── Layout consistency: commentary positioned above charts ──
+            # Canonical rule: every chart tab with a `<div class="fc-note"
+            # id="commentary-<tab>">` element should render it ABOVE the
+            # first chart canvas in the tab. Catches drift where commentary
+            # ends up wedged between or below cards (silent UX regression
+            # the existing DOM checks couldn't see because they're scoped
+            # to single elements, not relative position).
+            # Skips tabs that have no commentary-<tab> element (fc/Outlook
+            # uses commentary-gdp by design; gdp/stack/validator/dict
+            # have no per-tab commentary).
+            commentary = panel.query_selector(f'#commentary-{tab_id}')
+            if commentary and canvases:
+                c_box = commentary.bounding_box()
+                first_canvas_box = canvases[0].bounding_box()
+                if c_box and first_canvas_box:
+                    above_first_chart = c_box['y'] < first_canvas_box['y']
+                    _check(
+                        tab_name, 'Commentary positioned above first chart',
+                        above_first_chart,
+                        f'commentary y={c_box["y"]:.0f}, '
+                        f'first canvas y={first_canvas_box["y"]:.0f}',
+                    )
+
             # Check for panels (sub-sections)
             panels = panel.query_selector_all('.panel')
             for i, p in enumerate(panels[:10]):  # Limit to first 10
