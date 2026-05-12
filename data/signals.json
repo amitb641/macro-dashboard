@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-05-12T16:24:55.649242Z",
+  "analyzed_at": "2026-05-12T19:08:03.492897Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 1,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 3.9,
@@ -46,21 +46,21 @@
     },
     "dgs10": {
       "value": 4.38,
-      "delta": -0.03,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
       "value": 78,
-      "delta": -1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 279,
-      "delta": -2,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -74,9 +74,9 @@
     },
     "cpi_yoy": {
       "value": 3.78,
-      "delta": 0.49,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "pce_yoy": {
@@ -144,35 +144,35 @@
     },
     "dgs2": {
       "value": 3.9,
-      "delta": -0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 4.02,
-      "delta": -0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 4.95,
-      "delta": -0.02,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 48,
-      "delta": -1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "core_cpi_yoy": {
       "value": 2.74,
-      "delta": 0.14,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,12 +241,6 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "cpi_yoy",
-      "line": "cpi_yoy: 3.78 (\u25b20.49 vs prior) [ALERT]",
-      "alert": "alert"
-    }
-  ],
+  "headlines": [],
   "raw_errors": []
 }
