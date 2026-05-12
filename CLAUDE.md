@@ -25,7 +25,14 @@
 7. `scripts/visual_qa.py` — Agent 7: DOM-based visual quality checks (Playwright)
 8. `scripts/visual_review.py` — Agent 8: Vision-based chart review (Claude multimodal)
 9. `scripts/earnings_agent.py` — Agent 9: Autonomous quarterly earnings — fetches transcripts, extracts verbatim fields via Claude Sonnet, gated by validator Pass 3c. Runs on its own cron (`earnings_agent.yml`, 10pm UTC during Jan/Apr/Jul/Oct weeks). **Never touches the weekly briefing cadence.**
-10. `scripts/repair_agent.py` — Agent 10: Repair agent (observer mode v1). Reads `data/validation_report.json` after every CI run, surfaces critical/warning/stale findings into a structured summary in the run log + rolling `data/repair_log.md`. **No automated fixes** — passive observer per `docs/SELF_VERIFICATION.md` design rule (≥3 weeks observation before any fix-writing). Runs `if: always()` after Agent 6 so it surfaces failures even when the validator gate halts the pipeline.
+10. `scripts/repair_agent.py` — Agent 10: Repair agent. Default mode is **observer** — reads `data/validation_report.json` after every CI run and surfaces critical/warning/stale findings into a structured summary in the run log + rolling `data/repair_log.md`. When `AGENT_DIAGNOSTICIAN_ENABLED=1` and `ANTHROPIC_API_KEY` is set, additionally invokes **Stage 10a Diagnostician**: Claude reasons about each finding using `data/playbook.md` + `data/known_normal.json` and writes a per-run incident report to `data/incident_reports/<date>.md`. Still read-only — no code/data/layout writes ever. Every LLM call is bounded by `scripts/_agent_guardrails.py` (kill switch via `AGENT_DISABLE_ALL=1`, cost cap via `AGENT_MAX_LLM_CALLS`, path allowlist) and logged to `data/agent_memory.jsonl`. Future stages (10b Proposer with diff, 10c Auto-fixer) require ≥3 weeks of 10a shadow data before promotion. Runs `if: always()` after Agent 6 so it surfaces failures even when the validator gate halts the pipeline.
+
+Supporting modules (read by agentic components):
+- `scripts/_models.py` — Centralised Claude model IDs (single source of truth).
+- `scripts/_agent_guardrails.py` — Runtime safety layer for LLM-driven agents. Hard kill switch, cost cap, path allowlist, two-LLM critique helper. **Every agentic LLM call goes through `bounded_llm_call()` so it's audited.**
+- `scripts/_agent_memory.py` — Append-only JSONL audit log writer at `data/agent_memory.jsonl`. Capped at 2000 entries (rolling FIFO).
+- `data/playbook.md` — Human-curated reasoning context. Pipeline cadence, source publish lag tables, noise floors per series, common-cause patterns, forbidden recommendations. Agents cite §X.Y when justifying diagnoses; when this and an LLM disagree, this file wins.
+- `data/known_normal.json` — Machine-readable mirror of playbook baselines (publish lag, noise floors, shock-tracker min obs counts, model routing).
 
 Supporting scripts:
 - `scripts/snapshot.py` — Rolling data backups (keep last 3)
@@ -43,6 +50,10 @@ Supporting scripts:
 - `data/validation_report.json` — Validator output (6-pass)
 - `data/visual_review_report.json` — Agent 8 vision review output
 - `data/pipeline_version.json` — Version tracking audit log
+- `data/playbook.md` — Human-curated reasoning playbook used by agentic components (see Agent 10 entry).
+- `data/known_normal.json` — Machine-readable baselines (publish lag, noise floors) read by agentic components.
+- `data/agent_memory.jsonl` — Append-only audit log of every agentic LLM call (rolling cap 2000 lines).
+- `data/incident_reports/<YYYY-MM-DD>.md` — Per-run incident reports written by the Repair Diagnostician when Stage 10a is enabled.
 - `.github/workflows/briefing.yml` — Main CI pipeline (Agents 1-8, weekly Fri + monthly 2nd Sat)
 - `.github/workflows/earnings_agent.yml` — Agent 9 cron (quarterly, earnings-season only — Jan/Apr/Jul/Oct days 10-28, 10pm UTC)
 - `.github/workflows/smoke-tests.yml` — PR smoke tests

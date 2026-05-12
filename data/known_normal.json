@@ -1,0 +1,55 @@
+{
+  "_meta": {
+    "purpose": "Per-series baselines used by the Repair Diagnostician (Agent 10) to decide whether a finding is genuine drift or normal source behaviour. Mirrors data/playbook.md §2.2-2.3 in machine-readable form.",
+    "schema_version": 1,
+    "owner": "human-curated",
+    "last_reviewed": "2026-05-12",
+    "rules": [
+      "Agents read this file. Agents do NOT modify it without human review.",
+      "When a finding contradicts a baseline here, raise an incident rather than silently disagreeing.",
+      "When this file and the LLM disagree, this file wins."
+    ]
+  },
+
+  "publish_lag_days": {
+    "fred_weekly":   {"typical_max": 7,  "investigate_if_over": 14, "examples": ["GASREGW", "ICSA", "WTI"]},
+    "fred_monthly":  {"typical_max": 14, "investigate_if_over": 25, "examples": ["MORTGAGE30US", "FEDFUNDS"]},
+    "bls_monthly":   {"typical_max": 14, "investigate_if_over": 25, "examples": ["NFP", "CPI", "wages"]},
+    "bea_quarterly": {"typical_max": 35, "investigate_if_over": 60, "examples": ["GDP advance estimate"]},
+    "bea_pce":       {"typical_max": 35, "investigate_if_over": 110, "note": "PCE genuinely lags ~95 days at times; do NOT recommend action below 110 days"},
+    "eia_weekly":    {"typical_max": 7,  "investigate_if_over": 14},
+    "umich":         {"typical_max": 14, "investigate_if_over": 25, "note": "Prelim mid-month, final end-of-month"},
+    "nyfed_hhdc":    {"typical_max": 60, "investigate_if_over": 120, "note": "Quarterly; 2-3 quarter lag is structural"}
+  },
+
+  "noise_floor_pp": {
+    "core_cpi_yoy":     0.3,
+    "saving_rate":      0.3,
+    "umich_sentiment":  0.5,
+    "cc_delinq_90plus": 0.15,
+    "gasoline_usd_gal": 0.10,
+    "_units_note": "Values are in the metric's natural units: pp for percentage-point series, points for sentiment indices, $/gal for gasoline."
+  },
+
+  "shock_tracker_yoy_min_obs": {
+    "_note": "YoY phases in update_shock_tracker need at least this many observations of the underlying series to compute pre/now without falling through to a hardcoded baseline. Mirrors CLAUDE.md Shock Tracker Data Contracts table.",
+    "cpi_transport": 24,
+    "cpi_food_away": 24,
+    "cpiengsl":      13,
+    "gasoline":       2
+  },
+
+  "benign_warnings": {
+    "_note": "Warning patterns that are known-benign and should be downgraded to informational by the Diagnostician.",
+    "patch_kpi_not_found_after_double_render": "Renderer runs twice on the same HTML produce 'not found' warnings — labels already updated.",
+    "umcsent_status_missing": "umcsent entries without an explicit 'status' field are treated as 'final' for back-compat; not a bug.",
+    "u_sector_mom_skip_low_obs": "U_SECTOR_MOM rebuild SKIPPED when <10/13 sectors have ≥2 obs — chart shows stale data but renderer correctly refuses to compute spurious diffs."
+  },
+
+  "model_routing": {
+    "_note": "Which Claude model to use for which agent task. Read by _models.py / agents at startup. The Diagnostician uses Sonnet; Opus is reserved for higher-stakes reasoning (Stage 10b proposer, Stage 10c critique).",
+    "diagnostician": "claude-sonnet-4-6",
+    "critic":        "claude-opus-4-7",
+    "_critic_note":  "Two-LLM critique uses Opus for the second opinion — different family from the proposer reduces correlated reasoning errors."
+  }
+}
