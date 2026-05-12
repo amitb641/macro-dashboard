@@ -61,8 +61,9 @@ ROOT = Path(__file__).resolve().parent.parent
 LLM_WRITABLE_PATHS = frozenset({
     'data/agent_memory.jsonl',
     'data/incident_reports/',
-    'data/repair_log.md',           # existing observer log
-    'data/known_normal.json',       # learned baselines (Stage 10b+)
+    'data/repair_log.md',             # existing observer log
+    'data/known_normal.json',         # learned baselines (Stage 10b+)
+    'data/signal_rationales.json',    # Phase 2 signal-explainer output
 })
 
 # Files an LLM agent may READ. Broad — reasoning needs context. The risk
