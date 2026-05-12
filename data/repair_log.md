@@ -1,3 +1,33 @@
+## Repair Agent — 2026-05-12T20:55:50.620709Z
+
+- **Status**: WARN
+- **Total checks**: 481
+- **Passed**: 470
+- **Failed**: 11
+- **Critical divergences**: 0
+
+### Internal consistency
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **NFP_VS_ADP.adp label sync** — 
+- ⚠️ **NFP_VS_ADP series length sync** — 
+
+### Earnings verbatim
+_0 critical · 9 warning · 0 stale_
+
+- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
+- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
+- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
+- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
+- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
+- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
+- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
+- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
+- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
+
+
+---
+
 ## Repair Agent — 2026-05-12T19:09:34.438923Z
 
 - **Status**: WARN

@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-12T19:09:34.438923Z",
+  "validated_at": "2026-05-12T20:55:50.620709Z",
   "status": "WARN",
   "summary": {
     "total_checks": 481,
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.38,
-      "fresh_api_value": 4.38,
+      "raw_data_value": 4.42,
+      "fresh_api_value": 4.42,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-12T19:07:40.248280Z",
+      "collected_at": "2026-05-12T20:53:56.351487Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.38,
+      "reference": 4.42,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.38,
-        "data[\"dgs10\"]": 4.38
+        "KPIS 10Y Treasury": 4.42,
+        "data[\"dgs10\"]": 4.42
       },
       "severity": "ok",
       "pass": true
