@@ -1987,11 +1987,16 @@ def update_shock_tracker(html, data, vals):
     saving = vals.get('saving_rate', 4.5)
     cc_del = vals.get('cc_delinq', 2.94)
 
-    def _status(now, pre, expected_weeks, data_is_post_shock=False):
+    def _status(now, pre, expected_weeks, data_is_post_shock=False, move_threshold=0.15):
         """Determine phase status. Only confirm/emerge if data is post-shock.
         chg is SIGNED — positive = shock-consistent direction. Callers for drop-
         expected phases (sentiment, savings) negate both inputs. Opposite-direction
-        moves never confirm (METHODOLOGY.md §1.4)."""
+        moves never confirm (METHODOLOGY.md §1.4).
+
+        move_threshold is the noise floor for the metric's natural units (pp for
+        YoY series, $/gal for gasoline, index points for sentiment). Pass an
+        explicit value per phase — the 0.15 default is only appropriate for
+        $/gal-scale series; YoY % and index series have wider noise floors."""
         if now is None:
             return 'awaiting_data'
         if pre is None:
@@ -2002,10 +2007,13 @@ def update_shock_tracker(html, data, vals):
         in_window = expected_weeks[0] <= weeks <= expected_weeks[1]
         past_window = weeks > expected_weeks[1]
         before_window = weeks < expected_weeks[0]
-        moved = chg > 0.15
+        moved = chg > move_threshold
         if moved and before_window:
             return 'ahead'
         if moved and (in_window or past_window):
+            # Confirmation gate stays an absolute floor (0.5 in natural units)
+            # so phases with higher move_thresholds still confirm at the same
+            # level the narrative copy advertises ($0.50/gal, 0.5pt UMich, etc.)
             return 'confirmed' if chg > 0.5 else 'emerging'
         return 'on_schedule' if in_window else 'not_yet'
 
@@ -2033,7 +2041,8 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Pump Prices Spike", "expected": "Days 1\u201314", "expected_weeks": [0, 2],
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
          "chg": round(gas_now - gas_pre, 2) if gas_now and gas_pre else None,
-         "status": _status(gas_now, gas_pre, [0, 2], data_is_post_shock=gas_post),
+         "status": _status(gas_now, gas_pre, [0, 2], data_is_post_shock=gas_post,
+                           move_threshold=0.15),  # $/gal \u2014 ~$0.05-0.10 weekly noise
          "source": "FRED GASREGW \u00b7 EIA weekly retail gasoline",
          "status_reason": (
              (f'Gasoline +${round(gas_now-gas_pre,2)}/gal (+{((gas_now-gas_pre)/gas_pre*100):.0f}%) vs pre-shock baseline — well beyond $0.50 confirmation threshold. Expected window: weeks 0\u20132.'
@@ -2115,15 +2124,23 @@ def update_shock_tracker(html, data, vals):
         },
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
-         "status": _status(core_cpi, 2.5, [20, 32], data_is_post_shock=cpi_post),
+         "status": _status(core_cpi, 2.5, [20, 32], data_is_post_shock=cpi_post,
+                           move_threshold=0.5),  # pp YoY \u2014 Core CPI wiggles \u00b10.2-0.3pp month-to-month
          "source": "FRED CPILFESL \u00b7 BLS CPI ex-Food & Energy (monthly)",
-         "status_reason": (f'Expected window is weeks 20\u201332 (months 5\u20138 post-shock). We are at week {weeks} \u2014 far too early. Core CPI at {core_cpi}% is near the pre-shock 2.5% baseline.'),
+         "status_reason": (
+             f'Latest Core CPI reading predates the shock. First post-shock print will land within ~1 month of release.'
+             if not cpi_post else
+             (f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 within the \u00b10.5pp noise floor for Core CPI YoY. Expected window: weeks 20\u201332 (months 5\u20138 post-shock), currently at week {weeks}.'
+              if abs(core_cpi - 2.5) < 0.5 else
+              f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 beyond \u00b10.5pp noise floor. Expected window: weeks 20\u201332 (months 5\u20138), currently at week {weeks}.')
+         ),
          "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}",
          "commentary": "Manufacturing/chemicals absorb input costs over 5\u20138 months. Too early for this phase \u2014 energy input costs only began passing through in Mar'26 PPI."
         },
         {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
          "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),
-         "status": _status(-umcsent, -56.6, [2, 6], data_is_post_shock=umcsent_post),
+         "status": _status(-umcsent, -56.6, [2, 6], data_is_post_shock=umcsent_post,
+                           move_threshold=0.5),  # index points \u2014 confirmation threshold cited in reason text below
          "source": "UMich Survey of Consumers (direct) \u00b7 prelim mid-month, final end-of-month",
          "status_reason": (
              f'UMich dropped from 56.6 to {umcsent} ({round(umcsent-56.6,1):+.1f}pt). Confirmation threshold: 0.5pt move. Expected window: weeks 2\u20136, currently at week {weeks}.'
@@ -2141,7 +2158,8 @@ def update_shock_tracker(html, data, vals):
         },
         {"phase": "Savings Drawdown", "expected": "Months 2\u20134", "expected_weeks": [8, 16],
          "metric": "Personal Saving Rate", "pre": 4.5, "now": saving, "chg": round(saving - 4.5, 1),
-         "status": _status(-saving, -4.5, [8, 16], data_is_post_shock=saving_post),
+         "status": _status(-saving, -4.5, [8, 16], data_is_post_shock=saving_post,
+                           move_threshold=0.3),  # pp \u2014 saving rate moves \u00b10.2-0.3pp month-to-month
          "source": "FRED PSAVERT \u00b7 BEA Personal Saving Rate (monthly, ~1-mo lag)",
          "status_reason": (
              f'Latest PSAVERT reading ({_latest_date("psavert")}) is pre-shock. BEA releases with ~1-month lag, so the first post-shock print lands in ~May.'
@@ -2157,7 +2175,8 @@ def update_shock_tracker(html, data, vals):
         },
         {"phase": "Delinquencies Climb", "expected": "Months 5\u201310", "expected_weeks": [20, 40],
          "metric": "CC 90+ DPD Rate", "pre": 2.94, "now": cc_del, "chg": round(cc_del - 2.94, 2),
-         "status": _status(cc_del, 2.94, [20, 40], data_is_post_shock=cc_post),
+         "status": _status(cc_del, 2.94, [20, 40], data_is_post_shock=cc_post,
+                           move_threshold=0.15),  # pp \u2014 quarterly series, slow-moving, 0.1-0.2pp is signal
          "source": "NY Fed Household Debt & Credit Report \u00b7 CC 90+ DPD (quarterly)",
          "status_reason": (
              f'Latest CC 90+ DPD is quarterly (NY Fed HHDC), reading {_latest_date("cc_delinq")}. Pre-shock. Expected window: months 5\u201310 (weeks 20\u201340). First post-shock look is Q3\'26 release (~Nov\'26).'
