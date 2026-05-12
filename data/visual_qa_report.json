@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-05-12T20:55:50.614335Z",
+  "checked_at": "2026-05-12T21:48:49.358288Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 298,
-    "passed": 298,
+    "total_checks": 328,
+    "passed": 328,
     "failed": 0,
     "js_errors": 0,
     "console_errors": 0
@@ -361,6 +361,24 @@
     },
     {
       "category": "Jobs",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
       "check": "Panel \"\ud83d\udccb Jobs Market Commentary \u2014 2025 & 2026 O\" has title",
       "pass": true,
       "severity": "ok"
@@ -445,6 +463,24 @@
     },
     {
       "category": "Unemployment",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
       "check": "Panel \"\ud83d\udc77 Unemployment Commentary \u2014 Trends & Ris\" has title",
       "pass": true,
       "severity": "ok"
@@ -523,6 +559,24 @@
     },
     {
       "category": "Wages",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
       "check": "Panel \"\ud83d\udcb5 Wage Growth Commentary \u2014 Nominal vs Re\" has title",
       "pass": true,
       "severity": "ok"
@@ -590,6 +644,24 @@
     {
       "category": "CPI",
       "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Commentary color matches palette",
       "pass": true,
       "severity": "ok"
     },
@@ -709,6 +781,24 @@
     },
     {
       "category": "Consumer & PCE",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
       "check": "Panel \"\ud83d\udcb3 Consumer & PCE Commentary \u2014 Spending H\" has title",
       "pass": true,
       "severity": "ok"
@@ -805,6 +895,24 @@
     },
     {
       "category": "Rates & Yields",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
       "check": "Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
       "pass": true,
       "severity": "ok"
@@ -877,6 +985,24 @@
     },
     {
       "category": "Credit",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
       "check": "Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
       "pass": true,
       "severity": "ok"
@@ -932,6 +1058,24 @@
     {
       "category": "Banking",
       "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Commentary color matches palette",
       "pass": true,
       "severity": "ok"
     },
@@ -1004,6 +1148,24 @@
     {
       "category": "Housing",
       "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Commentary color matches palette",
       "pass": true,
       "severity": "ok"
     },
@@ -1088,6 +1250,24 @@
     {
       "category": "Oil",
       "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Commentary color matches palette",
       "pass": true,
       "severity": "ok"
     },

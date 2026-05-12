@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-12T20:55:50.620709Z",
+  "validated_at": "2026-05-12T21:48:49.362711Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 481,
-    "passed": 470,
-    "failed": 11,
+    "total_checks": 514,
+    "passed": 500,
+    "failed": 14,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-12T20:53:56.351487Z",
+      "collected_at": "2026-05-12T21:46:55.629201Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1790,6 +1790,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Jobs \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Jobs \u2014 Panel \"\ud83d\udccb Jobs Market Commentary \u2014 2025 & 2026 O\" has title",
       "severity": "ok",
       "pass": true,
@@ -1874,6 +1892,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Unemployment \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Unemployment \u2014 Panel \"\ud83d\udc77 Unemployment Commentary \u2014 Trends & Ris\" has title",
       "severity": "ok",
       "pass": true,
@@ -1952,6 +1988,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Wages \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Wages \u2014 Panel \"\ud83d\udcb5 Wage Growth Commentary \u2014 Nominal vs Re\" has title",
       "severity": "ok",
       "pass": true,
@@ -2019,6 +2073,24 @@
     },
     {
       "check": "Visual: CPI \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2138,6 +2210,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Consumer & PCE \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Consumer & PCE \u2014 Panel \"\ud83d\udcb3 Consumer & PCE Commentary \u2014 Spending H\" has title",
       "severity": "ok",
       "pass": true,
@@ -2234,6 +2324,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Rates & Yields \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Rates & Yields \u2014 Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
       "severity": "ok",
       "pass": true,
@@ -2306,6 +2414,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Credit \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Credit \u2014 Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
       "severity": "ok",
       "pass": true,
@@ -2361,6 +2487,24 @@
     },
     {
       "check": "Visual: Banking \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2433,6 +2577,24 @@
     },
     {
       "check": "Visual: Housing \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2517,6 +2679,24 @@
     },
     {
       "check": "Visual: Oil \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -3230,5 +3410,40 @@
       "detail": ""
     }
   ],
-  "visual_review": []
+  "visual_review": [],
+  "cross_source": [
+    {
+      "check": "Cross-source: unrate (FRED vs BLS)",
+      "pass": false,
+      "severity": "warning",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4,
+      "diff": 0.3,
+      "tol": 0.2,
+      "note": "FRED 4.3 vs BLS 4 (\u0394=0.3000, tol=0.2000). One side may be stale or revised."
+    },
+    {
+      "check": "Cross-source: cpi_all (FRED vs BLS)",
+      "pass": false,
+      "severity": "warning",
+      "metric": "cpi_all",
+      "fred": 332.407,
+      "bls": 333,
+      "diff": 0.593,
+      "tol": 0.333,
+      "note": "FRED 332.407 vs BLS 333 (\u0394=0.5930, tol=0.3330). One side may be stale or revised."
+    },
+    {
+      "check": "Cross-source: core_cpi (FRED vs BLS)",
+      "pass": false,
+      "severity": "warning",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 336,
+      "diff": 0.577,
+      "tol": 0.336,
+      "note": "FRED 335.423 vs BLS 336 (\u0394=0.5770, tol=0.3360). One side may be stale or revised."
+    }
+  ]
 }
