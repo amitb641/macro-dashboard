@@ -5870,37 +5870,37 @@ function buildStackTab(){
       <tbody>
         <tr>
           <td><span class="hiw-row-num">A3 · Stage 02</span><span class="hiw-cap-name">Briefing</span></td>
-          <td><span class="hiw-why-cat">Synthesis</span><span class="hiw-why-body">Turns 15+ unrelated KPI deltas into a 4-sentence narrative that holds together. Composition, not lookup — no template can write a coherent week-in-review.</span></td>
+          <td><span class="hiw-why-cat">Synthesis</span><span class="hiw-why-body">Input: <span class="hiw-mono">signals.json</span> (15+ regime-classified KPI deltas). Output: 2-4 sentence commentary per tab, citing this week's actual numbers. Every week's combination of deltas is new — a template can't compose new prose from them.</span></td>
           <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on · briefing_agent.py</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">A8 · Stage 02</span><span class="hiw-cap-name">Vision Review</span></td>
-          <td><span class="hiw-why-cat">Perception</span><span class="hiw-why-body">Reads the rendered page as a human would — catches contrast, alignment, label-noise, mis-bucketed colour issues that DOM checks can't see.</span></td>
+          <td><span class="hiw-why-cat">Perception</span><span class="hiw-why-body">Multimodal input: PNG screenshots of each rendered tab. Flags layout, alignment, label collisions, and mis-bucketed colour usage that DOM-attribute checks cannot detect (e.g. a green-coded chart drawn in red).</span></td>
           <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on · visual_review.py</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">A9 · Stage 02</span><span class="hiw-cap-name">Earnings</span></td>
-          <td><span class="hiw-why-cat">Extraction</span><span class="hiw-why-body">Pulls verbatim CEO/CFO quotes from unstructured 200-page transcripts. Regex fails; an LLM understands the question being answered.</span></td>
+          <td><span class="hiw-why-cat">Extraction</span><span class="hiw-why-body">Input: 60-90 min earnings-call transcripts (free-form text). Output per bank: a verbatim quote span plus 7 typed fields (economy, lending, credit, outlook, …). Speakers and topic boundaries aren't on fixed lines — no regex finds them.</span></td>
           <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">quarterly cron · earnings_agent.py</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">A10 · Stage 03</span><span class="hiw-cap-name">Diagnostician</span></td>
-          <td><span class="hiw-why-cat">Diagnosis</span><span class="hiw-why-body">Root-causes incidents against the playbook and prior runs. Reasons about cause vs. correlation — the audit log is too long for a rules table.</span></td>
+          <td><span class="hiw-why-cat">Diagnosis</span><span class="hiw-why-body">Input: <span class="hiw-mono">validation_report.json</span> failures + <span class="hiw-mono">playbook.md</span> + prior incident reports. Output: ranked probable causes per finding, citing playbook §X.Y. Memory-aware — recurring findings are re-weighted against first-seen.</span></td>
           <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">AGENT_DIAGNOSTICIAN_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🔒 Allowlist</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">Phase 2</span><span class="hiw-cap-name">Signal Explainer</span></td>
-          <td><span class="hiw-why-cat">Translation</span><span class="hiw-why-body">Converts a numeric signal score into a plain-language rationale. Schema-validated output — rejected fields are dropped, never substituted.</span></td>
+          <td><span class="hiw-why-cat">Translation</span><span class="hiw-why-body">Input: one signal row {series, score, band, deltas}. Output: 1-2 sentence rationale citing that signal's actual delta. Same score yields different rationales when the underlying drivers differ.</span></td>
           <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">AGENT_EXPLAINER_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">Phase 2.5</span><span class="hiw-cap-name">Editorial Review</span></td>
-          <td><span class="hiw-why-cat">Critique</span><span class="hiw-why-body">Two-LLM adversarial check on the finished briefing. Sonnet drafts the critique, Opus adjudicates — catches the kind of error a single model would miss.</span></td>
+          <td><span class="hiw-why-cat">Critique</span><span class="hiw-why-body">Deterministic linters check length, hedging filler, and fabricated numerics first. The LLM pass is opt-in: Sonnet audits tone + factuality against <span class="hiw-mono">style_guide.md §2</span>; Opus must concur before any "critical" verdict is promoted.</span></td>
           <td class="hiw-mono-cell">sonnet + opus<span class="hiw-mono-sub">AGENT_EDITORIAL_REVIEW_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
