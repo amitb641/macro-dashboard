@@ -94,16 +94,44 @@ Three semantic colours, each load-bearing.
 
 ---
 
+## Reusable design language — propagate to every tab
+
+These patterns landed in J but are **not stack-tab-specific**. They are the new visual contract for the whole dashboard and should be applied wherever they fit. The next session should treat this as the canonical extraction; everything below this table is either persistence work, a stack-tab port, or one-off J components.
+
+| Token / pattern | Spec | Where it applies dashboard-wide |
+|---|---|---|
+| **3-colour semantic system** | Ink (`--text` #0D1B2A) = deterministic / structural elements. Purple (`--purple` #8878B8) = **AI surface only** — any element that represents Claude output, AI-drafted commentary, AI agents, etc. Green (`--green` #1A9E5A) = **the act of verification / gated state** — validation chips, "PASS" pills, gate edges, cross-check arrows. | Every tab. Audit existing tabs and recolour any purple-misused-as-decoration; introduce green only where there's an actual verification semantic. |
+| **Hero stat strip** | 4 editorial tiles, **no card backgrounds**, hairline `--border` dividers between tiles. Mono caps label (9px DM Mono, .2em tracking, `--muted`). Serif value (36px Instrument Serif 400, `--text`). Supporting line ≤14px in `--text2`. | Use as the top-of-tab summary anywhere a 30-second scan needs a hook. Replaces existing marketing-style pills and `.fc-note` blue callouts at the top of tabs. |
+| **Section header treatment** | Serif h2 (22px Instrument Serif 400) over a single 1px `--text` rule. Mono caps annotation (10px, .18em tracking, `--muted`) **flush-right** under the rule. Margin tightened to `margin:2px 0 14px`. | All `.sect h2` (or equivalent) across every tab. Stripe-Press / GS-research feel. |
+| **Source-card / publisher typography** | Publisher in 9px DM Mono caps `--muted`. Source ID (e.g. FRED, BLS, EIA) in **Instrument Serif 20px** — not mono. Treats sources as editorial citations, not code tokens. | Anywhere we cite a data publisher (data sources tables, validator tab, methodology tab). |
+| **Metadata top-right pattern** | Card index / agent number / version / timestamp goes in the top-right corner in 9px DM Mono `--dim`. Headline / name leads from top-left in serif. | Any indexed card collection (forecast scenarios, bank cards, agent listings, etc.). |
+| **Documentation-grade voice** | No "for you" / "trust" / "save a week of work" / italicized accent words in headlines / LIVE status pills / inspirational closers / benefit-framed cards. Declarative, factual, peer-to-peer. | All explainer surfaces: stack tab, dict tab, validator tab, methodology references in `index.html`, any future "how this works" content. |
+
+### Stack-tab-specific (do NOT propagate elsewhere)
+
+J-only — these are about the multi-agent system itself and don't belong on other tabs:
+
+- 5 → 11 → 1 mini pipeline glyph
+- SVG verification-edge convention (green dashed bezier curves between agent cards)
+- Defense-in-depth ladder with depth-stepping rungs
+- Output closing card with KPI tiles ("this week's output" demo)
+- Proof artifact chip (`C-04 · earnings_verbatim · PASS 46/46`)
+- L0 / L1 / L2-focus / L3 layer-band metaphor
+
+---
+
 ## What was NOT done (outstanding work)
 
 ### 1. Style-guide persistence (proposed, awaiting approval)
-The conventions we converged on are not yet in any governing document. Proposed plan (user has not approved yet):
+The reusable patterns above are not yet in any governing document. Without persistence they will drift. Proposed plan:
 
-- **`data/style_guide.md` §2** — add explicit list of forbidden marketing constructs (CEO framing, LIVE pills, benefit-framed copy, inspirational closers)
-- **`data/style_guide.md` §4.2** — add the **green = "verification / gated"** semantic, distinct from purple's AI-only usage
-- **`data/style_guide.md` §X (new)** — codify the stack-tab voice (documentation-grade, four-section frame Architecture / What it tracks / Accuracy / At a glance, any-level reader test, multi-agent as the headline)
-- **`.preview-stack/J-design-spec.md`** — focused component spec for the J-specific patterns (hero glyph SVG, stat strip, SVG verification-edge convention, ladder treatment, output closing card, proof artifact chip)
-- **`CLAUDE.md`** — one new line pointing to the stack-tab voice section
+- **`data/style_guide.md` §2 (commentary copy rules)** — extend with the explicit list of forbidden marketing constructs (CEO framing, LIVE pills, benefit-framed copy, inspirational closers, italicized hero accents).
+- **`data/style_guide.md` §4.2 (semantic colour usage)** — **rewrite** around the 3-colour system. Ink = deterministic/structure; Purple = AI surface only; Green = verification/gated. Add explicit "do not use purple as decoration" rule.
+- **`data/style_guide.md` §X (new — "Reusable component patterns")** — codify the table above: hero stat strip, section header treatment, source-card typography, metadata top-right pattern.
+- **`data/style_guide.md` §Y (new — "Explainer-surface voice")** — documentation-grade voice rules + rejection patterns (see this handoff's rejection table).
+- **`.preview-stack/J-design-spec.md`** — focused J-only component spec (mini glyph SVG, SVG verification-edge JS, ladder, output closing card, proof artifact chip) for the stack-tab port.
+- **`CLAUDE.md`** — one new line pointing to the new sections + "when touching any explainer surface, read §Y first".
+- **Propagation audit (follow-up branch)** — walk every existing tab (gdp / jobs / unemp / wages / cpi / pce / yield / credit / banks / housing / oil / dict / validator / outlook) and identify where the reusable patterns above are violated. Schedule those fixes in a separate branch — **do not bundle with the stack-tab port.**
 
 ### 2. Port into production `index.html`
 The actual `buildStackTab()` function at line 5425 of `index.html` is unchanged. Production still renders the 5,674px stack tab. Porting J in requires:
