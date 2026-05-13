@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-13T01:12:04.366275Z",
+  "collected_at": "2026-05-13T16:26:31.124481Z",
   "series_count": 79,
   "error_count": 0,
   "errors": [],
@@ -513,14 +513,18 @@
       }
     ],
     "ig_oas": {
-      "date": "2026-05-11",
-      "value": 0.78
+      "date": "2026-05-12",
+      "value": 0.77
     },
     "hy_oas": {
-      "date": "2026-05-11",
-      "value": 2.79
+      "date": "2026-05-12",
+      "value": 2.82
     },
     "ig_hist": [
+      {
+        "date": "2026-05-12",
+        "value": 0.77
+      },
       {
         "date": "2026-05-11",
         "value": 0.78
@@ -756,13 +760,13 @@
       {
         "date": "2026-02-19",
         "value": 0.79
-      },
-      {
-        "date": "2026-02-18",
-        "value": 0.78
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-05-12",
+        "value": 2.82
+      },
       {
         "date": "2026-05-11",
         "value": 2.79
@@ -998,10 +1002,6 @@
       {
         "date": "2026-02-19",
         "value": 2.88
-      },
-      {
-        "date": "2026-02-18",
-        "value": 2.86
       }
     ],
     "wti_daily": [
@@ -1678,7 +1678,7 @@
         "WTI surge $4.4 (4.2%) \u2014 pipeline updates this field with market headlines"
       ],
       "month": "Mar\u2013May 2026",
-      "updated": "May 13 01:12 UTC",
+      "updated": "May 13 16:26 UTC",
       "sessions": 45
     },
     "gasoline": [

@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-13T01:13:56.851508Z",
+  "validated_at": "2026-05-13T16:27:38.416036Z",
   "status": "WARN",
   "summary": {
     "total_checks": 512,
-    "passed": 498,
-    "failed": 14,
-    "skipped": 1,
+    "passed": 499,
+    "failed": 13,
+    "skipped": 3,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -661,11 +661,8 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "raw_data_value": 3.64,
-      "fresh_api_value": 3.64,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -779,7 +776,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-13T01:12:04.366275Z",
+      "collected_at": "2026-05-13T16:26:31.124481Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3413,14 +3410,9 @@
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
-      "pass": false,
-      "severity": "warning",
-      "metric": "cpi_all",
-      "fred": 332.407,
-      "bls": 333,
-      "diff": 0.593,
-      "tol": 0.333,
-      "note": "FRED 332.407 vs BLS 333 (\u0394=0.5930, tol=0.3330). One side may be stale or revised."
+      "pass": true,
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
