@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-05-13T16:27:38.411264Z",
-  "status": "PASS",
+  "checked_at": "2026-05-13T20:50:33.834656Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 326,
-    "passed": 326,
-    "failed": 0,
+    "total_checks": 334,
+    "passed": 333,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -308,6 +308,30 @@
     {
       "category": "GDP",
       "check": "Chart canvas 31 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Panel \"\ud83d\udcc8 GDP Commentary \u2014 2025 Growth & 2026 Ou\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -913,6 +937,12 @@
     },
     {
       "category": "Rates & Yields",
+      "check": "Panel \"\ud83c\udfdb Fed Rates Commentary \u2014 Policy Stance &\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
       "check": "Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
       "pass": true,
       "severity": "ok"
@@ -1003,6 +1033,12 @@
     },
     {
       "category": "Credit",
+      "check": "Panel \"\ud83d\udcc9 Credit Commentary \u2014 Spread Complacency\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
       "check": "Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
       "pass": true,
       "severity": "ok"
@@ -1076,6 +1112,12 @@
     {
       "category": "Banking",
       "check": "Commentary color matches palette",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"\ud83c\udfe6 Banks Commentary \u2014 Earnings, NII & Cre\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1273,6 +1315,12 @@
     },
     {
       "category": "Oil",
+      "check": "Panel \"\ud83d\udee2 Oil Commentary \u2014 Supply Shock & Macro \" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
       "check": "Panel \"WTI & Brent \u2014 Annual History\" has title",
       "pass": true,
       "severity": "ok"
@@ -1382,8 +1430,9 @@
     {
       "category": "Dashboard",
       "check": "Commentary sentence count in [2,4]",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "8 sentences (style_guide \u00a72)"
     },
     {
       "category": "Dashboard",
