@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-13T00:48:30Z";
+  var BUILD_V = "2026-05-13T01:02:11Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -5529,7 +5529,7 @@ function buildStackTab(){
     --hiw-sans: ui-sans-serif, -apple-system, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
     --hiw-shadow: 0 1px 2px rgba(0,0,0,.04);
   }
-  #tab-stack .stk-wrap { max-width: 1200px; margin: 0 auto; padding: 56px 40px 96px; font-family: var(--hiw-sans); font-size: 13px; line-height: 1.65; color: var(--text); }
+  #tab-stack .stk-wrap { max-width: 1440px; margin: 0 auto; padding: 56px 48px 96px; font-family: var(--hiw-sans); font-size: 14px; line-height: 1.65; color: var(--text); }
   #tab-stack .hiw-mono { font-family: var(--hiw-mono); letter-spacing: .03em; }
   #tab-stack .hiw-label { font-family: var(--hiw-mono); font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
   #tab-stack .hiw-num { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--muted); }
@@ -5543,7 +5543,7 @@ function buildStackTab(){
   #tab-stack .stk-hero .hiw-crumb .hiw-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); }
   #tab-stack .stk-hero h1 { font-size: 56px; line-height: 1.02; letter-spacing: -.01em; margin: 0 0 22px; }
   #tab-stack .stk-hero h1 em { font-style: italic; color: var(--purple-ink); }
-  #tab-stack .stk-hero .hiw-lead { font-size: 16px; line-height: 1.6; color: var(--text2); max-width: 640px; }
+  #tab-stack .stk-hero .hiw-lead { font-size: 17px; line-height: 1.6; color: var(--text2); max-width: 720px; }
   #tab-stack .stk-hero .hiw-lead + .hiw-lead { margin-top: 12px; }
 
   #tab-stack .stk-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
@@ -5561,7 +5561,7 @@ function buildStackTab(){
   #tab-stack .hiw-agm-row .hiw-v { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; padding: 3px 7px; border-radius: 4px; border: 1px solid var(--border); background: var(--card2); color: var(--muted); }
 
   #tab-stack .hiw-sec-hd { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
-  #tab-stack .hiw-sec-hd h2 { font-size: 28px; line-height: 1.15; letter-spacing: -.005em; }
+  #tab-stack .hiw-sec-hd h2 { font-size: 32px; line-height: 1.15; letter-spacing: -.005em; }
   #tab-stack .hiw-sec-hd .hiw-meta { display: flex; align-items: center; gap: 16px; }
 
   #tab-stack .hiw-map { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 8px; box-shadow: var(--hiw-shadow); overflow: hidden; }
@@ -5569,11 +5569,11 @@ function buildStackTab(){
 
   #tab-stack .hiw-matrix { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--hiw-shadow); }
   #tab-stack .hiw-matrix thead th { font-family: var(--hiw-mono); font-size: 9.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--card2); }
-  #tab-stack .hiw-matrix tbody td { padding: 16px 18px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 12.5px; color: var(--text2); }
+  #tab-stack .hiw-matrix tbody td { padding: 18px 20px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 13.5px; color: var(--text2); }
   #tab-stack .hiw-matrix tbody tr:last-child td { border-bottom: 0; }
-  #tab-stack .hiw-matrix td .hiw-cap-name { font-family: var(--hiw-serif); font-size: 18px; color: var(--text); display: block; line-height: 1.2; }
+  #tab-stack .hiw-matrix td .hiw-cap-name { font-family: var(--hiw-serif); font-size: 20px; color: var(--text); display: block; line-height: 1.2; }
   #tab-stack .hiw-matrix td .hiw-cap-sub { display: block; font-family: var(--hiw-mono); font-size: 9px; letter-spacing: .15em; color: var(--muted); margin-top: 6px; line-height: 1.4; }
-  #tab-stack .hiw-matrix td.hiw-mono-cell { font-family: var(--hiw-mono); font-size: 11px; color: var(--text); }
+  #tab-stack .hiw-matrix td.hiw-mono-cell { font-family: var(--hiw-mono); font-size: 12px; color: var(--text); }
   #tab-stack .hiw-matrix td .hiw-guard-chips { display: flex; flex-wrap: wrap; gap: 4px; }
   #tab-stack .hiw-gchip { display: inline-flex; align-items: center; gap: 4px; font-family: var(--hiw-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--purple-ink); padding: 3px 7px; border: 1px solid rgba(136,120,184,.32); background: var(--purple-tint); border-radius: 4px; }
   #tab-stack .hiw-matrix .hiw-row-num { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--purple); }
@@ -5582,7 +5582,7 @@ function buildStackTab(){
   #tab-stack .ma-sources { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 18px; }
   #tab-stack .ma-source { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; box-shadow: var(--hiw-shadow); position: relative; }
   #tab-stack .ma-source-icon { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
-  #tab-stack .ma-source-name { font-family: var(--hiw-serif); font-size: 18px; color: var(--text); line-height: 1.15; margin-top: 4px; }
+  #tab-stack .ma-source-name { font-family: var(--hiw-serif); font-size: 20px; color: var(--text); line-height: 1.15; margin-top: 4px; }
   #tab-stack .ma-source-sub { font-family: var(--hiw-mono); font-size: 9.5px; color: var(--muted); margin-top: 6px; letter-spacing: .04em; }
   #tab-stack .ma-vconn { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 4px 0 14px; }
   #tab-stack .ma-vline { width: 1.5px; height: 28px; background: linear-gradient(180deg, #C8CCD3, var(--dim)); }
@@ -5595,10 +5595,10 @@ function buildStackTab(){
   #tab-stack .ma-agent-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   #tab-stack .ma-agent-num { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
   #tab-stack .ma-agent-icon { font-size: 11px; line-height: 1; color: var(--purple); }
-  #tab-stack .ma-agent-name { font-family: var(--hiw-serif); font-size: 18px; color: var(--text); margin: 4px 0 6px; line-height: 1.15; width: 100%; }
+  #tab-stack .ma-agent-name { font-family: var(--hiw-serif); font-size: 20px; color: var(--text); margin: 4px 0 6px; line-height: 1.15; width: 100%; }
   #tab-stack .ma-agent-file { font-family: var(--hiw-mono); font-size: 9px; color: var(--muted); letter-spacing: .04em; margin-left: auto; }
   #tab-stack .ma-agent-body { display: flex; flex-direction: column; flex: 1; }
-  #tab-stack .ma-agent-desc { font-size: 12px; color: var(--text2); line-height: 1.55; }
+  #tab-stack .ma-agent-desc { font-size: 13.5px; color: var(--text2); line-height: 1.55; }
   #tab-stack .ma-agent-io { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
   #tab-stack .ma-agent-out { font-family: var(--hiw-mono); font-size: 8.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 3px 6px; border-radius: 3px; border: 1px solid var(--border); color: var(--muted); background: var(--card2); }
   #tab-stack .ma-agent-out.det { color: var(--acc2); border-color: rgba(51,107,204,.25); background: rgba(51,107,204,.06); }
@@ -5611,28 +5611,34 @@ function buildStackTab(){
   #tab-stack .ma-outputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   #tab-stack .ma-output { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; box-shadow: var(--hiw-shadow); }
   #tab-stack .ma-output-icon { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
-  #tab-stack .ma-output-title { font-family: var(--hiw-serif); font-size: 17px; color: var(--text); line-height: 1.15; margin: 4px 0 6px; }
+  #tab-stack .ma-output-title { font-family: var(--hiw-serif); font-size: 19px; color: var(--text); line-height: 1.15; margin: 4px 0 6px; }
   #tab-stack .ma-output-sub { font-family: var(--hiw-mono); font-size: 10px; color: var(--text2); letter-spacing: .03em; }
 
   #tab-stack .hiw-gd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   #tab-stack .hiw-gd-tile { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; box-shadow: var(--hiw-shadow); position: relative; }
   #tab-stack .hiw-gd-tile::before { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 2px; background: var(--purple); border-radius: 0 0 2px 2px; }
-  #tab-stack .hiw-gd-tile .hiw-env { font-family: var(--hiw-mono); font-size: 11.5px; font-weight: 700; color: var(--purple-ink); letter-spacing: .04em; word-break: break-all; }
-  #tab-stack .hiw-gd-tile p { font-size: 12.5px; color: var(--text2); margin-top: 8px; }
+  #tab-stack .hiw-gd-tile .hiw-env { font-family: var(--hiw-mono); font-size: 13px; font-weight: 700; color: var(--purple-ink); letter-spacing: .04em; word-break: break-all; }
+  #tab-stack .hiw-gd-tile p { font-size: 13.5px; color: var(--text2); margin-top: 8px; }
   #tab-stack .hiw-gd-tile .hiw-v { display: inline-block; margin-top: 12px; font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--muted); padding: 3px 7px; border-radius: 4px; background: var(--card2); border: 1px solid var(--border); }
 
   #tab-stack .hiw-ct-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   #tab-stack .hiw-ct-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px 22px 20px; box-shadow: var(--hiw-shadow); text-decoration: none; color: inherit; display: block; transition: border-color .15s ease; position: relative; }
   #tab-stack .hiw-ct-card:hover { border-color: rgba(51,107,204,.4); }
   #tab-stack .hiw-ct-card .hiw-arrow { position: absolute; top: 18px; right: 20px; font-family: var(--hiw-mono); font-size: 14px; color: var(--muted); }
-  #tab-stack .hiw-ct-card h3 { font-size: 22px; line-height: 1.15; margin-bottom: 8px; }
-  #tab-stack .hiw-ct-card p { font-size: 12.5px; color: var(--text2); max-width: 88%; }
-  #tab-stack .hiw-ct-card .hiw-path { margin-top: 14px; font-family: var(--hiw-mono); font-size: 10.5px; color: var(--acc2); letter-spacing: .02em; }
+  #tab-stack .hiw-ct-card h3 { font-size: 25px; line-height: 1.15; margin-bottom: 8px; }
+  #tab-stack .hiw-ct-card p { font-size: 13.5px; color: var(--text2); max-width: 88%; }
+  #tab-stack .hiw-ct-card .hiw-path { margin-top: 14px; font-family: var(--hiw-mono); font-size: 11.5px; color: var(--acc2); letter-spacing: .02em; }
 
   #tab-stack .hiw-oc-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   #tab-stack .hiw-oc-card { border-top: 1px solid var(--border); padding-top: 24px; }
-  #tab-stack .hiw-oc-card .hiw-nmark { font-family: var(--hiw-serif); font-size: 36px; color: rgba(51,107,204,.8); line-height: 1; display: block; margin-bottom: 14px; }
-  #tab-stack .hiw-oc-card p { font-size: 15px; line-height: 1.45; color: var(--text); max-width: 92%; }
+  #tab-stack .hiw-oc-card .hiw-nmark { font-family: var(--hiw-serif); font-size: 42px; color: rgba(51,107,204,.8); line-height: 1; display: block; margin-bottom: 14px; }
+  #tab-stack .hiw-oc-card p { font-size: 16px; line-height: 1.45; color: var(--text); max-width: 92%; }
+
+  #tab-stack .hiw-purpose-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  #tab-stack .hiw-purpose-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px 26px 26px; box-shadow: var(--hiw-shadow); }
+  #tab-stack .hiw-purpose-card .hiw-label { color: var(--purple-ink); margin-bottom: 14px; display: block; }
+  #tab-stack .hiw-purpose-card h3 { font-size: 22px; line-height: 1.2; margin: 0 0 10px; }
+  #tab-stack .hiw-purpose-card p { font-size: 14px; line-height: 1.55; color: var(--text2); }
 
   #tab-stack #commentary-stack { color: var(--text2); }
 </style>
@@ -5647,7 +5653,7 @@ function buildStackTab(){
       </div>
       <h1>How the Dashboard <em>thinks.</em></h1>
       <div class="fc-note" id="commentary-stack">
-        <p class="hiw-lead">An 11-stage pipeline turns five public macro feeds into a daily macro briefing. Six of those stages are agentic — Claude does the reasoning, the system does the proving.</p>
+        <p class="hiw-lead">An 11-stage pipeline turns five public macro feeds into a weekly macro briefing. Six of those stages are agentic — Claude does the reasoning, the system does the proving.</p>
         <p class="hiw-lead">Every LLM call routes through the same four guardrails: a path allowlist, a per-run cost cap, an output-schema validator, and an append-only audit log. Defense-in-depth across six independent gates blocks any defect from reaching the publish surface.</p>
       </div>
 
@@ -5674,6 +5680,35 @@ function buildStackTab(){
   </section>
 
   <div class="hiw-hero-rule"></div>
+
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>What it does.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-label">For business readers</span>
+      </div>
+    </div>
+
+    <div class="hiw-purpose-row">
+      <div class="hiw-purpose-card">
+        <span class="hiw-label">Audience</span>
+        <h3>Senior decision-makers.</h3>
+        <p>Built for executives, founders, and strategy or finance leads who need a current read on the U.S. macro picture without working through fifty sell-side notes a week.</p>
+      </div>
+      <div class="hiw-purpose-card">
+        <span class="hiw-label">Answers</span>
+        <h3>Where we are. What just changed.</h3>
+        <p>Tracks fifteen-plus macro indicators across labor, inflation, growth, credit, oil, consumer sentiment, and bank earnings — and surfaces what shifted this week in plain language, with every chart linked to its underlying series.</p>
+      </div>
+      <div class="hiw-purpose-card">
+        <span class="hiw-label">Confidence</span>
+        <h3>Numbers you can defend.</h3>
+        <p>Every datapoint sources to FRED, BLS, EIA, UMich, or quarterly bank filings. Six independent quality gates run before the page publishes; methodology and source attribution are one click away on every chart.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="hiw-hr"></div>
 
   <section>
     <div class="hiw-sec-hd">
@@ -5904,7 +5939,7 @@ function buildStackTab(){
         <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A0 / PREFLIGHT</span><span class="ma-agent-file">preflight.py</span></div><div class="ma-agent-name">Preflight</div><div class="ma-agent-body"><p class="ma-agent-desc">Verifies the run environment, paths, and required env vars before any agent is allowed to start.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">2 checks</span></div></div></div>
         <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A1 / COLLECTOR</span><span class="ma-agent-file">collector.py</span></div><div class="ma-agent-name">Collector</div><div class="ma-agent-body"><p class="ma-agent-desc">Pulls latest series from FRED, BLS, EIA, UMich; normalises units, frequency, and revision history.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">5 sources</span></div></div></div>
         <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A2 / ANALYZER</span><span class="ma-agent-file">analyzer.py</span></div><div class="ma-agent-name">Analyzer</div><div class="ma-agent-body"><p class="ma-agent-desc">Computes signal scores, regime classifications, and YoY/MoM deltas against the playbook bands.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">pure math</span></div></div></div>
-        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A3 / BRIEFING</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">briefing_agent.py</span></div><div class="ma-agent-name">Briefing</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet writes the daily commentary block from the analyzer's signals.json.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">always-on</span></div></div></div>
+        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A3 / BRIEFING</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">briefing_agent.py</span></div><div class="ma-agent-name">Briefing</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet writes the weekly commentary block from the analyzer's signals.json.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">always-on</span></div></div></div>
         <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A4 / RENDERER</span><span class="ma-agent-file">renderer.py</span></div><div class="ma-agent-name">Renderer</div><div class="ma-agent-body"><p class="ma-agent-desc">Materialises the single-page index.html from signal data, the briefing, and component templates.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">templated</span></div></div></div>
         <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A5 / PUBLISHER</span><span class="ma-agent-file">publisher.py</span></div><div class="ma-agent-name">Publisher</div><div class="ma-agent-body"><p class="ma-agent-desc">Commits the build artifacts to the publish branch only after the publish gate returns PASS.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">gated</span></div></div></div>
         <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A6 / VALIDATOR</span><span class="ma-agent-file">validator.py</span></div><div class="ma-agent-name">Validator</div><div class="ma-agent-body"><p class="ma-agent-desc">Ten validation passes, 200+ assertions on signal coverage, schema, freshness, and band consistency.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">10 passes</span></div></div></div>
