@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-12T21:48:49Z";
+  var BUILD_V = "2026-05-12T22:18:17Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -5521,912 +5521,513 @@ function buildStackTab(){
 
   panel.innerHTML = `
 <style>
-.stk-wrap { max-width:900px; margin:0 auto; }
+  #tab-stack {
+    --purple-ink: #5D4C92;
+    --purple-tint: #F2EFF8;
+    --hiw-serif: "Instrument Serif", "Times New Roman", Georgia, serif;
+    --hiw-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --hiw-sans: ui-sans-serif, -apple-system, "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+    --hiw-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  #tab-stack .stk-wrap { max-width: 1200px; margin: 0 auto; padding: 56px 40px 96px; font-family: var(--hiw-sans); font-size: 13px; line-height: 1.65; color: var(--text); }
+  #tab-stack .hiw-mono { font-family: var(--hiw-mono); letter-spacing: .03em; }
+  #tab-stack .hiw-label { font-family: var(--hiw-mono); font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  #tab-stack .hiw-num { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--muted); }
+  #tab-stack h1, #tab-stack h2, #tab-stack h3 { font-family: var(--hiw-serif); font-weight: 400; color: var(--text); margin: 0; }
+  #tab-stack p { margin: 0; color: var(--text2); }
+  #tab-stack .hiw-hr { height: 1px; background: var(--border); width: 100%; margin: 64px 0; }
+  #tab-stack .hiw-hero-rule { height: 1px; background: var(--border); margin: 16px 0 56px; }
 
-/* Hero */
-.stk-hero {
-  border-radius:14px; padding:28px 32px 24px;
-  background:#fff;
-  border:1px solid rgba(51,107,204,.18);
-  border-left:4px solid var(--accent);
-  position:relative; overflow:hidden; margin-bottom:20px;
-}
-.stk-hero::before {
-  content:''; position:absolute; inset:0; pointer-events:none;
-  background:linear-gradient(135deg, rgba(51,107,204,.03) 0%, transparent 60%);
-}
-.stk-grid { display:none; }
-.stk-glow { display:none; }
-@keyframes stkGlow{}
-.stk-content{position:relative;z-index:1;}
-.stk-overline{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--accent);margin-bottom:10px;opacity:.7;}
-.stk-h1{font-family:'Instrument Serif',serif;font-size:26px;font-weight:400;color:var(--text);
-  letter-spacing:-.02em;line-height:1.2;margin-bottom:8px;}
-.stk-h1 em{color:var(--accent);font-style:normal;}
-.stk-lead{font-size:12.5px;color:var(--text2);line-height:1.65;max-width:560px;margin-bottom:16px;}
-.stk-pills{display:flex;gap:7px;flex-wrap:wrap;}
-.stk-pill{font-family:'DM Mono',monospace;font-size:10px;font-weight:600;
-  padding:3px 11px;border-radius:20px;border:1px solid;}
+  #tab-stack .stk-hero { display: grid; grid-template-columns: 1fr 320px; gap: 48px; align-items: start; padding-bottom: 40px; }
+  #tab-stack .stk-hero .hiw-crumb { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+  #tab-stack .stk-hero .hiw-crumb .hiw-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); }
+  #tab-stack .stk-hero h1 { font-size: 56px; line-height: 1.02; letter-spacing: -.01em; margin: 0 0 22px; }
+  #tab-stack .stk-hero h1 em { font-style: italic; color: var(--purple-ink); }
+  #tab-stack .stk-hero .hiw-lead { font-size: 16px; line-height: 1.6; color: var(--text2); max-width: 640px; }
+  #tab-stack .stk-hero .hiw-lead + .hiw-lead { margin-top: 12px; }
 
-/* Flow diagram */
-.stk-flow {
-  display:grid; grid-template-columns:repeat(5,1fr); gap:0;
-  background:#fff; border:1px solid var(--border); border-radius:14px;
-  overflow:hidden; margin-bottom:20px;
-}
-.stk-node {
-  padding:18px 14px 16px; text-align:center; position:relative;
-  border-right:1px solid var(--border);
-  animation:stkNodeIn .4s ease both;
-}
-.stk-node:last-child{border-right:none;}
-@keyframes stkNodeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.stk-node:nth-child(1){animation-delay:.05s}
-.stk-node:nth-child(2){animation-delay:.12s}
-.stk-node:nth-child(3){animation-delay:.19s}
-.stk-node:nth-child(4){animation-delay:.26s}
-.stk-node:nth-child(5){animation-delay:.33s}
-.stk-node-icon{font-size:22px;margin-bottom:8px;}
-.stk-node-num{font-family:'DM Mono',monospace;font-size:8.5px;font-weight:700;
-  letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
-.stk-node-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;}
-.stk-node-sub{font-size:10px;color:var(--muted);line-height:1.45;margin-bottom:10px;}
-.stk-node-tags{display:flex;flex-direction:column;gap:3px;align-items:center;}
-.stk-node-tag{font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;
-  padding:2px 7px;border-radius:4px;background:var(--bg2);color:var(--muted);
-  border:1px solid var(--border);white-space:nowrap;}
-.stk-arrow{
-  position:absolute;right:-9px;top:50%;transform:translateY(-50%);
-  width:16px;height:16px;z-index:2;
-  background:#fff;border-top:1px solid var(--border);border-right:1px solid var(--border);
-  transform:translateY(-50%) rotate(45deg);
-  display:none;
-}
+  #tab-stack .stk-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  #tab-stack .hiw-pill { font-family: var(--hiw-mono); font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--text2); white-space: nowrap; }
+  #tab-stack .hiw-pill.agentic { background: var(--purple); border-color: var(--purple); color: #fff; }
 
-/* Stats strip */
-.stk-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  background:#fff;border:1px solid var(--border);border-radius:12px;
-  overflow:hidden;margin-bottom:20px;
-}
-.stk-stat{padding:16px 14px;text-align:center;border-right:1px solid var(--border);}
-.stk-stat:last-child{border-right:none;}
-.stk-stat-val{font-family:'Instrument Serif',serif;font-size:24px;color:var(--text);
-  letter-spacing:-.02em;line-height:1;margin-bottom:4px;}
-.stk-stat-val.blue{color:var(--accent);}
-.stk-stat-val.green{color:#1A9E5A;}
-.stk-stat-lbl{font-size:10px;color:var(--muted);}
+  #tab-stack .hiw-agm { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 18px 16px; box-shadow: var(--hiw-shadow); }
+  #tab-stack .hiw-agm-hd { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  #tab-stack .hiw-agm-hd .hiw-label { color: var(--purple-ink); }
+  #tab-stack .hiw-agm-hd .hiw-live { display: inline-flex; align-items: center; gap: 6px; font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--muted); }
+  #tab-stack .hiw-agm-hd .hiw-live::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgba(26,158,90,.14); }
+  #tab-stack .hiw-agm-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--border); gap: 12px; }
+  #tab-stack .hiw-agm-row:last-child { border-bottom: 0; }
+  #tab-stack .hiw-agm-row .hiw-k { font-family: var(--hiw-mono); font-size: 10.5px; font-weight: 500; color: var(--text); }
+  #tab-stack .hiw-agm-row .hiw-v { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; padding: 3px 7px; border-radius: 4px; border: 1px solid var(--border); background: var(--card2); color: var(--muted); }
 
-/* Section title */
-.stk-section-title{
-  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);margin:24px 0 10px;padding-bottom:6px;
-  border-bottom:1px solid var(--border);
-}
+  #tab-stack .hiw-sec-hd { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+  #tab-stack .hiw-sec-hd h2 { font-size: 28px; line-height: 1.15; letter-spacing: -.005em; }
+  #tab-stack .hiw-sec-hd .hiw-meta { display: flex; align-items: center; gap: 16px; }
+
+  #tab-stack .hiw-map { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 8px; box-shadow: var(--hiw-shadow); overflow: hidden; }
+  #tab-stack .hiw-map svg { display: block; width: 100%; height: auto; }
+
+  #tab-stack .hiw-matrix { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--hiw-shadow); }
+  #tab-stack .hiw-matrix thead th { font-family: var(--hiw-mono); font-size: 9.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--card2); }
+  #tab-stack .hiw-matrix tbody td { padding: 16px 18px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 12.5px; color: var(--text2); }
+  #tab-stack .hiw-matrix tbody tr:last-child td { border-bottom: 0; }
+  #tab-stack .hiw-matrix td .hiw-cap-name { font-family: var(--hiw-serif); font-size: 18px; color: var(--text); display: block; line-height: 1.2; }
+  #tab-stack .hiw-matrix td .hiw-cap-sub { display: block; font-family: var(--hiw-mono); font-size: 9px; letter-spacing: .15em; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+  #tab-stack .hiw-matrix td.hiw-mono-cell { font-family: var(--hiw-mono); font-size: 11px; color: var(--text); }
+  #tab-stack .hiw-matrix td .hiw-guard-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  #tab-stack .hiw-gchip { display: inline-flex; align-items: center; gap: 4px; font-family: var(--hiw-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--purple-ink); padding: 3px 7px; border: 1px solid rgba(136,120,184,.32); background: var(--purple-tint); border-radius: 4px; }
+  #tab-stack .hiw-matrix .hiw-row-num { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--purple); }
+
+  #tab-stack .ma-trigger { display: block; }
+  #tab-stack .ma-sources { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 18px; }
+  #tab-stack .ma-source { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; box-shadow: var(--hiw-shadow); position: relative; }
+  #tab-stack .ma-source-icon { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
+  #tab-stack .ma-source-name { font-family: var(--hiw-serif); font-size: 18px; color: var(--text); line-height: 1.15; margin-top: 4px; }
+  #tab-stack .ma-source-sub { font-family: var(--hiw-mono); font-size: 9.5px; color: var(--muted); margin-top: 6px; letter-spacing: .04em; }
+  #tab-stack .ma-vconn { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 4px 0 14px; }
+  #tab-stack .ma-vline { width: 1.5px; height: 28px; background: linear-gradient(180deg, #C8CCD3, var(--dim)); }
+  #tab-stack .ma-vconn-lbl { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .2em; color: var(--muted); }
+
+  #tab-stack .ma-agents { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  #tab-stack .ma-agent { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px 16px 22px; box-shadow: var(--hiw-shadow); min-height: 148px; display: flex; flex-direction: column; }
+  #tab-stack .ma-agent-accent { position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; background: var(--accent); border-radius: 0 2px 2px 0; }
+  #tab-stack .ma-agent.llm .ma-agent-accent { background: var(--purple); }
+  #tab-stack .ma-agent-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  #tab-stack .ma-agent-num { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
+  #tab-stack .ma-agent-icon { font-size: 11px; line-height: 1; color: var(--purple); }
+  #tab-stack .ma-agent-name { font-family: var(--hiw-serif); font-size: 18px; color: var(--text); margin: 4px 0 6px; line-height: 1.15; width: 100%; }
+  #tab-stack .ma-agent-file { font-family: var(--hiw-mono); font-size: 9px; color: var(--muted); letter-spacing: .04em; margin-left: auto; }
+  #tab-stack .ma-agent-body { display: flex; flex-direction: column; flex: 1; }
+  #tab-stack .ma-agent-desc { font-size: 12px; color: var(--text2); line-height: 1.55; }
+  #tab-stack .ma-agent-io { display: flex; align-items: center; gap: 6px; margin-top: 12px; }
+  #tab-stack .ma-agent-out { font-family: var(--hiw-mono); font-size: 8.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 3px 6px; border-radius: 3px; border: 1px solid var(--border); color: var(--muted); background: var(--card2); }
+  #tab-stack .ma-agent-out.det { color: var(--acc2); border-color: rgba(51,107,204,.25); background: rgba(51,107,204,.06); }
+  #tab-stack .ma-agent-out.llm { color: #fff; background: var(--purple); border-color: var(--purple); }
+
+  #tab-stack .ma-arrows { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0; }
+  #tab-stack .ma-arrow-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  #tab-stack .ma-arrow-line { width: 1.5px; height: 22px; background: linear-gradient(180deg, #C8CCD3, var(--dim)); }
+
+  #tab-stack .ma-outputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  #tab-stack .ma-output { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; box-shadow: var(--hiw-shadow); }
+  #tab-stack .ma-output-icon { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
+  #tab-stack .ma-output-title { font-family: var(--hiw-serif); font-size: 17px; color: var(--text); line-height: 1.15; margin: 4px 0 6px; }
+  #tab-stack .ma-output-sub { font-family: var(--hiw-mono); font-size: 10px; color: var(--text2); letter-spacing: .03em; }
+
+  #tab-stack .hiw-gd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  #tab-stack .hiw-gd-tile { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; box-shadow: var(--hiw-shadow); position: relative; }
+  #tab-stack .hiw-gd-tile::before { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 2px; background: var(--purple); border-radius: 0 0 2px 2px; }
+  #tab-stack .hiw-gd-tile .hiw-env { font-family: var(--hiw-mono); font-size: 11.5px; font-weight: 700; color: var(--purple-ink); letter-spacing: .04em; word-break: break-all; }
+  #tab-stack .hiw-gd-tile p { font-size: 12.5px; color: var(--text2); margin-top: 8px; }
+  #tab-stack .hiw-gd-tile .hiw-v { display: inline-block; margin-top: 12px; font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--muted); padding: 3px 7px; border-radius: 4px; background: var(--card2); border: 1px solid var(--border); }
+
+  #tab-stack .hiw-ct-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  #tab-stack .hiw-ct-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px 22px 20px; box-shadow: var(--hiw-shadow); text-decoration: none; color: inherit; display: block; transition: border-color .15s ease; position: relative; }
+  #tab-stack .hiw-ct-card:hover { border-color: rgba(51,107,204,.4); }
+  #tab-stack .hiw-ct-card .hiw-arrow { position: absolute; top: 18px; right: 20px; font-family: var(--hiw-mono); font-size: 14px; color: var(--muted); }
+  #tab-stack .hiw-ct-card h3 { font-size: 22px; line-height: 1.15; margin-bottom: 8px; }
+  #tab-stack .hiw-ct-card p { font-size: 12.5px; color: var(--text2); max-width: 88%; }
+  #tab-stack .hiw-ct-card .hiw-path { margin-top: 14px; font-family: var(--hiw-mono); font-size: 10.5px; color: var(--acc2); letter-spacing: .02em; }
+
+  #tab-stack .hiw-oc-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #tab-stack .hiw-oc-card { border-top: 1px solid var(--border); padding-top: 24px; }
+  #tab-stack .hiw-oc-card .hiw-nmark { font-family: var(--hiw-serif); font-size: 36px; color: rgba(51,107,204,.8); line-height: 1; display: block; margin-bottom: 14px; }
+  #tab-stack .hiw-oc-card p { font-size: 15px; line-height: 1.45; color: var(--text); max-width: 92%; }
+
+  #tab-stack #commentary-stack { color: var(--text2); }
 </style>
 
 <div class="stk-wrap">
 
-  <!-- HERO -->
-  <div class="stk-hero">
-    <div class="stk-grid"></div>
-    <div class="stk-glow"></div>
-    <div class="stk-content">
-      <div class="stk-overline">Architecture · Data · Deployment</div>
-      <div class="stk-h1">How the <em>Dashboard Works</em></div>
-      <div class="stk-lead">An 11-stage pipeline — a pre-flight dependency verifier plus 10 specialized agents — collects 40+ macro series from FRED, BLS, EIA, and UMich, scores signals against post-shock confirmation rules, drafts AI commentary with Claude Sonnet, and patches this dashboard. The output is then cross-validated across 9 data-quality passes, 224 Playwright DOM checks, and Claude multimodal vision review; quarterly bank earnings-call transcripts are archived autonomously with verbatim quote extraction (validator-gated), and a passive repair observer surfaces failures into a rolling log — unattended, in ~4 minutes per weekly run.</div>
+  <section class="stk-hero">
+    <div>
+      <div class="hiw-crumb">
+        <span class="hiw-dot"></span>
+        <span class="hiw-label">Dashboard / How it works</span>
+      </div>
+      <h1>How the Dashboard <em>thinks.</em></h1>
+      <div class="fc-note" id="commentary-stack">
+        <p class="hiw-lead">An 11-stage pipeline turns five public macro feeds into a daily macro briefing. Six of those stages are agentic — Claude does the reasoning, the system does the proving.</p>
+        <p class="hiw-lead">Every LLM call routes through the same four guardrails: a path allowlist, a per-run cost cap, an output-schema validator, and an append-only audit log. Defense-in-depth across six independent gates blocks any defect from reaching the publish surface.</p>
+      </div>
+
       <div class="stk-pills">
-        <span class="stk-pill" style="color:#336BCC;border-color:rgba(51,107,204,.25);background:#EBF2FF">Claude Sonnet 4.6</span>
-        <span class="stk-pill" style="color:#8878B8;border-color:rgba(136,120,184,.25);background:#F3F0FF">GitHub Actions CI/CD</span>
-        <span class="stk-pill" style="color:#1A9E5A;border-color:rgba(13,122,74,.25);background:#ECFDF5">BLS · BEA · FRED · EIA</span>
-        <span class="stk-pill" style="color:#059669;border-color:rgba(5,150,105,.25);background:#F0FDF9">254 Quality Checks</span>
-        <span class="stk-pill" style="color:#CC8A00;border-color:rgba(204,138,0,.25);background:#FEF3C7">~4 min / run</span>
+        <span class="hiw-pill">11-stage pipeline</span>
+        <span class="hiw-pill agentic">🧠 6 agentic layers</span>
+        <span class="hiw-pill">89 tests</span>
+        <span class="hiw-pill">style-guide-gated</span>
+        <span class="hiw-pill">two-LLM critique</span>
+        <span class="hiw-pill">~4 min / run</span>
       </div>
     </div>
-  </div>
 
-  <!-- ARCHITECTURE DIAGRAM -->
-  <div class="stk-section-title">11-stage architecture — pre-flight, collection, analysis, AI commentary, rendering, publishing, validation, visual QA, vision review, earnings extraction &amp; repair observability</div>
-  <div class="panel" style="margin-bottom:20px;padding:0;overflow:hidden">
-  <style>
-  .diag-wrap { padding:28px 24px 24px; background:#fff; }
+    <aside class="hiw-agm" aria-label="Agentic mode panel">
+      <div class="hiw-agm-hd">
+        <span class="hiw-label">Agentic Mode</span>
+        <span class="hiw-live">Live</span>
+      </div>
+      <div class="hiw-agm-row"><span class="hiw-k">AGENT_DISABLE_ALL</span><span class="hiw-v">OFF</span></div>
+      <div class="hiw-agm-row"><span class="hiw-k">AGENT_DIAGNOSTICIAN_ENABLED</span><span class="hiw-v">OFF</span></div>
+      <div class="hiw-agm-row"><span class="hiw-k">AGENT_EXPLAINER_ENABLED</span><span class="hiw-v">OFF</span></div>
+      <div class="hiw-agm-row"><span class="hiw-k">AGENT_EDITORIAL_REVIEW_ENABLED</span><span class="hiw-v">OFF</span></div>
+    </aside>
+  </section>
 
-  /* Trigger bar */
-  .ma-trigger {
-    display:flex; align-items:center; justify-content:center; gap:12px;
-    padding:11px 20px; margin-bottom:0;
-    background:#F3F0FF; border:1px solid rgba(136,120,184,.2); border-radius:10px;
-  }
-  .ma-trigger-label { font-size:11px; font-weight:600; color:#8878B8; }
-  .ma-trigger-sub   { font-size:9.5px; color:#9D8FD4; margin-left:6px; }
+  <div class="hiw-hero-rule"></div>
 
-  /* Vertical connector */
-  .ma-vconn {
-    display:flex; justify-content:center; align-items:center;
-    height:32px; position:relative;
-  }
-  .ma-vline {
-    width:2px; height:100%;
-    background:linear-gradient(to bottom,#CBD5E1,#64748B);
-    position:relative; margin:0 auto;
-  }
-  .ma-vline::after {
-    content:''; position:absolute; bottom:-1px; left:50%;
-    transform:translateX(-50%);
-    border-left:5px solid transparent; border-right:5px solid transparent;
-    border-top:7px solid #64748B;
-  }
-  .ma-vconn-lbl {
-    position:absolute; left:calc(50% + 10px);
-    font-family:'DM Mono',monospace; font-size:8px; font-weight:600;
-    color:#94A3B8; white-space:nowrap;
-  }
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>System map.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-num">01 / 06</span>
+        <span class="hiw-label">Architecture · Data · Deployment</span>
+      </div>
+    </div>
 
-  /* Data sources row */
-  .ma-sources {
-    display:flex; gap:6px; justify-content:center; margin-bottom:0;
-  }
-  .ma-source {
-    flex:1; max-width:105px; padding:9px 10px 8px; text-align:center;
-    background:#F8FAFC; border:1px solid #E2E8F0; border-radius:9px;
-    animation:maFade .4s ease both;
-  }
-  .ma-source-icon { font-size:16px; margin-bottom:4px; }
-  .ma-source-name { font-family:'DM Mono',monospace; font-size:8.5px; font-weight:700; color:#336BCC; letter-spacing:.05em; }
-  .ma-source-sub  { font-size:8.5px; color:#94A3B8; line-height:1.3; margin-top:2px; }
+    <div class="hiw-map">
+      <svg viewBox="0 0 1000 760" role="img" aria-label="System architecture map">
+        <defs>
+          <linearGradient id="hiw-agentic-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F4F1FA" />
+            <stop offset="100%" stop-color="#ECE7F4" />
+          </linearGradient>
+          <linearGradient id="hiw-pub-fill" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#336BCC" />
+            <stop offset="100%" stop-color="#2A5BB0" />
+          </linearGradient>
+          <marker id="hiw-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#7A8FA8" />
+          </marker>
+        </defs>
 
-  /* Agents grid */
-  .ma-agents {
-    display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:0;
-  }
-  .ma-agent {
-    border-radius:11px; border:1px solid var(--border);
-    overflow:hidden; background:#fff;
-    box-shadow:0 1px 4px rgba(0,0,0,.05);
-    animation:maFade .45s ease both;
-    display:flex; flex-direction:column;
-  }
-  .ma-agent-header {
-    padding:12px 12px 10px; border-bottom:1px solid var(--border);
-  }
-  .ma-agent-accent {
-    height:3px; border-radius:3px 3px 0 0; margin:-12px -12px 10px;
-  }
-  .ma-agent-num  { font-family:'DM Mono',monospace; font-size:8px; font-weight:700; letter-spacing:.12em; color:#94A3B8; text-transform:uppercase; margin-bottom:3px; }
-  .ma-agent-icon { font-size:18px; margin-bottom:5px; }
-  .ma-agent-name { font-size:12px; font-weight:700; color:#1E293B; margin-bottom:2px; }
-  .ma-agent-file { font-family:'DM Mono',monospace; font-size:9px; color:#94A3B8; }
-  .ma-agent-body { padding:10px 12px 12px; flex:1; display:flex; flex-direction:column; gap:6px; }
-  .ma-agent-desc { font-size:10px; color:#64748B; line-height:1.45; flex:1; }
-  .ma-agent-io   {
-    display:flex; flex-direction:column; gap:3px; margin-top:2px;
-  }
-  .ma-agent-in, .ma-agent-out {
-    font-family:'DM Mono',monospace; font-size:8px; font-weight:600;
-    padding:2px 7px; border-radius:4px; white-space:nowrap; overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .ma-agent-in  { background:#F1F5F9; color:#64748B; border:1px solid #E2E8F0; }
-  .ma-agent-out { background:#EBF2FF; color:#336BCC; border:1px solid rgba(51,107,204,.2); }
+        <g font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="2" fill="#7A8FA8">
+          <text x="14" y="36">BAND A</text>
+          <text x="14" y="48">INGESTION</text>
+          <text x="14" y="170">BAND B</text>
+          <text x="14" y="182">PIPELINE</text>
+          <text x="14" y="430">BAND C</text>
+          <text x="14" y="442">QUALITY</text>
+          <text x="14" y="650">BAND D</text>
+          <text x="14" y="662">AGENTIC SPINE</text>
+        </g>
 
-  /* Arrow row between agents */
-  .ma-arrows {
-    display:grid; grid-template-columns:repeat(6,1fr); gap:8px;
-    height:20px; align-items:center;
-  }
-  .ma-arrow-cell { display:flex; justify-content:center; align-items:center; position:relative; }
-  .ma-arrow-cell::after {
-    content:''; position:absolute; right:-4px; top:50%;
-    transform:translateY(-50%);
-    border-top:5px solid transparent; border-bottom:5px solid transparent;
-    border-left:7px solid #CBD5E1;
-  }
-  .ma-arrow-cell:last-child::after { display:none; }
-  .ma-arrow-line { width:100%; height:1px; background:linear-gradient(to right,#CBD5E1,#94A3B8); }
+        <g>
+          <g transform="translate(80,60)"><rect width="130" height="56" rx="9" fill="#FFFFFF" stroke="#E2E8F0" /><text x="12" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#7A8FA8">01 / SOURCE</text><text x="12" y="40" font-family="Instrument Serif, serif" font-size="17" fill="#0D1B2A">FRED</text></g>
+          <g transform="translate(232,60)"><rect width="130" height="56" rx="9" fill="#FFFFFF" stroke="#E2E8F0" /><text x="12" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#7A8FA8">02 / SOURCE</text><text x="12" y="40" font-family="Instrument Serif, serif" font-size="17" fill="#0D1B2A">BLS</text></g>
+          <g transform="translate(384,60)"><rect width="130" height="56" rx="9" fill="#FFFFFF" stroke="#E2E8F0" /><text x="12" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#7A8FA8">03 / SOURCE</text><text x="12" y="40" font-family="Instrument Serif, serif" font-size="17" fill="#0D1B2A">EIA</text></g>
+          <g transform="translate(536,60)"><rect width="130" height="56" rx="9" fill="#FFFFFF" stroke="#E2E8F0" /><text x="12" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#7A8FA8">04 / SOURCE</text><text x="12" y="40" font-family="Instrument Serif, serif" font-size="17" fill="#0D1B2A">UMich</text></g>
+          <g transform="translate(688,60)"><rect width="130" height="56" rx="9" fill="#FFFFFF" stroke="#E2E8F0" /><text x="12" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#7A8FA8">05 / SOURCE</text><text x="12" y="40" font-family="Instrument Serif, serif" font-size="17" fill="#0D1B2A">Earnings</text></g>
 
-  /* Outputs */
-  .ma-outputs {
-    display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
-  }
-  .ma-output {
-    display:flex; align-items:flex-start; gap:10px; padding:12px 14px;
-    border:1px solid var(--border); border-radius:10px; background:#F8FAFC;
-  }
-  .ma-output-icon  { font-size:22px; flex-shrink:0; margin-top:1px; }
-  .ma-output-title { font-size:11.5px; font-weight:700; color:#1E293B; margin-bottom:3px; }
-  .ma-output-sub   { font-size:10px; color:#94A3B8; line-height:1.45; }
+          <g fill="none" stroke="#C8CCD3" stroke-width="1.5" marker-end="url(#hiw-arr)">
+            <path d="M145,116 C145,135 250,140 280,200" />
+            <path d="M297,116 C297,135 320,140 365,200" />
+            <path d="M449,116 C449,150 449,160 449,200" />
+            <path d="M601,116 C601,135 580,140 534,200" />
+            <path d="M753,116 C753,135 650,140 619,200" />
+          </g>
+        </g>
 
-  /* No-LLM badge */
-  .ma-badge-nollm { font-family:'DM Mono',monospace; font-size:7.5px; font-weight:700;
-    padding:1px 5px; border-radius:3px; background:#F1F5F9; color:#94A3B8;
-    border:1px solid #E2E8F0; display:inline-block; margin-top:3px; }
-  .ma-badge-llm   { font-family:'DM Mono',monospace; font-size:7.5px; font-weight:700;
-    padding:1px 5px; border-radius:3px; background:#F3F0FF; color:#8878B8;
-    border:1px solid rgba(136,120,184,.2); display:inline-block; margin-top:3px; }
+        <g transform="translate(80,210)"><rect width="113" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A0</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Preflight</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(89,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(205,210)"><rect width="113" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A1</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Collector</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(89,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(330,210)"><rect width="113" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A2</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Analyzer</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(89,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(455,200)"><rect width="113" height="90" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#5D4C92">A3 · 🧠</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="15" fill="#0D1B2A">Briefing</text><rect x="10" y="50" width="93" height="14" rx="3" fill="#8878B8" /><text x="14" y="60" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#FFFFFF">CLAUDE SONNET 4.6</text><text x="10" y="78" font-family="DM Mono, monospace" font-size="8" letter-spacing=".5" fill="#5D4C92">always-on</text><g transform="translate(89,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(580,210)"><rect width="113" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A4</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Renderer</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(89,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(705,210)"><rect width="113" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A5</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Publisher</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(89,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
 
-  @keyframes maFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        <g transform="translate(80,310)"><rect width="133" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A6</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Validator</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(109,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(231,310)"><rect width="133" height="70" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A7</text><text x="10" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Visual QA</text><rect x="10" y="48" width="74" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="14" y="58" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#7A8FA8">DETERMINISTIC</text><g transform="translate(109,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(382,300)"><rect width="133" height="90" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#5D4C92">A8 · 🧠</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="15" fill="#0D1B2A">Vision Review</text><rect x="10" y="50" width="113" height="14" rx="3" fill="#8878B8" /><text x="14" y="60" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#FFFFFF">CLAUDE SONNET 4.6 · VISION</text><text x="10" y="78" font-family="DM Mono, monospace" font-size="8" letter-spacing=".5" fill="#5D4C92">always-on</text><g transform="translate(109,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(533,300)"><rect width="133" height="90" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#5D4C92">A9 · 🧠</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="15" fill="#0D1B2A">Earnings</text><rect x="10" y="50" width="113" height="14" rx="3" fill="#8878B8" /><text x="14" y="60" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#FFFFFF">CLAUDE SONNET 4.6</text><text x="10" y="78" font-family="DM Mono, monospace" font-size="8" letter-spacing=".5" fill="#5D4C92">quarterly cron</text><g transform="translate(109,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
+        <g transform="translate(684,300)"><rect width="133" height="90" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#5D4C92">A10 · 🧠</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="15" fill="#0D1B2A">Diagnostician</text><rect x="10" y="50" width="113" height="14" rx="3" fill="#8878B8" /><text x="14" y="60" font-family="DM Mono, monospace" font-size="7.5" font-weight="700" letter-spacing="1.2" fill="#FFFFFF">CLAUDE SONNET 4.6</text><text x="10" y="78" font-family="DM Mono, monospace" font-size="8" letter-spacing=".5" fill="#5D4C92">AGENT_DIAGNOSTICIAN_ENABLED</text><g transform="translate(109,8)"><rect width="18" height="11" rx="3" fill="#EAF6EF" stroke="rgba(26,158,90,.3)" /><text x="4" y="8" font-family="DM Mono, monospace" font-size="6.5" font-weight="700" letter-spacing="1" fill="#1A9E5A">READY</text></g></g>
 
-  @media(max-width:700px){
-    .ma-agents { grid-template-columns:repeat(2,1fr); }
-    .ma-arrow-cell::after { display:none; }
-    .ma-outputs { grid-template-columns:1fr; }
-  }
-  </style>
+        <g fill="none" stroke="#C8CCD3" stroke-width="1.5" marker-end="url(#hiw-arr)">
+          <line x1="193" y1="245" x2="203" y2="245" />
+          <line x1="318" y1="245" x2="328" y2="245" />
+          <line x1="443" y1="245" x2="453" y2="245" />
+          <line x1="568" y1="245" x2="578" y2="245" />
+          <line x1="693" y1="245" x2="703" y2="245" />
+          <path d="M818,280 C 850,295 70,290 80,345" />
+          <line x1="213" y1="345" x2="223" y2="345" />
+          <line x1="364" y1="345" x2="374" y2="345" />
+          <line x1="515" y1="345" x2="525" y2="345" />
+          <line x1="666" y1="345" x2="676" y2="345" />
+          <path d="M449,390 C 449,400 449,408 449,418" />
+        </g>
 
-  <div class="diag-wrap">
+        <g font-family="DM Mono, monospace" font-weight="700" letter-spacing="1.4">
+          <g transform="translate(80,420)"><rect width="738" height="26" rx="6" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="17" font-size="9" fill="#336BCC">PREFLIGHT</text><text x="160" y="17" font-size="10" fill="#0D1B2A" font-family="Instrument Serif, serif" font-weight="400">Agent 0 · environment + paths</text><text x="500" y="17" font-size="9" fill="#7A8FA8">2 CHECKS</text><rect x="640" y="6" width="84" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="649" y="16" font-size="8" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
+          <g transform="translate(80,452)"><rect width="738" height="26" rx="6" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="17" font-size="9" fill="#336BCC">SMOKE</text><text x="160" y="17" font-size="10" fill="#0D1B2A" font-family="Instrument Serif, serif" font-weight="400">pytest · unit + contract tests</text><text x="500" y="17" font-size="9" fill="#7A8FA8">29 TESTS</text><rect x="640" y="6" width="84" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="649" y="16" font-size="8" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
+          <g transform="translate(80,484)"><rect width="738" height="26" rx="6" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="17" font-size="9" fill="#336BCC">VALIDATOR</text><text x="160" y="17" font-size="10" fill="#0D1B2A" font-family="Instrument Serif, serif" font-weight="400">Agent 6 · 10 passes, 200+ assertions</text><text x="500" y="17" font-size="9" fill="#7A8FA8">200+ CHECKS</text><rect x="640" y="6" width="84" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="649" y="16" font-size="8" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
+          <g transform="translate(80,516)"><rect width="738" height="26" rx="6" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="17" font-size="9" fill="#336BCC">VISUAL QA</text><text x="160" y="17" font-size="10" fill="#0D1B2A" font-family="Instrument Serif, serif" font-weight="400">Agent 7 · headless DOM assertions</text><text x="500" y="17" font-size="9" fill="#7A8FA8">~230 DOM CHECKS</text><rect x="640" y="6" width="84" height="14" rx="3" fill="#F1F4F9" stroke="#E2E8F0" /><text x="649" y="16" font-size="8" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
+          <g transform="translate(80,548)"><rect width="738" height="26" rx="6" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><text x="14" y="17" font-size="9" fill="#5D4C92">VISION REVIEW</text><text x="160" y="17" font-size="10" fill="#0D1B2A" font-family="Instrument Serif, serif" font-weight="400">Agent 8 · Claude multimodal critique</text><text x="500" y="17" font-size="9" fill="#5D4C92">🧠 MULTIMODAL</text><rect x="640" y="6" width="84" height="14" rx="3" fill="#8878B8" /><text x="660" y="16" font-size="8" fill="#FFFFFF" letter-spacing="1.2">🧠 AGENTIC</text></g>
+          <g transform="translate(80,580)"><rect width="738" height="26" rx="6" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><text x="14" y="17" font-size="9" fill="#5D4C92">EDITORIAL</text><text x="160" y="17" font-size="10" fill="#0D1B2A" font-family="Instrument Serif, serif" font-weight="400">Phase 2.5 · linters + Claude audit</text><text x="500" y="17" font-size="9" fill="#5D4C92">🧠 TWO-LLM CRITIQUE</text><rect x="640" y="6" width="84" height="14" rx="3" fill="#8878B8" /><text x="660" y="16" font-size="8" fill="#FFFFFF" letter-spacing="1.2">🧠 AGENTIC</text></g>
+        </g>
 
-    <!-- TRIGGER -->
+        <g transform="translate(80,618)">
+          <rect width="738" height="20" rx="5" fill="url(#hiw-pub-fill)" />
+          <text x="14" y="14" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="2.4" fill="#FFFFFF">PUBLISH GATE</text>
+          <text x="500" y="14" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="rgba(255,255,255,.85)">VERDICT · PASS / WARN / FAIL</text>
+          <path d="M730,10 L 748,10" stroke="#FFFFFF" stroke-width="1.5" marker-end="url(#hiw-arr)" />
+        </g>
+
+        <g>
+          <g transform="translate(80,668)"><rect width="118" height="80" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><rect x="8" y="8" width="44" height="12" rx="3" fill="#8878B8" /><text x="14" y="17" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1.1" fill="#FFFFFF">🧠 AGENTIC</text><text x="92" y="17" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">01</text><text x="8" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Briefing</text><text x="8" y="52" font-family="DM Mono, monospace" font-size="7.5" fill="#5D4C92">claude-sonnet-4-6</text><text x="8" y="63" font-family="DM Mono, monospace" font-size="7.5" fill="#7A8FA8">signals.json</text><text x="8" y="74" font-family="DM Mono, monospace" font-size="7" letter-spacing=".6" fill="#5D4C92">⬤ always-on  💲 📝</text></g>
+          <g transform="translate(206,668)"><rect width="118" height="80" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><rect x="8" y="8" width="44" height="12" rx="3" fill="#8878B8" /><text x="14" y="17" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1.1" fill="#FFFFFF">🧠 AGENTIC</text><text x="92" y="17" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">02</text><text x="8" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Vision Review</text><text x="8" y="52" font-family="DM Mono, monospace" font-size="7.5" fill="#5D4C92">claude-sonnet-4-6</text><text x="8" y="63" font-family="DM Mono, monospace" font-size="7.5" fill="#7A8FA8">visual_review_report.json</text><text x="8" y="74" font-family="DM Mono, monospace" font-size="7" letter-spacing=".6" fill="#5D4C92">⬤ always-on  💲 📝</text></g>
+          <g transform="translate(332,668)"><rect width="118" height="80" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><rect x="8" y="8" width="44" height="12" rx="3" fill="#8878B8" /><text x="14" y="17" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1.1" fill="#FFFFFF">🧠 AGENTIC</text><text x="92" y="17" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">03</text><text x="8" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Earnings</text><text x="8" y="52" font-family="DM Mono, monospace" font-size="7.5" fill="#5D4C92">claude-sonnet-4-6</text><text x="8" y="63" font-family="DM Mono, monospace" font-size="7.5" fill="#7A8FA8">bank_earnings.json</text><text x="8" y="74" font-family="DM Mono, monospace" font-size="7" letter-spacing=".6" fill="#5D4C92">⬤ quarterly  💲 📝</text></g>
+          <g transform="translate(458,668)"><rect width="118" height="80" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><rect x="8" y="8" width="44" height="12" rx="3" fill="#8878B8" /><text x="14" y="17" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1.1" fill="#FFFFFF">🧠 AGENTIC</text><text x="92" y="17" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">04</text><text x="8" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Diagnostician</text><text x="8" y="52" font-family="DM Mono, monospace" font-size="7.5" fill="#5D4C92">claude-sonnet-4-6</text><text x="8" y="63" font-family="DM Mono, monospace" font-size="7.5" fill="#7A8FA8">incident_reports/*.md</text><text x="8" y="74" font-family="DM Mono, monospace" font-size="7" letter-spacing=".6" fill="#5D4C92">⬤ flag  🔒 💲 📝</text></g>
+          <g transform="translate(584,668)"><rect width="118" height="80" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><rect x="8" y="8" width="44" height="12" rx="3" fill="#8878B8" /><text x="14" y="17" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1.1" fill="#FFFFFF">🧠 AGENTIC</text><text x="92" y="17" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">05</text><text x="8" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Signal Explainer</text><text x="8" y="52" font-family="DM Mono, monospace" font-size="7.5" fill="#5D4C92">claude-sonnet-4-6</text><text x="8" y="63" font-family="DM Mono, monospace" font-size="7.5" fill="#7A8FA8">signal_rationales.json</text><text x="8" y="74" font-family="DM Mono, monospace" font-size="7" letter-spacing=".6" fill="#5D4C92">⬤ flag  🛡 💲 📝</text></g>
+          <g transform="translate(710,668)"><rect width="118" height="80" rx="9" fill="url(#hiw-agentic-fill)" stroke="#8878B8" /><rect x="8" y="8" width="44" height="12" rx="3" fill="#8878B8" /><text x="14" y="17" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1.1" fill="#FFFFFF">🧠 AGENTIC</text><text x="92" y="17" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">06</text><text x="8" y="38" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Editorial</text><text x="8" y="52" font-family="DM Mono, monospace" font-size="7.5" fill="#5D4C92">sonnet + opus</text><text x="8" y="63" font-family="DM Mono, monospace" font-size="7.5" fill="#7A8FA8">editorial_report.json</text><text x="8" y="74" font-family="DM Mono, monospace" font-size="7" letter-spacing=".6" fill="#5D4C92">⬤ flag  🛡 💲 📝</text></g>
+        </g>
+
+        <g>
+          <rect x="848" y="200" width="142" height="548" rx="10" fill="#F1F4F9" stroke="#E2E8F0" />
+          <text x="864" y="216" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="2.4" fill="#5D4C92">_AGENT_GUARDRAILS</text>
+          <g transform="translate(860,236)"><rect width="118" height="68" rx="8" fill="#FFFFFF" stroke="rgba(136,120,184,.4)" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="11" font-weight="700" fill="#5D4C92">🔒</text><text x="28" y="18" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.4" fill="#5D4C92">PATH ALLOWLIST</text><text x="10" y="36" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">refuses renderer.py,</text><text x="10" y="48" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">index.html writes</text><text x="10" y="62" font-family="DM Mono, monospace" font-size="7" fill="#7A8FA8" letter-spacing=".8">data/incident_reports/* OK</text></g>
+          <g transform="translate(860,316)"><rect width="118" height="68" rx="8" fill="#FFFFFF" stroke="rgba(136,120,184,.4)" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="11" font-weight="700" fill="#5D4C92">💲</text><text x="28" y="18" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.4" fill="#5D4C92">COST CAP</text><text x="10" y="36" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">AGENT_MAX_LLM_CALLS</text><text x="10" y="48" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">= 20 / run</text><text x="10" y="62" font-family="DM Mono, monospace" font-size="7" fill="#7A8FA8" letter-spacing=".8">hard exit on overage</text></g>
+          <g transform="translate(860,396)"><rect width="118" height="68" rx="8" fill="#FFFFFF" stroke="rgba(136,120,184,.4)" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="11" font-weight="700" fill="#5D4C92">🛡</text><text x="28" y="18" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.4" fill="#5D4C92">OUTPUT VALIDATOR</text><text x="10" y="36" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">schema reject →</text><text x="10" y="48" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">None, never returned</text><text x="10" y="62" font-family="DM Mono, monospace" font-size="7" fill="#7A8FA8" letter-spacing=".8">strict JSON · typed fields</text></g>
+          <g transform="translate(860,476)"><rect width="118" height="68" rx="8" fill="#FFFFFF" stroke="rgba(136,120,184,.4)" /><text x="10" y="18" font-family="DM Mono, monospace" font-size="11" font-weight="700" fill="#5D4C92">📝</text><text x="28" y="18" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.4" fill="#5D4C92">AUDIT LOG</text><text x="10" y="36" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">agent_memory.jsonl</text><text x="10" y="48" font-family="DM Mono, monospace" font-size="8" fill="#0D1B2A">2000-entry rolling</text><text x="10" y="62" font-family="DM Mono, monospace" font-size="7" fill="#7A8FA8" letter-spacing=".8">append-only · WORM</text></g>
+          <text x="860" y="580" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">EVERY LLM CALL</text>
+          <text x="860" y="592" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">ROUTES THROUGH</text>
+          <text x="860" y="604" font-family="DM Mono, monospace" font-size="8" font-weight="700" letter-spacing="1.5" fill="#7A8FA8">ALL FOUR.</text>
+          <line x1="860" y1="615" x2="978" y2="615" stroke="#E2E8F0" />
+          <text x="860" y="632" font-family="DM Mono, monospace" font-size="7" fill="#7A8FA8" letter-spacing=".5">One env-var to disable:</text>
+          <text x="860" y="646" font-family="DM Mono, monospace" font-size="8" font-weight="700" fill="#5D4C92">AGENT_DISABLE_ALL=1</text>
+        </g>
+
+        <g fill="none" stroke="#8878B8" stroke-width="1" stroke-dasharray="3 3" opacity="0.5">
+          <path d="M568,245 C 700,245 780,270 848,270" />
+          <path d="M515,345 C 700,345 780,350 848,350" />
+          <path d="M666,345 C 720,345 800,400 848,430" />
+          <path d="M817,345 C 830,400 840,460 848,500" />
+          <path d="M818,561 C 830,561 838,540 848,520" />
+          <path d="M818,593 C 830,593 838,560 848,540" />
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <div class="hiw-hr"></div>
+
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>Agentic operations matrix.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-num">02 / 06</span>
+        <span class="hiw-label">Spec sheet · Six capabilities</span>
+      </div>
+    </div>
+
+    <table class="hiw-matrix">
+      <thead>
+        <tr>
+          <th style="width: 26%">Capability</th>
+          <th style="width: 17%">Model</th>
+          <th style="width: 22%">Mode flag</th>
+          <th style="width: 18%">Output artifact</th>
+          <th style="width: 17%">Guardrails</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="hiw-row-num">01 · A3</span><span class="hiw-cap-name">Briefing</span><span class="hiw-cap-sub">Daily commentary on macro signals</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
+          <td class="hiw-mono-cell">always-on<br/><span style="color:var(--muted);font-size:10px">briefing_agent.py</span></td>
+          <td class="hiw-mono-cell">data/signals.json</td>
+          <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="hiw-row-num">02 · A8</span><span class="hiw-cap-name">Vision Review</span><span class="hiw-cap-sub">Multimodal critique of every render</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
+          <td class="hiw-mono-cell">always-on<br/><span style="color:var(--muted);font-size:10px">visual_review.py</span></td>
+          <td class="hiw-mono-cell">data/visual_review_report.json</td>
+          <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="hiw-row-num">03 · A9</span><span class="hiw-cap-name">Earnings Extract</span><span class="hiw-cap-sub">Quarterly bank-transcript extraction</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
+          <td class="hiw-mono-cell">quarterly cron<br/><span style="color:var(--muted);font-size:10px">earnings_agent.py</span></td>
+          <td class="hiw-mono-cell">data/bank_earnings.json</td>
+          <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="hiw-row-num">04 · A10</span><span class="hiw-cap-name">Repair Diagnostician</span><span class="hiw-cap-sub">Memory-aware incident root-cause</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
+          <td class="hiw-mono-cell">AGENT_DIAGNOSTICIAN_ENABLED=1</td>
+          <td class="hiw-mono-cell">data/incident_reports/*.md</td>
+          <td><div class="hiw-guard-chips"><span class="hiw-gchip">🔒 Allowlist</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="hiw-row-num">05 · Phase 2</span><span class="hiw-cap-name">Signal Explainer</span><span class="hiw-cap-sub">Plain-language rationale per signal</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
+          <td class="hiw-mono-cell">AGENT_EXPLAINER_ENABLED=1</td>
+          <td class="hiw-mono-cell">data/signal_rationales.json</td>
+          <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
+        </tr>
+        <tr>
+          <td><span class="hiw-row-num">06 · Phase 2.5</span><span class="hiw-cap-name">Editorial Review</span><span class="hiw-cap-sub">Two-LLM critique of finished briefing</span></td>
+          <td class="hiw-mono-cell">sonnet + opus</td>
+          <td class="hiw-mono-cell">AGENT_EDITORIAL_REVIEW_ENABLED=1</td>
+          <td class="hiw-mono-cell">data/editorial_report.json</td>
+          <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="hiw-hr"></div>
+
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>Pipeline agent grid.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-num">03 / 06</span>
+        <span class="hiw-label">Technical reference · 11 agents</span>
+      </div>
+    </div>
+
     <div class="ma-trigger">
-      <span style="font-size:18px">⚙️</span>
-      <div>
-        <span class="ma-trigger-label">GitHub Actions — Cron triggers: Weekly Sat 8am ET · Monthly 2nd Sat · Earnings-season daily 10pm UTC (Jan/Apr/Jul/Oct, days 10-28)</span>
-        <span class="ma-trigger-sub">briefing.yml (Agent 0 pre-flight + 8 main agents + build gate + Agent 10 observer + auto-rollback, &lt;3 min) · earnings_agent.yml (Agent 9 quarterly) — last main-pipeline run: April 24, 2026</span>
+      <div class="ma-sources">
+        <div class="ma-source"><div class="ma-source-icon">01 / SOURCE</div><div class="ma-source-name">FRED</div><div class="ma-source-sub">macro series · daily</div></div>
+        <div class="ma-source"><div class="ma-source-icon">02 / SOURCE</div><div class="ma-source-name">BLS</div><div class="ma-source-sub">labor · monthly</div></div>
+        <div class="ma-source"><div class="ma-source-icon">03 / SOURCE</div><div class="ma-source-name">EIA</div><div class="ma-source-sub">energy · weekly</div></div>
+        <div class="ma-source"><div class="ma-source-icon">04 / SOURCE</div><div class="ma-source-name">UMich</div><div class="ma-source-sub">sentiment · monthly</div></div>
+        <div class="ma-source"><div class="ma-source-icon">05 / SOURCE</div><div class="ma-source-name">Earnings</div><div class="ma-source-sub">bank transcripts · quarterly</div></div>
+      </div>
+
+      <div class="ma-vconn">
+        <div class="ma-vline"></div>
+        <div class="ma-vconn-lbl">INGEST → PIPELINE</div>
+        <div class="ma-vline"></div>
+      </div>
+
+      <div class="ma-agents">
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A0 / PREFLIGHT</span><span class="ma-agent-file">preflight.py</span></div><div class="ma-agent-name">Preflight</div><div class="ma-agent-body"><p class="ma-agent-desc">Verifies the run environment, paths, and required env vars before any agent is allowed to start.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">2 checks</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A1 / COLLECTOR</span><span class="ma-agent-file">collector.py</span></div><div class="ma-agent-name">Collector</div><div class="ma-agent-body"><p class="ma-agent-desc">Pulls latest series from FRED, BLS, EIA, UMich; normalises units, frequency, and revision history.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">5 sources</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A2 / ANALYZER</span><span class="ma-agent-file">analyzer.py</span></div><div class="ma-agent-name">Analyzer</div><div class="ma-agent-body"><p class="ma-agent-desc">Computes signal scores, regime classifications, and YoY/MoM deltas against the playbook bands.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">pure math</span></div></div></div>
+        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A3 / BRIEFING</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">briefing_agent.py</span></div><div class="ma-agent-name">Briefing</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet writes the daily commentary block from the analyzer's signals.json.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">always-on</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A4 / RENDERER</span><span class="ma-agent-file">renderer.py</span></div><div class="ma-agent-name">Renderer</div><div class="ma-agent-body"><p class="ma-agent-desc">Materialises the single-page index.html from signal data, the briefing, and component templates.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">templated</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A5 / PUBLISHER</span><span class="ma-agent-file">publisher.py</span></div><div class="ma-agent-name">Publisher</div><div class="ma-agent-body"><p class="ma-agent-desc">Commits the build artifacts to the publish branch only after the publish gate returns PASS.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">gated</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A6 / VALIDATOR</span><span class="ma-agent-file">validator.py</span></div><div class="ma-agent-name">Validator</div><div class="ma-agent-body"><p class="ma-agent-desc">Ten validation passes, 200+ assertions on signal coverage, schema, freshness, and band consistency.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">10 passes</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A7 / VISUAL QA</span><span class="ma-agent-file">visual_qa.py</span></div><div class="ma-agent-name">Visual QA</div><div class="ma-agent-body"><p class="ma-agent-desc">Playwright-driven DOM checks: commentary placement, color usage, label presence, contrast targets.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">~230 checks</span></div></div></div>
+        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A8 / VISION REVIEW</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">visual_review.py</span></div><div class="ma-agent-name">Vision Review</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet (vision) critiques the rendered page like a senior designer.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">multimodal</span></div></div></div>
+        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A9 / EARNINGS</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">earnings_agent.py</span></div><div class="ma-agent-name">Earnings</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet extracts verbatim CEO/CFO quotes from quarterly bank transcripts.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">quarterly</span></div></div></div>
+        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A10 / DIAGNOSTICIAN</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">diagnostician.py</span></div><div class="ma-agent-name">Diagnostician</div><div class="ma-agent-body"><p class="ma-agent-desc">Memory-aware diagnostician — reads the audit log, hypothesises root cause, writes an incident report.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">flagged</span></div></div></div>
+        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">GATE / PUBLISH</span><span class="ma-agent-file">ceo_grade_gate.py</span></div><div class="ma-agent-name">Publish Gate</div><div class="ma-agent-body"><p class="ma-agent-desc">Final verdict over every preceding layer. PASS publishes; WARN annotates; FAIL holds the build.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">PASS / WARN / FAIL</span></div></div></div>
+      </div>
+
+      <div class="ma-arrows">
+        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
+        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
+        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
+        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
+      </div>
+
+      <div class="ma-outputs">
+        <div class="ma-output"><div class="ma-output-icon">OUT / 01</div><div class="ma-output-title">signals.json</div><div class="ma-output-sub">analyzer scores + briefing commentary</div></div>
+        <div class="ma-output"><div class="ma-output-icon">OUT / 02</div><div class="ma-output-title">index.html</div><div class="ma-output-sub">rendered single-page dashboard</div></div>
+        <div class="ma-output"><div class="ma-output-icon">OUT / 03</div><div class="ma-output-title">visual_review_report.json</div><div class="ma-output-sub">multimodal critique by A8</div></div>
+        <div class="ma-output"><div class="ma-output-icon">OUT / 04</div><div class="ma-output-title">editorial_report.json</div><div class="ma-output-sub">two-LLM verdict on the briefing</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="hiw-hr"></div>
+
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>Guardrails — the four feature flags.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-num">04 / 06</span>
+        <span class="hiw-label">Operator controls · default OFF</span>
       </div>
     </div>
 
-    <!-- DOWN ARROW -->
-    <div class="ma-vconn">
-      <div class="ma-vline"></div>
-      <div class="ma-vconn-lbl">spins up pipeline</div>
+    <div class="hiw-gd">
+      <div class="hiw-gd-tile">
+        <div class="hiw-env">AGENT_DISABLE_ALL</div>
+        <p>Kill switch. When set, every agentic capability is short-circuited at import time and the pipeline runs deterministic-only.</p>
+        <span class="hiw-v">DEFAULT · OFF</span>
+      </div>
+      <div class="hiw-gd-tile">
+        <div class="hiw-env">AGENT_DIAGNOSTICIAN_ENABLED</div>
+        <p>Allows Agent 10 to write into <span class="hiw-mono">data/incident_reports/</span>. Path allowlist enforced regardless.</p>
+        <span class="hiw-v">DEFAULT · OFF</span>
+      </div>
+      <div class="hiw-gd-tile">
+        <div class="hiw-env">AGENT_EXPLAINER_ENABLED</div>
+        <p>Enables the Signal Explainer phase. Output is schema-validated; rejected fields are dropped, never substituted.</p>
+        <span class="hiw-v">DEFAULT · OFF</span>
+      </div>
+      <div class="hiw-gd-tile">
+        <div class="hiw-env">AGENT_EDITORIAL_REVIEW_ENABLED</div>
+        <p>Runs the two-LLM Editorial Review after rendering. Sonnet drafts the critique; Opus adjudicates it.</p>
+        <span class="hiw-v">DEFAULT · OFF</span>
+      </div>
     </div>
+  </section>
 
-    <!-- DATA SOURCES -->
-    <div class="ma-sources" style="margin-bottom:0">
-      <div class="ma-source" style="animation-delay:.04s">
-        <div class="ma-source-icon">📊</div>
-        <div class="ma-source-name">BLS API</div>
-        <div class="ma-source-sub">Jobs · Wages · CPI · Unemp</div>
-      </div>
-      <div class="ma-source" style="animation-delay:.08s">
-        <div class="ma-source-icon">🏛️</div>
-        <div class="ma-source-name">BEA API</div>
-        <div class="ma-source-sub">GDP · PCE · Income</div>
-      </div>
-      <div class="ma-source" style="animation-delay:.12s">
-        <div class="ma-source-icon">🏦</div>
-        <div class="ma-source-name">FRED API</div>
-        <div class="ma-source-sub">Yields · Spreads · Mortgage</div>
-      </div>
-      <div class="ma-source" style="animation-delay:.16s">
-        <div class="ma-source-icon">⛽</div>
-        <div class="ma-source-name">EIA API</div>
-        <div class="ma-source-sub">Oil · Gas · Production</div>
-      </div>
-      <div class="ma-source" style="animation-delay:.20s">
-        <div class="ma-source-icon">📰</div>
-        <div class="ma-source-name">Manual</div>
-        <div class="ma-source-sub">NY Fed · NAR · forecast institutions</div>
-      </div>
-      <div class="ma-source" style="animation-delay:.24s">
-        <div class="ma-source-icon">🏦</div>
-        <div class="ma-source-name">Earnings Transcripts</div>
-        <div class="ma-source-sub">10 banks · Q1/Q2/Q3/Q4 · auto-fetched by Agent 9</div>
+  <div class="hiw-hr"></div>
+
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>Source-of-truth contracts.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-num">05 / 06</span>
+        <span class="hiw-label">Three docs, no exceptions</span>
       </div>
     </div>
 
-    <!-- DOWN ARROW -->
-    <div class="ma-vconn">
-      <div class="ma-vline"></div>
-      <div class="ma-vconn-lbl">40+ series → Agent 1</div>
+    <div class="hiw-ct-row">
+      <a class="hiw-ct-card" href="#" data-doc="style_guide">
+        <span class="hiw-arrow">↗</span>
+        <h3>Visual contract.</h3>
+        <p>Typography, color, spacing, component density. The validator and Visual QA both read from it.</p>
+        <div class="hiw-path">data/style_guide.md</div>
+      </a>
+      <a class="hiw-ct-card" href="#" data-doc="playbook">
+        <span class="hiw-arrow">↗</span>
+        <h3>Data + reasoning contract.</h3>
+        <p>What "normal" looks like in each macro band, what triggers a watch, what triggers critical.</p>
+        <div class="hiw-path">data/playbook.md</div>
+      </a>
+      <a class="hiw-ct-card" href="#" data-doc="framework_report">
+        <span class="hiw-arrow">↗</span>
+        <h3>Framework + maturity report.</h3>
+        <p>The six-layer defense-in-depth model, current maturity, and the verdict from the latest gate run.</p>
+        <div class="hiw-path">docs/ · internal reference</div>
+      </a>
     </div>
+  </section>
 
-    <!-- 11 AGENTS -->
-    <div class="ma-agents">
+  <div class="hiw-hr"></div>
 
-      <!-- Agent 0 — Pre-flight -->
-      <div class="ma-agent" style="animation-delay:.04s;border-color:rgba(220,38,38,.25);box-shadow:0 2px 12px rgba(220,38,38,.08)">
-        <div class="ma-agent-header" style="background:#FEF2F2">
-          <div class="ma-agent-accent" style="background:#DC2626"></div>
-          <div class="ma-agent-num">Agent 0</div>
-          <div class="ma-agent-icon">🛂</div>
-          <div class="ma-agent-name">Pre-flight</div>
-          <div class="ma-agent-file">preflight.py</div>
-          <span class="ma-badge-nollm">No LLM · Halts pipeline on failure</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Validates every FRED series_id used by the collector (~52 IDs) returns ≥1 obs before the pipeline runs. Halts immediately on any 4xx so downstream agents never run on poisoned data. Defense-in-depth alongside validator Pass 3h: Agent 0 fails upstream, Pass 3h surfaces anything that slipped through.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: collector.py source (extracts IDs)</div>
-            <div class="ma-agent-out">OUT: ✅ proceed | ❌ exit 1</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 1 -->
-      <div class="ma-agent" style="animation-delay:.08s">
-        <div class="ma-agent-header">
-          <div class="ma-agent-accent" style="background:#336BCC"></div>
-          <div class="ma-agent-num">Agent 1</div>
-          <div class="ma-agent-icon">📥</div>
-          <div class="ma-agent-name">Collector</div>
-          <div class="ma-agent-file">collector.py</div>
-          <span class="ma-badge-nollm">No LLM</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Pulls all 40 series via public APIs (incl. weekly jobless claims on Thursdays). Normalises units, applies seasonal adjustment flags, timestamps each datapoint.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: API keys + series IDs</div>
-            <div class="ma-agent-out">OUT: raw_data.json</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 2 -->
-      <div class="ma-agent" style="animation-delay:.15s">
-        <div class="ma-agent-header">
-          <div class="ma-agent-accent" style="background:#1A9E5A"></div>
-          <div class="ma-agent-num">Agent 2</div>
-          <div class="ma-agent-icon">🔍</div>
-          <div class="ma-agent-name">Analyzer</div>
-          <div class="ma-agent-file">analyzer.py</div>
-          <span class="ma-badge-nollm">No LLM</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Diffs raw data vs prior snapshot. Scores signal changes, flags surprises vs consensus, tags directional deltas.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: raw_data.json + snapshot.json</div>
-            <div class="ma-agent-out">OUT: signals.json</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 3 — Claude -->
-      <div class="ma-agent" style="animation-delay:.22s;border-color:rgba(136,120,184,.3);box-shadow:0 2px 12px rgba(136,120,184,.1)">
-        <div class="ma-agent-header" style="background:#FAFBFF">
-          <div class="ma-agent-accent" style="background:#8878B8"></div>
-          <div class="ma-agent-num">Agent 3</div>
-          <div class="ma-agent-icon">🧠</div>
-          <div class="ma-agent-name">Analyst</div>
-          <div class="ma-agent-file">briefing_agent.py</div>
-          <span class="ma-badge-llm">claude-sonnet-4-6</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Reads signals.json + analyst persona prompt. Writes risk posture, tab commentary, macro bottom line. Only step using an LLM.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: signals.json (~8K tokens)</div>
-            <div class="ma-agent-out">OUT: analysis.json</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 4 -->
-      <div class="ma-agent" style="animation-delay:.29s">
-        <div class="ma-agent-header">
-          <div class="ma-agent-accent" style="background:#CC8A00"></div>
-          <div class="ma-agent-num">Agent 4</div>
-          <div class="ma-agent-icon">🖥️</div>
-          <div class="ma-agent-name">Renderer</div>
-          <div class="ma-agent-file">renderer.py</div>
-          <span class="ma-badge-nollm">No LLM</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Rebuilds all chart arrays from raw data (annual + monthly YoY), patches KPI strip, injects AI commentary. Auto-updates CPI, PCE, unemployment, housing, oil, jobs sector data.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: analysis.json + template</div>
-            <div class="ma-agent-out">OUT: dashboard.html</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 5 -->
-      <div class="ma-agent" style="animation-delay:.36s">
-        <div class="ma-agent-header">
-          <div class="ma-agent-accent" style="background:#0E7490"></div>
-          <div class="ma-agent-num">Agent 5</div>
-          <div class="ma-agent-icon">📬</div>
-          <div class="ma-agent-name">Publisher</div>
-          <div class="ma-agent-file">publisher.py</div>
-          <span class="ma-badge-nollm">No LLM</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Commits dashboard.html to GitHub, sends HTML briefing email via Resend API. Saves snapshot.json for next run's diff.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: dashboard.html + analysis.json</div>
-            <div class="ma-agent-out">OUT: email + git commit</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 6 -->
-      <div class="ma-agent" style="animation-delay:.43s;border-color:rgba(5,150,105,.3);box-shadow:0 2px 12px rgba(5,150,105,.08)">
-        <div class="ma-agent-header" style="background:#F0FDF9">
-          <div class="ma-agent-accent" style="background:#059669"></div>
-          <div class="ma-agent-num">Agent 6</div>
-          <div class="ma-agent-icon">🛡️</div>
-          <div class="ma-agent-name">Validator</div>
-          <div class="ma-agent-file">validator.py</div>
-          <span class="ma-badge-nollm">9-Pass · Build Gate</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Unified 9-pass quality gate: (1) internal consistency — HTML vs raw_data, (2) source verification — live API spot-checks, (3) staleness detection, (3b) shock-tracker structure + MMA consistency, (3c) earnings commentary factuality — every "…" quote must verbatim-match an archived transcript, (3d) panel-title vs data-const month consistency, (3e) cross-surface metric consistency, <strong>(3f) schema contract — every renderer key must have a collector writer</strong>, <strong>(3g) seed drift — static seeds recomputed from raw data each run</strong>, <strong>(3h) collector errors — surfaces FRED/BLS 4xx as critical findings</strong>, (4) visual QA via Agent 7, (5) AI vision review via Agent 8. Build gate blocks publish on critical failures.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: index.html + raw_data.json + APIs</div>
-            <div class="ma-agent-out">OUT: validation_report.json</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 7 -->
-      <div class="ma-agent" style="animation-delay:.50s;border-color:rgba(14,116,144,.3);box-shadow:0 2px 12px rgba(14,116,144,.08)">
-        <div class="ma-agent-header" style="background:#F0FDFA">
-          <div class="ma-agent-accent" style="background:#0E7490"></div>
-          <div class="ma-agent-num">Agent 7</div>
-          <div class="ma-agent-icon">🔬</div>
-          <div class="ma-agent-name">Visual QA</div>
-          <div class="ma-agent-file">visual_qa.py</div>
-          <span class="ma-badge-nollm">Playwright · 224 DOM Checks</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Headless Chromium renders every tab, checks: JS errors, console errors, bad placeholder values, chart canvas sizes, KPI tile integrity, panel content. Screenshots saved for Agent 8.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: index.html (headless browser)</div>
-            <div class="ma-agent-out">OUT: visual_qa_report.json + PNGs</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 8 -->
-      <div class="ma-agent" style="animation-delay:.57s;border-color:rgba(136,120,184,.3);box-shadow:0 2px 12px rgba(136,120,184,.1)">
-        <div class="ma-agent-header" style="background:#FAFBFF">
-          <div class="ma-agent-accent" style="background:#8878B8"></div>
-          <div class="ma-agent-num">Agent 8</div>
-          <div class="ma-agent-icon">👁️</div>
-          <div class="ma-agent-name">Visual Review</div>
-          <div class="ma-agent-file">visual_review.py</div>
-          <span class="ma-badge-llm">claude-sonnet-4-6 · vision</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Sends per-tab screenshots to Claude's vision API for pixel-level defect detection: broken chart lines, empty data areas, overlapping labels, missing legends, blank tiles, formatting errors. Catches visual bugs invisible to DOM checks.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: screenshots from Agent 7</div>
-            <div class="ma-agent-out">OUT: visual_review_report.json</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 9 — separate earnings-season pipeline -->
-      <div class="ma-agent" style="animation-delay:.64s;border-color:rgba(136,120,184,.3);box-shadow:0 2px 12px rgba(136,120,184,.1);grid-column:span 2;background:linear-gradient(to right,#FAFBFF 0%,#FDFCFA 100%)">
-        <div class="ma-agent-header" style="background:#FAFBFF">
-          <div class="ma-agent-accent" style="background:#8878B8"></div>
-          <div class="ma-agent-num">Agent 9</div>
-          <div class="ma-agent-icon">🏦</div>
-          <div class="ma-agent-name">Earnings Agent</div>
-          <div class="ma-agent-file">earnings_agent.py</div>
-          <span class="ma-badge-llm">claude-sonnet-4-6</span>
-          <span class="ma-badge-nollm" style="margin-left:6px">Quarterly · autonomous</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Autonomous quarterly pipeline for bank earnings commentary — runs on its own cron (10pm UTC, days 10-28 of Jan/Apr/Jul/Oct), does not touch the weekly briefing cadence. Reads <code>data/earnings_calendar.json</code> → fetches each bank's Q-transcript from IR/Motley Fool/Seeking Alpha → Claude Sonnet extracts 8 verbatim fields with a strict no-paraphrase schema → local substring check + validator Pass 3c gate → auto-commits to main when the gate passes, halts silently when it doesn't. The factuality rule is enforced mechanically, not by human review.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: earnings_calendar.json + transcript URLs</div>
-            <div class="ma-agent-out">OUT: bank_earnings.json + data/transcripts/&lt;Q&gt;/&lt;TICKER&gt;.txt + git commit</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Agent 10 — Repair Agent (observer mode) -->
-      <div class="ma-agent" style="animation-delay:.71s;border-color:rgba(217,119,6,.3);box-shadow:0 2px 12px rgba(217,119,6,.1);grid-column:span 2;background:linear-gradient(to right,#FFFBEB 0%,#FEF3C7 100%)">
-        <div class="ma-agent-header" style="background:#FFFBEB">
-          <div class="ma-agent-accent" style="background:#D97706"></div>
-          <div class="ma-agent-num">Agent 10</div>
-          <div class="ma-agent-icon">🔧</div>
-          <div class="ma-agent-name">Repair Agent</div>
-          <div class="ma-agent-file">repair_agent.py</div>
-          <span class="ma-badge-nollm">No LLM (yet) · Observer mode v1</span>
-        </div>
-        <div class="ma-agent-body">
-          <div class="ma-agent-desc">Self-correction layer (observer mode v1 — passive, no automated fixes). Runs <code>if: always()</code> after Agent 6 so it surfaces failures even when the build gate halts publishing. Reads <code>data/validation_report.json</code>, prints a structured per-section summary into the CI run log, and appends to a rolling <code>data/repair_log.md</code> (capped at 50 entries). Per the design rule, must run for ≥3 weeks of weekly cycles before any fix-writing logic is added — every autonomous-fix system that hasn't first observed its trigger signal ends up auto-merging garbage during the first weird outage. v2/v3/v4 (GitHub surface → fix proposals → narrow auto-merge) gated on that observation phase.</div>
-          <div class="ma-agent-io">
-            <div class="ma-agent-in">IN: validation_report.json</div>
-            <div class="ma-agent-out">OUT: structured summary in run log + data/repair_log.md</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- DOWN ARROW -->
-    <div class="ma-vconn">
-      <div class="ma-vline"></div>
-      <div class="ma-vconn-lbl">outputs + safety net</div>
-    </div>
-
-    <!-- OUTPUTS -->
-    <div class="ma-outputs" style="grid-template-columns:1fr 1fr">
-      <div class="ma-output" style="border-color:rgba(51,107,204,.2);background:#EBF2FF">
-        <div class="ma-output-icon">📊</div>
-        <div>
-          <div class="ma-output-title" style="color:#336BCC">This Dashboard</div>
-          <div class="ma-output-sub">index.html updated in-place · 15 tabs refreshed · committed to GitHub · deployed to GitHub Pages</div>
-        </div>
-      </div>
-      <div class="ma-output" style="border-color:rgba(13,122,74,.2);background:#ECFDF5">
-        <div class="ma-output-icon">✉️</div>
-        <div>
-          <div class="ma-output-title" style="color:#1A9E5A">Weekly Briefing Email</div>
-          <div class="ma-output-sub">HTML email with macro summary, tab-by-tab headlines, key signal changes vs prior run · via Resend API</div>
-        </div>
-      </div>
-      <div class="ma-output" style="border-color:rgba(5,150,105,.2);background:#F0FDF9">
-        <div class="ma-output-icon">🛡️</div>
-        <div>
-          <div class="ma-output-title" style="color:#059669">Validation Report (9-pass)</div>
-          <div class="ma-output-sub">Internal consistency · source verification · staleness · shock-tracker · panel-data · metric consistency · <strong>schema contract · seed drift · collector errors</strong> · earnings factuality · 224 DOM visual checks · AI vision review — viewable in Validator tab</div>
-        </div>
-      </div>
-      <div class="ma-output" style="border-color:rgba(136,120,184,.2);background:#F3F0FF">
-        <div class="ma-output-icon">🔄</div>
-        <div>
-          <div class="ma-output-title" style="color:#8878B8">Safety Net</div>
-          <div class="ma-output-sub">Rolling snapshots (keep 3) · post-deploy health check · auto-rollback on failure · pipeline version audit trail · failure alerts via GitHub Issues</div>
-        </div>
+  <section>
+    <div class="hiw-sec-hd">
+      <h2>What this buys you.</h2>
+      <div class="hiw-meta">
+        <span class="hiw-num">06 / 06</span>
+        <span class="hiw-label">Three guarantees</span>
       </div>
     </div>
 
-    <!-- WHY NOTE -->
-    <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10.5px;color:#92400E;line-height:1.6">
-      <strong>Why multi-agent?</strong> Only Agents 3, 8 and 9 use an LLM — Agents 0, 1, 2, 4, 5, 6, 7 and 10 are pure Python with no AI cost. Each agent is independently testable, and the Collector can be reused for other dashboards. <strong>Self-verification stack:</strong> Agent 0 (pre-flight) validates every FRED ID upstream of Agent 1; Agent 6 runs a 9-pass quality gate including <strong>schema contract</strong> (renderer reads ↔ collector writes), <strong>seed drift</strong> (FC_MACRO actuals recomputed each run), and <strong>collector errors</strong> (FRED/BLS 4xx surfaced as critical), alongside the existing internal/source/staleness/shock-tracker/panel/metric/earnings passes plus Agent 7's 224 DOM checks and Agent 8's AI vision review. Agent 9 runs on its own cron (quarterly) and uses the same validator gate. Agent 10 (repair, observer mode v1) reads the validation report after every run and surfaces accumulated drift into a rolling log. Critical failures block publish; auto-rollback restores the last known-good snapshot if the health check fails post-deploy.
-    </div>
-
-  </div>
-  </div>
-
-  <!-- PIPELINE FLOW -->
-  <div class="stk-section-title">Pipeline — 11 stages, Weekly Sat 8am ET + Monthly 2nd Sat 10am ET</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:8px;padding:12px">
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF2F2;border-radius:10px;border:1px solid rgba(220,38,38,.15)">
-      <span style="font-size:18px">🛂</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#DC2626;margin-bottom:1px">0. Pre-flight</div>
-        <div style="font-size:9px;color:#64748B">Validate FRED IDs · halt on 4xx</div>
+    <div class="hiw-oc-row">
+      <div class="hiw-oc-card">
+        <span class="hiw-nmark">①</span>
+        <p>Six independent gates block any defect from reaching the publish surface — preflight, smoke, validator, visual QA, vision review, editorial.</p>
+      </div>
+      <div class="hiw-oc-card">
+        <span class="hiw-nmark">②</span>
+        <p>Every agentic LLM call is path-allowlisted, cost-capped, schema-validated, and written to a 2000-entry audit log.</p>
+      </div>
+      <div class="hiw-oc-card">
+        <span class="hiw-nmark">③</span>
+        <p>One env-var — <span class="hiw-mono" style="font-size:13px;color:var(--purple-ink)">AGENT_DISABLE_ALL=1</span> — disables every agentic feature in a single deploy.</p>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#EBF2FF;border-radius:10px;border:1px solid rgba(51,107,204,.15)">
-      <span style="font-size:18px">📥</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#336BCC;margin-bottom:1px">1. Collect</div>
-        <div style="font-size:9px;color:#64748B">40+ series from BLS/BEA/FRED/EIA</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#ECFDF5;border-radius:10px;border:1px solid rgba(26,158,90,.15)">
-      <span style="font-size:18px">🔍</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#1A9E5A;margin-bottom:1px">2. Analyze</div>
-        <div style="font-size:9px;color:#64748B">Diff vs prior run, score signals</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F3F0FF;border-radius:10px;border:1px solid rgba(136,120,184,.2)">
-      <span style="font-size:18px">🧠</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#8878B8;margin-bottom:1px">3. AI Analyst</div>
-        <div style="font-size:9px;color:#64748B">Claude Sonnet writes commentary</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
-      <span style="font-size:18px">🖥️</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#CC8A00;margin-bottom:1px">4. Render</div>
-        <div style="font-size:9px;color:#64748B">Patch HTML: charts, KPIs, commentary</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0FDF9;border-radius:10px;border:1px solid rgba(5,150,105,.15)">
-      <span style="font-size:18px">🛡️</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:1px">5. Validate (9-pass)</div>
-        <div style="font-size:9px;color:#64748B">9-pass gate: data + schema contract + seed drift + collector errors + visual + AI vision</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF3C7;border-radius:10px;border:1px solid rgba(204,138,0,.15)">
-      <span style="font-size:18px">🖥️</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#CC8A00;margin-bottom:1px">6. Re-render</div>
-        <div style="font-size:9px;color:#64748B">Inject validation report into page</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FEF2F2;border-radius:10px;border:1px solid rgba(214,64,69,.15)">
-      <span style="font-size:18px">🚦</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#D64045;margin-bottom:1px">7. Build Gate</div>
-        <div style="font-size:9px;color:#64748B">Block publish on critical failures</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F0F9FF;border-radius:10px;border:1px solid rgba(14,116,144,.15)">
-      <span style="font-size:18px">📬</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#0E7490;margin-bottom:1px">8. Publish + Deploy</div>
-        <div style="font-size:9px;color:#64748B">Email via Resend · GitHub Pages</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0">
-      <span style="font-size:18px">🔄</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#64748B;margin-bottom:1px">9. Health Check + Rollback</div>
-        <div style="font-size:9px;color:#94A3B8">Verify live page · auto-rollback on fail</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#FFFBEB;border-radius:10px;border:1px solid rgba(217,119,6,.2)">
-      <span style="font-size:18px">🔧</span>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#D97706;margin-bottom:1px">10. Repair (observer)</div>
-        <div style="font-size:9px;color:#64748B">Reads validation report · rolling log</div>
-      </div>
-    </div>
-  </div>
+  </section>
 
-  <!-- STATS -->
-  <div class="stk-stats" style="grid-template-columns:repeat(5,1fr)">
-    <div class="stk-stat">
-      <div class="stk-stat-val blue">11</div>
-      <div class="stk-stat-lbl">Pipeline agents</div>
-    </div>
-    <div class="stk-stat">
-      <div class="stk-stat-val blue">40+</div>
-      <div class="stk-stat-lbl">Data series tracked</div>
-    </div>
-    <div class="stk-stat">
-      <div class="stk-stat-val green">480+</div>
-      <div class="stk-stat-lbl">Quality checks per run</div>
-    </div>
-    <div class="stk-stat">
-      <div class="stk-stat-val">15</div>
-      <div class="stk-stat-lbl">Dashboard tabs</div>
-    </div>
-    <div class="stk-stat">
-      <div class="stk-stat-val">~4 min</div>
-      <div class="stk-stat-lbl">Full pipeline runtime</div>
-    </div>
-  </div>
-
-  <!-- CI/CD & SAFETY INFRASTRUCTURE -->
-  <div class="stk-section-title">CI/CD &amp; Safety Infrastructure — automated quality assurance</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
-
-    <div class="panel" style="margin-bottom:0;padding:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:16px">🧪</span>
-        <div style="font-size:12px;font-weight:700;color:var(--text)">Smoke Tests (PR Gate)</div>
-      </div>
-      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
-        29 offline tests run on every pull request. Generates synthetic fixture data and tests analyzer, renderer, validator, and snapshot logic — no API keys needed. Blocks merge on failure.
-      </div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap">
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#ECFDF5;color:#059669;border:1px solid rgba(5,150,105,.2)">29 tests</span>
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">smoke-tests.yml</span>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-bottom:0;padding:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:16px">📋</span>
-        <div style="font-size:12px;font-weight:700;color:var(--text)">API Contract Tests</div>
-      </div>
-      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
-        Weekly (Tuesday 6am ET) verifies FRED, BLS, and EIA response schemas haven't changed. Tests expected keys, date formats, value types. Auto-creates GitHub Issue if format breaks.
-      </div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap">
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#EBF2FF;color:#336BCC;border:1px solid rgba(51,107,204,.2)">Weekly Tue</span>
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">api-contract.yml</span>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-bottom:0;padding:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:16px">💾</span>
-        <div style="font-size:12px;font-weight:700;color:var(--text)">Rolling Snapshots</div>
-      </div>
-      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
-        Each pipeline run saves raw_data.json + validation_report.json to data/snapshots/. Keeps last 3 snapshots, auto-prunes older. Enables instant rollback to any recent good state.
-      </div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap">
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#FEF3C7;color:#CC8A00;border:1px solid rgba(204,138,0,.2)">Keep 3</span>
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">snapshot.py</span>
-      </div>
-    </div>
-
-    <div class="panel" style="margin-bottom:0;padding:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-        <span style="font-size:16px">🔄</span>
-        <div style="font-size:12px;font-weight:700;color:var(--text)">Auto-Rollback + Alerts</div>
-      </div>
-      <div style="font-size:10.5px;color:var(--text2);line-height:1.6;margin-bottom:8px">
-        Post-deploy health check verifies the live page (HTTP 200, size, content markers). On failure: auto-restores last snapshot, re-renders, and re-deploys. Pipeline failures auto-create GitHub Issues.
-      </div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap">
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#FEF2F2;color:#D64045;border:1px solid rgba(214,64,69,.2)">Auto-heal</span>
-        <span style="font-family:'DM Mono',monospace;font-size:8.5px;font-weight:600;padding:2px 7px;border-radius:4px;background:#F1F5F9;color:#64748B;border:1px solid #E2E8F0">healthcheck.py</span>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- SUPPORTING SCRIPTS -->
-  <div class="stk-section-title">Supporting Scripts — version tracking &amp; development workflow</div>
-  <div class="panel" style="margin-bottom:20px;padding:16px">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-      <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
-        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">version_tracker.py</div>
-        <div style="font-size:10px;color:var(--text2);line-height:1.5">Records git SHA, branch, data freshness, validation status, and key indicator values each run. Rolling history of last 20 runs in pipeline_version.json.</div>
-      </div>
-      <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
-        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">CLAUDE.md</div>
-        <div style="font-size:10px;color:var(--text2);line-height:1.5">Centralized development conventions. Ensures all Claude Code sessions use the same branch strategy (dev → main), testing requirements, and commit conventions.</div>
-      </div>
-      <div style="padding:10px;background:#F8FAFC;border:1px solid var(--border);border-radius:8px">
-        <div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:4px">3 CI Workflows</div>
-        <div style="font-size:10px;color:var(--text2);line-height:1.5"><strong>briefing.yml</strong> — main pipeline (Sat weekly + 2nd Sat monthly) · <strong>smoke-tests.yml</strong> — PR gate (29 tests) · <strong>api-contract.yml</strong> — weekly API schema checks (Tue)</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DATA STATUS TABLE -->
-  <div class="stk-section-title">Data sources &amp; freshness — 40+ series across 15 tabs</div>
-  <div class="fc-note" style="margin-bottom:14px">
-    <strong>Pipeline cadence:</strong>
-    <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
-      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#336BCC;background:#EBF2FF;border:1px solid rgba(51,107,204,.2)">Weekly</span> Every Saturday 8am ET — Full 11-agent pipeline + validation + deploy
-    </span>
-    <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
-      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#8878B8;background:#F3F0FF;border:1px solid rgba(136,120,184,.2)">Monthly Deep</span> 2nd Saturday 10am ET — captures Jobs (1st Fri) + CPI (~10th) + PCE (~28th prior month)
-    </span>
-    <span style="display:inline-flex;align-items:center;gap:4px;margin:0 10px">
-      <span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:9.5px;font-weight:700;color:#CC8A00;background:#FEF3C7;border:1px solid rgba(204,138,0,.2)">Quarterly</span> manual update after bank earnings / GDP advance estimates
-    </span>
-    All tab commentaries are dynamically generated by Claude AI from live FRED/BLS/EIA data on each pipeline run.
-  </div>
-
-  ${seriesHTML}
-
-  <!-- SIGNAL THRESHOLD LOGIC -->
-  <div class="stk-section-title">Signal Threshold Logic — how KPI colors are determined</div>
-  <div class="panel" style="margin-bottom:20px;padding:20px">
-    <div class="fc-note" style="margin-bottom:14px">
-      Each headline KPI is color-coded using threshold-based logic. The color reflects the <strong>economic signal</strong> of the reading — not whether the number went up or down. Thresholds are derived from Fed targets, historical averages, and recession-era benchmarks.
-    </div>
-    <div style="overflow-x:auto">
-      <table class="dtable" style="width:100%;font-size:11px">
-        <thead>
-          <tr>
-            <th style="text-align:left;min-width:130px">Metric</th>
-            <th style="text-align:center;min-width:100px"><span style="color:#1A9E5A;font-weight:700">&#9679;</span> Green</th>
-            <th style="text-align:center;min-width:100px"><span style="color:#CC8A00;font-weight:700">&#9679;</span> Amber</th>
-            <th style="text-align:center;min-width:100px"><span style="color:#D64045;font-weight:700">&#9679;</span> Red</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Unemployment</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&lt; 4.0%</td>
-            <td style="text-align:center;color:#CC8A00">4.0 – 4.9%</td>
-            <td style="text-align:center;color:#D64045">&ge; 5.0%</td>
-          </tr>
-          <tr>
-            <td><strong>Jobs (NFP MoM)</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&gt; +100K</td>
-            <td style="text-align:center;color:#CC8A00">0 – +100K</td>
-            <td style="text-align:center;color:#D64045">&lt; 0</td>
-          </tr>
-          <tr>
-            <td><strong>CPI YoY</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&lt; 2.5%</td>
-            <td style="text-align:center;color:#CC8A00">2.5 – 3.5%</td>
-            <td style="text-align:center;color:#D64045">&ge; 3.5%</td>
-          </tr>
-          <tr>
-            <td><strong>Core PCE YoY</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&lt; 2.5%</td>
-            <td style="text-align:center;color:#CC8A00">2.5 – 3.0%</td>
-            <td style="text-align:center;color:#D64045">&ge; 3.0%</td>
-          </tr>
-          <tr>
-            <td><strong>Wage Growth</strong></td>
-            <td style="text-align:center;color:#1A9E5A">3.0 – 4.5%</td>
-            <td style="text-align:center;color:#CC8A00">&lt; 3.0 or &gt; 4.5%</td>
-            <td style="text-align:center;color:#D64045">&lt; 2.0 or &gt; 6.0%</td>
-          </tr>
-          <tr>
-            <td><strong>Initial Claims</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&lt; 220K</td>
-            <td style="text-align:center;color:#CC8A00">220 – 280K</td>
-            <td style="text-align:center;color:#D64045">&ge; 280K</td>
-          </tr>
-          <tr>
-            <td><strong>UMich Sentiment</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&ge; 70</td>
-            <td style="text-align:center;color:#CC8A00">55 – 70</td>
-            <td style="text-align:center;color:#D64045">&lt; 55</td>
-          </tr>
-          <tr>
-            <td><strong>Debt Service Ratio</strong></td>
-            <td style="text-align:center;color:#1A9E5A">&lt; 10.5%</td>
-            <td style="text-align:center;color:#CC8A00">10.5 – 12.0%</td>
-            <td style="text-align:center;color:#D64045">&ge; 12.0%</td>
-          </tr>
-          <tr style="background:#F9FAFB">
-            <td><strong>Fed Funds / 10Y</strong></td>
-            <td colspan="3" style="text-align:center;color:#635BFF;font-weight:600">Always purple — policy rate (context-dependent)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- THRESHOLD DERIVATION -->
-    <div style="margin-top:16px;border:1px solid var(--border);border-radius:10px;overflow:hidden">
-      <div style="padding:12px 16px;background:#F9FAFB;border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text);letter-spacing:.02em">
-        Threshold Derivation — how each boundary was chosen
-      </div>
-      <div style="padding:16px;font-size:10.5px;line-height:1.7;color:var(--text2)">
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Unemployment &mdash; 4.0% / 5.0%</div>
-            <strong>Source:</strong> CBO's NAIRU (Non-Accelerating Inflation Rate of Unemployment) estimate of 4.0&ndash;4.4%. The Fed's Summary of Economic Projections (SEP) places the longer-run unemployment rate at 4.0%.<br>
-            <strong>Red threshold:</strong> Every post-war U.S. recession has seen unemployment breach 5.0%. The Sahm Rule triggers at a 0.5pp rise from the trailing 12-month low &mdash; historically, reaching 5%+ has coincided with that trigger in 8 of the last 9 recessions.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Jobs (NFP) &mdash; +100K / 0</div>
-            <strong>Source:</strong> BLS and CBO labor force projections. The U.S. working-age population grows by ~60&ndash;80K/mo from demographics; with immigration, the breakeven rate to hold unemployment steady is estimated at 75&ndash;150K/mo. The 100K midpoint is widely used by Fed officials and Wall Street strategists.<br>
-            <strong>Red threshold:</strong> Negative monthly payrolls have occurred in only 6% of months since 1948 &mdash; almost exclusively during NBER-dated recessions.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">CPI YoY &mdash; 2.5% / 3.5%</div>
-            <strong>Source:</strong> The Fed targets 2% inflation on PCE. CPI structurally runs 30&ndash;50bp above PCE due to methodological differences (CPI uses fixed basket weights; PCE allows substitution, and CPI weights shelter more heavily).<br>
-            <strong>Green:</strong> 2.5% CPI &asymp; 2.0&ndash;2.2% PCE &asymp; on-target. <strong>Red:</strong> CPI above 3.5% has historically triggered hawkish pivots &mdash; the 2022 tightening cycle began when CPI crossed 3.5% in mid-2021.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Core PCE &mdash; 2.5% / 3.0%</div>
-            <strong>Source:</strong> The Fed's explicitly stated 2% target metric (adopted January 2012, reaffirmed in the 2020 FAIT framework). Core PCE strips food &amp; energy to reveal underlying price pressure.<br>
-            <strong>Tighter than CPI</strong> because the Fed watches this directly. No rate cuts have been initiated with Core PCE above 3.0% in the modern era. The 2.5% amber line reflects the Fed's stated willingness to tolerate "moderately above 2%" under FAIT.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Wage Growth &mdash; 3.0&ndash;4.5% / 2.0% &amp; 6.0%</div>
-            <strong>Source:</strong> The "Goldilocks" range is derived from: 2% inflation target + ~1.0&ndash;1.5% productivity growth = 3.0&ndash;3.5% wage growth consistent with stable inflation. The 4.5% upper bound adds a buffer for higher-productivity periods.<br>
-            <strong>Red:</strong> Below 2.0% signals demand destruction (only seen during 2009 and early pandemic). Above 6.0% risks a wage-price spiral &mdash; only occurred during the 2021&ndash;2022 post-COVID reopening surge.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Initial Claims &mdash; 220K / 280K</div>
-            <strong>Source:</strong> DOL weekly data. The 2017&ndash;2019 pre-pandemic average was ~215K, representing a historically tight labor market. The 220K green boundary is the upper end of that "normal tight" range.<br>
-            <strong>Red:</strong> Claims sustained above 280K have preceded every significant unemployment rate rise since 1990. During the 2001 and 2008 recessions, claims crossed 280K 2&ndash;3 months before the NBER-dated recession start.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">UMich Sentiment &mdash; 70 / 55</div>
-            <strong>Source:</strong> University of Michigan Surveys of Consumers (1952&ndash;present). The long-run average is ~85. One standard deviation below is ~70, which serves as the amber threshold.<br>
-            <strong>Red:</strong> Readings below 55 have only occurred during three periods: the 1980 recession (51.7), the 2008&ndash;09 GFC (55.3), and the 2022 inflation shock (50.0, an all-time low). Below 55 signals extreme consumer distress.
-          </div>
-
-          <div style="padding:12px;background:#fff;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:var(--text);margin-bottom:4px">Debt Service Ratio &mdash; 10.5% / 12.0%</div>
-            <strong>Source:</strong> Federal Reserve TDSP series (household debt payments as % of disposable income). Historical (1980&ndash;2024) average is ~10.5%. The green threshold matches this long-run norm.<br>
-            <strong>Red:</strong> The pre-GFC peak was 13.2% (Q3 2007). Above 12% has historically coincided with rising consumer credit defaults and tightening bank lending standards (per the Fed's SLOOS survey).
-          </div>
-
-          <div style="padding:12px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px">
-            <div style="font-weight:600;color:#635BFF;margin-bottom:4px">Fed Funds / 10Y Treasury &mdash; Always purple</div>
-            Policy rates are <strong>tools, not signals</strong>. A 4.25% Fed Funds rate can be restrictive (if neutral rate is 2.5%) or accommodative (if neutral rate is 5%). The "correct" level depends on r* (the natural rate of interest), which is unobservable and debated.<br>
-            <strong>Design choice:</strong> Purple avoids false signals. The same rate can be bullish or bearish depending on the inflation and growth backdrop.
-          </div>
-
-        </div>
-
-        <div style="margin-top:14px;padding:10px 14px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-left:3px solid #CC8A00;border-radius:8px;font-size:10px;color:#92400E;line-height:1.55">
-          <strong>Note:</strong> These are round-number approximations of economic consensus, not precise statistical cutoffs. They could be refined &mdash; e.g., unemployment thresholds could use the CBO's real-time NAIRU estimate instead of a static 4.0%, or CPI could adjust for the PCE-CPI wedge dynamically. The current thresholds prioritize <strong>readability and stability</strong> over precision.
-        </div>
-      </div>
-    </div>
-
-    <!-- DELTA ARROW LOGIC -->
-    <div style="margin-top:12px;padding:10px 14px;background:#F0F9FF;border:1px solid rgba(51,107,204,.15);border-left:3px solid var(--accent);border-radius:8px;font-size:10.5px;color:#1E3A5F;line-height:1.6">
-      <strong>Delta arrows</strong> (&#9650; &#9660;) show month-over-month direction. For <em>inverted</em> metrics (unemployment, CPI, PCE, claims, DSR), up = <span style="color:#D64045;font-weight:600">bad</span> and down = <span style="color:#1A9E5A;font-weight:600">good</span>. For normal metrics (jobs, wages, sentiment), up = <span style="color:#1A9E5A;font-weight:600">good</span> and down = <span style="color:#D64045;font-weight:600">bad</span>.
-    </div>
-  </div>
-
-</div>`;
+</div>
+`;
 }
 
 // ── Safe init: wait for Chart.js CDN + DOM to be fully ready ──────────
