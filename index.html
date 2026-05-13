@@ -5625,15 +5625,15 @@ function buildStackTab(){
   #tab-stack .ma-arrow-line { width: 1.5px; height: 22px; background: linear-gradient(180deg, #C8CCD3, var(--dim)); }
 
   #tab-stack .ma-outputs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  #tab-stack .ma-output { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; box-shadow: var(--hiw-shadow); }
+  #tab-stack .ma-output { display: block; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; box-shadow: var(--hiw-shadow); }
   #tab-stack .ma-output-icon { font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--muted); }
-  #tab-stack .ma-output-title { font-family: var(--hiw-serif); font-size: 19px; color: var(--text); line-height: 1.15; margin: 4px 0 6px; }
+  #tab-stack .ma-output-title { font-family: var(--hiw-serif); font-size: 19px; color: var(--text); line-height: 1.15; margin: 4px 0 6px; overflow-wrap: anywhere; }
   #tab-stack .ma-output-sub { font-family: var(--hiw-mono); font-size: 10px; color: var(--text2); letter-spacing: .03em; }
 
   #tab-stack .hiw-gd { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
   #tab-stack .hiw-gd-tile { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; box-shadow: var(--hiw-shadow); position: relative; }
   #tab-stack .hiw-gd-tile::before { content: ""; position: absolute; left: 18px; right: 18px; top: 0; height: 2px; background: var(--purple); border-radius: 0 0 2px 2px; }
-  #tab-stack .hiw-gd-tile .hiw-env { font-family: var(--hiw-mono); font-size: 13px; font-weight: 700; color: var(--purple-ink); letter-spacing: .04em; word-break: break-all; }
+  #tab-stack .hiw-gd-tile .hiw-env { font-family: var(--hiw-mono); font-size: 12px; font-weight: 700; color: var(--purple-ink); letter-spacing: .02em; overflow-wrap: anywhere; }
   #tab-stack .hiw-gd-tile p { font-size: 13.5px; color: var(--text2); margin-top: 8px; }
   #tab-stack .hiw-gd-tile .hiw-v { display: inline-block; margin-top: 12px; font-family: var(--hiw-mono); font-size: 9px; font-weight: 700; letter-spacing: .15em; color: var(--muted); padding: 3px 7px; border-radius: 4px; background: var(--card2); border: 1px solid var(--border); }
 
@@ -6000,17 +6000,17 @@ function buildStackTab(){
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
-        <div class="hiw-env">AGENT_DIAGNOSTICIAN_ENABLED</div>
+        <div class="hiw-env">AGENT_<wbr>DIAGNOSTICIAN_<wbr>ENABLED</div>
         <p>Allows Agent 10 to write into <span class="hiw-mono">data/incident_reports/</span>. Path allowlist enforced regardless.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
-        <div class="hiw-env">AGENT_EXPLAINER_ENABLED</div>
+        <div class="hiw-env">AGENT_<wbr>EXPLAINER_<wbr>ENABLED</div>
         <p>Enables the Signal Explainer phase. Output is schema-validated; rejected fields are dropped, never substituted.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
-        <div class="hiw-env">AGENT_EDITORIAL_REVIEW_ENABLED</div>
+        <div class="hiw-env">AGENT_<wbr>EDITORIAL_<wbr>REVIEW_<wbr>ENABLED</div>
         <p>Runs the two-LLM Editorial Review after rendering. Sonnet drafts the critique; Opus adjudicates it.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
