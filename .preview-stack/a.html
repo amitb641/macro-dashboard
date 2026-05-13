@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option A — Editorial restructure</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head><body>
+<div class="opt-banner"><span>Option A · Editorial restructure</span><span class="pill">~5 sections · ~3,400px</span></div>
+<div class="wrap">
+
+  <!-- HEADLINE BLOCK (replaces blue .fc-note callout + pills + agentic panel) -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--purple)"></span>
+    <span class="lbl">How the Dashboard Works</span>
+  </div>
+  <h1 style="font-size:52px;line-height:1.05;letter-spacing:-.01em;max-width:980px">An eleven-agent pipeline that turns <em style="font-style:italic;color:var(--purple-ink)">public macro data</em> into a weekly CEO briefing.</h1>
+  <p style="font-size:17px;line-height:1.6;color:var(--text2);max-width:780px;margin-top:20px">
+    Every Friday, Python agents pull from FRED, BLS, EIA, UMich, and earnings transcripts, score the signals, draft commentary, render the page, and gate publication on a ten-pass validator. Claude writes the prose; the structure is deterministic.
+  </p>
+  <div style="margin-top:22px"><a href="#tech" class="jumplink">Skip to technical detail ↓</a></div>
+
+  <div style="height:1px;background:var(--border);margin:56px 0"></div>
+
+  <!-- SECTION 1: WHAT IT DOES -->
+  <div class="sec-hd"><h2>What it does</h2><span class="num">§ 01</span></div>
+  <div class="tiles3">
+    <div class="tile"><div class="h">Pulls weekly</div><p>FRED, BLS, EIA, UMich, plus quarterly earnings transcripts. Single weekly cycle Fri morning.</p></div>
+    <div class="tile"><div class="h">Scores the signals</div><p>Compares each metric against the playbook's noise floor and known-normal bands. Flags divergences.</p></div>
+    <div class="tile"><div class="h">Writes the briefing</div><p>Claude Sonnet drafts 2–4 sentence commentary per tab, constrained by §2 copy rules. No numerics outside the KPI tiles.</p></div>
+  </div>
+
+  <div class="hr"></div>
+
+  <!-- SECTION 2: SINGLE CANONICAL AGENT VIEW (replaces system map + ops matrix + pipeline grid) -->
+  <div class="sec-hd"><h2>The eleven agents</h2><span class="num">§ 02 · canonical view</span></div>
+  <table class="matrix">
+    <thead><tr><th style="width:32px"></th><th>Agent</th><th>Role</th><th>Output</th><th>Guardrails</th></tr></thead>
+    <tbody>
+      <tr><td class="rownum">00</td><td><span class="nm">Preflight</span><span class="sub">PREFLIGHT.PY</span></td><td>Verifies every FRED series and Claude model ID before the pipeline runs.</td><td class="mc">halt-on-4xx</td><td></td></tr>
+      <tr><td class="rownum">01</td><td><span class="nm">Collector</span><span class="sub">COLLECTOR.PY</span></td><td>Pulls raw observations from FRED, BLS, EIA APIs into <code>raw_data.json</code>.</td><td class="mc">raw_data.json</td><td></td></tr>
+      <tr><td class="rownum">02</td><td><span class="nm">Analyzer</span><span class="sub">ANALYZER.PY</span></td><td>Diffs week-over-week, scores divergences against known-normal bands.</td><td class="mc">signals.json</td><td></td></tr>
+      <tr><td class="rownum">03</td><td><span class="nm">Briefing</span><span class="sub">BRIEFING_AGENT.PY · LLM</span></td><td>Sonnet drafts 2–4 sentence commentary per tab, bounded by §2 copy rules.</td><td class="mc">commentary fields</td><td><span class="gchip">kill-switch</span><span class="gchip">cost-cap</span></td></tr>
+      <tr><td class="rownum">04</td><td><span class="nm">Renderer</span><span class="sub">RENDERER.PY</span></td><td>Regex-patches <code>index.html</code> with chart data and KPI tiles. Layout is never modifiable by agents.</td><td class="mc">index.html</td><td></td></tr>
+      <tr><td class="rownum">06</td><td><span class="nm">Validator</span><span class="sub">VALIDATOR.PY</span></td><td>Ten-pass build gate: consistency, staleness, schema, cross-source agreement, earnings verbatim.</td><td class="mc">validation_report.json</td><td></td></tr>
+      <tr><td class="rownum">05</td><td><span class="nm">Publisher</span><span class="sub">PUBLISHER.PY</span></td><td>Sends the briefing email via Resend after the gate passes.</td><td class="mc">email send</td><td></td></tr>
+      <tr><td class="rownum">07</td><td><span class="nm">Visual QA</span><span class="sub">VISUAL_QA.PY</span></td><td>224 DOM-based layout, typography, color, spacing checks (Playwright).</td><td class="mc">qa report</td><td></td></tr>
+      <tr><td class="rownum">08</td><td><span class="nm">Vision Review</span><span class="sub">VISUAL_REVIEW.PY · LLM</span></td><td>Claude multimodal reviews the rendered charts against the style guide.</td><td class="mc">visual_review_report.json</td><td><span class="gchip">kill-switch</span></td></tr>
+      <tr><td class="rownum">09</td><td><span class="nm">Earnings</span><span class="sub">EARNINGS_AGENT.PY · LLM</span></td><td>Quarterly: pulls transcripts, extracts verbatim fields. Gated by validator Pass 3c.</td><td class="mc">bank_earnings.json</td><td><span class="gchip">verbatim</span><span class="gchip">cost-cap</span></td></tr>
+      <tr><td class="rownum">10</td><td><span class="nm">Repair</span><span class="sub">REPAIR_AGENT.PY · LLM</span></td><td>Observer: surfaces critical findings into an incident report. Memory-aware. Read-only.</td><td class="mc">incident_reports/</td><td><span class="gchip">read-only</span><span class="gchip">kill-switch</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="hr" id="tech"></div>
+
+  <!-- SECTION 3: GUARDRAILS -->
+  <div class="sec-hd"><h2>Guardrails</h2><span class="num">§ 03 · technical detail</span></div>
+  <div class="tiles4">
+    <div class="tile"><span class="lbl" style="color:var(--purple-ink)">AGENT_DISABLE_ALL</span><p style="margin-top:8px">Hard kill-switch. Stops every agentic LLM call regardless of other flags.</p></div>
+    <div class="tile"><span class="lbl" style="color:var(--purple-ink)">AGENT_MAX_LLM_CALLS</span><p style="margin-top:8px">Per-run cost cap. Bounded budget across the four LLM agents.</p></div>
+    <div class="tile"><span class="lbl" style="color:var(--purple-ink)">PATH ALLOWLIST</span><p style="margin-top:8px">Each agent has a strict allowlist of writable paths. Layout and renderer are never on it.</p></div>
+    <div class="tile"><span class="lbl" style="color:var(--purple-ink)">AUDIT LOG</span><p style="margin-top:8px">Every LLM call appends to <code class="mono">data/agent_memory.jsonl</code> (rolling cap 2000).</p></div>
+  </div>
+
+  <div class="hr"></div>
+
+  <!-- SECTION 4: SOURCES OF TRUTH -->
+  <div class="sec-hd"><h2>Sources of truth</h2><span class="num">§ 04</span></div>
+  <div class="tiles3">
+    <div class="tile"><div class="h">Visual contract</div><p><code class="mono">data/style_guide.md</code> codifies layout, typography, palette, spacing, and cross-tab consistency rules. Agents 7 and 8 enforce against it.</p></div>
+    <div class="tile"><div class="h">Data contract</div><p><code class="mono">data/playbook.md</code> + <code class="mono">data/known_normal.json</code> define what counts as normal. Validator passes 1–3h enforce.</p></div>
+    <div class="tile"><div class="h">Editorial contract</div><p>Briefing prose is bounded by §2 of the playbook: 2–4 sentences, no hedging, every numeric matches the corresponding KPI tile.</p></div>
+  </div>
+
+</div></body></html>

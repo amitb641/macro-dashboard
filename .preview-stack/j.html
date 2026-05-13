@@ -1,0 +1,533 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option J — Multi-agent, polished</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-size:13.5px}
+  .wrap{max-width:1320px;padding-top:36px;padding-bottom:56px}
+
+  :root{
+    --verified:#1A9E5A;
+    --verified-tint:#E8F5EE;
+    --verified-edge:rgba(26,158,90,.32);
+  }
+
+  /* ===== HERO ===== */
+  .head{display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:end;padding-bottom:24px;border-bottom:1.5px solid var(--text)}
+  .head h1{font-family:var(--hiw-serif);font-weight:400;font-size:44px;line-height:1.04;letter-spacing:-.015em;color:var(--text);margin:0}
+  .head .lede{font-size:14px;color:var(--text2);max-width:680px;margin-top:14px;line-height:1.6}
+  .head .lede strong{color:var(--text);font-weight:600}
+  .head .glyph{display:flex;justify-content:flex-end}
+  .head .glyph svg{width:300px;height:200px;display:block}
+
+  /* ===== HERO STAT STRIP — editorial, no card bg ===== */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:28px 0 32px;border-bottom:1px solid var(--border)}
+  .stats .s{padding:0 32px;border-right:1px solid var(--border)}
+  .stats .s:first-child{padding-left:0}
+  .stats .s:last-child{padding-right:0;border-right:0}
+  .stats .s .lbl{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .stats .s .val{font-family:var(--hiw-serif);font-size:36px;font-weight:400;line-height:1;color:var(--text);margin-top:8px;letter-spacing:-.005em}
+  .stats .s .val em{font-style:italic;color:var(--purple-ink);font-weight:400}
+  .stats .s .sub{font-size:11.5px;color:var(--text2);margin-top:6px;line-height:1.45}
+
+  /* ===== SECTION HEADERS — flush-right annotation ===== */
+  .sect{margin-top:48px}
+  .sect h2{font-family:var(--hiw-serif);font-weight:400;font-size:22px;color:var(--text);margin:0;padding-bottom:8px;border-bottom:1px solid var(--text)}
+  .sect .anno{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin:2px 0 14px;text-align:right}
+
+  /* ===== WHAT IT TRACKS — compressed single row ===== */
+  .domains-row{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  .dc{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 12px}
+  .dc h4{font-family:var(--hiw-serif);font-size:14px;font-weight:400;color:var(--text);margin:0;line-height:1.1}
+  .dc .items{margin-top:6px;font-family:var(--hiw-mono);font-size:9.5px;color:var(--text2);letter-spacing:.02em;line-height:1.5}
+
+  /* ===== ARCHITECTURE ===== */
+  .arch{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px}
+  .arch .edges{position:absolute;inset:0;pointer-events:none;z-index:1}
+  .arch .stage-lbl{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+
+  .src-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:relative;z-index:2}
+  .src-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:12px 12px;text-align:center}
+  .src-card .pub{font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+  .src-card .id{font-family:var(--hiw-serif);font-size:20px;font-weight:400;color:var(--text);margin-top:4px;line-height:1}
+  .src-card .det{font-size:10px;color:var(--text2);margin-top:6px;line-height:1.4}
+
+  .down{display:flex;flex-direction:column;align-items:center;padding:14px 0;position:relative;z-index:2}
+  .down .vl{width:1.5px;height:18px;background:#94A3B8}
+  .down .lbl{font-family:var(--hiw-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:5px 0}
+
+  /* ===== LAYERS ===== */
+  .layers{display:grid;gap:12px;position:relative;z-index:2}
+  .layer{border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:linear-gradient(180deg,#FBFCFE 0%, #F4F6FA 100%)}
+  .layer .lhd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}
+  .layer .lhd .lt{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text)}
+  .layer .lhd .lt .pn{color:var(--purple);margin-right:8px}
+  .layer .lhd .lsub{font-family:var(--hiw-mono);font-size:9.5px;color:var(--muted);letter-spacing:.06em}
+  .layer .row{display:grid;gap:10px}
+  .layer .row.cols-2{grid-template-columns:repeat(2,1fr)}
+  .layer .row.cols-3{grid-template-columns:repeat(3,1fr)}
+  .layer .row.cols-4{grid-template-columns:repeat(4,1fr)}
+
+  /* L2 is the focus band */
+  .layer.focus{padding:20px 18px;background:linear-gradient(180deg,#F7F4FE 0%,#EFE9F8 100%);border:1.5px solid var(--purple);position:relative;margin:8px 0}
+  .layer.focus::after{content:"";position:absolute;right:-1.5px;top:14px;bottom:14px;width:3px;background:var(--purple);border-radius:2px}
+  .layer.focus .ag{min-height:110px}
+
+  /* ===== AGENT CARD ===== */
+  .ag{background:#fff;border:1px solid var(--border);border-radius:6px;padding:11px 12px 10px;position:relative;display:flex;flex-direction:column;gap:4px;min-height:96px}
+  .ag.ai{border-color:var(--purple);background:linear-gradient(180deg,#fff 0%,#F8F4FE 100%)}
+  .ag .anum{position:absolute;top:8px;right:10px;font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.15em;color:var(--dim)}
+  .ag.ai .anum{color:var(--purple-ink)}
+  .ag .anm{font-family:var(--hiw-serif);font-size:16px;font-weight:400;color:var(--text);line-height:1.1;padding-right:36px}
+  .ag .arole{font-size:11px;color:var(--text2);line-height:1.45;margin-top:2px}
+  .ag .class{font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:auto;padding-top:6px;display:flex;align-items:center;gap:5px}
+  .ag.ai .class{color:var(--purple-ink)}
+  .ag .class::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#fff;border:1.5px solid var(--dim)}
+  .ag.ai .class::before{background:var(--purple);border-color:var(--purple)}
+  .ag .ticks{display:flex;gap:2px;margin-top:8px;flex-wrap:wrap}
+  .ag .ticks .tk{width:6px;height:3px;background:var(--purple);border-radius:1px;opacity:.85}
+  .ag .ticks .tk.dim{background:var(--dim);opacity:.5}
+  .ag .verif-chip{display:inline-block;font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--verified);background:var(--verified-tint);border:1px solid var(--verified-edge);border-radius:3px;padding:2px 5px;margin-top:6px;align-self:flex-start}
+
+  /* ===== OUTPUT CARD (closing wow) ===== */
+  .out-card{background:var(--text);color:#fff;border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;border-top:3px solid var(--verified)}
+  .out-card .lt .id{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--verified)}
+  .out-card .lt .nm{font-family:var(--hiw-serif);font-size:26px;line-height:1.1;margin-top:4px;color:#fff}
+  .out-card .lt .det{font-family:var(--hiw-mono);font-size:10.5px;color:#A8B5C7;margin-top:8px;letter-spacing:.06em}
+  .out-card .preview{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .out-card .preview .k{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:10px 12px}
+  .out-card .preview .k .l{font-family:var(--hiw-mono);font-size:8.5px;letter-spacing:.14em;color:#A8B5C7;text-transform:uppercase}
+  .out-card .preview .k .v{font-family:var(--hiw-mono);font-size:18px;font-weight:700;color:#fff;margin-top:4px}
+  .out-card .preview .k .d{font-family:var(--hiw-mono);font-size:9px;color:#9DC4E2;margin-top:2px}
+  .out-card .preview .cap{grid-column:1/-1;font-family:var(--hiw-mono);font-size:9px;color:#7A8FA8;letter-spacing:.15em;text-transform:uppercase;text-align:right;margin-top:-2px}
+
+  .arch-legend{display:flex;justify-content:flex-end;gap:18px;margin-top:14px;font-family:var(--hiw-mono);font-size:9.5px;letter-spacing:.04em;color:var(--muted)}
+  .arch-legend .lg{display:inline-flex;align-items:center;gap:6px}
+  .arch-legend .sw{display:inline-block;width:10px;height:10px;border-radius:50%;border:1.5px solid var(--dim);background:#fff}
+  .arch-legend .lg.ai .sw{background:var(--purple);border-color:var(--purple)}
+  .arch-legend .lg.verified .sw{background:var(--verified-tint);border:1.5px dashed var(--verified)}
+
+  /* ===== DEFENSE-IN-DEPTH ===== */
+  .did{display:grid;grid-template-columns:360px 1fr;gap:28px;align-items:start}
+  .did .why-block{padding:0 20px 0 16px;border-left:3px solid var(--purple);position:sticky;top:24px}
+  .did .why-block .label{font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--purple-ink)}
+  .did .why-block .pull{font-family:var(--hiw-serif);font-style:italic;font-size:18px;line-height:1.5;color:var(--text);margin-top:10px}
+  .did .why-block .proof{margin-top:18px;background:var(--purple-tint);border:1px solid rgba(136,120,184,.4);border-radius:6px;padding:12px 14px;font-family:var(--hiw-mono);font-size:10.5px;line-height:1.6;color:var(--text)}
+  .did .why-block .proof .h{font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--purple-ink);margin-bottom:6px}
+  .did .why-block .proof code.r{display:block;font-family:var(--hiw-mono);font-size:11px;color:var(--text);background:#fff;border:1px solid rgba(136,120,184,.3);border-radius:3px;padding:6px 8px;margin-top:6px}
+  .did .why-block .proof .pass{display:inline-block;font-size:8.5px;font-weight:700;letter-spacing:.14em;color:var(--verified);background:var(--verified-tint);border:1px solid var(--verified-edge);border-radius:3px;padding:2px 6px;margin-right:6px}
+  .did .why-block .proof .footnote{font-family:var(--hiw-mono);font-size:9.5px;color:var(--muted);margin-top:8px;letter-spacing:.04em}
+
+  /* The ladder — vertical rail, numbered circles, slight indent stepping right */
+  .ladder{position:relative;padding-left:36px}
+  .ladder::before{content:"";position:absolute;left:18px;top:14px;bottom:14px;width:1.5px;background:linear-gradient(180deg,var(--purple) 0%,rgba(136,120,184,.35) 100%)}
+  .rung{position:relative;padding:10px 14px 10px 18px;border:1px solid var(--border);border-radius:6px;background:var(--card);margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+  .rung .nm{font-family:var(--hiw-serif);font-size:15px;color:var(--text);line-height:1.15}
+  .rung .desc{font-size:11.5px;color:var(--text2);margin-top:2px;line-height:1.45}
+  .rung .by{font-family:var(--hiw-mono);font-size:9.5px;color:var(--muted);letter-spacing:.04em;text-align:right;white-space:nowrap}
+  .rung .by strong{color:var(--text);font-weight:700;letter-spacing:.05em}
+  .rung .dot{position:absolute;left:-26px;top:14px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;color:var(--purple-ink);letter-spacing:0}
+  .rung.l1{margin-left:0}
+  .rung.l2{margin-left:6px}
+  .rung.l3{margin-left:12px}
+  .rung.l4{margin-left:18px}
+  .rung.l5{margin-left:24px}
+  .rung.l6{margin-left:30px;border-color:var(--verified);background:var(--verified-tint)}
+  .rung.l6 .dot{background:var(--verified);border-color:var(--verified);color:#fff}
+  .rung.l6 .nm{color:var(--text)}
+  .depth-scale{position:absolute;left:-2px;top:0;bottom:0;width:14px;display:flex;flex-direction:column;justify-content:space-between;font-family:var(--hiw-mono);font-size:8.5px;color:var(--muted);letter-spacing:.06em;writing-mode:vertical-rl;transform:rotate(180deg);padding:8px 0}
+
+</style>
+</head><body>
+<div class="opt-banner"><span>Option J · Polished multi-agent · designer + PE pass</span><span class="pill">verification edges · proof artifact</span></div>
+<div class="wrap">
+
+  <!-- ===== HEAD (two-column hero) ===== -->
+  <div class="head">
+    <div class="lt">
+      <h1>How the Macro Dashboard works.</h1>
+      <p class="lede">A <strong>multi-agent system</strong> of eleven specialised programs pulls macro data from five public sources, computes the indicators, drafts commentary, and gates publication through layered cross-checks. Each agent has a single responsibility; each agent's output is verified by another before the briefing ships.</p>
+    </div>
+    <div class="glyph">
+      <!-- Mini "5 → 11 → 1" pipeline glyph -->
+      <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid meet">
+        <!-- 5 sources -->
+        <g>
+          <rect x="6" y="20" width="36" height="22" rx="2" fill="#fff" stroke="#0D1B2A" stroke-width="1"/>
+          <rect x="6" y="50" width="36" height="22" rx="2" fill="#fff" stroke="#0D1B2A" stroke-width="1"/>
+          <rect x="6" y="80" width="36" height="22" rx="2" fill="#fff" stroke="#0D1B2A" stroke-width="1"/>
+          <rect x="6" y="110" width="36" height="22" rx="2" fill="#fff" stroke="#0D1B2A" stroke-width="1"/>
+          <rect x="6" y="140" width="36" height="22" rx="2" fill="#fff" stroke="#0D1B2A" stroke-width="1"/>
+          <text x="24" y="184" text-anchor="middle" fill="#7A8FA8" font-family="DM Mono,monospace" font-size="9" letter-spacing=".1em">5 SOURCES</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="#94A3B8" stroke-width="1" fill="none">
+          <path d="M 44 31 Q 70 31 90 91" stroke-dasharray="2 3"/>
+          <path d="M 44 61 Q 70 61 90 91"/>
+          <path d="M 44 91 L 90 91"/>
+          <path d="M 44 121 Q 70 121 90 91"/>
+          <path d="M 44 151 Q 70 151 90 91" stroke-dasharray="2 3"/>
+        </g>
+        <!-- 11 agents stack -->
+        <g>
+          <rect x="92" y="20" width="80" height="142" rx="3" fill="#F8F4FE" stroke="#8878B8" stroke-width="1.5"/>
+          <g>
+            <line x1="100" y1="34" x2="164" y2="34" stroke="#0D1B2A" stroke-width="2"/>
+            <line x1="100" y1="44" x2="164" y2="44" stroke="#0D1B2A" stroke-width="2"/>
+            <line x1="100" y1="54" x2="164" y2="54" stroke="#8878B8" stroke-width="2"/>
+            <line x1="100" y1="64" x2="164" y2="64" stroke="#0D1B2A" stroke-width="2"/>
+            <line x1="100" y1="74" x2="164" y2="74" stroke="#0D1B2A" stroke-width="2"/>
+            <line x1="100" y1="84" x2="164" y2="84" stroke="#0D1B2A" stroke-width="2"/>
+            <line x1="100" y1="94" x2="164" y2="94" stroke="#8878B8" stroke-width="2"/>
+            <line x1="100" y1="104" x2="164" y2="104" stroke="#8878B8" stroke-width="2"/>
+            <line x1="100" y1="114" x2="164" y2="114" stroke="#0D1B2A" stroke-width="2"/>
+            <line x1="100" y1="124" x2="164" y2="124" stroke="#8878B8" stroke-width="2"/>
+            <line x1="100" y1="134" x2="164" y2="134" stroke="#0D1B2A" stroke-width="2"/>
+          </g>
+          <text x="132" y="184" text-anchor="middle" fill="#7A8FA8" font-family="DM Mono,monospace" font-size="9" letter-spacing=".1em">11 AGENTS</text>
+        </g>
+        <!-- arrow -->
+        <g stroke="#94A3B8" stroke-width="1.5" fill="none">
+          <path d="M 172 91 L 218 91"/>
+          <polygon points="218,87 226,91 218,95" fill="#94A3B8"/>
+        </g>
+        <!-- output -->
+        <g>
+          <rect x="228" y="62" width="66" height="58" rx="3" fill="#0D1B2A"/>
+          <rect x="234" y="68" width="18" height="14" rx="1" fill="#FFFFFF" opacity=".15"/>
+          <rect x="254" y="68" width="18" height="14" rx="1" fill="#FFFFFF" opacity=".15"/>
+          <rect x="274" y="68" width="14" height="14" rx="1" fill="#1A9E5A" opacity=".6"/>
+          <rect x="234" y="86" width="54" height="2" rx="1" fill="#FFFFFF" opacity=".25"/>
+          <rect x="234" y="92" width="48" height="2" rx="1" fill="#FFFFFF" opacity=".2"/>
+          <rect x="234" y="98" width="44" height="2" rx="1" fill="#FFFFFF" opacity=".18"/>
+          <text x="261" y="184" text-anchor="middle" fill="#7A8FA8" font-family="DM Mono,monospace" font-size="9" letter-spacing=".1em">1 DASHBOARD</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== HERO STAT STRIP ===== -->
+  <div class="stats">
+    <div class="s">
+      <div class="lbl">Agents</div>
+      <div class="val">11</div>
+      <div class="sub">Specialised programs, single responsibility each.</div>
+    </div>
+    <div class="s">
+      <div class="lbl">Checks per run</div>
+      <div class="val">234</div>
+      <div class="sub">10 deterministic + 224 visual; <em>all build-blocking</em>.</div>
+    </div>
+    <div class="s">
+      <div class="lbl">Public sources</div>
+      <div class="val">5</div>
+      <div class="sub">FRED · BLS · EIA · UMich · SEC 10-Q.</div>
+    </div>
+    <div class="s">
+      <div class="lbl">Publication gate</div>
+      <div class="val">1</div>
+      <div class="sub">Aggregated verdict; <em>critical</em> = no send.</div>
+    </div>
+  </div>
+
+  <!-- ===== §1 WHAT IT TRACKS ===== -->
+  <div class="sect">
+    <h2>What it tracks</h2>
+    <div class="anno">twelve indicators · six domains</div>
+    <div class="domains-row">
+      <div class="dc"><h4>Growth</h4><div class="items">GDP · forecasts · industry</div></div>
+      <div class="dc"><h4>Labour</h4><div class="items">NFP · U-3 · U-6 · claims · wages</div></div>
+      <div class="dc"><h4>Prices</h4><div class="items">CPI · Core CPI · PCE · Core PCE</div></div>
+      <div class="dc"><h4>Credit &amp; rates</h4><div class="items">UST 2-30Y · FF · OAS · DPD</div></div>
+      <div class="dc"><h4>Banking</h4><div class="items">NII · NCO · ROTCE · CET1 · 10-Q</div></div>
+      <div class="dc"><h4>Energy &amp; housing</h4><div class="items">WTI · Brent · mtg · HPI · starts</div></div>
+    </div>
+  </div>
+
+  <!-- ===== §2 ARCHITECTURE ===== -->
+  <div class="sect">
+    <h2>Architecture</h2>
+    <div class="anno">five sources → eleven agents → one output</div>
+
+    <div class="arch" id="arch">
+      <svg class="edges" id="edges"></svg>
+
+      <div class="stage-lbl">— Inputs · 5 public data sources —</div>
+      <div class="src-row">
+        <div class="src-card"><div class="pub">Federal Reserve</div><div class="id">FRED</div><div class="det">CPI · PCE · yields · OAS</div></div>
+        <div class="src-card"><div class="pub">U.S. Labor</div><div class="id">BLS</div><div class="det">Payrolls · jobs · wages</div></div>
+        <div class="src-card"><div class="pub">U.S. Energy</div><div class="id">EIA</div><div class="det">WTI · Brent · supply</div></div>
+        <div class="src-card"><div class="pub">Univ. Michigan</div><div class="id">UMICH</div><div class="det">Consumer sentiment</div></div>
+        <div class="src-card"><div class="pub">SEC Filings</div><div class="id">10-Q</div><div class="det">Bank disclosures</div></div>
+      </div>
+
+      <div class="down"><div class="vl"></div><div class="lbl">↓ retrieved</div><div class="vl"></div></div>
+
+      <div class="layers">
+
+        <div class="layer">
+          <div class="lhd"><span class="lt"><span class="pn">L0</span>Pre-flight &amp; Retrieval</span><span class="lsub">verifies dependencies and collects raw data</span></div>
+          <div class="row cols-2">
+            <div class="ag" id="ag-00"><div class="anum">Agent 00</div><div class="anm">Preflight</div><div class="arole">Verifies every source endpoint and AI model identifier before the run begins. Halts on any 4xx.</div><div class="class">deterministic</div></div>
+            <div class="ag" id="ag-01"><div class="anum">Agent 01</div><div class="anm">Collector</div><div class="arole">Pulls latest observations from FRED, BLS, EIA, UMich.</div><div class="class">deterministic</div></div>
+          </div>
+        </div>
+
+        <div class="layer">
+          <div class="lhd"><span class="lt"><span class="pn">L1</span>Computation &amp; commentary</span><span class="lsub">numbers are computed; commentary is drafted</span></div>
+          <div class="row cols-3">
+            <div class="ag" id="ag-02"><div class="anum">Agent 02</div><div class="anm">Analyzer</div><div class="arole">Computes every indicator value; flags divergences against known-normal bands.</div><div class="class">deterministic</div></div>
+            <div class="ag ai" id="ag-03"><div class="anum">Agent 03</div><div class="anm">Briefing</div><div class="arole">Drafts 2–4 sentence commentary per panel. Numbers from Analyzer are passed in; AI never invents a value.</div><div class="class">AI · Claude</div></div>
+            <div class="ag" id="ag-04"><div class="anum">Agent 04</div><div class="anm">Renderer</div><div class="arole">Inserts values and commentary into the dashboard page.</div><div class="class">deterministic</div></div>
+          </div>
+        </div>
+
+        <div class="layer focus">
+          <div class="lhd"><span class="lt"><span class="pn">L2</span>Validation &amp; quality · defense-in-depth</span><span class="lsub">four independent agents cross-check the output</span></div>
+          <div class="row cols-4">
+            <div class="ag" id="ag-06">
+              <div class="anum">Agent 06</div>
+              <div class="anm">Validator</div>
+              <div class="arole">10 checks: reconciliation, source trace, schema, freshness, cross-source agreement, earnings verbatim.</div>
+              <div class="ticks" title="10 deterministic checks">
+                <span class="tk"></span><span class="tk"></span><span class="tk"></span><span class="tk"></span><span class="tk"></span>
+                <span class="tk"></span><span class="tk"></span><span class="tk"></span><span class="tk"></span><span class="tk"></span>
+              </div>
+              <div class="class">deterministic</div>
+            </div>
+            <div class="ag" id="ag-07">
+              <div class="anum">Agent 07</div>
+              <div class="anm">Visual QA</div>
+              <div class="arole">224 DOM-based layout, typography, and spacing checks against the visual specification.</div>
+              <div class="ticks" title="224 deterministic checks, sampled">
+                <span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span>
+                <span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span>
+                <span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span>
+                <span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span>
+                <span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span><span class="tk dim"></span>
+              </div>
+              <div class="class">deterministic</div>
+            </div>
+            <div class="ag ai" id="ag-08">
+              <div class="anum">Agent 08</div>
+              <div class="anm">Vision Review</div>
+              <div class="arole">Independent image-based review of rendered charts — catches what the DOM checks cannot see.</div>
+              <div class="class">AI · Claude</div>
+            </div>
+            <div class="ag ai" id="ag-10">
+              <div class="anum">Agent 10</div>
+              <div class="anm">Repair</div>
+              <div class="arole">Reads validation findings and recurrence history; classifies each as first-time or recurring.</div>
+              <div class="class">AI · Claude</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="layer">
+          <div class="lhd"><span class="lt"><span class="pn">L3</span>Publication</span><span class="lsub">gated on the aggregated verdict from L2</span></div>
+          <div class="row cols-2">
+            <div class="ag" id="ag-05"><div class="anum">Agent 05</div><div class="anm">Publisher</div><div class="arole">Sends email and updates the web page only if the aggregated verdict is PASS or WARN. Critical divergence → no send.</div><div class="class">deterministic</div></div>
+            <div class="ag ai" id="ag-09"><div class="anum">Agent 09</div><div class="anm">Earnings</div><div class="arole">Quarterly: extracts pre-defined fields from archived bank transcripts; every cited quote is verbatim-verified.</div><div class="class">AI · Claude</div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="down"><div class="vl"></div><div class="lbl">↓ published if PASS / WARN</div><div class="vl"></div></div>
+
+      <!-- OUTPUT CLOSING CARD with KPI tiles -->
+      <div class="out-card">
+        <div class="lt">
+          <span class="id">▼ Output · gated PASS</span>
+          <div class="nm">Single-page dashboard</div>
+          <div class="det">twelve indicator panels · ~539 KB · email + web · Fri 06:00 UTC</div>
+        </div>
+        <div class="preview">
+          <div class="k"><div class="l">CPI YoY</div><div class="v">3.8%</div><div class="d">▲ +0.2 mom</div></div>
+          <div class="k"><div class="l">U-3</div><div class="v">4.3%</div><div class="d">▲ +0.1 mom</div></div>
+          <div class="k"><div class="l">10Y–2Y</div><div class="v">47bp</div><div class="d">steepening</div></div>
+          <div class="cap">this week's output</div>
+        </div>
+      </div>
+
+      <div class="arch-legend">
+        <span class="lg"><span class="sw"></span>deterministic</span>
+        <span class="lg ai"><span class="sw"></span>AI · Claude</span>
+        <span class="lg verified"><span class="sw"></span>verification edge</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== §3 HOW ACCURACY & RELIABILITY ARE MAINTAINED ===== -->
+  <div class="sect">
+    <h2>How accuracy &amp; reliability are maintained</h2>
+    <div class="anno">defense-in-depth · multiple independent checks before publication</div>
+
+    <div class="did">
+      <div class="why-block">
+        <span class="label">Why multi-agent</span>
+        <div class="pull">No single agent decides what ships. Eleven specialised programs each do one thing, and each one's output is verified by another before the briefing goes out.</div>
+
+        <div class="proof">
+          <div class="h">Last run · proof artifact</div>
+          <code class="r">C-04 · earnings_verbatim · <span class="pass">PASS</span> 46/46 quotes</code>
+          <div class="footnote">Q1 2026 · JPM · BAC · WFC · GS · C — every cited bank-commentary span matched the archived transcript verbatim. One mismatch would have suspended publication.</div>
+        </div>
+      </div>
+
+      <div class="ladder">
+        <div class="rung l1">
+          <div>
+            <div class="nm">Source verification</div>
+            <div class="desc">Every API endpoint and AI model ID is verified before the run begins.</div>
+          </div>
+          <div class="by">Agent 00 · <strong>Preflight</strong></div>
+          <div class="dot">L1</div>
+        </div>
+        <div class="rung l2">
+          <div>
+            <div class="nm">Numerical reconciliation</div>
+            <div class="desc">Every value shown traces to a raw observation; FRED↔BLS cross-source agreement checked.</div>
+          </div>
+          <div class="by">Agent 06 · <strong>Validator</strong></div>
+          <div class="dot">L2</div>
+        </div>
+        <div class="rung l3">
+          <div>
+            <div class="nm">Earnings-quote verbatim</div>
+            <div class="desc">Every quoted bank-commentary span must exist verbatim in the archived transcript.</div>
+          </div>
+          <div class="by">Agent 06 · <strong>Validator</strong> · C-04</div>
+          <div class="dot">L3</div>
+        </div>
+        <div class="rung l4">
+          <div>
+            <div class="nm">Visual verification</div>
+            <div class="desc">DOM-based check (224 rules) + independent AI image review of rendered charts.</div>
+          </div>
+          <div class="by">Agents 07 &amp; 08 · <strong>independent</strong></div>
+          <div class="dot">L4</div>
+        </div>
+        <div class="rung l5">
+          <div>
+            <div class="nm">Recurrence diagnostic</div>
+            <div class="desc">Findings are classified against the run history; recurring issues surfaced for the editor.</div>
+          </div>
+          <div class="by">Agent 10 · <strong>Repair</strong></div>
+          <div class="dot">L5</div>
+        </div>
+        <div class="rung l6">
+          <div>
+            <div class="nm">Publication gate</div>
+            <div class="desc">The publisher reads a single aggregated verdict. Any critical divergence → no send.</div>
+          </div>
+          <div class="by">Agent 05 · <strong>Publisher</strong></div>
+          <div class="dot">L6</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Draw SVG verification edges between agent cards
+(function(){
+  function draw(){
+    const root = document.getElementById('arch');
+    const svg = document.getElementById('edges');
+    if(!root || !svg) return;
+    const rb = root.getBoundingClientRect();
+    svg.setAttribute('width', rb.width);
+    svg.setAttribute('height', rb.height);
+    svg.setAttribute('viewBox', `0 0 ${rb.width} ${rb.height}`);
+    svg.innerHTML = '';
+
+    // Define edges: [from-agent-id, to-agent-id, label]
+    const edges = [
+      ['ag-03', 'ag-06', 'verified'],
+      ['ag-04', 'ag-06', 'verified'],
+      ['ag-04', 'ag-07', 'checked'],
+      ['ag-07', 'ag-08', 'independent'],
+      ['ag-06', 'ag-10', 'classifies'],
+      ['ag-09', 'ag-06', 'C-04'],
+      ['ag-06', 'ag-05', 'gates'],
+    ];
+
+    function rect(id){
+      const el = document.getElementById(id);
+      if(!el) return null;
+      const r = el.getBoundingClientRect();
+      return {
+        left: r.left - rb.left,
+        right: r.right - rb.left,
+        top: r.top - rb.top,
+        bottom: r.bottom - rb.top,
+        cx: (r.left + r.right)/2 - rb.left,
+        cy: (r.top + r.bottom)/2 - rb.top,
+        w: r.width, h: r.height
+      };
+    }
+
+    edges.forEach(([fromId, toId, label])=>{
+      const f = rect(fromId), t = rect(toId);
+      if(!f || !t) return;
+
+      // pick endpoints: bottom of "from" → top of "to" (most edges flow down through layers)
+      // for sibling-layer cards (07→08, 06→10), use right→left
+      const sameLayer = Math.abs(f.cy - t.cy) < 60;
+      let x1, y1, x2, y2, c1x, c1y, c2x, c2y;
+      if(sameLayer){
+        if(f.cx < t.cx){
+          x1 = f.right; y1 = f.cy;
+          x2 = t.left;  y2 = t.cy;
+        } else {
+          x1 = f.left; y1 = f.cy;
+          x2 = t.right; y2 = t.cy;
+        }
+        const dx = Math.abs(x2-x1);
+        c1x = x1 + (x2-x1)*0.4; c1y = y1 - Math.min(28, dx*0.6);
+        c2x = x1 + (x2-x1)*0.6; c2y = y2 - Math.min(28, dx*0.6);
+      } else if (f.cy < t.cy){
+        // flowing down
+        x1 = f.cx + 18; y1 = f.bottom;
+        x2 = t.cx - 18; y2 = t.top;
+        c1x = x1; c1y = y1 + (y2-y1)*0.5;
+        c2x = x2; c2y = y2 - (y2-y1)*0.5;
+      } else {
+        // flowing up (e.g. 09→06)
+        x1 = f.cx - 18; y1 = f.top;
+        x2 = t.cx + 18; y2 = t.bottom;
+        c1x = x1; c1y = y1 - 30;
+        c2x = x2; c2y = y2 + 30;
+      }
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`);
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke','#1A9E5A');
+      path.setAttribute('stroke-width','1.25');
+      path.setAttribute('stroke-dasharray','3 4');
+      path.setAttribute('opacity','0.62');
+      svg.appendChild(path);
+
+      // small dot at the target
+      const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx', x2); dot.setAttribute('cy', y2);
+      dot.setAttribute('r', '2.5');
+      dot.setAttribute('fill', '#1A9E5A');
+      svg.appendChild(dot);
+    });
+  }
+
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){
+    setTimeout(draw, 50);
+  } else {
+    window.addEventListener('DOMContentLoaded', ()=>setTimeout(draw, 50));
+  }
+  window.addEventListener('resize', draw);
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option G — Documentation page</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-size:13.5px;line-height:1.6}
+  .wrap{max-width:1280px;padding-top:32px}
+
+  /* TITLE — short, factual */
+  .title{padding:0 0 24px;border-bottom:1px solid var(--border);margin-bottom:32px}
+  .title h1{font-family:var(--hiw-serif);font-weight:400;font-size:36px;line-height:1.1;color:var(--text);margin:0}
+  .title .summary{font-size:14.5px;color:var(--text2);max-width:880px;margin-top:14px;line-height:1.6}
+
+  /* SECTIONS */
+  section.doc{margin-top:48px}
+  section.doc > h2{font-family:var(--hiw-serif);font-weight:400;font-size:22px;color:var(--text);margin:0 0 4px;padding-bottom:8px;border-bottom:1px solid var(--text)}
+  section.doc > .sub{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+  section.doc > p{font-size:13.5px;color:var(--text2);max-width:920px;line-height:1.6;margin:0 0 12px}
+
+  /* THE DIAGRAM — central artifact */
+  .diagram{margin:8px 0 0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:36px 32px}
+  .dlbl{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:center}
+  .drow{display:grid;gap:10px;margin-top:10px}
+  .drow.sources{grid-template-columns:repeat(5,1fr)}
+  .dnode{background:#fff;border:1px solid var(--border);border-radius:6px;padding:12px 14px;text-align:center}
+  .dnode.src{padding:14px 12px}
+  .dnode .pub{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+  .dnode .id{font-family:var(--hiw-mono);font-size:13px;font-weight:700;color:var(--text);margin-top:4px;letter-spacing:.04em}
+  .dnode .det{font-family:var(--hiw-mono);font-size:10px;color:var(--text2);margin-top:6px;letter-spacing:.02em;line-height:1.45}
+  .dconn{display:flex;flex-direction:column;align-items:center;padding:14px 0}
+  .dconn .vline{width:1.5px;height:24px;background:#94A3B8}
+  .dconn .arrow{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #94A3B8}
+  .dconn .vlabel{font-family:var(--hiw-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:6px 0}
+  .dbox{background:#fff;border:1.5px solid var(--text);border-radius:8px;padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+  .dbox.ai{border-color:var(--purple);background:linear-gradient(180deg,#FAF7FE 0%,#F2EDFA 100%)}
+  .dbox .left .id{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text)}
+  .dbox.ai .left .id{color:var(--purple-ink)}
+  .dbox .left .name{font-family:var(--hiw-serif);font-size:22px;color:var(--text);margin-top:2px;line-height:1.15}
+  .dbox .left .desc{font-size:12.5px;color:var(--text2);margin-top:6px;max-width:580px}
+  .dbox .right{display:flex;flex-direction:column;gap:6px;align-items:flex-end;font-family:var(--hiw-mono);font-size:10px;color:var(--muted);letter-spacing:.04em;text-align:right}
+  .dbox .right .k{color:var(--text);font-weight:700;letter-spacing:.06em}
+
+  /* TABLES */
+  table.t{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+  table.t thead th{text-align:left;padding:8px 10px;font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text);border-bottom:1.5px solid var(--text);background:transparent}
+  table.t tbody td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2);font-size:12.5px;line-height:1.55}
+  table.t tbody tr:last-child td{border-bottom:1px solid var(--text)}
+  table.t td.k{color:var(--text);font-weight:500}
+  table.t td.mn{font-family:var(--hiw-mono);font-size:11.5px;color:var(--text)}
+  table.t td.path{font-family:var(--hiw-mono);font-size:11px;color:var(--text2)}
+
+  /* INDICATOR GRID — by domain */
+  .ind-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .ind-grid .row{display:grid;grid-template-columns:140px 1fr;gap:16px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:start}
+  .ind-grid .row:nth-last-child(-n+2):not(.last){border-bottom:1px solid var(--border)}
+  .ind-grid .row.last,.ind-grid .row:last-child{border-bottom:0}
+  .ind-grid .row .domain{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text)}
+  .ind-grid .row .list{font-size:12.5px;color:var(--text2);line-height:1.55}
+
+  /* AI STAGES — small grid of cards */
+  .ai-stages{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:10px}
+  .ai-stage{border:1px solid rgba(136,120,184,.4);border-left:3px solid var(--purple);background:#fff;border-radius:6px;padding:14px 16px}
+  .ai-stage .id{font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--purple-ink)}
+  .ai-stage .name{font-family:var(--hiw-serif);font-size:18px;margin-top:2px;color:var(--text);line-height:1.15}
+  .ai-stage p{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.55}
+
+  /* CONTROLS LIST */
+  .ctrls{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:6px}
+  .ctrls .c{padding:14px 16px;border-right:1px solid var(--border)}
+  .ctrls .c:last-child{border-right:0}
+  .ctrls .c .nm{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text)}
+  .ctrls .c p{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5}
+
+  /* FACT BAR */
+  .facts{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:16px;border-top:1px solid var(--text);border-bottom:1px solid var(--text)}
+  .facts .f{padding:12px 14px;border-right:1px solid var(--border)}
+  .facts .f:last-child{border-right:0}
+  .facts .f .lbl{font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .facts .f .val{font-family:var(--hiw-mono);font-size:15px;font-weight:700;color:var(--text);margin-top:4px;letter-spacing:.02em}
+
+  code.inl{font-family:var(--hiw-mono);font-size:12px;color:var(--text);background:var(--card2);padding:1px 5px;border-radius:3px}
+</style>
+</head><body>
+<div class="opt-banner"><span>Option G · Documentation page</span><span class="pill">factual · diagram-first</span></div>
+<div class="wrap">
+
+  <!-- TITLE -->
+  <div class="title">
+    <h1>How the Macro Dashboard works</h1>
+    <p class="summary">
+      The macro dashboard is an automated system that retrieves U.S. macroeconomic data from five public sources, computes a set of indicators, and publishes a single-page briefing on a weekly schedule. Indicator values are computed by deterministic code from the source observations. Written commentary on each indicator is drafted by an Anthropic Claude language model under documented constraints. The system runs on a scheduled job; no manual step is required between scheduled runs.
+    </p>
+
+    <div class="facts">
+      <div class="f"><div class="lbl">Sources</div><div class="val">5</div></div>
+      <div class="f"><div class="lbl">Indicators</div><div class="val">12</div></div>
+      <div class="f"><div class="lbl">Pipeline stages</div><div class="val">11</div></div>
+      <div class="f"><div class="lbl">AI stages</div><div class="val">4</div></div>
+      <div class="f"><div class="lbl">Validation checks</div><div class="val">10</div></div>
+      <div class="f"><div class="lbl">Refresh</div><div class="val">Wkly · Fri</div></div>
+    </div>
+  </div>
+
+  <!-- §1 SYSTEM DIAGRAM -->
+  <section class="doc">
+    <h2>System diagram</h2>
+    <div class="sub">data sources → production pipeline → published dashboard</div>
+
+    <div class="diagram">
+      <div class="dlbl">Input — public data sources</div>
+      <div class="drow sources">
+        <div class="dnode src"><div class="pub">Federal Reserve</div><div class="id">FRED</div><div class="det">CPI, PCE, Treasury yields, OAS, rates</div></div>
+        <div class="dnode src"><div class="pub">U.S. Dept. of Labor</div><div class="id">BLS</div><div class="det">Payrolls, unemployment, wages</div></div>
+        <div class="dnode src"><div class="pub">U.S. DOE</div><div class="id">EIA</div><div class="det">Oil prices, petroleum supply</div></div>
+        <div class="dnode src"><div class="pub">Univ. of Michigan</div><div class="id">UMICH</div><div class="det">Consumer sentiment survey</div></div>
+        <div class="dnode src"><div class="pub">SEC filings</div><div class="id">10-Q</div><div class="det">Bank disclosures (5 issuers)</div></div>
+      </div>
+
+      <div class="dconn"><div class="vline"></div><div class="vlabel">retrieved</div><div class="arrow"></div></div>
+
+      <div class="dbox ai">
+        <div class="left">
+          <span class="id">Production pipeline · 11 stages</span>
+          <div class="name">Pull → Score → Write → Validate</div>
+          <p class="desc">Deterministic Python orchestrates retrieval, computation, page rendering, and validation. Four of the eleven stages call an AI model: per-tab commentary, bank-earnings extraction, vision review, and diagnostic classification.</p>
+        </div>
+        <div class="right">
+          <span><span class="k">7</span> deterministic stages</span>
+          <span><span class="k">4</span> AI stages</span>
+          <span><span class="k">10</span> validation checks</span>
+        </div>
+      </div>
+
+      <div class="dconn"><div class="vline"></div><div class="vlabel">published</div><div class="arrow"></div></div>
+
+      <div class="dbox">
+        <div class="left">
+          <span class="id">Output</span>
+          <div class="name">Single-page dashboard</div>
+          <p class="desc">A single HTML page with twelve indicator panels, distributed by email and hosted on the web. Each panel includes the value, supporting chart, and a short AI-drafted commentary.</p>
+        </div>
+        <div class="right">
+          <span><span class="k">~539</span> KB HTML</span>
+          <span><span class="k">12</span> indicator panels</span>
+          <span><span class="k">Friday</span> 06:00 UTC</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- §2 DATA SOURCES -->
+  <section class="doc">
+    <h2>Data sources</h2>
+    <div class="sub">all public, all named</div>
+    <table class="t">
+      <thead><tr><th>Publisher</th><th>Series retrieved</th><th>Release cadence</th><th>Typical publication lag</th></tr></thead>
+      <tbody>
+        <tr><td class="k">FRED (Federal Reserve Bank of St. Louis)</td><td>CPI, PCE, Personal Saving Rate, Treasury yields, Fed Funds, ICE BofA OAS, mortgage rates, UMCSENT, debt service ratio</td><td>Daily–Monthly</td><td>1–95 days</td></tr>
+        <tr><td class="k">BLS (Bureau of Labor Statistics)</td><td>CPI-U components, Average Hourly Earnings, CES payrolls by sector, U-3, U-6</td><td>Monthly</td><td>~14 days</td></tr>
+        <tr><td class="k">EIA (Energy Information Administration)</td><td>WTI, Brent, weekly U.S. petroleum supply</td><td>Weekly</td><td>~7 days</td></tr>
+        <tr><td class="k">University of Michigan</td><td>Consumer Sentiment Index (preliminary and final)</td><td>Monthly</td><td>~14d preliminary; ~30d final</td></tr>
+        <tr><td class="k">SEC 10-Q filings</td><td>NII, NCO rates, ROTCE, CET1, card delinquencies; verbatim earnings-call commentary from JPM, BAC, WFC, GS, C</td><td>Quarterly</td><td>~21 days post quarter-end</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §3 INDICATORS TRACKED -->
+  <section class="doc">
+    <h2>Indicators tracked</h2>
+    <div class="sub">twelve indicators, organized by domain</div>
+    <div class="ind-grid">
+      <div class="row"><span class="domain">Growth</span><span class="list">Real GDP (quarterly), GDP forecasts (GS · JPM · Deloitte · others), GDP by industry</span></div>
+      <div class="row"><span class="domain">Labour</span><span class="list">Nonfarm payrolls, U-3 unemployment, U-6 underemployment, initial &amp; continued jobless claims, wage growth (Atlanta Fed WGT), wages by sector</span></div>
+      <div class="row"><span class="domain">Prices</span><span class="list">CPI-U, Core CPI, PCE headline, Core PCE, CPI by category (8 components)</span></div>
+      <div class="row"><span class="domain">Credit &amp; rates</span><span class="list">2/5/10/30Y Treasury yields, Fed Funds, FOMC dot plot, IG &amp; HY credit spreads (OAS), card delinquency 90+ DPD, SLOOS</span></div>
+      <div class="row"><span class="domain">Banking sector</span><span class="list">Net income, NII guidance, ROTCE, CET1 ratios for JPM, BAC, WFC, GS, C; verbatim commentary on the economy, lending, credit, and outlook from each issuer's earnings call</span></div>
+      <div class="row last"><span class="domain">Energy &amp; housing</span><span class="list">WTI &amp; Brent, U.S. oil production, oil outlook (7 institutions); 30Y mortgage, FHFA / Case-Shiller HPI, housing starts</span></div>
+    </div>
+  </section>
+
+  <!-- §4 PIPELINE -->
+  <section class="doc">
+    <h2>Production pipeline</h2>
+    <div class="sub">eleven stages, executed in order</div>
+    <table class="t">
+      <thead><tr><th style="width:42px">Stage</th><th>Step</th><th>Function</th><th>Class</th></tr></thead>
+      <tbody>
+        <tr><td class="mn">00</td><td class="k">Preflight</td><td>Verify every source endpoint and AI model identifier before the run begins</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">01</td><td class="k">Retrieve</td><td>Pull observations from FRED, BLS, EIA, UMich</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">02</td><td class="k">Score</td><td>Compute indicator values; flag divergences against known-normal bands</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">03</td><td class="k">Write commentary</td><td>AI drafts 2–4 sentences per indicator panel</td><td class="path">AI · Claude Sonnet</td></tr>
+        <tr><td class="mn">04</td><td class="k">Render</td><td>Insert computed values and commentary into the dashboard page</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">05</td><td class="k">Validate</td><td>Run ten automated checks; suspend publication on any critical divergence</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">06</td><td class="k">Visual QA</td><td>224 DOM-based layout and typography checks</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">07</td><td class="k">Visual review</td><td>AI review of rendered charts against the visual specification</td><td class="path">AI · Claude Sonnet (multimodal)</td></tr>
+        <tr><td class="mn">08</td><td class="k">Publish</td><td>Send by email; update the web copy</td><td class="path">deterministic</td></tr>
+        <tr><td class="mn">09</td><td class="k">Earnings extraction</td><td>Quarterly: extract pre-defined fields from archived earnings transcripts</td><td class="path">AI · Claude Sonnet</td></tr>
+        <tr><td class="mn">10</td><td class="k">Diagnostic review</td><td>Classify validation findings against recurrence history for the editor's queue</td><td class="path">AI · Claude Sonnet</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §5 AI USE -->
+  <section class="doc">
+    <h2>Use of artificial intelligence</h2>
+    <div class="sub">where AI is and is not used</div>
+    <p>AI is used in four of eleven production stages. None of these stages compute or alter any published numeric value. Their outputs are limited to written commentary, classification of validation findings, and image-based quality review.</p>
+    <div class="ai-stages">
+      <div class="ai-stage"><span class="id">Stage 03 · Commentary</span><div class="name">Per-indicator written commentary</div><p>Drafts 2–4 sentences per panel. Sentence count, vocabulary, and factual grounding rules are enforced after generation.</p></div>
+      <div class="ai-stage"><span class="id">Stage 07 · Visual review</span><div class="name">Image-based chart review</div><p>Reviews rendered charts against the visual specification. Output is a flag for editorial review, never an edit.</p></div>
+      <div class="ai-stage"><span class="id">Stage 09 · Earnings extraction</span><div class="name">Field extraction from transcripts</div><p>Extracts pre-defined fields from archived bank transcripts. All cited quotes are verified verbatim against the transcript.</p></div>
+      <div class="ai-stage"><span class="id">Stage 10 · Diagnostic review</span><div class="name">Finding classification</div><p>Reads validation findings and recurrence history; classifies each finding as first-time or recurring for the editor's queue.</p></div>
+    </div>
+  </section>
+
+  <!-- §6 OPERATIONAL CONTROLS -->
+  <section class="doc">
+    <h2>Operational controls on AI use</h2>
+    <div class="sub">four controls, applied to every AI call</div>
+    <div class="ctrls">
+      <div class="c"><div class="nm">Circuit breaker</div><p>A single configuration flag stops all AI calls system-wide.</p></div>
+      <div class="c"><div class="nm">Cost ceiling</div><p>Per-run call count is capped; production does not exceed the configured budget.</p></div>
+      <div class="c"><div class="nm">Path restriction</div><p>Each AI stage may only write to a specifically permitted file. Indicator values and layout files are not on the list.</p></div>
+      <div class="c"><div class="nm">Audit trail</div><p>Every AI call records its prompt hash, model, token count, and output destination to an append-only log.</p></div>
+    </div>
+  </section>
+
+  <!-- §7 VALIDATION -->
+  <section class="doc">
+    <h2>Validation</h2>
+    <div class="sub">ten checks; any critical divergence suspends publication</div>
+    <table class="t">
+      <thead><tr><th style="width:80px">Check</th><th>Verifies</th><th>Severity</th></tr></thead>
+      <tbody>
+        <tr><td class="mn">C-01</td><td>Internal consistency: every value shown reconciles to the underlying JSON</td><td>critical</td></tr>
+        <tr><td class="mn">C-02</td><td>Source verification: every published value traces to an observation from a named source</td><td>critical</td></tr>
+        <tr><td class="mn">C-03</td><td>Freshness: each series is within its known publish-lag baseline</td><td>warning</td></tr>
+        <tr><td class="mn">C-04</td><td>Verbatim verification: every quoted bank-commentary span exists in the archived transcript</td><td>critical</td></tr>
+        <tr><td class="mn">C-05</td><td>Schema conformance: data files match the contract</td><td>critical</td></tr>
+        <tr><td class="mn">C-06</td><td>Seed drift: deterministic outputs are unchanged between identical inputs</td><td>warning</td></tr>
+        <tr><td class="mn">C-07</td><td>Collector errors: any source-fetch failure is recorded</td><td>warning</td></tr>
+        <tr><td class="mn">C-08</td><td>Cross-source agreement: shared anchor metrics reconcile between FRED and BLS</td><td>critical</td></tr>
+        <tr><td class="mn">C-09</td><td>Visual quality: 224 layout, typography, color, and spacing checks</td><td>warning</td></tr>
+        <tr><td class="mn">C-10</td><td>Independent visual review of rendered charts</td><td>warning</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §8 DOCUMENTATION -->
+  <section class="doc">
+    <h2>Documentation</h2>
+    <div class="sub">governing documents</div>
+    <table class="t">
+      <thead><tr><th>File</th><th>Contents</th></tr></thead>
+      <tbody>
+        <tr><td class="path">METHODOLOGY.md</td><td>Indicator definitions, formulas, thresholds, confirmation rules</td></tr>
+        <tr><td class="path">data/playbook.md</td><td>Source publish-lag table, noise-floor bands, commentary copy rules, forbidden vocabulary</td></tr>
+        <tr><td class="path">data/style_guide.md</td><td>Visual contract: layout, typography, colour palette, cross-tab consistency</td></tr>
+        <tr><td class="path">data/known_normal.json</td><td>Machine-readable baselines used by the validator</td></tr>
+        <tr><td class="path">data/pipeline_version.json</td><td>Per-run audit trail (append-only)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div></body></html>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option F — Simple visual story</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-size:14px}
+
+  /* HERO */
+  .hero{padding:24px 0 56px;text-align:left}
+  .hero .tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--hiw-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:6px 12px;border:1px solid var(--border);border-radius:999px;background:var(--card)}
+  .hero .tag .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(26,158,90,.15)}
+  .hero h1{font-family:var(--hiw-serif);font-weight:400;font-size:64px;line-height:1.02;letter-spacing:-.01em;margin:24px 0 18px;max-width:1100px}
+  .hero h1 em{font-style:italic;color:var(--purple-ink)}
+  .hero .lede{font-size:18px;line-height:1.55;color:var(--text2);max-width:780px}
+
+  /* FLOW DIAGRAM — the centerpiece */
+  .flow{margin:24px 0 80px;padding:48px 32px 56px;background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .flow .row{display:flex;align-items:stretch;justify-content:center;gap:14px}
+  .flow .row.sources{flex-wrap:wrap}
+  .src{flex:1;min-width:160px;text-align:center;padding:18px 14px;background:var(--card2);border:1px solid var(--border);border-radius:12px;position:relative}
+  .src .pub{font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .src .nm{font-family:var(--hiw-serif);font-size:22px;color:var(--text);margin-top:6px;line-height:1.1}
+  .src .what{font-family:var(--hiw-mono);font-size:10px;color:var(--text2);margin-top:8px;letter-spacing:.04em;line-height:1.45}
+
+  .conn-down{display:flex;justify-content:center;align-items:center;flex-direction:column;height:56px;gap:6px}
+  .conn-down .line{width:1.5px;flex:1;background:linear-gradient(180deg,#C8CCD3,var(--dim))}
+  .conn-down .lbl{font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+  .pipeline{background:linear-gradient(180deg, #F7F4FE 0%, #ECE6F8 100%);border:1.5px solid var(--purple);border-radius:14px;padding:24px 28px;position:relative}
+  .pipeline .pipeline-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .pipeline .pipeline-head .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--hiw-mono);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:var(--purple);padding:5px 11px;border-radius:999px}
+  .pipeline .pipeline-head .badge .pulse{width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.4)}
+  .pipeline .pipeline-head .meta{font-family:var(--hiw-mono);font-size:10px;color:var(--purple-ink);letter-spacing:.06em}
+  .pipeline h3{font-family:var(--hiw-serif);font-size:30px;line-height:1.1;color:var(--text);margin:4px 0 12px;max-width:780px}
+  .pipeline .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+  .pipeline .step{background:#fff;border:1px solid rgba(136,120,184,.3);border-radius:10px;padding:12px 14px}
+  .pipeline .step .n{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.2em;color:var(--purple)}
+  .pipeline .step .nm{font-family:var(--hiw-serif);font-size:18px;color:var(--text);margin-top:2px}
+  .pipeline .step .desc{font-size:11.5px;color:var(--text2);margin-top:4px;line-height:1.45}
+
+  .output{background:var(--card);border:1.5px solid var(--text);border-radius:14px;padding:24px 28px;position:relative}
+  .output .out-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .output .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--hiw-mono);font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:var(--text);color:#fff;padding:5px 11px;border-radius:999px}
+  .output .out-meta{font-family:var(--hiw-mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+  .output h3{font-family:var(--hiw-serif);font-size:30px;line-height:1.1;margin:4px 0 8px}
+  .output p.what{font-size:13.5px;color:var(--text2);max-width:780px}
+
+  /* mini dashboard preview */
+  .preview{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+  .preview .kpi{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px}
+  .preview .kpi .lab{font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+  .preview .kpi .val{font-family:var(--hiw-mono);font-size:18px;font-weight:700;color:var(--text);margin-top:6px}
+  .preview .kpi .delta{font-family:var(--hiw-mono);font-size:10px;margin-top:2px}
+  .preview .kpi .delta.up{color:var(--red)}
+  .preview .kpi .delta.dn{color:var(--green)}
+  .preview .chart{grid-column:span 4;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:6px}
+  .preview .chart .lab{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  .preview .chart svg{width:100%;height:90px;display:block}
+
+  /* WHAT IT DOES — 3 simple cards */
+  .does{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:24px}
+  .does .c{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px 26px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .does .c .n{font-family:var(--hiw-serif);font-style:italic;font-size:13px;color:var(--purple);letter-spacing:.02em}
+  .does .c h4{font-family:var(--hiw-serif);font-size:24px;font-weight:400;line-height:1.15;margin:6px 0 10px;color:var(--text)}
+  .does .c p{font-size:13.5px;line-height:1.6;color:var(--text2)}
+
+  /* SECTION DIVIDER + heading */
+  .section-h{padding-bottom:14px;border-bottom:1px solid var(--border);margin:80px 0 24px;display:flex;align-items:baseline;justify-content:space-between}
+  .section-h h2{font-family:var(--hiw-serif);font-size:32px;font-weight:400;letter-spacing:-.005em}
+  .section-h .anno{font-family:var(--hiw-mono);font-size:10.5px;color:var(--muted);letter-spacing:.1em}
+
+  /* TRUST STRIP */
+  .trust{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:24px;border-top:1.5px solid var(--text);border-bottom:1.5px solid var(--text)}
+  .trust .t{padding:18px 20px;border-right:1px solid var(--border)}
+  .trust .t:last-child{border-right:0}
+  .trust .t .lab{font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .trust .t .val{font-family:var(--hiw-serif);font-size:32px;font-weight:400;color:var(--text);margin-top:4px;line-height:1}
+  .trust .t .sub{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.45}
+
+  /* FOOTER NOTE */
+  .footer-note{margin-top:48px;padding:18px 22px;background:var(--card2);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;max-width:920px}
+  .footer-note p{font-size:13px;color:var(--text2);line-height:1.6}
+  .footer-note .label{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--purple-ink);margin-bottom:6px;display:block}
+</style>
+</head><body>
+<div class="opt-banner"><span>Option F · Simple visual story</span><span class="pill">~2,800px · one diagram</span></div>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="tag"><span class="dot"></span>Live · publishes every Friday</span>
+    <h1>An <em>autonomous macro dashboard</em>, written every Friday by AI from public data.</h1>
+    <p class="lede">
+      Five credible public sources feed an automated pipeline that pulls fresh data, identifies what's moved, writes the commentary, and ships a single-page briefing — without anyone touching it.
+    </p>
+  </div>
+
+  <!-- THE FLOW — centerpiece -->
+  <div class="flow">
+
+    <!-- SOURCES ROW -->
+    <div class="row sources">
+      <div class="src">
+        <div class="pub">Federal Reserve</div>
+        <div class="nm">FRED</div>
+        <div class="what">CPI · PCE · Yields · Spreads · Rates</div>
+      </div>
+      <div class="src">
+        <div class="pub">U.S. Bureau of</div>
+        <div class="nm">Labor Statistics</div>
+        <div class="what">Payrolls · Unemployment · Wages</div>
+      </div>
+      <div class="src">
+        <div class="pub">U.S. Energy</div>
+        <div class="nm">Information Admin</div>
+        <div class="what">WTI · Brent · Petroleum Supply</div>
+      </div>
+      <div class="src">
+        <div class="pub">University of</div>
+        <div class="nm">Michigan</div>
+        <div class="what">Consumer Sentiment Survey</div>
+      </div>
+      <div class="src">
+        <div class="pub">SEC filings</div>
+        <div class="nm">Bank 10-Q</div>
+        <div class="what">JPM · BAC · WFC · GS · C</div>
+      </div>
+    </div>
+
+    <div class="conn-down">
+      <div class="lbl">↓ pulled automatically</div>
+      <div class="line"></div>
+    </div>
+
+    <!-- PIPELINE BOX -->
+    <div class="pipeline">
+      <div class="pipeline-head">
+        <span class="badge"><span class="pulse"></span>AI Pipeline</span>
+        <span class="meta">runs autonomously · Friday 06:00 UTC</span>
+      </div>
+      <h3>Pulls. Scores. Writes. Validates.</h3>
+
+      <div class="steps">
+        <div class="step">
+          <span class="n">01 · PULL</span>
+          <div class="nm">Fetch fresh data</div>
+          <div class="desc">From each source, only the latest observations.</div>
+        </div>
+        <div class="step">
+          <span class="n">02 · SCORE</span>
+          <div class="nm">Flag what's moved</div>
+          <div class="desc">Compare every metric to its known-normal range.</div>
+        </div>
+        <div class="step">
+          <span class="n">03 · WRITE</span>
+          <div class="nm">Draft commentary</div>
+          <div class="desc">Claude writes 2–4 sentences per panel under strict rules.</div>
+        </div>
+        <div class="step">
+          <span class="n">04 · VALIDATE</span>
+          <div class="nm">Gate before publish</div>
+          <div class="desc">Ten checks; any critical divergence blocks the send.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="conn-down">
+      <div class="line"></div>
+      <div class="lbl">↓ published</div>
+    </div>
+
+    <!-- OUTPUT BOX -->
+    <div class="output">
+      <div class="out-head">
+        <span class="badge">One Dashboard</span>
+        <span class="out-meta">single-page HTML · email · web</span>
+      </div>
+      <h3>Twelve indicators. One screen. Every Friday.</h3>
+      <p class="what">Growth, labour, prices, credit and rates, and a view on the U.S. banking sector — synthesized into a single weekly read with commentary on every panel.</p>
+
+      <div class="preview">
+        <div class="kpi">
+          <div class="lab">CPI YoY</div>
+          <div class="val">3.8%</div>
+          <div class="delta up">▲ +0.2 mom</div>
+        </div>
+        <div class="kpi">
+          <div class="lab">U-3 Unemp</div>
+          <div class="val">4.3%</div>
+          <div class="delta up">▲ +0.1 mom</div>
+        </div>
+        <div class="kpi">
+          <div class="lab">10Y–2Y</div>
+          <div class="val">47bp</div>
+          <div class="delta dn">▼ steepening</div>
+        </div>
+        <div class="kpi">
+          <div class="lab">WTI</div>
+          <div class="val">$109.8</div>
+          <div class="delta up">▲ shock active</div>
+        </div>
+        <div class="chart">
+          <div class="lab">Sample · 12-month indicator panel</div>
+          <svg viewBox="0 0 800 90" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#8878B8" stroke-width="2"
+              points="0,70 70,62 140,58 210,50 280,55 350,48 420,40 490,35 560,30 630,28 700,22 770,18"/>
+            <polyline fill="none" stroke="#336BCC" stroke-width="1.5" stroke-dasharray="3,3"
+              points="0,55 70,52 140,52 210,48 280,46 350,45 420,42 490,40 560,38 630,36 700,34 770,32"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT IT DOES -->
+  <div class="section-h">
+    <h2>What this dashboard does for you.</h2>
+    <span class="anno">in three lines</span>
+  </div>
+  <div class="does">
+    <div class="c">
+      <span class="n">One.</span>
+      <h4>Saves a week of work</h4>
+      <p>The hours of pulling data, reconciling sources, and writing the read — done automatically. The reader picks it up already assembled.</p>
+    </div>
+    <div class="c">
+      <span class="n">Two.</span>
+      <h4>Every number is traceable</h4>
+      <p>Every value on the page traces to a public observation from one of five named sources. Nothing is invented; nothing is paraphrased into existence.</p>
+    </div>
+    <div class="c">
+      <span class="n">Three.</span>
+      <h4>AI writes, controls publish</h4>
+      <p>Claude drafts the commentary; ten automated checks decide whether it ships. If something looks wrong, publication is suspended — not papered over.</p>
+    </div>
+  </div>
+
+  <!-- TRUST STRIP -->
+  <div class="section-h">
+    <h2>Why you can trust it.</h2>
+    <span class="anno">the short version</span>
+  </div>
+  <div class="trust">
+    <div class="t">
+      <div class="lab">Sources</div>
+      <div class="val">5</div>
+      <div class="sub">Federal Reserve, BLS, EIA, UMich, and SEC bank filings — all public.</div>
+    </div>
+    <div class="t">
+      <div class="lab">Cadence</div>
+      <div class="val">Wkly</div>
+      <div class="sub">Refreshes every Friday morning. Quarterly bank data on its own schedule.</div>
+    </div>
+    <div class="t">
+      <div class="lab">Validation</div>
+      <div class="val">10</div>
+      <div class="sub">Automated controls reconcile every published value before send.</div>
+    </div>
+    <div class="t">
+      <div class="lab">AI Use</div>
+      <div class="val">4 of 11</div>
+      <div class="sub">Steps that use AI; none of them compute the numbers — only the words.</div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <span class="label">Methodology, in one line</span>
+    <p>Indicators, formulas, thresholds, and AI controls are documented in <code class="mono">METHODOLOGY.md</code> and <code class="mono">data/playbook.md</code>. When AI output and methodology disagree, methodology wins.</p>
+  </div>
+
+</div></body></html>

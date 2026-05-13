@@ -1,0 +1,234 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option H — Visual one-pager</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-size:13.5px}
+  .wrap{max-width:1280px;padding-top:36px;padding-bottom:56px}
+
+  /* TITLE — short */
+  .head{padding-bottom:18px;border-bottom:1.5px solid var(--text);margin-bottom:36px;display:flex;align-items:baseline;justify-content:space-between;gap:24px}
+  .head .lt h1{font-family:var(--hiw-serif);font-weight:400;font-size:32px;line-height:1.1;color:var(--text)}
+  .head .lt p{font-size:13.5px;color:var(--text2);max-width:760px;margin-top:8px;line-height:1.55}
+  .head .rt{text-align:right;font-family:var(--hiw-mono);font-size:10px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+  .head .rt .v{color:var(--text);font-weight:700;font-size:11px}
+
+  /* SECTION TITLE */
+  .sect{margin-top:48px}
+  .sect h2{font-family:var(--hiw-serif);font-weight:400;font-size:20px;color:var(--text);margin:0 0 4px}
+  .sect .anno{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
+
+  /* ARCHITECTURE DIAGRAM — the centerpiece */
+  .arch{padding:36px 32px;background:var(--card);border:1px solid var(--border);border-radius:12px}
+
+  .arch .stage-lbl{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;text-align:center}
+
+  .src-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .src-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 12px;text-align:center;position:relative}
+  .src-card::before{content:"";position:absolute;left:18px;right:18px;top:0;height:2px;background:var(--text);border-radius:0 0 2px 2px}
+  .src-card .id{font-family:var(--hiw-mono);font-size:13px;font-weight:700;color:var(--text);letter-spacing:.04em;margin-top:6px}
+  .src-card .pub{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+  .src-card .det{font-size:11px;color:var(--text2);margin-top:8px;line-height:1.4}
+
+  .gap{height:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .gap .vl{width:1.5px;height:18px;background:#94A3B8}
+  .gap .lbl{font-family:var(--hiw-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+  /* PIPELINE — horizontal flow */
+  .pipe{background:linear-gradient(180deg,#FAF7FE 0%,#F2EDFA 100%);border:1.5px solid var(--purple);border-radius:10px;padding:22px 24px}
+  .pipe-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .pipe-head .id{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--purple-ink)}
+  .pipe-head .meta{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.06em;color:var(--purple-ink)}
+  .pipe-flow{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr 22px 1fr;gap:0;align-items:stretch}
+  .pstep{background:#fff;border:1px solid rgba(136,120,184,.4);border-radius:7px;padding:11px 12px;display:flex;flex-direction:column}
+  .pstep.ai{border-color:var(--purple);background:linear-gradient(180deg,#fff 0%,#F7F2FE 100%)}
+  .pstep .num{font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--muted)}
+  .pstep .nm{font-family:var(--hiw-serif);font-size:16px;color:var(--text);margin-top:2px;line-height:1.15}
+  .pstep .desc{font-size:11px;color:var(--text2);margin-top:6px;line-height:1.45}
+  .pstep .class{margin-top:auto;padding-top:8px;font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .pstep.ai .class{color:var(--purple-ink)}
+  .pstep.ai .class::before{content:"● ";color:var(--purple)}
+  .pstep:not(.ai) .class::before{content:"○ ";color:var(--muted)}
+  .arrow-c{display:flex;align-items:center;justify-content:center}
+  .arrow-c::before{content:"→";font-family:var(--hiw-mono);font-size:14px;color:#94A3B8;font-weight:700}
+
+  /* OUTPUT — mini-dashboard preview */
+  .out{background:var(--card);border:1.5px solid var(--text);border-radius:10px;padding:18px 20px}
+  .out-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+  .out-head .id{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text)}
+  .out-head .meta{font-family:var(--hiw-mono);font-size:10px;color:var(--muted)}
+  .out-head h3{font-family:var(--hiw-serif);font-size:18px;margin:0}
+  .out-preview{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .mini-kpi{background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:10px}
+  .mini-kpi .l{font-family:var(--hiw-mono);font-size:8.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  .mini-kpi .v{font-family:var(--hiw-mono);font-size:15px;font-weight:700;color:var(--text);margin-top:4px}
+  .mini-kpi .d{font-family:var(--hiw-mono);font-size:9px;margin-top:2px;color:var(--text2)}
+  .out-chart{margin-top:8px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:12px}
+  .out-chart .l{font-family:var(--hiw-mono);font-size:8.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+  .out-chart svg{display:block;width:100%;height:60px}
+  .out-comm{margin-top:8px;font-size:11.5px;color:var(--text2);line-height:1.5;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--hiw-serif);font-style:italic}
+  .out-comm::before{content:"AI commentary  ·  ";font-family:var(--hiw-mono);font-style:normal;font-weight:700;font-size:9px;letter-spacing:.16em;color:var(--purple);text-transform:uppercase}
+
+  /* WHAT IT TRACKS — domain grid */
+  .domains{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .dcard{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+  .dcard h4{font-family:var(--hiw-serif);font-size:18px;font-weight:400;line-height:1.15;color:var(--text);margin:0}
+  .dcard .items{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px 6px}
+  .dcard .it{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.02em;color:var(--text2);padding:2px 7px;background:var(--card2);border:1px solid var(--border);border-radius:3px;white-space:nowrap}
+  .dcard .src{font-family:var(--hiw-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+  .dcard .src strong{color:var(--text);font-weight:700}
+
+  /* FACTS STRIP */
+  .facts{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border-top:1.5px solid var(--text);border-bottom:1.5px solid var(--text)}
+  .facts .f{padding:14px 16px;border-right:1px solid var(--border)}
+  .facts .f:last-child{border-right:0}
+  .facts .f .lbl{font-family:var(--hiw-mono);font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .facts .f .val{font-family:var(--hiw-mono);font-size:15px;font-weight:700;color:var(--text);margin-top:4px;letter-spacing:.02em}
+  .facts .f .sub{font-size:10px;color:var(--muted);margin-top:2px;font-family:var(--hiw-mono);letter-spacing:.04em}
+
+  /* LEGEND inside arch */
+  .legend{display:flex;gap:18px;margin-top:12px;font-family:var(--hiw-mono);font-size:10px;color:var(--muted);letter-spacing:.04em;justify-content:flex-end}
+  .legend .lg{display:inline-flex;align-items:center;gap:6px}
+  .legend .lg .sw{width:10px;height:10px;border-radius:2px;border:1px solid var(--border)}
+  .legend .lg.det .sw{background:#fff}
+  .legend .lg.ai .sw{background:var(--purple);border-color:var(--purple)}
+</style>
+</head><body>
+<div class="opt-banner"><span>Option H · Visual one-pager</span><span class="pill">diagrams over text</span></div>
+<div class="wrap">
+
+  <!-- TITLE -->
+  <div class="head">
+    <div class="lt">
+      <h1>How the Macro Dashboard works</h1>
+      <p>An automated pipeline that retrieves U.S. macro data from five public sources, computes a fixed set of indicators, and publishes a single-page briefing every Friday. AI writes the commentary; deterministic code computes every number.</p>
+    </div>
+    <div class="rt">
+      <div><span class="v">v.weekly</span></div>
+      <div style="margin-top:4px">Fri 06:00 UTC</div>
+    </div>
+  </div>
+
+  <!-- §1 ARCHITECTURE -->
+  <div class="sect">
+    <h2>Architecture</h2>
+    <div class="anno">sources · pipeline · output</div>
+
+    <div class="arch">
+
+      <div class="stage-lbl">— Inputs · 5 public data sources —</div>
+      <div class="src-row">
+        <div class="src-card"><div class="pub">Federal Reserve</div><div class="id">FRED</div><div class="det">CPI · PCE · yields · spreads · rates</div></div>
+        <div class="src-card"><div class="pub">U.S. Dept. of Labor</div><div class="id">BLS</div><div class="det">Payrolls · unemployment · wages</div></div>
+        <div class="src-card"><div class="pub">U.S. DOE</div><div class="id">EIA</div><div class="det">WTI · Brent · petroleum supply</div></div>
+        <div class="src-card"><div class="pub">Univ. of Michigan</div><div class="id">UMICH</div><div class="det">Consumer sentiment survey</div></div>
+        <div class="src-card"><div class="pub">SEC Filings</div><div class="id">10-Q</div><div class="det">JPM · BAC · WFC · GS · C</div></div>
+      </div>
+
+      <div class="gap"><div class="vl"></div><div class="lbl">retrieved</div><div class="vl"></div></div>
+
+      <div class="stage-lbl">— Pipeline · 5 stages (1 uses AI) —</div>
+      <div class="pipe">
+        <div class="pipe-head"><span class="id">Production pipeline</span><span class="meta">runs autonomously · Fri 06:00 UTC</span></div>
+        <div class="pipe-flow">
+          <div class="pstep"><div class="num">01</div><div class="nm">Retrieve</div><div class="desc">Pull latest observations from each source.</div><div class="class">deterministic</div></div>
+          <div class="arrow-c"></div>
+          <div class="pstep"><div class="num">02</div><div class="nm">Compute</div><div class="desc">Calculate indicators; flag against known-normal.</div><div class="class">deterministic</div></div>
+          <div class="arrow-c"></div>
+          <div class="pstep ai"><div class="num">03</div><div class="nm">Write</div><div class="desc">Claude drafts 2–4 sentences per panel.</div><div class="class">AI</div></div>
+          <div class="arrow-c"></div>
+          <div class="pstep"><div class="num">04</div><div class="nm">Validate</div><div class="desc">10 checks; block publish on critical divergence.</div><div class="class">deterministic</div></div>
+          <div class="arrow-c"></div>
+          <div class="pstep"><div class="num">05</div><div class="nm">Publish</div><div class="desc">Send by email; update the web page.</div><div class="class">deterministic</div></div>
+        </div>
+        <div class="legend">
+          <span class="lg det"><span class="sw"></span>deterministic code</span>
+          <span class="lg ai"><span class="sw"></span>AI (Claude)</span>
+        </div>
+      </div>
+
+      <div class="gap"><div class="vl"></div><div class="lbl">published</div><div class="vl"></div></div>
+
+      <div class="stage-lbl">— Output · single-page dashboard —</div>
+      <div class="out">
+        <div class="out-head">
+          <div>
+            <span class="id">Dashboard</span>
+            <h3 style="margin-top:2px">Twelve indicators · one screen</h3>
+          </div>
+          <span class="meta">HTML · ~539 KB · email + web</span>
+        </div>
+        <div class="out-preview">
+          <div class="mini-kpi"><div class="l">CPI YoY</div><div class="v">3.8%</div><div class="d">▲ +0.2</div></div>
+          <div class="mini-kpi"><div class="l">Core PCE</div><div class="v">3.2%</div><div class="d">flat</div></div>
+          <div class="mini-kpi"><div class="l">U-3</div><div class="v">4.3%</div><div class="d">▲ +0.1</div></div>
+          <div class="mini-kpi"><div class="l">10Y–2Y</div><div class="v">47bp</div><div class="d">steepening</div></div>
+          <div class="mini-kpi"><div class="l">WTI</div><div class="v">$109.8</div><div class="d">▲ shock</div></div>
+        </div>
+        <div class="out-chart">
+          <div class="l">Sample panel · 12-month trend</div>
+          <svg viewBox="0 0 800 60" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#8878B8" stroke-width="2"
+              points="0,48 70,42 140,40 210,32 280,36 350,30 420,24 490,22 560,18 630,16 700,12 770,8"/>
+          </svg>
+        </div>
+        <div class="out-comm">A short, factual paragraph drafted by the AI accompanies each panel — explaining what the latest reading means, bounded by the methodology rules.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §2 WHAT IT TRACKS -->
+  <div class="sect">
+    <h2>What it tracks</h2>
+    <div class="anno">twelve indicators across six domains</div>
+
+    <div class="domains">
+      <div class="dcard">
+        <h4>Growth</h4>
+        <div class="items"><span class="it">Real GDP</span><span class="it">GDP forecasts</span><span class="it">By industry</span></div>
+        <div class="src">SRC · <strong>BEA · FRED</strong></div>
+      </div>
+      <div class="dcard">
+        <h4>Labour</h4>
+        <div class="items"><span class="it">NFP</span><span class="it">U-3</span><span class="it">U-6</span><span class="it">Jobless claims</span><span class="it">Wages</span></div>
+        <div class="src">SRC · <strong>BLS</strong></div>
+      </div>
+      <div class="dcard">
+        <h4>Prices</h4>
+        <div class="items"><span class="it">CPI</span><span class="it">Core CPI</span><span class="it">PCE</span><span class="it">Core PCE</span></div>
+        <div class="src">SRC · <strong>BLS · BEA · FRED</strong></div>
+      </div>
+      <div class="dcard">
+        <h4>Credit &amp; rates</h4>
+        <div class="items"><span class="it">2/5/10/30Y</span><span class="it">Fed Funds</span><span class="it">IG OAS</span><span class="it">HY OAS</span><span class="it">Card DPD</span></div>
+        <div class="src">SRC · <strong>FRED · NY Fed</strong></div>
+      </div>
+      <div class="dcard">
+        <h4>Banking sector</h4>
+        <div class="items"><span class="it">NII</span><span class="it">NCO</span><span class="it">ROTCE</span><span class="it">CET1</span><span class="it">Verbatim commentary</span></div>
+        <div class="src">SRC · <strong>SEC 10-Q</strong></div>
+      </div>
+      <div class="dcard">
+        <h4>Energy &amp; housing</h4>
+        <div class="items"><span class="it">WTI</span><span class="it">Brent</span><span class="it">30Y mortgage</span><span class="it">Case-Shiller</span><span class="it">Starts</span></div>
+        <div class="src">SRC · <strong>EIA · FHFA · Freddie</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §3 KEY FACTS -->
+  <div class="sect">
+    <h2>At a glance</h2>
+    <div class="anno">the system in numbers</div>
+    <div class="facts">
+      <div class="f"><div class="lbl">Sources</div><div class="val">5</div><div class="sub">all public</div></div>
+      <div class="f"><div class="lbl">Indicators</div><div class="val">12</div><div class="sub">across 6 domains</div></div>
+      <div class="f"><div class="lbl">Pipeline</div><div class="val">5 stages</div><div class="sub">1 uses AI</div></div>
+      <div class="f"><div class="lbl">AI scope</div><div class="val">Words only</div><div class="sub">never numbers</div></div>
+      <div class="f"><div class="lbl">Validation</div><div class="val">10 checks</div><div class="sub">critical = no send</div></div>
+      <div class="f"><div class="lbl">Cadence</div><div class="val">Fri 06:00</div><div class="sub">UTC · weekly</div></div>
+    </div>
+  </div>
+
+</div></body></html>

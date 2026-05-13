@@ -1,0 +1,121 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option C — Story-first narrative</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head><body>
+<div class="opt-banner"><span>Option C · Story-first narrative</span><span class="pill">6 chapters · charts embedded</span></div>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+    <span style="width:6px;height:6px;border-radius:50%;background:var(--purple)"></span>
+    <span class="lbl">How the dashboard works · A walkthrough</span>
+  </div>
+  <h1 style="font-size:64px;line-height:1.0;letter-spacing:-.01em;max-width:1100px;font-family:var(--hiw-serif)">
+    Six chapters, from <em style="font-style:italic;color:var(--purple-ink)">raw data</em> to a CEO's inbox.
+  </h1>
+  <p style="font-size:18px;line-height:1.6;color:var(--text2);max-width:780px;margin-top:24px">
+    Each Friday, the dashboard publishes itself. This is the story of how — what problem it solves, how the system approaches it, and what stays a human judgement call.
+  </p>
+
+  <div style="display:flex;gap:8px;margin-top:36px;flex-wrap:wrap">
+    <a href="#c1" class="jumplink">01 · Problem</a>
+    <a href="#c2" class="jumplink">02 · Approach</a>
+    <a href="#c3" class="jumplink">03 · Walkthrough</a>
+    <a href="#c4" class="jumplink">04 · Architecture</a>
+    <a href="#c5" class="jumplink">05 · Quality</a>
+    <a href="#c6" class="jumplink">06 · Open questions</a>
+  </div>
+
+  <div class="hr"></div>
+
+  <!-- CHAPTER 1 -->
+  <section class="chapter" id="c1">
+    <span class="chapter-num">Chapter 01</span>
+    <h2>The problem.</h2>
+    <p class="lede">A weekly read of the U.S. macro picture used to be a research analyst's full week — pull data, reconcile sources, spot what's moved, decide what it means, write it up, ship it. The result was good but slow, and the human cost was high. The question was whether software could do the assembly and let the human do the judging.</p>
+  </section>
+
+  <div class="dash"></div>
+
+  <!-- CHAPTER 2 -->
+  <section class="chapter" id="c2">
+    <span class="chapter-num">Chapter 02</span>
+    <h2>The approach.</h2>
+    <p class="lede">Split the work into eleven small jobs. Each agent has one responsibility, a strict input/output contract, and — for the ones that call Claude — a kill-switch, cost cap, and path allowlist. The structure is deterministic; only the prose is generative.</p>
+
+    <div class="chart-stub">
+      <div class="cap">Sample · Eleven-agent pipeline shape</div>
+      <div class="svg-box">
+        <span style="height:18%"></span><span style="height:34%"></span><span style="height:52%"></span><span style="height:68%"></span>
+        <span style="height:80%"></span><span style="height:72%"></span><span style="height:54%"></span><span style="height:40%"></span>
+        <span style="height:30%"></span><span style="height:22%"></span><span style="height:16%"></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="dash"></div>
+
+  <!-- CHAPTER 3 -->
+  <section class="chapter" id="c3">
+    <span class="chapter-num">Chapter 03</span>
+    <h2>A Friday morning, end to end.</h2>
+    <p class="lede">06:00 UTC — preflight checks every FRED series and every Claude model ID. 06:05 — collector pulls. 06:20 — analyzer scores against known-normal bands. 06:30 — Claude drafts commentary. 06:35 — renderer patches the page. 06:40 — validator runs ten passes. 06:45 — publisher sends email. Each step has its own log, its own artifact, and its own reason to halt.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px">
+      <div class="tile" style="padding:12px"><span class="num">06:05</span><div style="font-family:var(--hiw-serif);font-size:16px;margin-top:4px">Collector pulls</div></div>
+      <div class="tile" style="padding:12px"><span class="num">06:20</span><div style="font-family:var(--hiw-serif);font-size:16px;margin-top:4px">Analyzer scores</div></div>
+      <div class="tile" style="padding:12px"><span class="num">06:30</span><div style="font-family:var(--hiw-serif);font-size:16px;margin-top:4px">Briefing drafts</div></div>
+      <div class="tile" style="padding:12px"><span class="num">06:35</span><div style="font-family:var(--hiw-serif);font-size:16px;margin-top:4px">Renderer patches</div></div>
+    </div>
+  </section>
+
+  <div class="dash"></div>
+
+  <!-- CHAPTER 4 -->
+  <section class="chapter" id="c4">
+    <span class="chapter-num">Chapter 04</span>
+    <h2>The architecture, briefly.</h2>
+    <p class="lede">Deterministic Python in the middle, Claude at the edges. Every agentic call goes through one guardrail file. The renderer never re-runs HTML it didn't write; the validator gates every publish.</p>
+
+    <table class="matrix" style="margin-top:24px">
+      <thead><tr><th style="width:32px"></th><th>Agent</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td class="rownum">01</td><td><span class="nm">Collector</span></td><td>FRED / BLS / EIA pulls.</td></tr>
+        <tr><td class="rownum">02</td><td><span class="nm">Analyzer</span></td><td>Score against known-normal.</td></tr>
+        <tr><td class="rownum">03</td><td><span class="nm">Briefing</span></td><td>Claude commentary, bounded.</td></tr>
+        <tr><td class="rownum">04</td><td><span class="nm">Renderer</span></td><td>Regex-patches index.html.</td></tr>
+        <tr><td class="rownum">06</td><td><span class="nm">Validator</span></td><td>Ten-pass build gate.</td></tr>
+        <tr><td class="rownum">10</td><td><span class="nm">Repair</span></td><td>Memory-aware observer.</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px;font-family:var(--hiw-mono);letter-spacing:.04em">— see full table for all 11 agents —</p>
+  </section>
+
+  <div class="dash"></div>
+
+  <!-- CHAPTER 5 -->
+  <section class="chapter" id="c5">
+    <span class="chapter-num">Chapter 05</span>
+    <h2>What keeps it honest.</h2>
+    <p class="lede">Three contracts and a gate. The visual contract is <code class="mono">style_guide.md</code>. The data contract is <code class="mono">playbook.md</code>. The editorial contract is §2 of the playbook. The gate is the validator — ten passes, build-blocking, no human override on critical divergences.</p>
+
+    <div class="tiles4" style="margin-top:20px">
+      <div class="tile"><span class="lbl" style="color:var(--purple-ink)">Pass 1–3</span><p style="margin-top:8px">Internal consistency, source verification, staleness.</p></div>
+      <div class="tile"><span class="lbl" style="color:var(--purple-ink)">Pass 3c</span><p style="margin-top:8px">Earnings-quote verbatim gate.</p></div>
+      <div class="tile"><span class="lbl" style="color:var(--purple-ink)">Pass 3i</span><p style="margin-top:8px">Cross-source agreement (FRED vs BLS).</p></div>
+      <div class="tile"><span class="lbl" style="color:var(--purple-ink)">Pass 7–8</span><p style="margin-top:8px">Visual QA + AI vision review.</p></div>
+    </div>
+  </section>
+
+  <div class="dash"></div>
+
+  <!-- CHAPTER 6 -->
+  <section class="chapter" id="c6">
+    <span class="chapter-num">Chapter 06</span>
+    <h2>What's still a judgement call.</h2>
+    <p class="lede">The system can score divergences against a baseline, but it can't decide which divergence matters most this week. That call still lives with the editor. The agents flag, draft, and validate; a human chooses the lede and stands behind it.</p>
+  </section>
+
+</div></body></html>

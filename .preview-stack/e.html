@@ -1,0 +1,193 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option E — Methodology &amp; Disclosure</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-size:13.5px}
+  .mast{padding:20px 0 14px;border-bottom:2px solid var(--text)}
+  .mast .crumb{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .mast h1{font-family:var(--hiw-serif);font-size:40px;line-height:1.05;font-weight:400;margin-top:8px;color:var(--text);letter-spacing:-.005em}
+  .mast .sub{font-family:var(--hiw-serif);font-style:italic;font-size:18px;color:var(--text2);margin-top:8px;line-height:1.5;max-width:880px}
+  .mast .stamp{font-family:var(--hiw-mono);font-size:10.5px;color:var(--muted);margin-top:14px;letter-spacing:.04em;display:flex;gap:24px;flex-wrap:wrap}
+  .mast .stamp span strong{color:var(--text);font-weight:700;margin-right:6px;letter-spacing:.04em}
+  .abstract{margin:24px 0 0;padding:16px 0 0;font-size:14px;color:var(--text2);line-height:1.6;max-width:920px}
+  .abstract::first-line{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  section.m{margin-top:48px}
+  section.m > .h{padding-bottom:8px;border-bottom:1px solid var(--text);margin-bottom:18px;display:flex;align-items:baseline;gap:14px}
+  section.m > .h h2{font-family:var(--hiw-serif);font-size:24px;font-weight:400;letter-spacing:-.002em;color:var(--text)}
+  section.m > .h .num{font-family:var(--hiw-mono);font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.15em}
+  section.m > .h .anno{margin-left:auto;font-family:var(--hiw-mono);font-size:10px;color:var(--muted);letter-spacing:.06em;font-style:normal}
+  section.m > .lede{font-size:14px;color:var(--text2);line-height:1.6;max-width:920px;margin-bottom:16px}
+  table.disc{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.disc thead th{text-align:left;padding:8px 12px;font-family:var(--hiw-mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text);border-bottom:1.5px solid var(--text);background:transparent}
+  table.disc tbody td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2);font-size:12.5px;line-height:1.55}
+  table.disc tbody tr:last-child td{border-bottom:1.5px solid var(--text)}
+  table.disc td.k{color:var(--text);font-weight:500}
+  table.disc td.mn{font-family:var(--hiw-mono);font-size:11.5px;color:var(--text)}
+  table.disc td .src-tag{display:inline-block;font-family:var(--hiw-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:2px 6px;border-radius:3px;border:1px solid var(--border);background:var(--card2);color:var(--muted);margin-right:6px}
+  table.disc td .src-tag.ai{color:#fff;background:var(--purple);border-color:var(--purple)}
+  table.disc td .src-tag.h{color:var(--text);background:#fff;border-color:var(--text)}
+  .footnote{font-family:var(--hiw-mono);font-size:10.5px;color:var(--muted);line-height:1.55;margin-top:10px;letter-spacing:.02em;padding-left:18px;text-indent:-18px;max-width:920px}
+  .footnote::before{content:"†   ";color:var(--text)}
+  .controls-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:6px}
+  .control{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 18px}
+  .control .nm{font-family:var(--hiw-mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text)}
+  .control p{font-size:13px;color:var(--text2);margin-top:8px;line-height:1.55}
+  .control .ref{font-family:var(--hiw-mono);font-size:10px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
+  .ai-disclosure{background:var(--purple-tint);border:1px solid rgba(136,120,184,.45);border-left:4px solid var(--purple);padding:16px 18px;border-radius:6px;margin:0 0 18px;max-width:920px}
+  .ai-disclosure .label{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--purple-ink);font-weight:700}
+  .ai-disclosure p{font-size:13.5px;color:var(--text);margin-top:6px;line-height:1.55}
+  .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:24px;border-top:1.5px solid var(--text);border-bottom:1.5px solid var(--text)}
+  .keys .k{padding:14px 16px;border-right:1px solid var(--border);font-family:var(--hiw-mono)}
+  .keys .k:last-child{border-right:0}
+  .keys .k .lbl{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .keys .k .val{font-size:18px;font-weight:700;color:var(--text);margin-top:4px}
+  .keys .k .sub{font-size:10px;color:var(--muted);letter-spacing:.04em;margin-top:2px}
+</style>
+</head><body>
+<div class="opt-banner"><span>Option E · Methodology &amp; Disclosure</span><span class="pill">finance / data science voice</span></div>
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <div class="mast">
+    <span class="crumb">Macro Dashboard · Documentation</span>
+    <h1>Methodology, Sources, and Validation</h1>
+    <div class="sub">A disclosure of how the indicators are sourced, computed, validated, and presented — and where artificial intelligence is used in the production process.</div>
+    <div class="stamp">
+      <span><strong>PUBLISHED</strong> weekly · Fri 06:00 UTC</span>
+      <span><strong>METHODOLOGY VERSION</strong> 2026.05</span>
+      <span><strong>LAST REVIEWED</strong> 2026-05-13</span>
+    </div>
+
+    <p class="abstract">
+ABSTRACT &nbsp;&nbsp;&nbsp; The dashboard reports on twelve U.S. macroeconomic and financial-sector indicators sourced from five public data providers, supplemented by quarterly earnings disclosures from five major U.S. banks. Indicator values are computed by deterministic code from the published source series; written commentary accompanying each indicator is drafted by a large-language model under documented constraints (§05) and reviewed against a ten-control validation framework (§04) before publication.
+    </p>
+
+    <div class="keys">
+      <div class="k"><div class="lbl">Indicators</div><div class="val">12</div><div class="sub">macro &amp; financial sector</div></div>
+      <div class="k"><div class="lbl">Data Sources</div><div class="val">5</div><div class="sub">FRED · BLS · EIA · UMich · 10-Q</div></div>
+      <div class="k"><div class="lbl">Validation Controls</div><div class="val">10</div><div class="sub">build-blocking</div></div>
+      <div class="k"><div class="lbl">Refresh Cadence</div><div class="val">WK</div><div class="sub">+ monthly &amp; quarterly cycles</div></div>
+    </div>
+  </div>
+
+  <!-- §01 SCOPE -->
+  <section class="m">
+    <div class="h"><span class="num">§ 01</span><h2>Scope</h2><span class="anno">what is reported</span></div>
+    <p class="lede">The dashboard tracks twelve indicators across four domains: <strong>growth</strong> (GDP, payrolls), <strong>labour</strong> (U-3 and U-6 unemployment, wages, jobless claims), <strong>prices</strong> (CPI, core CPI, PCE), <strong>credit and rates</strong> (Treasury yields, IG/HY spreads, mortgage rates, card delinquency), and a fifth view on the <strong>U.S. banking sector</strong> sourced from the largest five depository institutions' quarterly disclosures (JPM, BAC, WFC, GS, C). Each indicator's definition, formula, threshold rules, and confirmation logic is documented in <code class="mono">METHODOLOGY.md</code>.</p>
+  </section>
+
+  <!-- §02 SOURCES -->
+  <section class="m">
+    <div class="h"><span class="num">§ 02</span><h2>Data Sources</h2><span class="anno">publisher · cadence · lag</span></div>
+    <table class="disc">
+      <thead><tr><th>Publisher</th><th>Datasets used</th><th>Release cadence</th><th>Typical lag</th><th>Vintage handling</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Federal Reserve Economic Data (FRED)</td><td>CPI, PCE, Personal Saving Rate, TDSP, Treasury yields, Fed Funds, ICE BofA OAS, Atlanta Fed Wage Tracker, UMCSENT, mortgage rates</td><td>Daily–Monthly</td><td>1–95 days</td><td>Snapshot at fetch time; revisions overwrite</td></tr>
+        <tr><td class="k">Bureau of Labor Statistics (BLS)</td><td>CPI-U components, Average Hourly Earnings, payrolls by sector (CES)</td><td>Monthly</td><td>~14 days</td><td>Headline read with each release</td></tr>
+        <tr><td class="k">U.S. Energy Information Administration (EIA)</td><td>WTI &amp; Brent spot, U.S. petroleum supply</td><td>Weekly</td><td>~7 days</td><td>Direct EIA API</td></tr>
+        <tr><td class="k">University of Michigan</td><td>Consumer Sentiment (preliminary, then final)</td><td>Monthly</td><td>~14d preliminary · ~30d final</td><td>Status field disambiguates vintage</td></tr>
+        <tr><td class="k">Bank disclosures (10-Q, earnings calls)</td><td>NII, NCO rates, ROTCE, CET1, card delinquencies; verbatim commentary from JPM, BAC, WFC, GS, C</td><td>Quarterly</td><td>~21 days post quarter-end</td><td>Transcripts archived per quarter; verbatim verification on every cited quote</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">All sources are public. Bank earnings text is reproduced verbatim from the company's published transcript or 10-Q; no paraphrase is presented in quotation marks. See §05 for the verbatim verification control.</p>
+  </section>
+
+  <!-- §03 COMPUTATION -->
+  <section class="m">
+    <div class="h"><span class="num">§ 03</span><h2>Indicator Computation</h2><span class="anno">deterministic · METHODOLOGY.md</span></div>
+    <p class="lede">Indicator values are computed by deterministic Python from the source series. No AI is used in the computation of any published number. Representative formulas:</p>
+    <table class="disc">
+      <thead><tr><th style="width:200px">Indicator</th><th>Definition</th><th>Computation</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Year-over-year CPI</td><td>Headline CPI-U, 12-month change</td><td class="mn">(CPI<sub>t</sub> / CPI<sub>t−12</sub> − 1) × 100</td></tr>
+        <tr><td class="k">Real wage growth</td><td>Nominal wage growth less CPI inflation</td><td class="mn">Atlanta Fed WGT YoY − CPI-U YoY</td></tr>
+        <tr><td class="k">10Y–2Y spread</td><td>Yield-curve slope</td><td class="mn">GS10 − GS2 &nbsp;(bps)</td></tr>
+        <tr><td class="k">Credit risk premium</td><td>High-yield over investment-grade option-adjusted spread</td><td class="mn">HY OAS − IG OAS</td></tr>
+        <tr><td class="k">Shock-tracker phase gate</td><td>Energy-shock transmission status</td><td class="mn">phase = "not yet" until series date ≥ shock-date AND obs ≥ 24</td></tr>
+        <tr><td class="k">Consumer Sentiment vintage</td><td>Preliminary vs. final read</td><td class="mn">if status missing → treated as final</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">Thresholds for indicator commentary (e.g. payrolls below 150K denotes deceleration, U-3 above cycle low denotes labour weakening, etc.) are codified in <code class="mono">data/playbook.md</code> §1 and applied by the analyzer step.</p>
+  </section>
+
+  <!-- §04 VALIDATION -->
+  <section class="m">
+    <div class="h"><span class="num">§ 04</span><h2>Validation Controls</h2><span class="anno">build-blocking · 10 controls</span></div>
+    <p class="lede">Every published edition passes through ten controls. Any critical-severity divergence suspends publication; the briefing email is not sent until the divergence is resolved or downgraded by the editor.</p>
+    <table class="disc">
+      <thead><tr><th style="width:70px">Control</th><th>Verifies</th><th>Severity</th></tr></thead>
+      <tbody>
+        <tr><td class="k">C-01</td><td>Internal consistency: every value shown on the page reconciles to the underlying JSON</td><td>critical</td></tr>
+        <tr><td class="k">C-02</td><td>Source verification: every published value traces to a raw observation from a §02 source</td><td>critical</td></tr>
+        <tr><td class="k">C-03</td><td>Freshness: each series is no older than its known publish-lag baseline</td><td>warning</td></tr>
+        <tr><td class="k">C-04</td><td>Verbatim verification: every quoted bank commentary span exists verbatim in the archived transcript</td><td>critical</td></tr>
+        <tr><td class="k">C-05</td><td>Schema conformance: <code class="mono">signals.json</code> and <code class="mono">raw_data.json</code> match the contract</td><td>critical</td></tr>
+        <tr><td class="k">C-06</td><td>Seed drift: deterministic outputs unchanged between identical inputs</td><td>warning</td></tr>
+        <tr><td class="k">C-07</td><td>Collector errors: any source-fetch failure recorded for review</td><td>warning</td></tr>
+        <tr><td class="k">C-08</td><td>Cross-source agreement: shared anchor metrics reconcile between FRED and BLS</td><td>critical</td></tr>
+        <tr><td class="k">C-09</td><td>Visual quality: 224 layout, typography, color, and spacing checks against <code class="mono">style_guide.md</code></td><td>warning</td></tr>
+        <tr><td class="k">C-10</td><td>Independent visual review by a multimodal AI; flags rendered-chart issues that the DOM-based checks cannot see</td><td>warning</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">Verdicts from all ten controls are aggregated into a single go/no-go decision (PASS / WARN / FAIL / SKIP). The publish step reads only this aggregated verdict and refuses to send on FAIL.</p>
+  </section>
+
+  <!-- §05 AI USE -->
+  <section class="m">
+    <div class="h"><span class="num">§ 05</span><h2>Use of Artificial Intelligence</h2><span class="anno">disclosure</span></div>
+    <div class="ai-disclosure">
+      <div class="label">Where AI is used</div>
+      <p>Four of the eleven production steps use an Anthropic Claude language model. None of them compute or alter any published numeric value; their outputs are limited to written commentary, methodology-based diagnostics, and quality review.</p>
+    </div>
+    <table class="disc">
+      <thead><tr><th style="width:200px">Step</th><th>Role of AI</th><th>Bounded by</th><th>Failure handling</th></tr></thead>
+      <tbody>
+        <tr><td class="k"><span class="src-tag ai">AI</span>Per-tab commentary</td><td>Drafts 2–4 sentences accompanying each indicator panel. Sentence-count and vocabulary rules are enforced after generation.</td><td>Copy rules (no hedging, no fabricated numerics, ≤4 sentences); verified against C-01.</td><td>Sentence rewritten or removed</td></tr>
+        <tr><td class="k"><span class="src-tag ai">AI</span>Earnings extraction</td><td>Extracts pre-tagged fields (economy, lending, credit, outlook) from archived bank transcripts.</td><td>Verbatim verification (C-04) against archived transcript text.</td><td>Edition blocks publication if any quote diverges</td></tr>
+        <tr><td class="k"><span class="src-tag ai">AI</span>Visual review</td><td>Independent review of rendered charts against the visual contract; flags issues invisible to DOM checks.</td><td>Read-only; output is a flag, never an edit.</td><td>Editor reviews; warning only</td></tr>
+        <tr><td class="k"><span class="src-tag ai">AI</span>Diagnostic commentary</td><td>Reads validation findings and recurrence history; classifies each finding (first-time vs. recurring) for the editor's review queue.</td><td>Read-only observer; cannot modify code, data, or layout.</td><td>Findings logged; no action taken</td></tr>
+      </tbody>
+    </table>
+    <p class="lede" style="margin-top:18px">All AI use is subject to four operational controls:</p>
+    <div class="controls-grid">
+      <div class="control"><div class="nm">Circuit-breaker</div><p>A single configuration flag stops all AI calls system-wide. Used during incidents or model deprecations.</p><div class="ref">env: AGENT_DISABLE_ALL</div></div>
+      <div class="control"><div class="nm">Cost ceiling</div><p>Per-edition call count is capped; production exceeds neither the budget nor the model rate-limit.</p><div class="ref">env: AGENT_MAX_LLM_CALLS</div></div>
+      <div class="control"><div class="nm">Path restriction</div><p>Each AI-using step may only write to a specifically permitted file path. The page layout and indicator computation paths are excluded.</p><div class="ref">scripts/_agent_guardrails.py</div></div>
+      <div class="control"><div class="nm">Audit trail</div><p>Every AI call records its prompt hash, model, token count, cost, and output destination to a rolling append-only log (2,000-entry FIFO).</p><div class="ref">data/agent_memory.jsonl</div></div>
+    </div>
+  </section>
+
+  <!-- §06 GOVERNANCE -->
+  <section class="m">
+    <div class="h"><span class="num">§ 06</span><h2>Governance</h2><span class="anno">documents · ownership</span></div>
+    <table class="disc">
+      <thead><tr><th>Document</th><th>Governs</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="k">METHODOLOGY.md</td><td>Indicator definitions, formulas, thresholds, confirmation rules</td><td><span class="src-tag h">HUMAN-CURATED</span></td></tr>
+        <tr><td class="k">data/playbook.md</td><td>Source publish-lag table, noise-floor bands, commentary copy rules (§2), forbidden recommendations</td><td><span class="src-tag h">HUMAN-CURATED</span></td></tr>
+        <tr><td class="k">data/style_guide.md</td><td>Visual contract: layout, typography (≤14px body), palette, spacing, cross-tab consistency</td><td><span class="src-tag h">HUMAN-CURATED</span></td></tr>
+        <tr><td class="k">data/known_normal.json</td><td>Machine-readable baselines (publish lag, noise floors, shock-tracker thresholds)</td><td><span class="src-tag h">HUMAN-CURATED</span></td></tr>
+        <tr><td class="k">data/pipeline_version.json</td><td>Versioning and audit trail for every production run</td><td>Auto-generated, append-only</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">When a curated document and an AI output disagree, the curated document is authoritative. AI is never used to revise the playbook, methodology, or style guide.</p>
+  </section>
+
+  <!-- §07 UPDATE CADENCE -->
+  <section class="m">
+    <div class="h"><span class="num">§ 07</span><h2>Update Cadence</h2><span class="anno">refresh schedule</span></div>
+    <table class="disc">
+      <thead><tr><th>Component</th><th>Refresh</th><th>Trigger</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Macro indicators (CPI, NFP, GDP, etc.)</td><td>Weekly Friday + monthly 2nd Saturday</td><td>Scheduled CI job</td></tr>
+        <tr><td class="k">Energy &amp; weekly series (oil, jobless claims)</td><td>Weekly</td><td>Scheduled CI job</td></tr>
+        <tr><td class="k">Bank quarterly data</td><td>Quarterly, days 10–28 of Jan/Apr/Jul/Oct</td><td>Separate scheduled job; does not interrupt weekly cadence</td></tr>
+        <tr><td class="k">Methodology document</td><td>On rule change</td><td>Editor commit</td></tr>
+        <tr><td class="k">Visual / style contract</td><td>On layout change</td><td>Editor commit · regression-tested against 224 visual checks</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div></body></html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Option D — Analytical spec</title>
+<link rel="stylesheet" href="_shell.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body{font-size:13.5px}
+  .spec-head{padding:24px 0 16px;border-bottom:1px solid var(--border)}
+  .spec-head .crumb{font-family:var(--hiw-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .spec-head h1{font-family:var(--hiw-mono);font-size:22px;font-weight:700;letter-spacing:.04em;margin-top:8px;color:var(--text)}
+  .spec-head .meta{font-family:var(--hiw-mono);font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.04em}
+  .spec-head .def{font-size:14px;color:var(--text2);margin-top:18px;max-width:880px;line-height:1.6}
+  .facts{display:grid;grid-template-columns:repeat(7,1fr);gap:0;margin:28px 0 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
+  .facts .fact{padding:14px 16px;border-right:1px solid var(--border);font-family:var(--hiw-mono)}
+  .facts .fact:last-child{border-right:0}
+  .facts .fact .k{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .facts .fact .v{font-size:18px;font-weight:700;color:var(--text);margin-top:4px;letter-spacing:.02em}
+  .facts .fact .u{font-size:9.5px;color:var(--muted);letter-spacing:.06em}
+  section.s{margin-top:56px}
+  section.s > .h{display:flex;align-items:baseline;gap:14px;padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:18px}
+  section.s > .h .num{font-family:var(--hiw-mono);font-size:11px;font-weight:700;color:var(--purple);letter-spacing:.15em}
+  section.s > .h h2{font-family:var(--hiw-mono);font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text)}
+  section.s > .h .anno{margin-left:auto;font-family:var(--hiw-mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+  table.spec{width:100%;border-collapse:collapse;font-family:var(--hiw-mono);font-size:11.5px}
+  table.spec thead th{text-align:left;padding:8px 10px;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--card2)}
+  table.spec tbody td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text2);font-size:11.5px;line-height:1.5}
+  table.spec tbody tr:last-child td{border-bottom:0}
+  table.spec td.k{color:var(--text);font-weight:500}
+  table.spec td.path{font-family:var(--hiw-mono);color:var(--purple-ink);font-size:11px}
+  table.spec td .tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.12em;padding:2px 6px;border-radius:3px;border:1px solid var(--border);background:var(--card2);color:var(--muted);margin-right:4px}
+  table.spec td .tag.llm{color:#fff;background:var(--purple);border-color:var(--purple)}
+  table.spec td .tag.det{color:var(--accent);border-color:rgba(51,107,204,.3);background:rgba(51,107,204,.06)}
+  table.spec td .tag.halt{color:var(--red);border-color:rgba(214,64,69,.3);background:rgba(214,64,69,.06)}
+  table.spec td .tag.warn{color:var(--amber);border-color:rgba(204,138,0,.3);background:rgba(204,138,0,.08)}
+  pre.code{background:#0D1B2A;color:#E6EAF2;font-family:var(--hiw-mono);font-size:11.5px;padding:16px 18px;border-radius:8px;overflow-x:auto;line-height:1.55;margin:16px 0 0}
+  pre.code .kw{color:#C8B6E8}
+  pre.code .str{color:#A8D8B9}
+  pre.code .cm{color:#7A8FA8;font-style:italic}
+  .note{font-family:var(--hiw-mono);font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.04em;line-height:1.55}
+  code.inl{font-family:var(--hiw-mono);font-size:11.5px;color:var(--purple-ink);background:var(--purple-tint);padding:1px 5px;border-radius:3px}
+</style>
+</head><body>
+<div class="opt-banner"><span>Option D · Analytical specification</span><span class="pill">system spec voice</span></div>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="spec-head">
+    <span class="crumb">§ macro-dashboard / system specification</span>
+    <h1>HOW IT WORKS</h1>
+    <div class="meta">cadence: weekly Fri 06:00 UTC + monthly 2nd Sat &nbsp;·&nbsp; output: single-file HTML, ~539 KB &nbsp;·&nbsp; runtime: GitHub Actions</div>
+    <p class="def">
+      Eleven-stage Python pipeline. Pulls from FRED, BLS, EIA, UMich, and quarterly earnings transcripts; scores divergences against a curated baseline; renders a single-file HTML briefing; gates publication on a ten-pass validator. Four agents call Claude (commentary, vision review, earnings extraction, repair diagnosis); seven are deterministic. Every LLM call is bounded by a kill-switch, cost cap, path allowlist, and append-only audit log.
+    </p>
+
+    <div class="facts">
+      <div class="fact"><div class="k">Agents</div><div class="v">11</div><div class="u">0–10</div></div>
+      <div class="fact"><div class="k">LLM-bounded</div><div class="v">4</div><div class="u">of 11</div></div>
+      <div class="fact"><div class="k">Validator passes</div><div class="v">10</div><div class="u">build-gating</div></div>
+      <div class="fact"><div class="k">Visual QA checks</div><div class="v">224</div><div class="u">DOM-based</div></div>
+      <div class="fact"><div class="k">Sources</div><div class="v">5</div><div class="u">FRED · BLS · EIA · UMich · Earnings</div></div>
+      <div class="fact"><div class="k">Audit log cap</div><div class="v">2,000</div><div class="u">lines · rolling FIFO</div></div>
+      <div class="fact"><div class="k">Output size</div><div class="v">~539</div><div class="u">KB single-file HTML</div></div>
+    </div>
+  </div>
+
+  <!-- §1 DATA SOURCES -->
+  <section class="s">
+    <div class="h"><span class="num">§ 01</span><h2>Data Sources</h2><span class="anno">collector.py · agent 1</span></div>
+    <table class="spec">
+      <thead><tr><th style="width:90px">Source</th><th>Series</th><th>Cadence</th><th>Publish lag</th><th>Fetch limit</th><th>Failure handling</th></tr></thead>
+      <tbody>
+        <tr><td class="k">FRED</td><td>CPI · PCE · NFP · UMCSENT · TDSP · GS10 · DFF · ICE BofA OAS · …</td><td>daily–monthly</td><td>1–95 days</td><td>≥24 obs per YoY series</td><td>preflight halts on 4xx</td></tr>
+        <tr><td class="k">BLS</td><td>CPI-U components · Average Hourly Earnings · CES sector payrolls</td><td>monthly</td><td>~14 days</td><td>via FRED mirror where available</td><td>str→float coercion required</td></tr>
+        <tr><td class="k">EIA</td><td>WTI · Brent · U.S. weekly petroleum supply</td><td>weekly</td><td>~7 days</td><td>EIA API key required</td><td>preflight halts on 4xx</td></tr>
+        <tr><td class="k">UMich</td><td>Consumer Sentiment (prelim → final)</td><td>monthly</td><td>~14d prelim · ~30d final</td><td>direct CSV → FRED fallback</td><td>status field disambiguates</td></tr>
+        <tr><td class="k">Earnings</td><td>JPM · BAC · WFC · GS · C transcripts (verbatim)</td><td>quarterly</td><td>~21 days</td><td>archived to <code class="inl">data/transcripts/&lt;Quarter&gt;/&lt;TICKER&gt;.txt</code></td><td>validator Pass 3c verbatim gate</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §2 PIPELINE DAG -->
+  <section class="s">
+    <div class="h"><span class="num">§ 02</span><h2>Pipeline DAG</h2><span class="anno">.github/workflows/briefing.yml</span></div>
+    <table class="spec">
+      <thead><tr><th style="width:28px">#</th><th>Module</th><th>Input</th><th>Output</th><th>Class</th><th>Halt condition</th></tr></thead>
+      <tbody>
+        <tr><td>00</td><td class="path">preflight.py</td><td>FRED series list, _models.py</td><td>—</td><td><span class="tag det">DET</span></td><td><span class="tag halt">any 4xx</span></td></tr>
+        <tr><td>01</td><td class="path">collector.py</td><td>API keys, series list</td><td>data/raw_data.json</td><td><span class="tag det">DET</span></td><td>recorded to collector_errors.json (Pass 3h)</td></tr>
+        <tr><td>02</td><td class="path">analyzer.py</td><td>raw_data.json, known_normal.json</td><td>data/signals.json</td><td><span class="tag det">DET</span></td><td>schema violation</td></tr>
+        <tr><td>03</td><td class="path">briefing_agent.py</td><td>signals.json, playbook.md §2</td><td>commentary fields in signals.json</td><td><span class="tag llm">LLM</span></td><td>guardrail kill-switch, cost cap</td></tr>
+        <tr><td>04</td><td class="path">renderer.py</td><td>signals.json, raw_data.json, bank_earnings.json</td><td>index.html (regex-patched)</td><td><span class="tag det">DET</span></td><td>silent on pattern miss</td></tr>
+        <tr><td>06</td><td class="path">validator.py</td><td>all artifacts</td><td>data/validation_report.json</td><td><span class="tag det">DET</span></td><td><span class="tag halt">critical divergence</span></td></tr>
+        <tr><td>07</td><td class="path">visual_qa.py</td><td>rendered index.html (Playwright)</td><td>DOM check report (224 checks)</td><td><span class="tag det">DET</span></td><td>style_guide.md violation</td></tr>
+        <tr><td>08</td><td class="path">visual_review.py</td><td>rendered chart screenshots</td><td>data/visual_review_report.json</td><td><span class="tag llm">LLM</span></td><td>guardrail kill-switch</td></tr>
+        <tr><td>05</td><td class="path">publisher.py</td><td>rendered index.html</td><td>Resend API send</td><td><span class="tag det">DET</span></td><td>gated by ceo_grade_verdict.json (PASS/WARN only)</td></tr>
+        <tr><td>09</td><td class="path">earnings_agent.py</td><td>earnings_calendar.json, transcripts</td><td>bank_earnings.json</td><td><span class="tag llm">LLM</span></td><td>Pass 3c verbatim gate, separate cron (Jan/Apr/Jul/Oct)</td></tr>
+        <tr><td>10</td><td class="path">repair_agent.py</td><td>validation_report.json, repair_log.md, incident history</td><td>data/incident_reports/&lt;date&gt;.md</td><td><span class="tag llm">LLM</span></td><td>observer-only; never writes code/data/layout</td></tr>
+      </tbody>
+    </table>
+    <p class="note"># DAG order: 00 → 01 → 02 → 03 → 04 → 06 → 07 → 08 → 05. Agent 10 runs <code class="inl">if: always()</code> after 06. Agent 09 runs on its own cron.</p>
+  </section>
+
+  <!-- §3 LLM SURFACE -->
+  <section class="s">
+    <div class="h"><span class="num">§ 03</span><h2>LLM Surface</h2><span class="anno">scripts/_agent_guardrails.py · scripts/_models.py</span></div>
+    <table class="spec">
+      <thead><tr><th style="width:32px">#</th><th>Agent</th><th>Model</th><th>Role</th><th>Optional</th><th>Audit channel</th></tr></thead>
+      <tbody>
+        <tr><td>03</td><td class="k">Briefing</td><td>Sonnet</td><td>2–4 sentence per-tab commentary, §2 copy rules</td><td>always-on</td><td class="path">data/agent_memory.jsonl</td></tr>
+        <tr><td>08</td><td class="k">Vision review</td><td>Sonnet multimodal</td><td>Chart-by-chart review vs style_guide.md</td><td>requires ANTHROPIC_API_KEY</td><td class="path">data/visual_review_report.json</td></tr>
+        <tr><td>09</td><td class="k">Earnings</td><td>Sonnet</td><td>Verbatim field extraction from transcripts</td><td>quarterly cron only</td><td class="path">data/agent_memory.jsonl</td></tr>
+        <tr><td>10a</td><td class="k">Repair diagnostician</td><td>Sonnet+Opus critique</td><td>Recurrence-aware finding interpretation</td><td><code class="inl">AGENT_DIAGNOSTICIAN_ENABLED=1</code></td><td class="path">data/incident_reports/</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Every call passes through <code class="inl">bounded_llm_call()</code> which enforces the four-layer guardrail before the request leaves the process:</p>
+<pre class="code"><span class="cm"># scripts/_agent_guardrails.py — semantics</span>
+<span class="kw">def</span> bounded_llm_call(agent, prompt, *, model, write_path=<span class="kw">None</span>):
+    <span class="kw">if</span> env(<span class="str">"AGENT_DISABLE_ALL"</span>) == <span class="str">"1"</span>: <span class="kw">raise</span> KillSwitch
+    <span class="kw">if</span> calls_this_run &gt;= env_int(<span class="str">"AGENT_MAX_LLM_CALLS"</span>): <span class="kw">raise</span> CostCap
+    <span class="kw">if</span> write_path <span class="kw">and</span> write_path <span class="kw">not in</span> ALLOWLIST[agent]: <span class="kw">raise</span> PathDenied
+    response = anthropic.messages.create(model=model, ...)
+    append_jsonl(<span class="str">"data/agent_memory.jsonl"</span>, audit_entry(...))   <span class="cm"># rolling cap 2000</span>
+    <span class="kw">return</span> response</pre>
+  </section>
+
+  <!-- §4 VALIDATION -->
+  <section class="s">
+    <div class="h"><span class="num">§ 04</span><h2>Validation Gates</h2><span class="anno">validator.py · ten passes · build-blocking</span></div>
+    <table class="spec">
+      <thead><tr><th style="width:50px">Pass</th><th>Asserts</th><th>Source of truth</th><th>Severity</th></tr></thead>
+      <tbody>
+        <tr><td class="k">1</td><td>Internal consistency across rendered KPIs vs underlying JSON</td><td>signals.json, index.html</td><td><span class="tag halt">critical</span></td></tr>
+        <tr><td class="k">2</td><td>Source verification: every published value traces to raw_data.json</td><td>raw_data.json</td><td><span class="tag halt">critical</span></td></tr>
+        <tr><td class="k">3</td><td>Staleness: max age vs known_normal.json publish-lag table</td><td>data/known_normal.json</td><td><span class="tag warn">warn</span></td></tr>
+        <tr><td class="k">3c</td><td>Earnings commentary verbatim against archived transcript</td><td>data/transcripts/&lt;Q&gt;/&lt;T&gt;.txt</td><td><span class="tag halt">critical</span></td></tr>
+        <tr><td class="k">3f</td><td>Schema contract for signals.json / raw_data.json</td><td>scripts schemas</td><td><span class="tag halt">critical</span></td></tr>
+        <tr><td class="k">3g</td><td>Seed drift between consecutive runs (deterministic guard)</td><td>prior snapshot</td><td><span class="tag warn">warn</span></td></tr>
+        <tr><td class="k">3h</td><td>Collector errors recorded during pull</td><td>collector_errors.json</td><td><span class="tag warn">warn</span></td></tr>
+        <tr><td class="k">3i</td><td>Cross-source agreement: FRED vs BLS for shared anchor metrics</td><td>both</td><td><span class="tag halt">critical</span></td></tr>
+        <tr><td class="k">SH</td><td>Shock tracker phase-gating (date ≥ shock date, YoY obs &gt;= 24)</td><td>renderer.update_shock_tracker</td><td><span class="tag warn">warn</span></td></tr>
+        <tr><td class="k">VQ</td><td>Visual QA + AI vision review verdict</td><td>visual_qa.py, visual_review.py</td><td><span class="tag warn">warn</span></td></tr>
+      </tbody>
+    </table>
+    <p class="note"># ceo_grade_gate.py aggregates all of the above into <code class="inl">data/ceo_grade_verdict.json</code>. Exit codes: 0=PASS/WARN, 2=FAIL, 3=SKIP, 4=internal. Publish step reads this single file.</p>
+  </section>
+
+  <!-- §5 CONTRACTS -->
+  <section class="s">
+    <div class="h"><span class="num">§ 05</span><h2>Contracts</h2><span class="anno">human-curated · machine-enforced</span></div>
+    <table class="spec">
+      <thead><tr><th>Path</th><th>Governs</th><th>Enforced by</th></tr></thead>
+      <tbody>
+        <tr><td class="path">data/playbook.md</td><td>Pipeline cadence, source publish lag, noise floors, common-cause patterns, commentary copy rules (§2)</td><td>Agent 3, validator passes 1–3, repair diagnostician</td></tr>
+        <tr><td class="path">data/known_normal.json</td><td>Machine-readable mirror: publish lag, noise floors, shock-tracker min obs, model routing</td><td>analyzer.py, validator.py</td></tr>
+        <tr><td class="path">data/style_guide.md</td><td>Layout, typography (≤14px body), color palette, spacing, cross-tab consistency</td><td>visual_qa.py (224 checks), visual_review.py</td></tr>
+        <tr><td class="path">scripts/_models.py</td><td>Single source of truth for Claude model IDs</td><td>preflight.py (validates against Anthropic /v1/models)</td></tr>
+        <tr><td class="path">METHODOLOGY.md</td><td>Indicator definitions, formulas, thresholds, confirmation logic</td><td>analyzer.py, manual review</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §6 OBSERVABILITY -->
+  <section class="s">
+    <div class="h"><span class="num">§ 06</span><h2>Observability</h2><span class="anno">artifacts written per run</span></div>
+    <table class="spec">
+      <thead><tr><th>Artifact</th><th>Writer</th><th>Retention</th><th>Inspector</th></tr></thead>
+      <tbody>
+        <tr><td class="path">data/agent_memory.jsonl</td><td>bounded_llm_call()</td><td>rolling FIFO, 2,000 lines</td><td class="path">scripts/inspect_agent_memory.py</td></tr>
+        <tr><td class="path">data/validation_report.json</td><td>validator.py</td><td>overwritten per run</td><td>read by repair_agent.py + ceo_grade_gate.py</td></tr>
+        <tr><td class="path">data/ceo_grade_verdict.json</td><td>ceo_grade_gate.py</td><td>overwritten per run</td><td>publish step CI</td></tr>
+        <tr><td class="path">data/incident_reports/&lt;date&gt;.md</td><td>repair_agent.py (Stage 10a)</td><td>append-only (one per run)</td><td>repair_log.md aggregates</td></tr>
+        <tr><td class="path">data/pipeline_version.json</td><td>version_tracker.py</td><td>append-only audit trail</td><td>manual</td></tr>
+        <tr><td class="path">data/signal_rationales.json</td><td>_signal_rationales.py (opt-in)</td><td>overwritten per run</td><td>UI consumer (separate artifact)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §7 KNOWN BEHAVIORS -->
+  <section class="s">
+    <div class="h"><span class="num">§ 07</span><h2>Known Behaviors</h2><span class="anno">gotchas · invariants</span></div>
+    <table class="spec">
+      <thead><tr><th style="width:200px">Pattern</th><th>Behavior</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td class="k">BLS values are strings</td><td>JSON returns <code class="inl">'23756.5'</code> not 23756.5</td><td><code class="inl">round(float(val))</code> at boundary</td></tr>
+        <tr><td class="k">json.dumps escapes</td><td>Produces <code class="inl">\u</code> escapes in regex replacements</td><td>Use <code class="inl">lambda m: replacement</code> in re.subn</td></tr>
+        <tr><td class="k">Renderer idempotency</td><td>Re-running on patched HTML triggers benign patch_kpi warnings</td><td>Pattern must match renderer's own JSON shape</td></tr>
+        <tr><td class="k">PCE staleness</td><td>~95 day publish lag is genuine, not a bug</td><td>known_normal.json publish_lag baseline</td></tr>
+        <tr><td class="k">UMCSENT status</td><td>Prelim (mid-month) vs final (end-of-month) carry different obs</td><td><code class="inl">status</code> field disambiguates; missing→final</td></tr>
+        <tr><td class="k">Shock-tracker fall-through</td><td>Wrong fetch count silently uses hardcoded baseline</td><td>Audit YoY phases for limit≥24 obs after edits</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</div></body></html>
