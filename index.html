@@ -5669,16 +5669,17 @@ function buildStackTab(){
       </div>
       <h1>How the Dashboard <em>thinks.</em></h1>
       <div class="fc-note" id="commentary-stack">
-        <p class="hiw-lead">An 11-stage pipeline turns five public macro feeds into a weekly macro briefing. Six of those stages are agentic — Claude does the reasoning, the system does the proving.</p>
-        <p class="hiw-lead">Every LLM call routes through the same four guardrails: a path allowlist, a per-run cost cap, an output-schema validator, and an append-only audit log. Defense-in-depth across six independent gates blocks any defect from reaching the publish surface.</p>
+        <p class="hiw-lead">A weekly read on the U.S. economy — refreshed automatically, every chart sourced, every commentary written from this week's data.</p>
+        <p class="hiw-lead">Behind this dashboard is an automated pipeline that refreshes <strong>15+ macro KPIs every Friday</strong> from FRED, BLS, BEA, EIA, UMich, and bank filings. <strong>Six AI agents</strong> write the commentary, critique the visuals, and extract executive quotes. <strong>Six independent quality gates</strong> check every run before it publishes. The whole cycle takes about four minutes — you see only the result.</p>
+        <p class="hiw-lead">Every chart shows <strong>where we are, what just changed, and why it matters</strong> — with sources and methodology one click away.</p>
       </div>
 
       <div class="stk-pills">
-        <span class="hiw-pill">11-stage pipeline</span>
-        <span class="hiw-pill agentic">🧠 6 agentic layers</span>
-        <span class="hiw-pill">89 tests</span>
-        <span class="hiw-pill">style-guide-gated</span>
-        <span class="hiw-pill">two-LLM critique</span>
+        <span class="hiw-pill">weekly auto-refresh</span>
+        <span class="hiw-pill">15+ KPIs tracked</span>
+        <span class="hiw-pill agentic">🧠 6 AI agents</span>
+        <span class="hiw-pill">6 quality gates</span>
+        <span class="hiw-pill">every chart sourced</span>
         <span class="hiw-pill">~4 min / run</span>
       </div>
     </div>
@@ -5698,28 +5699,21 @@ function buildStackTab(){
   <div class="hiw-hero-rule"></div>
 
   <section>
-    <div class="hiw-sec-hd">
-      <h2>What it does.</h2>
-      <div class="hiw-meta">
-        <span class="hiw-label">For business readers</span>
-      </div>
-    </div>
-
     <div class="hiw-purpose-row">
       <div class="hiw-purpose-card">
-        <span class="hiw-label">Audience</span>
-        <h3>Senior decision-makers.</h3>
-        <p>Built for executives, founders, and strategy or finance leads who need a current read on the U.S. macro picture without working through fifty sell-side notes a week.</p>
+        <span class="hiw-label">What it tracks</span>
+        <h3>15+ macro KPIs in one place.</h3>
+        <p>Labor, inflation, growth, credit, oil, consumer sentiment, and bank earnings — each series refreshed automatically every Friday, with prior-week, YoY, and regime comparisons baked in.</p>
       </div>
       <div class="hiw-purpose-card">
-        <span class="hiw-label">Answers</span>
-        <h3>Where we are. What just changed.</h3>
-        <p>Tracks fifteen-plus macro indicators across labor, inflation, growth, credit, oil, consumer sentiment, and bank earnings — and surfaces what shifted this week in plain language, with every chart linked to its underlying series.</p>
+        <span class="hiw-label">What it says</span>
+        <h3>What just changed, and why.</h3>
+        <p>Every KPI carries a green / amber / red regime classification against the playbook bands. Briefing-style commentary at the top of each tab is rewritten by Claude every run — no stale copy, no manual updates.</p>
       </div>
       <div class="hiw-purpose-card">
-        <span class="hiw-label">Confidence</span>
-        <h3>Numbers you can defend.</h3>
-        <p>Every datapoint sources to FRED, BLS, EIA, UMich, or quarterly bank filings. Six independent quality gates run before the page publishes; methodology and source attribution are one click away on every chart.</p>
+        <span class="hiw-label">How it's defended</span>
+        <h3>Numbers you can audit.</h3>
+        <p>Every datapoint traces back to FRED, BLS, BEA, EIA, UMich, or 10-Q filings. Every AI-generated sentence is logged to an append-only audit trail. Six quality gates block any failed run from publishing.</p>
       </div>
     </div>
   </section>
