@@ -5922,22 +5922,22 @@ function buildStackTab(){
     <div class="hiw-gd">
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_DISABLE_ALL</div>
-        <p>Kill switch. Every agentic capability short-circuits at import time — pipeline runs deterministic-only.</p>
+        <p>Set to <span class="hiw-mono">1</span> to disable every LLM call. <span class="hiw-mono">_agent_guardrails.py</span> short-circuits <span class="hiw-mono">bounded_llm_call()</span> at import. The deterministic pipeline (A0–A2, A4–A7) still runs end-to-end.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>DIAGNOSTICIAN_<wbr>ENABLED</div>
-        <p>Lets A10 write into <span class="hiw-mono">data/incident_reports/</span>. Path allowlist still enforced.</p>
+        <p>OFF: A10 runs in observer mode — read-only summary of validator findings to the run log. ON: also invokes Claude to write ranked-cause reports to <span class="hiw-mono">data/incident_reports/&lt;date&gt;.md</span>.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>EXPLAINER_<wbr>ENABLED</div>
-        <p>Enables the Signal Explainer. Schema-validated; rejected fields dropped, never substituted.</p>
+        <p>Emits one Claude-authored rationale per flagged signal to <span class="hiw-mono">data/signal_rationales.json</span>. Separate artifact — does not mutate <span class="hiw-mono">signals.json</span>; renderer is unchanged.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>EDITORIAL_<wbr>REVIEW_<wbr>ENABLED</div>
-        <p>Runs the two-LLM Editorial Review after rendering. Sonnet drafts, Opus adjudicates.</p>
+        <p>Deterministic linters (length, hedging, fabricated-numeric) run regardless. This flag adds the LLM tone + factuality pass: Sonnet audits, Opus must concur before any "critical" verdict promotes.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
     </div>
@@ -5958,27 +5958,27 @@ function buildStackTab(){
       <a class="hiw-ct-card" href="#" data-doc="style_guide">
         <span class="hiw-arrow">↗</span>
         <h3>Visual contract.</h3>
-        <p>Typography, color, spacing, component density. Validator + Visual QA both read from it.</p>
+        <p>Typography, color, spacing, chart standards. Agents 7 (DOM checks) and 8 (vision review) cite the §-section they enforce.</p>
         <div class="hiw-path">data/style_guide.md</div>
       </a>
       <a class="hiw-ct-card" href="#" data-doc="playbook">
         <span class="hiw-arrow">↗</span>
         <h3>Data + reasoning contract.</h3>
-        <p>What "normal" looks like, what triggers a watch, what triggers critical. Agents cite §X.Y when diagnosing.</p>
+        <p>Publish-lag tables, noise floors per series, common-cause patterns, forbidden recommendations. A10 cites §X.Y when justifying diagnoses; when this file and an LLM disagree, this file wins.</p>
         <div class="hiw-path">data/playbook.md</div>
       </a>
       <a class="hiw-ct-card is-new" href="#" data-doc="known_normal">
         <span class="hiw-new-mark">NEW</span>
         <span class="hiw-arrow">↗</span>
         <h3>Machine-readable normals.</h3>
-        <p>The playbook's thresholds in JSON form. When this and an LLM disagree, this file wins.</p>
+        <p>Machine-readable mirror of playbook baselines: publish lag, noise floors, shock-tracker min-obs counts, model routing. Read by collector, validator, and renderer.</p>
         <div class="hiw-path">data/known_normal.json</div>
       </a>
-      <a class="hiw-ct-card" href="#" data-doc="framework_report">
+      <a class="hiw-ct-card" href="#" data-doc="methodology">
         <span class="hiw-arrow">↗</span>
-        <h3>Framework + maturity report.</h3>
-        <p>Six-layer defense-in-depth model, current maturity, verdict from the latest gate run.</p>
-        <div class="hiw-path">docs/ · internal reference</div>
+        <h3>Indicator methodology.</h3>
+        <p>Indicator definitions. Formulas, thresholds, and confirmation logic per series. Updated whenever a threshold or rule changes.</p>
+        <div class="hiw-path">METHODOLOGY.md</div>
       </a>
     </div>
 
@@ -5986,7 +5986,7 @@ function buildStackTab(){
       <span class="hiw-cdot"></span>
       <div class="hiw-cbody">
         <strong>The net effect.</strong>
-        Every number is sourced through six independent gates. Every agentic LLM call is path-allowlisted, cost-capped, schema-validated, and written to a 2,000-entry audit log. One env-var — <span class="hiw-mono">AGENT_DISABLE_ALL=1</span> — disables the AI tier entirely.
+        Every number is sourced through six gates — preflight → smoke → validator → visual QA → vision review → editorial. Every agentic LLM call is bounded by <span class="hiw-mono">bounded_llm_call()</span>: path-allowlisted, cost-capped, written to <span class="hiw-mono">data/agent_memory.jsonl</span> (2,000-entry rolling FIFO). <span class="hiw-mono">AGENT_DISABLE_ALL=1</span> short-circuits the LLM tier entirely; the deterministic pipeline still runs.
       </div>
     </div>
   </section>
