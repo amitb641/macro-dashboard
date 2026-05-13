@@ -5657,6 +5657,23 @@ function buildStackTab(){
   #tab-stack .hiw-purpose-card p { font-size: 14px; line-height: 1.55; color: var(--text2); }
 
   #tab-stack #commentary-stack { color: var(--text2); }
+
+  /* Section 02 — LLM-only deep-dive additions */
+  #tab-stack .hiw-matrix td .hiw-why-cat { font-family: var(--hiw-mono); font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--acc2); display: block; margin-bottom: 4px; }
+  #tab-stack .hiw-matrix td .hiw-why-body { font-size: 13px; color: var(--text2); line-height: 1.55; display: block; }
+  #tab-stack .hiw-matrix td .hiw-mono-sub { display: block; font-family: var(--hiw-mono); font-size: 10px; color: var(--muted); margin-top: 4px; letter-spacing: .02em; }
+
+  /* Section 04 — Contracts: 4-card row + NEW variant */
+  #tab-stack .hiw-ct-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  #tab-stack .hiw-ct-card.is-new { border-left: 3px solid var(--purple); }
+  #tab-stack .hiw-ct-card .hiw-new-mark { position: absolute; top: 14px; right: 14px; font-family: var(--hiw-mono); font-size: 8.5px; font-weight: 700; letter-spacing: .14em; background: var(--purple-tint); color: var(--purple-ink); padding: 3px 7px; border-radius: 3px; }
+
+  /* Closing caption — replaces "What this buys you" */
+  #tab-stack .hiw-closing { margin-top: 28px; padding: 20px 24px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: flex-start; gap: 14px; box-shadow: var(--hiw-shadow); }
+  #tab-stack .hiw-closing .hiw-cdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 8px; flex-shrink: 0; }
+  #tab-stack .hiw-closing .hiw-cbody { font-size: 14px; color: var(--text2); line-height: 1.6; }
+  #tab-stack .hiw-closing .hiw-cbody strong { color: var(--text); font-weight: 700; }
+  #tab-stack .hiw-closing .hiw-cbody .hiw-mono { font-size: 12.5px; color: var(--purple-ink); }
 </style>
 
 <div class="stk-wrap">
@@ -5724,7 +5741,7 @@ function buildStackTab(){
     <div class="hiw-sec-hd">
       <h2>System map.</h2>
       <div class="hiw-meta">
-        <span class="hiw-num">01 / 06</span>
+        <span class="hiw-num">01 / 04</span>
         <span class="hiw-label">Architecture · Data · Deployment</span>
       </div>
     </div>
@@ -5834,64 +5851,57 @@ function buildStackTab(){
 
   <section>
     <div class="hiw-sec-hd">
-      <h2>Agentic operations matrix.</h2>
+      <h2>The AI tier, up close.</h2>
       <div class="hiw-meta">
-        <span class="hiw-num">02 / 06</span>
-        <span class="hiw-label">Spec sheet · Six capabilities</span>
+        <span class="hiw-num">02 / 04</span>
+        <span class="hiw-label">Six LLM capabilities · why each one needs a model</span>
       </div>
     </div>
 
     <table class="hiw-matrix">
       <thead>
         <tr>
-          <th style="width: 26%">Capability</th>
-          <th style="width: 17%">Model</th>
-          <th style="width: 22%">Mode flag</th>
-          <th style="width: 18%">Output artifact</th>
-          <th style="width: 17%">Guardrails</th>
+          <th style="width: 18%">Agent</th>
+          <th style="width: 42%">Why an LLM?</th>
+          <th style="width: 22%">Model · Flag</th>
+          <th style="width: 18%">Guardrails</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><span class="hiw-row-num">01 · A3</span><span class="hiw-cap-name">Briefing</span><span class="hiw-cap-sub">Daily commentary on macro signals</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
-          <td class="hiw-mono-cell">always-on<br/><span style="color:var(--muted);font-size:10px">briefing_agent.py</span></td>
-          <td class="hiw-mono-cell">data/signals.json</td>
+          <td><span class="hiw-row-num">A3 · Stage 02</span><span class="hiw-cap-name">Briefing</span></td>
+          <td><span class="hiw-why-cat">Synthesis</span><span class="hiw-why-body">Turns 15+ unrelated KPI deltas into a 4-sentence narrative that holds together. Composition, not lookup — no template can write a coherent week-in-review.</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on · briefing_agent.py</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
-          <td><span class="hiw-row-num">02 · A8</span><span class="hiw-cap-name">Vision Review</span><span class="hiw-cap-sub">Multimodal critique of every render</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
-          <td class="hiw-mono-cell">always-on<br/><span style="color:var(--muted);font-size:10px">visual_review.py</span></td>
-          <td class="hiw-mono-cell">data/visual_review_report.json</td>
+          <td><span class="hiw-row-num">A8 · Stage 02</span><span class="hiw-cap-name">Vision Review</span></td>
+          <td><span class="hiw-why-cat">Perception</span><span class="hiw-why-body">Reads the rendered page as a human would — catches contrast, alignment, label-noise, mis-bucketed colour issues that DOM checks can't see.</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on · visual_review.py</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
-          <td><span class="hiw-row-num">03 · A9</span><span class="hiw-cap-name">Earnings Extract</span><span class="hiw-cap-sub">Quarterly bank-transcript extraction</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
-          <td class="hiw-mono-cell">quarterly cron<br/><span style="color:var(--muted);font-size:10px">earnings_agent.py</span></td>
-          <td class="hiw-mono-cell">data/bank_earnings.json</td>
+          <td><span class="hiw-row-num">A9 · Stage 02</span><span class="hiw-cap-name">Earnings</span></td>
+          <td><span class="hiw-why-cat">Extraction</span><span class="hiw-why-body">Pulls verbatim CEO/CFO quotes from unstructured 200-page transcripts. Regex fails; an LLM understands the question being answered.</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">quarterly cron · earnings_agent.py</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
-          <td><span class="hiw-row-num">04 · A10</span><span class="hiw-cap-name">Repair Diagnostician</span><span class="hiw-cap-sub">Memory-aware incident root-cause</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
-          <td class="hiw-mono-cell">AGENT_DIAGNOSTICIAN_ENABLED=1</td>
-          <td class="hiw-mono-cell">data/incident_reports/*.md</td>
+          <td><span class="hiw-row-num">A10 · Stage 03</span><span class="hiw-cap-name">Diagnostician</span></td>
+          <td><span class="hiw-why-cat">Diagnosis</span><span class="hiw-why-body">Root-causes incidents against the playbook and prior runs. Reasons about cause vs. correlation — the audit log is too long for a rules table.</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">AGENT_DIAGNOSTICIAN_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🔒 Allowlist</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
-          <td><span class="hiw-row-num">05 · Phase 2</span><span class="hiw-cap-name">Signal Explainer</span><span class="hiw-cap-sub">Plain-language rationale per signal</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6</td>
-          <td class="hiw-mono-cell">AGENT_EXPLAINER_ENABLED=1</td>
-          <td class="hiw-mono-cell">data/signal_rationales.json</td>
+          <td><span class="hiw-row-num">Phase 2</span><span class="hiw-cap-name">Signal Explainer</span></td>
+          <td><span class="hiw-why-cat">Translation</span><span class="hiw-why-body">Converts a numeric signal score into a plain-language rationale. Schema-validated output — rejected fields are dropped, never substituted.</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">AGENT_EXPLAINER_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
-          <td><span class="hiw-row-num">06 · Phase 2.5</span><span class="hiw-cap-name">Editorial Review</span><span class="hiw-cap-sub">Two-LLM critique of finished briefing</span></td>
-          <td class="hiw-mono-cell">sonnet + opus</td>
-          <td class="hiw-mono-cell">AGENT_EDITORIAL_REVIEW_ENABLED=1</td>
-          <td class="hiw-mono-cell">data/editorial_report.json</td>
+          <td><span class="hiw-row-num">Phase 2.5</span><span class="hiw-cap-name">Editorial Review</span></td>
+          <td><span class="hiw-why-cat">Critique</span><span class="hiw-why-body">Two-LLM adversarial check on the finished briefing. Sonnet drafts the critique, Opus adjudicates — catches the kind of error a single model would miss.</span></td>
+          <td class="hiw-mono-cell">sonnet + opus<span class="hiw-mono-sub">AGENT_EDITORIAL_REVIEW_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
       </tbody>
@@ -5902,66 +5912,9 @@ function buildStackTab(){
 
   <section>
     <div class="hiw-sec-hd">
-      <h2>Pipeline agent grid.</h2>
-      <div class="hiw-meta">
-        <span class="hiw-num">03 / 06</span>
-        <span class="hiw-label">Technical reference · 11 agents</span>
-      </div>
-    </div>
-
-    <div class="ma-trigger">
-      <div class="ma-sources">
-        <div class="ma-source"><div class="ma-source-icon">01 / SOURCE</div><div class="ma-source-name">FRED</div><div class="ma-source-sub">macro series · daily</div></div>
-        <div class="ma-source"><div class="ma-source-icon">02 / SOURCE</div><div class="ma-source-name">BLS</div><div class="ma-source-sub">labor · monthly</div></div>
-        <div class="ma-source"><div class="ma-source-icon">03 / SOURCE</div><div class="ma-source-name">EIA</div><div class="ma-source-sub">energy · weekly</div></div>
-        <div class="ma-source"><div class="ma-source-icon">04 / SOURCE</div><div class="ma-source-name">UMich</div><div class="ma-source-sub">sentiment · monthly</div></div>
-        <div class="ma-source"><div class="ma-source-icon">05 / SOURCE</div><div class="ma-source-name">Earnings</div><div class="ma-source-sub">bank transcripts · quarterly</div></div>
-      </div>
-
-      <div class="ma-vconn">
-        <div class="ma-vline"></div>
-        <div class="ma-vconn-lbl">INGEST → PIPELINE</div>
-        <div class="ma-vline"></div>
-      </div>
-
-      <div class="ma-agents">
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A0 / PREFLIGHT</span><span class="ma-agent-file">preflight.py</span></div><div class="ma-agent-name">Preflight</div><div class="ma-agent-body"><p class="ma-agent-desc">Verifies the run environment, paths, and required env vars before any agent is allowed to start.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">2 checks</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A1 / COLLECTOR</span><span class="ma-agent-file">collector.py</span></div><div class="ma-agent-name">Collector</div><div class="ma-agent-body"><p class="ma-agent-desc">Pulls latest series from FRED, BLS, EIA, UMich; normalises units, frequency, and revision history.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">5 sources</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A2 / ANALYZER</span><span class="ma-agent-file">analyzer.py</span></div><div class="ma-agent-name">Analyzer</div><div class="ma-agent-body"><p class="ma-agent-desc">Computes signal scores, regime classifications, and YoY/MoM deltas against the playbook bands.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">pure math</span></div></div></div>
-        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A3 / BRIEFING</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">briefing_agent.py</span></div><div class="ma-agent-name">Briefing</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet writes the weekly commentary block from the analyzer's signals.json.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">always-on</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A4 / RENDERER</span><span class="ma-agent-file">renderer.py</span></div><div class="ma-agent-name">Renderer</div><div class="ma-agent-body"><p class="ma-agent-desc">Materialises the single-page index.html from signal data, the briefing, and component templates.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">templated</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A5 / PUBLISHER</span><span class="ma-agent-file">publisher.py</span></div><div class="ma-agent-name">Publisher</div><div class="ma-agent-body"><p class="ma-agent-desc">Commits the build artifacts to the publish branch only after the publish gate returns PASS.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">gated</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A6 / VALIDATOR</span><span class="ma-agent-file">validator.py</span></div><div class="ma-agent-name">Validator</div><div class="ma-agent-body"><p class="ma-agent-desc">Ten validation passes, 200+ assertions on signal coverage, schema, freshness, and band consistency.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">10 passes</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A7 / VISUAL QA</span><span class="ma-agent-file">visual_qa.py</span></div><div class="ma-agent-name">Visual QA</div><div class="ma-agent-body"><p class="ma-agent-desc">Playwright-driven DOM checks: commentary placement, color usage, label presence, contrast targets.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">~230 checks</span></div></div></div>
-        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A8 / VISION REVIEW</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">visual_review.py</span></div><div class="ma-agent-name">Vision Review</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet (vision) critiques the rendered page like a senior designer.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">multimodal</span></div></div></div>
-        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A9 / EARNINGS</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">earnings_agent.py</span></div><div class="ma-agent-name">Earnings</div><div class="ma-agent-body"><p class="ma-agent-desc">Agentic — Claude Sonnet extracts verbatim CEO/CFO quotes from quarterly bank transcripts.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">quarterly</span></div></div></div>
-        <div class="ma-agent llm"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">A10 / DIAGNOSTICIAN</span><span class="ma-agent-icon">🧠</span><span class="ma-agent-file">diagnostician.py</span></div><div class="ma-agent-name">Diagnostician</div><div class="ma-agent-body"><p class="ma-agent-desc">Memory-aware diagnostician — reads the audit log, hypothesises root cause, writes an incident report.</p><div class="ma-agent-io"><span class="ma-agent-out llm">🧠 Agentic</span><span class="ma-agent-out">flagged</span></div></div></div>
-        <div class="ma-agent"><span class="ma-agent-accent"></span><div class="ma-agent-header"><span class="ma-agent-num">GATE / PUBLISH</span><span class="ma-agent-file">ceo_grade_gate.py</span></div><div class="ma-agent-name">Publish Gate</div><div class="ma-agent-body"><p class="ma-agent-desc">Final verdict over every preceding layer. PASS publishes; WARN annotates; FAIL holds the build.</p><div class="ma-agent-io"><span class="ma-agent-out det">Deterministic</span><span class="ma-agent-out">PASS / WARN / FAIL</span></div></div></div>
-      </div>
-
-      <div class="ma-arrows">
-        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-        <div class="ma-arrow-cell"><div class="ma-arrow-line"></div></div>
-      </div>
-
-      <div class="ma-outputs">
-        <div class="ma-output"><div class="ma-output-icon">OUT / 01</div><div class="ma-output-title">signals.json</div><div class="ma-output-sub">analyzer scores + briefing commentary</div></div>
-        <div class="ma-output"><div class="ma-output-icon">OUT / 02</div><div class="ma-output-title">index.html</div><div class="ma-output-sub">rendered single-page dashboard</div></div>
-        <div class="ma-output"><div class="ma-output-icon">OUT / 03</div><div class="ma-output-title">visual_review_report.json</div><div class="ma-output-sub">multimodal critique by A8</div></div>
-        <div class="ma-output"><div class="ma-output-icon">OUT / 04</div><div class="ma-output-title">editorial_report.json</div><div class="ma-output-sub">two-LLM verdict on the briefing</div></div>
-      </div>
-    </div>
-  </section>
-
-  <div class="hiw-hr"></div>
-
-  <section>
-    <div class="hiw-sec-hd">
       <h2>Guardrails — the four feature flags.</h2>
       <div class="hiw-meta">
-        <span class="hiw-num">04 / 06</span>
+        <span class="hiw-num">03 / 04</span>
         <span class="hiw-label">Operator controls · default OFF</span>
       </div>
     </div>
@@ -5969,22 +5922,22 @@ function buildStackTab(){
     <div class="hiw-gd">
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_DISABLE_ALL</div>
-        <p>Kill switch. When set, every agentic capability is short-circuited at import time and the pipeline runs deterministic-only.</p>
+        <p>Kill switch. Every agentic capability short-circuits at import time — pipeline runs deterministic-only.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>DIAGNOSTICIAN_<wbr>ENABLED</div>
-        <p>Allows Agent 10 to write into <span class="hiw-mono">data/incident_reports/</span>. Path allowlist enforced regardless.</p>
+        <p>Lets A10 write into <span class="hiw-mono">data/incident_reports/</span>. Path allowlist still enforced.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>EXPLAINER_<wbr>ENABLED</div>
-        <p>Enables the Signal Explainer phase. Output is schema-validated; rejected fields are dropped, never substituted.</p>
+        <p>Enables the Signal Explainer. Schema-validated; rejected fields dropped, never substituted.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>EDITORIAL_<wbr>REVIEW_<wbr>ENABLED</div>
-        <p>Runs the two-LLM Editorial Review after rendering. Sonnet drafts the critique; Opus adjudicates it.</p>
+        <p>Runs the two-LLM Editorial Review after rendering. Sonnet drafts, Opus adjudicates.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
     </div>
@@ -5996,56 +5949,44 @@ function buildStackTab(){
     <div class="hiw-sec-hd">
       <h2>Source-of-truth contracts.</h2>
       <div class="hiw-meta">
-        <span class="hiw-num">05 / 06</span>
-        <span class="hiw-label">Three docs, no exceptions</span>
+        <span class="hiw-num">04 / 04</span>
+        <span class="hiw-label">Four docs · no exceptions</span>
       </div>
     </div>
 
-    <div class="hiw-ct-row">
+    <div class="hiw-ct-row cols-4">
       <a class="hiw-ct-card" href="#" data-doc="style_guide">
         <span class="hiw-arrow">↗</span>
         <h3>Visual contract.</h3>
-        <p>Typography, color, spacing, component density. The validator and Visual QA both read from it.</p>
+        <p>Typography, color, spacing, component density. Validator + Visual QA both read from it.</p>
         <div class="hiw-path">data/style_guide.md</div>
       </a>
       <a class="hiw-ct-card" href="#" data-doc="playbook">
         <span class="hiw-arrow">↗</span>
         <h3>Data + reasoning contract.</h3>
-        <p>What "normal" looks like in each macro band, what triggers a watch, what triggers critical.</p>
+        <p>What "normal" looks like, what triggers a watch, what triggers critical. Agents cite §X.Y when diagnosing.</p>
         <div class="hiw-path">data/playbook.md</div>
+      </a>
+      <a class="hiw-ct-card is-new" href="#" data-doc="known_normal">
+        <span class="hiw-new-mark">NEW</span>
+        <span class="hiw-arrow">↗</span>
+        <h3>Machine-readable normals.</h3>
+        <p>The playbook's thresholds in JSON form. When this and an LLM disagree, this file wins.</p>
+        <div class="hiw-path">data/known_normal.json</div>
       </a>
       <a class="hiw-ct-card" href="#" data-doc="framework_report">
         <span class="hiw-arrow">↗</span>
         <h3>Framework + maturity report.</h3>
-        <p>The six-layer defense-in-depth model, current maturity, and the verdict from the latest gate run.</p>
+        <p>Six-layer defense-in-depth model, current maturity, verdict from the latest gate run.</p>
         <div class="hiw-path">docs/ · internal reference</div>
       </a>
     </div>
-  </section>
 
-  <div class="hiw-hr"></div>
-
-  <section>
-    <div class="hiw-sec-hd">
-      <h2>What this buys you.</h2>
-      <div class="hiw-meta">
-        <span class="hiw-num">06 / 06</span>
-        <span class="hiw-label">Three guarantees</span>
-      </div>
-    </div>
-
-    <div class="hiw-oc-row">
-      <div class="hiw-oc-card">
-        <span class="hiw-nmark">①</span>
-        <p>Six independent gates block any defect from reaching the publish surface — preflight, smoke, validator, visual QA, vision review, editorial.</p>
-      </div>
-      <div class="hiw-oc-card">
-        <span class="hiw-nmark">②</span>
-        <p>Every agentic LLM call is path-allowlisted, cost-capped, schema-validated, and written to a 2000-entry audit log.</p>
-      </div>
-      <div class="hiw-oc-card">
-        <span class="hiw-nmark">③</span>
-        <p>One env-var — <span class="hiw-mono" style="font-size:13px;color:var(--purple-ink)">AGENT_DISABLE_ALL=1</span> — disables every agentic feature in a single deploy.</p>
+    <div class="hiw-closing">
+      <span class="hiw-cdot"></span>
+      <div class="hiw-cbody">
+        <strong>The net effect.</strong>
+        Every number is sourced through six independent gates. Every agentic LLM call is path-allowlisted, cost-capped, schema-validated, and written to a 2,000-entry audit log. One env-var — <span class="hiw-mono">AGENT_DISABLE_ALL=1</span> — disables the AI tier entirely.
       </div>
     </div>
   </section>
