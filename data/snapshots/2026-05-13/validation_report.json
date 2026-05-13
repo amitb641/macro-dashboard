@@ -1,18 +1,18 @@
 {
-  "validated_at": "2026-05-10T14:58:56.960288Z",
+  "validated_at": "2026-05-13T00:48:30.405902Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 481,
-    "passed": 470,
-    "failed": 11,
+    "total_checks": 512,
+    "passed": 498,
+    "failed": 14,
     "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
     {
       "check": "CPI headline YoY (latest)",
-      "html_value": 3.3,
-      "source_value": 3.3,
+      "html_value": 3.8,
+      "source_value": 3.8,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -20,8 +20,8 @@
     },
     {
       "check": "CPI core YoY (latest)",
-      "html_value": 2.6,
-      "source_value": 2.6,
+      "html_value": 2.7,
+      "source_value": 2.7,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -616,8 +616,8 @@
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "raw_data_value": 330.293,
-      "fresh_api_value": 330.293,
+      "raw_data_value": 332.407,
+      "fresh_api_value": 332.407,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -625,8 +625,8 @@
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "raw_data_value": 334.165,
-      "fresh_api_value": 334.165,
+      "raw_data_value": 335.423,
+      "fresh_api_value": 335.423,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.41,
-      "fresh_api_value": 4.41,
+      "raw_data_value": 4.42,
+      "fresh_api_value": 4.42,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -700,23 +700,23 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 39,
+      "age_days": 42,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: cpi_all",
-      "latest_date": "2026-03-01",
-      "age_days": 70,
+      "latest_date": "2026-04-01",
+      "age_days": 42,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: cpi_core",
-      "latest_date": "2026-03-01",
-      "age_days": 70,
+      "latest_date": "2026-04-01",
+      "age_days": 42,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 70,
+      "age_days": 73,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 70,
+      "age_days": 73,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,7 +740,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 39,
+      "age_days": 42,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -748,7 +748,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 98,
+      "age_days": 101,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -756,7 +756,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-07",
-      "age_days": 3,
+      "age_days": 6,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 9,
+      "age_days": 12,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-10T14:57:54.856682Z",
+      "collected_at": "2026-05-13T00:46:41.118131Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -812,8 +812,8 @@
     },
     {
       "check": "SHOCK_TRACKER[1] Transport & Freight Costs status consistent with MMA delta",
-      "status": "not_yet",
-      "post_minus_pre_pp": 0.4,
+      "status": "confirmed",
+      "post_minus_pre_pp": 1.7,
       "severity": "ok",
       "pass": true
     },
@@ -826,7 +826,7 @@
     {
       "check": "SHOCK_TRACKER[2] CPI Energy Prints status consistent with MMA delta",
       "status": "confirmed",
-      "post_minus_pre_pp": 238.9,
+      "post_minus_pre_pp": 50.4,
       "severity": "ok",
       "pass": true
     },
@@ -839,7 +839,7 @@
     {
       "check": "SHOCK_TRACKER[3] Food & Services Inflation status consistent with MMA delta",
       "status": "not_yet",
-      "post_minus_pre_pp": -1.3,
+      "post_minus_pre_pp": -1.4,
       "severity": "ok",
       "pass": true
     },
@@ -872,11 +872,11 @@
     {
       "check": "CPI by Category \u2014 MoM Change: title months match CPI_CAT_MOM keys",
       "title_months": [
-        "feb",
+        "apr",
         "mar"
       ],
       "data_keys": [
-        "feb",
+        "apr",
         "mar"
       ],
       "severity": "ok",
@@ -884,18 +884,18 @@
     },
     {
       "check": "CPI by Category \u2014 MoM Change: prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Mar'26",
       "chips_found": [
+        "Apr'26",
         "Mar'26",
-        "Feb'26",
+        "Apr'26",
         "Mar'26",
-        "Feb'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
         "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26",
-        "Mar'26",
-        "Feb'26"
+        "Apr'26",
+        "Mar'26"
       ],
       "severity": "ok",
       "pass": true
@@ -1006,10 +1006,10 @@
     },
     {
       "check": "CPI YoY latest (%): surfaces agree within \u00b10.15 (ref: CPI_MONTHLY.headline[-1])",
-      "reference": 3.3,
+      "reference": 3.8,
       "surfaces": {
-        "CPI_MONTHLY.headline[-1]": 3.3,
-        "KPIS CPI YoY": 3.3
+        "CPI_MONTHLY.headline[-1]": 3.8,
+        "KPIS CPI YoY": 3.8
       },
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.41,
+      "reference": 4.42,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.41,
-        "data[\"dgs10\"]": 4.41
+        "KPIS 10Y Treasury": 4.42,
+        "data[\"dgs10\"]": 4.42
       },
       "severity": "ok",
       "pass": true
@@ -1790,6 +1790,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Jobs \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Jobs \u2014 Panel \"\ud83d\udccb Jobs Market Commentary \u2014 2025 & 2026 O\" has title",
       "severity": "ok",
       "pass": true,
@@ -1874,6 +1892,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Unemployment \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Unemployment \u2014 Panel \"\ud83d\udc77 Unemployment Commentary \u2014 Trends & Ris\" has title",
       "severity": "ok",
       "pass": true,
@@ -1952,6 +1988,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Wages \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Wages \u2014 Panel \"\ud83d\udcb5 Wage Growth Commentary \u2014 Nominal vs Re\" has title",
       "severity": "ok",
       "pass": true,
@@ -2024,6 +2078,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: CPI \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: CPI \u2014 Panel \"\ud83d\uded2 CPI Commentary \u2014 Inflation Trajectory \" has title",
       "severity": "ok",
       "pass": true,
@@ -2036,7 +2108,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"CPI by Category \u2014 MoM Change (Mar'26 vs \" has title",
+      "check": "Visual: CPI \u2014 Panel \"CPI by Category \u2014 MoM Change (Apr'26 vs \" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2138,6 +2210,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Consumer & PCE \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Consumer & PCE \u2014 Panel \"\ud83d\udcb3 Consumer & PCE Commentary \u2014 Spending H\" has title",
       "severity": "ok",
       "pass": true,
@@ -2234,6 +2324,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Rates & Yields \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Rates & Yields \u2014 Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
       "severity": "ok",
       "pass": true,
@@ -2306,6 +2414,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: Credit \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Credit \u2014 Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
       "severity": "ok",
       "pass": true,
@@ -2361,6 +2487,24 @@
     },
     {
       "check": "Visual: Banking \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2433,6 +2577,24 @@
     },
     {
       "check": "Visual: Housing \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2517,6 +2679,24 @@
     },
     {
       "check": "Visual: Oil \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2630,25 +2810,13 @@
       "detail": ""
     },
     {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcca GDP\" has title",
+      "check": "Visual: Dashboard \u2014 Commentary sentence count in [2,4]",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udccb Jobs\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udc77 Unemp\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcb5 Wages\" has title",
+      "check": "Visual: Dashboard \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -3230,5 +3398,40 @@
       "detail": ""
     }
   ],
-  "visual_review": []
+  "visual_review": [],
+  "cross_source": [
+    {
+      "check": "Cross-source: unrate (FRED vs BLS)",
+      "pass": false,
+      "severity": "warning",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4,
+      "diff": 0.3,
+      "tol": 0.2,
+      "note": "FRED 4.3 vs BLS 4 (\u0394=0.3000, tol=0.2000). One side may be stale or revised."
+    },
+    {
+      "check": "Cross-source: cpi_all (FRED vs BLS)",
+      "pass": false,
+      "severity": "warning",
+      "metric": "cpi_all",
+      "fred": 332.407,
+      "bls": 333,
+      "diff": 0.593,
+      "tol": 0.333,
+      "note": "FRED 332.407 vs BLS 333 (\u0394=0.5930, tol=0.3330). One side may be stale or revised."
+    },
+    {
+      "check": "Cross-source: core_cpi (FRED vs BLS)",
+      "pass": false,
+      "severity": "warning",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 336,
+      "diff": 0.577,
+      "tol": 0.336,
+      "note": "FRED 335.423 vs BLS 336 (\u0394=0.5770, tol=0.3360). One side may be stale or revised."
+    }
+  ]
 }

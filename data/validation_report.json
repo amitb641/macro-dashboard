@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-05-12T21:48:49.362711Z",
+  "validated_at": "2026-05-13T00:48:30.405902Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 514,
-    "passed": 500,
+    "total_checks": 512,
+    "passed": 498,
     "failed": 14,
     "skipped": 1,
     "critical_divergences": 0
@@ -700,7 +700,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 41,
+      "age_days": 42,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -708,7 +708,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-04-01",
-      "age_days": 41,
+      "age_days": 42,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-04-01",
-      "age_days": 41,
+      "age_days": 42,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 72,
+      "age_days": 73,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 72,
+      "age_days": 73,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,7 +740,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 41,
+      "age_days": 42,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -748,7 +748,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 100,
+      "age_days": 101,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -756,7 +756,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-07",
-      "age_days": 5,
+      "age_days": 6,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 11,
+      "age_days": 12,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-12T21:46:55.629201Z",
+      "collected_at": "2026-05-13T00:46:41.118131Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -2810,25 +2810,13 @@
       "detail": ""
     },
     {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcca GDP\" has title",
+      "check": "Visual: Dashboard \u2014 Commentary sentence count in [2,4]",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udccb Jobs\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udc77 Unemp\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Dashboard \u2014 Panel \"\ud83d\udcb5 Wages\" has title",
+      "check": "Visual: Dashboard \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
       "detail": ""

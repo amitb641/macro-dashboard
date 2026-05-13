@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-05-12T21:48:49.358288Z",
+  "checked_at": "2026-05-13T00:48:30.400959Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 328,
-    "passed": 328,
+    "total_checks": 326,
+    "passed": 326,
     "failed": 0,
     "js_errors": 0,
     "console_errors": 0
@@ -1381,25 +1381,13 @@
     },
     {
       "category": "Dashboard",
-      "check": "Panel \"\ud83d\udcca GDP\" has title",
+      "check": "Commentary sentence count in [2,4]",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Dashboard",
-      "check": "Panel \"\ud83d\udccb Jobs\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83d\udc77 Unemp\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Panel \"\ud83d\udcb5 Wages\" has title",
+      "check": "Commentary color matches palette",
       "pass": true,
       "severity": "ok"
     },
