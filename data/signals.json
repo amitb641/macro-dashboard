@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-05-13T20:48:59.695049Z",
+  "analyzed_at": "2026-05-13T21:40:21.635734Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 1,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.64,
     "dgs2": 4.0,
@@ -46,7 +46,7 @@
     },
     "dgs10": {
       "value": 4.46,
-      "delta": 0.04,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -95,9 +95,9 @@
     },
     "wti": {
       "value": 105.78,
-      "delta": -3.98,
-      "direction": "falling",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "mortgage30": {
@@ -144,28 +144,28 @@
     },
     "dgs2": {
       "value": 4.0,
-      "delta": 0.05,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 4.12,
-      "delta": 0.05,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 5.03,
-      "delta": 0.05,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 46,
-      "delta": -1,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -207,7 +207,7 @@
     },
     "brent": {
       "value": 111.37,
-      "delta": -6.89,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,12 +241,6 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "wti",
-      "line": "wti: 105.78 (\u25bc3.98 vs prior) [ALERT]",
-      "alert": "alert"
-    }
-  ],
+  "headlines": [],
   "raw_errors": []
 }
