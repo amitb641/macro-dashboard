@@ -1559,6 +1559,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <!-- ══ GDP ══ -->
 <div class="tab-panel" id="tab-gdp">
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">📈 GDP Commentary — 2025 Growth &amp; 2026 Outlook</div>
+    <div class="fc-note" id="commentary-gdp">Real GDP grew 2.1% in 2025, a meaningful slowdown from 3.1% in 2024 and the weakest annual print since 2022. Nominal growth of 5.1% YoY masks a price-led component (deflator +3.0%) that is increasingly squeezing real output. The 2026F consensus range of 1.5–2.2% reflects a narrow path to soft landing, with tariff drag and oil-shock transmission as the two binding downside risks. Government is the only major sector with a negative 2025 contribution (−0.6%); residential real estate has begun to recover (+2.1%) while consumer-facing sectors are flat to mildly positive.</div>
+  </div>
   <div class="metric-row" id="gdp-metrics"></div>
   <p class="src vintage-note" id="gdp-vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
   <div class="sort-row">
@@ -1584,12 +1588,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ UNEMPLOYMENT ══ -->
 <div class="tab-panel" id="tab-unemp">
 
-  <div class="metric-row" id="unemp-metrics"></div>
-
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">👷 Unemployment Commentary — Trends &amp; Risk Factors</div>
     <div class="fc-note" id="commentary-unemp">U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% — a 190bp spread over U-3 — signals significant slack in hours and involuntary part-time work that the headline number obscures. This breadth of labor market weakness is inconsistent with a soft-landing narrative and points to genuine demand destruction in the jobs market.</div>
   </div>
+
+  <div class="metric-row" id="unemp-metrics"></div>
 
   <!-- Row 1: Monthly Rate (left) | Sector MoM (right) -->
   <div class="two-up">
@@ -1928,7 +1932,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <!-- ══ BANK EARNINGS ══ -->
 <div class="tab-panel" id="tab-banks">
-  <div class="fc-note" id="commentary-banks">Credit card delinquency at 2.9% is a direct stress indicator for consumer lending books and is trending in the wrong direction given the 4.3% unemployment rate and near-zero real wage growth. Net interest income should remain supported by the 10Y-2Y spread at 47bp, but rising loss provisions for consumer credit will increasingly offset NII tailwinds in bank earnings. Banks with high consumer credit card and auto loan exposure face a deteriorating credit quality outlook that the current spread environment is not compensating for.</div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">🏦 Banks Commentary — Earnings, NII &amp; Credit Quality</div>
+    <div class="fc-note" id="commentary-banks">Credit card delinquency at 2.9% is a direct stress indicator for consumer lending books and is trending in the wrong direction given the 4.3% unemployment rate and near-zero real wage growth. Net interest income should remain supported by the 10Y-2Y spread at 47bp, but rising loss provisions for consumer credit will increasingly offset NII tailwinds in bank earnings. Banks with high consumer credit card and auto loan exposure face a deteriorating credit quality outlook that the current spread environment is not compensating for.</div>
+  </div>
   <div class="metric-row" id="bank-metrics"></div>
   <div class="panel">
     <div class="panel-title">Big 9 Banks — Q1 2026 Earnings Comparison</div>
@@ -2010,9 +2017,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ OIL MARKETS ══ -->
 <div class="tab-panel" id="tab-oil">
 
-  <div class="metric-row" id="oil-metrics"></div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">🛢 Oil Commentary — Supply Shock &amp; Macro Transmission</div>
+    <div class="fc-note" id="commentary-oil">WTI at $109.8 and Brent at $118.3 represent an acute supply shock that functions as a regressive tax on consumers and a margin headwind for corporate America simultaneously. At these price levels, the macro transmission is unambiguously negative: energy costs are re-inflating headline CPI and PCE, compressing consumer discretionary spending, and raising input costs across manufacturing and logistics. This oil shock is the single greatest threat to a soft landing and the primary reason risk is rated HIGH.</div>
+  </div>
 
-  <div class="fc-note" id="commentary-oil" style="margin-bottom:12px">WTI at $109.8 and Brent at $118.3 represent an acute supply shock that functions as a regressive tax on consumers and a margin headwind for corporate America simultaneously. At these price levels, the macro transmission is unambiguously negative: energy costs are re-inflating headline CPI and PCE, compressing consumer discretionary spending, and raising input costs across manufacturing and logistics. This oil shock is the single greatest threat to a soft landing and the primary reason risk is rated HIGH.</div>
+  <div class="metric-row" id="oil-metrics"></div>
 
   <!-- SECTION 1: Price & Supply -->
   <div class="stk-section-title" style="margin-top:4px">📈 Section 1 — Price &amp; Supply</div>
@@ -2085,7 +2095,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 </div>
 <!-- ══ CREDIT CYCLE ══ -->
 <div class="tab-panel" id="tab-credit">
-  <div class="fc-note" id="commentary-credit">IG OAS at 78bp remains historically tight and reflects a market that has not yet priced the deteriorating macro backdrop — this is a complacency risk, not a green light. HY OAS at 279bp is wider but still well below levels consistent with recession conditions (typically 500bp+), suggesting high yield is also mispriced relative to the unemployment and growth trajectory. A repricing of credit risk, particularly in energy-cost-sensitive sectors and highly leveraged consumer-facing businesses, remains the key tail risk.</div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">📉 Credit Commentary — Spread Complacency &amp; Tail Risk</div>
+    <div class="fc-note" id="commentary-credit">IG OAS at 78bp remains historically tight and reflects a market that has not yet priced the deteriorating macro backdrop — this is a complacency risk, not a green light. HY OAS at 279bp is wider but still well below levels consistent with recession conditions (typically 500bp+), suggesting high yield is also mispriced relative to the unemployment and growth trajectory. A repricing of credit risk, particularly in energy-cost-sensitive sectors and highly leveraged consumer-facing businesses, remains the key tail risk.</div>
+  </div>
   <div class="metric-row" id="credit-metrics"></div>
 
   <div class="two-up">
@@ -2257,7 +2270,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <!-- ══ YIELD CURVE & FED ══ -->
 <div class="tab-panel" id="tab-yield">
-  <div class="fc-note" id="commentary-yield" style="margin-bottom:14px">The 10Y-2Y spread at 47bp has re-steepened from prior inversion, a pattern that historically accompanies the transition from recession risk pricing to recession onset — this is not a benign signal. The 10Y at 4.42% prices in an economy that can absorb current rates, but that assumption is under stress with NFP at 115K and oil-driven inflation re-accelerating. The Fed Funds rate at 3.64% leaves real rates modestly positive, keeping the Fed effectively on hold with a hawkish bias as long as Core PCE stays above 3%.</div>
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">🏛 Fed Rates Commentary — Policy Stance &amp; Term Structure</div>
+    <div class="fc-note" id="commentary-yield">The 10Y-2Y spread at 47bp has re-steepened from prior inversion, a pattern that historically accompanies the transition from recession risk pricing to recession onset — this is not a benign signal. The 10Y at 4.42% prices in an economy that can absorb current rates, but that assumption is under stress with NFP at 115K and oil-driven inflation re-accelerating. The Fed Funds rate at 3.64% leaves real rates modestly positive, keeping the Fed effectively on hold with a hawkish bias as long as Core PCE stays above 3%.</div>
+  </div>
   <div class="metric-row" id="yield-metrics"></div>
 
   <!-- Row 1: FFR chart full-width -->
