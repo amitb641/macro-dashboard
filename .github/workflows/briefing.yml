@@ -155,10 +155,20 @@ jobs:
 
       - name: Agent 8 — Visual Review (Claude vision)
         id: visual_review
-        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        # NOTE: cannot use `if: secrets.X != ''` at step level — the
+        # `secrets` context is not available in step-level if-expressions
+        # and triggers a workflow-startup error ("workflow file issue",
+        # 0 jobs). Instead, gate inside the run: script and fall through
+        # cleanly when the key is absent (continue-on-error catches any
+        # actual script failure).
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python scripts/visual_review.py
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY not set — skipping visual_review."
+            exit 0
+          fi
+          python scripts/visual_review.py
         continue-on-error: true
 
       - name: Editorial Review (deterministic linters, LLM tone optional)
