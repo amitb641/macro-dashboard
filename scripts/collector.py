@@ -35,6 +35,51 @@ OUT_FILE = ROOT / 'data' / 'raw_data.json'
 errors = []
 
 
+# ── B6.2: Per-observation provenance envelope ─────────────────────────
+# Every obs dict carries:
+#   date           — the observation's reporting date (legacy)
+#   value          — float value (legacy)
+#   source         — short attribution string, e.g. 'FRED:UNRATE',
+#                    'ALFRED:UNRATE@2026-01-15', 'UMich:tbcics.csv',
+#                    'EIA:RWTC'. Lets validator Pass 3i pin which API
+#                    a given number came from when FRED and BLS publish
+#                    overlapping series.
+#   fetched_at     — ISO 8601 UTC of when collector recorded it.
+# Optional:
+#   status                 — 'preliminary' / 'final' (UMich)
+#   carried_forward_from   — ISO 8601 UTC of a later run that reused
+#                             this obs without refetching (so a stale
+#                             obs is identifiable from the dict alone,
+#                             not just by inspecting collected_at on
+#                             the outer envelope).
+# Back-compat: legacy {date,value} keys preserved; downstream code that
+# only reads those two keys is unaffected.
+def _envelope(date, value, source, **extra):
+    obs = {'date': date, 'value': value, 'source': source,
+           'fetched_at': datetime.datetime.utcnow().isoformat() + 'Z'}
+    for k, v in extra.items():
+        if v is not None:
+            obs[k] = v
+    return obs
+
+
+def _carry_forward(prior_series, this_run_ts):
+    """Stamp every dict in `prior_series` with carried_forward_from so
+    a downstream consumer can tell a reused obs apart from a fresh one
+    without cross-referencing the run's `collected_at` timestamp.
+    Non-dict elements pass through unchanged (defensive — old data
+    from before B6.2 may still be plain scalars in some edge cases)."""
+    out = []
+    for obs in prior_series:
+        if isinstance(obs, dict):
+            new = dict(obs)
+            new['carried_forward_from'] = this_run_ts
+            out.append(new)
+        else:
+            out.append(obs)
+    return out
+
+
 # ── FRED ──────────────────────────────────────────────────────────────
 
 def fred_obs(series_id, limit=14, freq=None):
@@ -53,7 +98,8 @@ def fred_obs(series_id, limit=14, freq=None):
             r = requests.get('https://api.stlouisfed.org/fred/series/observations',
                              params=params, timeout=15)
             r.raise_for_status()
-            return [{'date': o['date'], 'value': float(o['value'])}
+            return [_envelope(o['date'], float(o['value']),
+                              source=f'FRED:{series_id}')
                     for o in r.json().get('observations', []) if o['value'] != '.']
         except requests.exceptions.HTTPError as e:
             last_err = e
@@ -110,7 +156,8 @@ def fred_alfred_obs(series_id, vintage_date, limit=14, freq=None):
         r = requests.get('https://api.stlouisfed.org/fred/series/observations',
                          params=params, timeout=15)
         r.raise_for_status()
-        return [{'date': o['date'], 'value': float(o['value'])}
+        return [_envelope(o['date'], float(o['value']),
+                          source=f'ALFRED:{series_id}@{vintage_date}')
                 for o in r.json().get('observations', []) if o['value'] != '.']
     except Exception as e:
         errors.append(f'ALFRED {series_id}@{vintage_date}: {e}'); return []
@@ -150,8 +197,9 @@ def umich_fetch():
             except ValueError:
                 continue
             date = f"{parts[1]}-{_UMICH_MONTHS[month_name]:02d}-01"
-            rows.append({'date': date, 'value': value,
-                         'status': 'preliminary' if is_prelim else 'final'})
+            rows.append(_envelope(date, value,
+                                  source='UMich:tbcics.csv',
+                                  status='preliminary' if is_prelim else 'final'))
         rows.sort(key=lambda r: r['date'], reverse=True)
         return rows
     except Exception as e:
@@ -186,7 +234,8 @@ def eia_spot(product, days=35):
            f'&sort[0][column]=period&sort[0][direction]=desc&length={days}')
     try:
         r = requests.get(url, timeout=15); r.raise_for_status()
-        return [{'date': d['period'], 'value': float(d['value'])}
+        return [_envelope(d['period'], float(d['value']),
+                          source=f'EIA:{product}')
                 for d in r.json()['response']['data'] if d['value']]
     except Exception as e:
         errors.append(f'EIA {product}: {e}'); return []
@@ -315,8 +364,8 @@ def collect():
         data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
     else:
         print('  [Weekly] Jobless Claims (carry forward — not Thursday)')
-        data['icsa']    = prior_icsa
-        data['ccsa']    = prior_ccsa
+        data['icsa']    = _carry_forward(prior_icsa, ts)
+        data['ccsa']    = _carry_forward(prior_ccsa, ts)
 
     print('  [Monthly] Labor...')
     data['unrate']      = fred_obs('UNRATE',     480)
@@ -485,7 +534,13 @@ def collect():
     carried = 0
     for key in data:
         if not data[key] and key in prior and prior[key]:
-            data[key] = prior[key]
+            # Stamp carried_forward_from when reusing list-of-obs series;
+            # leave scalar/dict shapes (e.g. single-value fv() results)
+            # alone since those are handled by fv() at fetch time.
+            if isinstance(prior[key], list):
+                data[key] = _carry_forward(prior[key], ts)
+            else:
+                data[key] = prior[key]
             carried += 1
     if carried:
         print(f'  ℹ  Carried forward {carried} series from prior run')
