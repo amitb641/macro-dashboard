@@ -24,6 +24,7 @@ HTML_FILE = ROOT / 'index.html'
 RAW_FILE  = ROOT / 'data' / 'raw_data.json'
 SIG_FILE  = ROOT / 'data' / 'signals.json'
 RPT_FILE  = ROOT / 'data' / 'validation_report.json'
+KNOWN_NORMAL_FILE = ROOT / 'data' / 'known_normal.json'
 
 FRED_KEY  = os.environ.get('FRED_API_KEY', '')
 BLS_KEY   = os.environ.get('BLS_API_KEY', '')
@@ -1493,7 +1494,135 @@ def check_cross_source(data):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None):
+# ═══════════════════════════════════════════════════════════════════════
+# PASS 3j: NOISE-FLOOR COMPLIANCE (observability, not a gate)
+#   For each metric with a known_normal.json noise_floor_pp entry, compute
+#   the latest PoP delta and report whether it sits within the noise band
+#   or above it. Other passes can interpret a 'real_signal' verdict as
+#   permission to escalate; an 'within_noise' verdict means a small wobble
+#   does NOT deserve a finding.
+#
+#   This pass NEVER fails the build. It writes one finding per known
+#   metric so the Repair Diagnostician (Agent 10) and CEO-grade gate can
+#   read latest_delta + floor side-by-side. Mirrors data/playbook.md §2.2.
+# ═══════════════════════════════════════════════════════════════════════
+
+# Mapping from known_normal.json noise_floor_pp key → callable that
+# extracts the latest two scalar observations from the raw_data dict.
+# Returns (prior, latest) tuple, or (None, None) if data unavailable.
+# Keys absent here are simply skipped — adding a new series to the
+# noise floor table without a mapping here is fine, just produces a
+# 'no_mapping' info finding.
+
+def _two_latest_from_series(data, key, value_key='value'):
+    """Return (prior_value, latest_value) for a list-of-dicts series."""
+    series = data.get(key)
+    if not isinstance(series, list) or len(series) < 2:
+        return (None, None)
+    # Collector convention: index 0 is newest, but a few series flip.
+    # Sort by date descending to be safe.
+    try:
+        s = sorted(series, key=lambda r: r.get('date', ''), reverse=True)
+        latest = s[0].get(value_key)
+        prior  = s[1].get(value_key)
+        return (float(prior), float(latest))
+    except (TypeError, ValueError, AttributeError):
+        return (None, None)
+
+
+_NOISE_FLOOR_EXTRACTORS = {
+    'core_cpi_yoy':         lambda d, v: _two_latest_from_series(d, 'core_cpi_yoy'),
+    'saving_rate':          lambda d, v: _two_latest_from_series(d, 'psavert'),
+    'umich_sentiment':      lambda d, v: _two_latest_from_series(d, 'umcsent'),
+    'cc_delinq_90plus':     lambda d, v: _two_latest_from_series(d, 'cc_delinq'),
+    'gasoline_usd_gal':     lambda d, v: _two_latest_from_series(d, 'gasoline'),
+    'jolts_openings':       lambda d, v: _two_latest_from_series(d, 'jolts_openings'),
+    'jolts_quits':          lambda d, v: _two_latest_from_series(d, 'jolts_quits'),
+    'jolts_hires':          lambda d, v: _two_latest_from_series(d, 'jolts_hires'),
+    'trimmed_mean_cpi_yoy': lambda d, v: _two_latest_from_series(d, 'trimmed_mean_cpi'),
+    'median_cpi_yoy':       lambda d, v: _two_latest_from_series(d, 'median_cpi'),
+    'walcl_bn':             lambda d, v: _two_latest_from_series(d, 'walcl'),
+    'wresbal_bn':           lambda d, v: _two_latest_from_series(d, 'wresbal'),
+    'rrpontsyd_bn':         lambda d, v: _two_latest_from_series(d, 'rrpontsyd'),
+    'deficit_pct_gdp':      lambda d, v: _two_latest_from_series(d, 'fyfsgda188s'),
+}
+
+
+def check_noise_floor(data, sig_vals):
+    """Pass 3j — Per-metric PoP noise compliance (observability only)."""
+    findings = []
+    if not KNOWN_NORMAL_FILE.exists():
+        findings.append({
+            'check': 'known_normal.json present',
+            'pass': True, 'severity': 'skipped',
+            'reason': 'known_normal.json not found; noise-floor checks skipped',
+        })
+        return findings
+
+    try:
+        kn = json.loads(KNOWN_NORMAL_FILE.read_text(encoding='utf-8'))
+    except (json.JSONDecodeError, OSError) as e:
+        findings.append({
+            'check': 'known_normal.json parseable',
+            'pass': False, 'severity': 'warning',
+            'note': f'failed to read/parse known_normal.json: {e!r}',
+        })
+        return findings
+
+    floors = (kn.get('noise_floor_pp') or {})
+    for metric, floor in floors.items():
+        if metric.startswith('_'):
+            continue  # _units_note etc.
+        try:
+            floor = float(floor)
+        except (TypeError, ValueError):
+            continue
+
+        extractor = _NOISE_FLOOR_EXTRACTORS.get(metric)
+        if extractor is None:
+            findings.append({
+                'check': f'noise_floor[{metric}]',
+                'pass': True, 'severity': 'skipped',
+                'metric': metric, 'floor': floor,
+                'reason': 'no extractor mapping in validator (add one in _NOISE_FLOOR_EXTRACTORS)',
+            })
+            continue
+
+        prior, latest = extractor(data, sig_vals)
+        if prior is None or latest is None:
+            findings.append({
+                'check': f'noise_floor[{metric}]',
+                'pass': True, 'severity': 'skipped',
+                'metric': metric, 'floor': floor,
+                'reason': 'underlying series not yet populated in raw_data (collector may not have run, or series newly added)',
+            })
+            continue
+
+        delta = latest - prior
+        abs_delta = abs(delta)
+        within_noise = abs_delta <= floor
+        verdict = 'within_noise' if within_noise else 'real_signal'
+
+        findings.append({
+            'check': f'noise_floor[{metric}]',
+            'pass': True,            # this pass NEVER fails — observability only
+            'severity': 'ok',
+            'metric':   metric,
+            'floor':    floor,
+            'prior':    prior,
+            'latest':   latest,
+            'delta':    round(delta, 4),
+            'abs_delta': round(abs_delta, 4),
+            'verdict':  verdict,
+            'note':     (f'PoP delta {delta:+.3f} '
+                         f'{"≤" if within_noise else ">"} ±{floor} → '
+                         f'{verdict}'),
+        })
+
+    return findings
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None, noise_floor=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1515,10 +1644,12 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         seed_drift = []
     if cross_source is None:
         cross_source = []
+    if noise_floor is None:
+        noise_floor = []
     all_findings = (internal + sources + staleness + visual + vision_review +
                     shock_tracker + earnings + panel_data + metric_consistency +
                     schema_contract + collector_errors + seed_drift +
-                    cross_source)
+                    cross_source + noise_floor)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1554,6 +1685,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'visual_qa': visual,
         'visual_review': vision_review,
         'cross_source': cross_source,
+        'noise_floor': noise_floor,
     }
     return report
 
@@ -1651,6 +1783,16 @@ def validate():
     cs_skip = sum(1 for f in cross_source if f.get('severity') == 'skipped')
     print(f'  {cs_pass} passed, {cs_fail} failed, {cs_skip} skipped')
 
+    # Pass 3j: Noise-floor compliance (observability — reports PoP deltas
+    # vs known_normal.json's noise floors so other consumers can tell
+    # within_noise wobbles apart from real_signal moves).
+    print('\n  ── Pass 3j: Noise-Floor Compliance (advisory) ──')
+    noise_floor = check_noise_floor(data, sig_vals)
+    nf_real = sum(1 for f in noise_floor if f.get('verdict') == 'real_signal')
+    nf_in   = sum(1 for f in noise_floor if f.get('verdict') == 'within_noise')
+    nf_skip = sum(1 for f in noise_floor if f.get('severity') == 'skipped')
+    print(f'  {nf_in} within noise, {nf_real} real signal, {nf_skip} skipped')
+
     # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
     print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
     earnings = check_earnings_verbatim()
@@ -1682,7 +1824,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source, noise_floor)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
