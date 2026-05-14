@@ -422,7 +422,7 @@ h1 span{color:var(--accent)}
 .kpi-strip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;min-width:115px;flex:1;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .kpi-lbl{font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
-.kpi-val{font-size:20px;font-weight:500;line-height:1}
+.kpi-val{font-family:'Instrument Serif',serif;font-size:22px;font-weight:400;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1}
 .kpi-sub{font-size:9px;color:var(--muted);margin-top:4px}
 
 /* NAV — Stripe Dashboard style: white bar, bordered pills, single accent */
@@ -711,10 +711,17 @@ h1 span { color: var(--accent) !important; }
 }
 .kpi-val {
   font-family: 'Instrument Serif', serif !important;
-  font-size: 26px !important;
+  /* B4.3: 26 → 22 brings KPI weight in line with section titles so the
+     strip reads as overview, not as the page's primary heading.
+     tabular-nums keeps digit columns aligned across same-width tiles —
+     "4.3%" and "3.1%" land on the same x-position vertically and
+     period-over-period swaps don't shift the layout. */
+  font-size: 22px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
   letter-spacing: -.02em !important;
+  font-variant-numeric: tabular-nums !important;
+  font-feature-settings: "tnum" 1, "lnum" 1 !important;
   animation: countUp .5s .1s ease both !important;
 }
 .kpi-sub {
