@@ -415,7 +415,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 /* HEADER */
 .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 h1{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:clamp(22px,5vw,34px);font-weight:800;letter-spacing:-.02em;color:var(--text);line-height:1.1}
-h1 span{color:#635BFF}
+h1 span{color:var(--accent)}
 .subtitle{font-size:11px;color:var(--muted);margin-top:5px;margin-bottom:22px}
 
 /* HEADLINE KPIs */
@@ -433,12 +433,15 @@ h1 span{color:#635BFF}
 .nav-group-meta{margin-left:auto}
 .nav-btn{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #D1D5DB;color:#6B7280;padding:9px 18px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:500;letter-spacing:0;transition:all .15s ease;border-radius:9px;line-height:1}
 .nav-btn:hover:not(.active){color:#111827;border-color:#9CA3AF;background:#F9FAFB}
-.nav-btn.active{background:#635BFF;border-color:#635BFF;color:#fff;font-weight:600;box-shadow:0 1px 3px rgba(99,91,255,.3)}
+/* Active nav: border + text only, no fill — keeps the per-tab SVG icon
+   color legible and prevents the Stripe-purple filled pill from competing
+   with the page accent. Icon stays at its native color (no invert). */
+.nav-btn.active{background:#fff;border-color:var(--accent);color:var(--accent);font-weight:600;box-shadow:none}
 .nav-btn .nav-icon{width:16px;height:16px;flex-shrink:0;display:inline-block;vertical-align:middle}
-.nav-btn.active .nav-icon{filter:brightness(0) invert(1);opacity:.95}
+.nav-btn.active .nav-icon{filter:none;opacity:1}
 .nav-btn-meta{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid transparent;color:#9CA3AF;font-size:12px;padding:8px 14px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;border-radius:9px;transition:all .15s;opacity:1}
 .nav-btn-meta:hover:not(.active){color:#6B7280;border-color:#E5E7EB}
-.nav-btn-meta.active{background:#F4F3FF;border-color:#C4B5FD;color:#635BFF;box-shadow:none}
+.nav-btn-meta.active{background:transparent;border-color:var(--accent);color:var(--accent);box-shadow:none}
 .nav-btn-meta.active .nav-icon{filter:none}
 
 /* TAB */
@@ -453,8 +456,8 @@ h1 span{color:#635BFF}
 .sort-row{display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
 .sort-lbl{font-size:10px;color:var(--muted)}
 .sort-btn{background:var(--card);border:1px solid var(--border);color:var(--dim);padding:5px 12px;cursor:pointer;font-family:'Courier New',Courier,monospace;font-size:10px;transition:all .18s;border-radius:3px}
-.sort-btn.active{background:#635BFF;color:#fff;border-color:#5449E6;box-shadow:0 1px 3px rgba(99,91,255,.3)}
-.sort-btn:hover:not(.active){color:#635BFF;border-color:#635BFF;background:#F4F3FF}
+.sort-btn.active{background:transparent;color:var(--accent);border-color:var(--accent);box-shadow:none;font-weight:600}
+.sort-btn:hover:not(.active){color:var(--accent);border-color:var(--accent);background:transparent}
 
 /* SECTOR CARDS */
 .sector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
@@ -663,7 +666,7 @@ h1 {
   color: var(--text) !important;
   line-height: 1.1 !important;
 }
-h1 span { color: #635BFF !important; }
+h1 span { color: var(--accent) !important; }
 .subtitle {
   font-size: 12px !important;
   color: var(--muted) !important;
@@ -808,16 +811,16 @@ h1 span { color: #635BFF !important; }
   transition: all .15s ease !important;
 }
 .sort-btn:hover:not(.active) {
-  border-color: #635BFF !important;
-  color: #635BFF !important;
-  background: #F4F3FF !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  background: transparent !important;
 }
 .sort-btn.active {
-  background: #635BFF !important;
-  border-color: #5449E6 !important;
-  color: #fff !important;
+  background: transparent !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
   font-weight: 600 !important;
-  box-shadow: 0 1px 3px rgba(99,91,255,.3) !important;
+  box-shadow: none !important;
 }
 
 /* ── METRICS ── */
@@ -1081,7 +1084,7 @@ div[style*="background:#fff8e6;border:1px solid #CC8A0040"] {
 /* download button & dropdown */
 .download-btn {
   font-family: 'DM Sans', sans-serif !important;
-  background: #635BFF !important;
+  background: var(--accent) !important;
   color: #fff !important;
   border: none !important;
   border-radius: 7px !important;
@@ -1092,9 +1095,9 @@ div[style*="background:#fff8e6;border:1px solid #CC8A0040"] {
   transition: all .15s ease !important;
 }
 .download-btn:hover {
-  background: #5046E5 !important;
+  background: var(--acc2) !important;
   transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(99,91,255,.3) !important;
+  box-shadow: 0 4px 12px rgba(43,90,179,.3) !important;
 }
 .download-btn:disabled{opacity:.6;cursor:wait;transform:none!important;box-shadow:none!important}
 
@@ -1506,14 +1509,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <span style="font-size:9px;color:#1A9E5A;font-weight:600">● Healthy</span>
   <span style="font-size:9px;color:#CC8A00;font-weight:600">● Watch</span>
   <span style="font-size:9px;color:#D64045;font-weight:600">● Stress</span>
-  <span style="font-size:9px;color:#635BFF;font-weight:600">● Policy Rate</span>
+  <span style="font-size:9px;color:#8878B8;font-weight:600">● Policy Rate</span>
 </div>
 
 <div class="nav-grouped">
   <div class="nav-group">
     <span class="nav-group-lbl">Overview</span>
     <div class="nav-group-pills">
-      <button class="nav-btn active" data-tab="fc"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EEF2FF"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#635BFF" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#635BFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Outlook</button>
+      <button class="nav-btn active" data-tab="fc"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EAF1FB"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#336BCC" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#336BCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Outlook</button>
       <button class="nav-btn" data-tab="gdp"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="4" fill="#ECFDF5"/><path d="M4 14l3.5-3.5 2.5 2.5L16 7" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>GDP</button>
     </div>
   </div>
@@ -2579,7 +2582,7 @@ let builtTabs = {"status": false};
 // ════════════════════════════════════════════════════
 // Color thresholds: each KPI has defined zones that determine its color.
 // Green (#1A9E5A) = healthy / target   Amber (#CC8A00) = watch / elevated
-// Red (#D64045)   = stress / concern   Purple (#635BFF) = neutral / policy rate
+// Red (#D64045)   = stress / concern   Purple (#8878B8) = neutral / policy rate
 //
 // ┌─────────────────────┬──────────────┬──────────────┬──────────────┐
 // │ Metric              │ Green        │ Amber        │ Red          │
@@ -2606,11 +2609,16 @@ const _KPI_THRESHOLDS = {
   rate:    {parse:v=>parseFloat(v), purple:true, green:()=>false, red:()=>false} // always purple — policy rate
 };
 function _kpiColor(metric, val){
+  // Policy-rate purple (#8878B8) is reserved for the "neutral / policy
+  // rate" semantic role. Unknown-metric and NaN-value fallbacks return
+  // the brand accent (#336BCC) instead — these are not policy rates and
+  // shouldn't borrow the purple semantic, just render in the dashboard's
+  // default accent.
   var t = _KPI_THRESHOLDS[metric];
-  if(!t) return '#635BFF';
-  if(t.purple) return '#635BFF'; // policy rates — always purple
+  if(!t) return '#336BCC';
+  if(t.purple) return '#8878B8'; // policy rates — always purple
   var n = t.parse(val);
-  if(isNaN(n)) return '#635BFF';
+  if(isNaN(n)) return '#336BCC';
   if(t.red(n)) return '#D64045';
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
@@ -2628,7 +2636,7 @@ function _releaseBadge(tag){
     color:${color};background:${bg};border:1px solid ${bd}">${isPrelim ? 'PRELIM' : 'FINAL'}</span>`;
 }
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
-  const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#635BFF');
+  const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
   const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
   const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
   const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
@@ -5364,7 +5372,7 @@ async function buildValidatorTab(){
 
   // Summary tiles
   var tiles = [
-    {lbl:"Total Checks", val:s.total_checks, col:"#635BFF"},
+    {lbl:"Total Checks", val:s.total_checks, col:"#336BCC"},
     {lbl:"Passed", val:s.passed, col:"#059669"},
     {lbl:"Failed", val:s.failed, col:s.failed>0?"#DC2626":"#059669"},
     {lbl:"Skipped", val:s.skipped, col:"#94A3B8"},
@@ -6026,7 +6034,7 @@ if(document.readyState === 'loading'){
       <span style="font-size:11px;font-weight:600;color:#1A9E5A">● Green = Healthy — within normal/target range</span>
       <span style="font-size:11px;font-weight:600;color:#CC8A00">● Amber = Watch — approaching stress levels</span>
       <span style="font-size:11px;font-weight:600;color:#D64045">● Red = Stress — outside normal bounds, action warranted</span>
-      <span style="font-size:11px;font-weight:600;color:#635BFF">● Purple = Policy Rate — Fed-set or influenced, not a directional signal</span>
+      <span style="font-size:11px;font-weight:600;color:#8878B8">● Purple = Policy Rate — Fed-set or influenced, not a directional signal</span>
     </div>
     <div class="dtable-wrap"><table class="dtable" style="width:100%">
       <thead><tr>
@@ -6045,7 +6053,7 @@ if(document.readyState === 'loading'){
         <tr><td>Initial Claims (K)</td><td style="text-align:center">&lt; 220K</td><td style="text-align:center">220 – 280K</td><td style="text-align:center">≥ 280K</td><td style="font-size:10px;color:#7A8FA8">Pre-pandemic normal ~210K. Above 250K = labor market softening. 300K+ historically precedes recessions. Weekly leading indicator.</td></tr>
         <tr><td>UMich Sentiment</td><td style="text-align:center">≥ 70</td><td style="text-align:center">55 – 70</td><td style="text-align:center">&lt; 55</td><td style="font-size:10px;color:#7A8FA8">Long-run avg ~85. Below 70 = consumer pessimism. Sub-55 = crisis-level (2008: 55, 2022: 50). Leads spending by 1-2 quarters.</td></tr>
         <tr><td>Debt Service Ratio %</td><td style="text-align:center">&lt; 10.5%</td><td style="text-align:center">10.5 – 12%</td><td style="text-align:center">≥ 12%</td><td style="font-size:10px;color:#7A8FA8">FRED TDSP: mortgage + consumer debt payments as % of disposable income. 2007 peak: 13.2%. Above 12% = financial stress rising.</td></tr>
-        <tr><td>Fed Funds / 10Y Treasury</td><td colspan="3" style="text-align:center;color:#635BFF;font-weight:600">Always purple — policy rate, not a directional signal</td><td style="font-size:10px;color:#7A8FA8">Rates set by FOMC or market expectations. Not inherently good/bad — context-dependent (inflation regime, growth outlook, term premium).</td></tr>
+        <tr><td>Fed Funds / 10Y Treasury</td><td colspan="3" style="text-align:center;color:#8878B8;font-weight:600">Always purple — policy rate, not a directional signal</td><td style="font-size:10px;color:#7A8FA8">Rates set by FOMC or market expectations. Not inherently good/bad — context-dependent (inflation regime, growth outlook, term premium).</td></tr>
       </tbody>
     </table></div>
   </div>
@@ -6393,7 +6401,7 @@ function _captureAndDownload(TAB_IDS, origTabId){
     + '<span style="font-size:9px;color:#1A9E5A;font-weight:600">\u25CF Healthy</span>'
     + '<span style="font-size:9px;color:#CC8A00;font-weight:600">\u25CF Watch</span>'
     + '<span style="font-size:9px;color:#D64045;font-weight:600">\u25CF Stress</span>'
-    + '<span style="font-size:9px;color:#635BFF;font-weight:600">\u25CF Policy Rate</span>'
+    + '<span style="font-size:9px;color:#8878B8;font-weight:600">\u25CF Policy Rate</span>'
     + '</div>\n';
 
   // Tab navigation — clone the real nav bar with icons and grouping
