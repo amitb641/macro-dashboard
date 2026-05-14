@@ -1014,6 +1014,7 @@ def rebuild_charts(html, data):
     html = rebuild_oil_prod_spread(html, data)
     html = rebuild_fed_liquidity_data(html, data)
     html = rebuild_jolts_data(html, data)
+    html = rebuild_cpi_breadth(html, data)
 
     return html
 
@@ -1460,6 +1461,77 @@ def rebuild_oil_prod_spread(html, data):
     if n:
         applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
         html = new_html
+    return html
+
+
+def rebuild_cpi_breadth(html, data):
+    """Rebuild CPI_BREADTH (B3.3) — trimmed-mean / median CPI vs headline.
+
+    Sources (collector.py):
+      * cpi_trimmed (TRMMEANCPIM157SFRBCLE) — Cleveland Fed 16% trimmed-mean,
+        already MoM annualised (BLS M157 series convention).
+      * cpi_median (MEDCPIM157SFRBCLE) — Cleveland Fed median, MoM annualised.
+      * cpi_all (CPIAUCSL) — BLS headline CPI level. We compute MoM annualised
+        as `((cur/prev)**12 - 1) * 100` to make all three lines comparable
+        (annualised rate, not 12-month YoY).
+
+    All three series align on monthly dates; we trim to the last 24 months
+    of overlap. Missing trimmed/median → SKIP (we don't render headline alone).
+    """
+    trimmed = data.get('cpi_trimmed', [])
+    median  = data.get('cpi_median', [])
+    cpi_lvl = data.get('cpi_all', [])
+
+    if not (trimmed and median and cpi_lvl):
+        warnings.append('CPI_BREADTH rebuild SKIPPED — one or more of cpi_trimmed/cpi_median/cpi_all missing')
+        return html
+
+    def _by_date(series):
+        out = {}
+        for o in series:
+            if isinstance(o, dict):
+                d, v = o.get('date'), o.get('value')
+            else:
+                continue
+            if d is None or v is None:
+                continue
+            out[d] = float(v)
+        return out
+
+    t = _by_date(trimmed)
+    m = _by_date(median)
+    c = _by_date(cpi_lvl)
+
+    # Build headline MoM annualised from CPIAUCSL levels.
+    c_dates = sorted(c)
+    headline_mom = {}
+    for i in range(1, len(c_dates)):
+        prev, cur = c_dates[i-1], c_dates[i]
+        if c[prev] > 0:
+            headline_mom[cur] = ((c[cur] / c[prev]) ** 12 - 1) * 100.0
+
+    common = sorted(set(t) & set(m) & set(headline_mom))
+    if not common:
+        warnings.append('CPI_BREADTH rebuild SKIPPED — no overlap across trimmed/median/headline-MoM')
+        return html
+    common = common[-24:]
+
+    labels = [month_label(d) for d in common]
+    obj = {
+        'labels': labels,
+        'headline_mom_ann': [round(headline_mom[d], 2) for d in common],
+        'trimmed':          [round(t[d], 2) for d in common],
+        'median':           [round(m[d], 2) for d in common],
+    }
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const CPI_BREADTH\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const CPI_BREADTH = {new_json};', html, count=1)
+    if n:
+        applied.append(f'CPI_BREADTH rebuilt ({len(common)} months, latest {common[-1]}, '
+                       f'headline {obj["headline_mom_ann"][-1]:+.1f}% · trimmed {obj["trimmed"][-1]:+.1f}% · median {obj["median"][-1]:+.1f}%)')
+        html = new_html
+    else:
+        warnings.append('CPI_BREADTH rebuild: const pattern not matched (HTML may already be on a newer schema)')
     return html
 
 

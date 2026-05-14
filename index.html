@@ -1724,6 +1724,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <p class="src">Source: BLS CPI-U. Feb 2026 = +2.4% YoY; Jan 2026 = +2.4%; Dec 2025 = +2.7%. Oct–Nov 2025 data unavailable (gov't shutdown). Core CPI Feb 2026: +2.5%.</p>
     </div>
   </div>
+
+  <!-- Inflation breadth (B3.3) — trimmed-mean + median CPI vs headline -->
+  <div class="panel">
+    <div class="panel-title">Inflation Breadth — Trimmed-Mean &amp; Median CPI vs Headline</div>
+    <div class="panel-sub">Cleveland Fed Trimmed-Mean (TRMMEANCPIM157SFRBCLE) + Median (MEDCPIM157SFRBCLE) · MoM annualised · last 24 months · gauges how broad-based the inflation is vs concentrated in a few outlier categories</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#336BCC;border-radius:2px"></span><span style="font-size:10.5px;color:#336BCC;font-weight:600">Headline CPI MoM (ann.)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#CC8A00;border-radius:2px"></span><span style="font-size:10.5px;color:#CC8A00;font-weight:600">Trimmed-Mean CPI</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">Median CPI</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:1.5px;background:#94A3B8;border-radius:2px;border-top:1.5px dashed #94A3B8"></span><span style="font-size:10.5px;color:#94A3B8;font-weight:600">Fed 2% target</span></div>
+    </div>
+    <div class="ch320"><canvas id="c-cpi-breadth"></canvas></div>
+    <p class="src">Source: Federal Reserve Bank of Cleveland — Median CPI &amp; 16% Trimmed-Mean CPI (monthly, annualised). Headline CPI MoM annualised computed from BLS CPIAUCSL. When trimmed-mean and median sit close to headline, inflation is broad-based and policy-stickier; when they diverge sharply lower, the headline number is being driven by a small set of categories (energy, used cars) and can fade quickly. Cleveland Fed publishes the day after BLS CPI release.</p>
+  </div>
 </div>
 
 <!-- ══ WAGES ══ -->
@@ -2455,6 +2469,11 @@ const U_SECTORS = [
 // ── CPI ──────────────────────────────────────────────
 const CPI_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[6.3, 3.0, 3.0, 2.8, 2.6, 2.5, 3.4, 1.7, 1.6, 2.7, 3.4, 1.6, 2.5, 2.0, 3.3, 3.3, 2.5, 4.1, -0.0, 2.8, 1.4, 3.1, 1.8, 1.5, 0.7, 0.6, 2.1, 2.1, 2.0, 2.3, 1.3, 7.2, 6.4, 3.3, 2.9, 2.7], "avg3m":2.5};
 const CPI_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "headline":[2.4, 2.3, 2.4, 2.7, 2.7, 2.9, 3.0, 2.7, 2.7, 2.4, 2.4, 3.3, 3.8], "core":[2.8, 2.8, 2.8, 2.9, 3.1, 3.1, 3.0, 2.6, 2.6, 2.5, 2.5, 2.6, 2.7]};
+// Inflation breadth (B3.3) — Cleveland Fed trimmed-mean + median CPI plus
+// BLS headline MoM annualised. Renderer (rebuild_cpi_breadth) overwrites
+// from cpi_trimmed/cpi_median (FRED MoM-annualised series) + cpi raw series.
+// Placeholder empty arrays render the canvas as no-op until first pipeline run.
+const CPI_BREADTH = {"labels":[], "headline_mom_ann":[], "trimmed":[], "median":[]};
 const CPI_CATS = [
   {cat:"Shelter / Housing",     color:"#8878B8", c21:4.1,  c22:7.9,  c23:6.5,  c24:4.9,  c25:4.6},
   {cat:"Food Away from Home",   color:"#1A9E5A", c21:4.4,  c22:7.7,  c23:5.2,  c24:4.1,  c25:3.6},
@@ -3156,6 +3175,32 @@ function buildCPITab(){
   var _cTr=_c25<_c24?"↓ Easing":_c25>_c24?"↑ Rising":"→ Stable";
   h+=`<tr><td>All Items CPI</td><td style="color:${_cCol(_c22)}">+${_c22}%</td><td style="color:${_cCol(_c23)}">+${_c23}%</td><td style="color:${_cCol(_c24)}">+${_c24}%</td><td style="color:${_cCol(_c25)}">+${_c25}%</td><td>${trendPill(_cTr)}</td></tr>`;
   document.getElementById("cpi-tbl").innerHTML=h+"</tbody>";
+
+  // ── Inflation breadth chart (B3.3) ─────────────────────────────────
+  try{
+  var bEl = document.getElementById("c-cpi-breadth");
+  if (bEl && CPI_BREADTH && CPI_BREADTH.labels && CPI_BREADTH.labels.length) {
+    // Build a 2% target overlay matching length.
+    var _target = CPI_BREADTH.labels.map(function(){return 2.0;});
+    new Chart(bEl.getContext("2d"),{
+      type:"line",
+      data:{labels:CPI_BREADTH.labels,datasets:[
+        {label:"Headline CPI MoM (ann.)",data:CPI_BREADTH.headline_mom_ann,borderColor:"#336BCC",backgroundColor:"rgba(51,107,204,.07)",borderWidth:2.5,pointRadius:0,tension:0.25,fill:true},
+        {label:"Trimmed-Mean CPI",       data:CPI_BREADTH.trimmed,         borderColor:"#CC8A00",borderWidth:2,pointRadius:0,tension:0.25,fill:false},
+        {label:"Median CPI",             data:CPI_BREADTH.median,          borderColor:"#8878B8",borderWidth:2,pointRadius:0,tension:0.25,fill:false},
+        {label:"Fed 2% target",          data:_target,                     borderColor:"#94A3B8",borderWidth:1.5,pointRadius:0,tension:0,fill:false,borderDash:[4,4]},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+": "+ctx.parsed.y.toFixed(1)+"%";}}}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10},maxTicksLimit:12,autoSkip:true},border:{display:false}},
+          y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%";}},border:{display:false}}
+        }}
+    });
+  }
+  }catch(e){console.error("CPI breadth chart error:",e);}
 }
 
 // ════════════════════════════════════════════════════
