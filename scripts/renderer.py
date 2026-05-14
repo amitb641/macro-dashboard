@@ -1013,6 +1013,7 @@ def rebuild_charts(html, data):
     html = rebuild_treasury_data(html, data)
     html = rebuild_oil_prod_spread(html, data)
     html = rebuild_fed_liquidity_data(html, data)
+    html = rebuild_jolts_data(html, data)
 
     return html
 
@@ -1459,6 +1460,79 @@ def rebuild_oil_prod_spread(html, data):
     if n:
         applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
         html = new_html
+    return html
+
+
+def rebuild_jolts_data(html, data):
+    """Rebuild JOLTS_DATA (B3.1) from labour-market churn series.
+
+    Sources (collector.py): jolts_hist (JTSJOL, openings), quits (JTSQUL),
+    hires (JTSHIL), unemploy_hist (UNEMPLOY) — all BLS monthly, level in
+    thousands SA, fetched as 24 obs. V/U ratio is computed in renderer
+    (openings ÷ unemployed, in level terms — both are in thousands, so the
+    quotient is dimensionless).
+
+    Output schema: {labels, openings, hires, quits, vu} where labels are
+    month strings ("Apr'26") and arrays are aligned by date. Missing any of
+    the four series triggers SKIP rather than partial render.
+    """
+    openings = data.get('jolts_hist', [])
+    quits    = data.get('quits', [])
+    hires    = data.get('hires', [])
+    unemp    = data.get('unemploy_hist', [])
+
+    if not (openings and quits and hires and unemp):
+        warnings.append('JOLTS_DATA rebuild SKIPPED — one or more of jolts_hist/quits/hires/unemploy_hist missing')
+        return html
+
+    def _by_date(series):
+        out = {}
+        for o in series:
+            if isinstance(o, dict):
+                d, v = o.get('date'), o.get('value')
+            else:
+                continue
+            if d is None or v is None:
+                continue
+            out[d] = float(v)
+        return out
+
+    o = _by_date(openings)
+    q = _by_date(quits)
+    h = _by_date(hires)
+    u = _by_date(unemp)
+
+    common = sorted(set(o) & set(q) & set(h) & set(u))
+    if not common:
+        warnings.append('JOLTS_DATA rebuild SKIPPED — no overlapping dates across JOLTS + UNEMPLOY')
+        return html
+
+    # Keep at most the last 24 dates to match the panel's stated 24-month window.
+    common = common[-24:]
+
+    labels   = [month_label(d) for d in common]
+    openings_arr = [round(o[d], 0) for d in common]
+    quits_arr    = [round(q[d], 0) for d in common]
+    hires_arr    = [round(h[d], 0) for d in common]
+    # V/U: openings / unemployed. Guard against zero (theoretically impossible
+    # for UNEMPLOY but defensive).
+    vu = [round(o[d] / u[d], 2) if u[d] else None for d in common]
+
+    obj = {
+        'labels': labels,
+        'openings': openings_arr,
+        'quits': quits_arr,
+        'hires': hires_arr,
+        'vu': vu,
+    }
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const JOLTS_DATA\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const JOLTS_DATA = {new_json};', html, count=1)
+    if n:
+        applied.append(f'JOLTS_DATA rebuilt ({len(common)} months, latest {common[-1]}, V/U {vu[-1]})')
+        html = new_html
+    else:
+        warnings.append('JOLTS_DATA rebuild: const pattern not matched (HTML may already be on a newer schema)')
     return html
 
 

@@ -1832,6 +1832,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <p class="src">Source: BLS CES (seasonally adjusted, post-Jan 2026 benchmark revision). Mar 2026: +178K, led by healthcare (+90K), leisure (+44K), construction (+26K). 2025 full-year (Dec-to-Dec): +116K after benchmark revision slashed prior estimates by −862K.</p>
   </div>
 
+  <!-- JOLTS labour-market churn (B3.1) — openings, quits, hires, V/U ratio -->
+  <div class="panel">
+    <div class="panel-title">Labour Market Churn — JOLTS Openings, Quits, Hires &amp; V/U Ratio</div>
+    <div class="panel-sub">BLS JOLTS (JTSJOL/JTSQUL/JTSHIL) + UNEMPLOY · monthly · last 24 months · V/U = vacancies per unemployed worker (Fed tightness gauge, normal ≈ 1.0)</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#336BCC;border-radius:2px"></span><span style="font-size:10.5px;color:#336BCC;font-weight:600">Openings (L)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#1A9E5A;border-radius:2px"></span><span style="font-size:10.5px;color:#1A9E5A;font-weight:600">Hires (L)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#CC8A00;border-radius:2px"></span><span style="font-size:10.5px;color:#CC8A00;font-weight:600">Quits (L)</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px;border-top:2px dashed #8878B8"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">V/U Ratio (R)</span></div>
+    </div>
+    <div class="ch320"><canvas id="c-jolts"></canvas></div>
+    <p class="src">Sources: BLS JOLTS (Job Openings &amp; Labor Turnover Survey) — series JTSJOL/JTSQUL/JTSHIL (thousands, seasonally adjusted). BLS Current Population Survey UNEMPLOY (level, thousands SA). V/U ratio = openings ÷ unemployed: above 1.0 means more job postings than job seekers (a labour-market tightness signal cited by the Fed during the 2022–2024 cycle). Quits rate is the canonical "confidence to leave" indicator — falling quits historically precede payroll deceleration by 3–6 months.</p>
+  </div>
+
 </div>
 
 <!-- ══ PCE & CONSUMER HEALTH ══ -->
@@ -2493,6 +2507,11 @@ const SECTOR_MOM = {
   mar26:  [91, 18, 12, 0, 16, -19, 2, -6, 22, 29, 15, 26, -15],
   apr26:  [53, 22, 0, -8, 9, -11, 3, -13, 30, 14, -2, 7, -9]
 };
+// JOLTS labour-market churn (B3.1). Renderer (rebuild_jolts_data) overwrites
+// from raw_data.json keys jolts_hist/quits/hires/unemploy_hist. All four
+// series are BLS monthly, level in thousands SA; V/U = openings / unemployed.
+// Placeholder empty arrays render the canvas as no-op until first pipeline run.
+const JOLTS_DATA = {"labels":[], "openings":[], "quits":[], "hires":[], "vu":[]};
 // Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
 const NFP_BLS_MOM = {"labels":["May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "bls":[78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 160, -156, 185, 115]};
 
@@ -3369,6 +3388,34 @@ function buildJobsTab(){
   var _jTr2=_j25>_j24?"↑ Rising":_j25<_j24/2?"↓ Sharp":"↓ Falling";
   h+=`<tr><td>Total Nonfarm</td><td style="color:${_jCol(_j22)}">${_jFmt(_j22)}</td><td style="color:${_jCol(_j23)}">${_jFmt(_j23)}</td><td style="color:${_jCol(_j24)}">${_jFmt(_j24)}</td><td style="color:${_jCol(_j25)}">${_jFmt(_j25)}</td><td>${trendPillPos(_jTr2)}</td></tr>`;
   document.getElementById("jobs-tbl").innerHTML=h+"</tbody>";
+
+  // ── JOLTS labour churn chart (B3.1) ──────────────────────────────
+  try{
+  var jEl = document.getElementById("c-jolts");
+  if (jEl && JOLTS_DATA && JOLTS_DATA.labels && JOLTS_DATA.labels.length) {
+    new Chart(jEl.getContext("2d"),{
+      type:"line",
+      data:{labels:JOLTS_DATA.labels,datasets:[
+        {label:"Openings (K)",data:JOLTS_DATA.openings,borderColor:"#336BCC",backgroundColor:"rgba(51,107,204,.07)",borderWidth:2.5,pointRadius:0,tension:0.25,fill:true,yAxisID:"y"},
+        {label:"Hires (K)",   data:JOLTS_DATA.hires,   borderColor:"#1A9E5A",borderWidth:2,pointRadius:0,tension:0.25,fill:false,yAxisID:"y"},
+        {label:"Quits (K)",   data:JOLTS_DATA.quits,   borderColor:"#CC8A00",borderWidth:2,pointRadius:0,tension:0.25,fill:false,yAxisID:"y"},
+        {label:"V/U Ratio",   data:JOLTS_DATA.vu,      borderColor:"#8878B8",borderWidth:2,pointRadius:0,tension:0.25,fill:false,yAxisID:"y2",borderDash:[6,3]},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){
+            if(ctx.dataset.label==="V/U Ratio") return "V/U: "+ctx.parsed.y.toFixed(2);
+            return ctx.dataset.label+": "+(Math.round(ctx.parsed.y)).toLocaleString();
+          }}}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10},maxTicksLimit:12,autoSkip:true},border:{display:false}},
+          y:{position:"left",grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return (v/1000).toFixed(1)+"M";}},title:{display:true,text:"Workers",color:"#94A3B8",font:{size:10,weight:"600"}},border:{display:false}},
+          y2:{position:"right",grid:{display:false},ticks:{color:"#8878B8",callback:function(v){return v.toFixed(2);}},title:{display:true,text:"V/U Ratio",color:"#8878B8",font:{size:10,weight:"600"}},border:{display:false}}
+        }}
+    });
+  }
+  }catch(e){console.error("JOLTS chart error:",e);}
 }
 
 // ════════════════════════════════════════════════════
