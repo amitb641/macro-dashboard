@@ -1073,14 +1073,11 @@ div[style*="background:#fff8e6;border:1px solid #CC8A0040"] {
   background-size: 400px 100% !important;
   animation: shimmerLight 1.2s infinite linear !important;
 }
-/* live dot pulse */
-@keyframes pulse-dot {
-  0%,100% { opacity:1; transform:scale(1); }
-  50%      { opacity:.5; transform:scale(1.4); }
-}
-.live-dot {
-  animation: pulse-dot 2s ease-in-out infinite !important;
-}
+/* Live-dot is a static colored circle (green/amber/red per status).
+   The pulse animation was removed for CEO-grade calm — flashing dots
+   on a board-deck page read as urgency where none exists. The status
+   color alone communicates freshness; the live timestamp text next to
+   it carries the precise meaning. */
 /* download button & dropdown */
 .download-btn {
   font-family: 'DM Sans', sans-serif !important;
@@ -1563,7 +1560,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ GDP ══ -->
 <div class="tab-panel" id="tab-gdp">
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">📈 GDP Commentary — 2025 Growth &amp; 2026 Outlook</div>
+    <div class="panel-title">GDP Commentary — 2025 Growth &amp; 2026 Outlook</div>
     <div class="fc-note" id="commentary-gdp">Real GDP grew 2.1% in 2025, a meaningful slowdown from 3.1% in 2024 and the weakest annual print since 2022. Nominal growth of 5.1% YoY masks a price-led component (deflator +3.0%) that is increasingly squeezing real output. The 2026F consensus range of 1.5–2.2% reflects a narrow path to soft landing, with tariff drag and oil-shock transmission as the two binding downside risks. Government is the only major sector with a negative 2025 contribution (−0.6%); residential real estate has begun to recover (+2.1%) while consumer-facing sectors are flat to mildly positive.</div>
   </div>
   <div class="metric-row" id="gdp-metrics"></div>
@@ -1592,7 +1589,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-unemp">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">👷 Unemployment Commentary — Trends &amp; Risk Factors</div>
+    <div class="panel-title">Unemployment Commentary — Trends &amp; Risk Factors</div>
     <div class="fc-note" id="commentary-unemp">U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% — a 190bp spread over U-3 — signals significant slack in hours and involuntary part-time work that the headline number obscures. This breadth of labor market weakness is inconsistent with a soft-landing narrative and points to genuine demand destruction in the jobs market.</div>
   </div>
 
@@ -1672,7 +1669,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-cpi">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">🛒 CPI Commentary — Inflation Trajectory &amp; Fed Implications</div>
+    <div class="panel-title">CPI Commentary — Inflation Trajectory &amp; Fed Implications</div>
     <div class="fc-note" id="commentary-cpi">Headline CPI at 3.8% YoY is running nearly 90bp above Core CPI at 2.7%, a gap almost entirely attributable to energy — WTI at $109.8 is the dominant driver and it is not yet fully reflected in downstream prices. Core CPI at 2.7% has not broken to target and risks re-acceleration as oil costs transmit through transportation, manufacturing, and services over the next 60-90 days. The Fed cannot cut rates with headline at 3.8% and an oil shock still propagating; rate relief is not imminent.</div>
   </div>
   <div class="metric-row" id="cpi-metrics"></div>
@@ -1726,7 +1723,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-wages">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">💵 Wage Growth Commentary — Nominal vs Real
+    <div class="panel-title">Wage Growth Commentary — Nominal vs Real
 </div>
     <div class="fc-note" id="commentary-wages">Nominal wage growth at 3.9% YoY appears healthy in isolation but is being consumed by 3.8% CPI, leaving real wage growth near zero and providing no lift to consumer purchasing power. With WTI at $109.8, real wages are at risk of turning negative again as energy costs pass through to goods and services over coming months. The wage-price spiral risk has diminished, but so has the consumer's ability to sustain spending.</div>
   </div>
@@ -1774,7 +1771,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-jobs">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">📋 Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
+    <div class="panel-title">Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
     <div class="fc-note" id="commentary-jobs">At 115K, monthly payroll growth has fallen below the ~150K threshold needed to absorb labor force growth, signaling genuine deceleration rather than normalization. This is the weakest NFP print consistent with an unemployment rate that has already climbed to 4.3%, suggesting the labor market is a lagging confirmation of a slowdown already underway. Leading indicators in hours worked and temp employment should be monitored closely for further deterioration.</div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
@@ -1834,7 +1831,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-pce">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">💳 Consumer &amp; PCE Commentary — Spending Health &amp; Household Stress</div>
+    <div class="panel-title">Consumer &amp; PCE Commentary — Spending Health &amp; Household Stress</div>
     <div class="fc-note" id="commentary-pce">Core PCE at 3.2% — the Fed's preferred measure — remains 120bp above target and is the single most important number blocking any dovish pivot. Headline PCE at 3.5% reflects the same energy-driven wedge seen in CPI, and the savings rate at 3.6% confirms consumers are drawing down buffers rather than reducing spending voluntarily. The combination of elevated PCE, depleted savings, and surging energy costs represents a serious deterioration in the consumer's real income trajectory.</div>
   </div>
   <div class="metric-row" id="pce-metrics"></div>
@@ -1936,7 +1933,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ BANK EARNINGS ══ -->
 <div class="tab-panel" id="tab-banks">
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">🏦 Banks Commentary — Earnings, NII &amp; Credit Quality</div>
+    <div class="panel-title">Banks Commentary — Earnings, NII &amp; Credit Quality</div>
     <div class="fc-note" id="commentary-banks">Credit card delinquency at 2.9% is a direct stress indicator for consumer lending books and is trending in the wrong direction given the 4.3% unemployment rate and near-zero real wage growth. Net interest income should remain supported by the 10Y-2Y spread at 47bp, but rising loss provisions for consumer credit will increasingly offset NII tailwinds in bank earnings. Banks with high consumer credit card and auto loan exposure face a deteriorating credit quality outlook that the current spread environment is not compensating for.</div>
   </div>
   <div class="metric-row" id="bank-metrics"></div>
@@ -2021,7 +2018,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-oil">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">🛢 Oil Commentary — Supply Shock &amp; Macro Transmission</div>
+    <div class="panel-title">Oil Commentary — Supply Shock &amp; Macro Transmission</div>
     <div class="fc-note" id="commentary-oil">WTI at $109.8 and Brent at $118.3 represent an acute supply shock that functions as a regressive tax on consumers and a margin headwind for corporate America simultaneously. At these price levels, the macro transmission is unambiguously negative: energy costs are re-inflating headline CPI and PCE, compressing consumer discretionary spending, and raising input costs across manufacturing and logistics. This oil shock is the single greatest threat to a soft landing and the primary reason risk is rated HIGH.</div>
   </div>
 
@@ -2099,7 +2096,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ CREDIT CYCLE ══ -->
 <div class="tab-panel" id="tab-credit">
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">📉 Credit Commentary — Spread Complacency &amp; Tail Risk</div>
+    <div class="panel-title">Credit Commentary — Spread Complacency &amp; Tail Risk</div>
     <div class="fc-note" id="commentary-credit">IG OAS at 78bp remains historically tight and reflects a market that has not yet priced the deteriorating macro backdrop — this is a complacency risk, not a green light. HY OAS at 279bp is wider but still well below levels consistent with recession conditions (typically 500bp+), suggesting high yield is also mispriced relative to the unemployment and growth trajectory. A repricing of credit risk, particularly in energy-cost-sensitive sectors and highly leveraged consumer-facing businesses, remains the key tail risk.</div>
   </div>
   <div class="metric-row" id="credit-metrics"></div>
@@ -2220,7 +2217,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-housing">
 
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">🏠 Housing Commentary — Affordability Crisis &amp; Lock-In Effect</div>
+    <div class="panel-title">Housing Commentary — Affordability Crisis &amp; Lock-In Effect</div>
     <div class="fc-note" id="commentary-housing">The 30-year mortgage at 6.37% continues to lock existing homeowners in place and suppress transaction volume, while Housing Starts at 1,502K suggest builders are still active but are running ahead of effective demand at current affordability levels. With real wages flat, savings rates thin, and no near-term prospect of meaningful mortgage rate relief, the demand side of housing remains structurally impaired. A downside break in starts and permits over coming months would be a significant recessionary signal.</div>
   </div>
   <div class="metric-row" id="housing-metrics"></div>
@@ -2274,7 +2271,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <!-- ══ YIELD CURVE & FED ══ -->
 <div class="tab-panel" id="tab-yield">
   <div class="panel" style="margin-bottom:16px">
-    <div class="panel-title">🏛 Fed Rates Commentary — Policy Stance &amp; Term Structure</div>
+    <div class="panel-title">Fed Rates Commentary — Policy Stance &amp; Term Structure</div>
     <div class="fc-note" id="commentary-yield">The 10Y-2Y spread at 47bp has re-steepened from prior inversion, a pattern that historically accompanies the transition from recession risk pricing to recession onset — this is not a benign signal. The 10Y at 4.42% prices in an economy that can absorb current rates, but that assumption is under stress with NFP at 115K and oil-driven inflation re-accelerating. The Fed Funds rate at 3.64% leaves real rates modestly positive, keeping the Fed effectively on hold with a hawkish bias as long as Core PCE stays above 3%.</div>
   </div>
   <div class="metric-row" id="yield-metrics"></div>
@@ -6164,7 +6161,7 @@ if(document.readyState === 'loading'){
 
 <!-- ══ COMMENTARY NOTE ══ -->
   <div class="panel" style="margin-top:16px">
-    <div class="panel-title">🤖 Dynamic Commentary — AI-Generated from Live Data</div>
+    <div class="panel-title">Dynamic Commentary — AI-Generated from Live Data</div>
     <div class="fc-note">
       All tab commentaries are <strong>dynamically generated</strong> by Claude AI (Agent 3) on each pipeline run. The AI reads the latest FRED/BLS/EIA data from signals.json, compares against prior snapshots, and writes fresh 2–3 sentence commentary for each tab. Commentary is injected into the dashboard via <code>id="commentary-{tab}"</code> markers. Tabs covered: GDP, Jobs, Unemployment, Wages, CPI, PCE, Fed Rates, Credit, Housing, Oil, Banks.
     </div>
