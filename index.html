@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-14T13:05:58Z";
+  var BUILD_V = "2026-05-14T13:14:58Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -3504,15 +3504,20 @@ function buildJobsTab(){
 // FORECAST TAB
 // ════════════════════════════════════════════════════
 // 2026 scenario data
+// FC_SCENARIOS schema: institution + 2026 forecasts. `vintage` field (B4.1)
+// records the publish date / source title for each row so readers can gauge
+// freshness; the renderer surfaces it as the "As of" column. When refreshing
+// a row, update both `vintage` and the underlying numbers in the same commit.
 const FC_SCENARIOS = [
-  {inst:"Goldman Sachs",   gdp26:"+2.6%",gdp26hi:"+2.8% (Q4/Q4)",unemp:"4.3–4.5%",cpi:"2.1% core PCE",fed:"3.0–3.25% (2 cuts)",recession:"20%",note:"Tax cuts + fading tariff drag. Above-consensus on inflation declining."},
-  {inst:"RSM US",          gdp26:"+2.2%",gdp26hi:"+2.2%",         unemp:"up to 4.5%",cpi:"~2.7%",        fed:"continued easing",  recession:"30%",note:"AI & deregulation tailwinds. Cut recession prob from 40% → 30%."},
-  {inst:"JP Morgan",       gdp26:"+1.8%",gdp26hi:"+1.8%",         unemp:"~4.5%",     cpi:"~2.8–3.0%",   fed:"25bp cuts",         recession:"30%",note:"Low-hire, low-fire labor market. Wage growth converging to 3.5%."},
-  {inst:"Deloitte (base)", gdp26:"+1.9%",gdp26hi:"Bull: +2.4%",   unemp:"4.5%",      cpi:"3.0% core PCE",fed:"gradual cuts",      recession:"25%",note:"Tariff pass-through hits consumers. AI bubble is key downside risk."},
-  {inst:"EY-Parthenon",    gdp26:"+2.0%",gdp26hi:"+2.4% upside",  unemp:"~4.5%",     cpi:"~2.8%",        fed:"2–3 cuts",          recession:"25%",note:"Solid private demand. Government shutdown Q4 rebound in 2026H1."},
-  {inst:"Morgan Stanley",  gdp26:"+2.0%",gdp26hi:"Mild recession risk",unemp:"4.5–5%",cpi:"2.6% core PCE",fed:"pause at 3.0–3.25%",recession:"30%",note:"Stagflation tail risk. Tariffs + immigration = supply shock."},
-  {inst:"IBRC / Stanford", gdp26:"+1.8%",gdp26hi:"+1.8%",         unemp:"4.8%",      cpi:"toward 2%",    fed:"data-dependent",    recession:"30–35%",note:"Stagflation the biggest concern. SCOTUS tariff ruling = wildcard."},
-  {inst:"Blue Chip Consensus",gdp26:"+2.1%",gdp26hi:"Range: 1.8–2.4%",unemp:"4.5%", cpi:"~2.8%",        fed:"2 cuts",            recession:"~25%",note:"Central tendency. Tariff uncertainty main headwind."},
+  {inst:"Goldman Sachs",   gdp26:"+2.5%",gdp26hi:"+2.8% full-yr · vs consensus 2.1%",unemp:"stabilizing · softening tail",cpi:"2.2% core PCE Dec'26",fed:"easing path",recession:"~15%",note:"Tax cuts (One Big Beautiful Bill Act) offset fading tariff drag. Above-consensus on growth, below-consensus on inflation.", vintage:"Dec 2025 Macro Outlook"},
+  {inst:"RSM US",          gdp26:"+2.2%",gdp26hi:"+2.2%",         unemp:"up to 4.5%",cpi:"~2.7%",        fed:"continued easing",  recession:"30%",note:"AI & deregulation tailwinds. Cut recession prob from 40% → 30%.", vintage:"Q4 2025 Outlook"},
+  {inst:"JP Morgan",       gdp26:"+2.2%",gdp26hi:"Full-yr · steady-state range 1.8–2.2%",unemp:"~4.5% steady · drifting to 4.2%",cpi:"peak >3% summer · ~2% YE",fed:"data-dependent gradual",recession:"30%",note:"K-shaped expansion: cold-hot-cold. Low-hire, low-fire labor market. ~60K payroll gains/month from labor supply + productivity.", vintage:"Q1 2026 Baseline (Cembalest)"},
+  {inst:"Deloitte (base)", gdp26:"+1.9%",gdp26hi:"Bull: +2.4%",   unemp:"4.5%",      cpi:"3.0% core PCE",fed:"gradual cuts",      recession:"25%",note:"Tariff pass-through hits consumers. AI bubble is key downside risk.", vintage:"Q4 2025 US Outlook"},
+  {inst:"EY-Parthenon",    gdp26:"+2.0%",gdp26hi:"+2.4% upside",  unemp:"~4.5%",     cpi:"~2.8%",        fed:"2–3 cuts",          recession:"25%",note:"Solid private demand. Government shutdown Q4 rebound in 2026H1.", vintage:"Q4 2025 Outlook"},
+  {inst:"Morgan Stanley",  gdp26:"+1.8%",gdp26hi:"+2.6% on stronger capex",unemp:"peaks 4.7% Q2'26",cpi:"2.6% core PCE YE",fed:"3.00–3.25% terminal (Dec+Jan+Apr cuts)",recession:"30%",note:"Hyperscaler capex $720B drives the upside; baseline 1.8% with Q2 unemployment peak. Stagflation tail risk if tariffs persist.", vintage:"Nov 2025 US Economics Outlook"},
+  {inst:"BCA Research",    gdp26:"+1.4%",gdp26hi:"H1 'Great Rotation' · H2 selloff",unemp:"weakening (chief concern)",cpi:"sticky · supply-shock channel",fed:"insufficient cushion",recession:"50% (40% if SCOTUS strikes tariffs)",note:"Two-stage 2026: tech→non-tech rotation H1, broad selloff H2 as labor weakens. Cites rising oil, tech capex bubble, frothy housing, private-credit stress.", vintage:"Q1 2026 Bearish (Berezin)"},
+  {inst:"IBRC / Stanford", gdp26:"+1.8%",gdp26hi:"+1.8%",         unemp:"4.8%",      cpi:"toward 2%",    fed:"data-dependent",    recession:"30–35%",note:"Stagflation the biggest concern. SCOTUS tariff ruling = wildcard.", vintage:"Q1 2026 Outlook"},
+  {inst:"Blue Chip Consensus",gdp26:"+2.1%",gdp26hi:"Range: 1.8–2.4%",unemp:"4.5%", cpi:"~2.8%",        fed:"2 cuts",            recession:"~25%",note:"Central tendency. Tariff uncertainty main headwind.", vintage:"Jan 2026 Survey"},
 ];
 
 function buildFCTab(){
@@ -3548,7 +3553,7 @@ function buildFCTab(){
   });
 
   // Scenarios table
-  const hd=["Institution","GDP 2026","Range / Scenario","Unemployment","CPI / PCE","Fed Rate Path","Recession Prob.","Key View"];
+  const hd=["Institution","GDP 2026","Range / Scenario","Unemployment","CPI / PCE","Fed Rate Path","Recession Prob.","Key View","As of"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   FC_SCENARIOS.forEach(r=>{
     const gv=parseFloat(r.gdp26);
@@ -3564,6 +3569,7 @@ function buildFCTab(){
       <td>${r.fed}</td>
       <td style="${rc};font-weight:500">${r.recession}</td>
       <td style="color:#7A8FA8;max-width:220px;white-space:normal;line-height:1.4">${r.note}</td>
+      <td style="color:#7A8FA8;font-style:italic;font-size:11px;white-space:nowrap">${r.vintage||"&mdash;"}</td>
     </tr>`;
   });
   document.getElementById("fc-scenarios-tbl").innerHTML=h+"</tbody>";
