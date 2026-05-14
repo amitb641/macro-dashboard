@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-14T13:14:58Z";
+  var BUILD_V = "2026-05-14T14:39:52Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -412,6 +412,14 @@ html{scrollbar-width:thin;scrollbar-color:#CBD5E1 transparent}
 ::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:4px}
 body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:28px 20px 60px;font-size:13px}
 
+/* A11Y — skip-to-content link (visible only on focus) and baseline
+   focus rings on every interactive surface. theme-overlay.css duplicates
+   these scoped to body.themed-sm; this block covers un-themed users. */
+.sr-only-focusable{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.sr-only-focusable:focus,.sr-only-focusable:focus-visible{position:fixed;left:12px;top:12px;width:auto;height:auto;padding:8px 14px;background:#111;color:#fff;font-weight:600;font-size:13px;border-radius:6px;z-index:9999;outline:2px solid #336BCC;outline-offset:2px;text-decoration:none}
+a:focus-visible,button:focus-visible,.nav-btn:focus-visible,.download-btn:focus-visible,.sort-btn:focus-visible,[role="button"]:focus-visible,[role="tab"]:focus-visible,[tabindex]:focus-visible{outline:2px solid #336BCC;outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+
 /* HEADER */
 .eyebrow{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 h1{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:clamp(22px,5vw,34px);font-weight:800;letter-spacing:-.02em;color:var(--text);line-height:1.1}
@@ -505,6 +513,10 @@ h1 span{color:var(--accent)}
 .ch260{position:relative;height:260px}
 .ch200{position:relative;height:200px}
 .ch-inline{position:relative}
+
+/* Stacked single-axis pair (replaces dual-axis charts where scales are unrelated). */
+.split-stack{display:flex;flex-direction:column;gap:6px;height:300px}
+.split-stack-row{position:relative;flex:1 1 0;min-height:0;width:100%}
 
 /* GRID LAYOUTS */
 .two-up{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -1186,6 +1198,7 @@ table{border-collapse:collapse}
   .ch400{height:250px!important}
   .ch320{height:220px!important}
   .ch300{height:200px!important}
+  .split-stack{height:240px!important}
   .ch260{height:185px!important}
   .ch200{height:160px!important}
   .ch-inline{height:220px!important}
@@ -1220,6 +1233,7 @@ table{border-collapse:collapse}
   .ch400{height:200px!important}
   .ch320{height:180px!important}
   .ch300{height:165px!important}
+  .split-stack{height:210px!important}
   .ch260{height:150px!important}
   .ch200{height:125px!important}
   .ch-inline{height:185px!important}
@@ -1264,6 +1278,7 @@ table{border-collapse:collapse}
   .panel{break-inside:avoid;page-break-inside:avoid}
   body{padding:0;font-size:10pt}
   .ch400,.ch320,.ch300{height:220px!important}
+  .split-stack{height:260px!important}
   canvas{max-height:220px}
 }
 
@@ -1500,6 +1515,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 </head>
 <body>
 
+<a href="#main-content" class="sr-only-focusable">Skip to dashboard content</a>
+
 <div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Updated weekly via GitHub Actions</div>
 <h1>U.S. <span>Macro</span> Dashboard</h1>
 <p class="subtitle">Growth · Labor · Inflation · Financial Conditions · Credit · Housing · Energy — 2025 actuals · 2026 outlook</p>
@@ -1507,7 +1524,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 
 
-<div class="kpi-strip" id="kpi-strip"></div>
+<div class="kpi-strip" id="kpi-strip" role="region" aria-label="Headline KPI strip"></div>
+<div id="main-content" tabindex="-1"></div>
 <div style="display:flex;gap:14px;align-items:center;margin:-14px 0 18px 0;flex-wrap:wrap">
   <span style="font-size:9px;color:#94A3B8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Signal:</span>
   <span style="font-size:9px;color:#1A9E5A;font-weight:600">● Healthy</span>
@@ -1560,7 +1578,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <button class="nav-btn nav-btn-meta" data-tab="dict"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2" fill="#F1F5F9"/><rect x="3" y="3" width="14" height="14" rx="2" fill="none" stroke="#64748B" stroke-width="1.2"/><path d="M6.5 7.5h7M6.5 10.5h5M6.5 13.5h3" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>Sources</button>
       <button class="nav-btn nav-btn-meta" data-tab="stack"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="2.5" y="2.5" width="6" height="6" rx="1.5" fill="#F1F5F9" stroke="#64748B" stroke-width="1.1"/><rect x="11.5" y="2.5" width="6" height="6" rx="1.5" fill="#E2E8F0" stroke="#64748B" stroke-width="1.1"/><rect x="2.5" y="11.5" width="6" height="6" rx="1.5" fill="#E2E8F0" stroke="#64748B" stroke-width="1.1"/><rect x="11.5" y="11.5" width="6" height="6" rx="1.5" fill="#F1F5F9" stroke="#64748B" stroke-width="1.1"/></svg>Dashboard</button>
       <button class="nav-btn nav-btn-meta" data-tab="validator"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M10 1.5l7.5 4v5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5v-5L10 1.5z" fill="#ECFDF5" stroke="#059669" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Validator</button>
-      <button class="download-btn" id="download-btn" onclick="downloadFullHTML()" title="Download full dashboard"><svg viewBox="0 0 20 20" width="14" height="14" style="vertical-align:-2px;margin-right:5px"><path d="M10 3v9m0 0l-3-3m3 3l3-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 14v2a1 1 0 001 1h10a1 1 0 001-1v-2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download</button>
+      <button class="download-btn" id="download-btn" onclick="downloadFullHTML()" title="Download full dashboard" aria-label="Download the full dashboard as a standalone HTML file"><svg viewBox="0 0 20 20" width="14" height="14" style="vertical-align:-2px;margin-right:5px"><path d="M10 3v9m0 0l-3-3m3 3l3-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 14v2a1 1 0 001 1h10a1 1 0 001-1v-2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download</button>
     </div>
   </div>
 </div>
@@ -1608,7 +1626,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Monthly Unemployment Rate — 13-Month Trend</div>
       <div class="panel-sub">Monthly rate (%) · BLS CPS · seasonally adjusted · dashed line = 2024 annual avg (4.0%)</div>
-      <div class="ch300"><canvas id="c-unemp-monthly"></canvas></div>
+      <div class="ch300"><canvas id="c-unemp-monthly" role="img" aria-label="Monthly unemployment rate, 13-month trend with 2024 average reference line"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted monthly data. 2024 annual average shown as reference baseline.</p>
     </div>
     <div class="panel">
@@ -1619,7 +1637,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 rate fell</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom" role="img" aria-label="Unemployment by sector, month-over-month change in percentage points"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
     </div>
   </div>
@@ -1629,7 +1647,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">National Unemployment Rate — Annual Average</div>
       <div class="panel-sub">% of civilian labor force · BLS CPS seasonally adjusted</div>
-      <div class="ch300"><canvas id="c-unemp-line"></canvas></div>
+      <div class="ch300"><canvas id="c-unemp-line" role="img" aria-label="National unemployment rate, annual averages"></canvas></div>
       <p class="src">Source: BLS Series LNS14000000 (Unemployment Rate, SA) · Each bar = average of 12 monthly readings for that year, e.g. 2025 = (Jan 4.2 + Feb 4.1 + … + Dec 4.4) ÷ 12 = 4.3%.</p>
     </div>
     <div class="panel">
@@ -1640,7 +1658,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>2025 worsened (higher)</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>2024</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-bar" role="img" aria-label="Unemployment by sector, 2025 versus 2024 rates"></canvas></div>
       <p class="src">Source: BLS Current Population Survey (CPS) Table A-14. Seasonally adjusted, 2025 vs 2024 rates by industry sector.</p>
     </div>
   </div>
@@ -1649,7 +1667,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Weekly Jobless Claims — Initial &amp; Continued</div>
     <div class="panel-sub">Seasonally adjusted · DOL via FRED · Initial claims (left axis) · Continued claims (right axis)</div>
-    <div class="ch300"><canvas id="c-claims-line"></canvas></div>
+    <div class="ch300"><canvas id="c-claims-line" role="img" aria-label="Weekly jobless claims, initial and continued"></canvas></div>
     <p class="src">Source: U.S. Department of Labor, Initial Claims (ICSA) &amp; Continued Claims (CCSA), seasonally adjusted. Updated weekly (Thursdays).</p>
   </div>
 
@@ -1688,7 +1706,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Monthly CPI — Headline vs Core YoY % (13-Month Trend)</div>
       <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
-      <div class="ch300"><canvas id="c-cpi-mom"></canvas></div>
+      <div class="ch300"><canvas id="c-cpi-mom" role="img" aria-label="CPI month-over-month change, 13-month trend"></canvas></div>
       <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference.</p>
     </div>
     <div class="panel">
@@ -1699,7 +1717,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Apr'26 cooling</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Mar'26</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-cpi-cat-mom"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-cpi-cat-mom" role="img" aria-label="CPI categories, month-over-month change"></canvas></div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Monthly YoY % change by category. Apr'26 vs Mar'26 comparison.</p>
     </div>
   </div>
@@ -1708,14 +1726,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %)</div>
     <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS</div>
-    <div class="ch300"><canvas id="c-cpi-bar"></canvas></div>
+    <div class="ch300"><canvas id="c-cpi-bar" role="img" aria-label="CPI annual rate, headline and core"></canvas></div>
     <p class="src">Source: BLS Series CUUR0000SA0 (CPI-U All Urban Consumers, SA) · Each bar = Dec-to-Dec YoY % change for that calendar year, e.g. 2025 = Dec'25 CPI vs Dec'24 CPI = +2.7%.</p>
   </div>
   <div class="two-up">
     <div class="panel">
       <div class="panel-title">CPI by Category — 2022 Peak vs 2024 vs 2025</div>
       <div class="panel-sub">Dec-to-Dec % change · grouped comparison</div>
-      <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-cpi-cat"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-cpi-cat" role="img" aria-label="CPI categories, annual rate comparison"></canvas></div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Dec-to-Dec % change by category.</p>
     </div>
     <div class="panel">
@@ -1736,7 +1754,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">Median CPI</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:1.5px;background:#94A3B8;border-radius:2px;border-top:1.5px dashed #94A3B8"></span><span style="font-size:10.5px;color:#94A3B8;font-weight:600">Fed 2% target</span></div>
     </div>
-    <div class="ch320"><canvas id="c-cpi-breadth"></canvas></div>
+    <div class="ch320"><canvas id="c-cpi-breadth" role="img" aria-label="CPI breadth, share of basket above 2% inflation"></canvas></div>
     <p class="src">Source: Federal Reserve Bank of Cleveland — Median CPI &amp; 16% Trimmed-Mean CPI (monthly, annualised). Headline CPI MoM annualised computed from BLS CPIAUCSL. When trimmed-mean and median sit close to headline, inflation is broad-based and policy-stickier; when they diverge sharply lower, the headline number is being driven by a small set of categories (energy, used cars) and can fade quickly. Cleveland Fed publishes the day after BLS CPI release.</p>
   </div>
 </div>
@@ -1757,7 +1775,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (13-Month Trend)</div>
     <div class="panel-sub">Atlanta Fed Wage Growth Tracker 3MMA · nominal (solid) vs real CPI-adjusted (dashed) · tracks wage growth for continuously-employed workers (controls for composition)</div>
-    <div class="ch300"><canvas id="c-wage-mom"></canvas></div>
+    <div class="ch300"><canvas id="c-wage-mom" role="img" aria-label="Wage growth month-over-month, 13-month trend"></canvas></div>
     <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average, Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a>. Real wages = nominal minus CPI YoY. Atlanta Fed's tracker follows the same workers over 12 months, unlike BLS AHE which can be biased by composition shifts when the mix of workers in the sample changes.</p>
   </div>
 
@@ -1766,7 +1784,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Nominal vs Real Wage Growth — Annual History</div>
       <div class="panel-sub">Atlanta Fed WGT 3MMA · Dec reading per year (solid) vs real inflation-adjusted (dashed)</div>
-      <div class="ch300"><canvas id="c-wage-line"></canvas></div>
+      <div class="ch300"><canvas id="c-wage-line" role="img" aria-label="Average hourly earnings, year-over-year trend"></canvas></div>
       <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3MMA Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a> · nominal = each year's December 3MMA reading (annual headline rate for continuously-employed workers). Real = nominal minus CPI Dec-YoY. Falls back to BLS AHETPI Dec-YoY (vintage-pinned) until Atlanta Fed series is collected.</p>
     </div>
     <div class="panel">
@@ -1777,7 +1795,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>2025 lower</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>2024</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar" role="img" aria-label="Wage growth by sector, year-over-year"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal YoY % change by sector.</p>
     </div>
   </div>
@@ -1804,7 +1822,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Monthly Employment Change — BLS Total Nonfarm vs ADP Private (thousands)</div>
       <div class="panel-sub">BLS CES = Total Nonfarm (includes government) · ADP = Private sector only (excludes government) · divergences reflect methodology differences · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
-      <div class="ch300"><canvas id="c-nfp-vs-adp"></canvas></div>
+      <div class="ch300"><canvas id="c-nfp-vs-adp" role="img" aria-label="Nonfarm payrolls versus ADP employment, monthly change"></canvas></div>
       <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
     </div>
     <div class="panel">
@@ -1815,7 +1833,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Apr'26 worsened vs Mar</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Mar'26</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom" role="img" aria-label="Job changes by sector, month-over-month"></canvas></div>
       <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
     </div>
   </div>
@@ -1825,7 +1843,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
       <div class="panel-sub">Net job gains/losses · BLS CES · seasonally adjusted · <span style="color:#336BCC;font-style:italic">2026F base case +1,000K · range +800K–+1,200K · tariff-adjusted · pre-tariff consensus was +1,500K</span></div>
-      <div class="ch300"><canvas id="c-jobs-total"></canvas></div>
+      <div class="ch300"><canvas id="c-jobs-total" role="img" aria-label="Total nonfarm payrolls, level over time"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES), seasonally adjusted. Annual net job gains/losses.</p>
     </div>
     <div class="panel">
@@ -1836,7 +1854,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>2025 lower</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>2024</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar" role="img" aria-label="Jobs by sector, annual change"></canvas></div>
       <p class="src">Source: BLS Current Employment Statistics (CES). Annual net change in payroll employment by sector.</p>
     </div>
   </div>
@@ -1857,7 +1875,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#CC8A00;border-radius:2px"></span><span style="font-size:10.5px;color:#CC8A00;font-weight:600">Quits (L)</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px;border-top:2px dashed #8878B8"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">V/U Ratio (R)</span></div>
     </div>
-    <div class="ch320"><canvas id="c-jolts"></canvas></div>
+    <div class="ch320"><canvas id="c-jolts" role="img" aria-label="JOLTS labour churn: job openings, quits, and hires"></canvas></div>
     <p class="src">Sources: BLS JOLTS (Job Openings &amp; Labor Turnover Survey) — series JTSJOL/JTSQUL/JTSHIL (thousands, seasonally adjusted). BLS Current Population Survey UNEMPLOY (level, thousands SA). V/U ratio = openings ÷ unemployed: above 1.0 means more job postings than job seekers (a labour-market tightness signal cited by the Fed during the 2022–2024 cycle). Quits rate is the canonical "confidence to leave" indicator — falling quits historically precede payroll deceleration by 3–6 months.</p>
   </div>
 
@@ -1878,13 +1896,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Personal Saving Rate — Last 13 Months</div>
       <div class="panel-sub">BEA Personal Income &amp; Outlays · % of disposable income · Pre-pandemic avg: ~7–9%</div>
-      <div class="ch300"><canvas id="c-saving-monthly"></canvas></div>
+      <div class="ch300"><canvas id="c-saving-monthly" role="img" aria-label="Personal saving rate, monthly trend"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Personal saving rate as % of disposable income.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Personal Saving Rate — Annual Averages (2000–2025)</div>
       <div class="panel-sub">Annual avg of monthly saving rate · BEA · COVID spike 2020: 15.1%</div>
-      <div class="ch300"><canvas id="c-saving-annual"></canvas></div>
+      <div class="ch300"><canvas id="c-saving-annual" role="img" aria-label="Personal saving rate, annual averages"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Annual average of monthly personal saving rate.</p>
     </div>
   </div>
@@ -1894,13 +1912,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Household Debt &amp; Delinquencies — NY Fed Data</div>
       <div class="panel-sub">Total household debt $18.59T (Q3 2025) · delinquency rates by type</div>
-      <div class="ch300"><canvas id="c-debt-bar"></canvas></div>
+      <div class="ch300"><canvas id="c-debt-bar" role="img" aria-label="Household debt by category"></canvas></div>
       <p class="src">Source: NY Fed Center for Microeconomic Data — Household Debt &amp; Credit, Q3 2025 (Equifax). Note: NY Fed/Equifax figures cover all credit card issuers (banks, credit unions, fintech, retail). Fed Board series (FRED RCCCBACTDPD90P) covers commercial banks only and reports ~7.8% — lower due to tighter bank underwriting standards.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Debt Service Ratio (TDSP) — % of Disposable Income</div>
       <div class="panel-sub">Household debt service payments as % of disposable income · Federal Reserve Board · Quarterly</div>
-      <div class="ch300"><canvas id="c-tdsp-line"></canvas></div>
+      <div class="ch300"><canvas id="c-tdsp-line" role="img" aria-label="Household debt service ratio over time"></canvas></div>
       <p class="src">Source: <a href="https://fred.stlouisfed.org/series/TDSP">FRED TDSP</a> · Federal Reserve Board. Includes mortgage + consumer debt payments. 2007 peak: ~13.2%. Current: ~11.3%.</p>
     </div>
   </div>
@@ -1910,13 +1928,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Consumer Sentiment — Last 13 Months<span id="umcsent-release-badge"></span></div>
       <div class="panel-sub">U. of Michigan Survey of Consumers · Monthly index · <a href="https://www.sca.isr.umich.edu/">sca.isr.umich.edu</a></div>
-      <div class="ch300"><canvas id="c-umcsent-monthly"></canvas></div>
+      <div class="ch300"><canvas id="c-umcsent-monthly" role="img" aria-label="University of Michigan consumer sentiment, monthly"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers (direct) with <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a> fallback. Pre-pandemic avg ~95.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Consumer Sentiment — Annual (2000–2025)</div>
       <div class="panel-sub">Annual avg index · U. of Michigan Survey · 2022 trough: 50.0 (inflation shock)</div>
-      <div class="ch300"><canvas id="c-umcsent-annual"></canvas></div>
+      <div class="ch300"><canvas id="c-umcsent-annual" role="img" aria-label="University of Michigan consumer sentiment, annual averages"></canvas></div>
       <p class="src">Source: University of Michigan Survey of Consumers / <a href="https://fred.stlouisfed.org/series/UMCSENT">FRED UMCSENT</a>. Pre-pandemic avg ~95. 2022 trough: 50.0 (inflation shock).</p>
     </div>
   </div>
@@ -1926,13 +1944,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">PCE Price Index — Monthly Headline vs Core YoY %</div>
       <div class="panel-sub">Last 13 months · BEA · Fed's preferred inflation gauge · 2% target shown</div>
-      <div class="ch300"><canvas id="c-pce-mom"></canvas></div>
+      <div class="ch300"><canvas id="c-pce-mom" role="img" aria-label="Core PCE month-over-month change"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays release. Core PCE excludes food &amp; energy — the Fed's preferred inflation gauge.</p>
     </div>
     <div class="panel">
       <div class="panel-title">PCE Price Index — Annual Headline vs Core YoY %</div>
       <div class="panel-sub">Dec-to-Dec YoY % change · 2000–2025 · BEA</div>
-      <div class="ch300"><canvas id="c-pce-line"></canvas></div>
+      <div class="ch300"><canvas id="c-pce-line" role="img" aria-label="Core PCE annual rate trend"></canvas></div>
       <p class="src">Source: BEA Series PCEPI / PCEPILFE. Each year = Dec-to-Dec YoY % change. 2025: Headline +2.9%, Core +3.0%.</p>
     </div>
   </div>
@@ -1945,13 +1963,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 cooling</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
       </div>
-      <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-pce-cat-mom"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-pce-cat-mom" role="img" aria-label="PCE categories, month-over-month change"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays (Table 2.3.4U). Monthly chain-type price index, top-level components.</p>
     </div>
     <div class="panel">
       <div class="panel-title">PCE by Category — Annual Growth 2023 vs 2024 vs 2025</div>
       <div class="panel-sub">Inflation-adjusted consumer spending growth · BEA</div>
-      <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-pce-cat"></canvas></div>
+      <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-pce-cat" role="img" aria-label="PCE categories, annual rate comparison"></canvas></div>
       <p class="src">Source: BEA Personal Income &amp; Outlays. Real (inflation-adjusted) consumer spending growth by category.</p>
     </div>
   </div>
@@ -1983,13 +2001,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">FY2026 NII Guidance — Updated After Q1 Prints ($B)</div>
       <div class="panel-sub">Net Interest Income guidance — JPM ↓$1.5B to ~$103B · BofA ↑ to +6–8% · WFC reaff. ~$50B</div>
-      <div class="ch300"><canvas id="c-bank-nii"></canvas></div>
+      <div class="ch300"><canvas id="c-bank-nii" role="img" aria-label="Bank net interest income trend"></canvas></div>
       <p class="src">Source: Q1 2026 earnings calls from major U.S. banks (Apr 2026). Net Interest Income guidance updates.</p>
     </div>
     <div class="panel">
       <div class="panel-title">Net Charge-Off Rates — Q1 2026 Actuals & FY26 Outlook</div>
       <div class="panel-sub">Consumer credit loss rates · Q1 2026 actuals & FY2026 guidance</div>
-      <div class="ch300"><canvas id="c-bank-nco"></canvas></div>
+      <div class="ch300"><canvas id="c-bank-nco" role="img" aria-label="Bank net charge-off rate trend"></canvas></div>
       <p class="src">Source: Q1 2026 earnings releases. Consumer credit loss rates and FY26 guidance.</p>
     </div>
   </div>
@@ -2011,13 +2029,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">2025 Quarterly GDP — BEA Estimates</div>
       <div class="panel-sub">Annualized % change by quarter · 2025 full year +2.2%</div>
-      <div class="ch260"><canvas id="c-gdp-q"></canvas></div>
+      <div class="ch260"><canvas id="c-gdp-q" role="img" aria-label="Real GDP, quarterly annualized growth rate"></canvas></div>
       <p class="src">Source: BEA. Real GDP annualized % change by quarter, 2025.</p>
     </div>
     <div class="panel">
       <div class="panel-title">2024 vs 2025 vs 2026F — Key Macro Indicators</div>
       <div class="panel-sub">Annual comparison · 2026 = consensus midpoint estimate</div>
-      <div class="ch260"><canvas id="c-fc-group"></canvas></div>
+      <div class="ch260"><canvas id="c-fc-group" role="img" aria-label="Financial conditions composite, group view"></canvas></div>
       <p class="src">Sources: BEA (GDP), BLS (unemployment, wages, CPI), Federal Reserve (rates). 2026F = consensus midpoint.</p>
     </div>
   </div>
@@ -2066,13 +2084,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">WTI &amp; Brent — Annual History</div>
       <div class="panel-sub">Annual average $/bbl · 2000–2025 · EIA · <span style="color:#D64045;font-weight:600">Note: 2022 avg $94.5 masks Jun peak of $114–123</span> · grey bands = NBER recessions</div>
-      <div class="ch320"><canvas id="c-oil-hist"></canvas></div>
+      <div class="ch320"><canvas id="c-oil-hist" role="img" aria-label="WTI crude oil price, long-run history"></canvas></div>
       <p class="src">Source: Energy Information Administration (EIA). Annual average $/bbl, 2000–2025. Grey bands = NBER recessions.</p>
     </div>
     <div class="panel">
       <div class="panel-title">WTI &amp; Brent — Monthly Jan 2022–Feb 2026 (Prior Month)</div>
       <div class="panel-sub">Monthly avg $/bbl · Jan 2022–Feb 2026 · EIA · Ends prior complete month · <span style="color:#D64045;font-weight:600">⚡ Mar 2026 spike shown in daily chart →</span></div>
-      <div class="ch320"><canvas id="c-oil-monthly"></canvas></div>
+      <div class="ch320"><canvas id="c-oil-monthly" role="img" aria-label="WTI crude oil price, monthly average"></canvas></div>
       <p class="src">Source: Energy Information Administration (EIA). Monthly average $/bbl, Jan 2022–Feb 2026.</p>
     </div>
   </div>
@@ -2117,7 +2135,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">WTI Price History with Recession Shading · 1973–2025</div>
       <div class="panel-sub">Annual WTI $/bbl · NBER recession years shaded red · 1973–2025</div>
-      <div class="ch300"><canvas id="c-oil-recession"></canvas></div>
+      <div class="ch300"><canvas id="c-oil-recession" role="img" aria-label="Oil price shocks overlaid with NBER recessions"></canvas></div>
       <p class="src">Source: EIA (WTI historical prices); NBER (recession dating). Annual averages, 1973–2025.</p>
     </div>
     <div class="panel">
@@ -2141,7 +2159,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Delinquency Rates by Product — 90+ Days Past Due (%)</div>
       <div class="panel-sub">NY Fed Household Debt & Credit · quarterly · Q3 2025</div>
-      <div class="ch300"><canvas id="c-credit-delinq"></canvas></div>
+      <div class="ch300"><canvas id="c-credit-delinq" role="img" aria-label="Consumer credit delinquency rates"></canvas></div>
       <p style="font-size:10px;color:#7a90aa;margin-top:4px">⚠ Student loan 90+ DPD data unavailable 2003–2007: NY Fed HHDC began tracking student loans in 2003, but reliable delinquency reporting lagged until ~2008 due to limited servicer data and high deferment/forbearance rates among recent graduates. Pre-2020 values (6–11%) reflect true delinquency; 2020–Q1'25 shows 0% due to CARES Act/on-ramp payment pause.</p>
     </div>
     <div class="panel">
@@ -2150,11 +2168,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="two-up" style="margin-top:12px">
         <div>
           <div style="font-size:11px;font-weight:600;color:#D64045;margin-bottom:6px">💳 Card Specialists</div>
-          <div class="ch300"><canvas id="c-nco-cards"></canvas></div>
+          <div class="ch300"><canvas id="c-nco-cards" role="img" aria-label="Credit card net charge-off rates by issuer"></canvas></div>
         </div>
         <div>
           <div style="font-size:11px;font-weight:600;color:#336BCC;margin-bottom:6px">🏦 Diversified Banks — Consumer NCO</div>
-          <div class="ch300"><canvas id="c-nco-banks"></canvas></div>
+          <div class="ch300"><canvas id="c-nco-banks" role="img" aria-label="Bank net charge-off rates by category"></canvas></div>
         </div>
       </div>
       <p style="font-size:10px;color:#7a90aa;margin-top:6px">⚠ Note: Card specialists report card-only NCO on near-100% card portfolios. Diversified bank rates are blended across cards, auto, and mortgage. Not directly comparable.</p>
@@ -2173,7 +2191,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
 
     <!-- SLOOS Chart.js chart — rendered directly using bundled Chart.js (_ChartJS) -->
-    <div style="position:relative;height:310px;margin-bottom:8px"><canvas id="c-sloos"></canvas></div>
+    <div style="position:relative;height:310px;margin-bottom:8px"><canvas id="c-sloos" role="img" aria-label="SLOOS senior loan officer survey, tightening standards"></canvas></div>
     <div id="sloos-heatmap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3"></div>
     <div class="sloos-narrative" style="margin:8px 0 6px;padding:8px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:10.5px;color:#374151;line-height:1.65">
       <strong style="color:#1F2937">Risk assessment:</strong> Credit card delinquencies lag recession probability by approximately 5 quarters <span style="color:#6B7280">(r = 0.50)</span> — once the yield curve signals distress, card losses are already building beneath the surface. SLOOS bank tightening serves as the transmission mechanism, forecasting elevated card stress roughly 3 quarters forward <span style="color:#6B7280">(r = 0.48)</span>. Notably, card delinquencies deteriorate ahead of broader consumer credit products <span style="color:#6B7280">(all-product DQ r = 0.27, ~5Q lag)</span>, positioning cards as the earliest observable stress indicator in the consumer credit cycle.
@@ -2231,7 +2249,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Consumer Credit Growth — Revolving vs Non-Revolving YoY %</div>
       <div class="panel-sub">Federal Reserve G.19 Consumer Credit · annual % change</div>
-      <div class="ch300"><canvas id="c-credit-growth"></canvas></div>
+      <div class="ch300"><canvas id="c-credit-growth" role="img" aria-label="Consumer and business credit growth"></canvas></div>
       <p class="src">Source: Federal Reserve G.19 Consumer Credit release. Annual % change, revolving vs non-revolving.</p>
     </div>
   <div class="panel">
@@ -2261,9 +2279,12 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Monthly Trend Chart -->
   <div class="panel">
     <div class="panel-title">Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate (13-Month)</div>
-    <div class="panel-sub">Case-Shiller National HPI YoY % (left axis) · 30yr fixed mortgage rate (right axis) · monthly</div>
-    <div class="ch300"><canvas id="c-housing-mom"></canvas></div>
-    <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Inverse relationship: higher rates suppress demand → slower price growth.</p>
+    <div class="panel-sub">Two single-axis panels — each metric reads on its own scale. Top: home-price momentum (Case-Shiller YoY %). Bottom: financing cost (30yr fixed mortgage rate %).</div>
+    <div class="split-stack">
+      <div class="split-stack-row"><canvas id="c-housing-mom" role="img" aria-label="Housing prices month-over-month"></canvas></div>
+      <div class="split-stack-row"><canvas id="c-housing-mom-2"></canvas></div>
+    </div>
+    <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Why both: mortgage rate is the cost-of-capital input; Case-Shiller YoY is the lagged price response. They are read together, not visually correlated — scales differ by ~3x.</p>
   </div>
 
   <!-- Annual Charts -->
@@ -2271,13 +2292,13 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Home Price Index — Case-Shiller & FHFA (2012=100)</div>
       <div class="panel-sub">National composite annual indices · S&P/Case-Shiller, FHFA</div>
-      <div class="ch300"><canvas id="c-hpi"></canvas></div>
+      <div class="ch300"><canvas id="c-hpi" role="img" aria-label="Case-Shiller national home price index"></canvas></div>
       <p class="src">Source: S&amp;P/Case-Shiller National Home Price Index; FHFA House Price Index. Annual composite indices, base year 2012=100.</p>
     </div>
     <div class="panel">
       <div class="panel-title">30-Year Mortgage Rate vs Fed Funds Rate</div>
       <div class="panel-sub">Annual averages 2018–2026F · Freddie Mac PMMS · Fed</div>
-      <div class="ch300"><canvas id="c-mortgage"></canvas></div>
+      <div class="ch300"><canvas id="c-mortgage" role="img" aria-label="30-year fixed mortgage rate trend"></canvas></div>
       <p class="src">Source: Freddie Mac Primary Mortgage Market Survey (30yr fixed); Federal Reserve (effective federal funds rate). Annual averages.</p>
     </div>
   </div>
@@ -2285,14 +2306,17 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel">
       <div class="panel-title">Housing Starts — Single-Family vs Multi-Family (000s units)</div>
       <div class="panel-sub">Annual seasonally adjusted · Census Bureau</div>
-      <div class="ch300"><canvas id="c-starts"></canvas></div>
+      <div class="ch300"><canvas id="c-starts" role="img" aria-label="Housing starts, monthly annualized rate"></canvas></div>
       <p class="src">Source: U.S. Census Bureau. Housing starts, seasonally adjusted annual rate (000s).</p>
     </div>
     <div class="panel">
       <div class="panel-title">Affordability Index & Months Supply</div>
-      <div class="panel-sub">NAR Housing Affordability Index (100=qualifying income) · months supply</div>
-      <div class="ch300"><canvas id="c-afford"></canvas></div>
-      <p class="src">Source: NAR Housing Affordability Index; NAR Existing Home Sales (months supply).</p>
+      <div class="panel-sub">Two single-axis panels. Top: NAR Affordability Index (100 = qualifying income at median home / median family). Bottom: Months Supply with a 6.0 balanced-market reference line — below 6 = seller's market, above 6 = buyer's market.</div>
+      <div class="split-stack">
+        <div class="split-stack-row"><canvas id="c-afford" role="img" aria-label="Housing affordability index trend"></canvas></div>
+        <div class="split-stack-row"><canvas id="c-afford-2"></canvas></div>
+      </div>
+      <p class="src">Source: NAR Housing Affordability Index; NAR Existing Home Sales (months supply). Why both: affordability gates whether households can transact; months supply tells you who has the pricing power once they do. Different units, different stories — shown separately on purpose.</p>
     </div>
   </div>
   <div class="panel">
@@ -2316,7 +2340,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Fed Funds Rate — Actual vs FOMC Dot Plot 2026F</div>
     <div class="panel-sub">Actual year-end rate + Dec 2025 SEP median dots · Wall St consensus · Federal Reserve</div>
-    <div class="ch320"><canvas id="c-ffr"></canvas></div>
+    <div class="ch320"><canvas id="c-ffr" role="img" aria-label="Federal funds rate, target and effective"></canvas></div>
     <p class="src">Sources: Federal Reserve H.15; FOMC Dec 2025 SEP (dot plot); GS, JPM, MS forecasts (Jan 2026).</p>
   </div>
 
@@ -2330,7 +2354,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#CC8A00;border-radius:2px"></span><span style="font-size:10.5px;color:#CC8A00;font-weight:600">Reverse Repo (R)</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">Treasury TGA (R)</span></div>
     </div>
-    <div class="ch320"><canvas id="c-fed-liquidity"></canvas></div>
+    <div class="ch320"><canvas id="c-fed-liquidity" role="img" aria-label="Fed balance sheet and liquidity facilities"></canvas></div>
     <p class="src">Sources: Federal Reserve H.4.1 — WALCL (total assets, Wednesday close), WRESBAL (reserve balances), RRPONTSYD (overnight reverse repo), WTREGEN (Treasury General Account). All values $bn. Total assets on left axis; reserves, RRP, TGA on right axis (the three components that absorb Fed-supplied liquidity).</p>
   </div>
 
@@ -2346,7 +2370,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel">
     <div class="panel-title">Card Issuer Funding Mix — Deposits vs Market Borrowing</div>
     <div class="panel-sub">Bank-wide deposits vs total loans · L/D ratio · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
-    <div class="ch300"><canvas id="c-bank-funding"></canvas></div>
+    <div class="ch300"><canvas id="c-bank-funding" role="img" aria-label="Bank funding costs and deposit trends"></canvas></div>
     <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
     <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Deposits &amp; Total Loans = bank-wide figures ($B). L/D ratio = total loans / total deposits; &gt;100% means loans exceed deposits, requiring wholesale funding. Card Yield = card portfolio interest yield where disclosed in quarterly earnings supplements or 10-K; &quot;—&quot; = not separately reported. Rate sensitivity = estimated NII impact of +100bp rate shock. Tickers: JPM = JPMorgan Chase; BAC = Bank of America; CITI = Citigroup; COF = Capital One; DFS = Discover Financial; AXP = American Express; BCS = Barclays; SYF = Synchrony Financial; BFH = Bread Financial.</p>
   </div>
@@ -2364,7 +2388,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#D64045;border-radius:2px"></span><span style="font-size:10.5px;color:#D64045;font-weight:600">Card 90+ DPD %</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:10px;background:rgba(214,64,69,.12);border:1px solid rgba(214,64,69,.3);border-radius:2px"></span><span style="font-size:10.5px;color:#94A3B8">Inversion zone</span></div>
     </div>
-    <div style="height:340px"><canvas id="c-treasury"></canvas></div>
+    <div style="height:340px"><canvas id="c-treasury" role="img" aria-label="Treasury yield curve, 2-year and 10-year spreads"></canvas></div>
     <p class="src">Source: Federal Reserve H.15 (Treasury yields); NY Fed HHDC (Card 90+ DPD). Annual data, 2000–present.</p>
   </div>
 
@@ -2391,7 +2415,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#B45309;border-radius:2px"></span><span style="font-size:10.5px;color:#B45309;font-weight:600">Deficit / GDP</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:1.5px;background:#94A3B8;border-radius:2px;border-top:1.5px dashed #94A3B8"></span><span style="font-size:10.5px;color:#94A3B8;font-weight:600">Post-1965 avg (−3.4%)</span></div>
     </div>
-    <div class="ch320"><canvas id="c-fiscal-deficit"></canvas></div>
+    <div class="ch320"><canvas id="c-fiscal-deficit" role="img" aria-label="Federal fiscal deficit, percent of GDP"></canvas></div>
     <p class="src">Source: OMB / Treasury via FRED series FYFSGDA188S (Federal Surplus or Deficit as % of GDP, annual fiscal year). Negative values = deficit (govt spending exceeds receipts); positive = surplus. Reference line is the simple average from 1965 to last reported FY.</p>
   </div>
 
@@ -2671,6 +2695,77 @@ let miniCharts = {};
 let builtTabs = {"status": false};
 
 // ════════════════════════════════════════════════════
+// NBER RECESSION-BANDS PLUGIN  (style guide §6.4)
+// ════════════════════════════════════════════════════
+// Opt-in per chart via:  options.plugins.nberBands = { enabled: true }
+// Charts that don't set the flag are unaffected.
+// NBER updates are rare — review annually.
+const NBER_RECESSIONS = [
+  { start: "1990-07", end: "1991-03" },
+  { start: "2001-03", end: "2001-11" },
+  { start: "2007-12", end: "2009-06" },
+  { start: "2020-02", end: "2020-04" }
+];
+const nberRecessionBands = {
+  id: "nberBands",
+  beforeDraw(chart, _args, opts) {
+    if (!opts || opts.enabled !== true) return;
+    const xScale = chart.scales && (chart.scales.x || chart.scales["x-axis-0"]);
+    const area = chart.chartArea;
+    if (!xScale || !area) return;
+    const ctx = chart.ctx;
+    const ts = (iso) => Date.parse(iso + "-01T00:00:00Z");
+    const isTime = xScale.type === "time" || xScale.type === "timeseries";
+    // Resolve an x-pixel for a YYYY-MM date against either a time scale or
+    // a category axis whose labels contain a recognisable year token
+    // ("1990", "Mar'20", "2020-03", "May'26"). Returns null if unmatched.
+    function pixelFor(iso, clampSide) {
+      if (isTime) {
+        const px = xScale.getPixelForValue(ts(iso));
+        return isFinite(px) ? px : null;
+      }
+      const labels = xScale.getLabels ? xScale.getLabels() : (chart.data && chart.data.labels) || [];
+      if (!labels.length) return null;
+      const targetYear = parseInt(iso.slice(0, 4), 10);
+      const targetMonth = parseInt(iso.slice(5, 7), 10);
+      let idx = labels.findIndex(l => typeof l === "string" && l.indexOf(iso) === 0);
+      if (idx < 0) {
+        const monAbbr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][targetMonth-1];
+        const yy = String(targetYear).slice(2);
+        idx = labels.findIndex(l => l === monAbbr + "'" + yy);
+      }
+      if (idx < 0) {
+        const yStr = String(targetYear);
+        idx = labels.findIndex(l => l === yStr);
+      }
+      if (idx < 0) {
+        const firstYear = parseInt(String(labels[0]).slice(0, 4), 10);
+        const lastYear  = parseInt(String(labels[labels.length-1]).slice(0, 4), 10);
+        if (isFinite(firstYear) && targetYear < firstYear && clampSide === "start") return area.left;
+        if (isFinite(lastYear)  && targetYear > lastYear  && clampSide === "end")   return area.right;
+        return null;
+      }
+      return xScale.getPixelForValue(labels[idx], idx);
+    }
+    ctx.save();
+    ctx.fillStyle = "rgba(13,27,42,.06)";
+    for (const r of NBER_RECESSIONS) {
+      const x1 = pixelFor(r.start, "start");
+      const x2 = pixelFor(r.end, "end");
+      if (x1 == null || x2 == null) continue;
+      const left = Math.max(area.left, Math.min(x1, x2));
+      const right = Math.min(area.right, Math.max(x1, x2));
+      if (right <= left) continue;
+      ctx.fillRect(left, area.top, right - left, area.bottom - area.top);
+    }
+    ctx.restore();
+  }
+};
+if (typeof Chart !== "undefined" && Chart && Chart.register) {
+  try { Chart.register(nberRecessionBands); } catch(e) { /* already registered */ }
+}
+
+// ════════════════════════════════════════════════════
 // KPI STRIP — Systematic Color Logic
 // ════════════════════════════════════════════════════
 // Color thresholds: each KPI has defined zones that determine its color.
@@ -2735,7 +2830,11 @@ document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
   const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
   const b = _releaseBadge(k.badge);
-  return `<div class="kpi"><div class="kpi-lbl">${k.lbl}${b}</div>
+  // a11y: roll label + value + delta into one aria-label so screen
+  // readers announce the tile as a single unit instead of three.
+  const _aria = `${k.lbl}: ${k.val}${k.chg ? ', change ' + k.chg : ''}. ${k.sub || ''}`
+    .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
+  return `<div class="kpi" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
   <div class="kpi-val" style="color:${col}">${k.val}${d}</div>
   <div class="kpi-sub">${k.sub}</div></div>`;
 }).join("");
@@ -2928,7 +3027,7 @@ function _priorKey(obj,prefix){var keys=Object.keys(obj).filter(function(k){retu
 function _keyYear(k){return "20"+k.replace(/^[a-z]+/i,"");}
 // Utility: clean sector name for tile display (remove → prefix, truncate at & or ()
 function _shortName(s){return s.replace(/^→\s*/,"").replace(/\s*[&(].*$/,"").trim()||s;}
-function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.06)';var bdr='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.2)';return '<div class="metric" style="background:'+bg+';border:1px solid '+bdr+';border-left:3.5px solid '+m.col+'"><div class="m-lbl" style="color:'+m.col+'">'+m.lbl+'</div><div class="m-val" style="color:'+m.col+'">'+m.val+'</div><div class="m-sub">'+m.sub+'</div></div>';}
+function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.06)';var bdr='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',.2)';var aria=((m.lbl||'')+': '+(m.val||'')+'. '+(m.sub||'')).replace(/\s+/g,' ').trim().replace(/"/g,'&quot;');return '<div class="metric" role="group" aria-label="'+aria+'" style="background:'+bg+';border:1px solid '+bdr+';border-left:3.5px solid '+m.col+'"><div class="m-lbl" style="color:'+m.col+'">'+m.lbl+'</div><div class="m-val" style="color:'+m.col+'">'+m.val+'</div><div class="m-sub">'+m.sub+'</div></div>';}
 
 // GDP metric tiles — computed dynamically from GDP_TOTAL_DATA
 (function(){
@@ -3179,7 +3278,8 @@ function buildCPITab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
-        tooltip:{...TT,callbacks:{label:c=>`CPI: ${c.raw}%`}}},
+        tooltip:{...TT,callbacks:{label:c=>`CPI: ${c.raw}%`}},
+        nberBands:{enabled:true}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:11,border:{display:false}}}}
   });
@@ -3489,7 +3589,8 @@ function buildJobsTab(){
           tooltip:{callbacks:{label:function(ctx){
             if(ctx.dataset.label==="V/U Ratio") return "V/U: "+ctx.parsed.y.toFixed(2);
             return ctx.dataset.label+": "+(Math.round(ctx.parsed.y)).toLocaleString();
-          }}}},
+          }}},
+          nberBands:{enabled:true}},
         scales:{
           x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10},maxTicksLimit:12,autoSkip:true},border:{display:false}},
           y:{position:"left",grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return (v/1000).toFixed(1)+"M";}},title:{display:true,text:"Workers",color:"#94A3B8",font:{size:10,weight:"600"}},border:{display:false}},
@@ -3681,7 +3782,7 @@ const BANK_RESULTS = [
    nii26:"BCUS recv. +10% YoY",expense26:"GM partnership ramp",nco26:"Elevated vs peers",loan_growth:"+10% YoY (GM add)",signal:"neutral"},
 ];
 
-const BANK_COMMENTARY = [{"bank":"JPMorgan Chase","ceo":"Jamie Dimon, CEO","ticker":"JPM","color":"#1e3a8a","date":"Apr 14, 2026","quote":"There is an increasingly complex set of risks — such as geopolitical tensions and wars, energy price volatility, trade uncertainty, large global fiscal deficits and elevated asset prices.","economy":"Economy was resilient in Q1 but uncertainties mounting. Dimon explicitly declined to forecast recession: \"I'm not forecasting anything, I'm simply saying, for JPMorgan, we have to be prepared for a recession, and that you can have stagflation.\"","lending":"Consumer and business credit sound; card originations moderated deliberately. Loan growth modest, mortgage flat. Provision build continues as late-cycle caution mounts despite Q1 resilience.","cards_loans":"Card NCO ~3.3% Q1, FY26 guide 3.4%. Card spend volumes +8% YoY. Mortgage delinquencies at low end of historical range. Dimon on credit cycle: \"if there's a credit cycle, I do expect it will be worse than people think relative to the scenario.\"","macro":"Dimon (Q1 press release): \"While we cannot predict how these risks and uncertainties will ultimately play out, they are significant and they reinforce why we prepare the firm for a wide range of environments.\" Dimon told analysts JPM expects tariffs to add roughly +0.5% to inflation in 2026. Fed on hold; stagflation flagged as a prepared-for scenario, not a forecast.","src":{"economy":"Q&A","lending":"Summary","cards_loans":"Q&A","macro":"PressRelease","tech_ai":"Q&A"},"tech_ai":"On cyber, Dimon (Q&A): \"AI's made it worse, it's made it harder\" — JPM is testing Anthropic's Mythos model and noted it \"does create additional vulnerabilities, and maybe down the road, better ways to strengthen yourself too.\" Dimon has publicly framed AI efficiency gains as likely to be competed away across banks, with benefits accruing to customers rather than industry margins. JPM spends ~$2B/yr on AI.","credit":"Card NCO ~3.3% in Q1; FY guide 3.4%. Provisions rose YoY on card credit. Mortgage delinquencies still at low end of historical range. Dimon cautious on consumer late-cycle risks despite Q1 resilience.","outlook":"FY26 NII trimmed $1.5B to ~$103B (all markets NII revision; non-markets held flat). Expenses ~$105B. Markets revenue record $11.6B (+20%) — FICC $7.1B (+21%), Equities $4.5B (+17%). IB fees +28% YoY, #1 on Dealogic."},{"bank":"Bank of America","ceo":"Brian Moynihan, CEO","ticker":"BAC","color":"#D64045","date":"Apr 15, 2026","quote":"The NII that we're generating is going to drop to the bottom line, that continues to be our position. Equities had their best quarter ever with revenues up 30% year-over-year.","economy":"Moynihan (prepared): \"the macro backdrop remains constructive\" and \"We see the forward look of GDP growth rates in the U.S. in the 2% range.\" \"Credit performance remained stable and consistent with our expectations.\" Continued healthy client activity through Q1.","lending":"Moynihan: \"The U.S. consumer continues to spend.\" On CRE: \"improved results in CRE office loans\" with \"no new inflows of nonperforming assets into office exposures.\"","cards_loans":"Moynihan: \"debit and credit card spending was up 6% year-over-year. This total is about 25% of the way consumers spend money.\" Total net charge-offs \"were approximately $1.4 billion with a net loss rate of 48 basis points.\"","macro":"Moynihan: \"the ongoing conflicts in the Middle East, including implications for the energy market inflation and growth\" remain watch items — \"we continue to watch them carefully.\" FY26 NII growth guide raised: \"we're raising our full year NII growth guidance range for 2026 versus 2025 to be up 6% to 8%.\"","src":{"economy":"Prepared","lending":"Prepared","cards_loans":"Prepared","macro":"Prepared","tech_ai":"Prepared"},"tech_ai":"Moynihan: \"We've got 90 installations working, all 200,000 teammates have access to AI or can use it every day.\" Headcount \"down about 1,070 people from year-end 2025 through attrition.\" Separately (Mar 2026 press coverage, not on earnings call): BofA deployed an AI advisory platform built on Salesforce Agentforce to ~1,000 financial advisers.","credit":"Total NCO rate 48 bps in Q1. CRE office losses continuing to improve. Consumer credit broadly stable with resilient spend.","outlook":"FY26 NII guide RAISED to +6–8% (from +5–7%). Q1 NII +9% to $15.9B. Operating leverage +290bps. Equities trading record revenues +30% YoY. ROTCE 16% (+200bps YoY)."},{"bank":"Wells Fargo","ceo":"Charlie Scharf, CEO","ticker":"WFC","color":"#d97706","date":"Apr 14, 2026","quote":"With revenue growing faster than expenses, pre-tax, pre-provision profit grew 14% from a year ago.","economy":"Scharf: \"At this point, it is likely there will be some economic impact based on what has already occurred, but there are both risks and potential mitigants, so it is hard to predict the ultimate impact.\" Consumer \"remains resilient in the aggregate but increasingly bifurcated beneath the surface.\"","lending":"Scharf: \"Upper-income consumers continue to benefit from elevated equity prices, home equity, and cash buffers accumulated earlier in the cycle, allowing discretionary spending to remain firm. By contrast, lower-income households are more exposed to higher interest rates and energy prices.\" Loans +11% YoY; deposits +7%.","cards_loans":"\"Our net charge-off ratio was stable from a year ago at 45 basis points.\" Consumer NCO \"increased modestly from the fourth quarter to 78 basis points.\" New credit card account growth \"nearly 60% from a year ago, driven by higher digital and branch-based openings.\" Scharf on Home Lending: \"We are very comfortable with the plan we have in our Home Lending business today, which is focusing on people who are broader clients within the bank.\"","macro":"Scharf: \"We have managed credit well over many cycles and are well-positioned to support our customers and navigate a variety of economic scenarios.\" \"We returned 5.4 billion dollars to shareholders in the first quarter, including 4 billion dollars in common stock repurchases.\" FY26 NII reaffirmed ~$50B.","src":{"economy":"Q&A","lending":"Q&A","cards_loans":"Prepared","macro":"Prepared","tech_ai":"Prepared"},"tech_ai":"Scharf (Q1 call): \"Fargo, our AI-powered virtual assistant, reached over 1 billion customer interactions less than three years since its launch.\" \"We are increasing our investments in areas like technology, including AI, as well as in advertising, while continuing to execute on our efficiency initiatives which has resulted in 23 consecutive quarters of headcount reductions.\"","credit":"NCO total 45bps — stable. Provision $1.135B (up YoY). Average loans +11% to $996B; deposits +7% to $1.4T. CET1 10.3%. Credit quality stable.","outlook":"FY26 NII reaffirmed ~$50B (±). Revenue $21.45B missed $21.77B consensus on NII stagnation; shares fell ~5%. All segments grew: Consumer +7%, Commercial +7%, Wealth +14%. Returned $5.4B (incl. $4B buybacks) to holders; CET1 10.3%."},{"bank":"Citigroup","ceo":"Jane Fraser, CEO","ticker":"C","color":"#0284c7","date":"Apr 14, 2026","quote":"Services, our crown jewel, had an exceptional first quarter. Markets crossed $7 billion in revenues for the first time in a decade. We remain well on track to deliver the 10% to 11% ROTCE for the year.","economy":"Fraser: \"One good first quarter does not a full year make. The first quarter is always the strongest, and we do have an unclear macro environment ahead.\" \"North America has greater resiliency than other parts of the world face given the macro environment and the conflict in the Middle East.\"","lending":"Services new mandates +40%, revenues +17%. Cross-border transactions +12%, deposits +16%, AUC/AUA +20%. Four of five core businesses reported double-digit revenue growth.","cards_loans":"Fraser (prepared): \"total U.S. Cards NCL rate of between 4% and 4.5%, which is lower than the aggregate of the expectations that we provided previously for Branded Cards and Retail Services, reflecting the delinquency trends and loss performance we have seen year to date.\"","macro":"Fraser: \"we are focused on driving sustainably improving returns over time, not just short-term upside.\" FY26 ROTCE target 10-11% reaffirmed; Q1 delivered 13.1%. Longer-term returns to be laid out at Investor Day.","src":{"economy":"Q&A","lending":"Summary","cards_loans":"Prepared","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Fraser: \"We are methodically deploying AI at scale across the firm and strengthening our defensive capabilities, and you will be hearing much more about this on Investor Day.\"","credit":"Card delinquencies stabilizing. Consumer resilient. Services — crown jewel — new mandates +40%, revenues +17%. Cross-border txns +12%, deposits +16%, AUC/AUA +20%.","outlook":"Q1 ROTCE 13.1% · Revenue +14% · EPS $3.06 beat $2.64 est. Markets >$7B for first time in 10 years — FICC $5.2B (+13%), Equities record $2.1B (+39%). Net income $5.8B (+42% YoY). Laying out longer-term returns at Investor Day."},{"bank":"Goldman Sachs","ceo":"David Solomon, CEO","ticker":"GS","color":"#1d4ed8","date":"Apr 13, 2026","quote":"Goldman Sachs delivered very strong performance for our shareholders this quarter, even as market conditions became more volatile. Our clients continue to depend on us for high quality execution and insights amid the broader uncertainty, and we remain confident in how we've positioned our businesses. The geopolitical landscape remains very complex — so disciplined risk management must remain core to how we operate.","economy":"Solomon: \"the geopolitical landscape remains very complex, and the ultimate impact of higher energy prices on inflation and growth is yet to be determined.\" Q1 saw rising volatility tied to the Middle East conflict.","lending":"Consumer banking fully exited. Total loan portfolio $253B at quarter end — focus is institutional/wholesale. Institutional credit quality performing.","cards_loans":"No consumer card exposure. All lending is wholesale/institutional. Solomon: \"if the resolution of the conflict drags, that probably will be a headwind in some of these areas particularly inflation trends as we get further into the second and the third quarter.\"","macro":"Solomon: \"the environment for investment banking activity continues to be incredibly robust, particularly M&A activity.\" On IPOs: \"there is no question that with the conflict in the Middle East, IPO activity slowed a little bit, particularly in March.\" Advisory revenues \"rose 89% year-over-year on higher completed volumes.\" $6.4B returned to shareholders.","src":{"economy":"Prepared","lending":"Summary","cards_loans":"Q&A","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Solomon: \"we are also investing for long-term growth, including through One Goldman Sachs 3.0\" — \"accelerating our investments in cloud migration, and in the accuracy, completeness and timeliness of our data. These investments are critical to optimizing the deployment of AI solutions.\"","credit":"Consumer banking fully exited. Total loan portfolio $253B (growth in corporate/collateralized). Institutional credit focus.","outlook":"Q1 revenue $17.2B, EPS $17.55, ROE 19.8%. Advisory revenues $1.5B (+89% YoY). Equities net revenues record $5.3B. $6.4B returned to common shareholders (incl. record $5B repurchases + $1.4B dividends)."},{"bank":"Capital One","ceo":"Richard Fairbank, CEO & Founder","ticker":"COF","color":"#8878B8","date":"Apr 21, 2026","quote":"The U.S. consumer remained healthy, overall economy remained resilient through the first quarter. We still expect our earnings power on the other side of the Discover integration to be consistent with what we expected at the time we announced the deal, inclusive of the Brex and Hopper travel infrastructure.","economy":"Fairbank: \"The unemployment rate improved slightly in the quarter despite some high-profile headlines about layoffs... Income growth continued to run ahead of inflation. Consumer spending remained robust.\"","lending":"Fairbank: \"we continue to really feel very good about not only our portfolio performance, but good for the credit outlook of consumers\" and the \"opportunity to continue to lean in to origination and credit line growth in our business.\" NIM 7.87%.","cards_loans":"Fairbank: \"the domestic card business posted another quarter of top line growth and strong credit results.\" \"On a sequential quarter basis, our charge-off rate moved in line with the seasonality\" and \"our delinquencies improved relative to what we would expect from normal seasonality.\"","macro":"Fairbank: \"if energy prices remain elevated for an extended period of time, that would be a real headwind for consumers and probably a drag on the overall macro economy.\" Provision includes \"about $3.8 billion of net charge-offs and an allowance build of $230 million.\"","src":{"economy":"Prepared","lending":"Q&A","cards_loans":"Prepared","macro":"Q&A","tech_ai":"Q&A"},"tech_ai":"Fairbank: \"All companies will be able to take advantage of AI, but the leverage is vastly greater when AI is embedded in the company's ecosystem... Our entire technology is architected to enable these capabilities at scale embedded in our modern ecosystem.\" \"We now fully own the technology that we have built in partnership with Hopper and the Hopper talent we've worked with will join Capital One.\"","credit":"Provision $4.1B · $3.8B net charge-offs + $230M allowance build. Excluding Discover, card volumes +8% YoY. Consumer macro resilient. Pleased with Discover's credit policies, bullish on bringing Discover onto COF tech/credit platform.","outlook":"Q1 adj EPS $4.42 MISSED $4.61 est.; adj revenue $15.23B missed $15.37B. NIM 7.87%. Brex acquisition closed April 7. Debit customers converted to Discover Network. Net income $2.2B (+57% YoY)."},{"bank":"American Express","ceo":"Stephen Squeri, Chairman & CEO","ticker":"AXP","color":"#059669","date":"Apr 23, 2026","quote":"We had a very strong start to the year. Revenue in the quarter grew 11%, or 10% on an FX-adjusted basis, and EPS was $4.28, up 18% over the prior year. Card member spending grew 10% on a reported basis — the highest quarterly growth in three years.","economy":"\"Card Member spending grew 10% on a reported basis — this is the highest quarterly growth in three years, driven by strong growth across both goods and services and T&E.\" Premium cardholder base largely insulated from macro headwinds; T&E leading growth.","lending":"Primarily a charge card/short-term revolving issuer. Write-off rates stable at historically low levels, delinquency flat. \"We really haven't seen any pull forward at all... from a consumer perspective, we see no pull forward at all\" on tariff-driven buying.","cards_loans":"\"We continue to see strong demand and engagement with our premium products. Within our U.S. Platinum portfolio, we are seeing accelerated spend growth following the refresh, while maintaining high retention rates after the fee increases went into effect.\"","macro":"\"If you think about our consumers, what they tend to do is they spend a little bit less, revolve a little bit less\" in a downturn — but that scenario is not visible in Q1 data. FY26 EPS guide reaffirmed $17.30–$17.90. NFL deal announced.","src":{"economy":"Prepared","lending":"Q&A","cards_loans":"Prepared","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Acquired Hyper, an AI-powered expense management startup backed by OpenAI CEO Sam Altman — deal expected to close Q2 2026. Hyper will be integrated into Center, AXP's expense management platform. Squeri introduced Amex Agentic Commerce Experiences (ACE), a developer kit to embed AXP cards into AI-powered transactions. AXP and Hyper previously partnered in 2024 on the Hypercard Rewards AmEx card.","credit":"Credit quality remains best-in-class. Write-off rates stable / low. Delinquency flat. Provision reflects loan growth, not deterioration.","outlook":"FY26 REAFFIRMED: revenue +9–10%, EPS $17.30–$17.90. Platinum refresh driving accelerated spend with high retention post fee increase. Globally 70%+ of new accounts on fee-paying products. Gen Z/Millennial and premium travel (+T&E) leading growth. NFL deal announced."},{"bank":"Synchrony","ceo":"Brian Doubles, President & CEO","ticker":"SYF","color":"#ea580c","date":"Apr 21, 2026","quote":"Synchrony Financial started the year with strong momentum and delivered first quarter financial results that included record first quarter purchase volume of $43 billion, reflecting the enduring appeal of Synchrony Financial's multiproduct suite.","economy":"Doubles: \"The macro environment is still pretty constructive... you have some watch items. We are watching inflation very closely, higher gas prices, other factors that I think are creating some uncertainty out there with consumers.\" \"But they really seem to be looking past it at this point. We do not see it impacting spend.\"","lending":"Wenzel (prepared): \"Our first quarter net interest margin increased 76 basis points versus last year to 15.5%.\" Growth drivers: OnePay, Bob's Discount Furniture, RH, plus \"approximately $725 million of Lowe's commercial co-brand loan receivables, which was added in early April.\"","cards_loans":"NCO 5.42% Q1 — improved from 6.38% prior year. Doubles: \"We expect delinquency and losses to follow normal seasonality through the year, with net charge-offs peaking in the second quarter.\" FY26 NCO guide below long-term 5.5-6.0% target range. Record $43B Q1 purchase volume.","macro":"Higher NIM from repricing a significant EPS driver. New partnerships de-risk concentration risk. FY26 EPS guide: Synchrony \"remains on track to deliver between $9.10 and $9.50 in diluted earnings per share.\"","src":{"economy":"Q&A","lending":"Prepared","cards_loans":"Q&A","macro":"Summary","tech_ai":"Q&A"},"tech_ai":"Doubles: \"we do not want to be adding headcount right now. We want to drive productivity through the tools... how we drive AI into all aspects of our business to drive a flat headcount environment and get leverage.\" On Agentic Commerce: \"Agentic commerce is going to fundamentally change how consumers discover new products, how they research, read reviews, and ultimately purchase... the purchase actually gets completed inside of the AI platform.\"","credit":"NCO 5.42% in Q1; FY26 guide below 5.5-6.0% long-term target. Payment rate +50bps vs prior year. Delinquency / allowance stabilizing.","outlook":"FY26 EPS $9.10–$9.50. Q1 EPS $2.27 adj (+20% YoY). NII $4.64B · NIM 15.5% (+76bps). Receivables mid-single-digit growth FY. OnePay, Bob's, RH ramping; $725M Lowe's commercial added April. Record $43B Q1 purchase volume."},{"bank":"U.S. Bancorp","ceo":"Gunjan Kedia, CEO","ticker":"USB","color":"#0f766e","date":"Apr 16, 2026","quote":"We are committed to positive operating leverage and to having it driven more by revenue growth as we look into 2026. Continue to grow our fee categories — we want to be known for a heavy fee mix driving strong returns.","economy":"Kedia: \"the macroeconomic backdrop remains constructive, despite some softening of sentiment recently. Consumer spend, core loan demand, and credit delinquency trends all indicate relative stability.\" Stern: another record on the consumer deposit side, +$7B YoY.","lending":"Kedia: \"Net interest income on a taxable equivalent basis increased 4.1% year over year, supported by robust core loan growth.\" On card: \"New products aimed at affluent transactors, along with significant increases in marketing, have resulted in double-digit growth in account acquisitions over the past four quarters.\"","cards_loans":"NCO 0.56% — well below card-heavy peers. Fee income +6.9% YoY across payments, capital markets, and wealth. Kedia: \"What I will add on sentiment is it is turning to more core demand, which we find to be very healthy.\"","macro":"Kedia: \"there was a real pause pending some resolution or clarity around tariffs.\" \"It is turning to more core demand, which we find to be very healthy.\" FY26 revenue guide +4–6%, >200bps positive operating leverage.","src":{"economy":"Prepared","lending":"Prepared","cards_loans":"Q&A","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Kedia: \"we are focused on becoming an AI-native organization.\" ~$2.6B technology investment for 2026 (~15% of revenue). 83% of active customers digitally engaged (vs 80% a year ago). Amazon co-brand partnership — Kedia: \"This partnership is unique from traditional co-brand card arrangements in anticipating a clear pathway to broader banking relationships over time.\"","credit":"NCO ~0.56% — well below peers. Credit quality stable across portfolios. Provision moderate.","outlook":"Q1 EPS $1.18 (+15% YoY), revenue $7.3B (+4.7%). NII +4.1% YoY; fee income +6.9% YoY. FY26 revenue +4–6% with >200bps positive operating leverage. Heavy fee mix focus — payments + capital markets + investment services momentum."},{"bank":"Barclays US (BCUS)","ceo":"C.S. Venkatakrishnan, Barclays Group CEO","ticker":"BCS","color":"#1E4FA3","date":"Apr 30, 2026 (pending)","quote":"Our partnership cards business has grown faster than the overall market in 16 of the last 20 quarters. [FY25 results, Feb 2026 — Q1 2026 results PENDING 30 April 2026.]","economy":"Q1 2026 results PENDING (reports Apr 30, 2026). No company-reported Q1 figures to cite yet; entries below reflect FY25 / Q4'25 disclosures only.","lending":"GM partnership contributed ~50% of Q4'25 YoY receivable growth (+10% total). NIM improved to 11.6% Q4'25 on 2024 repricing and portfolio mix upgrade. New origination discipline maintained post-GM onboarding.","cards_loans":"Partnership cards (GM, major US retailers) form bulk of BCUS portfolio. Q4'25 NCO ~5.2% — elevated vs diversified bank peers but consistent with card-specialist profile. Delinquency broadly in line with peer card issuers.","macro":"FY26 Barclays Group NII guidance £8.1–8.3B. BCUS receivables +10% YoY / +5% QoQ as of Q4'25. GM partnership ramp continues. Q1 2026 results April 30 will show first full quarter with GM portfolio integrated. Watch: tariff impact on auto-linked card spending.","src":{"economy":"Pending","lending":"FY25 Call","cards_loans":"FY25 Call","macro":"FY25 Call","tech_ai":"FY25 Call"},"tech_ai":"Venkat (FY25 results, Feb 2026): \"To me, the promise of AI is not just efficiency… it makes some of the more routine aspects of people's jobs easier to accomplish, and frees them up to do much more.\" Microsoft Copilot deployed to ~90% of Barclays employees, saving 1M+ working hours in 2025. Targeting £2B in AI/digital cost savings 2026–2028.","credit":"Q4'25 BCUS NCO ~5.2% — elevated vs US diversified banks (card-heavy portfolio mix). Partnership card delinquency broadly in line with peer card specialists. Credit discipline on new originations.","outlook":"Q1 2026 results PENDING (reports Apr 30). FY26 Barclays Group NII £8.1–8.3B. BCUS receivables +10% YoY / +5% QoQ as of Q4'25 (GM add ~half of growth). NIM improved to 11.6% Q4'25 on 2024 repricing + portfolio mix. General Motors partnership ramp continues."}];
+const BANK_COMMENTARY = [{"bank":"JPMorgan Chase","ceo":"Jamie Dimon, CEO","ticker":"JPM","color":"#1e3a8a","date":"Apr 14, 2026","quote":"There is an increasingly complex set of risks — such as geopolitical tensions and wars, energy price volatility, trade uncertainty, large global fiscal deficits and elevated asset prices.","economy":"Economy was resilient in Q1 but uncertainties mounting. Dimon explicitly declined to forecast recession: \"I'm not forecasting anything, I'm simply saying, for JPMorgan, we have to be prepared for a recession, and that you can have stagflation.\"","lending":"Consumer and business credit sound; card originations moderated deliberately. Loan growth modest, mortgage flat. Provision build continues as late-cycle caution mounts despite Q1 resilience.","cards_loans":"Card NCO ~3.3% Q1, FY26 guide 3.4%. Card spend volumes +8% YoY. Mortgage delinquencies at low end of historical range. Dimon on credit cycle: \"if there's a credit cycle, I do expect it will be worse than people think relative to the scenario.\"","macro":"Dimon (Q1 press release): \"While we cannot predict how these risks and uncertainties will ultimately play out, they are significant and they reinforce why we prepare the firm for a wide range of environments.\" JPM management commentary on the Q1 call cited tariffs as a roughly +0.5%-ish inflation overhang into 2026 (paraphrase — not verified against archived transcript). Fed on hold; stagflation flagged as a prepared-for scenario, not a forecast.","src":{"economy":"Q&A","lending":"Summary","cards_loans":"Q&A","macro":"PressRelease","tech_ai":"Q&A"},"tech_ai":"On cyber, Dimon (Q&A): \"AI's made it worse, it's made it harder\" — JPM is testing Anthropic's Mythos model and noted it \"does create additional vulnerabilities, and maybe down the road, better ways to strengthen yourself too.\" Dimon has publicly framed AI efficiency gains as likely to be competed away across banks, with benefits accruing to customers rather than industry margins. JPM spends ~$2B/yr on AI.","credit":"Card NCO ~3.3% in Q1; FY guide 3.4%. Provisions rose YoY on card credit. Mortgage delinquencies still at low end of historical range. Dimon cautious on consumer late-cycle risks despite Q1 resilience.","outlook":"FY26 NII trimmed $1.5B to ~$103B (all markets NII revision; non-markets held flat). Expenses ~$105B. Markets revenue record $11.6B (+20%) — FICC $7.1B (+21%), Equities $4.5B (+17%). IB fees +28% YoY, #1 on Dealogic."},{"bank":"Bank of America","ceo":"Brian Moynihan, CEO","ticker":"BAC","color":"#D64045","date":"Apr 15, 2026","quote":"The NII that we're generating is going to drop to the bottom line, that continues to be our position. Equities had their best quarter ever with revenues up 30% year-over-year.","economy":"Moynihan (prepared): \"the macro backdrop remains constructive\" and \"We see the forward look of GDP growth rates in the U.S. in the 2% range.\" \"Credit performance remained stable and consistent with our expectations.\" Continued healthy client activity through Q1.","lending":"Moynihan: \"The U.S. consumer continues to spend.\" On CRE: \"improved results in CRE office loans\" with \"no new inflows of nonperforming assets into office exposures.\"","cards_loans":"Moynihan: \"debit and credit card spending was up 6% year-over-year. This total is about 25% of the way consumers spend money.\" Total net charge-offs \"were approximately $1.4 billion with a net loss rate of 48 basis points.\"","macro":"Moynihan: \"the ongoing conflicts in the Middle East, including implications for the energy market inflation and growth\" remain watch items — \"we continue to watch them carefully.\" FY26 NII growth guide raised: \"we're raising our full year NII growth guidance range for 2026 versus 2025 to be up 6% to 8%.\"","src":{"economy":"Prepared","lending":"Prepared","cards_loans":"Prepared","macro":"Prepared","tech_ai":"Prepared"},"tech_ai":"Moynihan: \"We've got 90 installations working, all 200,000 teammates have access to AI or can use it every day.\" Headcount \"down about 1,070 people from year-end 2025 through attrition.\" Separately (Mar 2026 press coverage, not on earnings call): BofA deployed an AI advisory platform built on Salesforce Agentforce to ~1,000 financial advisers.","credit":"Total NCO rate 48 bps in Q1. CRE office losses continuing to improve. Consumer credit broadly stable with resilient spend.","outlook":"FY26 NII guide RAISED to +6–8% (from +5–7%). Q1 NII +9% to $15.9B. Operating leverage +290bps. Equities trading record revenues +30% YoY. ROTCE 16% (+200bps YoY)."},{"bank":"Wells Fargo","ceo":"Charlie Scharf, CEO","ticker":"WFC","color":"#d97706","date":"Apr 14, 2026","quote":"With revenue growing faster than expenses, pre-tax, pre-provision profit grew 14% from a year ago.","economy":"Scharf: \"At this point, it is likely there will be some economic impact based on what has already occurred, but there are both risks and potential mitigants, so it is hard to predict the ultimate impact.\" Consumer \"remains resilient in the aggregate but increasingly bifurcated beneath the surface.\"","lending":"Scharf: \"Upper-income consumers continue to benefit from elevated equity prices, home equity, and cash buffers accumulated earlier in the cycle, allowing discretionary spending to remain firm. By contrast, lower-income households are more exposed to higher interest rates and energy prices.\" Loans +11% YoY; deposits +7%.","cards_loans":"\"Our net charge-off ratio was stable from a year ago at 45 basis points.\" Consumer NCO \"increased modestly from the fourth quarter to 78 basis points.\" New credit card account growth \"nearly 60% from a year ago, driven by higher digital and branch-based openings.\" Scharf on Home Lending: \"We are very comfortable with the plan we have in our Home Lending business today, which is focusing on people who are broader clients within the bank.\"","macro":"Scharf: \"We have managed credit well over many cycles and are well-positioned to support our customers and navigate a variety of economic scenarios.\" \"We returned 5.4 billion dollars to shareholders in the first quarter, including 4 billion dollars in common stock repurchases.\" FY26 NII reaffirmed ~$50B.","src":{"economy":"Q&A","lending":"Q&A","cards_loans":"Prepared","macro":"Prepared","tech_ai":"Prepared"},"tech_ai":"Scharf (Q1 call): \"Fargo, our AI-powered virtual assistant, reached over 1 billion customer interactions less than three years since its launch.\" \"We are increasing our investments in areas like technology, including AI, as well as in advertising, while continuing to execute on our efficiency initiatives which has resulted in 23 consecutive quarters of headcount reductions.\"","credit":"NCO total 45bps — stable. Provision $1.135B (up YoY). Average loans +11% to $996B; deposits +7% to $1.4T. CET1 10.3%. Credit quality stable.","outlook":"FY26 NII reaffirmed ~$50B (±). Revenue $21.45B missed $21.77B consensus on NII stagnation; shares fell ~5%. All segments grew: Consumer +7%, Commercial +7%, Wealth +14%. Returned $5.4B (incl. $4B buybacks) to holders; CET1 10.3%."},{"bank":"Citigroup","ceo":"Jane Fraser, CEO","ticker":"C","color":"#0284c7","date":"Apr 14, 2026","quote":"Services, our crown jewel, had an exceptional first quarter. Markets crossed $7 billion in revenues for the first time in a decade. We remain well on track to deliver the 10% to 11% ROTCE for the year.","economy":"Fraser: \"One good first quarter does not a full year make. The first quarter is always the strongest, and we do have an unclear macro environment ahead.\" \"North America has greater resiliency than other parts of the world face given the macro environment and the conflict in the Middle East.\"","lending":"Services new mandates +40%, revenues +17%. Cross-border transactions +12%, deposits +16%, AUC/AUA +20%. Four of five core businesses reported double-digit revenue growth.","cards_loans":"Fraser (prepared): \"total U.S. Cards NCL rate of between 4% and 4.5%, which is lower than the aggregate of the expectations that we provided previously for Branded Cards and Retail Services, reflecting the delinquency trends and loss performance we have seen year to date.\"","macro":"Fraser: \"we are focused on driving sustainably improving returns over time, not just short-term upside.\" FY26 ROTCE target 10-11% reaffirmed; Q1 delivered 13.1%. Longer-term returns to be laid out at Investor Day.","src":{"economy":"Q&A","lending":"Summary","cards_loans":"Prepared","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Fraser: \"We are methodically deploying AI at scale across the firm and strengthening our defensive capabilities, and you will be hearing much more about this on Investor Day.\"","credit":"Card delinquencies stabilizing. Consumer resilient. Services — crown jewel — new mandates +40%, revenues +17%. Cross-border txns +12%, deposits +16%, AUC/AUA +20%.","outlook":"Q1 ROTCE 13.1% · Revenue +14% · EPS $3.06 beat $2.64 est. Markets >$7B for first time in 10 years — FICC $5.2B (+13%), Equities record $2.1B (+39%). Net income $5.8B (+42% YoY). Laying out longer-term returns at Investor Day."},{"bank":"Goldman Sachs","ceo":"David Solomon, CEO","ticker":"GS","color":"#1d4ed8","date":"Apr 13, 2026","quote":"Goldman Sachs delivered very strong performance for our shareholders this quarter, even as market conditions became more volatile. Our clients continue to depend on us for high quality execution and insights amid the broader uncertainty, and we remain confident in how we've positioned our businesses. The geopolitical landscape remains very complex — so disciplined risk management must remain core to how we operate.","economy":"Solomon: \"the geopolitical landscape remains very complex, and the ultimate impact of higher energy prices on inflation and growth is yet to be determined.\" Q1 saw rising volatility tied to the Middle East conflict.","lending":"Consumer banking fully exited. Total loan portfolio $253B at quarter end — focus is institutional/wholesale. Institutional credit quality performing.","cards_loans":"No consumer card exposure. All lending is wholesale/institutional. Solomon: \"if the resolution of the conflict drags, that probably will be a headwind in some of these areas particularly inflation trends as we get further into the second and the third quarter.\"","macro":"Solomon: \"the environment for investment banking activity continues to be incredibly robust, particularly M&A activity.\" On IPOs: \"there is no question that with the conflict in the Middle East, IPO activity slowed a little bit, particularly in March.\" Advisory revenues \"rose 89% year-over-year on higher completed volumes.\" $6.4B returned to shareholders.","src":{"economy":"Prepared","lending":"Summary","cards_loans":"Q&A","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Solomon: \"we are also investing for long-term growth, including through One Goldman Sachs 3.0\" — \"accelerating our investments in cloud migration, and in the accuracy, completeness and timeliness of our data. These investments are critical to optimizing the deployment of AI solutions.\"","credit":"Consumer banking fully exited. Total loan portfolio $253B (growth in corporate/collateralized). Institutional credit focus.","outlook":"Q1 revenue $17.2B, EPS $17.55, ROE 19.8%. Advisory revenues $1.5B (+89% YoY). Equities net revenues record $5.3B. $6.4B returned to common shareholders (incl. record $5B repurchases + $1.4B dividends)."},{"bank":"Capital One","ceo":"Richard Fairbank, CEO & Founder","ticker":"COF","color":"#8878B8","date":"Apr 21, 2026","quote":"The U.S. consumer remained healthy, overall economy remained resilient through the first quarter. We still expect our earnings power on the other side of the Discover integration to be consistent with what we expected at the time we announced the deal, inclusive of the Brex and Hopper travel infrastructure.","economy":"Fairbank: \"The unemployment rate improved slightly in the quarter despite some high-profile headlines about layoffs... Income growth continued to run ahead of inflation. Consumer spending remained robust.\"","lending":"Fairbank: \"we continue to really feel very good about not only our portfolio performance, but good for the credit outlook of consumers\" and the \"opportunity to continue to lean in to origination and credit line growth in our business.\" NIM 7.87%.","cards_loans":"Fairbank: \"the domestic card business posted another quarter of top line growth and strong credit results.\" \"On a sequential quarter basis, our charge-off rate moved in line with the seasonality\" and \"our delinquencies improved relative to what we would expect from normal seasonality.\"","macro":"Fairbank: \"if energy prices remain elevated for an extended period of time, that would be a real headwind for consumers and probably a drag on the overall macro economy.\" Provision includes \"about $3.8 billion of net charge-offs and an allowance build of $230 million.\"","src":{"economy":"Prepared","lending":"Q&A","cards_loans":"Prepared","macro":"Q&A","tech_ai":"Q&A"},"tech_ai":"Fairbank: \"All companies will be able to take advantage of AI, but the leverage is vastly greater when AI is embedded in the company's ecosystem... Our entire technology is architected to enable these capabilities at scale embedded in our modern ecosystem.\" \"We now fully own the technology that we have built in partnership with Hopper and the Hopper talent we've worked with will join Capital One.\"","credit":"Provision $4.1B · $3.8B net charge-offs + $230M allowance build. Excluding Discover, card volumes +8% YoY. Consumer macro resilient. Pleased with Discover's credit policies, bullish on bringing Discover onto COF tech/credit platform.","outlook":"Q1 adj EPS $4.42 MISSED $4.61 est.; adj revenue $15.23B missed $15.37B. NIM 7.87%. Brex acquisition closed April 7. Debit customers converted to Discover Network. Net income $2.2B (+57% YoY)."},{"bank":"American Express","ceo":"Stephen Squeri, Chairman & CEO","ticker":"AXP","color":"#059669","date":"Apr 23, 2026","quote":"We had a very strong start to the year. Revenue in the quarter grew 11%, or 10% on an FX-adjusted basis, and EPS was $4.28, up 18% over the prior year. Card member spending grew 10% on a reported basis — the highest quarterly growth in three years.","economy":"\"Card Member spending grew 10% on a reported basis — this is the highest quarterly growth in three years, driven by strong growth across both goods and services and T&E.\" Premium cardholder base largely insulated from macro headwinds; T&E leading growth.","lending":"Primarily a charge card/short-term revolving issuer. Write-off rates stable at historically low levels, delinquency flat. \"We really haven't seen any pull forward at all... from a consumer perspective, we see no pull forward at all\" on tariff-driven buying.","cards_loans":"\"We continue to see strong demand and engagement with our premium products. Within our U.S. Platinum portfolio, we are seeing accelerated spend growth following the refresh, while maintaining high retention rates after the fee increases went into effect.\"","macro":"\"If you think about our consumers, what they tend to do is they spend a little bit less, revolve a little bit less\" in a downturn — but that scenario is not visible in Q1 data. FY26 EPS guide reaffirmed $17.30–$17.90. NFL deal announced.","src":{"economy":"Prepared","lending":"Q&A","cards_loans":"Prepared","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Acquired Hyper, an AI-powered expense management startup backed by OpenAI CEO Sam Altman — deal expected to close Q2 2026. Hyper will be integrated into Center, AXP's expense management platform. Squeri introduced Amex Agentic Commerce Experiences (ACE), a developer kit to embed AXP cards into AI-powered transactions. AXP and Hyper previously partnered in 2024 on the Hypercard Rewards AmEx card.","credit":"Credit quality remains best-in-class. Write-off rates stable / low. Delinquency flat. Provision reflects loan growth, not deterioration.","outlook":"FY26 REAFFIRMED: revenue +9–10%, EPS $17.30–$17.90. Platinum refresh driving accelerated spend with high retention post fee increase. Globally 70%+ of new accounts on fee-paying products. Gen Z/Millennial and premium travel (+T&E) leading growth. NFL deal announced."},{"bank":"Synchrony","ceo":"Brian Doubles, President & CEO","ticker":"SYF","color":"#ea580c","date":"Apr 21, 2026","quote":"Synchrony Financial started the year with strong momentum and delivered first quarter financial results that included record first quarter purchase volume of $43 billion, reflecting the enduring appeal of Synchrony Financial's multiproduct suite.","economy":"Doubles: \"The macro environment is still pretty constructive... you have some watch items. We are watching inflation very closely, higher gas prices, other factors that I think are creating some uncertainty out there with consumers.\" \"But they really seem to be looking past it at this point. We do not see it impacting spend.\"","lending":"Wenzel (prepared): \"Our first quarter net interest margin increased 76 basis points versus last year to 15.5%.\" Growth drivers: OnePay, Bob's Discount Furniture, RH, plus \"approximately $725 million of Lowe's commercial co-brand loan receivables, which was added in early April.\"","cards_loans":"NCO 5.42% Q1 — improved from 6.38% prior year. Doubles: \"We expect delinquency and losses to follow normal seasonality through the year, with net charge-offs peaking in the second quarter.\" FY26 NCO guide below long-term 5.5-6.0% target range. Record $43B Q1 purchase volume.","macro":"Higher NIM from repricing a significant EPS driver. New partnerships de-risk concentration risk. FY26 EPS guide: Synchrony \"remains on track to deliver between $9.10 and $9.50 in diluted earnings per share.\"","src":{"economy":"Q&A","lending":"Prepared","cards_loans":"Q&A","macro":"Summary","tech_ai":"Q&A"},"tech_ai":"Doubles: \"we do not want to be adding headcount right now. We want to drive productivity through the tools... how we drive AI into all aspects of our business to drive a flat headcount environment and get leverage.\" On Agentic Commerce: \"Agentic commerce is going to fundamentally change how consumers discover new products, how they research, read reviews, and ultimately purchase... the purchase actually gets completed inside of the AI platform.\"","credit":"NCO 5.42% in Q1; FY26 guide below 5.5-6.0% long-term target. Payment rate +50bps vs prior year. Delinquency / allowance stabilizing.","outlook":"FY26 EPS $9.10–$9.50. Q1 EPS $2.27 adj (+20% YoY). NII $4.64B · NIM 15.5% (+76bps). Receivables mid-single-digit growth FY. OnePay, Bob's, RH ramping; $725M Lowe's commercial added April. Record $43B Q1 purchase volume."},{"bank":"U.S. Bancorp","ceo":"Gunjan Kedia, CEO","ticker":"USB","color":"#0f766e","date":"Apr 16, 2026","quote":"We are committed to positive operating leverage and to having it driven more by revenue growth as we look into 2026. Continue to grow our fee categories — we want to be known for a heavy fee mix driving strong returns.","economy":"Kedia: \"the macroeconomic backdrop remains constructive, despite some softening of sentiment recently. Consumer spend, core loan demand, and credit delinquency trends all indicate relative stability.\" Stern: another record on the consumer deposit side, +$7B YoY.","lending":"Kedia: \"Net interest income on a taxable equivalent basis increased 4.1% year over year, supported by robust core loan growth.\" On card: \"New products aimed at affluent transactors, along with significant increases in marketing, have resulted in double-digit growth in account acquisitions over the past four quarters.\"","cards_loans":"NCO 0.56% — well below card-heavy peers. Fee income +6.9% YoY across payments, capital markets, and wealth. Kedia: \"What I will add on sentiment is it is turning to more core demand, which we find to be very healthy.\"","macro":"Kedia: \"there was a real pause pending some resolution or clarity around tariffs.\" \"It is turning to more core demand, which we find to be very healthy.\" FY26 revenue guide +4–6%, >200bps positive operating leverage.","src":{"economy":"Prepared","lending":"Prepared","cards_loans":"Q&A","macro":"Q&A","tech_ai":"Prepared"},"tech_ai":"Kedia: \"we are focused on becoming an AI-native organization.\" ~$2.6B technology investment for 2026 (~15% of revenue). 83% of active customers digitally engaged (vs 80% a year ago). Amazon co-brand partnership — Kedia: \"This partnership is unique from traditional co-brand card arrangements in anticipating a clear pathway to broader banking relationships over time.\"","credit":"NCO ~0.56% — well below peers. Credit quality stable across portfolios. Provision moderate.","outlook":"Q1 EPS $1.18 (+15% YoY), revenue $7.3B (+4.7%). NII +4.1% YoY; fee income +6.9% YoY. FY26 revenue +4–6% with >200bps positive operating leverage. Heavy fee mix focus — payments + capital markets + investment services momentum."},{"bank":"Barclays US (BCUS)","ceo":"C.S. Venkatakrishnan, Barclays Group CEO","ticker":"BCS","color":"#1E4FA3","date":"Apr 30, 2026 (pending)","quote":"Our partnership cards business has grown faster than the overall market in 16 of the last 20 quarters. [FY25 results, Feb 2026 — Q1 2026 results PENDING 30 April 2026.]","economy":"Q1 2026 results PENDING (reports Apr 30, 2026). No company-reported Q1 figures to cite yet; entries below reflect FY25 / Q4'25 disclosures only.","lending":"GM partnership contributed ~50% of Q4'25 YoY receivable growth (+10% total). NIM improved to 11.6% Q4'25 on 2024 repricing and portfolio mix upgrade. New origination discipline maintained post-GM onboarding.","cards_loans":"Partnership cards (GM, major US retailers) form bulk of BCUS portfolio. Q4'25 NCO ~5.2% — elevated vs diversified bank peers but consistent with card-specialist profile. Delinquency broadly in line with peer card issuers.","macro":"FY26 Barclays Group NII guidance £8.1–8.3B. BCUS receivables +10% YoY / +5% QoQ as of Q4'25. GM partnership ramp continues. Q1 2026 results April 30 will show first full quarter with GM portfolio integrated. Watch: tariff impact on auto-linked card spending.","src":{"economy":"Pending","lending":"FY25 Call","cards_loans":"FY25 Call","macro":"FY25 Call","tech_ai":"FY25 Call"},"tech_ai":"Venkat (FY25 results, Feb 2026): \"To me, the promise of AI is not just efficiency… it makes some of the more routine aspects of people's jobs easier to accomplish, and frees them up to do much more.\" Microsoft Copilot deployed to ~90% of Barclays employees, saving 1M+ working hours in 2025. Targeting £2B in AI/digital cost savings 2026–2028.","credit":"Q4'25 BCUS NCO ~5.2% — elevated vs US diversified banks (card-heavy portfolio mix). Partnership card delinquency broadly in line with peer card specialists. Credit discipline on new originations.","outlook":"Q1 2026 results PENDING (reports Apr 30). FY26 Barclays Group NII £8.1–8.3B. BCUS receivables +10% YoY / +5% QoQ as of Q4'25 (GM add ~half of growth). NIM improved to 11.6% Q4'25 on 2024 repricing + portfolio mix. General Motors partnership ramp continues."}];
 
 // ════════════════════════════════════════════════════
 // BUILD PCE TAB
@@ -3820,7 +3921,8 @@ function buildPCETab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
-               tooltip:{...TT,callbacks:{label:ctx=>ctx.dataset.yAxisID==="y2"?`${ctx.dataset.label}: ${ctx.raw}%`:`${ctx.dataset.label}: $${ctx.raw}T`}}},
+               tooltip:{...TT,callbacks:{label:ctx=>ctx.dataset.yAxisID==="y2"?`${ctx.dataset.label}: ${ctx.raw}%`:`${ctx.dataset.label}: $${ctx.raw}T`}},
+               nberBands:{enabled:true}},
       scales:{
         x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
         y:{grid:{color:"#E2E8F0"},ticks:{color:"#336BCC",callback:v=>"$"+v+"T"},min:0,border:{display:false},title:{display:true,text:"Balance ($T)",color:"#336BCC",font:{size:10,weight:"600"}}},
@@ -5131,23 +5233,30 @@ function buildHousingTab(){
     {lbl:"Peak → Now",             val:"Afford. "+_hAfford[0]+"→"+_hAfford[_hAfford.length-1],sub:"Affordability index trend", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
-  // ── Housing Monthly Trend Chart — dynamic dual-axis scaling ──
+  // ── Housing Monthly Trend — split into two single-axis panels (was dual-axis; scales differ ~3x) ──
   (function(){
     var cs=HOUSING_MONTHLY.caseShiller, mt=HOUSING_MONTHLY.mortgage30;
-    var csMin=Math.min(...cs), csMax=Math.max(...cs), mtMin=Math.min(...mt), mtMax=Math.max(...mt);
-    // Add 20% padding and round to nearest 0.5
     var pad=0.4;
+    var csMin=Math.min(...cs), csMax=Math.max(...cs);
+    var mtMin=Math.min(...mt), mtMax=Math.max(...mt);
     var yMin=Math.floor((csMin-pad)*2)/2, yMax=Math.ceil((csMax+pad)*2)/2;
-    var y1Min=Math.floor((mtMin-pad)*2)/2, y1Max=Math.ceil((mtMax+pad)*2)/2;
+    var y2Min=Math.floor((mtMin-pad)*2)/2, y2Max=Math.ceil((mtMax+pad)*2)/2;
     new Chart(document.getElementById("c-housing-mom").getContext("2d"),{
       type:"line",
       data:{labels:HOUSING_MONTHLY.labels,datasets:[
-        {label:"Case-Shiller YoY %",data:cs,borderColor:"#336BCC",backgroundColor:"#336BCC15",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true,yAxisID:"y"},
-        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#D64045",backgroundColor:"#D6404522",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#D64045",tension:0.3,yAxisID:"y2"},
+        {label:"Case-Shiller YoY %",data:cs,borderColor:"#336BCC",backgroundColor:"#336BCC15",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true},
       ]},
       options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
         scales:{y:{position:"left",min:yMin,max:yMax,title:{display:true,text:"Case-Shiller YoY %",color:"#336BCC",font:{size:9}},ticks:{color:"#336BCC",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#E2E8F0"},border:{display:false}},
-          y2:{position:"right",min:y1Min,max:y1Max,title:{display:true,text:"Mortgage Rate %",color:"#D64045",font:{size:9}},ticks:{color:"#D64045",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{display:false},border:{display:false}},
+          x:{ticks:{font:{size:9},display:false},grid:{display:false}}}}
+    });
+    new Chart(document.getElementById("c-housing-mom-2").getContext("2d"),{
+      type:"line",
+      data:{labels:HOUSING_MONTHLY.labels,datasets:[
+        {label:"30yr Mortgage Rate %",data:mt,borderColor:"#D64045",backgroundColor:"#D6404522",borderWidth:2.5,pointRadius:3,pointBackgroundColor:"#D64045",tension:0.3,fill:true},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}}},
+        scales:{y:{position:"left",min:y2Min,max:y2Max,title:{display:true,text:"Mortgage Rate %",color:"#D64045",font:{size:9}},ticks:{color:"#D64045",callback:v=>v.toFixed(1)+"%",font:{size:10}},grid:{color:"#E2E8F0"},border:{display:false}},
           x:{ticks:{font:{size:9}},grid:{display:false}}}}
     });
   })();
@@ -5188,20 +5297,36 @@ function buildHousingTab(){
               y:{stacked:true,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"K"},border:{display:false}}}}
   });
 
+  // ── Affordability + Months Supply — split into two single-axis panels (was dual-axis; unrelated units) ──
   new Chart(document.getElementById("c-afford").getContext("2d"),{
     type:"bar",
     data:{labels:AFFORD_DATA.labels,datasets:[
-      {label:"Affordability Index",data:AFFORD_DATA.index, backgroundColor:"#336BCCcc",borderRadius:4,yAxisID:"y"},
-      {label:"Months Supply",      data:AFFORD_DATA.supply,borderColor:"#CC8A00",borderWidth:2.5,pointRadius:5,type:"line",yAxisID:"y2"},
+      {label:"Affordability Index (100=qualifying income)",data:AFFORD_DATA.index, backgroundColor:"#336BCCcc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
       scales:{
-        x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
-        y:{grid:{color:"#E2E8F0"},ticks:{color:"#336BCC"},min:0,border:{display:false}},
-        y2:{position:"right",grid:{display:false},ticks:{color:"#CC8A00",callback:v=>v+" mo"},min:0,max:12,border:{display:false}}
+        x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9},display:false},border:{display:false}},
+        y:{grid:{color:"#E2E8F0"},ticks:{color:"#336BCC",font:{size:10}},min:0,title:{display:true,text:"Affordability Index",color:"#336BCC",font:{size:9}},border:{display:false}}
       }}
   });
+  // Months Supply with 6.0 balanced-market reference line (synthetic dashed dataset).
+  (function(){
+    var balLine = AFFORD_DATA.labels.map(function(){return 6;});
+    new Chart(document.getElementById("c-afford-2").getContext("2d"),{
+      type:"line",
+      data:{labels:AFFORD_DATA.labels,datasets:[
+        {label:"Months Supply",data:AFFORD_DATA.supply,borderColor:"#CC8A00",backgroundColor:"#CC8A0022",borderWidth:2.5,pointRadius:3,tension:0.25,fill:true},
+        {label:"Balanced market (6.0 mo)",data:balLine,borderColor:"#7A8FA8",borderWidth:1.5,borderDash:[5,4],pointRadius:0,fill:false},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:"#334E68",font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9}},border:{display:false}},
+          y:{grid:{color:"#E2E8F0"},ticks:{color:"#CC8A00",callback:v=>v+" mo",font:{size:10}},min:0,max:12,title:{display:true,text:"Months Supply",color:"#CC8A00",font:{size:9}},border:{display:false}}
+        }}
+    });
+  })();
 
   const hd2=["Metro","2024 YoY","2025 YoY","Trend","Median Price","Market Note"];
   let h=`<thead><tr>${hd2.map(x=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
@@ -5312,6 +5437,7 @@ function buildYieldTab(){
       {label:"Card 90+ DPD %",data:TREASURY_DATA.card90,borderColor:"#D64045",backgroundColor:"rgba(214,64,69,.06)",borderWidth:2.5,pointRadius:3,tension:0.3,fill:true,yAxisID:"y2",datalabels:false}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
+      plugins:{nberBands:{enabled:true}},
       scales:{
         x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
         y:{position:"left",grid:{color:"rgba(148,163,184,.15)"},ticks:{color:"#8878B8",callback:function(v){return v+"%"},stepSize:1},min:0,max:7,title:{display:true,text:"Treasury Yield %",color:"#8878B8",font:{size:10,weight:"600"}},border:{display:false}},
@@ -6873,5 +6999,16 @@ function _captureAndDownload(TAB_IDS, origTabId){
 <div class="footer">
   Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4'25 Earnings. Pipeline: Weekly Sat 8am ET + Monthly 2nd Sat 10am ET · Pre-flight → Collector → Analyzer → Claude AI Commentary → Renderer → Validator (9-pass) → Email → Repair Agent. All commentaries dynamically generated from live data. 2025 = actual. 2026F = consensus midpoint.
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SYSTEM-MAP theme overlay (B7) — promoted from index-dev.html
+     after multi-expert audit pass.
+     Activates by adding `themed-sm` class to body via theme-overlay.js.
+     All rules are scoped to `body.themed-sm` so removing these three
+     lines fully reverts to the un-themed look.
+     ═══════════════════════════════════════════════════════════════ -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="theme-overlay.css">
+<script src="theme-overlay.js"></script>
 </body>
 </html>

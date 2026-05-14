@@ -53,10 +53,25 @@ ROOT = Path(__file__).resolve().parent.parent
 MEMORY_FILE = ROOT / 'data' / 'agent_memory.jsonl'
 
 # Hard limits — keep file size bounded.
-MEMORY_LINE_CAP   = 2000      # ~last 2K LLM calls retained
-PROMPT_TRUNC      = 4096      # bytes of prompt kept inline
-RESPONSE_TRUNC    = 8192      # bytes of response kept inline
-SYSTEM_TRUNC      = 1024      # bytes of system prompt kept inline
+# MEMORY_LINE_CAP can be raised via the AGENT_MEMORY_LINE_CAP env var when a
+# longer audit window is needed (e.g. incident investigation). Default 2000
+# ≈ ~5 months of weekly runs at ~4-5 LLM calls/run. Set to e.g. 5000 in CI
+# for a wider rolling window without redeploying code.
+def _read_cap() -> int:
+    try:
+        raw = os.environ.get('AGENT_MEMORY_LINE_CAP', '').strip()
+        if not raw:
+            return 2000
+        val = int(raw)
+        # Bound the override so a typo can't blow up disk usage.
+        return max(100, min(val, 50000))
+    except (ValueError, TypeError):
+        return 2000
+
+MEMORY_LINE_CAP   = _read_cap()  # ~last N LLM calls retained
+PROMPT_TRUNC      = 4096         # bytes of prompt kept inline
+RESPONSE_TRUNC    = 8192         # bytes of response kept inline
+SYSTEM_TRUNC      = 1024         # bytes of system prompt kept inline
 
 # Default agent label — set per-run by `set_agent(name)`. Falls back to
 # 'unknown' so accidental calls before set_agent are still attributed.
@@ -116,9 +131,12 @@ def log_llm_call(
         if MEMORY_FILE.exists():
             existing = MEMORY_FILE.read_text(encoding='utf-8').splitlines()
         existing.append(line)
-        # Trim from the front (oldest) when over cap.
-        if len(existing) > MEMORY_LINE_CAP:
-            existing = existing[-MEMORY_LINE_CAP:]
+        # Trim from the front (oldest) when over cap. Re-read env at
+        # write time so CI / test overrides take effect without import
+        # ordering surprises.
+        cap = _read_cap()
+        if len(existing) > cap:
+            existing = existing[-cap:]
         MEMORY_FILE.write_text('\n'.join(existing) + '\n', encoding='utf-8')
     except Exception as e:
         # Don't crash the calling agent on audit-log failure.

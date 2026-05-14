@@ -343,6 +343,75 @@ same ALFRED helper.
 
 ---
 
+## 5b. B3 release — Labour, Liquidity, Inflation-Breadth, Fiscal
+
+Four new chart families landed in the B3 release. Each has its own collector
+series, publish-lag tolerance (mirrored in `data/known_normal.json`), and
+validator coverage. All four ship in a `not yet populated` state until the
+first weekly CI run after merge — `theme-overlay.js` paints an "Awaiting
+first pipeline run" overlay on the empty canvases until then.
+
+### 5b.1 JOLTS labour-churn (chart `c-jolts`)
+
+Source: BLS Job Openings and Labor Turnover Survey, fetched via FRED.
+Series: `JTSJOL` (openings), `JTSQUL` (quits), `JTSHIL` (hires), `UNEMPLOY`
+(unemployed level for the openings-to-unemployed ratio).
+
+Publish lag: 35-40 days after reference month (`bls_jolts` in
+`known_normal.json`; investigate beyond 55 days). Noise floor: 200K
+(openings), 150K (quits/hires) — moves smaller than this are not
+interpretable. Quits/hires ratio is the leading labour-tightness indicator;
+prints below 1.0 historically precede labour-market cooling by 1-2 quarters.
+
+### 5b.2 Fed H.4.1 liquidity (chart `c-fed-liquidity`)
+
+Source: Federal Reserve H.4.1 weekly release.
+Series: `WALCL` (total assets), `WRESBAL` (reserve balances), `RRPONTSYD`
+(overnight reverse repo), `WTREGEN` (Treasury General Account).
+
+Publish lag: ≤7 days (Thursdays 4:30pm ET; `fred_h41` in `known_normal.json`;
+investigate beyond 14 days). Net liquidity proxy = WALCL − RRPONTSYD −
+WTREGEN. Noise floor: $50bn on WALCL/WRESBAL, $100bn on RRPONTSYD (RRP is
+inherently volatile around quarter-ends and treasury auction settlement).
+
+### 5b.3 Cleveland Fed CPI breadth (chart `c-cpi-breadth`)
+
+Source: Federal Reserve Bank of Cleveland.
+Series: `TRMMEANCPIM157SFRBCLE` (16% trimmed-mean CPI YoY),
+`MEDCPIM157SFRBCLE` (weighted-median CPI YoY), `CPIAUCSL` (headline CPI YoY
+for the comparison line).
+
+Publish lag: ≤18 days (released a few days after BLS CPI; investigate beyond
+30 days). Noise floor: 0.2pp. Confirms persistence of inflation impulse —
+when trimmed-mean and median both run >0.5pp above headline, the inflation
+is broad-based rather than driven by a handful of volatile components.
+
+### 5b.4 Federal deficit / GDP (chart `c-fiscal`)
+
+Source: BEA via FRED.
+Series: `FYFSGDA188S` (federal surplus or deficit as % of GDP, annual).
+
+Publish lag: ≤180 days (fiscal-year reporting; `bea_fiscal` in
+`known_normal.json`; investigate beyond 270 days). Noise floor: 0.5pp.
+Annual series — used for long-run fiscal context, not weekly signal.
+
+### 5b.5 Validator coverage for B3
+
+- Pass 3 (staleness) reads the lag rows above; alerts when latest obs
+  date exceeds `investigate_if_over`.
+- Pass 3g (seed drift) flags any silent fall-through to placeholder
+  consts (empty `labels` array shipped to production).
+- Pass 3h (collector errors) catches FRED API failures on any of the
+  12 new series.
+- Pass 3i (cross-source agreement) is N/A for these series — none
+  have a second source for the same anchor metric.
+
+When the first pipeline run populates `raw_data.json`, the empty-state
+overlay in `theme-overlay.js` self-suppresses (the check is
+`labels.length > 0`).
+
+---
+
 ## 6. Revision log
 
 | Version | Date | Notes |
@@ -356,3 +425,4 @@ same ALFRED helper.
 | v1.0.6 | 2026-04-20 | Vintage pin expanded to PCE headline (`pce`) and core (`pce_core`). Fed's preferred inflation gauge; BEA does periodic methodology updates (most recently 2023 comprehensive revision) that restate multi-year history. PCE_ANNUAL chart now stays stable within a pin cycle. Brings the total pinned-series count to 7 (real + nominal GDP, CPI, payrolls, wages, PCE headline + core). |
 | v1.0.7 | 2026-04-20 | Surface vintage-pin state to users. Added `<p class="src vintage-note">` footnotes beneath the metric rows on the GDP (already had one), CPI, Jobs, Wages, and PCE tabs. A single page-load init populates all `.vintage-note` elements from the shared `GDP_VINTAGE_INFO` constant, so users see "Annual-chart data vintage: pinned to ALFRED as-of 2026-03-31 · refresh cadence: quarterly…" on every long-history chart surface. Makes the credibility work visible — previously only the GDP tab advertised the pin. |
 | v1.0.8 | 2026-04-24 | Headline wage-growth source changed from BLS AHETPI YoY → Atlanta Fed Wage Growth Tracker 3MMA (`FRBATLWGT3MMAUMHWGO`). AHETPI computes YoY from an aggregate level and is biased by composition effects (a wave of lower-paid workers entering the survey drags the number down even if individual raises are unchanged). Atlanta Fed's tracker follows the same workers over 12 months and reports their actual wage change — the right measure for "are workers' wages growing?". AHETPI retained for the historical annual chart (WAGE_ANNUAL, long BLS history) and for the sector breakdown table (Atlanta Fed has no sector decomposition). Renderer falls back to AHETPI-YoY if the Atlanta Fed series hasn't been collected yet. |
+| v1.0.9 | 2026-05-14 | B3 release documented (§5b). Added JOLTS labour-churn, Fed H.4.1 liquidity, Cleveland Fed CPI breadth, and federal deficit/GDP chart families. Publish-lag tolerances added to `data/known_normal.json` (`fred_h41`, `bls_jolts`, `cleveland_fed`, `bea_fiscal`) so validator Pass 3 can detect silent staleness. Noise floors added for the 12 new series. Charts ship in placeholder state with empty-state overlay until first CI run populates `raw_data.json`. |

@@ -23,6 +23,38 @@ applied  = []
 errors   = []
 warnings = []
 
+# Structured record of every re.subn call that returned 0 replacements.
+# Distinct from `errors`/`warnings` so the --strict gate can target ONLY
+# silent-injection failures (the stability risk this list was added for).
+# Each entry: f'{section}: pattern {pattern!r} matched 0 times'
+zero_replacement_errors: list = []
+# Counter for successful re.subn injections (count > 0) so the SUMMARY
+# block at end of main() has a meaningful denominator.
+subn_success_count = 0
+
+
+def _record_subn_result(section, pattern, count):
+    """Audit a re.subn outcome.
+
+    Increments the global success counter when count > 0 and appends a
+    structured entry to `zero_replacement_errors` when count == 0.
+    `pattern` may be a compiled regex or a raw string — both are stringified
+    so a maintainer can diff against the JSON shape currently in index.html.
+
+    Note: this purely observes; it does NOT change patching behaviour. The
+    existing applied/warnings/errors lists keep working unchanged so the
+    weekly Saturday run is byte-identical in non-strict mode.
+    """
+    global subn_success_count
+    if count and count > 0:
+        subn_success_count += 1
+        return
+    try:
+        pat_str = pattern.pattern if hasattr(pattern, 'pattern') else str(pattern)
+    except Exception:
+        pat_str = '<unprintable pattern>'
+    zero_replacement_errors.append(f'{section}: pattern {pat_str!r} matched 0 times')
+
 START_YEAR = 1990   # all annual/historical charts start from this year
 
 # Single source of truth for the rolling-monthly trend window. Every chart
@@ -202,6 +234,7 @@ def _inject_const(html, var_name, obj):
     new_decl = f'const {var_name} = {new_json};'
     # Use lambda to avoid regex interpreting \u escapes in replacement
     new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    _record_subn_result(f'_inject_const[{var_name}]', pattern, n)
     if n:
         pts = len(obj.get('labels', []))
         applied.append(f'{var_name} rebuilt ({pts} pts from {START_YEAR})')
@@ -776,6 +809,7 @@ def rebuild_charts(html, data):
             pattern = r'const NFP_BLS_MOM\s*=\s*\{[\s\S]*?\};'
             new_decl = f'const NFP_BLS_MOM = {bls_json};'
             new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+            _record_subn_result('NFP_BLS_MOM', pattern, n)
             if n:
                 applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
                 html = new_html
@@ -793,6 +827,7 @@ def rebuild_charts(html, data):
                           f'  adp:   [{adp_str}]')
                 pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
                 new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)
+                _record_subn_result('NFP_VS_ADP.bls', pattern_vs, n2)
                 if n2:
                     applied.append(f'NFP_VS_ADP.bls updated ({len(bls_12)} months, ADP preserved)')
                     html = new_html2
@@ -875,6 +910,7 @@ def rebuild_charts(html, data):
                                   f'}};')
                         pattern_sm = r'const SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
                         new_html3, n3 = re.subn(pattern_sm, lambda m: new_sm, html, count=1)
+                        _record_subn_result('SECTOR_MOM', pattern_sm, n3)
                         if n3:
                             applied.append(f'SECTOR_MOM rebuilt ({updated_count} sectors, {prev_key} & {cur_key})')
                             html = new_html3
@@ -918,6 +954,10 @@ def rebuild_charts(html, data):
                 esc_name = re.escape(sector_name)
                 pat = rf'(\{{s:"{esc_name}"[^}}]*{re.escape(yr_key)}:)\s*-?\d+'
                 new_html4, n4 = re.subn(pat, rf'\g<1>{annual_chg}', html, count=1)
+                # NB: per-sector — a 0-match means this sector's JOBS_SECTORS
+                # entry has drifted shape (or sector name changed). Each one
+                # is its own failure record so the maintainer sees which.
+                _record_subn_result(f'JOBS_SECTORS[{sector_name}].{yr_key}', pat, n4)
                 if n4:
                     updated_sectors += 1
                     html = new_html4
@@ -976,6 +1016,7 @@ def rebuild_charts(html, data):
             new_arr = ', '.join(str(v) for v in final_vals)
             pat_fc = rf'({re.escape(act_key)}:\s*\[)[^\]]+(\])'
             new_html5, n5 = re.subn(pat_fc, rf'\g<1>{new_arr}\2', html, count=1)
+            _record_subn_result(f'FC_MACRO.{act_key}', pat_fc, n5)
             if n5:
                 applied.append(f'FC_MACRO.{act_key} updated {final_vals}')
                 html = new_html5
@@ -996,12 +1037,14 @@ def rebuild_charts(html, data):
         # Update "Full Year YYYY Avg" tile value
         pat_wti_tile = rf'(lbl:"Full Year {prev_yr} Avg"[^}}]*val:")(\$[\d.]+)(")'
         new_html6, n6 = re.subn(pat_wti_tile, rf'\g<1>${wti_prev_avg}\3', html, count=1)
+        _record_subn_result(f'Oil tile WTI {prev_yr} avg', pat_wti_tile, n6)
         if n6:
             applied.append(f'Oil tile WTI {prev_yr} avg → ${wti_prev_avg}')
             html = new_html6
     if brent_prev_avg is not None:
         pat_brent_tile = rf'(lbl:"Brent {prev_yr} Avg"[^}}]*val:")(\$[\d.]+)(")'
         new_html7, n7 = re.subn(pat_brent_tile, rf'\g<1>${brent_prev_avg}\3', html, count=1)
+        _record_subn_result(f'Oil tile Brent {prev_yr} avg', pat_brent_tile, n7)
         if n7:
             applied.append(f'Oil tile Brent {prev_yr} avg → ${brent_prev_avg}')
             html = new_html7
@@ -1040,6 +1083,9 @@ def patch_array_last(html, js_key, new_val, precision=2, scope_var=None):
         if not n:
             pattern2 = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+(\s*,\s*(?:null\s*,?\s*)*\])'
             new_chunk, n = re.subn(pattern2, rf'\g<1>{fmt}\2', chunk, count=1, flags=re.DOTALL)
+        # Record AFTER fallback so a primary miss that the fallback recovers
+        # doesn't pollute zero_replacement_errors. Only persistent misses count.
+        _record_subn_result(f'patch_array_last[{scope_var}.{js_key}]', pattern, n)
         if n:
             applied.append(f'{scope_var}.{js_key}[-1]={fmt}')
             return html[:start] + new_chunk + html[end + 1:]
@@ -1054,6 +1100,7 @@ def patch_array_last(html, js_key, new_val, precision=2, scope_var=None):
         # Second try: last numeric value before trailing nulls and ]
         pattern2 = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+(\s*,\s*(?:null\s*,?\s*)*\])'
         new_html, n = re.subn(pattern2, rf'\g<1>{fmt}\2', html, count=1, flags=re.DOTALL)
+    _record_subn_result(f'patch_array_last[{js_key}]', pattern, n)
     if n: applied.append(f'{js_key}[-1]={fmt}')
     else: errors.append(f'patch_array_last: {js_key} not found')
     return new_html
@@ -1062,11 +1109,13 @@ def patch_array_last(html, js_key, new_val, precision=2, scope_var=None):
 def patch_kpi(html, label, val, sub=None):
     pat = rf'(\{{lbl:"{re.escape(label)}"[^}}]*?val:")[^"]*(")'
     new_html, n = re.subn(pat, rf'\g<1>{val}\2', html)
+    _record_subn_result(f'patch_kpi[{label}].val', pat, n)
     if n:
         applied.append(f'kpi.{label}={val}')
         if sub:
             pat2 = rf'(lbl:"{re.escape(label)}"[^}}]*?sub:")[^"]*(")'
-            new_html, _ = re.subn(pat2, rf'\g<1>{sub}\2', new_html)
+            new_html, n2 = re.subn(pat2, rf'\g<1>{sub}\2', new_html)
+            _record_subn_result(f'patch_kpi[{label}].sub', pat2, n2)
     else:
         errors.append(f'patch_kpi: "{label}" not found')
     return new_html
@@ -1085,6 +1134,9 @@ def patch_kpi_full(html, old_label, new_label, val, sub=None):
         if base and len(base) > 3:
             fuzzy_pat = rf'(\{{lbl:"){re.escape(base)}[^"]*(")'
             new_html, n = re.subn(fuzzy_pat, rf'\g<1>{new_label}\2', html, count=1)
+    # Record once at the end — fuzzy fallback may rescue the exact-miss, so
+    # we only count terminal failures.
+    _record_subn_result(f'patch_kpi_full[{old_label}->{new_label}]', pat, n)
     if n:
         applied.append(f'kpi.rename → "{new_label}"')
     # Then patch the value using the new label
@@ -1096,6 +1148,7 @@ def patch_commentary(html, tab_id, text):
     if marker not in html: return html
     pat = rf'({re.escape(marker)}[^>]*>)(.*?)(</div>)'
     new_html, n = re.subn(pat, rf'\g<1>{text}\g<3>', html, count=1, flags=re.DOTALL)
+    _record_subn_result(f'patch_commentary[{tab_id}]', pat, n)
     if n: applied.append(f'commentary.{tab_id}')
     return new_html
 
@@ -1159,11 +1212,13 @@ def month_label(date_str):
 def inject_oil_daily(html, oil_daily):
     new_data = json.dumps(oil_daily, separators=(',', ':'))
     # Match both single-line {...}; and multi-line {...\n};
+    oil_daily_pat = r'(const OIL_DAILY\s*=\s*)\{[^;]*\}(\s*;)'
     new_html, n = re.subn(
-        r'(const OIL_DAILY\s*=\s*)\{[^;]*\}(\s*;)',
+        oil_daily_pat,
         lambda m: m.group(1) + new_data + m.group(2),
         html, count=1, flags=re.DOTALL
     )
+    _record_subn_result('OIL_DAILY', oil_daily_pat, n)
     if n:
         applied.append('OIL_DAILY (%d sessions, %s)' % (
             oil_daily.get('sessions', 0), oil_daily.get('month', '')))
@@ -1173,11 +1228,13 @@ def inject_oil_daily(html, oil_daily):
     # Also patch the static panel title so it reflects the current month
     month = oil_daily.get('month', '')
     if month:
+        panel_title_pat = r'(<div class="panel-title">)\w+ \d{4} — Daily Closes \(Live\)(</div>)'
         new_html, m = re.subn(
-            r'(<div class="panel-title">)\w+ \d{4} — Daily Closes \(Live\)(</div>)',
+            panel_title_pat,
             lambda x: x.group(1) + month + ' — Daily Closes (Live)' + x.group(2),
             new_html, count=1
         )
+        _record_subn_result('oil panel title', panel_title_pat, m)
         if m:
             applied.append('oil panel title → %s' % month)
         else:
@@ -1261,6 +1318,7 @@ def rebuild_u_sector_mom(html, data):
                    f'}};')
         pattern = r'const U_SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
         new_html, n = re.subn(pattern, new_obj, html, count=1)
+        _record_subn_result('U_SECTOR_MOM', pattern, n)
         if n:
             applied.append(f'U_SECTOR_MOM rebuilt ({len(sector_data)} sectors, {prv_k}/{cur_k})')
             html = new_html
@@ -1307,6 +1365,7 @@ def rebuild_cpi_cat_mom(html, data):
         new_json = json.dumps(entries, separators=(', ', ':'))
         pattern = r'const CPI_CAT_MOM\s*=\s*\[[\s\S]*?\];'
         new_html, n = re.subn(pattern, f'const CPI_CAT_MOM = {new_json};', html, count=1)
+        _record_subn_result('CPI_CAT_MOM', pattern, n)
         if n:
             keys = [k for k in entries[0] if k not in ('cat', 'color')]
             applied.append(f'CPI_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
@@ -1351,6 +1410,7 @@ def rebuild_pce_cat_mom(html, data):
         new_json = json.dumps(entries, separators=(', ', ':'))
         pattern = r'const PCE_CAT_MOM\s*=\s*\[[\s\S]*?\];'
         new_html, n = re.subn(pattern, f'const PCE_CAT_MOM = {new_json};', html, count=1)
+        _record_subn_result('PCE_CAT_MOM', pattern, n)
         if n:
             keys = [k for k in entries[0] if k != 'cat']
             applied.append(f'PCE_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
@@ -1426,6 +1486,7 @@ def rebuild_treasury_data(html, data):
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const TREASURY_DATA\s*=\s*\{[^;]*\};'
     new_html, n = re.subn(pattern, f'const TREASURY_DATA = {new_json};', html, count=1)
+    _record_subn_result('TREASURY_DATA', pattern, n)
     if n:
         applied.append(f'TREASURY_DATA rebuilt ({len(common)} points, latest {common[-1]})')
         html = new_html
@@ -1459,6 +1520,7 @@ def rebuild_oil_prod_spread(html, data):
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const OIL_SPREAD\s*=\s*\{[^;]*\};'
     new_html, n = re.subn(pattern, f'const OIL_SPREAD = {new_json};', html, count=1)
+    _record_subn_result('OIL_SPREAD', pattern, n)
     if n:
         applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
         html = new_html
@@ -1521,6 +1583,7 @@ def rebuild_fiscal_data(html, data):
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const FISCAL_DATA\s*=\s*\{[^;]*\};'
     new_html, n = re.subn(pattern, f'const FISCAL_DATA = {new_json};', html, count=1)
+    _record_subn_result('FISCAL_DATA', pattern, n)
     if n:
         applied.append(f'FISCAL_DATA rebuilt ({len(labels)} FY rows, latest FY{labels[-1]} {latest_pct:+.2f}%, post-1965 avg {avg_post1965:+.2f}%)')
         html = new_html
@@ -1591,6 +1654,7 @@ def rebuild_cpi_breadth(html, data):
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const CPI_BREADTH\s*=\s*\{[^;]*\};'
     new_html, n = re.subn(pattern, f'const CPI_BREADTH = {new_json};', html, count=1)
+    _record_subn_result('CPI_BREADTH', pattern, n)
     if n:
         applied.append(f'CPI_BREADTH rebuilt ({len(common)} months, latest {common[-1]}, '
                        f'headline {obj["headline_mom_ann"][-1]:+.1f}% · trimmed {obj["trimmed"][-1]:+.1f}% · median {obj["median"][-1]:+.1f}%)')
@@ -1665,6 +1729,7 @@ def rebuild_jolts_data(html, data):
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const JOLTS_DATA\s*=\s*\{[^;]*\};'
     new_html, n = re.subn(pattern, f'const JOLTS_DATA = {new_json};', html, count=1)
+    _record_subn_result('JOLTS_DATA', pattern, n)
     if n:
         applied.append(f'JOLTS_DATA rebuilt ({len(common)} months, latest {common[-1]}, V/U {vu[-1]})')
         html = new_html
@@ -1732,6 +1797,7 @@ def rebuild_fed_liquidity_data(html, data):
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const FED_LIQUIDITY_DATA\s*=\s*\{[^;]*\};'
     new_html, n = re.subn(pattern, f'const FED_LIQUIDITY_DATA = {new_json};', html, count=1)
+    _record_subn_result('FED_LIQUIDITY_DATA', pattern, n)
     if n:
         applied.append(f'FED_LIQUIDITY_DATA rebuilt ({len(common_dates)} weeks, latest {common_dates[-1]})')
         html = new_html
@@ -2054,10 +2120,12 @@ def render_inflation(html, data, vals, tabs):
         sav_prv_short = datetime.datetime.strptime(psv[1]['date'], '%Y-%m-%d').strftime("%b")
         direction = 'up' if sav_cur > sav_prev else 'down'
         # "Saving rate X.X%</strong> (Mon'YY) — ticking up/down from Mon's X.X%"
+        sav_pat = r"(Saving rate )\d+\.\d+%</strong> \([A-Z][a-z]+'\d+\) — ticking (?:up|down) from [A-Z][a-z]+'s \d+\.\d+%"
         new_h, n = re.subn(
-            r"(Saving rate )\d+\.\d+%</strong> \([A-Z][a-z]+'\d+\) — ticking (?:up|down) from [A-Z][a-z]+'s \d+\.\d+%",
+            sav_pat,
             rf"\g<1>{sav_cur}%</strong> ({sav_cur_lbl}) — ticking {direction} from {sav_prv_short}'s {sav_prev}%",
             html, count=1)
+        _record_subn_result('Commentary saving rate', sav_pat, n)
         if n:
             html = new_h
             applied.append(f'Commentary saving rate updated to {sav_cur}% ({sav_cur_lbl})')
@@ -2485,6 +2553,10 @@ def update_shock_tracker(html, data, vals):
     pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\};(?=\s*\n\s*//\s*OIL_DAILY)'
     # Use lambda to avoid regex interpreting \u escapes in replacement string
     new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    # NB: this pattern is the one CLAUDE.md flags — the trailing lookahead
+    # requires `\n  // OIL_DAILY` on the next line; single-line JSON output
+    # from prior runs can collapse the surrounding whitespace and break it.
+    _record_subn_result('SHOCK_TRACKER', pattern, n)
     if n:
         applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
         html = new_html
@@ -2770,6 +2842,7 @@ def rebuild_kpi_strip(html, data, vals):
     pattern = r'const KPIS\s*=\s*\[[\s\S]*?\];'
     new_decl = f'const KPIS = {cards_json};'
     new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    _record_subn_result('KPIS', pattern, n)
     if n:
         applied.append(f'KPIS rebuilt ({len(cards)} cards with MoM deltas)')
         return new_html
@@ -2828,6 +2901,7 @@ def update_bank_cards(html):
     pattern = re.compile(r'const BANK_COMMENTARY\s*=\s*\[[\s\S]*?\n?\];')
     # Lambda replacement avoids regex backref interpretation of \u escapes.
     new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    _record_subn_result('BANK_COMMENTARY', pattern, n)
     if n:
         applied.append(f'BANK_COMMENTARY rebuilt ({len(new_entries)} banks, {reported} reported)')
         return new_html
@@ -2973,10 +3047,37 @@ def render():
     for e in errors:   print(f'  ⚠  {e}')
     for w in warnings: print(f'  ℹ  {w}')
 
+    # ── INJECTION SUMMARY (B-stability-1) ────────────────────────────────
+    # Every re.subn call site is wired through _record_subn_result. The
+    # summary below makes silent "0 replacements" injections visible in CI
+    # logs even when not running with --strict. Non-strict behaviour is
+    # unchanged — this is observability only.
+    total_subn = subn_success_count + len(zero_replacement_errors)
+    print('')
+    print(f'[Agent 4] INJECTION SUMMARY — '
+          f'{subn_success_count}/{total_subn} re.subn call sites applied >=1 replacement, '
+          f'{len(zero_replacement_errors)} returned 0 replacements')
+    if zero_replacement_errors:
+        print('[Agent 4] Zero-replacement re.subn call sites (silent injection failures):')
+        for z in zero_replacement_errors:
+            print(f'  🛑 {z}')
+
     # Exit 1 only on hard errors, not on missing KPI labels
     hard_errors = [e for e in errors if 'missing' in e.lower() or 'ERROR' in e]
     return len(hard_errors) == 0
 
 
 if __name__ == '__main__':
-    sys.exit(0 if render() else 1)
+    # --strict: exit code 2 when any re.subn call site returned 0 replacements.
+    # Wired in CI for the Agent 4b re-render step (post-validator) so silent
+    # injection failures become hard build failures once the data layer is
+    # known-good. The weekly Saturday CI Agent 4 step does NOT pass --strict
+    # so any pre-validator JSON-shape drift surfaces as a SUMMARY warning
+    # rather than blocking the cadence.
+    strict = '--strict' in sys.argv[1:]
+    ok = render()
+    if strict and zero_replacement_errors:
+        print(f'[Agent 4] --strict gate FAILED — {len(zero_replacement_errors)} '
+              f'silent injection failure(s) listed above. Exiting 2.')
+        sys.exit(2)
+    sys.exit(0 if ok else 1)

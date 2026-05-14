@@ -19,7 +19,11 @@
     "bea_pce":       {"typical_max": 35, "investigate_if_over": 110, "note": "PCE genuinely lags ~95 days at times; do NOT recommend action below 110 days"},
     "eia_weekly":    {"typical_max": 7,  "investigate_if_over": 14},
     "umich":         {"typical_max": 14, "investigate_if_over": 25, "note": "Prelim mid-month, final end-of-month"},
-    "nyfed_hhdc":    {"typical_max": 60, "investigate_if_over": 120, "note": "Quarterly; 2-3 quarter lag is structural"}
+    "nyfed_hhdc":    {"typical_max": 60, "investigate_if_over": 120, "note": "Quarterly; 2-3 quarter lag is structural"},
+    "fred_h41":      {"typical_max": 7,  "investigate_if_over": 14, "examples": ["WALCL", "WRESBAL", "RRPONTSYD", "WTREGEN"], "note": "Fed H.4.1 balance-sheet weekly release, Thursdays 4:30pm ET"},
+    "bls_jolts":     {"typical_max": 40, "investigate_if_over": 55, "examples": ["JTSJOL", "JTSQUL", "JTSHIL"], "note": "JOLTS releases ~35-40 days after reference month"},
+    "cleveland_fed": {"typical_max": 18, "investigate_if_over": 30, "examples": ["TRMMEANCPIM157SFRBCLE", "MEDCPIM157SFRBCLE"], "note": "Trimmed-mean and median CPI published a few days after BLS CPI"},
+    "bea_fiscal":    {"typical_max": 180, "investigate_if_over": 270, "examples": ["FYFSGDA188S"], "note": "Federal deficit/GDP annual; fiscal year reporting lags ~6 months"}
   },
 
   "noise_floor_pp": {
@@ -28,7 +32,16 @@
     "umich_sentiment":  0.5,
     "cc_delinq_90plus": 0.15,
     "gasoline_usd_gal": 0.10,
-    "_units_note": "Values are in the metric's natural units: pp for percentage-point series, points for sentiment indices, $/gal for gasoline."
+    "jolts_openings":   200,
+    "jolts_quits":      150,
+    "jolts_hires":      150,
+    "trimmed_mean_cpi_yoy": 0.2,
+    "median_cpi_yoy":   0.2,
+    "walcl_bn":         50,
+    "wresbal_bn":       50,
+    "rrpontsyd_bn":     100,
+    "deficit_pct_gdp":  0.5,
+    "_units_note": "Values are in the metric's natural units: pp for percentage-point series, points for sentiment indices, $/gal for gasoline, thousands for JOLTS counts, $bn for H.4.1 balance-sheet lines."
   },
 
   "shock_tracker_yoy_min_obs": {

@@ -23,7 +23,7 @@ body.themed-sm {
   background-attachment: fixed;
   box-sizing: border-box !important;
 }
-body.themed-sm { padding-top: 70px !important; }
+body.themed-sm { padding-top: 32px !important; }
 @media (min-width: 1920px) {
   body.themed-sm { padding-left: 80px !important; padding-right: 80px !important; }
 }
@@ -31,14 +31,16 @@ body.themed-sm { padding-top: 70px !important; }
   body.themed-sm { max-width: 2200px !important; margin: 0 auto !important; }
 }
 
-/* ── fixed preview banner ─────────────────────────────────────── */
+/* ── subtle top accent bar (replaces fixed dev banner) ────────────
+   Visual designer flagged the original 56px fixed navy banner as
+   dead real-estate for a scrolling CEO dashboard. Replaced with a
+   2px brand-accent edge — present, but doesn't steal scroll height. */
 body.themed-sm::before {
-  content: 'SYSTEM-MAP THEME · dev preview · real data, real JS, restyled CSS';
+  content: '';
   position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-  background: #0D1B2A; color: #fff;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
-  padding: 9px 24px; text-align: center;
+  height: 2px;
+  background: linear-gradient(90deg, #336BCC 0%, #1E4A8C 60%, #0D1B2A 100%);
+  pointer-events: none;
 }
 
 /* ── hero ─────────────────────────────────────────────────────── */
@@ -46,19 +48,23 @@ body.themed-sm .eyebrow {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; font-weight: 700 !important;
   letter-spacing: .2em !important; text-transform: uppercase !important;
-  color: #7A8FA8 !important;
+  color: #5A6B7D !important;
   margin-bottom: 14px !important;
   background: none !important; border: none !important; padding: 0 !important;
 }
+/* Hero: dialled back from 62px serif to 44px sans per visual-designer
+   audit. Magazine-cover scale eroded scan hierarchy on a 12-tab
+   reference dashboard; FT/Bloomberg/Stripe all use conservative hero
+   weight. Serif reserved for KPI values + commentary pull-quotes. */
 body.themed-sm > h1 {
-  font-family: 'DM Serif Display', Georgia, serif !important;
-  font-size: 62px !important; font-weight: 400 !important;
-  line-height: 1.04 !important; letter-spacing: -.015em !important;
-  color: #0D1B2A !important; margin: 0 0 22px !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 44px !important; font-weight: 700 !important;
+  line-height: 1.08 !important; letter-spacing: -.02em !important;
+  color: #0D1B2A !important; margin: 0 0 18px !important;
 }
 body.themed-sm > h1 span {
-  font-style: italic !important; color: #1E4A8C !important;
-  font-weight: 400 !important; background: none !important;
+  font-weight: 700 !important; color: #1E4A8C !important;
+  background: none !important;
   -webkit-text-fill-color: #1E4A8C !important;
 }
 body.themed-sm .subtitle {
@@ -76,7 +82,7 @@ body.themed-sm .sm-meta {
   border-bottom: 1px solid #E2E8F0;
   font-family: 'DM Mono', monospace;
   font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase;
-  color: #7A8FA8;
+  color: #5A6B7D;
 }
 body.themed-sm .sm-meta .sm-meta-dot {
   width: 6px; height: 6px; border-radius: 50%; background: #1A9E5A;
@@ -124,14 +130,14 @@ body.themed-sm .kpi:nth-child(4)::before { background: #CC8A00; }
 body.themed-sm .kpi:nth-child(5)::before { background: #D64045; }
 body.themed-sm .kpi:nth-child(6)::before { background: #1E4A8C; }
 body.themed-sm .kpi:hover {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 14px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04) !important;
+  /* translateY removed — let the shadow do the lift, per visual audit. */
+  box-shadow: 0 4px 14px rgba(15,23,42,.07), 0 1px 2px rgba(15,23,42,.04) !important;
 }
 body.themed-sm .kpi-lbl {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; font-weight: 700 !important;
   letter-spacing: .18em !important; text-transform: uppercase !important;
-  color: #7A8FA8 !important; margin-bottom: 8px !important;
+  color: #5A6B7D !important; margin-bottom: 8px !important;
 }
 body.themed-sm .kpi-val {
   font-family: 'DM Serif Display', Georgia, serif !important;
@@ -141,7 +147,7 @@ body.themed-sm .kpi-val {
 }
 body.themed-sm .kpi-sub {
   font-family: 'DM Mono', monospace !important;
-  font-size: 10px !important; color: #7A8FA8 !important;
+  font-size: 10px !important; color: #5A6B7D !important;
   letter-spacing: .04em !important; margin-top: 7px !important;
 }
 body.themed-sm .kpi-delta {
@@ -167,7 +173,7 @@ body.themed-sm .nav-group-lbl {
   font-family: 'DM Mono', monospace !important;
   font-size: 9.5px !important; font-weight: 700 !important;
   letter-spacing: .2em !important; text-transform: uppercase !important;
-  color: #94A3B8 !important;
+  color: #5A6B7D !important;
 }
 body.themed-sm .nav-btn {
   font-family: 'DM Sans', sans-serif !important;
@@ -223,26 +229,30 @@ body.themed-sm .panel {
 body.themed-sm .panel:hover {
   box-shadow: 0 4px 14px rgba(15,23,42,.05), 0 1px 2px rgba(15,23,42,.04) !important;
 }
+/* Panel titles: reverted from 22px serif to 17px sans semibold.
+   Serif at 22px was competing with the hero for hierarchy weight;
+   style_guide.md §3.2 calls for quiet section dividers. */
 body.themed-sm .panel-title {
-  font-family: 'DM Serif Display', Georgia, serif !important;
-  font-size: 22px !important; font-weight: 400 !important;
-  line-height: 1.15 !important; letter-spacing: -.005em !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 17px !important; font-weight: 600 !important;
+  line-height: 1.25 !important; letter-spacing: -.01em !important;
   color: #0D1B2A !important; margin-bottom: 4px !important;
 }
 body.themed-sm .panel-sub {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; font-weight: 700 !important;
   letter-spacing: .15em !important; text-transform: uppercase !important;
-  color: #7A8FA8 !important; margin-bottom: 18px !important;
+  color: #5A6B7D !important; margin-bottom: 18px !important;
 }
 
-/* commentary CASE 1 — wrapped inside .panel */
+/* commentary CASE 1 — wrapped inside .panel
+   border-left snapped to 3px (one 8pt-grid tick) per visual audit. */
 body.themed-sm .panel .fc-note {
   background: transparent !important;
   border: none !important;
-  border-left: 2px solid #336BCC !important;
+  border-left: 3px solid #336BCC !important;
   border-radius: 0 !important;
-  padding: 4px 0 4px 16px !important;
+  padding: 4px 0 4px 14px !important;
   margin-top: 8px !important;
   margin-bottom: 0 !important;
   font-size: 14px !important;
@@ -279,7 +289,7 @@ body.themed-sm > .tab-panel > .sector-grid {
 body.themed-sm .src,
 body.themed-sm .vintage-note {
   font-family: 'DM Mono', monospace !important;
-  font-size: 9.5px !important; color: #94A3B8 !important;
+  font-size: 9.5px !important; color: #5A6B7D !important;
   letter-spacing: .06em !important; text-transform: uppercase !important;
   border-top: 1px solid #F1F5F9;
   padding-top: 10px !important;
@@ -312,7 +322,7 @@ body.themed-sm .metric:hover { transform: none !important; }
 body.themed-sm .m-lbl {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; letter-spacing: .18em !important;
-  text-transform: uppercase !important; color: #7A8FA8 !important;
+  text-transform: uppercase !important; color: #5A6B7D !important;
   font-weight: 700 !important;
 }
 body.themed-sm .m-val {
@@ -323,7 +333,7 @@ body.themed-sm .m-val {
 }
 body.themed-sm .m-sub {
   font-family: 'DM Mono', monospace !important;
-  font-size: 10px !important; color: #7A8FA8 !important;
+  font-size: 10px !important; color: #5A6B7D !important;
   letter-spacing: .04em !important;
 }
 
@@ -375,7 +385,7 @@ body.themed-sm .dtable th {
   font-family: 'DM Mono', monospace !important;
   font-size: 9.5px !important; font-weight: 700 !important;
   letter-spacing: .18em !important; text-transform: uppercase !important;
-  color: #7A8FA8 !important;
+  color: #5A6B7D !important;
   background: #F7F8FA !important;
   border-bottom: 1px solid #E2E8F0 !important;
   padding: 11px 12px !important;
@@ -394,7 +404,7 @@ body.themed-sm .dtable tbody tr:hover {
 body.themed-sm .sort-lbl {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; letter-spacing: .18em !important;
-  text-transform: uppercase !important; color: #7A8FA8 !important;
+  text-transform: uppercase !important; color: #5A6B7D !important;
   font-weight: 700 !important;
 }
 body.themed-sm .sort-btn {
@@ -439,16 +449,76 @@ body.themed-sm .sort-btn:focus-visible {
   outline-offset: 2px !important;
 }
 
-/* ── responsive ───────────────────────────────────────────────── */
+/* ── responsive (hero scaled with the new 44px desktop baseline) ── */
 @media (max-width: 1080px) {
-  body.themed-sm { padding: 60px 32px 60px !important; }
-  body.themed-sm > h1 { font-size: 48px !important; }
+  body.themed-sm { padding: 32px 32px 60px !important; }
+  body.themed-sm > h1 { font-size: 38px !important; }
 }
 @media (max-width: 900px) {
-  body.themed-sm > h1 { font-size: 40px !important; }
+  body.themed-sm > h1 { font-size: 34px !important; }
   body.themed-sm .subtitle { font-size: 14px !important; }
 }
 @media (max-width: 720px) {
-  body.themed-sm { padding: 56px 20px 56px !important; }
-  body.themed-sm > h1 { font-size: 36px !important; }
+  body.themed-sm { padding: 28px 20px 56px !important; }
+  body.themed-sm > h1 { font-size: 30px !important; }
+}
+
+/* ── split-stack chart container (dual-axis-lie remediation) ──────
+   Used by c-housing-mom and c-afford — each panel now hosts two
+   stacked single-axis canvases instead of a misleading dual-axis
+   chart. Theme-side rules just make sure the stack inherits panel
+   spacing + radius without competing with .ch300. */
+body.themed-sm .split-stack {
+  display: flex; flex-direction: column; gap: 8px;
+  width: 100%; height: 300px;
+}
+body.themed-sm .split-stack-row {
+  position: relative; flex: 1 1 0; min-height: 0; width: 100%;
+}
+body.themed-sm .split-stack-row + .split-stack-row {
+  border-top: 1px dashed #E2E8F0;
+  padding-top: 6px;
+}
+
+/* ── empty-state overlay (B3 charts pending first pipeline run) ───
+   Companion CSS to theme-overlay.js paintEmptyStates(). The JS sets
+   most styles inline for portability; this rule keeps the parent
+   sized so the absolute-positioned overlay anchors correctly even
+   when the canvas is the only child. */
+body.themed-sm .sm-empty-state {
+  background: rgba(247, 248, 250, 0.72);
+  backdrop-filter: blur(1px);
+  border-radius: 8px;
+  z-index: 2;
+}
+body.themed-sm .panel:has(.sm-empty-state) canvas,
+body.themed-sm .panel:has(.sm-empty-state) .chart-wrap {
+  min-height: 220px;
+}
+
+/* ── focus-visible: keyboard a11y on every interactive surface ────
+   Frontend audit flagged missing focus rings (outline:0 inherited
+   from production). 2px brand-accent ring with a generous offset so
+   it reads against both panel-white and page-grey backgrounds. */
+body.themed-sm a:focus-visible,
+body.themed-sm button:focus-visible,
+body.themed-sm .nav-btn:focus-visible,
+body.themed-sm .download-btn:focus-visible,
+body.themed-sm [role="button"]:focus-visible,
+body.themed-sm [tabindex]:focus-visible {
+  outline: 2px solid #336BCC !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
+}
+
+/* ── prefers-reduced-motion: kill every transition + animation ────
+   Visual audit flagged missing motion-reduction clause despite the
+   smFadeIn animation and hover transitions. WCAG 2.3.3. */
+@media (prefers-reduced-motion: reduce) {
+  body.themed-sm *,
+  body.themed-sm *::before,
+  body.themed-sm *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

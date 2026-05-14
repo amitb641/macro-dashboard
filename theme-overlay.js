@@ -53,11 +53,11 @@
       if (!parent || parent.querySelector('.sm-empty-state')) return;
       var overlay = document.createElement('div');
       overlay.className = 'sm-empty-state';
-      overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-family:"DM Mono",monospace;color:#94A3B8;font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:24px;pointer-events:none;';
+      overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-family:"DM Mono",monospace;color:#5A6B7D;font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:24px;pointer-events:none;';
       overlay.innerHTML =
         '<div style="font-size:22px;opacity:.5">◌</div>' +
-        '<div style="font-weight:700;color:#7A8FA8">Awaiting first pipeline run</div>' +
-        '<div style="text-transform:none;letter-spacing:.02em;font-family:\'DM Sans\',sans-serif;font-size:12px;color:#94A3B8;max-width:380px;line-height:1.5">' +
+        '<div style="font-weight:700;color:#5A6B7D">Awaiting first pipeline run</div>' +
+        '<div style="text-transform:none;letter-spacing:.02em;font-family:\'DM Sans\',sans-serif;font-size:12px;color:#5A6B7D;max-width:380px;line-height:1.5">' +
           spec.label + ' was added to the collector this week. Series will populate on the next weekly CI run (Sat 08:00 ET).' +
         '</div>';
       // make parent relative so absolute overlay sits inside

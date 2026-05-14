@@ -113,7 +113,10 @@ jobs:
         continue-on-error: true
 
       - name: Agent 4b — Re-render (inject validation report)
-        run: python scripts/renderer.py
+        # --strict: validator has run, so any re.subn returning 0 replacements
+        # is a real injection failure (stale data shipping risk), not a
+        # JSON-shape drift we haven't caught yet. Exits 2 on silent miss.
+        run: python scripts/renderer.py --strict
 
       - name: Gate — Block publish on critical validation failures
         if: steps.validator.outcome == 'failure'
