@@ -66,7 +66,7 @@ Supporting modules (read by agentic components):
 - `data/known_normal.json` — Machine-readable mirror of playbook baselines (publish lag, noise floors, shock-tracker min obs counts, model routing).
 
 Supporting scripts:
-- `scripts/snapshot.py` — Rolling data backups (keep last 3)
+- `scripts/snapshot.py` — Rolling data backups (keep last 13, ≈ one quarter of weekly runs). Each snapshot includes `raw_data.json`, `validation_report.json`, and `index.html` so a rollback can restore the live page directly when the renderer itself is the regression. Override retention via `SNAPSHOT_MAX` env var; rollback with `--rollback YYYY-MM-DD [--include-html]`.
 - `scripts/healthcheck.py` — Post-deploy page verification
 - `scripts/version_tracker.py` — Pipeline run audit trail
 
