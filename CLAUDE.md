@@ -34,6 +34,15 @@ cross-tab consistency checks pass.
 - Never create new branches without asking
 - Clean up stale remote branches after merging
 
+## ACTIVE: Parallel-run trial (2026-05-14 → 2026-06-14)
+**Read `.claude/PARALLEL_RUN.md` before touching CI workflows, the dev
+branch, or anything in `data/parallel_compare_*` / `data/run_report_*`.**
+That doc is the single source of truth for the prod/dev parallel-run
+plan, what's landed where, observation-mode gates, known issues, and
+the weekly review checklist. The "Plan + state snapshot" section near
+the top is written specifically for Claude sessions resuming the trial
+cold — start there.
+
 ## Local Dev Workflow
 - Dev worktree: `/home/user/macro-dashboard-dev` on branch `dev` (shares `.git` with main checkout via `git worktree`)
 - Preview server: `scripts/dev-preview.sh [port] [tab]` — defaults to `:8765`, optional tab hash (e.g. `banks`, `gdp`)

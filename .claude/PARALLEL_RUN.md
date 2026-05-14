@@ -13,6 +13,82 @@ Resend). Neither inherits state from the other.
 
 ---
 
+## Plan + state snapshot (2026-05-14)
+
+> Durable memory for future Claude sessions resuming this trial. Update
+> whenever the plan changes; do not delete past entries.
+
+**Goal:** observe dev's expert-bundle changes against fresh live data
+for ≥4 weekly cycles, then decide promote / extend / roll-back.
+
+**Architecture (already landed):**
+
+- `main` branch → prod pipeline (`briefing.yml`) → GitHub Pages.
+  Cron: Sat 12:00 UTC. Email: prod subscriber list. Hard gates: ON.
+- `dev/multi-expert-improvements` → dev pipeline (`briefing-dev.yml`)
+  → Vercel (`macro-dashboard-dev.vercel.app`). Cron: Sat 12:00 UTC.
+  Email: `EMAIL_TO_DEV` only (subscriber-safe). Gates: **observation
+  mode** for renderer `--strict` (Agent 4b) and CEO-grade gate.
+- `Parallel Compare (prod vs dev)` workflow (lives on **main** so
+  `workflow_run` registers, plus a copy on dev) → fires on either
+  briefing completion. Emits:
+  - `data/run_report_<branch>_latest.md` — every fire, committed to
+    dev when branch=dev, artifact-only when branch=main.
+  - `data/parallel_compare_latest.md` — only when BOTH branches
+    have a fresh (<24h) commit; committed to dev.
+
+**Key commits backing the trial:**
+
+| Branch | Commit | What |
+|---|---|---|
+| dev | `5db06e8` | Initial briefing-dev.yml + parallel-compare.yml + parallel_compare.py |
+| dev | `952c477` | Agent 4b (renderer --strict) → observation mode |
+| dev | `f6ae4d5` | Wired Vercel URL + optional health-check |
+| dev | `45fa273` | CEO-grade gate → observation mode |
+| dev | `371ad55` | scripts/run_report.py + restructured parallel-compare.yml + this doc extended to 1 month |
+| main | `016c02a` | Listener-only landing: parallel-compare.yml + run_report.py + parallel_compare.py. **Zero prod-pipeline mods.** |
+
+**Why landing 3 files on main was necessary:** GitHub Actions registers
+`workflow_run` listeners only from workflow files on the repo's default
+branch. Without `parallel-compare.yml` on main, the listener never
+fires, so per-run reports and paired comparisons would silently never
+generate. Main's commit is *listener-only* — no `briefing.yml`, `data/`,
+or `index.html` touches; prod's Saturday cron behaviour is unchanged.
+
+**Open known issues (block promotion to main):**
+
+1. Renderer `--strict` flags 24 obsolete `patch_kpi()` calls — modern
+   `inject_kpi()` already owns those tiles; legacy calls reference
+   labels B7 renamed/removed. Workaround in place (observation mode
+   on dev). Long-term fix: retire `patch_kpi()` calls in
+   `scripts/renderer.py`.
+2. CEO-grade gate flags 6 criticals on dev (1 validator
+   `transcript_archive_coverage` + 5 vision_review). Observed, not
+   blocked on dev. Either resolve or accept-as-WARN before promotion.
+
+**Pending operator actions:**
+
+- [ ] Set `DEV_URL` repo secret to activate Vercel health-check step.
+- [ ] Set `EMAIL_TO_DEV` repo secret if you want dev email previews.
+- [ ] Confirm Vercel "Production Branch" is set to
+      `dev/multi-expert-improvements` (Vercel → Project Settings →
+      Git → Production Branch).
+
+**Decision date:** 2026-06-14 (T+1 month). Promotion checklist lives
+in the "Decision criteria" section further down this doc.
+
+**Resume instructions for future Claude sessions:**
+
+1. Read this section first.
+2. Check `data/run_report_dev_latest.md` and (if present)
+   `data/parallel_compare_latest.md` for the most recent verdict.
+3. Walk the weekly review checklist below — do not invent a different
+   process.
+4. Append to the Log table at the bottom of this doc; never edit
+   prior log entries.
+
+---
+
 ## Why parallel
 
 The dev branch carries ~38 commits of expert-driven improvements (B1–B7
