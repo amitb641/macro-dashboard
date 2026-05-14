@@ -230,6 +230,26 @@ jobs:
           retention-days: 14
 
       # ───────────────────────────────────────────────────────────────
+      # Vercel health-check — confirms the dev preview URL serves the
+      # latest commit. Vercel auto-deploys on push to dev within ~30s,
+      # so we sleep briefly before pinging to give it time to roll out.
+      # No-op if DEV_URL secret is unset (Vercel may not yet be wired).
+      # ───────────────────────────────────────────────────────────────
+      - name: Vercel health-check (dev preview URL)
+        id: vercel_healthcheck
+        env:
+          DEV_URL: ${{ secrets.DEV_URL }}
+        run: |
+          if [ -z "$DEV_URL" ]; then
+            echo "DEV_URL secret not set — skipping Vercel health-check."
+            exit 0
+          fi
+          echo "Waiting 45s for Vercel auto-deploy to roll out..."
+          sleep 45
+          python scripts/healthcheck.py "$DEV_URL"
+        continue-on-error: true
+
+      # ───────────────────────────────────────────────────────────────
       # Email on dev only if EMAIL_TO_DEV secret is set. Subscribers
       # to the production list never receive a duplicate.
       # ───────────────────────────────────────────────────────────────

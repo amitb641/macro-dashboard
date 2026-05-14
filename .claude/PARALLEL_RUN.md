@@ -59,7 +59,7 @@ to fast-forward `main` to dev or extend the trial.
 | Deploy surface | Branch | URL |
 |---|---|---|
 | GitHub Pages (prod) | `main` | https://amitb641.github.io/macro-dashboard/ |
-| Vercel (parallel dev) | `dev/multi-expert-improvements` | (set after Vercel project creation) |
+| Vercel (parallel dev) | `dev/multi-expert-improvements` | https://macro-dashboard-dev.vercel.app/ |
 
 ## How to review
 
