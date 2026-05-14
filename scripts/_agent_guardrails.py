@@ -156,12 +156,18 @@ def bounded_llm_call(
     purpose: str,
     temperature: float = 0.2,
     validator: 'Optional[callable]' = None,
+    image_b64: 'Optional[str]' = None,
+    image_media_type: str = 'image/png',
 ) -> Optional[str]:
     """The ONLY way agentic code should call Claude. Wraps:
       - Budget check (raises BudgetExhausted if over cap)
       - HTTP call with retries (matches briefing_agent.py pattern)
       - Audit logging to agent_memory.jsonl
       - Optional output-validator (zero-fail-rate hook)
+      - Optional vision input via `image_b64` (base64-encoded PNG/JPEG/WEBP).
+        When supplied, the user message becomes a structured content list
+        with the image followed by the text prompt — identical to the
+        plain-text path for budget/audit/validator semantics.
 
     Returns the response text, or None if guardrails disabled the call.
 
@@ -200,6 +206,24 @@ def bounded_llm_call(
     started = time.time()
     last_err = None
 
+    # Build the user-message content shape. Text-only stays string-typed
+    # (smaller payload, unchanged on-wire for non-vision callers); vision
+    # callers get a structured content list.
+    if image_b64:
+        user_content = [
+            {
+                'type': 'image',
+                'source': {
+                    'type': 'base64',
+                    'media_type': image_media_type,
+                    'data': image_b64,
+                },
+            },
+            {'type': 'text', 'text': prompt},
+        ]
+    else:
+        user_content = prompt
+
     for attempt in range(3):
         try:
             if attempt > 0:
@@ -216,9 +240,9 @@ def bounded_llm_call(
                     'max_tokens': max_tokens,
                     'system': system,
                     'temperature': temperature,
-                    'messages': [{'role': 'user', 'content': prompt}],
+                    'messages': [{'role': 'user', 'content': user_content}],
                 },
-                timeout=90,
+                timeout=120 if image_b64 else 90,
             )
             r.raise_for_status()
             body = r.json()

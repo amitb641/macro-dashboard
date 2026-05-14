@@ -28,6 +28,12 @@ except ImportError:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _models import SONNET_VISION
+from _agent_guardrails import (
+    bounded_llm_call,
+    reset_call_counter,
+    BudgetExhausted,
+    is_disabled,
+)
 
 ANTHROPIC_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
@@ -99,9 +105,47 @@ def _encode_screenshot(path: Path) -> str:
         return base64.b64encode(f.read()).decode('utf-8')
 
 
+def _strip_fences_to_array(text: str) -> str:
+    """Normalize a Claude response down to its leading JSON array."""
+    t = text.strip()
+    if t.startswith('```'):
+        t = t.split('```', 2)[1]
+        if t.lower().startswith('json'):
+            t = t[4:]
+        if t.endswith('```'):
+            t = t[:-3]
+    return t.strip()
+
+
+def _validate_vision_response(text: str) -> bool:
+    """bounded_llm_call validator — accepts only JSON arrays (the defect
+    list contract). Rejecting non-arrays retriggers the retry loop before
+    we fall back to the empty-list default."""
+    import re
+    cleaned = _strip_fences_to_array(text)
+    try:
+        obj = json.loads(cleaned)
+        return isinstance(obj, list)
+    except (json.JSONDecodeError, ValueError):
+        # Be lenient: if a [...] array is embedded in surrounding prose,
+        # accept it. Same shape the post-call parser expects.
+        m = re.search(r'\[[\s\S]*\]', cleaned)
+        if not m:
+            return False
+        try:
+            return isinstance(json.loads(m.group(0)), list)
+        except (json.JSONDecodeError, ValueError):
+            return False
+
+
 def _call_claude_vision(image_b64: str, tab_name: str) -> list:
-    """Send screenshot to Claude for visual analysis. Returns list of defects."""
-    if not ANTHROPIC_KEY:
+    """Send screenshot to Claude for visual analysis. Returns list of defects.
+
+    Migrated to bounded_llm_call() so this call shares the kill switch,
+    cost cap, and audit log with every other agentic surface. Vision
+    payload uses the image_b64 parameter of bounded_llm_call.
+    """
+    if is_disabled() or not ANTHROPIC_KEY:
         return []
 
     user_prompt = (
@@ -110,76 +154,42 @@ def _call_claude_vision(image_b64: str, tab_name: str) -> list:
         f'Report any visual defects as a JSON array.'
     )
 
-    last_err = None
-    for attempt in range(3):
-        try:
-            if attempt > 0:
-                wait = 2 ** attempt
-                print(f'    Retry {attempt}/2 after {wait}s...')
-                time.sleep(wait)
+    try:
+        text = bounded_llm_call(
+            user_prompt,
+            system=SYSTEM_PROMPT,
+            model=SONNET_VISION,
+            max_tokens=1500,
+            purpose=f'visual_review:{tab_name}',
+            temperature=0.2,
+            validator=_validate_vision_response,
+            image_b64=image_b64,
+            image_media_type='image/png',
+        )
+    except BudgetExhausted as e:
+        print(f'    visual_review budget exhausted: {e}')
+        return []
+    except Exception as e:
+        print(f'    visual_review bounded_llm_call raised: {type(e).__name__}: {e}')
+        return []
 
-            r = requests.post(
-                'https://api.anthropic.com/v1/messages',
-                headers={
-                    'x-api-key': ANTHROPIC_KEY,
-                    'anthropic-version': '2023-06-01',
-                    'content-type': 'application/json',
-                },
-                json={
-                    'model': SONNET_VISION,
-                    'max_tokens': 1500,
-                    'system': SYSTEM_PROMPT,
-                    'messages': [{
-                        'role': 'user',
-                        'content': [
-                            {
-                                'type': 'image',
-                                'source': {
-                                    'type': 'base64',
-                                    'media_type': 'image/png',
-                                    'data': image_b64,
-                                },
-                            },
-                            {
-                                'type': 'text',
-                                'text': user_prompt,
-                            },
-                        ],
-                    }],
-                },
-                timeout=120,
-            )
-            r.raise_for_status()
-            text = r.json()['content'][0]['text'].strip()
+    if text is None:
+        # Kill switch or validator rejected every retry
+        return []
 
-            # Parse JSON from response (handle markdown fences)
-            if text.startswith('```'):
-                text = text.split('```')[1]
-                if text.startswith('json'):
-                    text = text[4:]
-            text = text.strip()
-
-            defects = json.loads(text)
-            if isinstance(defects, list):
-                return defects
+    cleaned = _strip_fences_to_array(text)
+    try:
+        defects = json.loads(cleaned)
+    except json.JSONDecodeError:
+        import re
+        m = re.search(r'\[[\s\S]*\]', cleaned)
+        if not m:
             return []
-
+        try:
+            defects = json.loads(m.group(0))
         except json.JSONDecodeError:
-            # Try to extract JSON array from response
-            import re
-            match = re.search(r'\[[\s\S]*\]', text)
-            if match:
-                try:
-                    return json.loads(match.group(0))
-                except json.JSONDecodeError:
-                    pass
-            last_err = f'Could not parse JSON from response'
-        except Exception as e:
-            last_err = e
-            print(f'    Claude vision call failed (attempt {attempt+1}/3): {e}')
-
-    print(f'    All retries exhausted. Last error: {last_err}')
-    return []
+            return []
+    return defects if isinstance(defects, list) else []
 
 
 def run_visual_review(tab_filter=None):
@@ -191,6 +201,14 @@ def run_visual_review(tab_filter=None):
         (findings_list, summary_dict)
     """
     print('[Agent 8 — Visual Review] Starting vision-based quality checks...')
+
+    # Share LLM-call budget with any other agentic components running in
+    # this process. bounded_llm_call() respects this counter.
+    reset_call_counter()
+
+    if is_disabled():
+        print('  AGENT_DISABLE_ALL=1 — visual review skipped')
+        return [], {'status': 'skipped', 'reason': 'kill switch'}
 
     if not ANTHROPIC_KEY:
         print('  No ANTHROPIC_API_KEY — visual review skipped')

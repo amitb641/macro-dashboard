@@ -17,6 +17,12 @@ except ImportError:
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _models import SONNET
+from _agent_guardrails import (
+    bounded_llm_call,
+    reset_call_counter,
+    BudgetExhausted,
+    is_disabled,
+)
 
 ANTHROPIC_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
@@ -170,53 +176,83 @@ Respond with this exact JSON (no markdown):
 }}"""
 
 
+def _strip_fences(text: str) -> str:
+    """Strip ```json ... ``` fence wrappers Claude sometimes adds."""
+    t = text.strip()
+    if t.startswith('```'):
+        # Drop opening fence (with optional language tag) and trailing fence
+        t = t.split('```', 2)[1]
+        if t.lower().startswith('json'):
+            t = t[4:]
+        if t.endswith('```'):
+            t = t[:-3]
+    return t.strip()
+
+
+def _validate_json_dict(text: str) -> bool:
+    """Validator for bounded_llm_call — accepts only a JSON object with
+    the minimum schema (tabs/kpi_updates) the renderer requires. Rejecting
+    malformed output here triggers a retry inside bounded_llm_call before
+    we fall through to the static fallback."""
+    try:
+        obj = json.loads(_strip_fences(text))
+    except (json.JSONDecodeError, ValueError):
+        return False
+    if not isinstance(obj, dict):
+        return False
+    # Must contain the keys the renderer/_fallback shape expects
+    return 'tabs' in obj and 'kpi_updates' in obj
+
+
 def call_claude(prompt: str) -> dict:
+    """Agent 3 LLM entry point. Wraps bounded_llm_call() so:
+      - master kill switch (AGENT_DISABLE_ALL) → static fallback
+      - missing ANTHROPIC_API_KEY → static fallback
+      - per-run cost cap honoured (BudgetExhausted surfaces as fallback)
+      - every call audited to data/agent_memory.jsonl
+      - response is validated as a JSON object with required keys
+        before being returned (zero-fail-rate guarantee).
+    """
+    if is_disabled():
+        print('  ⚠  AGENT_DISABLE_ALL=1 — using static fallback')
+        return _fallback()
     if not ANTHROPIC_KEY:
         print('  ⚠  No ANTHROPIC_API_KEY — using static fallback')
         return _fallback()
-    print(f'  Calling {SONNET}...')
-    import time
-    last_err = None
-    for attempt in range(3):
-        try:
-            if attempt > 0:
-                wait = 2 ** attempt
-                print(f'  Retry {attempt}/2 after {wait}s...')
-                time.sleep(wait)
-            r = requests.post(
-                'https://api.anthropic.com/v1/messages',
-                headers={
-                    'x-api-key': ANTHROPIC_KEY,
-                    'anthropic-version': '2023-06-01',
-                    'content-type': 'application/json',
-                },
-                json={
-                    'model': SONNET,
-                    'max_tokens': 4096,
-                    'system': SYSTEM,
-                    'messages': [{'role': 'user', 'content': prompt}],
-                },
-                timeout=90,
-            )
-            r.raise_for_status()
-            text = r.json()['content'][0]['text'].strip()
-            if text.startswith('```'): text = text.split('```')[1]
-            if text.startswith('json'): text = text[4:]
-            try:
-                return json.loads(text.strip())
-            except json.JSONDecodeError as je:
-                # Truncation or escaping bug — log the tail of the response so
-                # the cause is obvious in the next run instead of just a "char N"
-                # offset that requires reproducing locally.
-                snippet = text[max(0, je.pos - 200):je.pos + 100]
-                print(f'  ⚠  JSON parse failed at char {je.pos}: {je.msg}')
-                print(f'  ⚠  context (±200 chars around failure):\n{snippet!r}')
-                raise
-        except Exception as e:
-            last_err = e
-            print(f'  ❌ Claude call failed (attempt {attempt+1}/3): {e}')
-    print(f'  ❌ All retries exhausted. Last error: {last_err}')
-    return _fallback()
+    print(f'  Calling {SONNET} via bounded_llm_call...')
+
+    try:
+        text = bounded_llm_call(
+            prompt,
+            system=SYSTEM,
+            model=SONNET,
+            max_tokens=4096,
+            purpose='briefing:weekly_commentary',
+            temperature=0.2,
+            validator=_validate_json_dict,
+        )
+    except BudgetExhausted as e:
+        print(f'  ❌ {e} — using static fallback')
+        return _fallback()
+    except Exception as e:
+        print(f'  ❌ bounded_llm_call raised: {e} — using static fallback')
+        return _fallback()
+
+    if text is None:
+        # Guardrails skipped (kill switch flipped after start) or validator
+        # rejected every retry. Surface as fallback rather than crashing.
+        print('  ❌ bounded_llm_call returned None — using static fallback')
+        return _fallback()
+
+    cleaned = _strip_fences(text)
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError as je:
+        # Validator should have caught this — log defensively and fall back.
+        snippet = cleaned[max(0, je.pos - 200):je.pos + 100]
+        print(f'  ⚠  JSON parse failed at char {je.pos}: {je.msg}')
+        print(f'  ⚠  context (±200 chars around failure):\n{snippet!r}')
+        return _fallback()
 
 
 ALL_TABS = ['gdp', 'jobs', 'unemp', 'wages', 'cpi', 'pce', 'yield', 'credit', 'housing', 'oil', 'banks']
@@ -238,6 +274,9 @@ def _fallback() -> dict:
 
 def run():
     print('[Agent 3 — Analyst] Starting...')
+    # Share the per-run LLM-call budget across all agentic components
+    # running in this process. bounded_llm_call() honours this counter.
+    reset_call_counter()
     if not SIG_FILE.exists():
         print('ERROR: signals.json missing — run analyzer.py first'); sys.exit(1)
 
