@@ -519,6 +519,19 @@ def collect():
     data['rrpontsyd']  = fred_obs('RRPONTSYD',  104)
     data['tga']        = fred_obs('WTREGEN',    104)
 
+    # Fiscal — B3.2. Only the deficit/GDP series is FRED-fetchable.
+    # The other two leading-edge fiscal indicators the spec calls for —
+    # Hutchins Fiscal Impulse Measure (Brookings) and CBO baseline (CBO
+    # Budget Outlook tables) — are PDF-only publications without a
+    # stable API. They get hand-curated into data/fiscal_overrides.json
+    # by the same quarterly cadence as data/earnings_calendar.json once
+    # the fiscal tab UI lands.
+    #   FYFSGDA188S — Federal Surplus or Deficit [-] as % of GDP, annual
+    # 30 obs covers 1995-onward so the chart can show full post-2000
+    # fiscal regimes (Clinton surplus → GFC → Trump tax cuts → COVID
+    # blowout → post-COVID structural deficit).
+    data['deficit_gdp'] = fred_obs('FYFSGDA188S', 30)
+
     # ── Annual history for chart rebuilding (from 2000) ──────────────
     print('  [History] Annual chart series...')
     data['fedfunds_annual']   = fred_obs('FEDFUNDS', 40, freq='a')
