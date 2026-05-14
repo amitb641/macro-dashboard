@@ -21,6 +21,15 @@ on:
   schedule:
     - cron: '0 12 * * 6'        # Weekly: Sat 08:00 EDT / 07:00 EST
     - cron: '0 14 8-14 * 6'     # Monthly deep: 2nd Sat 10:00 EDT / 09:00 EST
+  push:
+    # Only main may trigger the publish pipeline on push. The github-pages
+    # environment has a branch policy restricted to `main`, so pushes from
+    # any other branch were producing startup-failure runs (0 jobs, 0
+    # check-runs) with a vague "workflow file issue" hint. Restricting the
+    # push trigger here makes feature branches green-by-skip and keeps the
+    # CI signal honest. Manual workflow_dispatch from any branch still
+    # works for ad-hoc reruns.
+    branches: [main]
   workflow_dispatch:
     inputs:
       force_ai:
