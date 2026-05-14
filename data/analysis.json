@@ -1,60 +1,29 @@
 {
   "generated_at": "May 14, 2026",
-  "risk_level": "HIGH",
-  "risk_rationale": "Inflation remains materially above target \u2014 CPI at 3.8% and Core PCE at 3.2% \u2014 while the labor market is softening with NFP at 115K and U-6 at 8.2%, creating a stagflationary tension that constrains Fed optionality. WTI dropping $3.98 to $105.78 provides marginal relief on headline inflation but Brent at $111.4 keeps energy pass-through risk elevated. The combination of compressed consumer savings (3.6%), rising credit card delinquencies (2.9%), and slowing wage growth (down 30bp to 3.6%) signals deteriorating household balance sheets.",
-  "outlook_headline": "Stagflationary crosscurrents are tightening the Fed's corridor as consumer resilience visibly erodes.",
-  "outlook_body": "Real GDP at 2.0% annualized masks an increasingly fragile demand picture: the savings rate at 3.6% leaves households with limited buffer as real wage growth turns marginally negative against 3.8% CPI. Credit card delinquencies at 2.9% are an early-cycle stress signal that warrants close monitoring for acceleration. The Fed is effectively pinned \u2014 easing risks re-igniting inflation expectations while holding risks amplifying labor market deterioration. Risk assets are priced for a soft landing that the data no longer fully supports.",
+  "risk_level": "MODERATE",
+  "risk_rationale": "",
+  "outlook_headline": "",
+  "outlook_body": "",
   "tabs": {
     "gdp": "Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The combination of slowing NFP, a 3.6% savings rate, and WTI at $109.8 creates a credible path to sub-1% growth within two quarters. Inventory and net export dynamics could provide temporary offsets, but domestic demand is the linchpin and it is weakening.",
-    "jobs": "NFP at 115K is a meaningful deceleration \u2014 below the ~150K threshold typically associated with labor market stability \u2014 and U-6 at 8.2% signals broader underemployment stress that the headline U-3 of 4.3% understates. The labor market is a lagging indicator, and this softening, combined with a savings rate of 3.6%, suggests consumer spending momentum is being funded by balance sheet drawdown rather than income growth. Continued NFP prints in this range would accelerate the case for Fed easing, but inflation data must cooperate first.",
+    "jobs": "",
     "unemp": "U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% \u2014 a 190bp spread over U-3 \u2014 signals significant slack in hours and involuntary part-time work that the headline number obscures. This breadth of labor market weakness is inconsistent with a soft-landing narrative and points to genuine demand destruction in the jobs market.",
-    "wages": "Wage growth decelerated 30bp to 3.6% YoY \u2014 a directionally welcome signal for the Fed, but with CPI at 3.8%, real wages are now negative, compressing consumer purchasing power in real terms. This wage deceleration reduces the risk of a wage-price spiral but simultaneously undermines the income-driven consumption that has supported GDP. The combination of falling real wages and a 3.6% savings rate is not sustainable beyond a few quarters without either a sharp drop in inflation or a deterioration in consumer credit quality.",
+    "wages": "",
     "cpi": "Headline CPI at 3.8% YoY is running nearly 90bp above Core CPI at 2.7%, a gap almost entirely attributable to energy \u2014 WTI at $109.8 is the dominant driver and it is not yet fully reflected in downstream prices. Core CPI at 2.7% has not broken to target and risks re-acceleration as oil costs transmit through transportation, manufacturing, and services over the next 60-90 days. The Fed cannot cut rates with headline at 3.8% and an oil shock still propagating; rate relief is not imminent.",
     "pce": "Core PCE at 3.2% \u2014 the Fed's preferred measure \u2014 remains 120bp above target and is the single most important number blocking any dovish pivot. Headline PCE at 3.5% reflects the same energy-driven wedge seen in CPI, and the savings rate at 3.6% confirms consumers are drawing down buffers rather than reducing spending voluntarily. The combination of elevated PCE, depleted savings, and surging energy costs represents a serious deterioration in the consumer's real income trajectory.",
-    "yield": "The 10Y-2Y spread has re-steepened to 48bp, reflecting market pricing of eventual Fed cuts rather than a clean all-clear on growth. With the Fed Funds rate at 3.64% and 10Y at 4.46%, real rates remain restrictive against a 3.5% PCE print, leaving limited room for duration to rally without a material growth shock. The curve shape suggests the market expects cuts within the next 12 months, but sticky Core PCE at 3.2% makes front-end pricing vulnerable to repricing higher.",
+    "yield": "",
     "credit": "IG OAS at 78bp remains historically tight and reflects a market that has not yet priced the deteriorating macro backdrop \u2014 this is a complacency risk, not a green light. HY OAS at 279bp is wider but still well below levels consistent with recession conditions (typically 500bp+), suggesting high yield is also mispriced relative to the unemployment and growth trajectory. A repricing of credit risk, particularly in energy-cost-sensitive sectors and highly leveraged consumer-facing businesses, remains the key tail risk.",
     "housing": "The 30-year mortgage at 6.37% continues to lock existing homeowners in place and suppress transaction volume, while Housing Starts at 1,502K suggest builders are still active but are running ahead of effective demand at current affordability levels. With real wages flat, savings rates thin, and no near-term prospect of meaningful mortgage rate relief, the demand side of housing remains structurally impaired. A downside break in starts and permits over coming months would be a significant recessionary signal.",
-    "oil": "WTI fell $3.98 to $105.78 and Brent sits at $111.4 \u2014 the drop provides modest headline CPI relief but the absolute level remains a significant cost-push inflation driver across transportation, manufacturing, and food supply chains. At $111.4 Brent, energy is still running well above levels consistent with the Fed's 2% inflation target, and any supply disruption reversal would immediately re-accelerate headline CPI. PMs should treat this pullback as a tactical fluctuation within a structurally elevated oil regime, not a trend break.",
+    "oil": "",
     "banks": "Credit card delinquency at 2.9% is a direct stress indicator for consumer lending books and is trending in the wrong direction given the 4.3% unemployment rate and near-zero real wage growth. Net interest income should remain supported by the 10Y-2Y spread at 47bp, but rising loss provisions for consumer credit will increasingly offset NII tailwinds in bank earnings. Banks with high consumer credit card and auto loan exposure face a deteriorating credit quality outlook that the current spread environment is not compensating for."
   },
   "kpi_updates": {
-    "risk_posture": "Defensive",
-    "macro_regime": "Late Cycle",
+    "risk_posture": "Neutral",
+    "macro_regime": "Expansion",
     "fed_bias": "On Hold"
   },
-  "signal_flags": [
-    {
-      "metric": "WTI Crude",
-      "reading": "$105.78 (\u25bc$3.98)",
-      "flag": "alert",
-      "note": "Sharp single-period drop warrants monitoring for demand destruction signal vs. supply-side normalization; absolute level still inflationary at $105.78."
-    },
-    {
-      "metric": "Wages YoY",
-      "reading": "3.6% (\u25bc0.30pp)",
-      "flag": "alert",
-      "note": "Real wages now negative vs. 3.8% CPI; deceleration reduces wage-price spiral risk but accelerates household financial stress given 3.6% savings rate."
-    },
-    {
-      "metric": "Core PCE",
-      "reading": "3.2%",
-      "flag": "alert",
-      "note": "Running 120bp above the Fed's 2% target; prevents rate cuts even as labor market softens \u2014 the central stagflationary constraint."
-    },
-    {
-      "metric": "CC Delinquency",
-      "reading": "2.9%",
-      "flag": "watch",
-      "note": "Early-stage consumer credit stress; if this accelerates alongside falling real wages, consumer spending contraction risk rises materially."
-    },
-    {
-      "metric": "NFP MoM",
-      "reading": "115K",
-      "flag": "watch",
-      "note": "Below labor market stability threshold; trend confirmation needed but directionally consistent with late-cycle labor demand softening."
-    }
-  ],
-  "agent3_ran_at": "2026-05-14T21:11:09.844374Z",
+  "signal_flags": [],
+  "agent3_ran_at": "2026-05-14T22:12:34.574773Z",
   "refreshed_tabs": [
     "yield",
     "oil",
