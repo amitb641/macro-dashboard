@@ -6094,7 +6094,49 @@ function _initDashboard(){
   buildFCTab();
 }
 
-// Chart.js handles window resize natively via ResizeObserver
+// ── B5.1: Chart lifecycle helpers ──────────────────────────────────
+// Chart.js 3.x handles window resize natively via ResizeObserver. The
+// problem space B5.1 was scoped to address — orphaned Chart instances
+// after a tab is rebuilt or after the "Download all tabs" flow makes
+// a hidden panel visible to capture it — is solved with the documented
+// Chart.getChart() API rather than the older "c.width = c.width" hack
+// (which clears canvas pixels but leaves the Chart.js bookkeeping in
+// place, causing "Canvas is already in use" warnings on rebuild and
+// occasional sub-pixel tooltip drift).
+//
+// Use _safeDestroyChart() before any rebuild path that may re-init a
+// chart on a canvas that already has one.
+function _safeDestroyChart(canvas){
+  if (!canvas) return;
+  // Chart.getChart returns the instance bound to a canvas, or undefined.
+  // Guard for the (rare) case where window.Chart hasn't loaded yet.
+  if (window.Chart && typeof window.Chart.getChart === 'function') {
+    var existing = window.Chart.getChart(canvas);
+    if (existing) {
+      try { existing.destroy(); } catch (_) { /* benign */ }
+    }
+  }
+}
+
+// IntersectionObserver hook: when a canvas re-enters the layout
+// (e.g. the download-all-tabs flow toggles panels visible), trigger
+// chart.resize() so Chart.js recomputes the canvas dimensions against
+// the now-real CSS box rather than the stale 10x10 fallback it cached
+// while the panel was display:none.
+var _b51_chartReflowObserver = null;
+function _b51_armChartReflow(){
+  if (_b51_chartReflowObserver || typeof IntersectionObserver === 'undefined') return;
+  _b51_chartReflowObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      var c = e.target;
+      if (window.Chart && typeof window.Chart.getChart === 'function') {
+        var inst = window.Chart.getChart(c);
+        if (inst) { try { inst.resize(); } catch(_){} }
+      }
+    });
+  }, { threshold: 0.01 });
+}
 
 // Fire when DOM is ready
 if(document.readyState === 'loading'){
@@ -6415,9 +6457,14 @@ function downloadFullHTML(){
         if(c.offsetWidth < 20 || c.offsetHeight < 20) badCanvas = true;
       });
       if(badCanvas){
-        // Reset so builder will re-run, destroy existing charts first
+        // B5.1: Properly destroy any existing Chart.js instance on each
+        // canvas before clearing pixels. The old `c.width = c.width`
+        // hack cleared the bitmap but left Chart.js still tracking the
+        // canvas — the next `new Chart(ctx, ...)` then warned "Canvas
+        // is already in use" and produced ghost tooltips on the rebuilt
+        // chart. Chart.getChart() is the documented 3.x API for this.
         panel.querySelectorAll("canvas").forEach(function(c){
-          try { c.width = c.width; } catch(e){} // clear canvas
+          _safeDestroyChart(c);
         });
         builtTabs[id] = 0;
         panelsToRebuild.push(id);
@@ -6427,6 +6474,13 @@ function downloadFullHTML(){
 
   // Hide all panels first, then show+build each one sequentially
   document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
+
+  // B5.1: Arm IntersectionObserver so any canvas that re-enters the
+  // layout (when we _showPanel below) gets a resize nudge. Chart.js's
+  // own ResizeObserver fires on canvas-size changes but not on the
+  // display:none → display:block transition itself; the IO threshold:0.01
+  // fires the first time any pixel is in the viewport.
+  _b51_armChartReflow();
 
   TAB_IDS.forEach(function(id){
     var panel = document.getElementById("tab-" + id);
@@ -6440,6 +6494,14 @@ function downloadFullHTML(){
     // Build tab content (charts, tables, metrics)
     if(builder){
       try { builder(); } catch(e){ console.warn("build "+id+":",e); }
+    }
+
+    // Observe every canvas in the panel — next intersection (after
+    // the capture loop toggles visibility again) fires Chart.resize().
+    if (_b51_chartReflowObserver) {
+      panel.querySelectorAll("canvas").forEach(function(c){
+        try { _b51_chartReflowObserver.observe(c); } catch(_){}
+      });
     }
 
     _hidePanel(panel);
