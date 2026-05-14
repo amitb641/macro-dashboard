@@ -1,10 +1,16 @@
 name: Parallel Compare (prod vs dev)
 
 # ───────────────────────────────────────────────────────────────────────────
-# Triggers on the *completion* of either briefing workflow. When fired,
-# checks whether the OTHER branch's briefing also completed within the
-# last 24h with a successful run. If both are fresh, generates a
-# side-by-side comparison report and commits it to the dev branch.
+# Triggers on the *completion* of either briefing workflow. Two outputs:
+#
+#   1. Per-run report (`scripts/run_report.py`) — ALWAYS emitted on every
+#      successful briefing completion. For dev fires this is committed
+#      to dev as `data/run_report_dev_latest.md`. For prod fires it is
+#      attached as an artifact only (we never push to main).
+#
+#   2. Paired comparison (`scripts/parallel_compare.py`) — additionally
+#      emitted when BOTH branches have committed within the last 24h,
+#      so the comparison is apples-to-apples for the week.
 #
 # Self-coordinating — no shared state between the two briefing files.
 # Either order of completion works (prod-first or dev-first).
@@ -21,11 +27,33 @@ jobs:
   compare:
     runs-on: ubuntu-latest
     # Only run if the triggering workflow succeeded. (Failed runs would
-    # produce a misleading comparison against potentially stale artifacts.)
+    # produce a misleading report against potentially stale artifacts.)
     if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
     steps:
+      - name: Identify triggering branch
+        id: trigger
+        run: |
+          # Determine which briefing fired this run. The dev workflow's
+          # display name contains "DEV"; everything else is treated as prod.
+          NAME="${{ github.event.workflow_run.name }}"
+          if echo "$NAME" | grep -qi "DEV"; then
+            echo "branch=dev" >> $GITHUB_OUTPUT
+            echo "ref=dev/multi-expert-improvements" >> $GITHUB_OUTPUT
+          else
+            echo "branch=main" >> $GITHUB_OUTPUT
+            echo "ref=main" >> $GITHUB_OUTPUT
+          fi
+          # workflow_dispatch falls through to dev-as-default (manual
+          # debugging is almost always against dev).
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "branch=dev" >> $GITHUB_OUTPUT
+            echo "ref=dev/multi-expert-improvements" >> $GITHUB_OUTPUT
+          fi
+          echo "Triggering workflow: $NAME"
+          echo "Resolved branch: $(grep '^branch=' $GITHUB_OUTPUT | tail -1)"
+
       - name: Checkout dev branch (artifact destination)
         uses: actions/checkout@v4
         with:
@@ -39,12 +67,51 @@ jobs:
           echo "main HEAD: $(git rev-parse main)"
           echo "dev HEAD:  $(git rev-parse HEAD)"
 
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # ─────────────────────────────────────────────────────────────────
+      # Step A: per-run report for whichever branch triggered this run.
+      # Fires every time. No freshness gate.
+      # ─────────────────────────────────────────────────────────────────
+      - name: Generate per-run report
+        id: run_report
+        run: |
+          python scripts/run_report.py \
+            --ref "${{ steps.trigger.outputs.ref }}" \
+            --branch "${{ steps.trigger.outputs.branch }}"
+
+      - name: Commit per-run report to dev (dev fires only)
+        if: steps.trigger.outputs.branch == 'dev'
+        run: |
+          git config user.name  "parallel-compare-bot"
+          git config user.email "parallel-compare-bot@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add data/run_report_dev_*.md
+          if git diff --staged --quiet; then
+            echo "No run-report changes"
+          else
+            git commit -m "📋 Run report (dev): $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push origin HEAD:dev/multi-expert-improvements
+          fi
+
+      - name: Upload per-run report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-report-${{ steps.trigger.outputs.branch }}-${{ github.run_id }}
+          path: data/run_report_${{ steps.trigger.outputs.branch }}_*.md
+          retention-days: 30
+
+      # ─────────────────────────────────────────────────────────────────
+      # Step B: paired comparison — only when BOTH branches have a fresh
+      # commit (<24h). Skipped on solo fires so we don't compare today's
+      # dev against last week's prod.
+      # ─────────────────────────────────────────────────────────────────
       - name: Check freshness of both branches
         id: freshness
         run: |
-          # Both branches must have a commit within the last 24h for the
-          # comparison to be meaningful (we don't want to compare today's
-          # dev run against last week's prod run).
           NOW=$(date +%s)
           MAIN_TS=$(git log -1 --format=%ct main)
           DEV_TS=$(git log -1 --format=%ct HEAD)
@@ -53,23 +120,17 @@ jobs:
           echo "Main last commit: ${MAIN_AGE_HOURS}h ago"
           echo "Dev last commit:  ${DEV_AGE_HOURS}h ago"
           if [ $MAIN_AGE_HOURS -gt 24 ] || [ $DEV_AGE_HOURS -gt 24 ]; then
-            echo "One branch is stale (>24h since last commit) — skipping comparison."
+            echo "One branch is stale (>24h since last commit) — skipping paired comparison."
             echo "skip=true" >> $GITHUB_OUTPUT
           else
             echo "skip=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Set up Python 3.11
-        if: steps.freshness.outputs.skip != 'true'
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Generate comparison report
+      - name: Generate paired comparison report
         if: steps.freshness.outputs.skip != 'true'
         run: python scripts/parallel_compare.py
 
-      - name: Commit comparison report to dev
+      - name: Commit paired comparison to dev
         if: steps.freshness.outputs.skip != 'true'
         run: |
           git config user.name  "parallel-compare-bot"
@@ -83,7 +144,7 @@ jobs:
             git push origin HEAD:dev/multi-expert-improvements
           fi
 
-      - name: Upload comparison artifact
+      - name: Upload paired comparison artifact
         if: steps.freshness.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
