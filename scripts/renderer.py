@@ -1012,6 +1012,7 @@ def rebuild_charts(html, data):
     html = rebuild_pce_cat_mom(html, data)
     html = rebuild_treasury_data(html, data)
     html = rebuild_oil_prod_spread(html, data)
+    html = rebuild_fed_liquidity_data(html, data)
 
     return html
 
@@ -1458,6 +1459,73 @@ def rebuild_oil_prod_spread(html, data):
     if n:
         applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
         html = new_html
+    return html
+
+
+def rebuild_fed_liquidity_data(html, data):
+    """Rebuild FED_LIQUIDITY_DATA (B3.4) from weekly H.4.1 series.
+
+    Sources (collector.py): walcl, wresbal, rrpontsyd, tga — all FRED weekly,
+    units = $millions, fetched as 104 obs (~2 years). We convert to $bn for
+    chart readability and align all four series on the common set of dates.
+
+    Behaviour notes:
+      * If any of the four series is missing, the rebuild SKIPS rather than
+        rendering a partial chart — observability/playbook §X consistency.
+      * Dates are kept as ISO YYYY-MM-DD on the wire; chart-side `maxTicksLimit`
+        thins them for display so we don't pre-truncate here.
+      * Provenance envelopes ({date,value,source,fetched_at}, B6.2) are
+        unwrapped via the standard `o['value'] if isinstance(o, dict)` guard.
+    """
+    walcl   = data.get('walcl', [])
+    wresbal = data.get('wresbal', [])
+    rrp     = data.get('rrpontsyd', [])
+    tga     = data.get('tga', [])
+
+    if not (walcl and wresbal and rrp and tga):
+        warnings.append('FED_LIQUIDITY_DATA rebuild SKIPPED — one or more of walcl/wresbal/rrpontsyd/tga missing')
+        return html
+
+    def _by_date(series):
+        out = {}
+        for o in series:
+            if isinstance(o, dict):
+                d, v = o.get('date'), o.get('value')
+            else:
+                continue
+            if d is None or v is None:
+                continue
+            out[d] = float(v)
+        return out
+
+    a = _by_date(walcl)
+    b = _by_date(wresbal)
+    c = _by_date(rrp)
+    d_ = _by_date(tga)
+
+    common_dates = sorted(set(a) & set(b) & set(c) & set(d_))
+    if not common_dates:
+        warnings.append('FED_LIQUIDITY_DATA rebuild SKIPPED — no overlapping dates across the four series')
+        return html
+
+    # FRED H.4.1 values arrive in $millions; divide by 1000 → $bn.
+    def _bn(v): return round(v / 1000.0, 1)
+
+    obj = {
+        'labels':    common_dates,
+        'walcl':     [_bn(a[d]) for d in common_dates],
+        'wresbal':   [_bn(b[d]) for d in common_dates],
+        'rrpontsyd': [_bn(c[d]) for d in common_dates],
+        'tga':       [_bn(d_[d]) for d in common_dates],
+    }
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const FED_LIQUIDITY_DATA\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const FED_LIQUIDITY_DATA = {new_json};', html, count=1)
+    if n:
+        applied.append(f'FED_LIQUIDITY_DATA rebuilt ({len(common_dates)} weeks, latest {common_dates[-1]})')
+        html = new_html
+    else:
+        warnings.append('FED_LIQUIDITY_DATA rebuild: const pattern not matched (HTML may already be on a newer schema)')
     return html
 
 
