@@ -44,6 +44,12 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    # Belt-and-suspenders gate: even if GitHub somehow triggers this on a
+    # non-main ref (the explicit `push: branches: [main]` above should
+    # already prevent that), skip the job cleanly. github-pages env policy
+    # blocks non-main refs at startup, producing red 0-job runs; skipping
+    # via `if:` yields a "skipped" outcome instead of "failed".
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     permissions:
       contents: write
       pages: write
@@ -246,7 +252,10 @@ jobs:
   notify-failure:
     runs-on: ubuntu-latest
     needs: update
-    if: failure()
+    # Only file failure issues for runs that actually executed the pipeline
+    # (main pushes, scheduled runs, manual dispatches). Skip on feature
+    # branches whose `update` job is gated off.
+    if: failure() && (github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
     permissions:
       issues: write
     steps:
