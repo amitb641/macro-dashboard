@@ -169,6 +169,8 @@ class MC{
       ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
       data.labels.forEach((lb,i)=>{ctx.fillText((lb+'').replace(/\\n.*/,''),d.x0+d.iw*(data.labels.length===1?0.5:i/(data.labels.length-1)),d.y0+d.ih+14);});
     }
+    // overlays: bands paint below series so series read cleanly on top
+    if(!mini)this._overlayBands(ctx,d,r);
     data.datasets.forEach((ds,di)=>{
       const col=ds.borderColor||aC(di),isY2=ds.yAxisID==="y2",rv=isY2?r2:r;
       if(!rv)return;
@@ -182,6 +184,8 @@ class MC{
       const pr=mini?0:(ds.pointRadius??3);if(pr>0)pts.forEach(p=>{if(!p)return;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,Math.PI*2);ctx.fillStyle=pC(col);ctx.fill();});
       pts.forEach((p,i)=>{if(p)this._addHit(i,di,p.x,p.y,0,0);});
     });
+    // overlays: horizontal reference lines + vertical event markers
+    if(!mini){this._overlayLines(ctx,d,r);this._overlayVEvents(ctx,d,data.labels);}
     // DATA LABELS on line charts (non-mini) — peaks, troughs & last only
     if(!mini){
       data.datasets.forEach((ds,di)=>{
@@ -248,6 +252,8 @@ class MC{
       const nG2=data.labels.length,gW2=d.iw/nG2;
       data.labels.forEach((lb,i)=>{ctx.fillText(lb,d.x0+gW2*i+gW2/2,d.y0+d.ih+14);});
     }
+    // overlays: bands paint below bars so bars read cleanly on top
+    if(!mini)this._overlayBands(ctx,d,r);
     const nG=data.labels.length,gW=d.iw/Math.max(nG,1),gap=mini?gW*0.1:gW*0.12;
     const toY=v=>d.y0+d.ih*(1-(v-r.min)/(r.max-r.min)),zY=toY(0);
     if(stacked){
@@ -275,6 +281,10 @@ class MC{
         let st=false;pts.forEach(p=>{if(!p){st=false;return;}if(!st){ctx.moveTo(p.x,p.y);st=true;}else ctx.lineTo(p.x,p.y);});ctx.stroke();ctx.setLineDash([]);
         const pr=ds.pointRadius??3;if(pr>0)pts.forEach(p=>{if(!p)return;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,Math.PI*2);ctx.fillStyle=pC(col);ctx.fill();});
       });
+      // overlays: horizontal reference lines + vertical event markers
+      // bar chart columns are gW-spaced centered, so pass a custom colStep
+      this._overlayLines(ctx,d,r);
+      this._overlayVEvents(ctx,d,data.labels,(i)=>d.x0+gW*i+gW/2);
       // DATA LABELS on bar charts — peaks, troughs & last only
       const nG_dl=data.labels.length,gW_dl=d.iw/Math.max(nG_dl,1),gap_dl=mini?gW_dl*0.1:gW_dl*0.12;
       const stacked_dl=opts.scales?.y?.stacked||opts.scales?.x?.stacked;
@@ -354,6 +364,144 @@ class MC{
     this._leg(ctx,{x0:pL,y0:pT,iw,ih},data.datasets);
   }
   _addHit(gi,di,x,y,w,h){this._hits.push({gi,di,x,y,w:w||0,h:h||0});}
+  // ── annotation overlays (replaces dead Chart.js plugin system) ─────
+  // Configs live under cfg.options.plugins.{hLines,vEvents}; MC paints
+  // them directly because window.Chart is shadowed and plugins never
+  // register. See briefing/style_guide for the intended visual contract.
+  _overlayBands(ctx,d,r){
+    const bands=this.cfg.options?.plugins?.hLines?.bands;
+    if(!bands||!bands.length||!r||!isFinite(r.min)||!isFinite(r.max)||r.max===r.min)return;
+    bands.forEach(b=>{
+      if(!isFinite(b.y1)||!isFinite(b.y2))return;
+      const lo=Math.min(b.y1,b.y2),hi=Math.max(b.y1,b.y2);
+      const yHi=d.y0+d.ih*(1-(hi-r.min)/(r.max-r.min));
+      const yLo=d.y0+d.ih*(1-(lo-r.min)/(r.max-r.min));
+      const yT=Math.max(d.y0,Math.min(yHi,yLo));
+      const yB=Math.min(d.y0+d.ih,Math.max(yHi,yLo));
+      if(yB<=yT)return;
+      ctx.fillStyle=b.fill||"rgba(26,158,90,.10)";
+      ctx.fillRect(d.x0,yT,d.iw,yB-yT);
+      if(b.label){
+        ctx.font="10px 'DM Mono',monospace";
+        ctx.textAlign="left";
+        ctx.fillStyle=b.labelColor||"#0F7A45";
+        const tw=ctx.measureText(b.label).width;
+        const lx=d.x0+d.iw-tw-6,ly=yT+11;
+        ctx.fillStyle="rgba(255,255,255,0.85)";
+        ctx.fillRect(lx-3,ly-9,tw+6,13);
+        ctx.fillStyle=b.labelColor||"#0F7A45";
+        ctx.fillText(b.label,lx,ly);
+      }
+    });
+  }
+  _overlayLines(ctx,d,r){
+    const lines=this.cfg.options?.plugins?.hLines?.lines;
+    if(!lines||!lines.length||!r||!isFinite(r.min)||!isFinite(r.max)||r.max===r.min)return;
+    lines.forEach(L=>{
+      if(!isFinite(L.y))return;
+      if(L.y<r.min-1e-9||L.y>r.max+1e-9)return;
+      const yp=d.y0+d.ih*(1-(L.y-r.min)/(r.max-r.min));
+      ctx.save();
+      ctx.strokeStyle=L.color||"#1A9E5A";
+      ctx.lineWidth=L.width||1.5;
+      if(L.dash)ctx.setLineDash(L.dash);
+      ctx.beginPath();ctx.moveTo(d.x0,yp);ctx.lineTo(d.x0+d.iw,yp);ctx.stroke();
+      ctx.restore();
+      if(L.label){
+        ctx.font="bold 10px 'DM Mono',monospace";
+        ctx.textAlign="left";
+        const tw=ctx.measureText(L.label).width;
+        const lx=d.x0+6,ly=yp-4;
+        ctx.fillStyle="rgba(255,255,255,0.92)";
+        ctx.fillRect(lx-3,ly-9,tw+6,13);
+        ctx.fillStyle=L.color||"#1A9E5A";
+        ctx.fillText(L.label,lx,ly);
+      }
+    });
+  }
+  // Resolve event x (date-string or numeric index) → label index.
+  // MC uses category axis, not a time scale, so we match against the
+  // label strings the renderer emits. Two common label patterns:
+  //   1) Every label carries year: "Mar'26", "Mar 2026", "2026-03"
+  //   2) Sparse year markers: "Jan'90","Feb","Mar",...,"Jan'26","Feb","Mar"
+  // For pattern (2) we carry the most-recent 'YY year forward so each
+  // bare month-name has an inferred year and we can match by (year, month).
+  // Returns -1 when no label matches.
+  _resolveEventIdx(xRef,labels){
+    if(xRef==null||!labels||!labels.length)return -1;
+    if(typeof xRef==="number"&&isFinite(xRef))return Math.max(0,Math.min(labels.length-1,Math.round(xRef)));
+    const s=(xRef+"").trim();
+    // exact match (covers explicit "Mar'26", "Mar 2026", "2026-03", etc.)
+    let i=labels.findIndex(L=>(L+"")===s);
+    if(i>=0)return i;
+    // parse "YYYY-MM" or "YYYY-MM-DD"
+    const m=s.match(/^(\d{4})-(\d{1,2})/);
+    if(!m)return -1;
+    const yr=+m[1],mo=+m[2];
+    const yy=(""+yr).slice(-2);
+    const months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const mShort=months[mo-1]||"";
+    // explicit-year format candidates
+    const candidates=[
+      mShort+"'"+yy,            // Mar'26
+      mShort+" "+yr,            // Mar 2026
+      mShort+" "+yy,            // Mar 26
+      yr+"-"+(mo<10?"0":"")+mo, // 2026-03
+    ];
+    for(const c of candidates){
+      i=labels.findIndex(L=>(L+"")===c);
+      if(i>=0)return i;
+    }
+    // Sparse-year pattern: carry forward most-recent '<YY> marker.
+    // Build inferred year per label, then match (year, month).
+    let cur=null,sawYearMarker=false;
+    const yrPerLabel=new Array(labels.length).fill(null);
+    for(let k=0;k<labels.length;k++){
+      const L=(labels[k]+"");
+      const ym=L.match(/'(\d{2})/);     // "Jan'26" → 26
+      const y4=L.match(/(\d{4})/);       // "2026-03" → 2026
+      if(ym){cur=2000+ +ym[1];sawYearMarker=true;}
+      else if(y4){cur=+y4[1];sawYearMarker=true;}
+      yrPerLabel[k]=cur;
+    }
+    if(sawYearMarker){
+      for(let k=0;k<labels.length;k++){
+        if(yrPerLabel[k]!==yr)continue;
+        const L=(labels[k]+"");
+        if(L.indexOf(mShort)>=0){return k;}
+      }
+    }
+    return -1;
+  }
+  _overlayVEvents(ctx,d,labels,colStep){
+    const events=this.cfg.options?.plugins?.vEvents?.events;
+    if(!events||!events.length||!labels||!labels.length)return;
+    events.forEach(ev=>{
+      const idx=this._resolveEventIdx(ev.x,labels);
+      if(idx<0)return;
+      const x=(typeof colStep==="function")?colStep(idx):(d.x0+d.iw*(labels.length===1?0.5:idx/(labels.length-1)));
+      if(!isFinite(x)||x<d.x0-1||x>d.x0+d.iw+1)return;
+      ctx.save();
+      ctx.strokeStyle=ev.color||"#CC8A00";
+      ctx.lineWidth=ev.width||1.5;
+      if(ev.dash)ctx.setLineDash(ev.dash);
+      ctx.beginPath();ctx.moveTo(x,d.y0);ctx.lineTo(x,d.y0+d.ih);ctx.stroke();
+      ctx.restore();
+      if(ev.label){
+        ctx.font="bold 10px 'DM Mono',monospace";
+        ctx.textAlign="left";
+        const tw=ctx.measureText(ev.label).width;
+        // place label near top, offset right of the line; flip left if it would overflow
+        let lx=x+4;
+        if(lx+tw+6>d.x0+d.iw)lx=x-tw-4;
+        const ly=d.y0+11;
+        ctx.fillStyle="rgba(255,255,255,0.92)";
+        ctx.fillRect(lx-3,ly-9,tw+6,13);
+        ctx.fillStyle=ev.color||"#CC8A00";
+        ctx.fillText(ev.label,lx,ly);
+      }
+    });
+  }
   _initTip(){
     const c=this.ctx.canvas,me=this;
     this._onMM=function(e){
@@ -2761,9 +2909,11 @@ const nberRecessionBands = {
     ctx.restore();
   }
 };
-if (typeof Chart !== "undefined" && Chart && Chart.register) {
-  try { Chart.register(nberRecessionBands); } catch(e) { /* already registered */ }
-}
+// NOTE: window.Chart is shadowed by the MC mini-chart class (see top of
+// file); Chart.register is therefore undefined and this plugin object is
+// retained only for reference. NBER bands are not currently re-emitted by
+// MC — if needed, port the band-drawing logic into MC._overlayBands using
+// the NBER_RECESSIONS array above.
 
 // ════════════════════════════════════════════════════════════════════════
 // hLines plugin — horizontal reference lines + bands
@@ -2900,10 +3050,13 @@ const vEventsPlugin = {
   }
 };
 
-if (typeof Chart !== "undefined" && Chart && Chart.register) {
-  try { Chart.register(hLinesPlugin); } catch(e) { /* already registered */ }
-  try { Chart.register(vEventsPlugin); } catch(e) { /* already registered */ }
-}
+// NOTE: window.Chart is shadowed by MC; the hLinesPlugin / vEventsPlugin
+// objects above are kept as reference for the config shape only. The actual
+// drawing happens inside MC._overlayBands / MC._overlayLines /
+// MC._overlayVEvents (see top of file). Per-chart configs under
+//   options.plugins.hLines = { lines:[...], bands:[...] }
+//   options.plugins.vEvents = { events:[...] }
+// are read directly by MC at paint time.
 
 // ════════════════════════════════════════════════════
 // KPI STRIP — Systematic Color Logic
