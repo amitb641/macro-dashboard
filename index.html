@@ -2765,6 +2765,146 @@ if (typeof Chart !== "undefined" && Chart && Chart.register) {
   try { Chart.register(nberRecessionBands); } catch(e) { /* already registered */ }
 }
 
+// ════════════════════════════════════════════════════════════════════════
+// hLines plugin — horizontal reference lines + bands
+// ════════════════════════════════════════════════════════════════════════
+// Opt-in per chart via:
+//   options.plugins.hLines = {
+//     lines: [{ y: 2.0, color: "#1A9E5A", dash: [6,4], label: "Fed 2% Target" }],
+//     bands: [{ y1: 2.5, y2: 3.0, fill: "rgba(26,158,90,.08)", label: "Neutral rate" }]
+//   }
+// Draws bands first (under the data), then lines (over the data) so the
+// reference geometry stays visible without obscuring the series.
+const hLinesPlugin = {
+  id: "hLines",
+  beforeDatasetsDraw(chart, _args, opts) {
+    if (!opts || (!opts.lines && !opts.bands)) return;
+    const yScale = chart.scales && (chart.scales.y || chart.scales["y-axis-0"]);
+    const area = chart.chartArea;
+    if (!yScale || !area) return;
+    const ctx = chart.ctx;
+    // Bands first (so lines + dataset paint over them)
+    for (const b of (opts.bands || [])) {
+      const y1 = yScale.getPixelForValue(b.y1);
+      const y2 = yScale.getPixelForValue(b.y2);
+      if (!isFinite(y1) || !isFinite(y2)) continue;
+      const top = Math.min(y1, y2), bot = Math.max(y1, y2);
+      ctx.save();
+      ctx.fillStyle = b.fill || "rgba(26,158,90,.08)";
+      ctx.fillRect(area.left, top, area.right - area.left, bot - top);
+      if (b.label) {
+        ctx.fillStyle = b.labelColor || "#1A9E5A";
+        ctx.font = "600 9px system-ui, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(b.label, area.left + 6, top + 3);
+      }
+      ctx.restore();
+    }
+  },
+  afterDatasetsDraw(chart, _args, opts) {
+    if (!opts || !opts.lines) return;
+    const yScale = chart.scales && (chart.scales.y || chart.scales["y-axis-0"]);
+    const area = chart.chartArea;
+    if (!yScale || !area) return;
+    const ctx = chart.ctx;
+    for (const l of opts.lines) {
+      const y = yScale.getPixelForValue(l.y);
+      if (!isFinite(y)) continue;
+      ctx.save();
+      ctx.strokeStyle = l.color || "#1A9E5A";
+      ctx.lineWidth = l.width || 1.5;
+      if (l.dash) ctx.setLineDash(l.dash);
+      ctx.beginPath();
+      ctx.moveTo(area.left, y); ctx.lineTo(area.right, y);
+      ctx.stroke();
+      if (l.label) {
+        ctx.setLineDash([]);
+        ctx.fillStyle = "rgba(255,255,255,.85)";
+        const w = ctx.measureText(l.label).width + 10;
+        ctx.fillRect(area.left + 4, y - 11, w, 12);
+        ctx.fillStyle = l.color || "#1A9E5A";
+        ctx.font = "600 9px system-ui, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText(l.label, area.left + 9, y - 5);
+      }
+      ctx.restore();
+    }
+  }
+};
+
+// ════════════════════════════════════════════════════════════════════════
+// vEvents plugin — vertical event markers (e.g., oil-shock annotation)
+// ════════════════════════════════════════════════════════════════════════
+// Opt-in per chart via:
+//   options.plugins.vEvents = {
+//     events: [{ x: "2026-03-01", color: "#D64045", label: "Oil shock" }]
+//   }
+// x-matching mirrors nberRecessionBands' resolver: works against both time
+// scales and category scales whose labels carry YYYY-MM, Mon'YY, or YYYY
+// formats. Silently skips events outside the visible range.
+const vEventsPlugin = {
+  id: "vEvents",
+  afterDatasetsDraw(chart, _args, opts) {
+    if (!opts || !opts.events || !opts.events.length) return;
+    const xScale = chart.scales && (chart.scales.x || chart.scales["x-axis-0"]);
+    const area = chart.chartArea;
+    if (!xScale || !area) return;
+    const ctx = chart.ctx;
+    const ts = (iso) => Date.parse(iso + "T00:00:00Z");
+    const isTime = xScale.type === "time" || xScale.type === "timeseries";
+    function pixelFor(iso) {
+      if (isTime) {
+        const px = xScale.getPixelForValue(ts(iso));
+        return isFinite(px) ? px : null;
+      }
+      const labels = xScale.getLabels ? xScale.getLabels() : (chart.data && chart.data.labels) || [];
+      if (!labels.length) return null;
+      const tY = parseInt(iso.slice(0, 4), 10);
+      const tM = parseInt(iso.slice(5, 7), 10);
+      const ym = iso.slice(0, 7);
+      let idx = labels.findIndex(l => typeof l === "string" && l.indexOf(ym) === 0);
+      if (idx < 0) {
+        const monAbbr = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][tM-1];
+        const yy = String(tY).slice(2);
+        idx = labels.findIndex(l => l === monAbbr + "'" + yy);
+      }
+      if (idx < 0) idx = labels.findIndex(l => l === String(tY));
+      if (idx < 0) return null;
+      return xScale.getPixelForValue(labels[idx], idx);
+    }
+    for (const e of opts.events) {
+      const x = pixelFor(e.x);
+      if (x == null || x < area.left || x > area.right) continue;
+      ctx.save();
+      ctx.strokeStyle = e.color || "#D64045";
+      ctx.lineWidth = e.width || 1.5;
+      ctx.setLineDash(e.dash || [4,3]);
+      ctx.beginPath();
+      ctx.moveTo(x, area.top); ctx.lineTo(x, area.bottom);
+      ctx.stroke();
+      if (e.label) {
+        ctx.setLineDash([]);
+        ctx.font = "600 9px system-ui, sans-serif";
+        const w = ctx.measureText(e.label).width + 10;
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.fillRect(x + 4, area.top + 4, w, 13);
+        ctx.fillStyle = e.color || "#D64045";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(e.label, x + 9, area.top + 6);
+      }
+      ctx.restore();
+    }
+  }
+};
+
+if (typeof Chart !== "undefined" && Chart && Chart.register) {
+  try { Chart.register(hLinesPlugin); } catch(e) { /* already registered */ }
+  try { Chart.register(vEventsPlugin); } catch(e) { /* already registered */ }
+}
+
 // ════════════════════════════════════════════════════
 // KPI STRIP — Systematic Color Logic
 // ════════════════════════════════════════════════════
@@ -3241,8 +3381,9 @@ function buildCPITab(){
       {label:"Core CPI YoY %",data:CPI_MONTHLY.core,borderColor:"#336BCC",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
-      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1A9E5A",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1A9E5A",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      // Fed 2% target line + Mar 2026 oil-shock marker (custom hLines/vEvents plugins above)
+      hLines:{lines:[{y:2.0,color:"#1A9E5A",dash:[6,4],label:"Fed 2% Target"}]},
+      vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Oil shock"}]}},
       scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
@@ -3821,8 +3962,9 @@ function buildPCETab(){
       {label:"Core PCE YoY %",data:PCE_MONTHLY.core,borderColor:"#8878B8",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
-      annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1A9E5A",borderWidth:1.5,borderDash:[6,4],
-        label:{display:true,content:"Fed 2% Target",position:"start",font:{size:9},color:"#1A9E5A",backgroundColor:"rgba(255,255,255,.8)"}}}}},
+      // Fed 2% target line + Mar 2026 oil-shock marker (custom plugins)
+      hLines:{lines:[{y:2.0,color:"#1A9E5A",dash:[6,4],label:"Fed 2% Target"}]},
+      vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Oil shock"}]}},
       scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
@@ -4341,7 +4483,10 @@ function buildOilTab(){
       {label:"Brent", data:OIL_MONTHLY.brent,borderColor:"#336BCC",borderWidth:2,pointRadius:2,tension:0.35,fill:false,datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}},
+        // Vertical marker at the Mar 2026 oil-shock onset (matches the
+        // hardcoded shock date in scripts/renderer.py:update_shock_tracker).
+        vEvents:{events:[{x:"2026-03-01",color:"#D64045",dash:[4,3],label:"Mar 2026 oil shock"}]}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:9},maxRotation:45,minRotation:0,
           callback(v,i){
@@ -5392,6 +5537,9 @@ function buildYieldTab(){
       {label:"JPM Forecast",       data:FFR_DATA.dots.map(function(v,i){return i===25||i===27?v:null;}), borderColor:"#CC8A00",borderWidth:2,pointRadius:6,tension:0.2,borderDash:[3,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
+      // Neutral-rate band (FOMC SEP long-run median ≈ 2.5–3.0% nominal).
+      // Helps the eye anchor where policy is restrictive vs neutral.
+      plugins:{hLines:{bands:[{y1:2.5,y2:3.0,fill:"rgba(26,158,90,.10)",label:"FOMC neutral rate (long-run)",labelColor:"#0F7A45"}]}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
         y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%";}},min:0,max:6.5,border:{display:false}}
