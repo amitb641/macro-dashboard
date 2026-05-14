@@ -1,0 +1,270 @@
+name: Weekly Macro Update (DEV — parallel)
+
+# ───────────────────────────────────────────────────────────────────────────
+# Parallel dev pipeline.
+# Mirrors briefing.yml exactly, with three surgical differences:
+#
+#   1. Target branch: dev/multi-expert-improvements (not main)
+#   2. Email: skipped unless EMAIL_TO_DEV secret is set (so subscribers
+#      to the production list never receive a duplicate dev email)
+#   3. Deploy: GitHub Pages step is skipped. Pages environment is
+#      repo-restricted to `main` and a repo can serve only one Pages
+#      site. The Pages artifact is still uploaded to the run for
+#      manual download. If a Vercel project is connected, Vercel
+#      auto-deploys a preview URL on every push to the dev branch
+#      with no additional workflow change.
+#
+# Comparison report between prod and dev is produced by a separate
+# workflow (parallel-compare.yml) that listens for completion of both
+# briefings — this file stays independent and parallel.
+# ───────────────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    - cron: '0 12 * * 6'        # Weekly: Sat 08:00 EDT / 07:00 EST (mirrors prod)
+    - cron: '0 14 8-14 * 6'     # Monthly deep: 2nd Sat 10:00 EDT / 09:00 EST
+  push:
+    branches: ['dev/multi-expert-improvements']
+  workflow_dispatch:
+    inputs:
+      force_ai:
+        description: 'Force Agent 3 (Claude AI) to run'
+        required: false
+        default: 'true'
+      strict_gate:
+        description: 'Treat ceo_grade_gate WARN as blocking. Scheduled cron runs always use --strict; this input only affects workflow_dispatch.'
+        required: false
+        default: 'true'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # Belt-and-suspenders gate: only run for the dev branch or explicit
+    # manual / scheduled trigger. The schedule trigger defaults to the
+    # repository's default branch (main) for `github.ref`; we override
+    # via explicit ref in the checkout step below.
+    if: github.ref == 'refs/heads/dev/multi-expert-improvements' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout dev branch
+        uses: actions/checkout@v4
+        with:
+          ref: dev/multi-expert-improvements
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Check setup
+        run: |
+          echo "Running parallel DEV pipeline on branch: dev/multi-expert-improvements"
+          echo "FRED key set:    ${{ secrets.FRED_API_KEY != '' }}"
+          echo "BLS key set:     ${{ secrets.BLS_API_KEY != '' }}"
+          echo "EIA key set:     ${{ secrets.EIA_API_KEY != '' }}"
+          echo "Claude key set:  ${{ secrets.ANTHROPIC_API_KEY != '' }}"
+          echo "Resend key set:  ${{ secrets.RESEND_API_KEY != '' }}"
+          echo "Dev email set:   ${{ secrets.EMAIL_TO_DEV != '' }}"
+          ls scripts/
+          ls data/ || echo "data/ missing"
+
+      - name: Agent 0 — Pre-flight (FRED + Anthropic model validation)
+        env:
+          FRED_API_KEY:      ${{ secrets.FRED_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/preflight.py
+
+      - name: Agent 1 — Collector
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+          EIA_API_KEY:  ${{ secrets.EIA_API_KEY }}
+        run: python scripts/collector.py
+
+      - name: Agent 2 — Analyzer
+        run: python scripts/analyzer.py
+
+      - name: Agent 3 — Analyst (claude-sonnet-4-6)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_AI: ${{ github.event.inputs.force_ai || 'false' }}
+        run: |
+          echo "Running Agent 3 — AI commentary refresh"
+          python scripts/briefing_agent.py
+
+      - name: Agent 4 — Renderer
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python scripts/renderer.py
+
+      - name: Agent 6 — Validator
+        id: validator
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+        run: python scripts/validator.py
+        continue-on-error: true
+
+      - name: Agent 10 — Repair Agent (observer mode)
+        if: always()
+        run: python scripts/repair_agent.py
+        continue-on-error: true
+
+      - name: Agent 4b — Re-render (inject validation report, strict)
+        run: python scripts/renderer.py --strict
+
+      - name: Gate — Block on critical validation failures
+        if: steps.validator.outcome == 'failure'
+        run: |
+          echo "❌ Validator detected critical data divergences."
+          echo "   Review data/validation_report.json for details."
+          echo "   Pipeline halted — fix data quality issues before publishing."
+          exit 1
+
+      # ───────────────────────────────────────────────────────────────
+      # CEO-grade gate stack (mirrors prod, all continue-on-error so
+      # ceo_grade_gate aggregates a partial verdict rather than burying
+      # the verdict on one auxiliary failure)
+      # ───────────────────────────────────────────────────────────────
+      - name: Agent 7 — Visual QA (DOM checks)
+        id: visual_qa
+        run: python scripts/visual_qa.py
+        continue-on-error: true
+
+      - name: Agent 8 — Visual Review (Claude vision)
+        id: visual_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY not set — skipping visual_review."
+            exit 0
+          fi
+          python scripts/visual_review.py
+        continue-on-error: true
+
+      - name: Editorial Review (deterministic linters, LLM tone optional)
+        id: editorial_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_EDITORIAL_REVIEW_ENABLED: '1'
+        run: python -m scripts._editorial_review
+        continue-on-error: true
+
+      - name: CEO-Grade Gate — aggregated PASS/WARN/FAIL/SKIP verdict
+        id: ceo_grade_gate
+        run: |
+          STRICT_FLAG=""
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            STRICT_FLAG="--strict"
+            echo "🔒 Scheduled DEV run — --strict on by default"
+          elif [ "${{ github.event.inputs.strict_gate }}" != "false" ]; then
+            STRICT_FLAG="--strict"
+            echo "🔒 Strict gate enabled — WARN will block publish"
+          else
+            echo "⚠ Strict gate off — WARN will not block (workflow_dispatch override)"
+          fi
+          python scripts/ceo_grade_gate.py $STRICT_FLAG
+        continue-on-error: true
+
+      - name: Gate — Block on CEO-grade FAIL/SKIP
+        if: steps.ceo_grade_gate.outcome == 'failure'
+        run: |
+          echo "❌ CEO-grade gate did not return PASS/WARN."
+          echo "   Review data/ceo_grade_verdict.json — publish halted."
+          cat data/ceo_grade_verdict.json || true
+          exit 1
+
+      - name: Snapshot — Rolling data backup
+        run: python scripts/snapshot.py
+
+      - name: Version Tracker — Record pipeline run
+        run: python scripts/version_tracker.py
+
+      - name: Commit and push to dev branch
+        run: |
+          git config user.name  "briefing-bot-dev"
+          git config user.email "briefing-bot-dev@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add index.html data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🌑 Shadow update (dev): $(date -u +'%Y-%m-%d')"
+            git push origin HEAD:dev/multi-expert-improvements
+          fi
+
+      # ───────────────────────────────────────────────────────────────
+      # Deploy step skipped on dev — GitHub Pages is repo-restricted to
+      # `main` and one Pages site per repo. Upload artifact for manual
+      # review. If Vercel is connected, it auto-deploys preview URLs on
+      # push to dev with no workflow involvement.
+      # ───────────────────────────────────────────────────────────────
+      - name: Upload Pages artifact (for manual download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-pages-${{ github.run_id }}
+          path: |
+            index.html
+            data/validation_report.json
+            data/ceo_grade_verdict.json
+            data/editorial_report.json
+            data/visual_review_report.json
+          retention-days: 14
+
+      # ───────────────────────────────────────────────────────────────
+      # Email on dev only if EMAIL_TO_DEV secret is set. Subscribers
+      # to the production list never receive a duplicate.
+      # ───────────────────────────────────────────────────────────────
+      - name: Agent 5 — Publisher (email to dev list only)
+        if: steps.ceo_grade_gate.outcome == 'success'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM:     ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:       ${{ secrets.EMAIL_TO_DEV }}
+        run: |
+          if [ -z "$EMAIL_TO" ]; then
+            echo "EMAIL_TO_DEV not set — skipping dev email send (subscriber-safe)."
+            exit 0
+          fi
+          python scripts/publisher.py
+
+  # ── Pipeline failure notification (dev) ────────────────────────────
+  notify-failure:
+    runs-on: ubuntu-latest
+    needs: update
+    if: failure() && (github.ref == 'refs/heads/dev/multi-expert-improvements' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+    permissions:
+      issues: write
+    steps:
+      - name: Notify dev pipeline failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `[dev] Pipeline failure: ${new Date().toISOString().slice(0,10)}`;
+            const body = [
+              '## DEV Pipeline Failure Alert',
+              '',
+              `**Run:** [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              `**Trigger:** ${context.eventName}`,
+              `**Branch:** dev/multi-expert-improvements`,
+              `**Time:** ${new Date().toISOString()}`,
+              '',
+              'This is a parallel-dev run — prod is unaffected. Review the failed',
+              'run and fix on dev before the next scheduled execution.',
+            ].join('\n');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['pipeline-failure', 'parallel-dev'],
+            });

@@ -1,0 +1,92 @@
+name: Parallel Compare (prod vs dev)
+
+# ───────────────────────────────────────────────────────────────────────────
+# Triggers on the *completion* of either briefing workflow. When fired,
+# checks whether the OTHER branch's briefing also completed within the
+# last 24h with a successful run. If both are fresh, generates a
+# side-by-side comparison report and commits it to the dev branch.
+#
+# Self-coordinating — no shared state between the two briefing files.
+# Either order of completion works (prod-first or dev-first).
+# ───────────────────────────────────────────────────────────────────────────
+on:
+  workflow_run:
+    workflows:
+      - 'Weekly Macro Update'
+      - 'Weekly Macro Update (DEV — parallel)'
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    # Only run if the triggering workflow succeeded. (Failed runs would
+    # produce a misleading comparison against potentially stale artifacts.)
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout dev branch (artifact destination)
+        uses: actions/checkout@v4
+        with:
+          ref: dev/multi-expert-improvements
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch main for cross-ref comparison
+        run: |
+          git fetch origin main:main
+          echo "main HEAD: $(git rev-parse main)"
+          echo "dev HEAD:  $(git rev-parse HEAD)"
+
+      - name: Check freshness of both branches
+        id: freshness
+        run: |
+          # Both branches must have a commit within the last 24h for the
+          # comparison to be meaningful (we don't want to compare today's
+          # dev run against last week's prod run).
+          NOW=$(date +%s)
+          MAIN_TS=$(git log -1 --format=%ct main)
+          DEV_TS=$(git log -1 --format=%ct HEAD)
+          MAIN_AGE_HOURS=$(( (NOW - MAIN_TS) / 3600 ))
+          DEV_AGE_HOURS=$(( (NOW - DEV_TS) / 3600 ))
+          echo "Main last commit: ${MAIN_AGE_HOURS}h ago"
+          echo "Dev last commit:  ${DEV_AGE_HOURS}h ago"
+          if [ $MAIN_AGE_HOURS -gt 24 ] || [ $DEV_AGE_HOURS -gt 24 ]; then
+            echo "One branch is stale (>24h since last commit) — skipping comparison."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python 3.11
+        if: steps.freshness.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate comparison report
+        if: steps.freshness.outputs.skip != 'true'
+        run: python scripts/parallel_compare.py
+
+      - name: Commit comparison report to dev
+        if: steps.freshness.outputs.skip != 'true'
+        run: |
+          git config user.name  "parallel-compare-bot"
+          git config user.email "parallel-compare-bot@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add data/parallel_compare_*.md data/parallel_compare_latest.md
+          if git diff --staged --quiet; then
+            echo "No comparison report changes"
+          else
+            git commit -m "📊 Parallel compare: $(date -u +'%Y-%m-%d')"
+            git push origin HEAD:dev/multi-expert-improvements
+          fi
+
+      - name: Upload comparison artifact
+        if: steps.freshness.outputs.skip != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: parallel-compare-${{ github.run_id }}
+          path: data/parallel_compare_*.md
+          retention-days: 30
