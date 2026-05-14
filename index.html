@@ -5255,33 +5255,114 @@ function buildYieldTab(){
 
 
 // ════════════════════════════════════════════════════
-// TAB SWITCHING
+// TAB SWITCHING (+ B5.2 ARIA semantics, roving tabindex, arrow nav)
 // ════════════════════════════════════════════════════
-document.querySelectorAll(".nav-btn").forEach(btn=>{
-  btn.addEventListener("click", function(){
-    document.querySelectorAll(".nav-btn").forEach(function(b){ b.classList.remove("active"); });
-    document.querySelectorAll(".tab-panel").forEach(function(p){ p.classList.remove("active"); });
-    btn.classList.add("active");
+// We attach role="tab"/"tabpanel" etc. via JS rather than hand-editing
+// 15+ buttons and 15+ panels in the source HTML. Trade-off: ARIA is
+// inactive for the <noscript> case (acceptable — page is unusable
+// without JS anyway since Chart.js renders all canvases).
+function _b52_decorateAriaTabs(){
+  var navContainer = document.querySelector('.nav-grouped');
+  if (navContainer) {
+    navContainer.setAttribute('role', 'tablist');
+    navContainer.setAttribute('aria-orientation', 'horizontal');
+    navContainer.setAttribute('aria-label', 'Dashboard sections');
+  }
+  document.querySelectorAll('.nav-btn').forEach(function(btn){
     var t = btn.dataset.tab;
-    var panel = document.getElementById("tab-" + t);
-    if(!panel) return;
-    panel.classList.add("active");
-    // Build tab content on first visit (SVG renders instantly, no sizing needed)
-    if(t==="fc")      buildFCTab();
-    if(t==="gdp")     buildGDPTab();
-    if(t==="unemp")   buildUnempTab();
-    if(t==="cpi")     buildCPITab();
-    if(t==="wages")   buildWagesTab();
-    if(t==="jobs")    buildJobsTab();
-    if(t==="pce")     buildPCETab();
-    if(t==="banks")   buildBanksTab();
-    if(t==="oil")     buildOilTab();
-    if(t==="credit")  buildCreditTab();
-    if(t==="housing") buildHousingTab();
-    if(t==="yield")   buildYieldTab();
-    if(t==="stack")   buildStackTab();
-    if(t==="validator") buildValidatorTab();
+    var panel = document.getElementById('tab-' + t);
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('id', 'nav-' + t);
+    btn.setAttribute('aria-controls', 'tab-' + t);
+    var isActive = btn.classList.contains('active');
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    // Roving tabindex: only the active tab is in the document tab order;
+    // arrow keys move within the tablist.
+    btn.setAttribute('tabindex', isActive ? '0' : '-1');
+    if (panel) {
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('aria-labelledby', 'nav-' + t);
+      // tabindex=0 lets keyboard users focus the panel after activation
+      // so screen readers announce its contents on transition.
+      panel.setAttribute('tabindex', '0');
+    }
   });
+}
+function _b52_decorateCanvasLabels(){
+  // Each <canvas> gets role="img" + an aria-label derived from the
+  // nearest .panel-title (the human-readable chart name). Falls back
+  // to canvas id if no panel-title is reachable. Without this, screen
+  // readers announce the canvas as "graphic" with no context.
+  document.querySelectorAll('canvas').forEach(function(c){
+    if (c.hasAttribute('aria-label')) return;
+    var panel = c.closest('.panel');
+    var titleEl = panel ? panel.querySelector('.panel-title') : null;
+    var label = titleEl
+      ? 'Chart: ' + titleEl.textContent.trim()
+      : (c.id ? 'Chart: ' + c.id : 'Chart');
+    c.setAttribute('role', 'img');
+    c.setAttribute('aria-label', label);
+  });
+}
+function _b52_activateTab(t, opts){
+  opts = opts || {};
+  document.querySelectorAll('.nav-btn').forEach(function(b){
+    var on = b.dataset.tab === t;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-selected', on ? 'true' : 'false');
+    b.setAttribute('tabindex', on ? '0' : '-1');
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.remove('active');
+  });
+  var panel = document.getElementById('tab-' + t);
+  if (!panel) return;
+  panel.classList.add('active');
+  // Lazy-build tab content on first visit
+  if(t==='fc')        buildFCTab();
+  if(t==='gdp')       buildGDPTab();
+  if(t==='unemp')     buildUnempTab();
+  if(t==='cpi')       buildCPITab();
+  if(t==='wages')     buildWagesTab();
+  if(t==='jobs')      buildJobsTab();
+  if(t==='pce')       buildPCETab();
+  if(t==='banks')     buildBanksTab();
+  if(t==='oil')       buildOilTab();
+  if(t==='credit')    buildCreditTab();
+  if(t==='housing')   buildHousingTab();
+  if(t==='yield')     buildYieldTab();
+  if(t==='stack')     buildStackTab();
+  if(t==='validator') buildValidatorTab();
+  // Canvases added by lazy-build need labelling too
+  _b52_decorateCanvasLabels();
+  if (opts.focusButton) {
+    var btn = document.getElementById('nav-' + t);
+    if (btn) btn.focus();
+  }
+}
+_b52_decorateAriaTabs();
+_b52_decorateCanvasLabels();
+document.querySelectorAll('.nav-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    _b52_activateTab(btn.dataset.tab);
+  });
+});
+// Keyboard arrow / Home / End navigation per WAI-ARIA tab pattern
+document.addEventListener('keydown', function(e){
+  var active = document.activeElement;
+  if (!active || !active.classList || !active.classList.contains('nav-btn')) return;
+  var all = Array.prototype.slice.call(document.querySelectorAll('.nav-btn'));
+  var idx = all.indexOf(active);
+  if (idx < 0) return;
+  var next = -1;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % all.length;
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + all.length) % all.length;
+  else if (e.key === 'Home') next = 0;
+  else if (e.key === 'End') next = all.length - 1;
+  if (next >= 0) {
+    e.preventDefault();
+    _b52_activateTab(all[next].dataset.tab, { focusButton: true });
+  }
 });
 
 // ═══════════════════════════════════════════════════════
