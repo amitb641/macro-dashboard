@@ -1015,6 +1015,7 @@ def rebuild_charts(html, data):
     html = rebuild_fed_liquidity_data(html, data)
     html = rebuild_jolts_data(html, data)
     html = rebuild_cpi_breadth(html, data)
+    html = rebuild_fiscal_data(html, data)
 
     return html
 
@@ -1461,6 +1462,70 @@ def rebuild_oil_prod_spread(html, data):
     if n:
         applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
         html = new_html
+    return html
+
+
+def rebuild_fiscal_data(html, data):
+    """Rebuild FISCAL_DATA (B3.2) from FYFSGDA188S (federal deficit / GDP, FY).
+
+    Source: FRED FYFSGDA188S — fiscal-year Federal Surplus or Deficit as %
+    of GDP. Annual series, OMB / Treasury original. Negative values = deficit.
+
+    Output schema:
+      labels: ['1965', '1966', ...]  — fiscal years from earliest obs onwards
+      deficit_pct: [-1.2, -0.5, ...] — % of GDP per year
+      latest_pct:  -6.4              — most recent FY value (number, not list)
+      avg_post1965: -3.4             — simple mean from 1965 onwards (number)
+
+    Hutchins fiscal impulse + CBO baseline are deferred to manual curation
+    (data/fiscal_overrides.json) — not touched here. SKIP if deficit_gdp
+    series is missing or empty.
+    """
+    series = data.get('deficit_gdp', [])
+    if not series:
+        warnings.append('FISCAL_DATA rebuild SKIPPED — deficit_gdp missing')
+        return html
+
+    by_date = {}
+    for o in series:
+        if isinstance(o, dict):
+            d, v = o.get('date'), o.get('value')
+        else:
+            continue
+        if d is None or v is None:
+            continue
+        by_date[d] = float(v)
+    if not by_date:
+        warnings.append('FISCAL_DATA rebuild SKIPPED — no usable rows in deficit_gdp')
+        return html
+
+    dates = sorted(by_date)
+    labels = [d[:4] for d in dates]            # FY year only ("1965")
+    vals = [round(by_date[d], 2) for d in dates]
+    latest_pct = vals[-1]
+    # Post-1965 average — defensive: index lookup may not find '1965' if the
+    # series starts later, so fall back to the whole window.
+    try:
+        i65 = labels.index('1965')
+        post65 = vals[i65:]
+    except ValueError:
+        post65 = vals
+    avg_post1965 = round(sum(post65) / len(post65), 2) if post65 else None
+
+    obj = {
+        'labels': labels,
+        'deficit_pct': vals,
+        'latest_pct': latest_pct,
+        'avg_post1965': avg_post1965,
+    }
+    new_json = json.dumps(obj, separators=(', ', ':'))
+    pattern = r'const FISCAL_DATA\s*=\s*\{[^;]*\};'
+    new_html, n = re.subn(pattern, f'const FISCAL_DATA = {new_json};', html, count=1)
+    if n:
+        applied.append(f'FISCAL_DATA rebuilt ({len(labels)} FY rows, latest FY{labels[-1]} {latest_pct:+.2f}%, post-1965 avg {avg_post1965:+.2f}%)')
+        html = new_html
+    else:
+        warnings.append('FISCAL_DATA rebuild: const pattern not matched (HTML may already be on a newer schema)')
     return html
 
 

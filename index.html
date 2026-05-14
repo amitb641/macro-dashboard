@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-14T06:31:14Z";
+  var BUILD_V = "2026-05-14T13:05:58Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -1546,6 +1546,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <button class="nav-btn" data-tab="yield"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="2" y="3" width="16" height="14" rx="2.5" fill="#EDE9FE"/><rect x="2" y="3" width="16" height="14" rx="2.5" fill="none" stroke="#7C3AED" stroke-width="1.3"/><rect x="2" y="3" width="16" height="4.5" rx="2.5" fill="#7C3AED"/><rect x="5" y="10" width="4" height="1.5" rx=".75" fill="#7C3AED" opacity=".4"/><rect x="5" y="13" width="6" height="1.5" rx=".75" fill="#7C3AED" opacity=".25"/></svg>Fed Rates</button>
       <button class="nav-btn" data-tab="credit"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="#E0E7FF"/><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="none" stroke="#4F46E5" stroke-width="1.3"/><rect x="1.5" y="4.5" width="17" height="4" rx="2.5" fill="#4F46E5"/><rect x="4.5" y="11.5" width="4" height="1.5" rx=".75" fill="#4F46E5" opacity=".35"/><circle cx="15" cy="12" r="1.5" fill="#4F46E5" opacity=".25"/></svg>Credit</button>
       <button class="nav-btn" data-tab="banks"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 8.5L10 3l7.5 5.5H2.5z" fill="#CFFAFE" stroke="#0891B2" stroke-width="1.2" stroke-linejoin="round"/><rect x="4.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="9" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="13.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="2" y="15" width="16" height="2" rx=".5" fill="#0891B2" opacity=".2"/><path d="M3 17h14" stroke="#0891B2" stroke-width="1.4" stroke-linecap="round"/></svg>Banks</button>
+      <button class="nav-btn" data-tab="fiscal"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 17h15" stroke="#B45309" stroke-width="1.6" stroke-linecap="round"/><path d="M5 17V7m10 10V7" stroke="#B45309" stroke-width="1.4" stroke-linecap="round"/><path d="M3 7h14L10 2.5 3 7z" fill="#FEF3C7" stroke="#B45309" stroke-width="1.3" stroke-linejoin="round"/><path d="M7.5 17V9m5 8V9" stroke="#B45309" stroke-width="1.2" stroke-linecap="round" opacity=".55"/></svg>Fiscal</button>
     </div>
   </div>
   <div class="nav-group">
@@ -2369,6 +2370,42 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Row 6: Treasury yield macro/credit explainer -->
   <div id="treasury-explainer"></div>
+
+</div>
+
+<!-- ══ FISCAL POLICY (B3.2) ══ -->
+<div class="tab-panel" id="tab-fiscal">
+
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-title">Fiscal Commentary — Federal Deficit, Impulse &amp; CBO Baseline</div>
+    <div class="fc-note" id="commentary-fiscal">The federal deficit as a share of GDP is the single most direct measure of how much the government is adding to (or subtracting from) aggregate demand. At the current trajectory, deficits remain elevated relative to the post-1965 average, keeping fiscal policy a net stimulus even as monetary policy is restrictive — a combination that complicates the inflation glide path. Hutchins Fiscal Impulse (state &amp; local + federal) and CBO baseline projections give the directional read; both require quarterly manual curation from non-API sources.</div>
+  </div>
+  <div class="metric-row" id="fiscal-metrics"></div>
+  <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
+
+  <!-- Row 1: Federal deficit as % of GDP — annual FRED FYFSGDA188S -->
+  <div class="panel">
+    <div class="panel-title">Federal Deficit (Surplus) as % of GDP — Annual</div>
+    <div class="panel-sub">FRED FYFSGDA188S · fiscal-year deficit relative to GDP · negative = surplus · post-1965 avg ≈ −3.4%</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#B45309;border-radius:2px"></span><span style="font-size:10.5px;color:#B45309;font-weight:600">Deficit / GDP</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:1.5px;background:#94A3B8;border-radius:2px;border-top:1.5px dashed #94A3B8"></span><span style="font-size:10.5px;color:#94A3B8;font-weight:600">Post-1965 avg (−3.4%)</span></div>
+    </div>
+    <div class="ch320"><canvas id="c-fiscal-deficit"></canvas></div>
+    <p class="src">Source: OMB / Treasury via FRED series FYFSGDA188S (Federal Surplus or Deficit as % of GDP, annual fiscal year). Negative values = deficit (govt spending exceeds receipts); positive = surplus. Reference line is the simple average from 1965 to last reported FY.</p>
+  </div>
+
+  <!-- Row 2: Manual-curation deferral note for Hutchins + CBO -->
+  <div class="panel">
+    <div class="panel-title">Fiscal Impulse &amp; CBO Baseline — Deferred Inputs</div>
+    <div class="panel-sub">No public API · sourced quarterly from Brookings (Hutchins) + CBO publications</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.7;padding:6px 4px 0">
+      <p style="margin:0 0 8px"><strong>Hutchins Fiscal Impulse Measure</strong> (Brookings) decomposes the contribution of federal, state &amp; local government to quarterly GDP growth. It's the standard analyst gauge for whether fiscal policy is currently <em>adding to</em> or <em>subtracting from</em> aggregate demand. Published as a PDF / blog post each quarter — not available through FRED, BLS, or any other automated source — so updates land via manual curation in <code>data/fiscal_overrides.json</code> rather than the collector.</p>
+      <p style="margin:0 0 8px"><strong>CBO Baseline Budget &amp; Economic Projections</strong> publishes 10-year deficit, debt-held-by-public, and net interest expenditure paths twice a year (Jan + Aug). Tables ship as PDF + Excel; the canonical numbers used here are the projected deficit-to-GDP ratio over the next 10 fiscal years. Each refresh requires reading the CBO Outlook PDF — also a manual-curation path.</p>
+      <p style="margin:0;color:#94A3B8;font-size:11.5px">Operationally: when Hutchins or CBO publish, edit <code>data/fiscal_overrides.json</code> with the new vintage and commit. Until that file is wired into renderer.py, this panel surfaces only the FRED-fetchable deficit/GDP series above plus the qualitative commentary at the top of the tab.</p>
+    </div>
+    <p class="src">Sources (when curated): Brookings Hutchins Center on Fiscal &amp; Monetary Policy — Fiscal Impulse Measure (quarterly); Congressional Budget Office — Budget &amp; Economic Outlook (semi-annual).</p>
+  </div>
 
 </div>
 
@@ -4116,6 +4153,12 @@ const SPREADS_DATA = {"labels":["2023", "2024", "2025", "May'26"], "ig":[124, 92
 // fresh checkout before the first pipeline run.
 const FED_LIQUIDITY_DATA = {"labels":[], "walcl":[], "wresbal":[], "rrpontsyd":[], "tga":[]};
 
+// Fiscal policy (B3.2) — federal deficit / GDP from FRED FYFSGDA188S (annual).
+// Renderer (rebuild_fiscal_data) overwrites from raw_data.json key deficit_gdp.
+// `latest_pct` and `avg_post1965` are pre-computed for the metric tiles to
+// avoid recomputing in the chart-build path.
+const FISCAL_DATA = {"labels":[], "deficit_pct":[], "latest_pct":null, "avg_post1965":null};
+
 
 
 
@@ -5391,6 +5434,55 @@ function buildYieldTab(){
   `;
 }
 
+// ── Fiscal Policy tab (B3.2) ─────────────────────────────────────────
+function buildFiscalTab(){
+  if(builtTabs.fiscal) return; builtTabs.fiscal=1;
+
+  // ── Tiles: latest deficit/GDP + post-1965 avg ──
+  var _flatest = (FISCAL_DATA && typeof FISCAL_DATA.latest_pct === 'number') ? FISCAL_DATA.latest_pct : null;
+  var _favg    = (FISCAL_DATA && typeof FISCAL_DATA.avg_post1965 === 'number') ? FISCAL_DATA.avg_post1965 : null;
+  var _flatestLbl = _flatest!==null ? (_flatest>=0?"+":"")+_flatest.toFixed(1)+"%" : "—";
+  var _favgLbl    = _favg!==null    ? (_favg>=0?"+":"")+_favg.toFixed(1)+"%"    : "—";
+  // Gap vs post-1965 average is the editorialised "how stimulative is fiscal right now" tile.
+  var _fGap       = (_flatest!==null && _favg!==null) ? (_flatest - _favg) : null;
+  var _fGapLbl    = _fGap!==null ? (_fGap>=0?"+":"")+_fGap.toFixed(1)+"pp" : "—";
+  var _fGapSub    = _fGap===null ? "—"
+                  : _fGap < -0.5 ? "Larger deficit than post-1965 norm — net fiscal stimulus"
+                  : _fGap >  0.5 ? "Smaller deficit than post-1965 norm — net fiscal restraint"
+                  :                "Within ±0.5pp of post-1965 norm — fiscal stance neutral";
+  var _fGapCol    = _fGap===null ? "#94A3B8" : (_fGap < -0.5 ? "#D64045" : _fGap > 0.5 ? "#1A9E5A" : "#CC8A00");
+
+  document.getElementById("fiscal-metrics").innerHTML = [
+    {lbl:"Federal Deficit / GDP (latest FY)", val:_flatestLbl, sub:"FRED FYFSGDA188S · negative = deficit", col:"#B45309"},
+    {lbl:"Post-1965 Average",                 val:_favgLbl,    sub:"Reference baseline for stimulative vs restrictive stance", col:"#94A3B8"},
+    {lbl:"Gap vs Post-1965 Avg",              val:_fGapLbl,    sub:_fGapSub, col:_fGapCol},
+    {lbl:"Hutchins Fiscal Impulse",           val:"—",          sub:"Manual curation (Brookings, quarterly) · pending wiring", col:"#94A3B8"},
+  ].map(m=>_mTile(m)).join("");
+
+  // ── Deficit / GDP annual line chart ──
+  try{
+  var fEl = document.getElementById("c-fiscal-deficit");
+  if (fEl && FISCAL_DATA && FISCAL_DATA.labels && FISCAL_DATA.labels.length) {
+    var _avgArr = FISCAL_DATA.labels.map(function(){return FISCAL_DATA.avg_post1965;});
+    new Chart(fEl.getContext("2d"),{
+      type:"line",
+      data:{labels:FISCAL_DATA.labels,datasets:[
+        {label:"Deficit / GDP",  data:FISCAL_DATA.deficit_pct, borderColor:"#B45309", backgroundColor:"rgba(180,83,9,.08)", borderWidth:2.5, pointRadius:0, tension:0.2, fill:true},
+        {label:"Post-1965 avg",  data:_avgArr,                 borderColor:"#94A3B8", borderWidth:1.5, pointRadius:0, tension:0, fill:false, borderDash:[4,4]},
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){return ctx.dataset.label+": "+ctx.parsed.y.toFixed(2)+"%";}}}},
+        scales:{
+          x:{grid:{display:false},ticks:{color:"#94A3B8",font:{size:10},maxTicksLimit:12,autoSkip:true},border:{display:false}},
+          y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%";}},border:{display:false}}
+        }}
+    });
+  }
+  }catch(e){console.error("Fiscal deficit chart error:",e);}
+}
+
 
 
 // ════════════════════════════════════════════════════
@@ -5470,6 +5562,7 @@ function _b52_activateTab(t, opts){
   if(t==='credit')    buildCreditTab();
   if(t==='housing')   buildHousingTab();
   if(t==='yield')     buildYieldTab();
+  if(t==='fiscal')    buildFiscalTab();
   if(t==='stack')     buildStackTab();
   if(t==='validator') buildValidatorTab();
   // Canvases added by lazy-build need labelling too
@@ -6471,7 +6564,7 @@ const SIGNAL_THRESHOLDS = [
 var TAB_NAMES = {
   fc:"Outlook", gdp:"GDP", jobs:"Jobs", unemp:"Unemployment",
   wages:"Wages", cpi:"CPI", pce:"Consumer & PCE", yield:"Fed Rates",
-  credit:"Credit", banks:"Banks", housing:"Housing", oil:"Oil",
+  credit:"Credit", banks:"Banks", fiscal:"Fiscal", housing:"Housing", oil:"Oil",
   dict:"Sources", stack:"Dashboard"
 };
 
@@ -6564,11 +6657,12 @@ function downloadFullHTML(){
   _setDLBtnState(true);
 
   // All data tabs + meta tabs
-  var TAB_IDS = ["fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","housing","oil","dict","stack","validator"];
+  var TAB_IDS = ["fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","fiscal","housing","oil","dict","stack","validator"];
   var builders = {
     fc:buildFCTab, gdp:buildGDPTab, jobs:buildJobsTab, unemp:buildUnempTab,
     wages:buildWagesTab, cpi:buildCPITab, pce:buildPCETab, yield:buildYieldTab,
-    credit:buildCreditTab, banks:buildBanksTab, housing:buildHousingTab, oil:buildOilTab,
+    credit:buildCreditTab, banks:buildBanksTab, fiscal:buildFiscalTab,
+    housing:buildHousingTab, oil:buildOilTab,
     stack:buildStackTab, validator:buildValidatorTab
   };
 
