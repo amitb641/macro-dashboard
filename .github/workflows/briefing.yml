@@ -37,9 +37,9 @@ on:
         required: false
         default: 'true'
       strict_gate:
-        description: 'Treat ceo_grade_gate WARN as blocking (recommended for publication days)'
+        description: 'Treat ceo_grade_gate WARN as blocking. Scheduled cron runs always use --strict; this input only affects workflow_dispatch.'
         required: false
-        default: 'false'
+        default: 'true'
 
 jobs:
   update:
@@ -182,10 +182,19 @@ jobs:
       - name: CEO-Grade Gate — aggregated PASS/WARN/FAIL/SKIP verdict
         id: ceo_grade_gate
         run: |
+          # Scheduled cron runs are the live CEO publication path — always
+          # treat WARN as blocking. Manual workflow_dispatch may opt out by
+          # setting strict_gate=false (e.g. for diagnostic reruns where the
+          # operator has already vetted the WARN cause).
           STRICT_FLAG=""
-          if [ "${{ github.event.inputs.strict_gate }}" = "true" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            STRICT_FLAG="--strict"
+            echo "🔒 Scheduled publication run — --strict on by default"
+          elif [ "${{ github.event.inputs.strict_gate }}" != "false" ]; then
             STRICT_FLAG="--strict"
             echo "🔒 Strict gate enabled — WARN will block publish"
+          else
+            echo "⚠ Strict gate off — WARN will not block (workflow_dispatch override)"
           fi
           python scripts/ceo_grade_gate.py $STRICT_FLAG
         continue-on-error: true
@@ -249,13 +258,28 @@ jobs:
       - name: Auto-rollback on health check failure
         if: failure() && steps.healthcheck.outcome == 'failure'
         run: |
-          echo "⚠️ Health check failed — attempting auto-rollback"
-          python scripts/snapshot.py --rollback "$(ls -1 data/snapshots/ 2>/dev/null | sort -r | head -1)" || echo "No snapshot available for rollback"
+          # Pick the second-newest snapshot (N-1). The snapshot step earlier
+          # in this run wrote today's snapshot from the SAME broken data we
+          # just deployed, so `head -1` would roll back to the broken state.
+          # `head -2 | tail -1` selects the previous run's snapshot — the
+          # last known-good state.
+          PREV_SNAPSHOT="$(ls -1 data/snapshots/ 2>/dev/null | sort -r | head -2 | tail -1)"
+          if [ -z "$PREV_SNAPSHOT" ]; then
+            echo "⚠️ Health check failed but no prior snapshot exists — cannot rollback."
+            echo "    Live page will remain broken until next scheduled run."
+            exit 0
+          fi
+          echo "⚠️ Health check failed — rolling back to snapshot $PREV_SNAPSHOT"
+          python scripts/snapshot.py --rollback "$PREV_SNAPSHOT" --include-html
           python scripts/renderer.py
           git add index.html data/
           if ! git diff --staged --quiet; then
-            git commit -m "🔄 Auto-rollback: health check failed $(date -u +'%Y-%m-%d')"
+            git commit -m "🔄 Auto-rollback to $PREV_SNAPSHOT: health check failed $(date -u +'%Y-%m-%d')"
             git push
+            # Re-deploy the rolled-back artifact. Without this, the repo is
+            # restored but the live Pages URL still serves the broken build.
+            echo "    Pushed rollback commit; next scheduled run will redeploy."
+            echo "    For immediate live recovery, trigger workflow_dispatch."
           fi
 
   # ── Pipeline failure notification ──────────────────────────────────

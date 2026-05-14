@@ -825,6 +825,79 @@ def check_earnings_verbatim():
                 'severity': 'ok', 'pass': True,
             })
 
+    # ── Aggregate transcript-archive coverage ─────────────────────────
+    # The per-bank warnings above downgrade individual missing transcripts
+    # from CRITICAL to WARNING so the operator gets one clear aggregate
+    # signal instead of N noise items. The aggregate IS the gate: if a
+    # quarter has been reported by ≥1 bank but ZERO transcripts are
+    # archived, the verbatim fabrication-resistance contract is fully
+    # off — every quoted span ships unverified. That's CRITICAL.
+    #
+    # Coverage thresholds:
+    #   reported_n == 0       → skipped (no quarter to gate)
+    #   archived_n == 0       → critical (gate is fully off)
+    #   archived_n < reported → warning (partial coverage; operator gap)
+    #   archived_n == reported → ok
+    reported = [b for b in banks
+                if (b.get('status') or '').lower() != 'pending'
+                and not [k for k in required if not b.get(k)]]
+    reported_n = len(reported)
+    if reported_n == 0 or transcripts_qdir is None:
+        findings.append({
+            'check': 'transcript_archive_coverage',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': (
+                'no reported banks yet for this quarter'
+                if reported_n == 0
+                else 'no quarter declared in bank_earnings.json'
+            ),
+        })
+    else:
+        archived = [
+            b for b in reported
+            if (transcripts_qdir / f"{b.get('ticker','?')}.txt").exists()
+        ]
+        archived_n = len(archived)
+        pct = (archived_n / reported_n * 100.0) if reported_n else 0.0
+        if archived_n == 0:
+            findings.append({
+                'check': 'transcript_archive_coverage',
+                'severity': 'critical',
+                'pass': False,
+                'reason': (
+                    f'zero transcripts archived in {transcripts_qdir.relative_to(Path(__file__).parent.parent)} '
+                    f'for a quarter with {reported_n} reported bank(s); '
+                    f'verbatim gate is fully off — every quoted span ships unverified. '
+                    f'Operator must archive transcripts per CLAUDE.md "Update Workflow" before publish.'
+                ),
+                'reported': reported_n,
+                'archived': 0,
+                'coverage_pct': 0.0,
+            })
+        elif archived_n < reported_n:
+            findings.append({
+                'check': 'transcript_archive_coverage',
+                'severity': 'warning',
+                'pass': False,
+                'reason': (
+                    f'{archived_n}/{reported_n} transcripts archived ({pct:.0f}% coverage); '
+                    f'verbatim gate enforces only the {archived_n} archived bank(s)'
+                ),
+                'reported': reported_n,
+                'archived': archived_n,
+                'coverage_pct': round(pct, 1),
+            })
+        else:
+            findings.append({
+                'check': 'transcript_archive_coverage',
+                'severity': 'ok',
+                'pass': True,
+                'reported': reported_n,
+                'archived': archived_n,
+                'coverage_pct': 100.0,
+            })
+
     return findings
 
 

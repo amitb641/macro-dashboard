@@ -2920,8 +2920,8 @@ const nberRecessionBands = {
 // ════════════════════════════════════════════════════════════════════════
 // Opt-in per chart via:
 //   options.plugins.hLines = {
-//     lines: [{ y: 2.0, color: "#1A9E5A", dash: [6,4], label: "Fed 2% Target" }],
-//     bands: [{ y1: 2.5, y2: 3.0, fill: "rgba(26,158,90,.08)", label: "Neutral rate" }]
+//     lines: [{ y: 2.0, color: "#1A9E5A", dash: [6,4], label: "Fed 2% target" }],
+//     bands: [{ y1: 2.5, y2: 3.0, fill: "rgba(26,158,90,.08)", label: "Neutral rate, 2.5–3.0%" }]
 //   }
 // Draws bands first (under the data), then lines (over the data) so the
 // reference geometry stays visible without obscuring the series.
@@ -2989,7 +2989,7 @@ const hLinesPlugin = {
 // ════════════════════════════════════════════════════════════════════════
 // Opt-in per chart via:
 //   options.plugins.vEvents = {
-//     events: [{ x: "2026-03-01", color: "#D64045", label: "Oil shock" }]
+//     events: [{ x: "2026-03-01", color: "#D64045", label: "Hormuz shock, Mar 2026" }]
 //   }
 // x-matching mirrors nberRecessionBands' resolver: works against both time
 // scales and category scales whose labels carry YYYY-MM, Mon'YY, or YYYY
@@ -3535,8 +3535,8 @@ function buildCPITab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
       // Fed 2% target line + Mar 2026 oil-shock marker (custom hLines/vEvents plugins above)
-      hLines:{lines:[{y:2.0,color:"#1A9E5A",dash:[6,4],label:"Fed 2% Target"}]},
-      vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Oil shock"}]}},
+      hLines:{lines:[{y:2.0,color:"#1A9E5A",dash:[6,4],label:"Fed 2% target"}]},
+      vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Hormuz shock, Mar 2026"}]}},
       scales:{y:{min:Math.floor(Math.min(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...CPI_MONTHLY.headline,...CPI_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
@@ -4116,8 +4116,8 @@ function buildPCETab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
       // Fed 2% target line + Mar 2026 oil-shock marker (custom plugins)
-      hLines:{lines:[{y:2.0,color:"#1A9E5A",dash:[6,4],label:"Fed 2% Target"}]},
-      vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Oil shock"}]}},
+      hLines:{lines:[{y:2.0,color:"#1A9E5A",dash:[6,4],label:"Fed 2% target"}]},
+      vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Hormuz shock, Mar 2026"}]}},
       scales:{y:{min:Math.floor(Math.min(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2-1)/2,max:Math.ceil(Math.max(...PCE_MONTHLY.headline,...PCE_MONTHLY.core)*2+1)/2,ticks:{callback:v=>v+"%",font:{size:10}},grid:{color:"#E2E8F0"}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
@@ -4150,7 +4150,7 @@ function buildPCETab(){
     data:{labels:PCE_ANNUAL.labels,datasets:[
       {label:"Headline PCE",data:PCE_ANNUAL.headline,borderColor:"#D64045",backgroundColor:"#D6404515",borderWidth:2.5,pointRadius:5,tension:0.3,fill:true},
       {label:"Core PCE",    data:PCE_ANNUAL.core,    borderColor:"#336BCC",backgroundColor:"#336BCC15",borderWidth:2,  pointRadius:5,tension:0.3,fill:false,borderDash:[5,3]},
-      {label:"Fed 2% Target",data:PCE_ANNUAL.labels.map(()=>2),borderColor:"#1A9E5A",borderWidth:1.5,pointRadius:0,tension:0,fill:false,borderDash:[4,4]},
+      {label:"Fed 2% target",data:PCE_ANNUAL.labels.map(()=>2),borderColor:"#1A9E5A",borderWidth:1.5,pointRadius:0,tension:0,fill:false,borderDash:[4,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
@@ -4639,7 +4639,7 @@ function buildOilTab(){
       plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}},
         // Vertical marker at the Mar 2026 oil-shock onset (matches the
         // hardcoded shock date in scripts/renderer.py:update_shock_tracker).
-        vEvents:{events:[{x:"2026-03-01",color:"#D64045",dash:[4,3],label:"Mar 2026 oil shock"}]}},
+        vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Hormuz shock, Mar 2026"}]}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:9},maxRotation:45,minRotation:0,
           callback(v,i){
@@ -5692,7 +5692,7 @@ function buildYieldTab(){
     options:{responsive:true,maintainAspectRatio:false,
       // Neutral-rate band (FOMC SEP long-run median ≈ 2.5–3.0% nominal).
       // Helps the eye anchor where policy is restrictive vs neutral.
-      plugins:{hLines:{bands:[{y1:2.5,y2:3.0,fill:"rgba(26,158,90,.10)",label:"FOMC neutral rate (long-run)",labelColor:"#0F7A45"}]}},
+      plugins:{hLines:{bands:[{y1:2.5,y2:3.0,fill:"rgba(26,158,90,.10)",label:"Neutral rate, 2.5–3.0%",labelColor:"#0F7A45"}]}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:10}},border:{display:false}},
         y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:function(v){return v+"%";}},min:0,max:6.5,border:{display:false}}

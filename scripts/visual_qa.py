@@ -489,6 +489,51 @@ def run_visual_qa(take_screenshots=False):
                    f'{stdom.get("phase_titles_found")}/8 titles found',
                    severity='warning')
 
+        # ── Annotation lexicon (style_guide.md §4.5) ───────────────────
+        # Verify the four annotated charts still carry their canonical
+        # labels. The labels are read directly off the HTML source (not
+        # via MC instances) because MC config lives in JS object literals
+        # not exposed as globals. If renderer.py or a regression silently
+        # drops the plugins.hLines / plugins.vEvents config, this check
+        # catches it before publish.
+        #
+        # The table below is the source-of-truth lexicon. Update it AND
+        # data/style_guide.md §4.5 together — never one without the other.
+        html_source = HTML_FILE.read_text(encoding='utf-8')
+        ANNOTATION_LEXICON = [
+            # (label, min_occurrences, owner_charts)
+            ('Fed 2% target',         2, 'c-cpi-mom, c-pce-mom (+ PCE annual series legend)'),
+            ('Hormuz shock, Mar 2026', 3, 'c-cpi-mom, c-pce-mom, c-oil-monthly'),
+            ('Neutral rate, 2.5–3.0%', 1, 'c-ffr'),
+        ]
+        for label, min_n, owners in ANNOTATION_LEXICON:
+            n = html_source.count(label)
+            _check(
+                'annotations',
+                f'lexicon: "{label}" present ≥{min_n}× ({owners})',
+                n >= min_n,
+                f'found {n} occurrences, expected ≥{min_n} — see style_guide.md §4.5',
+                severity='warning',
+            )
+        # Negative check: forbidden legacy spellings (the four amateur-hour
+        # spellings the editorial review flagged). Any survivor here means
+        # a partial rename or a regression.
+        FORBIDDEN_ANNOTATION_STRINGS = [
+            'Fed 2% Target',           # title-case relic
+            'Mar 2026 oil shock',       # superseded by Hormuz shock
+            'FOMC neutral rate',        # superseded by Neutral rate
+            '"Oil shock"',              # bare "Oil shock" as annotation label
+        ]
+        for bad in FORBIDDEN_ANNOTATION_STRINGS:
+            n = html_source.count(bad)
+            _check(
+                'annotations',
+                f'lexicon: legacy string "{bad}" not present',
+                n == 0,
+                f'found {n} occurrences — replace per style_guide.md §4.5',
+                severity='warning',
+            )
+
         browser.close()
 
     # ── Build report ───────────────────────────────────────────────

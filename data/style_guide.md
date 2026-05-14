@@ -303,6 +303,46 @@ adding a 4th colour.
 - Saturation above the named values. Don't bump a colour because
   "it looks brighter" — the value is fixed.
 
+### 4.5 Annotation contract
+
+Chart annotations (reference lines, bands, event markers) are the
+editorial voice of the chart. They are the part a CEO actually reads.
+Inconsistent annotation strings across charts ("Oil shock" here,
+"Mar 2026 oil shock" there, "Hormuz shock" in prose) is the most
+common amateur-hour signal in financial dashboards. Lock them down.
+
+**Lexicon — one phrasing per concept, sentence case, no parentheticals
+on plot.** This table is the source of truth; if a chart wants to use
+one of these events, it must use the exact string in column 2.
+
+| Concept | Label (verbatim) | Colour | Notes |
+|---|---|---|---|
+| Fed inflation target | `Fed 2% target` | `--green` #1A9E5A, dash `[6,4]` | Horizontal line at y=2.0 |
+| FOMC long-run neutral | `Neutral rate, 2.5–3.0%` | fill `rgba(26,158,90,.10)`, label `#0F7A45` | Horizontal band y1=2.5, y2=3.0 |
+| Strait of Hormuz oil event | `Hormuz shock, Mar 2026` | `--amber` #CC8A00, dash `[4,3]` | Vertical at x=`2026-03-01` |
+| NBER recession | (no plot label — see §4.3) | `rgba(13,27,42,.06)` | Vertical band, label in panel-sub only |
+
+**Typography.**
+
+- Annotation labels use the same font stack as axis labels:
+  `'DM Mono', monospace`, 10px, semibold or bold.
+- White pill background at 92% opacity behind the text so the label
+  reads cleanly over any series colour.
+- Label anchors at the *near* edge of the line/band, never floating in
+  the middle of the chart. Horizontal lines anchor top-left, bands
+  top-right, vertical events top of the line offset right (flip left
+  if overflow).
+
+**Series-weight rule.** Series must visually beat annotations. Series
+lines: 2px solid; annotation lines: 1.5px dashed. If the eye reads
+the annotation before the data, the dash is too heavy or the colour
+too saturated — rework before shipping.
+
+**Adding new events.** Before introducing a new label, add a row to
+the table above and update `scripts/visual_qa.py` annotation-presence
+check (`check_chart_annotations`). Ad-hoc labels added directly in
+`index.html` will fail CI.
+
 ---
 
 ## 5. Spacing and rhythm
