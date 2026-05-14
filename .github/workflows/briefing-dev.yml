@@ -184,13 +184,18 @@ jobs:
           python scripts/ceo_grade_gate.py $STRICT_FLAG
         continue-on-error: true
 
-      - name: Gate — Block on CEO-grade FAIL/SKIP
+      - name: Gate — CEO-grade FAIL/SKIP (observation mode on dev)
+        # On prod this is a hard block. On dev, we want the full pipeline
+        # to run end-to-end so the parallel-run trial can observe behaviour
+        # past the gate (snapshot, commit-back, Vercel deploy, health-check).
+        # The verdict JSON is still committed to dev — every finding is
+        # preserved for the comparison report and weekly review.
         if: steps.ceo_grade_gate.outcome == 'failure'
+        continue-on-error: true
         run: |
-          echo "❌ CEO-grade gate did not return PASS/WARN."
-          echo "   Review data/ceo_grade_verdict.json — publish halted."
+          echo "⚠ CEO-grade gate would have blocked publish on prod."
+          echo "   Recording verdict for parallel-run observation; continuing pipeline."
           cat data/ceo_grade_verdict.json || true
-          exit 1
 
       - name: Snapshot — Rolling data backup
         run: python scripts/snapshot.py
