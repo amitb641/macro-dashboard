@@ -1,18 +1,36 @@
 name: Weekly Macro Update
 
+# ───────────────────────────────────────────────────────────────────────────
+# Schedule contract (confirmed against actual UTC behaviour)
+#
+#   Cron                Local time (US/Eastern)
+#   ─────────────────── ───────────────────────────────────────
+#   0 12 * * 6          Sat 08:00 EDT  /  Sat 07:00 EST   ← weekly
+#   0 14 8-14 * 6       2nd Sat 10:00 EDT / 09:00 EST     ← monthly deep
+#
+# Why Saturday and not "Friday 8am ET":
+#   - BLS Employment Situation (NFP) prints Fri 08:30 ET
+#   - FRED morning batches typically updated Fri afternoon ET
+#   - Running Saturday lets the pipeline pick up Friday prints cleanly
+#
+# DST: GitHub crons are UTC-only. The hour drifts ±1h vs local time twice
+# a year. If a fixed local-clock launch is required, add a second cron and
+# gate by month (or accept the 1h drift — documented and intentional).
+# ───────────────────────────────────────────────────────────────────────────
 on:
   schedule:
-    # Weekly data pull: every Saturday 8am ET (12:00 UTC)
-    - cron: '0 12 * * 6'
-    # Monthly deep refresh: 2nd Saturday 10am ET (14:00 UTC)
-    # Captures Jobs (1st Fri) + CPI (~10th-13th) in one AI pass
-    - cron: '0 14 8-14 * 6'
+    - cron: '0 12 * * 6'        # Weekly: Sat 08:00 EDT / 07:00 EST
+    - cron: '0 14 8-14 * 6'     # Monthly deep: 2nd Sat 10:00 EDT / 09:00 EST
   workflow_dispatch:
     inputs:
       force_ai:
         description: 'Force Agent 3 (Claude AI) to run'
         required: false
         default: 'true'
+      strict_gate:
+        description: 'Treat ceo_grade_gate WARN as blocking (recommended for publication days)'
+        required: false
+        default: 'false'
 
 jobs:
   update:
@@ -73,8 +91,6 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FORCE_AI: ${{ github.event.inputs.force_ai || 'false' }}
         run: |
-          # Run AI commentary on every scheduled run (weekly + monthly)
-          # All runs now generate fresh commentary from latest data
           echo "Running Agent 3 — AI commentary refresh"
           python scripts/briefing_agent.py
 
@@ -107,18 +123,58 @@ jobs:
           echo "   Pipeline halted — fix data quality issues before publishing."
           exit 1
 
-      - name: Snapshot — Rolling data backup (keep last 3)
+      # ───────────────────────────────────────────────────────────────
+      # CEO-grade gate stack (B1.1)
+      # Run visual_qa + visual_review + editorial_review so the gate
+      # has all six layers to aggregate. Each is continue-on-error so
+      # ceo_grade_gate can produce a partial verdict (SKIP layers) rather
+      # than burying the verdict because one auxiliary check failed.
+      # ───────────────────────────────────────────────────────────────
+      - name: Agent 7 — Visual QA (DOM checks)
+        id: visual_qa
+        run: python scripts/visual_qa.py
+        continue-on-error: true
+
+      - name: Agent 8 — Visual Review (Claude vision)
+        id: visual_review
+        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/visual_review.py
+        continue-on-error: true
+
+      - name: Editorial Review (deterministic linters, LLM tone optional)
+        id: editorial_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_EDITORIAL_REVIEW_ENABLED: '1'
+        run: python -m scripts._editorial_review
+        continue-on-error: true
+
+      - name: CEO-Grade Gate — aggregated PASS/WARN/FAIL/SKIP verdict
+        id: ceo_grade_gate
+        run: |
+          STRICT_FLAG=""
+          if [ "${{ github.event.inputs.strict_gate }}" = "true" ]; then
+            STRICT_FLAG="--strict"
+            echo "🔒 Strict gate enabled — WARN will block publish"
+          fi
+          python scripts/ceo_grade_gate.py $STRICT_FLAG
+        continue-on-error: true
+
+      - name: Gate — Block on CEO-grade FAIL/SKIP
+        if: steps.ceo_grade_gate.outcome == 'failure'
+        run: |
+          echo "❌ CEO-grade gate did not return PASS/WARN."
+          echo "   Review data/ceo_grade_verdict.json — publish halted."
+          cat data/ceo_grade_verdict.json || true
+          exit 1
+
+      - name: Snapshot — Rolling data backup
         run: python scripts/snapshot.py
 
       - name: Version Tracker — Record pipeline run
         run: python scripts/version_tracker.py
-
-      - name: Agent 5 — Publisher
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          EMAIL_FROM:     ${{ secrets.EMAIL_FROM }}
-          EMAIL_TO:       ${{ secrets.EMAIL_TO }}
-        run: python scripts/publisher.py
 
       - name: Commit and push
         run: |
@@ -149,6 +205,18 @@ jobs:
         id: healthcheck
         if: steps.deploy.outputs.page_url
         run: python scripts/healthcheck.py "${{ steps.deploy.outputs.page_url }}"
+
+      # ───────────────────────────────────────────────────────────────
+      # Publisher moved AFTER healthcheck (B1.2)
+      # Email goes out only when the deployed page is verified healthy.
+      # ───────────────────────────────────────────────────────────────
+      - name: Agent 5 — Publisher (email after healthy deploy)
+        if: steps.healthcheck.outcome == 'success'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM:     ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:       ${{ secrets.EMAIL_TO }}
+        run: python scripts/publisher.py
 
       - name: Auto-rollback on health check failure
         if: failure() && steps.healthcheck.outcome == 'failure'

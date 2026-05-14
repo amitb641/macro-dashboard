@@ -282,6 +282,30 @@ def test_validator_offline(tmp_dir):
     validator.FRED_KEY = ''
     validator.BLS_KEY = ''
 
+    # Redirect bank-earnings + transcripts archive to tmp_dir so Pass 3c
+    # is exercised in isolation (the validator module otherwise pins these
+    # to the real project root at import time). Without this redirect the
+    # smoke test silently uses real bank_earnings.json + a missing
+    # transcripts/ archive — which (post-B1.4) correctly raises critical
+    # findings for every status=reported bank, defeating fixture isolation.
+    validator.BANK_FILE = tmp_dir / 'data' / 'bank_earnings.json'
+    validator.TRANSCRIPTS_DIR = tmp_dir / 'data' / 'transcripts'
+
+    # Write an offline-safe fixture: all banks marked 'pending' so Pass 3c
+    # emits 'skipped' rows (zero criticals, zero warnings) — mirrors a
+    # pre-earnings-season pipeline state.
+    (tmp_dir / 'data' / 'bank_earnings.json').write_text(json.dumps({
+        'quarter': 'Q1_2026',
+        'banks': [
+            {'id': 'jpm', 'bank': 'JPMorgan Chase', 'ticker': 'JPM',
+             'ceo': 'Jamie Dimon', 'status': 'pending',
+             'expected_report_date': '2026-04-15'},
+            {'id': 'bac', 'bank': 'Bank of America', 'ticker': 'BAC',
+             'ceo': 'Brian Moynihan', 'status': 'pending',
+             'expected_report_date': '2026-04-15'},
+        ],
+    }, indent=2), encoding='utf-8')
+
     try:
         result = validator.validate()
     except SystemExit:
@@ -295,9 +319,23 @@ def test_validator_offline(tmp_dir):
         _test('Report has status', 'status' in rpt)
         _test('Report has summary', 'summary' in rpt)
         _test('Summary has total_checks', 'total_checks' in rpt.get('summary', {}))
+        n_crit = rpt.get('summary', {}).get('critical_divergences', 99)
+        if n_crit > 0:
+            print('  DEBUG: critical findings ↓')
+            def _walk(obj, path=''):
+                if isinstance(obj, dict):
+                    sev = obj.get('severity')
+                    if sev in ('critical', 'divergence'):
+                        print(f'    - [{path}] {str(obj.get("check",""))[:80]} | {str(obj.get("reason",""))[:120]}')
+                    for k, v in obj.items():
+                        _walk(v, f'{path}.{k}' if path else k)
+                elif isinstance(obj, list):
+                    for i, v in enumerate(obj):
+                        _walk(v, f'{path}[{i}]')
+            _walk(rpt)
         _test('No critical divergences (fixture data)',
-              rpt.get('summary', {}).get('critical_divergences', 99) == 0,
-              f'found {rpt.get("summary", {}).get("critical_divergences", "?")}')
+              n_crit == 0,
+              f'found {n_crit}')
 
 
 def test_snapshot(tmp_dir):

@@ -89,7 +89,7 @@ Supporting scripts:
 - `data/style_guide.md` — Human-curated visual contract (layout, typography, color, spacing, cross-tab consistency rules). Read by Agent 8 vision review; cited by Agent 7 DOM checks.
 - `data/editorial_report.json` — Per-piece editorial-review findings (deterministic linters + optional LLM audit). Read by `ceo_grade_gate.py`.
 - `data/ceo_grade_verdict.json` — Aggregated go/no-go verdict across validator + visual_qa + vision_review + editorial + repair_incident. Read this in publish-step CI.
-- `.github/workflows/briefing.yml` — Main CI pipeline (Agents 1-8, weekly Fri + monthly 2nd Sat)
+- `.github/workflows/briefing.yml` — Main CI pipeline (Agents 0–10 + CEO-grade gate). Schedule: weekly Sat 08:00 EDT / 07:00 EST (cron `0 12 * * 6`); monthly deep refresh 2nd Sat 10:00 EDT / 09:00 EST (cron `0 14 8-14 * 6`). UTC-based, so local clock drifts ±1h across DST — documented and intentional. Saturday cadence is deliberate: BLS NFP prints Fri 08:30 ET and FRED morning batches refresh Fri afternoon; Saturday picks up clean data. **Publish flow: validator → repair_agent → re-render → visual_qa → visual_review → editorial_review → ceo_grade_gate (PASS/WARN) → snapshot → commit → deploy → healthcheck → publisher (email only after healthcheck PASS).**
 - `.github/workflows/earnings_agent.yml` — Agent 9 cron (quarterly, earnings-season only — Jan/Apr/Jul/Oct days 10-28, 10pm UTC)
 - `.github/workflows/smoke-tests.yml` — PR smoke tests
 

@@ -777,10 +777,25 @@ def check_earnings_verbatim():
             continue
         transcript_path = transcripts_qdir / f'{ticker}.txt'
         if not transcript_path.exists():
+            # Severity ladder: if the bank's status is 'reported' but no
+            # transcript is archived, the verbatim gate cannot run — and any
+            # quoted text in bank_earnings.json could be fabricated or vintage-
+            # stale. Promote to 'critical' so the CEO-grade gate blocks publish.
+            # For non-reported banks (pending/skipped), missing transcript is
+            # expected → stays 'warning'.
+            is_reported = (b.get('status') == 'reported')
             findings.append({
                 'check': f'{ticker}: transcript archived for verbatim check',
-                'severity': 'warning', 'pass': False,
-                'reason': f'no file at {transcript_path.relative_to(Path(__file__).parent.parent)} — enforcement skipped for this bank',
+                'severity': 'critical' if is_reported else 'warning',
+                'pass': False,
+                'reason': (
+                    f'status=reported but no transcript at '
+                    f'{transcript_path.relative_to(Path(__file__).parent.parent)} '
+                    f'— verbatim gate cannot enforce; quoted spans may be fabricated/vintage-stale'
+                ) if is_reported else (
+                    f'no file at {transcript_path.relative_to(Path(__file__).parent.parent)} '
+                    f'— enforcement skipped for this bank'
+                ),
             })
             continue
 
