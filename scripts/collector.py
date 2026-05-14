@@ -378,7 +378,16 @@ def collect():
     # Used as the headline wage growth KPI; AHETPI retained for level charts
     # and sector breakdowns (Atlanta Fed has no sector decomposition).
     data['wage_growth_atl'] = fred_obs('FRBATLWGT3MMAUMHWGO', 60)
-    data['jolts']       = fv('JTSJOL')
+    # JOLTS suite — B3.1. JTSJOL stays as a single-value KPI; the *_hist
+    # series feed a forthcoming JOLTS chart panel (24 obs = 2 yrs monthly).
+    # V/U ratio is computed downstream from jolts_hist + unemploy_hist
+    # (UNEMPLOY is the BLS unemployed-level series in thousands, NOT the
+    # unemployment rate — UNRATE — that the dashboard already shows).
+    data['jolts']       = fv('JTSJOL')                  # Job Openings (latest)
+    data['jolts_hist']  = fred_obs('JTSJOL', 24)        # Job Openings — history
+    data['quits']       = fred_obs('JTSQUL', 24)        # Quits Level
+    data['hires']       = fred_obs('JTSHIL', 24)        # Hires Level
+    data['unemploy_hist'] = fred_obs('UNEMPLOY', 24)    # Unemployed (level, for V/U)
     # UMich Consumer Sentiment: direct source gives prelim flag + fresher data;
     # FRED fills history older than the direct CSV's 13-month window (all final).
     umich_direct = umich_fetch()
@@ -449,6 +458,19 @@ def collect():
     # separate fetch needed. The bad CUSR0000SA0E ID returned 400s for months.
     data['cpi_used_cars'] = fred_obs('CUSR0000SETA02',24) # Used Cars & Trucks
 
+    # Inflation breadth — B3.3. Cleveland Fed publishes trimmed-mean and
+    # weighted-median CPI as smoothed signals that drop the most volatile
+    # 8% of categories per side and the volatility-weighted middle. These
+    # consistently lead the Fed's preferred-measure narrative ahead of
+    # headline CPI/PCE turns. Series are already in YoY% form (157SFRBCLE
+    # publishes as 12-month percent change, no _yoy_from_index needed).
+    # Supercore (services ex-shelter) has no clean FRED series and is
+    # composed at runtime in the renderer when needed.
+    # NTRI (New-Tenant Rent Index) is BLS-experimental and not yet on
+    # FRED; deferred to a later batch when BLS promotes the series.
+    data['cpi_trimmed']  = fred_obs('TRMMEANCPIM157SFRBCLE', 24)
+    data['cpi_median']   = fred_obs('MEDCPIM157SFRBCLE',     24)
+
     # PCE top-level component price indexes (BEA Table 2.3.4 via FRED) for
     # PCE_CAT_MOM auto-rebuild. BEA only publishes monthly chain-type price
     # indexes at the top-aggregate level — services sub-categories (housing,
@@ -476,6 +498,26 @@ def collect():
     data['cc_delinq']   = fred_obs('DRCCLACBS',  108)
     data['mtg_delinq']  = fred_obs('DRSFRMACBS', 12)
     data['tdsp']        = fred_obs('TDSP',   30)   # Household Debt Service Ratio (% of disp. income)
+
+    # Fed liquidity — B3.4. Four weekly H.4.1 series that jointly describe
+    # the size and composition of the Fed's balance sheet and the system
+    # cash that sits outside private bank reserves. Watch list:
+    #   WALCL      Fed total assets (size of the balance sheet itself —
+    #              flat-or-shrinking signals QT, rising signals QE)
+    #   WRESBAL    Bank reserves at the Fed (the cash buffer that flows
+    #              into repo when the Treasury issues bills — when this
+    #              dips toward $3T, money-market plumbing gets tight)
+    #   RRPONTSYD  Overnight reverse-repo facility take-up (the marginal
+    #              parking lot for excess MMF cash; near-zero = MMF cash
+    #              has been redeployed and won't backstop falling reserves)
+    #   WTREGEN    Treasury General Account at the Fed (debt-ceiling and
+    #              issuance dynamics drain/refill this; a falling TGA
+    #              floods reserves into the system)
+    # 104 obs ≈ 2 yrs of weekly data — enough for a regime-cycle chart.
+    data['walcl']      = fred_obs('WALCL',      104)
+    data['wresbal']    = fred_obs('WRESBAL',    104)
+    data['rrpontsyd']  = fred_obs('RRPONTSYD',  104)
+    data['tga']        = fred_obs('WTREGEN',    104)
 
     # ── Annual history for chart rebuilding (from 2000) ──────────────
     print('  [History] Annual chart series...')
