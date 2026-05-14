@@ -3012,7 +3012,11 @@ def render():
     # VALIDATION_REPORT is no longer inlined — dashboard fetches
     # data/validation_report.json at runtime (see METHODOLOGY.md §5).
 
-    HTML_FILE.write_text(html, encoding='utf-8')
+    # NOTE: HTML_FILE.write_text(html) is intentionally deferred to __main__
+    # AFTER the --strict gate has evaluated zero_replacement_errors. This way
+    # a silent-injection failure in --strict mode no longer leaves a stale or
+    # half-patched HTML on disk. Non-strict mode still writes unconditionally
+    # because that's the legacy weekly cadence contract.
 
     # ── Revision detection: flag when source data changed key values ──
     revisions = []
@@ -3042,7 +3046,7 @@ def render():
         for r in revisions:
             print(f'     → {r}')
 
-    print(f'[Agent 4] Done — {len(applied)} patches, {len(errors)} errors, {len(warnings)} warnings | {HTML_FILE.stat().st_size:,} bytes')
+    print(f'[Agent 4] Done — {len(applied)} patches, {len(errors)} errors, {len(warnings)} warnings | {len(html.encode("utf-8")):,} bytes (pending write)')
     for a in applied:  print(f'  ✅ {a}')
     for e in errors:   print(f'  ⚠  {e}')
     for w in warnings: print(f'  ℹ  {w}')
@@ -3064,7 +3068,7 @@ def render():
 
     # Exit 1 only on hard errors, not on missing KPI labels
     hard_errors = [e for e in errors if 'missing' in e.lower() or 'ERROR' in e]
-    return len(hard_errors) == 0
+    return (len(hard_errors) == 0, html)
 
 
 if __name__ == '__main__':
@@ -3074,10 +3078,19 @@ if __name__ == '__main__':
     # known-good. The weekly Saturday CI Agent 4 step does NOT pass --strict
     # so any pre-validator JSON-shape drift surfaces as a SUMMARY warning
     # rather than blocking the cadence.
+    #
+    # HTML write ordering: render() now returns the patched HTML in-memory
+    # without touching disk. We only commit to HTML_FILE AFTER the strict
+    # gate decides — so a --strict failure leaves the previous good HTML
+    # intact rather than landing a half-patched file. Non-strict runs still
+    # write unconditionally (legacy weekly cadence behaviour).
     strict = '--strict' in sys.argv[1:]
-    ok = render()
+    ok, html_out = render()
     if strict and zero_replacement_errors:
         print(f'[Agent 4] --strict gate FAILED — {len(zero_replacement_errors)} '
-              f'silent injection failure(s) listed above. Exiting 2.')
+              f'silent injection failure(s) listed above. Exiting 2 WITHOUT '
+              f'writing index.html — previous version preserved on disk.')
         sys.exit(2)
+    HTML_FILE.write_text(html_out, encoding='utf-8')
+    print(f'[Agent 4] index.html written — {HTML_FILE.stat().st_size:,} bytes')
     sys.exit(0 if ok else 1)

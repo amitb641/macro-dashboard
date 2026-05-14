@@ -657,7 +657,7 @@ body{overflow-x:hidden}
    Institutional Light · DM Sans · Sapphire
    ═══════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap');
 
 /* ── GLOBAL RESETS ── */
 *, *::before, *::after { font-family: 'DM Sans', system-ui, sans-serif; }
@@ -2282,7 +2282,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-sub">Two single-axis panels — each metric reads on its own scale. Top: home-price momentum (Case-Shiller YoY %). Bottom: financing cost (30yr fixed mortgage rate %).</div>
     <div class="split-stack">
       <div class="split-stack-row"><canvas id="c-housing-mom" role="img" aria-label="Housing prices month-over-month"></canvas></div>
-      <div class="split-stack-row"><canvas id="c-housing-mom-2"></canvas></div>
+      <div class="split-stack-row"><canvas id="c-housing-mom-2" role="img" aria-label="30-year mortgage rate trend"></canvas></div>
     </div>
     <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Why both: mortgage rate is the cost-of-capital input; Case-Shiller YoY is the lagged price response. They are read together, not visually correlated — scales differ by ~3x.</p>
   </div>
@@ -2314,7 +2314,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div class="panel-sub">Two single-axis panels. Top: NAR Affordability Index (100 = qualifying income at median home / median family). Bottom: Months Supply with a 6.0 balanced-market reference line — below 6 = seller's market, above 6 = buyer's market.</div>
       <div class="split-stack">
         <div class="split-stack-row"><canvas id="c-afford" role="img" aria-label="Housing affordability index trend"></canvas></div>
-        <div class="split-stack-row"><canvas id="c-afford-2"></canvas></div>
+        <div class="split-stack-row"><canvas id="c-afford-2" role="img" aria-label="Months of housing supply versus 6-month balanced-market reference"></canvas></div>
       </div>
       <p class="src">Source: NAR Housing Affordability Index; NAR Existing Home Sales (months supply). Why both: affordability gates whether households can transact; months supply tells you who has the pricing power once they do. Different units, different stories — shown separately on purpose.</p>
     </div>
