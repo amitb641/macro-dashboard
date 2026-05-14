@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-05-13T01:13:56.847649Z",
-  "status": "PASS",
+  "checked_at": "2026-05-14T21:12:14.916148Z",
+  "status": "FAIL",
   "summary": {
-    "total_checks": 326,
-    "passed": 326,
-    "failed": 0,
+    "total_checks": 349,
+    "passed": 337,
+    "failed": 12,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -313,6 +313,31 @@
     },
     {
       "category": "GDP",
+      "check": "Commentary positioned above first chart",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Commentary sentence count in [2,4]",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
+      "check": "Commentary color matches palette",
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+    },
+    {
+      "category": "GDP",
+      "check": "Panel \"GDP Commentary \u2014 2025 Growth & 2026 Outl\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
       "check": "Panel \"Broad Sector Groups \u2014 Real GDP % Change\" has title",
       "pass": true,
       "severity": "ok"
@@ -361,6 +386,12 @@
     },
     {
       "category": "Jobs",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -374,12 +405,13 @@
     {
       "category": "Jobs",
       "check": "Commentary color matches palette",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"\ud83d\udccb Jobs Market Commentary \u2014 2025 & 2026 O\" has title",
+      "check": "Panel \"Jobs Market Commentary \u2014 2025 & 2026 Out\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -410,6 +442,12 @@
     {
       "category": "Jobs",
       "check": "Panel \"Employment Change by Sector \u2014 Annual Net\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"Labour Market Churn \u2014 JOLTS Openings, Qu\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -476,12 +514,13 @@
     {
       "category": "Unemployment",
       "check": "Commentary color matches palette",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"\ud83d\udc77 Unemployment Commentary \u2014 Trends & Ris\" has title",
+      "check": "Panel \"Unemployment Commentary \u2014 Trends & Risk \" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -572,12 +611,13 @@
     {
       "category": "Wages",
       "check": "Commentary color matches palette",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
     },
     {
       "category": "Wages",
-      "check": "Panel \"\ud83d\udcb5 Wage Growth Commentary \u2014 Nominal vs Re\" has title",
+      "check": "Panel \"Wage Growth Commentary \u2014 Nominal vs Real\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -649,6 +689,12 @@
     },
     {
       "category": "CPI",
+      "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -662,12 +708,13 @@
     {
       "category": "CPI",
       "check": "Commentary color matches palette",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
     },
     {
       "category": "CPI",
-      "check": "Panel \"\ud83d\uded2 CPI Commentary \u2014 Inflation Trajectory \" has title",
+      "check": "Panel \"CPI Commentary \u2014 Inflation Trajectory & \" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -698,6 +745,12 @@
     {
       "category": "CPI",
       "check": "Panel \"CPI Category Annual Rates\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"Inflation Breadth \u2014 Trimmed-Mean & Media\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -794,12 +847,13 @@
     {
       "category": "Consumer & PCE",
       "check": "Commentary color matches palette",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"\ud83d\udcb3 Consumer & PCE Commentary \u2014 Spending H\" has title",
+      "check": "Panel \"Consumer & PCE Commentary \u2014 Spending Hea\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -895,6 +949,12 @@
     },
     {
       "category": "Rates & Yields",
+      "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -908,12 +968,25 @@
     {
       "category": "Rates & Yields",
       "check": "Commentary color matches palette",
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"Fed Rates Commentary \u2014 Policy Stance & T\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Rates & Yields",
       "check": "Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"Fed Liquidity \u2014 Balance Sheet, Reserves,\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -998,6 +1071,13 @@
     {
       "category": "Credit",
       "check": "Commentary color matches palette",
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"Credit Commentary \u2014 Spread Complacency &\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1076,6 +1156,13 @@
     {
       "category": "Banking",
       "check": "Commentary color matches palette",
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"Banks Commentary \u2014 Earnings, NII & Credi\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1153,6 +1240,18 @@
     },
     {
       "category": "Housing",
+      "check": "Chart canvas 5 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Chart canvas 6 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -1166,12 +1265,13 @@
     {
       "category": "Housing",
       "check": "Commentary color matches palette",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
     },
     {
       "category": "Housing",
-      "check": "Panel \"\ud83c\udfe0 Housing Commentary \u2014 Affordability Cri\" has title",
+      "check": "Panel \"Housing Commentary \u2014 Affordability Crisi\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1268,6 +1368,13 @@
     {
       "category": "Oil",
       "check": "Commentary color matches palette",
+      "pass": false,
+      "severity": "warning",
+      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"Oil Commentary \u2014 Supply Shock & Macro Tr\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1357,7 +1464,7 @@
     },
     {
       "category": "Sources",
-      "check": "Panel \"\ud83e\udd16 Dynamic Commentary \u2014 AI-Generated from\" has title",
+      "check": "Panel \"Dynamic Commentary \u2014 AI-Generated from L\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1382,8 +1489,9 @@
     {
       "category": "Dashboard",
       "check": "Commentary sentence count in [2,4]",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "8 sentences (style_guide \u00a72)"
     },
     {
       "category": "Dashboard",
@@ -1964,6 +2072,48 @@
     {
       "category": "data",
       "check": "SHOCK_TRACKER all 8 phase titles rendered",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: \"Fed 2% target\" present \u22652\u00d7 (c-cpi-mom, c-pce-mom (+ PCE annual series legend))",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: \"Hormuz shock, Mar 2026\" present \u22653\u00d7 (c-cpi-mom, c-pce-mom, c-oil-monthly)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: \"Neutral rate, 2.5\u20133.0%\" present \u22651\u00d7 (c-ffr)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: legacy string \"Fed 2% Target\" not present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: legacy string \"Mar 2026 oil shock\" not present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: legacy string \"FOMC neutral rate\" not present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "annotations",
+      "check": "lexicon: legacy string \"\"Oil shock\"\" not present",
       "pass": true,
       "severity": "ok"
     }

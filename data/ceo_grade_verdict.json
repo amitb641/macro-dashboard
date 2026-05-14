@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-05-14T21:15:56Z",
+  "overall": "FAIL",
+  "strict": true,
+  "headline": "❌ CEO-grade gate FAILED — 3 critical finding(s) block publish.",
+  "totals": {
+    "critical": 3,
+    "warning": 56
+  },
+  "missing": [],
+  "layers": {
+    "validator": {
+      "layer": "validator",
+      "status": "FAIL",
+      "critical": 1,
+      "warning": 26,
+      "skipped": 8,
+      "total": 561,
+      "validator_status": "WARN"
+    },
+    "visual_qa": {
+      "critical": 0,
+      "warning": 12,
+      "skipped": 0,
+      "ok": 337,
+      "total": 349,
+      "status": "WARN",
+      "layer": "visual_qa"
+    },
+    "vision_review": {
+      "critical": 2,
+      "warning": 17,
+      "skipped": 0,
+      "ok": 10,
+      "total": 29,
+      "status": "FAIL",
+      "layer": "vision_review"
+    },
+    "editorial": {
+      "critical": 0,
+      "warning": 1,
+      "skipped": 0,
+      "ok": 0,
+      "total": 1,
+      "pieces_audited": 14,
+      "status": "WARN",
+      "layer": "editorial"
+    },
+    "repair_incident": {
+      "layer": "repair_incident",
+      "status": "PASS",
+      "critical": 0,
+      "warning": 0,
+      "skipped": 0,
+      "total": 0,
+      "note": "no incident report for today"
+    }
+  }
+}

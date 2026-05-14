@@ -1,40 +1,40 @@
 {
-  "analyzed_at": "2026-05-13T01:12:19.830567Z",
+  "analyzed_at": "2026-05-14T21:10:41.648436Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 1,
-  "flagged_count": 0,
+  "flagged_count": 2,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.95,
-    "dgs5": 4.07,
-    "dgs10": 4.42,
-    "dgs30": 4.98,
-    "ig_oas": 78,
-    "hy_oas": 279,
+    "dgs2": 3.98,
+    "dgs5": 4.12,
+    "dgs10": 4.46,
+    "dgs30": 5.03,
+    "ig_oas": 76,
+    "hy_oas": 282,
     "unrate": 4.3,
     "u6rate": 8.2,
     "nfp_level": 158736.0,
     "nfp_mom": 115,
-    "icsa": 189000.0,
-    "ccsa": 1785000.0,
-    "wages_yoy": 3.9,
+    "icsa": 211000.0,
+    "ccsa": 1782000.0,
+    "wages_yoy": 3.6,
     "cpi_yoy": 3.78,
     "core_cpi_yoy": 2.74,
     "pce_yoy": 3.5,
     "core_pce_yoy": 3.2,
     "saving_rate": 3.6,
-    "mortgage30": 6.37,
+    "mortgage30": 6.36,
     "housing_starts": 1502.0,
     "cs_hpi_yoy": 0.66,
     "umcsent": 48.2,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
-    "wti": 109.76,
-    "brent": 118.26,
+    "wti": 105.78,
+    "brent": 111.37,
     "gdp_growth_q": 2.0,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 47
+    "spread_10_2_bp": 48
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.42,
-      "delta": 0.0,
+      "value": 4.46,
+      "delta": 0.04,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ig_oas": {
-      "value": 78,
-      "delta": 0,
+      "value": 76,
+      "delta": -2,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 279,
-      "delta": 0,
+      "value": 282,
+      "delta": 3,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -94,24 +94,24 @@
       "alert": null
     },
     "wti": {
-      "value": 109.76,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 105.78,
+      "delta": -3.98,
+      "direction": "falling",
+      "flagged": true,
       "alert": "alert"
     },
     "mortgage30": {
-      "value": 6.37,
-      "delta": 0.0,
+      "value": 6.36,
+      "delta": -0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "wages_yoy": {
-      "value": 3.9,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 3.6,
+      "delta": -0.3,
+      "direction": "falling",
+      "flagged": true,
       "alert": null
     },
     "cs_hpi_yoy": {
@@ -122,8 +122,8 @@
       "alert": null
     },
     "icsa": {
-      "value": 189000.0,
-      "delta": 0.0,
+      "value": 211000.0,
+      "delta": 22000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.95,
-      "delta": 0.0,
+      "value": 3.98,
+      "delta": 0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.07,
-      "delta": 0.0,
+      "value": 4.12,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.98,
-      "delta": 0.0,
+      "value": 5.03,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 47,
-      "delta": 0,
+      "value": 48,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -206,8 +206,8 @@
       "alert": null
     },
     "brent": {
-      "value": 118.26,
-      "delta": 0.0,
+      "value": 111.37,
+      "delta": -6.89,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -227,8 +227,8 @@
       "alert": null
     },
     "ccsa": {
-      "value": 1785000.0,
-      "delta": 0.0,
+      "value": 1782000.0,
+      "delta": -3000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,6 +241,17 @@
       "alert": null
     }
   },
-  "headlines": [],
+  "headlines": [
+    {
+      "key": "wti",
+      "line": "wti: 105.78 (\u25bc3.98 vs prior) [ALERT]",
+      "alert": "alert"
+    },
+    {
+      "key": "wages_yoy",
+      "line": "wages_yoy: 3.60 (\u25bc0.30 vs prior)",
+      "alert": null
+    }
+  ],
   "raw_errors": []
 }

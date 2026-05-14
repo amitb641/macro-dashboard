@@ -1,0 +1,139 @@
+{
+  "generated_at": "2026-05-14T21:15:55Z",
+  "pieces_audited": 14,
+  "llm_enabled": true,
+  "llm_calls_used": 14,
+  "guardrails": {
+    "disabled": false,
+    "diagnostician_enabled": false,
+    "max_llm_calls": 20,
+    "calls_used": 14,
+    "anthropic_key_set": true
+  },
+  "severity_counts": {
+    "critical": 0,
+    "warning": 1,
+    "minor": 0
+  },
+  "pieces": [
+    {
+      "label": "html:commentary-gdp",
+      "text_preview": "Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The ",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-unemp",
+      "text_preview": "U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% — a 190bp spread over U-3 — signa",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-cpi",
+      "text_preview": "Headline CPI at 3.8% YoY is running nearly 90bp above Core CPI at 2.7%, a gap almost entirely attributable to energy — WTI at $109.8 is the dominant driver and it is not yet fully reflected in downstr",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-wages",
+      "text_preview": "Wage growth decelerated 30bp to 3.6% YoY — a directionally welcome signal for the Fed, but with CPI at 3.8%, real wages are now negative, compressing consumer purchasing power in real terms. This wage",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-jobs",
+      "text_preview": "NFP at 115K is a meaningful deceleration — below the ~150K threshold typically associated with labor market stability — and U-6 at 8.2% signals broader underemployment stress that the headline U-3 of ",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-pce",
+      "text_preview": "Core PCE at 3.2% — the Fed's preferred measure — remains 120bp above target and is the single most important number blocking any dovish pivot. Headline PCE at 3.5% reflects the same energy-driven wedg",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-banks",
+      "text_preview": "Credit card delinquency at 2.9% is a direct stress indicator for consumer lending books and is trending in the wrong direction given the 4.3% unemployment rate and near-zero real wage growth. Net inte",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-gdp",
+      "text_preview": "Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The ",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-oil",
+      "text_preview": "WTI fell $3.98 to $105.78 and Brent sits at $111.4 — the drop provides modest headline CPI relief but the absolute level remains a significant cost-push inflation driver across transportation, manufac",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-credit",
+      "text_preview": "IG OAS at 78bp remains historically tight and reflects a market that has not yet priced the deteriorating macro backdrop — this is a complacency risk, not a green light. HY OAS at 279bp is wider but s",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-housing",
+      "text_preview": "The 30-year mortgage at 6.37% continues to lock existing homeowners in place and suppress transaction volume, while Housing Starts at 1,502K suggest builders are still active but are running ahead of ",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-yield",
+      "text_preview": "The 10Y-2Y spread has re-steepened to 48bp, reflecting market pricing of eventual Fed cuts rather than a clean all-clear on growth. With the Fed Funds rate at 3.64% and 10Y at 4.46%, real rates remain",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-fiscal",
+      "text_preview": "The federal deficit as a share of GDP is the single most direct measure of how much the government is adding to (or subtracting from) aggregate demand. At the current trajectory, deficits remain eleva",
+      "sentence_count": 3,
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    },
+    {
+      "label": "html:commentary-stack",
+      "text_preview": "A weekly read on the U.S. economy — refreshed automatically, every chart sourced, every commentary written from this week's data.\n        Behind this dashboard is an automated pipeline that refreshes ",
+      "sentence_count": 8,
+      "findings": [
+        {
+          "rule": "style_guide §2 — commentary 2–4 sentences",
+          "severity": "warning",
+          "detail": "sentence_count=8 (band [2,4])",
+          "fixable": "rewrite to 2-4 declarative sentences"
+        }
+      ],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
+    }
+  ]
+}
