@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-15T05:05:58.372620Z",
+  "validated_at": "2026-05-15T14:03:46.187438Z",
   "status": "WARN",
   "summary": {
     "total_checks": 577,
     "passed": 550,
     "failed": 27,
-    "skipped": 8,
+    "skipped": 10,
     "critical_divergences": 1
   },
   "internal_consistency": [
@@ -679,11 +679,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.36,
-      "fresh_api_value": 6.36,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -779,7 +776,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-15T05:04:17.530056Z",
+      "collected_at": "2026-05-15T14:00:18.366583Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1455,9 +1452,10 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector errors: none recorded",
-      "pass": true,
-      "severity": "ok"
+      "check": "FRED fetch: AHETPI",
+      "pass": false,
+      "severity": "warning",
+      "note": "500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
     }
   ],
   "seed_drift": [
@@ -3712,14 +3710,9 @@
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
-      "pass": false,
-      "severity": "warning",
-      "metric": "core_cpi",
-      "fred": 335.423,
-      "bls": 336,
-      "diff": 0.577,
-      "tol": 0.336,
-      "note": "FRED 335.423 vs BLS 336 (\u0394=0.5770, tol=0.3360). One side may be stale or revised."
+      "pass": true,
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     }
   ],
   "noise_floor": [

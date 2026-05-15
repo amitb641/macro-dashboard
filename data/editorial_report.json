@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-05-15T05:20:14Z",
+  "generated_at": "2026-05-15T14:16:52Z",
   "pieces_audited": 14,
   "llm_enabled": true,
-  "llm_calls_used": 14,
+  "llm_calls_used": 15,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 14,
+    "calls_used": 15,
     "anthropic_key_set": true
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 1,
-    "minor": 0
+    "warning": 4,
+    "minor": 1
   },
   "pieces": [
     {
@@ -42,7 +42,7 @@
     },
     {
       "label": "html:commentary-wages",
-      "text_preview": "Wage growth decelerated 30bp to 3.6% YoY, narrowing the gap with CPI at 3.8% and leaving real wages negative on a headline basis. This is a dual negative: it reduces consumer purchasing power at a tim",
+      "text_preview": "Wage growth decelerated 30bp to 3.6% YoY, a directionally positive signal for the Fed but insufficient to declare victory — real wages remain barely positive against CPI at 3.8%, meaning consumer purc",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -50,7 +50,7 @@
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "NFP at 115K is a meaningful step down and sits below the ~150K threshold generally associated with labor market stability at current participation levels. U-3 at 4.3% and U-6 at 8.2% — a 390bp gap — i",
+      "text_preview": "NFP at 115K is a meaningful deceleration — below the ~150K threshold typically associated with labor market stability — and U-6 at 8.2% against U-3 at 4.3% signals a widening gap in underemployment th",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,7 +82,7 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI dropped $3.98 to $105.78 and Brent sits at $111.4 — the magnitude of the single-session move warrants immediate attention as to whether this is demand destruction signaling or a supply-side releas",
+      "text_preview": "WTI dropped $3.98 to $105.78 and Brent sits at $111.4, a spread of $5.62 that reflects ongoing logistical and geopolitical differentials. The sharp WTI decline is an alert-level move — at this price l",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -106,11 +106,40 @@
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y-2Y spread has re-steepened to 48bp, suggesting markets are beginning to price in eventual Fed easing, but the 10Y at 4.46% reflects persistent inflation risk premium. With Fed Funds at 3.64% a",
+      "text_preview": "The 10Y-2Y spread at 48bp reflects a curve that has re-steepened from inversion but has not normalized to levels consistent with a healthy expansion. With Fed Funds at 3.64% and the 2Y at 3.98%, marke",
       "sentence_count": 3,
-      "findings": [],
-      "llm_confidence": null,
-      "critique_confirms_critical": null
+      "findings": [
+        {
+          "rule": "style_guide §2.1",
+          "severity": "warning",
+          "detail": "Commentary is 3 sentences but the third sentence is heavily clause-stuffed, violating the 'one declarative claim per sentence' rule.",
+          "fixable": "Split into two sentences: 'The Fed remains on hold — Core PCE at 3.2% gives no cover for easing.' followed by 'A cut before inflation sustainably approaches 2.5% risks a credibility-damaging re-acceleration.'",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.3",
+          "severity": "warning",
+          "detail": "Core PCE cited at 3.2% — this figure is not verifiable against the provided data context and is likely stale or incorrect. Current Core PCE YoY is well below 3.2% as of recent BEA releases (running closer to 2.6-2.8% range). If the dashboard KPI tile shows a different value, this is a cross-surface mismatch violating Validator Pass 3e. [critic downgraded]",
+          "fixable": "Replace '3.2%' with the value shown in the current render cycle's Core PCE KPI tile.",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.3",
+          "severity": "warning",
+          "detail": "Forward-looking claim — 'risks a credibility-damaging re-acceleration' — is presented as the dashboard's own assessment with no institutional attribution (no Fed, Goldman, CME, etc. cited).",
+          "fixable": "Attribute explicitly, e.g. 'risks what Fed officials have described as a credibility-damaging re-acceleration' or cite a specific institutional source.",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.2",
+          "severity": "minor",
+          "detail": "'sustainably approaches' is mild hedging filler that softens an otherwise declarative sentence.",
+          "fixable": "Replace 'sustainably approaches 2.5%' with 'returns to 2.5% on a durable basis' or simply 'falls to 2.5%'.",
+          "origin": "llm_audit"
+        }
+      ],
+      "llm_confidence": "medium",
+      "critique_confirms_critical": false
     },
     {
       "label": "html:commentary-fiscal",

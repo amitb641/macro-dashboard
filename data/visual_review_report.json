@@ -1,12 +1,12 @@
 {
-  "reviewed_at": "2026-05-15T05:10:07.742810Z",
+  "reviewed_at": "2026-05-15T14:07:57.550766Z",
   "summary": {
     "status": "FAIL",
     "tabs_reviewed": 12,
-    "total_defects": 63,
-    "critical": 5,
-    "warnings": 37,
-    "minor": 21,
+    "total_defects": 68,
+    "critical": 4,
+    "warnings": 41,
+    "minor": 23,
     "passed_tabs": 5
   },
   "findings": [
@@ -16,88 +16,79 @@
       "category": "TEXT_ILLEGIBLE",
       "element": "2026 Forecast Scenarios \u2014 Institution Comparison table (Key View and As Of columns)",
       "severity": "warning",
-      "detail": "The 'Key View' and 'As Of' columns in the institution comparison table contain very small, dense text that is extremely difficult to read at dashboard viewing scale. Multiple rows of narrative text are compressed into narrow cells, making them illegible for a CEO-level audience.",
+      "detail": "The 'Key View' and 'As Of' columns in the institution comparison table contain dense, small-font narrative text that is extremely difficult to read at dashboard resolution. This would be called out immediately in a board-level review.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Sector tiles (Passenger Airlines, Hotels, Restaurants, etc.) \u2014 commentary text",
+      "element": "Sector tiles commentary text (Passenger Airlines, Hotels, Restaurants, etc.)",
       "severity": "warning",
-      "detail": "The body commentary text within each sector tile (e.g., 'Stamp', 'Clamp', 'Macro' labels and associated narrative) is rendered at an extremely small font size, making it unreadable without zooming in. This is below the minimum legible size for a board-level presentation.",
+      "detail": "The 'stamp' and narrative commentary text within each sector tile (bottom third of each card) is rendered at a very small font size, making it illegible without zooming in. This is below the minimum readable size for a CEO-facing board deck.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Key 2025 Actuals & 2026 Themes \u2014 numbered bullet commentary",
+      "element": "Key 2025 Actuals & 2026 Themes section \u2014 numbered bullet body text",
       "severity": "warning",
-      "detail": "The six numbered bullet points at the bottom of the page are rendered in very small font. The dense paragraph text is difficult to read at normal dashboard resolution, particularly for a board deck context.",
+      "detail": "The five numbered theme bullets at the bottom of the tab contain very small body text. At board-deck resolution the detail sentences are illegible.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "LABEL_TRUNCATED",
-      "element": "2025 Quarterly GDP \u2014 BEA Estimates bar chart (x-axis labels)",
-      "severity": "minor",
-      "detail": "The x-axis quarter labels (Q1 2025, Q2 2025, etc.) and the 'Q1 2026' label appear compressed and partially cut off at the right edge of the chart area.",
+      "element": "2025 Quarterly GDP bar chart \u2014 Q1 2025 negative bar label",
+      "severity": "warning",
+      "detail": "The negative value label on the Q1 2025 bar appears to be clipped or partially obscured by the chart boundary, making the exact figure hard to confirm.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "COMMENTARY_PLACEMENT",
-      "element": "fc-note commentary block (Real GDP growth paragraph)",
+      "element": "Outlook tab fc-note commentary block",
       "severity": "critical",
-      "detail": "The commentary note ('Real GDP growth of 2.0% annualized is holding above stall speed\u2026') appears to be placed above the charts on this tab, which is correct in position, but it is rendered as a very small-font block that is difficult to distinguish as the leading editorial note. However, verifying exact placement relative to the first chart is borderline \u2014 the block does precede the charts visually.",
+      "detail": "The grey commentary/narrative box ('Real GDP growth of 2.0% annualized\u2026') appears to sit between the tab navigation bar and the first chart panel rather than clearly preceding it as a distinct above-chart element. On close inspection it is placed correctly in sequence, but the visual separation from the tab bar is minimal and could be confused with a header rather than a formal fc-note. Flagging for review against the requirement that commentary unambiguously precedes the first chart.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "COPY_QUALITY",
-      "element": "fc-note commentary block (Real GDP growth paragraph)",
+      "element": "Outlook tab fc-note commentary block",
       "severity": "warning",
-      "detail": "The commentary block contains hedging language ('could provide temporary offsets') and runs as a single long run-on sentence that exceeds the 4-sentence maximum. The style guide requires 2\u20134 sentences with no hedging filler.",
+      "detail": "The commentary block contains hedging language ('could provide temporary offsets', 'could precede') and runs to approximately 3 sentences but includes qualifiers that soften the analytical stance beyond what the style guide permits for CEO-level copy. The phrase 'domestic demand is the linchpin and it is weakening' is strong, but the preceding clauses dilute it with multiple conditional hedges.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "2024 vs 2025 vs 2026F \u2014 Key Macro Indicators chart (axis labels and bar labels)",
+      "category": "MISSING_LEGEND",
+      "element": "2024 vs 2025 vs 2026F \u2014 Key Macro Indicators grouped bar chart",
       "severity": "warning",
-      "detail": "The grouped bar chart on the right side of the GDP section has very small axis tick labels and data labels on the bars that are nearly illegible at the rendered size. Category labels on the x-axis are compressed and hard to distinguish.",
+      "detail": "The chart uses three distinct bar colors (blue, green, gold/orange) representing 2024 Actual, 2025 Actual, and 2026 Forecast respectively. A legend is shown but is very small and low-contrast at the top of the chart area, making it difficult to confirm which color maps to which year without zooming in.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "LAYOUT_ISSUE",
-      "element": "Sector tiles grid (bottom section)",
+      "element": "Sector tile grid (bottom section \u2014 12 sector cards)",
       "severity": "minor",
-      "detail": "The sector tiles (12 tiles across two rows) show inconsistent vertical heights \u2014 the second row tiles (Pharmaceuticals, Residential Real Estate, Commercial RE, Auto Manufacturing, Federal Government, Freight & Logistics) appear taller than the first row tiles, creating uneven spacing and misalignment across the grid.",
+      "detail": "The sector cards in the bottom two rows appear to have inconsistent internal padding and text overflow in several cards (e.g., Residential Real Estate, Commercial RE, Federal Government), where commentary text visibly runs close to or beyond the card boundary.",
       "pass": false
     },
     {
       "tab": "fc",
       "tab_name": "Outlook",
       "category": "SPACING_DRIFT",
-      "element": "Sector tiles \u2014 first row vs second row",
+      "element": "Sector tile grid rows vs. top KPI tile row",
       "severity": "minor",
-      "detail": "Vertical spacing and tile height visibly differ between the first row of sector tiles and the second row, breaking the uniform grid layout expected for peer panels.",
-      "pass": false
-    },
-    {
-      "tab": "fc",
-      "tab_name": "Outlook",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Source citations beneath charts and tables",
-      "severity": "minor",
-      "detail": "Source attribution lines (e.g., 'SOURCES: GOLDMAN SACHS MACRO OUTLOOK JAN 2026\u2026') are rendered at an extremely small font size throughout the page, making them effectively invisible without zooming. While source lines are typically small, they should remain minimally legible.",
+      "detail": "The vertical gap between the sector tile rows is visibly tighter than the gap between the top KPI metric tiles, creating an inconsistent rhythm across the dashboard.",
       "pass": false
     },
     {
@@ -105,71 +96,80 @@
       "tab_name": "GDP",
       "category": "TEXT_ILLEGIBLE",
       "element": "Sector panel commentary text (all sector cards)",
-      "severity": "critical",
-      "detail": "The commentary text beneath each sector bar chart is rendered at an extremely small font size (appears to be ~6-7px), making it completely unreadable at normal viewing scale. This would be embarrassing in a board deck.",
+      "severity": "warning",
+      "detail": "The commentary text beneath each sector bar chart is rendered at an extremely small font size (appears to be ~7-8px), making it effectively unreadable at normal viewing scale. This would be embarrassing in a board-level deck.",
       "pass": false
     },
     {
       "tab": "gdp",
       "tab_name": "GDP",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Annual chart data vintage / methodology footnote below sector filter bar",
+      "element": "Broad Sector Groups table \u2014 body rows",
       "severity": "warning",
-      "detail": "The footnote line ('ANNUAL-CHART DATA VINTAGE \u00b7 PINNED TO ALIGN AS OF 2026-04-01 \u00b7 REFRESH CADENCE: QUARTERLY\u2026') is rendered in very small, low-contrast gray text that is effectively illegible without zooming in.",
+      "detail": "The data rows in the 'Broad Sector Groups \u2014 Real GDP % Change' table at the bottom are rendered at a very small font size, making the year-by-year values difficult to read without zooming in.",
       "pass": false
     },
     {
       "tab": "gdp",
       "tab_name": "GDP",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Broad Sector Groups table \u2014 2026F 'Trend' column values",
-      "severity": "warning",
-      "detail": "The 'Trend' column in the Broad Sector Groups table shows colored pill labels (e.g., 'Falling', 'Slowing') but the text inside the pills is extremely small and difficult to read at dashboard scale.",
+      "element": "Annual chart data vintage / filter bar annotation text",
+      "severity": "minor",
+      "detail": "The small annotation line reading 'ANNUAL-CHART DATA VINTAGE \u00b7 PINNED TO ALPINE AS OF 2026-04-31 \u00b7 REFRESH CADENCE: QUARTERLY\u2026' is rendered at ~7px and is illegible at board presentation scale.",
       "pass": false
     },
     {
       "tab": "gdp",
       "tab_name": "GDP",
       "category": "TEXT_ILLEGIBLE",
-      "element": "KPI metric tile sub-labels and prior-period annotations (top header row)",
-      "severity": "warning",
-      "detail": "The secondary annotation lines beneath each KPI tile (e.g., 'Prior: +130K (Mar'26)', 'FOMC range: 5.00\u20135.75', etc.) are rendered at a very small size and low contrast, making them difficult to read without zooming.",
+      "element": "Source footnotes at very bottom of page",
+      "severity": "minor",
+      "detail": "The multi-line source attribution text at the bottom of the dashboard is rendered at an extremely small size and is unreadable, which could raise credibility questions if a board member tries to verify sources.",
       "pass": false
     },
     {
       "tab": "gdp",
       "tab_name": "GDP",
       "category": "LABEL_TRUNCATED",
-      "element": "GDP Commentary block \u2014 body paragraph",
-      "severity": "minor",
-      "detail": "The commentary paragraph text appears to be cut off at the right edge of the commentary box on some lines, suggesting the container width may be clipping the text rather than wrapping cleanly.",
+      "element": "KPI tile \u2014 'DEBT SERVICE RATIO Q4'25'",
+      "severity": "warning",
+      "detail": "The sub-label text beneath the 11.3% figure ('% of disp. income / Prior: 11.30 / (Q3 25)') appears clipped at the bottom of the tile, with text potentially cut off by the tile boundary.",
+      "pass": false
+    },
+    {
+      "tab": "gdp",
+      "tab_name": "GDP",
+      "category": "COPY_QUALITY",
+      "element": "GDP Commentary \u2014 2025 Growth & 2026 Outlook",
+      "severity": "warning",
+      "detail": "The commentary block contains hedging language ('increasingly fragile', 'could provide temporary offsets') and the phrase 'it is weakening' ends abruptly. The block reads as two run-on sentences rather than 2\u20134 clean declarative sentences, violating the forbidden-filler and sentence-count rules.",
       "pass": false
     },
     {
       "tab": "gdp",
       "tab_name": "GDP",
       "category": "COMMENTARY_PLACEMENT",
-      "element": "GDP Commentary \u2014 'GDP Commentary \u2014 2025 Growth & 2026 Outlook' block",
-      "severity": "warning",
-      "detail": "The commentary block appears above the KPI summary tiles but below the tab navigation bar. However, the sector-level mini-commentary notes appear below each sector chart rather than preceding them, violating the rule that fc-note commentary must precede the first chart it annotates.",
+      "element": "Sector card commentary (all ~30 sector panels)",
+      "severity": "critical",
+      "detail": "Each sector panel places its 'fc-note' commentary text below the bar chart rather than above/preceding it. Per the style guide, per-tab commentary must precede the first chart element it describes.",
       "pass": false
     },
     {
       "tab": "gdp",
       "tab_name": "GDP",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Broad Sector Groups table \u2014 source footnote at bottom",
+      "category": "LAYOUT_ISSUE",
+      "element": "Broad Sector Groups table \u2014 'TREND' column",
+      "severity": "warning",
+      "detail": "The 'TREND' column in the Broad Sector Groups table shows colored pill labels ('Falling', 'Stable', 'Rising') that appear to overflow or be partially clipped on the right edge of the table container, suggesting the table is wider than its allocated column.",
+      "pass": false
+    },
+    {
+      "tab": "gdp",
+      "tab_name": "GDP",
+      "category": "SPACING_DRIFT",
+      "element": "Sector card grid \u2014 bottom two rows (Airlines, Cruise Lines rows)",
       "severity": "minor",
-      "detail": "The sources footnote at the very bottom of the page is rendered in extremely small gray text, effectively invisible at normal resolution.",
-      "pass": false
-    },
-    {
-      "tab": "gdp",
-      "tab_name": "GDP",
-      "category": "LABEL_OVERLAP",
-      "element": "Sector bar chart panels \u2014 year-over-year percentage labels on bars",
-      "severity": "warning",
-      "detail": "In several sector panels (e.g., Software/Cloud, Inv. Banking, Chips/Hardware), the percentage change labels on the small bar charts appear to overlap adjacent bar labels due to the compressed panel width, making individual values indistinguishable.",
+      "detail": "The bottom rows of the sector card grid (Airlines through Travel Agencies) appear to have slightly larger vertical gaps between cards compared to the upper rows, creating a visually inconsistent grid rhythm.",
       "pass": false
     },
     {
@@ -193,109 +193,100 @@
     {
       "tab": "wages",
       "tab_name": "Wages",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Monthly Wage Growth chart \u2014 source/footnote text below chart",
+      "category": "LABEL_TRUNCATED",
+      "element": "KPI tile \u2014 'TOP SECTOR'",
       "severity": "warning",
-      "detail": "The source line and footnote text beneath the Monthly Wage Growth (13-Month Trend) chart is rendered at an extremely small font size, making it effectively unreadable at normal viewing scale. This would be called out in a board-level review.",
+      "detail": "The sector name 'Investment Banking' is broken across two lines and partially clipped within the tile boundary, making it read as 'Investmen t Banking'.",
       "pass": false
     },
     {
       "tab": "wages",
       "tab_name": "Wages",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Nominal vs Real Wage Growth \u2014 Annual History chart \u2014 source/footnote text",
+      "element": "Source / footnote lines beneath all three charts",
       "severity": "warning",
-      "detail": "Source and footnote text beneath the Annual History chart is rendered at a font size too small to read without significant zoom, inconsistent with board-deck legibility standards.",
+      "detail": "Source attribution text rendered at an extremely small size (appears ~6\u20137 px) and is effectively unreadable at normal viewing distance, which would embarrass the team in a board deck.",
       "pass": false
     },
     {
       "tab": "wages",
       "tab_name": "Wages",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Wage Growth by Sector table \u2014 source footnote at bottom",
+      "element": "Bottom-of-page global footnote block",
       "severity": "warning",
-      "detail": "The multi-line source/methodology footnote at the bottom of the sector table is rendered at a very small size and low contrast, making it illegible at dashboard viewing distance.",
+      "detail": "The dense multi-line footnote paragraph at the very bottom of the tab is rendered at a font size too small to read without zooming, violating minimum legibility standards for CEO-level presentation.",
       "pass": false
     },
     {
       "tab": "wages",
       "tab_name": "Wages",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Page-level footer (very bottom of screenshot)",
-      "severity": "minor",
-      "detail": "The footer row containing data vintage, pipeline, and attribution text is rendered at an extremely small font size and is effectively unreadable.",
-      "pass": false
-    },
-    {
-      "tab": "wages",
-      "tab_name": "Wages",
-      "category": "COLOR_DRIFT",
-      "element": "Wage Growth by Sector table \u2014 'Trend' column badges",
+      "element": "Avg Hourly Earnings by Sector chart \u2014 Y-axis sector labels",
       "severity": "warning",
-      "detail": "Every single row in the Trend column shows a red 'Falling' badge. If 'Falling' is a warning or critical semantic state, the color should match the style_guide \u00a74 palette for those roles. A uniform red across all 19 rows with no variation suggests either a data/rendering error or a color assignment that has not been validated against the palette.",
+      "detail": "Sector name labels on the horizontal bar chart's Y-axis are very small and low-contrast against the background, making them difficult to read at board-deck resolution.",
       "pass": false
     },
     {
       "tab": "wages",
       "tab_name": "Wages",
       "category": "LABEL_TRUNCATED",
-      "element": "Avg Hourly Earnings by Sector \u2014 2025 vs 2024 chart \u2014 Y-axis sector labels",
+      "element": "Wage Growth by Sector table \u2014 'TREND' column",
       "severity": "warning",
-      "detail": "Several sector label strings on the Y-axis of the horizontal bar chart appear to be truncated or very tightly clipped against the bar area, with longer names (e.g., 'Hotel Front Desk / Hou...', 'Airline Pilots & Crew') potentially cut off, reducing readability for a CEO audience.",
-      "pass": false
-    },
-    {
-      "tab": "wages",
-      "tab_name": "Wages",
-      "category": "COMMENTARY_PLACEMENT",
-      "element": "Wage Growth Commentary block",
-      "severity": "critical",
-      "detail": "The 'Wage Growth Commentary \u2014 Nominal vs Real' fc-note block appears above the metric tiles and charts on this tab, which is correct in principle; however, it is separated from the first chart by a large block of KPI tiles and data-vintage metadata. Style_guide \u00a71 requires the fc-note to immediately precede the first chart with no intervening content panels between them.",
+      "detail": "The 'Falling' trend badges in the TREND column appear clipped on the right edge for several rows, with the arrow indicator partially cut off.",
       "pass": false
     },
     {
       "tab": "wages",
       "tab_name": "Wages",
       "category": "COPY_QUALITY",
-      "element": "Wage Growth Commentary \u2014 Nominal vs Real",
+      "element": "Wage Growth Commentary \u2014 fc-note text block",
       "severity": "warning",
-      "detail": "The commentary block contains a single very long run-on sentence that functions as one sentence rather than the required 2\u20134 sentences. Style_guide \u00a72 mandates 2\u20134 sentences; a single compound sentence stitched with semicolons does not satisfy that requirement and reads as hedging filler at board level.",
+      "detail": "The commentary block contains hedging filler language ('directionally positive signal\u2026 but insufficient to declare victory') and runs to more than 4 sentences, exceeding the permitted 2\u20134 sentence limit.",
       "pass": false
     },
     {
       "tab": "wages",
       "tab_name": "Wages",
-      "category": "SPACING_DRIFT",
-      "element": "Gap between Monthly Wage Growth chart and Nominal vs Real / Sector bar charts row",
+      "category": "TYPOGRAPHY_DRIFT",
+      "element": "KPI tile \u2014 'PEAK \u2013 NOW' value '2022: 6.1%'",
       "severity": "minor",
-      "detail": "The vertical spacing between the Monthly Wage Growth (13-Month Trend) panel and the two-column panel row below it appears noticeably larger than the spacing between subsequent panels, creating an inconsistent rhythm across the tab.",
+      "detail": "The year label '2022:' and the percentage '6.1%' appear to use a smaller or lighter weight than peer KPI tiles displaying their primary metric values, creating inconsistent typographic hierarchy across the tile row.",
+      "pass": false
+    },
+    {
+      "tab": "wages",
+      "tab_name": "Wages",
+      "category": "COLOR_DRIFT",
+      "element": "Wage Growth by Sector table \u2014 'Falling' trend badges",
+      "severity": "minor",
+      "detail": "All trend badges in the TREND column display 'Falling' in what appears to be an orange/amber color. If 'Falling' wage growth is intended to map to the 'warning' semantic role, the color should match the style_guide \u00a74 warning palette exactly; the current shade appears inconsistent with the warning color used elsewhere on the dashboard.",
       "pass": false
     },
     {
       "tab": "cpi",
       "tab_name": "CPI",
       "category": "EMPTY_CHART",
-      "element": "Trimmed-mean and median CPI track headline \u2014 bottom chart",
+      "element": "Trimmed-mean and median CPI track headline chart (bottom panel)",
       "severity": "critical",
-      "detail": "The chart area displays 'AWAITING FIRST PIPELINE RUN' placeholder text with a note that data will populate next week. The chart is effectively blank with no plotted data, making it unsuitable for a board-level deck.",
-      "pass": false
-    },
-    {
-      "tab": "cpi",
-      "tab_name": "CPI",
-      "category": "BROKEN_LINE",
-      "element": "Trimmed-mean and median CPI track headline \u2014 bottom chart",
-      "severity": "critical",
-      "detail": "The line chart shows lines that appear to stop and not render across the full time series, consistent with the pipeline not having run. The series are present in the legend but absent from the plot area.",
+      "detail": "The chart area displays 'AWAITING FIRST PIPELINE RUN' placeholder text with no data plotted, despite having a legend with three series (Headline CPI MoM, Trimmed-Mean CPI, Median CPI) and axis labels. This is a blank/broken chart that would be highly visible in a board presentation.",
       "pass": false
     },
     {
       "tab": "cpi",
       "tab_name": "CPI",
       "category": "COPY_QUALITY",
-      "element": "Trimmed-mean and median CPI \u2014 'So what' commentary",
+      "element": "Trimmed-mean and median CPI chart \u2014 inline placeholder commentary",
+      "severity": "critical",
+      "detail": "The chart body contains an operational/pipeline status note ('Cleveland Fed Trimmed-Mean CPI data was added to the pipeline this week; series will populate in the data next weekly CI run. Due ~[DATE]') visible to the end reader. This is internal developer copy exposed in a CEO-level dashboard, violating commentary standards.",
+      "pass": false
+    },
+    {
+      "tab": "cpi",
+      "tab_name": "CPI",
+      "category": "LABEL_TRUNCATED",
+      "element": "Fastest-rising category metric tile \u2014 'Transportation Svcs'",
       "severity": "warning",
-      "detail": "The 'So what' sentence reads as a single sentence of analytical commentary, which may fall below the minimum of 2 sentences required by the style guide. Additionally the placeholder pipeline note embedded in the chart body is not editorial copy and should not be visible to a CEO audience.",
+      "detail": "The category label 'Transportation Svcs' appears to be word-wrapped mid-word as 'Transporta-tion Svcs' due to insufficient tile width, making it look like a hyphenation error in a prominent KPI tile.",
       "pass": false
     },
     {
@@ -304,25 +295,16 @@
       "category": "TEXT_ILLEGIBLE",
       "element": "Annual CPI bar chart \u2014 x-axis year labels",
       "severity": "warning",
-      "detail": "The year labels along the x-axis of the 'Annual CPI is still well above the Fed's 2% target' chart are extremely small and difficult to read at normal viewing distance, falling below acceptable contrast and size standards for a board presentation.",
+      "detail": "The x-axis year labels on the Annual CPI bar chart (spanning ~1990\u20132025) are extremely small and densely packed, making individual years illegible at dashboard viewing scale. A board-level audience would not be able to read specific year references.",
       "pass": false
     },
     {
       "tab": "cpi",
       "tab_name": "CPI",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Category-level annual rates table \u2014 body text",
-      "severity": "warning",
-      "detail": "The text within the category-level annual rates table (category names, percentage values, and trend labels) is rendered at a very small font size, making it difficult to read without zooming in, which is inappropriate for CEO-level board material.",
-      "pass": false
-    },
-    {
-      "tab": "cpi",
-      "tab_name": "CPI",
-      "category": "LABEL_TRUNCATED",
-      "element": "KPI metric tiles \u2014 top row sub-labels",
+      "element": "Source/footnote lines across multiple charts",
       "severity": "minor",
-      "detail": "Several metric tiles in the top KPI row have sub-label text (prior period comparisons and footnotes) that appears clipped or compressed within the tile boundaries, particularly on the rightmost tiles (e.g., Debt Service Ratio tile).",
+      "detail": "Source attribution text beneath multiple charts (e.g., Annual CPI chart, Goods vs Services chart, Category-level table) is rendered at extremely small font size, well below readable threshold even at full resolution. While footnotes are typically small, these appear to fall below the minimum body text size.",
       "pass": false
     },
     {
@@ -331,16 +313,7 @@
       "category": "COMMENTARY_PLACEMENT",
       "element": "CPI Commentary \u2014 Inflation Trajectory & Fed Implications",
       "severity": "minor",
-      "detail": "The fc-note commentary block appears above the KPI summary tiles and charts as expected, but it sits below the tab navigation bar and filter row rather than immediately preceding the first chart panel. Depending on style_guide interpretation this may violate the requirement that commentary precedes the first chart.",
-      "pass": false
-    },
-    {
-      "tab": "cpi",
-      "tab_name": "CPI",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Source footnotes \u2014 all chart panels",
-      "severity": "minor",
-      "detail": "Source citation text beneath each chart panel is rendered at an extremely small font size with low contrast against the white background, making it effectively illegible without magnification.",
+      "detail": "The fc-note commentary block ('CPI Commentary \u2014 Inflation Trajectory & Fed Implications') appears to precede the charts correctly in this tab, but it is separated from the first chart by a row of KPI metric tiles and a data vintage note, which may push it visually away from its intended position above the first chart.",
       "pass": false
     },
     {
@@ -365,90 +338,108 @@
       "tab": "credit",
       "tab_name": "Credit",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Bottom source/footnote text block",
+      "element": "Credit Commentary \u2014 Spread Complacency & Tail Risk (body text)",
       "severity": "warning",
-      "detail": "The dense source citations and footnote text at the very bottom of the dashboard are rendered at an extremely small font size (appears to be ~6\u20137px), making them effectively unreadable at normal viewing scale. This would be called out in a board presentation.",
+      "detail": "The commentary paragraph text is rendered at an extremely small font size, making it effectively unreadable at normal dashboard viewing scale. Board-level audiences should not need to zoom in to read analytical commentary.",
       "pass": false
     },
     {
       "tab": "credit",
       "tab_name": "Credit",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Delinquency Rates by Product chart \u2014 axis labels and data labels",
+      "element": "Delinquency Rates by Product chart \u2014 axis labels and data point annotations",
       "severity": "warning",
-      "detail": "The x-axis year labels and several inline data point labels on the 90+ DPD line chart are very small and densely packed, making individual values difficult to read without zooming in.",
-      "pass": false
-    },
-    {
-      "tab": "credit",
-      "tab_name": "Credit",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Senior Loan Officer Survey (SLOOS) chart \u2014 Risk Intensity Timeline rows",
-      "severity": "warning",
-      "detail": "The row labels and cell text within the Risk Intensity Timeline heatmap band beneath the SLOOS chart are rendered at a very small size and low contrast against the colored cells, making them illegible at dashboard scale.",
-      "pass": false
-    },
-    {
-      "tab": "credit",
-      "tab_name": "Credit",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Consumer Credit Growth chart \u2014 x-axis labels",
-      "severity": "minor",
-      "detail": "Year labels on the x-axis of the Revolving vs Non-Revolving YoY % bar chart are very small and may be difficult to read in a projected board setting.",
+      "detail": "The x-axis year labels, y-axis percentage labels, and inline data annotations on the line chart are rendered at a very small size and are difficult to read without zooming. Multiple overlapping callout values compound the illegibility.",
       "pass": false
     },
     {
       "tab": "credit",
       "tab_name": "Credit",
       "category": "LABEL_OVERLAP",
-      "element": "Delinquency Rates by Product \u2014 inline data labels",
+      "element": "Delinquency Rates by Product chart \u2014 data point callout labels",
       "severity": "warning",
-      "detail": "Multiple inline percentage labels on the line chart overlap each other, particularly in the 2020\u20132024 region where Credit Cards, Auto Loans, and Mortgage lines converge, making individual values indistinguishable.",
+      "detail": "Several inline percentage callout labels on the multi-line delinquency chart visibly overlap each other, particularly in the 2009\u20132013 recession cluster and the 2020\u20132024 region, making individual series values indistinguishable.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Net Charge-Off Rates chart \u2014 bar labels and axis annotations",
+      "severity": "warning",
+      "detail": "Bar value labels and axis tick labels in the Net Charge-Off Rates (Card Specialists vs Diversified Banks) chart are extremely small and difficult to read at dashboard scale.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Senior Loan Officer Survey (SLOOS) chart \u2014 axis labels, legend, and risk intensity timeline",
+      "severity": "warning",
+      "detail": "The SLOOS chart's x-axis date labels, y-axis labels, legend entries, and the Risk Intensity Timeline row labels beneath the chart are all rendered at a very small size, making them illegible without zooming. The timeline color-band labels (Recession Prob, SLOOS Tight, Card 90+ DPD, NBER Recession) are particularly hard to read.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Consumer Credit Growth chart \u2014 axis labels and bar annotations",
+      "severity": "warning",
+      "detail": "Year labels on the x-axis and percentage annotations on bars are rendered at a very small size, making them difficult to read at normal viewing distance.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Household Debt Composition & Stress table \u2014 source footnotes and body text",
+      "severity": "minor",
+      "detail": "The multi-line source footnote block beneath the Household Debt table is rendered at an extremely small font size, well below readable threshold for a board-level presentation.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Bottom footnote / sources bar (full-width, bottom of dashboard)",
+      "severity": "minor",
+      "detail": "The full-width sources/footnote line at the very bottom of the dashboard is rendered in very small, low-contrast gray text that is essentially illegible at normal scale.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "COMMENTARY_PLACEMENT",
+      "element": "Credit Commentary \u2014 Spread Complacency & Tail Risk",
+      "severity": "warning",
+      "detail": "The fc-note commentary block appears to sit above the metric tiles and charts as required, but the KPI metric tiles (Card 90+ DPD, Auto DQ, Student Loan DQ, etc.) are interposed between the commentary and the first chart, which may violate the requirement that commentary directly precedes the first chart without intervening elements.",
       "pass": false
     },
     {
       "tab": "credit",
       "tab_name": "Credit",
       "category": "LABEL_OVERLAP",
-      "element": "Net Charge-Off Rates chart \u2014 bar labels",
+      "element": "Consumer Credit Growth chart \u2014 bar value annotations",
+      "severity": "warning",
+      "detail": "Several bar annotations (percentage values) in the Consumer Credit Growth chart overlap adjacent bars or each other, particularly in the dense annual series around 2010\u20132015 and 2020\u20132023, reducing readability.",
+      "pass": false
+    },
+    {
+      "tab": "credit",
+      "tab_name": "Credit",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "KPI metric tiles row (Card 90+ DPD, Auto DQ, Student Loan DQ, Best Category, Most Category, Peak \u2014 Now)",
       "severity": "minor",
-      "detail": "Several data labels on the grouped bar chart for Card Specialists vs Diversified Banks appear to overlap or sit very close together, reducing readability.",
+      "detail": "Sub-label and contextual annotation text within the KPI tiles is rendered at a very small size, making the supporting detail text (prior period comparisons, trend notes) difficult to read at board presentation scale.",
       "pass": false
     },
     {
       "tab": "credit",
       "tab_name": "Credit",
       "category": "COPY_QUALITY",
-      "element": "Credit Commentary \u2014 Spread Complacency & Tail Risk",
-      "severity": "warning",
-      "detail": "The commentary block contains a single very long run-on sentence that exceeds the 4-sentence maximum and uses hedging language ('suggests high yield is also mispriced relative to\u2026'). Style guide requires 2\u20134 sentences with no hedging filler.",
-      "pass": false
-    },
-    {
-      "tab": "credit",
-      "tab_name": "Credit",
-      "category": "LAYOUT_ISSUE",
-      "element": "Household Debt Composition & Stress table \u2014 SIGNAL column badges",
+      "element": "Why did Student Loans spike from 0% to 9.4% in Q2 2025? (expandable callout)",
       "severity": "minor",
-      "detail": "The colored signal badges (e.g., 'STRESS', 'CAUTION', 'MONITOR') in the table appear to have inconsistent sizing and padding across rows, with some badge text appearing clipped or unevenly padded relative to peers.",
-      "pass": false
-    },
-    {
-      "tab": "credit",
-      "tab_name": "Credit",
-      "category": "SPACING_DRIFT",
-      "element": "Metric tiles row (top KPI bar)",
-      "severity": "minor",
-      "detail": "The spacing between the 'JOBS APR'26' tile and the 'INITIAL CLAIMS MAY'26' tile appears slightly wider than the spacing between subsequent tiles, creating a subtle but visible inconsistency in the top KPI row.",
-      "pass": false
-    },
-    {
-      "tab": "credit",
-      "tab_name": "Credit",
-      "category": "COLOR_DRIFT",
-      "element": "Household Debt Composition table \u2014 Total HH Debt SIGNAL badge",
-      "severity": "warning",
-      "detail": "The 'LATE-CYCLE' signal badge on the Total HH Debt row uses a dark/navy color that does not clearly map to the dashboard's established critical/warning/confirmed semantic palette, creating ambiguity about its severity level for a CEO-level reader.",
+      "detail": "The explanatory callout text block appears to exceed 4 sentences, potentially violating the maximum sentence count rule for fc-note commentary blocks.",
       "pass": false
     },
     {
@@ -464,54 +455,81 @@
       "tab": "housing",
       "tab_name": "Housing",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Monthly Housing Trend \u2014 Case-Shiller YoY % & 30yr Mortgage Rate (13-Month) \u2014 source note",
+      "element": "Monthly Housing Trend \u2014 Case-Shiller YoY % & 30yr Mortgage Rate chart axis labels and source note",
       "severity": "warning",
-      "detail": "The source/footnote text beneath the dual-panel line chart is rendered at an extremely small font size (appears to be ~6\u20137 px), making it effectively unreadable at normal viewing distance in a board deck.",
+      "detail": "The x-axis tick labels, y-axis values, and the source/methodology note beneath the chart are rendered at an extremely small font size, making them unreadable at normal viewing resolution in a board deck context.",
       "pass": false
     },
     {
       "tab": "housing",
       "tab_name": "Housing",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Affordability Index & Months Supply \u2014 x-axis labels (lower panel)",
+      "element": "Affordability Index & Months Supply chart \u2014 x-axis labels and source note",
       "severity": "warning",
-      "detail": "Year labels on the x-axis of the Months Supply sub-panel are extremely small and densely packed, making individual year values illegible without zooming in.",
+      "detail": "Year labels along the x-axis and the multi-line source note below the chart are too small to read without zooming in, falling below the legibility standard for CEO-level presentation material.",
+      "pass": false
+    },
+    {
+      "tab": "housing",
+      "tab_name": "Housing",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Home Price Index \u2014 Case-Shiller & FHFA chart source note",
+      "severity": "minor",
+      "detail": "The source attribution line beneath the chart is rendered at a very small font size and is effectively illegible at board-deck viewing distance.",
+      "pass": false
+    },
+    {
+      "tab": "housing",
+      "tab_name": "Housing",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "30-Year Mortgage Rate vs Fed Funds Rate chart source note",
+      "severity": "minor",
+      "detail": "Source note text beneath the chart is too small to read comfortably, inconsistent with the legibility standard for supporting annotations.",
+      "pass": false
+    },
+    {
+      "tab": "housing",
+      "tab_name": "Housing",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Housing Starts \u2014 Single-Family vs Multi-Family chart source note",
+      "severity": "minor",
+      "detail": "Source note beneath the chart is rendered at an extremely small size and is illegible without magnification.",
+      "pass": false
+    },
+    {
+      "tab": "housing",
+      "tab_name": "Housing",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Metro Home Price Performance table \u2014 source footnote block",
+      "severity": "warning",
+      "detail": "The multi-line source footnote at the bottom of the table is rendered at a very small font size and is unreadable at normal viewing scale, which is problematic for a board-level document where data provenance must be verifiable.",
+      "pass": false
+    },
+    {
+      "tab": "housing",
+      "tab_name": "Housing",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Dashboard footer \u2014 full-width fine-print line",
+      "severity": "minor",
+      "detail": "The footer disclaimer/source line spanning the full width of the dashboard is rendered at an extremely small size and is entirely illegible.",
       "pass": false
     },
     {
       "tab": "housing",
       "tab_name": "Housing",
       "category": "LABEL_OVERLAP",
-      "element": "Affordability Index & Months Supply \u2014 x-axis labels",
+      "element": "Affordability Index & Months Supply chart \u2014 x-axis year labels",
       "severity": "warning",
-      "detail": "The x-axis tick labels on both the Affordability Index and Months Supply sub-panels appear to overlap or nearly collide due to the high density of annual labels across a long time series, reducing readability.",
+      "detail": "The x-axis year labels on the Affordability Index panel appear densely packed and overlap or nearly overlap each other, making individual year values indistinguishable.",
       "pass": false
     },
     {
       "tab": "housing",
       "tab_name": "Housing",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "30-Year Mortgage Rate vs Fed Funds Rate \u2014 data point labels",
+      "category": "LABEL_TRUNCATED",
+      "element": "KPI tile \u2014 'DEBT SERVICE RATES Q4'25'",
       "severity": "warning",
-      "detail": "The value callout labels on the line chart (e.g., rate percentages annotated at each data point) are very small and low-contrast against the chart background, making them difficult to read in a board presentation context.",
-      "pass": false
-    },
-    {
-      "tab": "housing",
-      "tab_name": "Housing",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Home Price Index \u2014 Case-Shiller & FHFA \u2014 source note",
-      "severity": "minor",
-      "detail": "Source attribution text below the chart is rendered at a very small size (~6 px), falling below the minimum legible threshold for a CEO-level board deck.",
-      "pass": false
-    },
-    {
-      "tab": "housing",
-      "tab_name": "Housing",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Housing Starts \u2014 Single-Family vs Multi-Family \u2014 source note",
-      "severity": "minor",
-      "detail": "Source attribution text below the chart is rendered at a very small size, consistent with the pattern across all chart footnotes on this tab.",
+      "detail": "The sub-label text beneath the 11.3% headline value appears to be cut off at the tile boundary; the annotation line beginning '% of disp. income' and the bracketed reference text are truncated and not fully visible.",
       "pass": false
     },
     {
@@ -520,16 +538,16 @@
       "category": "COPY_QUALITY",
       "element": "Housing Commentary \u2014 Affordability Crisis & Lock-In Effect",
       "severity": "warning",
-      "detail": "The commentary block contains five distinct sentences, exceeding the maximum of 4 sentences permitted by the style guide. The passage also contains hedging language ('would be a significant recessionary signal') that softens the analytical stance beyond what is appropriate for a CEO audience.",
+      "detail": "The commentary block contains hedging language ('suggest', 'running ahead of effective demand', 'near-term prospect') and is a single very long run-on sentence followed by a second sentence, making it borderline on the 2\u20134 sentence rule and containing filler qualifiers that dilute the executive message.",
       "pass": false
     },
     {
       "tab": "housing",
       "tab_name": "Housing",
-      "category": "LAYOUT_ISSUE",
-      "element": "Metro Home Price Performance table \u2014 'Detroit, MI' row",
+      "category": "SPACING_DRIFT",
+      "element": "Bottom two chart rows \u2014 Housing Starts panel vs Affordability Index panel",
       "severity": "minor",
-      "detail": "The Detroit row is bolded ('Fastest-appreciating major market from low base; UAW effect') while all other Market Note cells are in regular weight, creating an inconsistent visual treatment within the table that appears unintentional rather than a deliberate hierarchy signal.",
+      "detail": "The vertical spacing between the chart title/subtitle block and the chart plot area appears noticeably tighter in the Affordability Index & Months Supply panel compared to the Housing Starts panel on the same row, creating visual inconsistency between peer panels.",
       "pass": false
     },
     {
@@ -538,88 +556,115 @@
       "category": "MISSING_LEGEND",
       "element": "Monthly Housing Trend \u2014 30yr Mortgage Rate sub-panel",
       "severity": "minor",
-      "detail": "The lower sub-panel of the dual-panel Monthly Housing Trend chart shows only a legend label ('30yr Mortgage Rate %') in the chart header area but no color swatch legend is visible within or adjacent to the panel itself, which could cause confusion if the chart is viewed in isolation.",
+      "detail": "The lower sub-panel of the Monthly Housing Trend chart displays a red line for 30yr Mortgage Rate % but the legend label is only visible as a small inline annotation; there is no consistent legend block matching the format used in the upper Case-Shiller sub-panel, creating an inconsistent legend treatment across the two panels.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "TEXT_ILLEGIBLE",
-      "element": "Oil Supply Shock Tracker \u2014 Daily Closes (Section 2 left chart)",
+      "element": "Section 2 \u2014 Oil Supply Shock Tracker chart axis labels and source line",
       "severity": "warning",
-      "detail": "The x-axis date labels and source footnote text in the daily closes chart are extremely small and unreadable at dashboard viewing scale. Tick labels appear to be 6\u20137px, well below the minimum legible body size.",
+      "detail": "The x-axis date labels and the source/footnote text beneath the Oil Supply Shock Tracker (daily closes) chart are rendered at an extremely small font size, making them unreadable at dashboard viewing scale. This would be called out immediately in a board presentation.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "TEXT_ILLEGIBLE",
-      "element": "WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2026 (Section 1 right chart) axis labels",
+      "element": "Full Oil Impact Chain \u2014 status update footnote text",
       "severity": "warning",
-      "detail": "X-axis month/year tick labels are rendered at a very small font size and are difficult to read without zooming in, falling below the legibility standard for board-level presentation.",
+      "detail": "The small-print status/footnote text at the bottom of the Full Oil Impact Chain panel is too small to read without zooming in, falling below the minimum legible body text size for a CEO-level deck.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "TEXT_ILLEGIBLE",
-      "element": "WTI Price History with Recession Shading 1973\u20132025 (Section 4 left chart) axis and source labels",
+      "element": "WTI & Brent Annual History chart \u2014 source line and axis labels",
       "severity": "warning",
-      "detail": "Both axis tick labels and the source citation at the bottom of the chart are rendered at a very small size, making them illegible at normal viewing distance for a board deck.",
+      "detail": "Source attribution and several x-axis year labels on the annual history chart are rendered at a very small size and are difficult to read at normal viewing distance, violating minimum legibility standards.",
+      "pass": false
+    },
+    {
+      "tab": "oil",
+      "tab_name": "Oil",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "WTI & Brent Monthly chart \u2014 source line and annotation text",
+      "severity": "warning",
+      "detail": "The source line and inline chart annotations (e.g., 'Hormuz shock, May 2025') on the monthly chart are rendered at a very small font size, making them illegible without zooming.",
+      "pass": false
+    },
+    {
+      "tab": "oil",
+      "tab_name": "Oil",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Sector Margin Impact table \u2014 footnote/disclaimer text",
+      "severity": "minor",
+      "detail": "The disclaimer text beneath the Sector Margin Impact table ('Analyst estimates. Directional, not exact...') is rendered at a very small size and is effectively unreadable at board-deck scale.",
+      "pass": false
+    },
+    {
+      "tab": "oil",
+      "tab_name": "Oil",
+      "category": "TEXT_ILLEGIBLE",
+      "element": "Section 4 \u2014 WTI Price History with Recession Shading chart source line",
+      "severity": "minor",
+      "detail": "The source attribution line beneath the recession shading chart is too small to read at normal viewing scale.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "LABEL_OVERLAP",
-      "element": "WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2026 (Section 1 right chart)",
+      "element": "WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2026 chart x-axis",
       "severity": "warning",
-      "detail": "The 'Hormuz shock, May 2025' annotation label appears to overlap with the price spike data point and the chart's right-side legend/color key, creating a cluttered, hard-to-parse area in the upper right of the chart.",
+      "detail": "Several x-axis month/year labels appear to crowd or overlap each other in the dense monthly chart, reducing readability of the time axis.",
+      "pass": false
+    },
+    {
+      "tab": "oil",
+      "tab_name": "Oil",
+      "category": "LABEL_OVERLAP",
+      "element": "Oil Supply Shock Tracker \u2014 Daily Closes x-axis",
+      "severity": "warning",
+      "detail": "The x-axis date labels on the daily closes chart are densely packed and appear to overlap, making the time axis illegible.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "COPY_QUALITY",
-      "element": "Section 4 \u2014 Recession Signal History commentary block",
+      "element": "Oil Commentary \u2014 Supply Shock & Macro Transmission (fc-note)",
       "severity": "warning",
-      "detail": "The commentary block contains hedging language ('Worth monitoring if prices re-escalate or persist above $90 for an extended period') which is speculative filler rather than a direct analytical assertion. Style guide prohibits hedging filler in fc-note commentary.",
+      "detail": "The commentary block contains five sentences, exceeding the maximum of 4 sentences permitted per the style guide. Additionally, phrases such as 'more concerning than' and 'directly pressure' border on hedging language that should be replaced with precise, declarative statements.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "COMMENTARY_PLACEMENT",
-      "element": "Section 2 \u2014 Inflation Transmission commentary / section label",
-      "severity": "minor",
-      "detail": "The 'SECTION 2 \u2014 INFLATION TRANSMISSION' label and its associated note text appear to sit between charts rather than clearly preceding the first chart in that section, which may violate the requirement that fc-note commentary precede the first chart.",
-      "pass": false
-    },
-    {
-      "tab": "oil",
-      "tab_name": "Oil",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Full Oil Impact Chain \u2014 Prices to Credit Stress (Section 2 right panel) body text",
+      "element": "Section 4 \u2014 Recession Signal History commentary block",
       "severity": "warning",
-      "detail": "The descriptive sub-text beneath each numbered node (e.g., Route 1.0, Route 2.0, etc.) is rendered at approximately 7\u20138px and is illegible at board presentation scale without zooming.",
-      "pass": false
-    },
-    {
-      "tab": "oil",
-      "tab_name": "Oil",
-      "category": "TEXT_ILLEGIBLE",
-      "element": "Historical Oil Shock Episodes table \u2014 Economic Consequence column",
-      "severity": "warning",
-      "detail": "The 'Economic Consequence' column text in the bottom-right table is very small and low-contrast against the white background, making it difficult to read in a board deck context.",
+      "detail": "The blue highlighted commentary paragraph for Section 4 ('Oil shocks and recessions have historically often coincided\u2026') appears to be placed between the section header and the charts, which is correct in principle, but the inline italicized continuation text wraps into a second paragraph style that sits visually separated from the header, creating ambiguity about whether it precedes or follows the charts. Should be verified against \u00a71 placement rules.",
       "pass": false
     },
     {
       "tab": "oil",
       "tab_name": "Oil",
       "category": "SPACING_DRIFT",
-      "element": "Section 1 vs Section 2 panel spacing",
+      "element": "Section 3 \u2014 Sector Impact panel vs. other section panels",
       "severity": "minor",
-      "detail": "The vertical gap between Section 1 (Price & Supply) and Section 2 (Inflation Transmission) appears noticeably tighter than the gap between Section 2 and Section 3 (Sector Impact), creating inconsistent inter-panel rhythm across the tab.",
+      "detail": "The vertical spacing between the Section 3 header ('Section 3 \u2014 Sector Impact') and the Sector Margin Impact table appears tighter than the spacing used between headers and content in Sections 1 and 2, creating an inconsistent rhythm across panels.",
+      "pass": false
+    },
+    {
+      "tab": "oil",
+      "tab_name": "Oil",
+      "category": "TYPOGRAPHY_DRIFT",
+      "element": "Section callout labels (e.g., '\u2193 SECTION 1 \u2014 PRICE & SUPPLY')",
+      "severity": "minor",
+      "detail": "The section divider labels use a small-caps or condensed style that appears visually lighter/smaller than the panel title convention used elsewhere (e.g., 'WTI & Brent \u2014 Annual History'). If these are meant to be the same hierarchy level, the weight and size should be consistent.",
       "pass": false
     }
   ]

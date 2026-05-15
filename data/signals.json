@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-05-15T05:04:39.677736Z",
+  "analyzed_at": "2026-05-15T14:02:25.379026Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 1,
@@ -11,7 +11,7 @@
     "dgs10": 4.46,
     "dgs30": 5.03,
     "ig_oas": 76,
-    "hy_oas": 282,
+    "hy_oas": 276,
     "unrate": 4.3,
     "u6rate": 8.2,
     "nfp_level": 158736.0,
@@ -59,8 +59,8 @@
       "alert": null
     },
     "hy_oas": {
-      "value": 282,
-      "delta": 3,
+      "value": 276,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -253,5 +253,7 @@
       "alert": null
     }
   ],
-  "raw_errors": []
+  "raw_errors": [
+    "FRED AHETPI: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
+  ]
 }
