@@ -1228,3 +1228,99 @@ All motion respects `prefers-reduced-motion`.
 Sweep order for follow-up tabs: GDP → Jobs → Wages → Unemployment →
 PCE → Yield → Housing → Credit → Banks → Oil → Outlook. Banks and
 Credit also receive sparkgrid replacement of their per-bank panels.
+
+---
+
+## §24 — Futuristic ambient pass (PR1 of 3, 2026-05-15)
+
+The "futuristic" remit is a restraint exercise: signal the chart is
+**alive and current** without sacrificing data-ink discipline (§4) or
+CEO-grade legibility (§1). Three additions, two affordances. No third-
+party libs.
+
+### 24.1 — Breathing "now" dot
+
+A single 8px dot, painted in the foreground series colour, sits at the
+last printed value and emits a slow ring (1.8s scale-2.4 ease-out,
+opacity .45→0). This is the only chart element allowed to animate
+continuously, and it pulses **once per chart at most** — on the
+foreground series. The animation pauses when the user enables
+`prefers-reduced-motion`.
+
+Implementation: DOM overlay via `MD.addPulseMarker(chart [, idx])`
+(see `index.html` UPLIFT-2026-05-PR1 block). Pure CSS keyframes; no
+extra `requestAnimationFrame` cost.
+
+```css
+.md-pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.md-pulse-dot::after{animation:md-pulse-ring 1.8s ease-out infinite}
+```
+
+### 24.2 — Annotation-on-scroll (briefing rhythm motion)
+
+`.panel-meta` and `.so-what` fade up (4px translate, 420ms) when the
+panel first scrolls into view. Staggered: meta at 80ms, so-what at
+280ms — this preserves the read-order rhythm of §23.7. Chart canvas
+content is **not** animated (charts must render fully on first paint
+so a screenshot taken before scroll still reads correctly). Disabled
+under `prefers-reduced-motion`.
+
+Implementation: `IntersectionObserver` (rootMargin -10% bottom,
+threshold 0.05), single-fire via `unobserve()`. The `.pre-reveal`
+class is the hiding state; `.revealed` is the resolved state. If JS
+fails, panels never get `.pre-reveal` and stay fully visible.
+
+### 24.3 — Dark-mode parity
+
+Single toggle, persisted in `localStorage.md_theme`. `<html
+data-theme="dark">` swaps every palette variable from §3:
+
+| Var | Light | Dark |
+|---|---|---|
+| `--bg` | `#FAFAF7` | `#0F1419` |
+| `--card` | `#FFFFFF` | `#161B25` |
+| `--text` | `#0D1B2A` | `#E5E9F0` |
+| `--text2` | `#3F4A5C` | `#A8B2C1` |
+| `--muted` | `#6B7280` | `#7A8696` |
+| `--border` | `#E2E8F0` | `#243042` |
+| `--accent` | `#336BCC` | `#5B8CE6` |
+| `--grid` | `rgba(13,27,42,.06)` | `rgba(229,233,240,.08)` |
+
+Bloomberg up-in-red is preserved across both themes (light `#D64045`
++ dark `#FF6B6B`). No new accent colours added — dark mode is a
+re-tone of the existing palette, not a new identity.
+
+### 24.4 — Theme-toggle pill
+
+Top-right fixed, DM Mono 10px uppercase, sun/moon glyph (☼/☾). Reads
+as an instrument indicator (consistent with `.chart-now-pill` and
+`.panel-meta`), not as a CTA. Hover lifts text to `--text` and
+border to `--text2`. On mobile (<680px), shrinks to 9px / 5px-8px
+padding so it doesn't crowd the eyebrow.
+
+### 24.5 — Implementation status
+
+| § | Pattern | Helper | Shipped to |
+|---|---|---|---|
+| 24.1 | Breathing now-dot | `MD.addPulseMarker` | helper landed; per-chart wiring pending |
+| 24.2 | Scroll reveal | `MD.initScrollReveal` (auto-init) | all `.panel`s with meta/so-what |
+| 24.3 | Dark palette | `:root[data-theme="dark"]` | all tabs (palette-level) |
+| 24.4 | Theme toggle | `MD.toggleTheme` / `.theme-toggle` | global header |
+
+Per-chart wiring of 24.1 (`MD.addPulseMarker`) and area-gradient
+backgrounds (`MD.areaGradient`) happen in PR 2 (instrument-cluster
+pass) alongside the sparkgrid ribbons, since both touch chart init
+code paths.
+
+### 24.6 — Non-goals (deliberately excluded from PR 1)
+
+- No neon, no glow, no animated grid lines.
+- No chart-type changes (charts remain Chart.js line/bar; no radial
+  or 3D).
+- No font swap — DM Sans + DM Mono + Instrument Serif remain.
+- No haptic / sound feedback.
+- No "live ticker" running banner — would conflict with §4
+  (data-ink). The breathing dot is the only "live" affordance.
+
+A chart should still pass §1's screenshot test ("would not embarrass
+us in a board deck") in both themes with motion disabled.
