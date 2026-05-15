@@ -32,7 +32,40 @@ EIA_KEY  = os.environ.get('EIA_API_KEY',  '')
 ROOT     = Path(__file__).parent.parent
 OUT_FILE = ROOT / 'data' / 'raw_data.json'
 
-errors = []
+# ── Secret scrubbing ──────────────────────────────────────────────────
+# python-requests' HTTPError.__str__ embeds the full request URL, which
+# includes query params — and our FRED/EIA fetches pass `api_key=…` as
+# a query param. Stringifying the exception and appending it to `errors`
+# would persist the key to data/raw_data.json and (via the analyzer)
+# data/signals.json.raw_errors. Both files ship to the public repo on
+# every weekly commit. To prevent this, wrap `errors` in a list whose
+# `append` strips any `api_key=` (or `&key=` for EIA) query parameter
+# from the string before storing. Belt-and-suspenders: callers don't
+# need to remember to scrub at the call site.
+import re as _re
+_SECRET_RE = _re.compile(
+    r'((?:[?&])(?:api_key|key|token|access_token|apikey)=)[^&\s\'"]+',
+    flags=_re.IGNORECASE,
+)
+
+def _scrub_secrets(msg: str) -> str:
+    """Replace any `?api_key=XYZ` / `&key=XYZ` query-param value with
+    `[REDACTED]`. Idempotent — safe to call on already-scrubbed strings."""
+    if not isinstance(msg, str):
+        return msg
+    return _SECRET_RE.sub(r'\1[REDACTED]', msg)
+
+class _ErrList(list):
+    """list whose `append` scrubs secrets from string entries.
+
+    All existing `errors.append(f'... {e}')` call sites work unchanged;
+    the api_key in a stringified exception URL is redacted before the
+    value is stored in memory or written to disk.
+    """
+    def append(self, item):  # type: ignore[override]
+        super().append(_scrub_secrets(str(item)) if isinstance(item, (str, Exception)) else item)
+
+errors = _ErrList()
 
 
 # ── B6.2: Per-observation provenance envelope ─────────────────────────

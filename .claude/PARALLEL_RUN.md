@@ -87,6 +87,61 @@ in the "Decision criteria" section further down this doc.
 4. Append to the Log table at the bottom of this doc; never edit
    prior log entries.
 
+**Independent analysis snapshot (2026-05-15):**
+
+> Full writeup: `data/prod_vs_dev_independent_analysis_2026-05-15.md`.
+
+- **Anchor data identical** between prod and dev (UMich, FFR, 10Y, UE
+  all Δ=0). Every divergence is in pipeline interpretation, not
+  upstream data.
+- **Dev is right in every divergence:** dev catches missing transcripts
+  (1 critical), 11 palette warnings, 2 analyzer signal flags (WTI
+  Δ−3.98, wages_yoy Δ−0.3) that prod's older gates silently pass.
+- **`collector_errors`** delta is a sampling artifact (dev hit an
+  ALFRED 429 window prod didn't); both pipelines correct.
+- **CEO-grade + editorial artifacts absent on prod** by design — they
+  are dev-only features in this trial.
+- **Promotion blockers remain:** archive 9 missing transcripts;
+  reconcile 11 palette warnings vs `data/style_guide.md`; retire
+  legacy `patch_kpi()` calls; **rotate FRED API key (security)**.
+
+**Security guardrail landed (2026-05-15):**
+
+- `scripts/collector.py` `errors` list is now an `_ErrList` that
+  scrubs `?api_key=…` / `&token=…` query params on append. All
+  existing `errors.append(…)` call sites benefit with no per-site
+  change. See `_scrub_secrets()` in that file.
+- Validator **Pass 3k — Secret-Leak Guard** scans every JSON under
+  `data/` (excluding `snapshots/`) for the same patterns. Build-
+  blocking on any hit. The validator's own report redacts the match
+  so the report itself can never ship the secret.
+- Working-tree `data/signals.json`, `data/raw_data.json`, and
+  `data/validation_report.json` were scrubbed of the existing leak.
+  **The key is still in 101 historical commits — rotation is the
+  only real remediation.**
+
+**Working principles (memorized from user feedback, 2026-05-15):**
+
+- **Experienced-coding bar.** When fixing pipeline issues, apply the
+  full discipline: defensive imports, schema tolerance, stable
+  fingerprints, smoke-test before commit, prefer per-pass-aware
+  extractors over flat assumptions. No "good enough" patches that
+  paper over schema mismatches — fix the data model first.
+- **Independent analysis on divergence.** When prod and dev produce
+  different outputs, **do not assume prod is right**. The dev branch
+  may be the correct one (it carries the newer gates). Run a fresh
+  artifact-level comparison from `origin/main` vs `HEAD`, walk each
+  divergence individually, and make a per-finding ruling: prod-correct,
+  dev-correct, or both-wrong. Record the verdict in this doc's log
+  before promoting either way.
+- **Findings ledger is the single source of truth for "what to fix
+  next."** Every per-run report and every parallel comparison now
+  records criticals + divergences into
+  `data/parallel_findings_ledger.{json,md}` with stable fingerprints,
+  occurrence counts, and KB-looked-up recommended fixes. Status
+  transitions (open → monitoring → resolved) are manual — edit the
+  JSON directly when a fix lands.
+
 ---
 
 ## Why parallel

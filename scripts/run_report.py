@@ -35,6 +35,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+# Findings ledger — recorded once per per-run report, surfaces a
+# "Recommended Fixes" section with stable fingerprints + KB lookup.
+# Lives next to this file; import is best-effort so older callers still
+# work if the module hasn't landed yet.
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import _findings_ledger as _ledger  # type: ignore
+except Exception:  # pragma: no cover - defensive
+    _ledger = None  # type: ignore
+
 # ───────────────────────────────────────────────────────────────────────────
 # Artifacts surfaced in the per-run report. Order = report order.
 # ───────────────────────────────────────────────────────────────────────────
@@ -199,47 +209,78 @@ def summarize_raw_anchors(payload: dict | None) -> dict:
 # Critical-finding extraction (so the report leads with what needs review).
 # ───────────────────────────────────────────────────────────────────────────
 
-def extract_validator_criticals(payload: dict | None) -> list[str]:
-    """Return short titles of validator findings that are critical or failed."""
+def extract_validator_criticals(payload: dict | None) -> list[dict]:
+    """Return validator findings that are critical-and-failed, as
+    {title, detail, severity} dicts.
+
+    Validator schema: top-level dict keyed by pass name (e.g.
+    `internal_consistency`, `cross_source`, `visual_qa`), each value a
+    list of `{check, severity, pass, ...}` items. Critical failures are
+    items where `pass is False` AND `severity == "critical"`.
+    """
     if not payload:
         return []
-    out: list[str] = []
-    # validation_report.json schema: top-level "passes" or "results" list,
-    # each entry has "name"/"status"/"severity". We tolerate variants.
-    for key in ("passes", "results", "findings"):
-        items = payload.get(key)
+    out: list[dict] = []
+    SKIP_TOP_KEYS = {"validated_at", "status", "summary"}
+    for pass_name, items in payload.items():
+        if pass_name in SKIP_TOP_KEYS:
+            continue
         if not isinstance(items, list):
             continue
         for it in items:
             if not isinstance(it, dict):
                 continue
             sev = (it.get("severity") or "").lower()
-            status = (it.get("status") or "").lower()
-            if sev == "critical" or status in ("fail", "failed", "critical"):
-                name = it.get("name") or it.get("check") or it.get("id") or "(unnamed)"
-                detail = it.get("message") or it.get("detail") or ""
-                line = name if not detail else f"{name} — {str(detail)[:140]}"
-                out.append(line)
-        if out:
-            break
+            passed = it.get("pass")
+            # `pass` is the canonical bool; treat missing as "no info, skip"
+            if passed is True or passed is None:
+                continue
+            if sev != "critical":
+                continue
+            check = it.get("check") or it.get("name") or "(unnamed)"
+            # Detail field varies by pass type; concatenate the
+            # diagnostic fields that exist.
+            detail_bits = []
+            for k in ("note", "detail", "message", "metric",
+                      "difference", "diff", "html_value", "source_value",
+                      "age_days", "max_lag_days"):
+                if k in it and it[k] not in (None, ""):
+                    detail_bits.append(f"{k}={it[k]}")
+            detail = "; ".join(detail_bits)[:240]
+            out.append({
+                "title": f"{pass_name}:{check}",
+                "detail": detail,
+                "severity": "critical",
+            })
     return out[:10]  # cap to keep report readable
 
 
-def extract_editorial_criticals(payload: dict | None) -> list[str]:
+def extract_editorial_criticals(payload: dict | None) -> list[dict]:
     if not payload:
         return []
     findings = payload.get("findings", payload.get("results", []))
     if not isinstance(findings, list):
         return []
-    out: list[str] = []
+    out: list[dict] = []
     for f in findings:
         if not isinstance(f, dict):
             continue
         if (f.get("severity") or "").lower() == "critical":
             target = f.get("target") or f.get("piece") or f.get("tab") or "(unknown piece)"
             msg = f.get("message") or f.get("detail") or ""
-            out.append(f"{target} — {str(msg)[:140]}")
+            out.append({
+                "title": f"editorial:{target}",
+                "detail": str(msg)[:240],
+                "severity": "critical",
+            })
     return out[:10]
+
+
+def _fmt_finding(f: dict) -> str:
+    """Render one finding as a bullet line for the 'needs attention' section."""
+    if f.get("detail"):
+        return f"{f['title']} — {f['detail'][:140]}"
+    return f["title"]
 
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -254,7 +295,8 @@ def render_kv(d: dict, title: str) -> str:
     return "\n".join(lines)
 
 
-def build_report(ref: str, branch: str, commit_sha: str, commit_msg: str) -> str:
+def build_report(ref: str, branch: str, commit_sha: str, commit_msg: str,
+                 *, repo_root: Path | None = None) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     surface = "GitHub Pages" if branch == "main" else "Vercel"
     sections: list[str] = [
@@ -306,6 +348,54 @@ def build_report(ref: str, branch: str, commit_sha: str, commit_msg: str) -> str
     # Criticals — pulled to the top so they're impossible to miss
     val_crits = extract_validator_criticals(val_payload)
     ed_crits = extract_editorial_criticals(ed_payload)
+
+    # Record into ledger so recurring findings accumulate occurrence count
+    # and the markdown ledger stays current. Best-effort: a ledger failure
+    # never aborts report generation.
+    recorded: list[dict] = []
+    if _ledger is not None and repo_root is not None:
+        for f in val_crits:
+            try:
+                entry = _ledger.record_finding(
+                    repo_root,
+                    source="validator",
+                    severity=f.get("severity", "critical"),
+                    title=f["title"],
+                    detail=f.get("detail", ""),
+                    branch=branch,
+                )
+                recorded.append(entry)
+            except Exception as e:  # pragma: no cover
+                print(f"[ledger] record_finding failed: {e}", file=sys.stderr)
+        for f in ed_crits:
+            try:
+                entry = _ledger.record_finding(
+                    repo_root,
+                    source="editorial",
+                    severity="critical",
+                    title=f["title"],
+                    detail=f.get("detail", ""),
+                    branch=branch,
+                )
+                recorded.append(entry)
+            except Exception as e:  # pragma: no cover
+                print(f"[ledger] record_finding failed: {e}", file=sys.stderr)
+        # CEO-grade FAIL — record as its own finding so the ledger surfaces
+        # the aggregate verdict alongside the layer-level findings.
+        if str(ceo.get("verdict", "")).upper() == "FAIL":
+            try:
+                entry = _ledger.record_finding(
+                    repo_root,
+                    source="ceo_grade",
+                    severity="critical",
+                    title="ceo_grade_fail",
+                    detail=ceo.get("reasons", "")[:240],
+                    branch=branch,
+                )
+                recorded.append(entry)
+            except Exception as e:  # pragma: no cover
+                print(f"[ledger] record_finding failed: {e}", file=sys.stderr)
+
     if val_crits or ed_crits:
         sections.append("## Findings that need attention")
         sections.append("")
@@ -313,19 +403,53 @@ def build_report(ref: str, branch: str, commit_sha: str, commit_msg: str) -> str
             sections.append("**Validator criticals:**")
             sections.append("")
             for c in val_crits:
-                sections.append(f"- {c}")
+                sections.append(f"- {_fmt_finding(c)}")
             sections.append("")
         if ed_crits:
             sections.append("**Editorial criticals:**")
             sections.append("")
             for c in ed_crits:
-                sections.append(f"- {c}")
+                sections.append(f"- {_fmt_finding(c)}")
             sections.append("")
     else:
         sections.append("## Findings that need attention")
         sections.append("")
         sections.append("_None at critical severity._")
         sections.append("")
+
+    # Recommended fixes — paired with each finding above. Deduplicated by
+    # fingerprint so a single fix never appears twice in one report.
+    if recorded:
+        sections.append("## Recommended fixes")
+        sections.append("")
+        sections.append(
+            "Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. "
+            "Status tracking and resolution notes live in "
+            "`data/parallel_findings_ledger.md` (open / monitoring / resolved)."
+        )
+        sections.append("")
+        seen_fp: set[str] = set()
+        for entry in recorded:
+            fp = entry.get("fingerprint", "")
+            if fp in seen_fp:
+                continue
+            seen_fp.add(fp)
+            sections.append(
+                f"### {entry.get('title', '?')}  "
+                f"_(seen {entry.get('occurrence_count', 1)}× · "
+                f"status: {entry.get('status', 'open')})_"
+            )
+            sections.append("")
+            sections.append(
+                f"- **Detail:** {entry.get('detail', '—')}"
+            )
+            sections.append(
+                f"- **Fix:** {entry.get('recommended_fix', '—')}"
+            )
+            sections.append(
+                f"- **Fingerprint:** `{fp}`"
+            )
+            sections.append("")
 
     sections.append("---")
     sections.append("")
@@ -420,7 +544,10 @@ def main() -> int:
     branch = args.branch or infer_branch_label()
     sha, msg = resolve_commit(args.ref)
 
-    report = build_report(args.ref, branch, sha, msg)
+    # Repo root for the ledger; up one from scripts/.
+    repo_root = Path(__file__).resolve().parent.parent
+
+    report = build_report(args.ref, branch, sha, msg, repo_root=repo_root)
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -433,6 +560,16 @@ def main() -> int:
 
     print(f"✅ Wrote {dated}")
     print(f"✅ Wrote {latest}")
+
+    # Re-render the ledger markdown so the human-readable view reflects
+    # what was just recorded. Best-effort — never abort the run report.
+    if _ledger is not None:
+        try:
+            ledger_path = _ledger.write_markdown(repo_root)
+            print(f"✅ Wrote {ledger_path}")
+        except Exception as e:  # pragma: no cover
+            print(f"[ledger] write_markdown failed: {e}", file=sys.stderr)
+
     return 0
 
 

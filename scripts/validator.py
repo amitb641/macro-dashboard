@@ -1495,6 +1495,72 @@ def check_collector_errors(raw):
     return findings
 
 
+def check_secret_leaks():
+    """Pass 3k — Secret-leak guard.
+
+    Scans every committed JSON artifact in `data/` for query-param-style
+    secret leaks (`?api_key=XYZ`, `&token=XYZ`, etc.). Build-blocking
+    on any hit. Background: python-requests embeds the full URL in
+    HTTPError.__str__, so a stringified exception captured into
+    `errors`/`raw_errors` would persist the API key alongside the
+    public data. The collector's `_ErrList` scrubs on append, but
+    this pass is the defence-in-depth that catches anything that
+    slipped through (new error capture sites, third-party libraries,
+    historical files that pre-date the scrubber).
+    """
+    findings = []
+    leak_re = re.compile(
+        r'(?:[?&])(?:api_key|key|token|access_token|apikey)=[^&\s\'"\[]+',
+        flags=re.IGNORECASE,
+    )
+    data_dir = ROOT / 'data'
+    if not data_dir.exists():
+        return [{'check': 'Secret leak scan', 'pass': True, 'severity': 'ok',
+                 'note': 'data/ not present'}]
+
+    scanned = 0
+    leaks_total = 0
+    for fp in sorted(data_dir.rglob('*.json')):
+        # Skip the snapshots directory — historical artifacts pre-date
+        # this guard, and rewriting them would also rewrite the audit
+        # trail. They're noted in the run log but not gating.
+        try:
+            rel = fp.relative_to(ROOT).as_posix()
+        except ValueError:
+            rel = str(fp)
+        if '/snapshots/' in rel:
+            continue
+        try:
+            text = fp.read_text(encoding='utf-8')
+        except (OSError, UnicodeDecodeError):
+            continue
+        scanned += 1
+        hits = leak_re.findall(text)
+        if hits:
+            # Truncate to first 2 distinct patterns to keep the report compact.
+            samples = list(dict.fromkeys(hits))[:2]
+            # Redact in the report itself — never let the validator's own
+            # output ship the secret.
+            redacted = [re.sub(r'=[^&\s\'"\[]+', '=[REDACTED]', s) for s in samples]
+            leaks_total += len(hits)
+            findings.append({
+                'check': f'Secret leak in {rel}',
+                'pass': False,
+                'severity': 'critical',
+                'note': f'{len(hits)} hit(s); examples: {", ".join(redacted)}',
+            })
+            print(f'  🔴 secret leak: {rel} — {len(hits)} hit(s)')
+
+    if not findings:
+        findings.append({
+            'check': f'Secret leak scan ({scanned} JSON files)',
+            'pass': True,
+            'severity': 'ok',
+            'note': 'no api_key/token/key= patterns detected',
+        })
+    return findings
+
+
 def check_cross_source(data):
     """Pass 3i — Cross-source agreement check.
 
@@ -1696,7 +1762,7 @@ def check_noise_floor(data, sig_vals):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None, noise_floor=None):
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None, noise_floor=None, secret_leaks=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1720,10 +1786,12 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         cross_source = []
     if noise_floor is None:
         noise_floor = []
+    if secret_leaks is None:
+        secret_leaks = []
     all_findings = (internal + sources + staleness + visual + vision_review +
                     shock_tracker + earnings + panel_data + metric_consistency +
                     schema_contract + collector_errors + seed_drift +
-                    cross_source + noise_floor)
+                    cross_source + noise_floor + secret_leaks)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1760,6 +1828,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'visual_review': vision_review,
         'cross_source': cross_source,
         'noise_floor': noise_floor,
+        'secret_leaks': secret_leaks,
     }
     return report
 
@@ -1897,8 +1966,17 @@ def validate():
     else:
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
+    # Pass 3k: Secret-leak scan (defence-in-depth for the collector
+    # scrubber). Fails the build on any `?api_key=…` / `&token=…`
+    # substring found in committed JSON under data/.
+    print('\n  ── Pass 3k: Secret-Leak Guard ──')
+    secret_leaks = check_secret_leaks()
+    sl_pass = sum(1 for f in secret_leaks if f.get('pass'))
+    sl_fail = sum(1 for f in secret_leaks if not f.get('pass'))
+    print(f'  {sl_pass} passed, {sl_fail} failed')
+
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source, noise_floor)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source, noise_floor, secret_leaks)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary

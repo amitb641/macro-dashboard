@@ -33,6 +33,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+# Findings ledger — best-effort import so an older repo missing the
+# module still produces a comparison report.
+try:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import _findings_ledger as _ledger  # type: ignore
+except Exception:  # pragma: no cover
+    _ledger = None  # type: ignore
+
 # ───────────────────────────────────────────────────────────────────────────
 # Artifacts compared. Each entry: (path-in-repo, short-name-for-report).
 # Order matters — first ones appear first in the report.
@@ -225,7 +233,122 @@ def _delta_cell(p: Any, d: Any) -> str:
         return "same" if p == d else "changed"
 
 
-def build_report(main_ref: str, dev_ref: str) -> str:
+# ───────────────────────────────────────────────────────────────────────────
+# Divergence detection — produces stable-titled findings the ledger can
+# fingerprint and deduplicate across runs.
+#
+# Tolerances chosen to filter noise without hiding real regressions:
+# - ANCHOR_REL_TOL — 0.5% relative drift is normal for staggered fetches
+#   (FRED/BLS update hourly; the two pipelines run minutes apart). Beyond
+#   that, the branches saw different underlying data.
+# - COUNT_DELTA — small int deltas in alert/watch counts are normal jitter;
+#   any delta on critical counts is reportable.
+# ───────────────────────────────────────────────────────────────────────────
+ANCHOR_REL_TOL = 0.005   # 0.5%
+ANCHOR_ABS_TOL = 0.05    # absolute floor for near-zero values
+
+
+def _is_number(x: Any) -> bool:
+    if isinstance(x, bool):
+        return False
+    try:
+        float(x)
+        return True
+    except (TypeError, ValueError):
+        return False
+
+
+def _materially_different(a: Any, b: Any,
+                          rel_tol: float = ANCHOR_REL_TOL,
+                          abs_tol: float = ANCHOR_ABS_TOL) -> bool:
+    """True iff two values differ enough to be reportable. Handles None,
+    strings, and floats. Returns False for any pair where one side is '—'
+    (missing) since that's an artifact-presence issue, not a divergence."""
+    if a in (None, "—") or b in (None, "—"):
+        return False
+    if _is_number(a) and _is_number(b):
+        af, bf = float(a), float(b)
+        diff = abs(af - bf)
+        scale = max(abs(af), abs(bf), 1.0)
+        return diff > max(abs_tol, rel_tol * scale)
+    return str(a) != str(b)
+
+
+def detect_divergences(
+    ceo_p: dict, ceo_d: dict,
+    val_p: dict, val_d: dict,
+    ed_p: dict, ed_d: dict,
+    sig_p: dict, sig_d: dict,
+    anc_p: dict, anc_d: dict,
+) -> list[dict]:
+    """Walk each summarised artifact and emit a list of divergence
+    findings. Each finding has a stable `title` so re-occurrences across
+    weeks land on the same ledger fingerprint.
+
+    Returns list of {title, detail, severity}."""
+    out: list[dict] = []
+
+    # CEO-grade verdict mismatch — most important signal.
+    vp, vd = str(ceo_p.get("verdict", "—")), str(ceo_d.get("verdict", "—"))
+    if vp != vd and "—" not in (vp, vd):
+        out.append({
+            "title": "ceo_grade_verdict_divergence",
+            "detail": f"prod={vp} dev={vd}",
+            "severity": "critical" if "FAIL" in (vp, vd) else "warning",
+        })
+
+    # Validator critical-count divergence.
+    cp, cd = val_p.get("critical_divergences"), val_d.get("critical_divergences")
+    if _is_number(cp) and _is_number(cd) and int(cp) != int(cd):
+        out.append({
+            "title": "validator_critical_count_divergence",
+            "detail": f"prod_criticals={cp} dev_criticals={cd}",
+            "severity": "warning",
+        })
+
+    # Validator failed-count divergence beyond noise (>2).
+    fp, fd = val_p.get("failed"), val_d.get("failed")
+    if _is_number(fp) and _is_number(fd) and abs(int(fp) - int(fd)) > 2:
+        out.append({
+            "title": "validator_failed_count_divergence",
+            "detail": f"prod_failed={fp} dev_failed={fd}",
+            "severity": "warning",
+        })
+
+    # Editorial criticals: any delta is reportable.
+    ep, ed_c = ed_p.get("critical", 0), ed_d.get("critical", 0)
+    if _is_number(ep) and _is_number(ed_c) and int(ep) != int(ed_c):
+        out.append({
+            "title": "editorial_critical_count_divergence",
+            "detail": f"prod_critical={ep} dev_critical={ed_c}",
+            "severity": "warning",
+        })
+
+    # Signal-flag drift — same upstream data should give same flags.
+    for key in ("alert_count", "watch_count", "flagged_count"):
+        sp, sd = sig_p.get(key), sig_d.get(key)
+        if _is_number(sp) and _is_number(sd) and int(sp) != int(sd):
+            out.append({
+                "title": f"signal_{key}_divergence",
+                "detail": f"prod={sp} dev={sd}",
+                "severity": "warning",
+            })
+
+    # Anchor metric divergence — beyond 0.5% relative tolerance only.
+    for label, prod_val in anc_p.items():
+        dev_val = anc_d.get(label, "—")
+        if _materially_different(prod_val, dev_val):
+            out.append({
+                "title": f"anchor_divergence:{label.lower().replace(' ', '_')}",
+                "detail": f"prod={prod_val} dev={dev_val}",
+                "severity": "warning",
+            })
+
+    return out
+
+
+def build_report(main_ref: str, dev_ref: str,
+                 *, repo_root: Path | None = None) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     sections: list[str] = [
         "# Parallel-run comparison: prod (main) vs dev",
@@ -244,29 +367,90 @@ def build_report(main_ref: str, dev_ref: str) -> str:
     ]
 
     # CEO verdict
-    p = summarize_ceo_verdict(load_json_ref(main_ref, "data/ceo_grade_verdict.json"))
-    d = summarize_ceo_verdict(load_json_ref(dev_ref,  "data/ceo_grade_verdict.json"))
-    sections.append(render_kv_table(p, d, "CEO-grade verdict"))
+    ceo_p = summarize_ceo_verdict(load_json_ref(main_ref, "data/ceo_grade_verdict.json"))
+    ceo_d = summarize_ceo_verdict(load_json_ref(dev_ref,  "data/ceo_grade_verdict.json"))
+    sections.append(render_kv_table(ceo_p, ceo_d, "CEO-grade verdict"))
 
     # Validator
-    p = summarize_validator(load_json_ref(main_ref, "data/validation_report.json"))
-    d = summarize_validator(load_json_ref(dev_ref,  "data/validation_report.json"))
-    sections.append(render_kv_table(p, d, "Validator (10-pass)"))
+    val_p = summarize_validator(load_json_ref(main_ref, "data/validation_report.json"))
+    val_d = summarize_validator(load_json_ref(dev_ref,  "data/validation_report.json"))
+    sections.append(render_kv_table(val_p, val_d, "Validator (10-pass)"))
 
     # Editorial
-    p = summarize_editorial(load_json_ref(main_ref, "data/editorial_report.json"))
-    d = summarize_editorial(load_json_ref(dev_ref,  "data/editorial_report.json"))
-    sections.append(render_kv_table(p, d, "Editorial review"))
+    ed_p = summarize_editorial(load_json_ref(main_ref, "data/editorial_report.json"))
+    ed_d = summarize_editorial(load_json_ref(dev_ref,  "data/editorial_report.json"))
+    sections.append(render_kv_table(ed_p, ed_d, "Editorial review"))
 
     # Signals
-    p = summarize_signals(load_json_ref(main_ref, "data/signals.json"))
-    d = summarize_signals(load_json_ref(dev_ref,  "data/signals.json"))
-    sections.append(render_kv_table(p, d, "Analyzer signals"))
+    sig_p = summarize_signals(load_json_ref(main_ref, "data/signals.json"))
+    sig_d = summarize_signals(load_json_ref(dev_ref,  "data/signals.json"))
+    sections.append(render_kv_table(sig_p, sig_d, "Analyzer signals"))
 
     # Raw anchors
-    p = summarize_raw_anchors(load_json_ref(main_ref, "data/raw_data.json"))
-    d = summarize_raw_anchors(load_json_ref(dev_ref,  "data/raw_data.json"))
-    sections.append(render_kv_table(p, d, "Raw data anchors (latest values)"))
+    anc_p = summarize_raw_anchors(load_json_ref(main_ref, "data/raw_data.json"))
+    anc_d = summarize_raw_anchors(load_json_ref(dev_ref,  "data/raw_data.json"))
+    sections.append(render_kv_table(anc_p, anc_d, "Raw data anchors (latest values)"))
+
+    # ── Divergences + recommended fixes ────────────────────────────
+    divergences = detect_divergences(
+        ceo_p, ceo_d, val_p, val_d, ed_p, ed_d, sig_p, sig_d, anc_p, anc_d
+    )
+
+    recorded: list[dict] = []
+    if divergences and _ledger is not None and repo_root is not None:
+        for f in divergences:
+            try:
+                entry = _ledger.record_finding(
+                    repo_root,
+                    source="parallel_compare",
+                    severity=f.get("severity", "warning"),
+                    title=f["title"],
+                    detail=f.get("detail", ""),
+                    branch="dev",  # divergences are observed on the dev side
+                )
+                recorded.append(entry)
+            except Exception as e:  # pragma: no cover
+                print(f"[ledger] record_finding failed: {e}", file=sys.stderr)
+
+    if divergences:
+        sections.append("## Divergences detected")
+        sections.append("")
+        for d_ in divergences:
+            sev = d_.get("severity", "warning").upper()
+            sections.append(
+                f"- **[{sev}]** {d_['title']} — {d_.get('detail', '')}"
+            )
+        sections.append("")
+    else:
+        sections.append("## Divergences detected")
+        sections.append("")
+        sections.append("_None — pipelines produced equivalent outputs within tolerance._")
+        sections.append("")
+
+    if recorded:
+        sections.append("## Recommended fixes")
+        sections.append("")
+        sections.append(
+            "Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. "
+            "Full status tracking in `data/parallel_findings_ledger.md`."
+        )
+        sections.append("")
+        seen_fp: set[str] = set()
+        for entry in recorded:
+            fp = entry.get("fingerprint", "")
+            if fp in seen_fp:
+                continue
+            seen_fp.add(fp)
+            sections.append(
+                f"### {entry.get('title', '?')}  "
+                f"_(seen {entry.get('occurrence_count', 1)}× · "
+                f"status: {entry.get('status', 'open')})_"
+            )
+            sections.append("")
+            sections.append(f"- **Detail:** {entry.get('detail', '—')}")
+            sections.append(f"- **Fix:** {entry.get('recommended_fix', '—')}")
+            sections.append(f"- **Fingerprint:** `{fp}`")
+            sections.append("")
 
     # Interpretation guide
     sections.extend([
@@ -341,7 +525,8 @@ def main() -> int:
         )
         return 2
 
-    report = build_report(args.main_ref, args.dev_ref)
+    repo_root = Path(__file__).resolve().parent.parent
+    report = build_report(args.main_ref, args.dev_ref, repo_root=repo_root)
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -354,6 +539,15 @@ def main() -> int:
 
     print(f"✅ Wrote {dated_path}")
     print(f"✅ Wrote {latest_path}")
+
+    # Re-render ledger markdown after divergence findings recorded.
+    if _ledger is not None:
+        try:
+            ledger_path = _ledger.write_markdown(repo_root)
+            print(f"✅ Wrote {ledger_path}")
+        except Exception as e:  # pragma: no cover
+            print(f"[ledger] write_markdown failed: {e}", file=sys.stderr)
+
     return 0
 
 

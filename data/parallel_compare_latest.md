@@ -1,9 +1,9 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-05-15 03:05 UTC._
+_Generated 2026-05-15 04:33 UTC._
 
-- **Prod ref:** `main`
-- **Dev ref:** `dev/multi-expert-improvements`
+- **Prod ref:** `origin/main`
+- **Dev ref:** `HEAD`
 
 Read this report week-over-week to track whether the dev branch's
 improvements (new gates, lexicon, transcript coverage check, etc.)
@@ -62,6 +62,34 @@ are producing a meaningfully different pipeline verdict than prod.
 | WTI Crude | — | — | — |
 | 10Y Treasury | 4.46 | 4.46 | 0 |
 | Unemployment Rate | 7.2 | 7.2 | 0 |
+
+## Divergences detected
+
+- **[WARNING]** validator_critical_count_divergence — prod_criticals=0 dev_criticals=1
+- **[WARNING]** validator_failed_count_divergence — prod_failed=15 dev_failed=27
+- **[WARNING]** signal_flagged_count_divergence — prod=0 dev=2
+
+## Recommended fixes
+
+Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Full status tracking in `data/parallel_findings_ledger.md`.
+
+### validator_critical_count_divergence  _(seen 2× · status: open)_
+
+- **Detail:** prod_criticals=0 dev_criticals=1
+- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+- **Fingerprint:** `parallel_compare:validator_critical_count_divergence:cfa5fd800344`
+
+### validator_failed_count_divergence  _(seen 2× · status: open)_
+
+- **Detail:** prod_failed=15 dev_failed=30
+- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+- **Fingerprint:** `parallel_compare:validator_failed_count_divergence:60c2262a6006`
+
+### signal_flagged_count_divergence  _(seen 2× · status: open)_
+
+- **Detail:** prod=0 dev=2
+- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+- **Fingerprint:** `parallel_compare:signal_flagged_count_divergence:01dbd0e3130d`
 
 ---
 
