@@ -21,7 +21,12 @@ name: Weekly Macro Update (DEV — parallel)
 on:
   schedule:
     - cron: '0 12 * * 6'        # Weekly: Sat 08:00 EDT / 07:00 EST (mirrors prod)
-    - cron: '0 14 8-14 * 6'     # Monthly deep: 2nd Sat 10:00 EDT / 09:00 EST
+    # Removed second cron (`0 14 8-14 * 6`) on 2026-05-14. Cron OR-
+    # semantics on DoM+DoW caused it to fire DAILY during days 8-14
+    # of each month, not just the 2nd Saturday as the comment claimed.
+    # Weekly Saturday cron above is sufficient; if a different deep-
+    # refresh behaviour is needed later, gate it inside the job with
+    # `[ $(date -u +%d) -le 14 ]` rather than re-adding a second cron.
   push:
     branches: ['dev/multi-expert-improvements']
   workflow_dispatch:
