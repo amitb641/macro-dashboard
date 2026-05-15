@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-15 05:21 UTC._
+_Generated 2026-05-15 14:18 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `ea901befa9b9` — 🌑 Shadow update (dev): 2026-05-15
+- **Commit:** `30d9bf8a3af0` — 🌑 Shadow update (dev): 2026-05-15
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
@@ -59,7 +59,7 @@ Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Status tracking 
 | total_checks | 577 |
 | passed | 550 |
 | failed | 27 |
-| skipped | 8 |
+| skipped | 10 |
 | critical_divergences | 1 |
 
 ### Editorial review
