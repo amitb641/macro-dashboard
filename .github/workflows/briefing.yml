@@ -4,9 +4,12 @@ on:
   schedule:
     # Weekly data pull: every Saturday 8am ET (12:00 UTC)
     - cron: '0 12 * * 6'
-    # Monthly deep refresh: 2nd Saturday 10am ET (14:00 UTC)
-    # Captures Jobs (1st Fri) + CPI (~10th-13th) in one AI pass
-    - cron: '0 14 8-14 * 6'
+    # Second cron `0 14 8-14 * 6` removed 2026-05-14 — cron OR-semantics
+    # on DoM+DoW caused it to fire DAILY during days 8-14 of each month
+    # instead of "2nd Saturday only" as intended. The weekly cron above
+    # already covers every Saturday including the 2nd one. If a genuinely
+    # different deep-refresh behaviour is needed later, gate it inside
+    # the job (e.g. `[ $(date -u +%d) -le 14 ]`) rather than a 2nd cron.
   workflow_dispatch:
     inputs:
       force_ai:
