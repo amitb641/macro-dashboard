@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-05-15T02:48:00.499512Z",
+  "validated_at": "2026-05-15T04:41:00.418797Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 561,
-    "passed": 534,
+    "total_checks": 562,
+    "passed": 535,
     "failed": 27,
     "skipped": 8,
     "critical_divergences": 1
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-15T02:46:28.937890Z",
+      "collected_at": "2026-05-15T04:39:14.214020Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3783,6 +3783,14 @@
       "metric": "deficit_pct_gdp",
       "floor": 0.5,
       "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
+    }
+  ],
+  "secret_leaks": [
+    {
+      "check": "Secret leak scan (16 JSON files)",
+      "pass": true,
+      "severity": "ok",
+      "note": "no api_key/token/key= patterns detected"
     }
   ]
 }
