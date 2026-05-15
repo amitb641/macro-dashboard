@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-15 03:05 UTC._
+_Generated 2026-05-15 04:56 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `ffa2a7c73002` — 🌑 Shadow update (dev): 2026-05-15
+- **Commit:** `29b0aac35c96` — 🌑 Shadow update (dev): 2026-05-15
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
@@ -17,13 +17,25 @@ fired yet. The paired diff (when both branches are fresh) is in
 ## Headline
 
 - **CEO-grade verdict:** **—**
-- **Validator:** 534 passed / 27 failed / 1 critical
+- **Validator:** 535 passed / 27 failed / 1 critical
 - **Editorial:** 0 critical, 0 warning
 - **Signals:** risk=HIGH, alerts=3, watch=1
 
 ## Findings that need attention
 
-_None at critical severity._
+**Validator criticals:**
+
+- earnings_verbatim:transcript_archive_coverage
+
+## Recommended fixes
+
+Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Status tracking and resolution notes live in `data/parallel_findings_ledger.md` (open / monitoring / resolved).
+
+### earnings_verbatim:transcript_archive_coverage  _(seen 4× · status: open)_
+
+- **Detail:** 
+- **Fix:** Archive the missing earnings transcripts under `data/transcripts/<Quarter>/<TICKER>.txt`. Validator Pass 3c (verbatim gate) requires the transcript text be present for every quoted span in `data/bank_earnings.json`. See CLAUDE.md → 'Update Workflow (Q2 2026 onward)' for the full flow.
+- **Fingerprint:** `validator:earnings_verbatim:transcript_archive_cov:87fb43e0cdb7`
 
 ---
 
@@ -44,8 +56,8 @@ _None at critical severity._
 | Metric | Value |
 |---|---|
 | status | WARN |
-| total_checks | 561 |
-| passed | 534 |
+| total_checks | 562 |
+| passed | 535 |
 | failed | 27 |
 | skipped | 8 |
 | critical_divergences | 1 |
