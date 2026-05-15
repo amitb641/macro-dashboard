@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-05-15T04:41:14.478056Z",
+  "checked_at": "2026-05-15T05:06:12.547188Z",
   "status": "FAIL",
   "summary": {
-    "total_checks": 349,
-    "passed": 337,
+    "total_checks": 364,
+    "passed": 352,
     "failed": 12,
     "js_errors": 0,
     "console_errors": 0
@@ -720,37 +720,127 @@
     },
     {
       "category": "CPI",
-      "check": "Panel \"Monthly CPI \u2014 Headline vs Core YoY % (13\" has title",
+      "check": "Panel \"Headline CPI re-accelerates above Core f\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"CPI by Category \u2014 MoM Change (Apr'26 vs \" has title",
+      "check": "Panel \"Energy and transport categories are pull\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"U.S. CPI Inflation \u2014 Annual Rate (Dec-to\" has title",
+      "check": "Panel \"Annual CPI is still well above the Fed's\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"CPI by Category \u2014 2022 Peak vs 2024 vs 2\" has title",
+      "check": "Panel \"Goods inflation has normalised; services\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"CPI Category Annual Rates\" has title",
+      "check": "Panel \"Category-level annual rates show four st\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Inflation Breadth \u2014 Trimmed-Mean & Media\" has title",
+      "check": "Panel \"Trimmed-mean and median CPI track headli\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.1 panel title contains finite verb (finding-first)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.2 panel-meta strip present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.3 \"so what\" footer present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.1 panel title contains finite verb (finding-first)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.2 panel-meta strip present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.3 \"so what\" footer present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.1 panel title contains finite verb (finding-first)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.2 panel-meta strip present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.3 \"so what\" footer present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.1 panel title contains finite verb (finding-first)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.2 panel-meta strip present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.3 \"so what\" footer present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.1 panel title contains finite verb (finding-first)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.2 panel-meta strip present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "\u00a723.3 \"so what\" footer present",
       "pass": true,
       "severity": "ok"
     },

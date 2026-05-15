@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-05-15T04:41:00.418797Z",
+  "validated_at": "2026-05-15T05:05:58.372620Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 562,
-    "passed": 535,
+    "total_checks": 577,
+    "passed": 550,
     "failed": 27,
     "skipped": 8,
     "critical_divergences": 1
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-15T04:39:14.214020Z",
+      "collected_at": "2026-05-15T05:04:17.530056Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -870,7 +870,7 @@
   ],
   "panel_data_consistency": [
     {
-      "check": "CPI by Category \u2014 MoM Change: title months match CPI_CAT_MOM keys",
+      "check": "Energy and transport categories are pulling the basket higher: title months match CPI_CAT_MOM keys",
       "title_months": [
         "apr",
         "mar"
@@ -883,17 +883,13 @@
       "pass": true
     },
     {
-      "check": "CPI by Category \u2014 MoM Change: prior-month chip matches title",
+      "check": "Energy and transport categories are pulling the basket higher: prior-month chip matches title",
       "expected_prior": "Mar'26",
       "chips_found": [
         "Apr'26",
         "Mar'26",
         "Apr'26",
-        "Mar'26",
         "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Mar'26",
         "Apr'26",
         "Mar'26"
       ],
@@ -2208,37 +2204,127 @@
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"Monthly CPI \u2014 Headline vs Core YoY % (13\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Headline CPI re-accelerates above Core f\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"CPI by Category \u2014 MoM Change (Apr'26 vs \" has title",
+      "check": "Visual: CPI \u2014 Panel \"Energy and transport categories are pull\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"U.S. CPI Inflation \u2014 Annual Rate (Dec-to\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Annual CPI is still well above the Fed's\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"CPI by Category \u2014 2022 Peak vs 2024 vs 2\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Goods inflation has normalised; services\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"CPI Category Annual Rates\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Category-level annual rates show four st\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"Inflation Breadth \u2014 Trimmed-Mean & Media\" has title",
+      "check": "Visual: CPI \u2014 Panel \"Trimmed-mean and median CPI track headli\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -3787,7 +3873,7 @@
   ],
   "secret_leaks": [
     {
-      "check": "Secret leak scan (16 JSON files)",
+      "check": "Secret leak scan (17 JSON files)",
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"
