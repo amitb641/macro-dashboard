@@ -1,0 +1,126 @@
+{
+  "_doc": "Per-series Y-axis baselines (floor/ceiling) for chart rendering. Anchored on the 10-year published range so a 0.4pp move in a 2.5-5.5% Fed funds chart visibly traverses ~10% of the panel height instead of vanishing into auto-scale. Style guide \u00a76.1 references this file. visual_qa.py asserts each charted Y-domain matches \u00b15% of these values.",
+  "_version": "1.0",
+  "_updated": "2026-05-15",
+  "_rules": {
+    "floor": "Y-axis minimum. May be below the data's actual min so the chart frames historical context.",
+    "ceiling": "Y-axis maximum. May be above the data's actual max for the same reason.",
+    "note": "Optional rationale for the chosen window."
+  },
+  "series": {
+    "FEDFUNDS": {
+      "label": "Federal Funds Rate",
+      "floor": 0.0,
+      "ceiling": 6.0,
+      "note": "Covers ZIRP through 5.5% peak; gives recent +/-0.5pp moves visible amplitude"
+    },
+    "DGS10": {
+      "label": "10-Year Treasury Yield",
+      "floor": 0.5,
+      "ceiling": 6.0,
+      "note": "Covers 2020 lows (0.6%) through 5%+ peak"
+    },
+    "DGS2": {
+      "label": "2-Year Treasury Yield",
+      "floor": 0.0,
+      "ceiling": 6.0,
+      "note": "Mirrors DGS10 range; 2Y sits below 10Y in normal regimes"
+    },
+    "DGS30": {
+      "label": "30-Year Treasury Yield",
+      "floor": 1.0,
+      "ceiling": 6.0,
+      "note": "Long bond range; less volatile than DGS2/DGS10"
+    },
+    "MORTGAGE30US": {
+      "label": "30-Year Mortgage Rate",
+      "floor": 2.5,
+      "ceiling": 8.5,
+      "note": "Spans 2021 lows through 2023 peak"
+    },
+    "UNRATE": {
+      "label": "Unemployment Rate",
+      "floor": 3.0,
+      "ceiling": 8.0,
+      "note": "Excludes COVID 14.8% spike (would crush all other variation)"
+    },
+    "CPIAUCSL_YOY": {
+      "label": "Headline CPI YoY",
+      "floor": -1.0,
+      "ceiling": 10.0,
+      "note": "Covers 2020 deflation flirt and 2022 9% peak"
+    },
+    "CPILFESL_YOY": {
+      "label": "Core CPI YoY",
+      "floor": 0.5,
+      "ceiling": 7.0,
+      "note": "Less volatile than headline; tighter window OK"
+    },
+    "PCEPI_YOY": {
+      "label": "Headline PCE YoY",
+      "floor": -1.0,
+      "ceiling": 8.0,
+      "note": "Tracks CPI but typically 0.3pp lower"
+    },
+    "PCEPILFE_YOY": {
+      "label": "Core PCE YoY",
+      "floor": 0.5,
+      "ceiling": 6.0,
+      "note": "The Fed's preferred gauge; primary target window"
+    },
+    "GDPC1_YOY": {
+      "label": "Real GDP YoY",
+      "floor": -3.0,
+      "ceiling": 6.0,
+      "note": "Excludes COVID -9% trough; recession-band visible above floor"
+    },
+    "PAYEMS_MoM_K": {
+      "label": "NFP MoM (thousands)",
+      "floor": -200,
+      "ceiling": 600,
+      "note": "Excludes COVID -20M shock; normal range +/-300K"
+    },
+    "GASREGW": {
+      "label": "Regular Gasoline ($/gal)",
+      "floor": 2.0,
+      "ceiling": 6.0,
+      "note": "Covers 2020 $1.80 lows through 2022 $5 peak"
+    },
+    "WTI": {
+      "label": "WTI Crude ($/bbl)",
+      "floor": 20.0,
+      "ceiling": 140.0,
+      "note": "Excludes 2020 negative-print anomaly"
+    },
+    "UMCSENT": {
+      "label": "UMich Consumer Sentiment",
+      "floor": 50.0,
+      "ceiling": 100.0,
+      "note": "Index level; 50 floor avoids dramatic-looking moves at the bottom"
+    },
+    "PSAVERT": {
+      "label": "Personal Saving Rate",
+      "floor": 0.0,
+      "ceiling": 16.0,
+      "note": "Excludes 2020 COVID spike to 32%"
+    },
+    "CASE_SHILLER": {
+      "label": "Case-Shiller HPI",
+      "floor": 150.0,
+      "ceiling": 350.0,
+      "note": "Index level; long-run housing trend"
+    },
+    "WAGES_YOY": {
+      "label": "Avg Hourly Earnings YoY",
+      "floor": 1.5,
+      "ceiling": 6.5,
+      "note": "Pre-COVID 3% trend through 2022 6% peak"
+    },
+    "CC_DELINQ": {
+      "label": "Credit Card 90+ DPD",
+      "floor": 1.0,
+      "ceiling": 5.0,
+      "note": "Banking-stress signal range"
+    }
+  }
+}

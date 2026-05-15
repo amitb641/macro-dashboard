@@ -26,6 +26,115 @@ var _ChartJS = window.Chart;
 if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart will not render. Ensure the file is in the same directory as index.html.");
 </script>
 <script>
+// ════════════════════════════════════════════════════════════════════
+// UPLIFT-2026-05 — chart annotation + a11y + value-pulse helpers.
+// Documented in style_guide.md §§4.5, 6.1, 6.7, 15.2. All helpers are
+// pure functions on `window.MD` so renderer.py can call them by name
+// when injecting chart configs.
+// ════════════════════════════════════════════════════════════════════
+(function(){
+  "use strict";
+  if (window.MD && window.MD._upliftLoaded) return;
+  var MD = window.MD = window.MD || {};
+
+  // Baseline lookup (style_guide §6.1). Hardcoded copy of
+  // data/chart_baselines.json keyed by FRED-style series ID. Use
+  // MD.baseline('FEDFUNDS') to get {floor, ceiling} or null.
+  MD._baselines = {
+    "FEDFUNDS":     {floor:0.0, ceiling:6.0},
+    "DGS10":        {floor:0.5, ceiling:6.0},
+    "DGS2":         {floor:0.0, ceiling:6.0},
+    "DGS30":        {floor:1.0, ceiling:6.0},
+    "MORTGAGE30US": {floor:2.5, ceiling:8.5},
+    "UNRATE":       {floor:3.0, ceiling:8.0},
+    "CPIAUCSL_YOY": {floor:-1.0, ceiling:10.0},
+    "CPILFESL_YOY": {floor:0.5, ceiling:7.0},
+    "PCEPI_YOY":    {floor:-1.0, ceiling:8.0},
+    "PCEPILFE_YOY": {floor:0.5, ceiling:6.0},
+    "GDPC1_YOY":    {floor:-3.0, ceiling:6.0},
+    "PAYEMS_MoM_K": {floor:-200, ceiling:600},
+    "GASREGW":      {floor:2.0, ceiling:6.0},
+    "WTI":          {floor:20.0, ceiling:140.0},
+    "UMCSENT":      {floor:50.0, ceiling:100.0},
+    "PSAVERT":      {floor:0.0, ceiling:16.0},
+    "CASE_SHILLER": {floor:150.0, ceiling:350.0},
+    "WAGES_YOY":    {floor:1.5, ceiling:6.5},
+    "CC_DELINQ":    {floor:1.0, ceiling:5.0}
+  };
+  MD.baseline = function(seriesId){
+    return MD._baselines[seriesId] || null;
+  };
+
+  // Apply baseline to a Chart.js options object before init. Mutates.
+  // Usage: MD.applyBaseline(opts, "FEDFUNDS")
+  MD.applyBaseline = function(opts, seriesId){
+    if (!opts || !opts.scales) return opts;
+    var b = MD.baseline(seriesId);
+    if (!b) return opts;
+    var y = opts.scales.y || opts.scales.yAxes && opts.scales.yAxes[0];
+    if (y) {
+      if (typeof y.min === "undefined") y.min = b.floor;
+      if (typeof y.max === "undefined") y.max = b.ceiling;
+    }
+    return opts;
+  };
+
+  // §4.5 — Build a Chart.js annotation plugin config that draws:
+  //   (a) a vertical "Now" line at the last data point's x value
+  //   (b) a "Last print" pill above the line with value + date
+  // Requires chartjs-plugin-annotation when present; otherwise falls
+  // back to a no-op so absence of the plugin doesn't break the chart.
+  MD.buildNowAnnotation = function(lastX, lastY, fmt){
+    fmt = fmt || function(v){ return String(v); };
+    return {
+      annotations: {
+        nowLine: {
+          type: "line",
+          xMin: lastX, xMax: lastX,
+          borderColor: "#336BCC",
+          borderWidth: 1,
+          drawTime: "afterDatasetsDraw"
+        },
+        lastPrintPill: {
+          type: "label",
+          xValue: lastX, yValue: lastY,
+          backgroundColor: "rgba(255,255,255,0.92)",
+          borderColor: "#E2E8F0",
+          borderWidth: 1,
+          borderRadius: 3,
+          font: { family: "'DM Mono','Courier New',monospace", size: 9, weight: "600" },
+          color: "#0D1B2A",
+          padding: { top: 2, bottom: 2, left: 6, right: 6 },
+          content: ["Last: " + fmt(lastY)],
+          position: { x: "center", y: "start" },
+          yAdjust: -14
+        }
+      }
+    };
+  };
+
+  // §15.2 — Value pulse: call MD.pulseValue(el) to animate a single
+  // 200ms 1.02× scale on a KPI/metric value DOM element. Honors
+  // prefers-reduced-motion via the CSS .value-changed rule.
+  MD.pulseValue = function(el){
+    if (!el || !el.classList) return;
+    el.classList.remove("value-changed");
+    // force reflow so the animation re-triggers if called repeatedly
+    void el.offsetWidth;
+    el.classList.add("value-changed");
+  };
+
+  // §15.2 — Skeleton state on a KPI tile while data loads. Add/remove
+  // the .skeleton class on the value node.
+  MD.skeleton = function(el, on){
+    if (!el || !el.classList) return;
+    el.classList.toggle("skeleton", !!on);
+  };
+
+  MD._upliftLoaded = true;
+})();
+</script>
+<script>
 (function(){
 "use strict";
 function pC(c){if(!c)return"rgba(51,107,204,0.75)";if(typeof c==="string"&&(c.startsWith("rgba")||c.startsWith("rgb")||c.startsWith("#")))return c;return"#336BCC";}
@@ -668,6 +777,89 @@ h1 span{color:var(--accent)}
 
 /* GRID LAYOUTS */
 .two-up{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ────────────────────────────────────────────────────────────────────
+   UPLIFT-2026-05: Panel-meta strip, So-what footer, dense tiles,
+   sparkgrid, briefing-zone rhythm, motion affordances, mobile table
+   row-cards, shape-redundancy on direction bars. All additive — no
+   existing class is modified. Cited by style_guide.md §§5.2, 6.7,
+   7.5, 8.6, 9.6, 13.2, 15.2, 16.2, 17.2.
+   ────────────────────────────────────────────────────────────────── */
+
+/* §13.2 Panel-meta strip — Goldman-style "Exhibit N | Source | As-of" */
+.panel-meta{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--muted);letter-spacing:.02em;margin:-2px 0 12px 0;line-height:1.5;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}
+.panel-meta .pm-sep{color:var(--dim);font-weight:400}
+.panel-meta .pm-exhibit{color:var(--text2);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.panel-meta .pm-source{color:var(--text2)}
+.panel-meta .pm-asof{color:var(--muted)}
+.panel-meta .pm-cadence{color:var(--dim);font-style:italic}
+
+/* §6.7 "So what" footer — McKinsey-style takeaway under each chart */
+.so-what{font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-style:italic;color:var(--text2);margin:12px 0 0 0;padding:8px 12px;border-left:2px solid var(--accent);background:rgba(51,107,204,.04);line-height:1.45;border-radius:0 4px 4px 0}
+.so-what::before{content:"So what — ";font-style:normal;font-weight:600;color:var(--text);letter-spacing:.01em}
+
+/* §7.5 Dense tile variant — Bloomberg-style high-density KPI row */
+.metric.dense,.m-tile.dense{padding:9px 11px}
+.metric.dense .m-lbl,.m-tile.dense .m-lbl{font-size:8px;letter-spacing:.10em;margin-bottom:3px}
+.metric.dense .m-val,.m-tile.dense .m-val{font-size:15px;font-weight:500;display:inline-block;margin-right:6px}
+.metric.dense .m-sub,.m-tile.dense .m-sub{font-size:9px;margin-top:2px;display:inline-block}
+.metric-row.dense{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+
+/* §6.8 Sparkgrid — Tufte small-multiples for many-of-the-same-metric */
+.sparkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:8px 0}
+.sparkgrid .spark-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.sparkgrid .spark-cell:hover{border-color:var(--bord2);box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.sparkgrid .spark-label{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.10em;color:var(--muted);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sparkgrid .spark-svg{width:100%;height:32px;display:block}
+.sparkgrid .spark-line{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.sparkgrid .spark-last{fill:var(--accent);stroke:none}
+.sparkgrid .spark-foot{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:10px}
+.sparkgrid .spark-val{font-family:'Instrument Serif',serif;font-size:14px;color:var(--text);font-variant-numeric:tabular-nums;line-height:1}
+.sparkgrid .spark-delta{font-size:9px;font-variant-numeric:tabular-nums}
+.sparkgrid .spark-delta.up{background:transparent;border:none;padding:0;color:var(--green)}
+.sparkgrid .spark-delta.dn{background:transparent;border:none;padding:0;color:var(--red)}
+
+/* §5.2 Briefing-zone rhythm — Pentagram-style three zones */
+.fc-note,.commentary-zone{margin-top:32px;margin-bottom:24px}
+.commentary-zone-data{margin-top:16px;margin-bottom:16px}
+.commentary-zone-reference,.src{margin-top:8px;margin-bottom:8px}
+
+/* §16.2 Shape redundancy on direction bars — a11y for deuteranopia */
+.dir-bar-up::before{content:"\2191\00a0";font-weight:700}
+.dir-bar-dn::before{content:"\2193\00a0";font-weight:700}
+.dir-glyph-up::after{content:"\00a0\25B2";font-size:.85em}
+.dir-glyph-dn::after{content:"\00a0\25BC";font-size:.85em}
+
+/* §17.2 Mobile table row-cards — Datawrapper-style collapse <600px */
+@media (max-width:600px){
+  .dtable.responsive{display:block;min-width:0;border:none}
+  .dtable.responsive thead{display:none}
+  .dtable.responsive tbody,.dtable.responsive tr{display:block;width:100%}
+  .dtable.responsive tr{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .dtable.responsive td{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border:none;white-space:normal;max-width:none}
+  .dtable.responsive td:first-child{font-weight:600;color:var(--text);font-size:12px;border-bottom:1px solid var(--bg2);padding-bottom:6px;margin-bottom:4px}
+  .dtable.responsive td:not(:first-child)::before{content:attr(data-label);color:var(--muted);font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+  .dtable.responsive td:not(:first-child){text-align:right}
+}
+
+/* §15.2 Motion affordances — Vercel/Linear product polish.
+   Note: full tab cross-fade requires swapping .tab-panel{display:none}
+   to opacity-only visibility — deferred to a follow-up PR to avoid
+   touching visual_qa's display-state assumptions. The value-pulse and
+   skeleton-loader rules below are display-agnostic and ship today. */
+@keyframes kpi-pulse-once{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+.m-val.value-changed,.kpi-val.value-changed{animation:kpi-pulse-once 200ms ease-in-out 1;display:inline-block}
+@keyframes skeleton-shimmer{0%{background-position:-200px 0}100%{background-position:200px 0}}
+.skeleton{background:linear-gradient(90deg,var(--bg) 0%,var(--bg2) 50%,var(--bg) 100%);background-size:400px 100%;animation:skeleton-shimmer 1.2s linear infinite;border-radius:4px;color:transparent !important;user-select:none}
+@media (prefers-reduced-motion: reduce){
+  .tab-panel{transition:none}
+  .m-val.value-changed,.kpi-val.value-changed{animation:none}
+  .skeleton{animation:none;background:var(--bg2)}
+}
+
+/* §4.5 "Now" line + "Last print" pill (used by chart annotation helper) */
+.chart-now-pill{font-family:'DM Mono','Courier New',monospace;font-size:9px;background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:3px;padding:2px 6px;color:var(--text);white-space:nowrap}
+.chart-now-pill .lp-date{color:var(--muted);margin-left:4px}
 
 /* ── GLOBAL OVERFLOW PROTECTION ── */
 *,*::before,*::after{box-sizing:border-box}
@@ -1852,50 +2044,61 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Monthly MoM Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Monthly CPI — Headline vs Core YoY % (13-Month Trend)</div>
-      <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · BLS</div>
+      <div class="panel-title">Headline CPI re-accelerates above Core for the third month</div>
+      <div class="panel-sub">CPI-U All Urban Consumers · monthly YoY readings · headline (all items) vs core (ex food &amp; energy) · 13-month trend</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 01</span><span class="pm-sep">|</span><span class="pm-source">BLS CPI-U</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div class="ch300"><canvas id="c-cpi-mom" role="img" aria-label="CPI month-over-month change, 13-month trend"></canvas></div>
+      <div class="so-what">The 90bp headline/core gap is entirely energy-driven; if WTI stays elevated through Q2, core resumes climbing as transport costs transmit.</div>
       <p class="src">Source: BLS CPI-U, seasonally adjusted. Headline includes all items; Core excludes food &amp; energy. Fed 2% target shown as reference.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">CPI by Category — MoM Change (Apr'26 vs Mar'26)</div>
+      <div class="panel-title">Energy and transport categories are pulling the basket higher</div>
       <div class="panel-sub">YoY % by category · Apr'26 vs Mar'26 · sorted by Apr'26 rate · BLS CPI-U</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">BLS CPI-U</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Apr'26 accelerating</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Apr'26 cooling</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Mar'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:380px"><canvas id="c-cpi-cat-mom" role="img" aria-label="CPI categories, month-over-month change"></canvas></div>
+      <div class="so-what">Acceleration is concentrated in energy-adjacent categories rather than broad services — the inflation re-acceleration is shock-driven, not demand-driven.</div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Monthly YoY % change by category. Apr'26 vs Mar'26 comparison.</p>
     </div>
   </div>
 
   <!-- Annual Chart -->
   <div class="panel">
-    <div class="panel-title">U.S. CPI Inflation — Annual Rate (Dec-to-Dec YoY %)</div>
-    <div class="panel-sub">CPI-U All Urban Consumers · U.S. City Average · BLS</div>
+    <div class="panel-title">Annual CPI is still well above the Fed's 2% target after three years</div>
+    <div class="panel-sub">CPI-U All Urban Consumers · Dec-to-Dec YoY % · U.S. City Average · BLS</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 03</span><span class="pm-sep">|</span><span class="pm-source">BLS Series CUUR0000SA0</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
     <div class="ch300"><canvas id="c-cpi-bar" role="img" aria-label="CPI annual rate, headline and core"></canvas></div>
+    <div class="so-what">Three consecutive years of above-target prints make a sustained run at 2% unlikely without restrictive policy held into 2027.</div>
     <p class="src">Source: BLS Series CUUR0000SA0 (CPI-U All Urban Consumers, SA) · Each bar = Dec-to-Dec YoY % change for that calendar year, e.g. 2025 = Dec'25 CPI vs Dec'24 CPI = +2.7%.</p>
   </div>
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">CPI by Category — 2022 Peak vs 2024 vs 2025</div>
-      <div class="panel-sub">Dec-to-Dec % change · grouped comparison</div>
+      <div class="panel-title">Goods inflation has normalised; services and shelter remain sticky</div>
+      <div class="panel-sub">Dec-to-Dec % change by category · 2022 peak vs 2024 vs 2025 · grouped comparison</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 04</span><span class="pm-sep">|</span><span class="pm-source">BLS CPI-U</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
       <div class="ch-inline" style="position:relative;height:400px"><canvas id="c-cpi-cat" role="img" aria-label="CPI categories, annual rate comparison"></canvas></div>
+      <div class="so-what">The disinflation story is real for goods but incomplete for services, where wage and shelter pass-through keep core elevated.</div>
       <p class="src">Source: BLS CPI-U All Urban Consumers. Dec-to-Dec % change by category.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">CPI Category Annual Rates</div>
-      <div class="panel-sub">Dec-to-Dec % change · BLS CPI-U</div>
-      <div class="dtable-wrap"><table class="dtable" id="cpi-tbl"></table></div>
+      <div class="panel-title">Category-level annual rates show four still above 3%</div>
+      <div class="panel-sub">Dec-to-Dec % change by category · sortable · BLS CPI-U</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 05</span><span class="pm-sep">|</span><span class="pm-source">BLS CPI-U</span><span class="pm-sep">|</span><span class="pm-asof">As of Feb 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
+      <div class="dtable-wrap"><table class="dtable responsive" id="cpi-tbl"></table></div>
+      <div class="so-what">Shelter, transportation services, and food away from home are the persistent flares — each requires a different policy lever to cool.</div>
       <p class="src">Source: BLS CPI-U. Feb 2026 = +2.4% YoY; Jan 2026 = +2.4%; Dec 2025 = +2.7%. Oct–Nov 2025 data unavailable (gov't shutdown). Core CPI Feb 2026: +2.5%.</p>
     </div>
   </div>
 
   <!-- Inflation breadth (B3.3) — trimmed-mean + median CPI vs headline -->
   <div class="panel">
-    <div class="panel-title">Inflation Breadth — Trimmed-Mean &amp; Median CPI vs Headline</div>
-    <div class="panel-sub">Cleveland Fed Trimmed-Mean (TRMMEANCPIM157SFRBCLE) + Median (MEDCPIM157SFRBCLE) · MoM annualised · last 24 months · gauges how broad-based the inflation is vs concentrated in a few outlier categories</div>
+    <div class="panel-title">Trimmed-mean and median CPI track headline — inflation is broad, not concentrated</div>
+    <div class="panel-sub">Cleveland Fed Trimmed-Mean (TRMMEANCPIM157SFRBCLE) + Median (MEDCPIM157SFRBCLE) · MoM annualised · last 24 months</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 06</span><span class="pm-sep">|</span><span class="pm-source">Cleveland Fed + BLS</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#336BCC;border-radius:2px"></span><span style="font-size:10.5px;color:#336BCC;font-weight:600">Headline CPI MoM (ann.)</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#CC8A00;border-radius:2px"></span><span style="font-size:10.5px;color:#CC8A00;font-weight:600">Trimmed-Mean CPI</span></div>
@@ -1903,7 +2106,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:1.5px;background:#94A3B8;border-radius:2px;border-top:1.5px dashed #94A3B8"></span><span style="font-size:10.5px;color:#94A3B8;font-weight:600">Fed 2% target</span></div>
     </div>
     <div class="ch320"><canvas id="c-cpi-breadth" role="img" aria-label="CPI breadth, share of basket above 2% inflation"></canvas></div>
-    <p class="src">Source: Federal Reserve Bank of Cleveland — Median CPI &amp; 16% Trimmed-Mean CPI (monthly, annualised). Headline CPI MoM annualised computed from BLS CPIAUCSL. When trimmed-mean and median sit close to headline, inflation is broad-based and policy-stickier; when they diverge sharply lower, the headline number is being driven by a small set of categories (energy, used cars) and can fade quickly. Cleveland Fed publishes the day after BLS CPI release.</p>
+    <div class="so-what">When trimmed-mean and median converge near headline, the print reflects broad pricing pressure rather than a few outliers — policy-stickier and harder to fade.</div>
+    <p class="src">Source: Federal Reserve Bank of Cleveland — Median CPI &amp; 16% Trimmed-Mean CPI (monthly, annualised). Headline CPI MoM annualised computed from BLS CPIAUCSL. Cleveland Fed publishes the day after BLS CPI release.</p>
   </div>
 </div>
 

@@ -997,18 +997,27 @@ def check_visual_review():
 #   hardcoded legend chips (purple #8878B8bb prior-month swatch).
 # ═══════════════════════════════════════════════════════════════════════
 
-# Each entry: (panel_anchor, js_const_name, key_extractor)
+# Each entry: (panel_anchor_candidates, js_const_name, key_extractor)
+# panel_anchor_candidates is a tuple of strings; the first one found in the
+# HTML wins. This survives finding-first title rewrites (style_guide §23.1)
+# while keeping the panel-data contract intact. Add the new title as the
+# first candidate; keep the old title as a fallback during the sweep.
 # key_extractor returns the list of month tokens (e.g. ['feb','mar']) found
 # in the data const. If empty, the const isn't month-keyed and the check is
 # skipped for that const.
 _PANEL_DATA_MAP = [
-    ('CPI by Category — MoM Change', 'CPI_CAT_MOM',
+    (('Energy and transport categories are pulling the basket higher',
+      'CPI by Category — MoM Change'),
+     'CPI_CAT_MOM',
      lambda obj: [k for k in (obj[0] if obj else {}) if k not in ('cat', 'color')]),
-    ('PCE by Component — YoY %', 'PCE_CAT_MOM',
+    (('PCE by Component — YoY %',),
+     'PCE_CAT_MOM',
      lambda obj: [k for k in (obj[0] if obj else {}) if k not in ('cat', 'color')]),
-    ('Monthly Job Change by Sector', 'SECTOR_MOM',
+    (('Monthly Job Change by Sector',),
+     'SECTOR_MOM',
      lambda obj: [k for k in (obj or {}) if k != 'sectors']),
-    ('Unemployment by Sector — Monthly MoM Change (pp)', 'U_SECTOR_MOM',
+    (('Unemployment by Sector — Monthly MoM Change (pp)',),
+     'U_SECTOR_MOM',
      lambda obj: [k for k in (obj or {}) if k != 'sectors']),
 ]
 
@@ -1050,14 +1059,24 @@ def check_panel_data_consistency(html):
     """Pass 3d: verify each MoM panel's title month tokens match the months
     encoded in the underlying JS data const + the prior-month legend chip."""
     findings = []
-    for anchor, var_name, key_fn in _PANEL_DATA_MAP:
-        title_months = _extract_panel_title_months(html, anchor)
+    for anchor_candidates, var_name, key_fn in _PANEL_DATA_MAP:
+        # Try each anchor candidate; first hit wins (style_guide §23.1
+        # finding-first title sweep means we keep the old title as fallback).
+        anchor = None
+        title_months = None
+        for cand in anchor_candidates:
+            tm = _extract_panel_title_months(html, cand)
+            if tm:
+                anchor, title_months = cand, tm
+                break
         if not title_months:
+            # Report using the canonical (first) candidate
+            anchor = anchor_candidates[0]
             findings.append({
                 'check': f'Panel anchor "{anchor}" present',
                 'severity': 'warning',
                 'pass': False,
-                'reason': 'Panel not found in HTML — anchor may have changed',
+                'reason': f'Panel not found in HTML — tried {len(anchor_candidates)} anchor(s)',
             })
             continue
 

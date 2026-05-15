@@ -315,6 +315,55 @@ def run_visual_qa(take_screenshots=False):
                     _check(tab_name, f'Panel "{title_text[:40]}" has title',
                            len(title_text.strip()) > 0, 'empty panel title')
 
+            # ── §23 Uplift checks — opt-in per tab as the sweep proceeds.
+            # Tabs in UPLIFT_SWEPT_TABS must satisfy:
+            #   (a) §23.1 finding-first titles — at least one finite verb
+            #       in any panel-title containing a chart canvas
+            #   (b) §23.2 panel-meta strip — present in every chart panel
+            #   (c) §23.3 "so what" footer — present in every chart panel
+            #
+            # When you sweep a new tab, add its tab_id to this set.
+            UPLIFT_SWEPT_TABS = {'cpi'}
+
+            if tab_id in UPLIFT_SWEPT_TABS:
+                # Common English finite-verb tokens that show up in
+                # finding-first titles. Best-effort detector; reviewer
+                # remains the final arbiter.
+                _verb_tokens = (
+                    ' is ', ' are ', ' was ', ' were ', ' has ', ' have ',
+                    ' had ', ' show', ' shows', ' indicates', ' remains',
+                    ' remain', ' stays', ' stay', ' tracks', ' track',
+                    ' fall', ' falls', ' rise', ' rises', ' rose', ' fell',
+                    ' run', ' runs', ' ran', ' cool', ' cools', ' cooled',
+                    ' heat', ' heats', ' heated', ' accelerat',
+                    ' decelerat', ' reaccelerat', ' re-accelerat',
+                    ' normalis', ' normaliz', ' converg', ' diverg',
+                    ' pull', ' pulls', ' pulling', ' driv', ' lead',
+                    ' lifted', ' lift', ' beat', ' beats', ' break',
+                    ' breaks', ' broke', ' stuck', ' stick', ' sticks',
+                )
+                chart_panels = [p for p in panels
+                                if p.query_selector('canvas, svg.chart, .ch300, .ch320, .ch400, .ch260, .ch200, .ch-inline')]
+                for p in chart_panels[:10]:
+                    pt = p.query_selector('.panel-title')
+                    title_lc = (pt.inner_text() if pt else '').lower()
+                    has_verb = any(tok in (' ' + title_lc + ' ') for tok in _verb_tokens)
+                    _check(
+                        tab_name, '§23.1 panel title contains finite verb (finding-first)',
+                        has_verb,
+                        f'title: "{title_lc[:60]}"',
+                    )
+                    _check(
+                        tab_name, '§23.2 panel-meta strip present',
+                        p.query_selector('.panel-meta') is not None,
+                        'missing .panel-meta — add Exhibit/Source/As-of/Cadence row',
+                    )
+                    _check(
+                        tab_name, '§23.3 "so what" footer present',
+                        p.query_selector('.so-what') is not None,
+                        'missing .so-what — add takeaway under chart',
+                    )
+
             # Take screenshot if requested
             if take_screenshots:
                 # Scroll to top of tab
