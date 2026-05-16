@@ -3429,51 +3429,63 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Monthly Trend Chart -->
   <div class="panel">
-    <div class="panel-title">Monthly Housing Trend — Case-Shiller YoY % &amp; 30yr Mortgage Rate (13-Month)</div>
+    <div class="panel-title">Mortgage rate at 6.37% is keeping price momentum subdued — Case-Shiller YoY has cooled below 4%</div>
     <div class="panel-sub">Two single-axis panels — each metric reads on its own scale. Top: home-price momentum (Case-Shiller YoY %). Bottom: financing cost (30yr fixed mortgage rate %).</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 01</span><span class="pm-sep">|</span><span class="pm-source">S&amp;P/Case-Shiller + Freddie Mac PMMS</span><span class="pm-sep">|</span><span class="pm-asof">As of Mar 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div class="split-stack">
       <div class="split-stack-row"><canvas id="c-housing-mom" role="img" aria-label="Housing prices month-over-month"></canvas></div>
       <div class="split-stack-row"><canvas id="c-housing-mom-2" role="img" aria-label="30-year mortgage rate trend"></canvas></div>
     </div>
+    <div class="so-what">Rates need to break below ~5.5% to unlock the lock-in cohort — until then, transaction volume stays compressed and price discovery is thin.</div>
     <p class="src">Source: S&amp;P/Case-Shiller Home Price Indices (monthly, 2-month lag); Freddie Mac Primary Mortgage Market Survey (PMMS), weekly avg → monthly. Why both: mortgage rate is the cost-of-capital input; Case-Shiller YoY is the lagged price response. They are read together, not visually correlated — scales differ by ~3x.</p>
   </div>
 
   <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Home Price Index — Case-Shiller & FHFA (2012=100)</div>
+      <div class="panel-title">Home prices have doubled since 2012 — well outpacing wage and income growth</div>
       <div class="panel-sub">National composite annual indices · S&P/Case-Shiller, FHFA</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">S&amp;P/Case-Shiller + FHFA</span><span class="pm-sep">|</span><span class="pm-asof">As of Q1 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div class="ch300"><canvas id="c-hpi" role="img" aria-label="Case-Shiller national home price index"></canvas></div>
+      <div class="so-what">Affordability deterioration has compounded — the price-to-income gap is the structural drag on transaction volume.</div>
       <p class="src">Source: S&amp;P/Case-Shiller National Home Price Index; FHFA House Price Index. Annual composite indices, base year 2012=100.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">30-Year Mortgage Rate vs Fed Funds Rate</div>
+      <div class="panel-title">Mortgage rate gap to Fed funds has widened to ~275bp — term premium is reasserting itself</div>
       <div class="panel-sub">Annual averages 2018–2026F · Freddie Mac PMMS · Fed</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 03</span><span class="pm-sep">|</span><span class="pm-source">Freddie Mac PMMS + Fed H.15</span><span class="pm-sep">|</span><span class="pm-asof">As of May 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed weekly</span></div>
       <div class="ch300"><canvas id="c-mortgage" role="img" aria-label="30-year fixed mortgage rate trend"></canvas></div>
+      <div class="so-what">Fed cuts don't automatically translate to mortgage relief — the long-end + MBS spread is the binding constraint, not the policy rate.</div>
       <p class="src">Source: Freddie Mac Primary Mortgage Market Survey (30yr fixed); Federal Reserve (effective federal funds rate). Annual averages.</p>
     </div>
   </div>
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Housing Starts — Single-Family vs Multi-Family (000s units)</div>
+      <div class="panel-title">Starts at 1.50M are running ahead of effective demand — multi-family is doing most of the heavy lifting</div>
       <div class="panel-sub">Annual seasonally adjusted · Census Bureau</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 04</span><span class="pm-sep">|</span><span class="pm-source">Census Bureau</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div class="ch300"><canvas id="c-starts" role="img" aria-label="Housing starts, monthly annualized rate"></canvas></div>
+      <div class="so-what">A break below 1.2M starts would be a textbook recession signal — single-family is the cyclical canary.</div>
       <p class="src">Source: U.S. Census Bureau. Housing starts, seasonally adjusted annual rate (000s).</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Affordability Index & Months Supply</div>
+      <div class="panel-title">Affordability index near record lows while months-supply has crept back above 4 — buyers are gaining leverage</div>
       <div class="panel-sub">Two single-axis panels. Top: NAR Affordability Index (100 = qualifying income at median home / median family). Bottom: Months Supply with a 6.0 balanced-market reference line — below 6 = seller's market, above 6 = buyer's market.</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 05</span><span class="pm-sep">|</span><span class="pm-source">NAR</span><span class="pm-sep">|</span><span class="pm-asof">As of Mar 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div class="split-stack">
         <div class="split-stack-row"><canvas id="c-afford" role="img" aria-label="Housing affordability index trend"></canvas></div>
         <div class="split-stack-row"><canvas id="c-afford-2" role="img" aria-label="Months of housing supply versus 6-month balanced-market reference"></canvas></div>
       </div>
+      <div class="so-what">As supply normalises toward 6 months, expect concessions, price cuts, and a sustained Case-Shiller MoM slowdown — sellers no longer set the terms.</div>
       <p class="src">Source: NAR Housing Affordability Index; NAR Existing Home Sales (months supply). Why both: affordability gates whether households can transact; months supply tells you who has the pricing power once they do. Different units, different stories — shown separately on purpose.</p>
     </div>
   </div>
   <div class="panel">
-    <div class="panel-title">Metro Home Price Performance — Key Markets 2024–2025</div>
+    <div class="panel-title">Sun Belt is cooling, Northeast is firming — the metro-level price dispersion is narrowing</div>
     <div class="panel-sub">YoY % price change · median price · Case-Shiller metro indices & Zillow</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 06</span><span class="pm-sep">|</span><span class="pm-source">Case-Shiller + FHFA + Zillow</span><span class="pm-sep">|</span><span class="pm-asof">As of Jan 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div class="dtable-wrap"><table class="dtable" id="housing-metro-tbl"></table></div>
+    <div class="so-what">The post-pandemic Sun Belt premium is unwinding — supply is finally catching up to demand in the metros that ran hottest in 2021–22.</div>
     <p class="src">Sources: S&P/Case-Shiller Home Price Indices Jan 2026; FHFA House Price Index Q3 2025; Freddie Mac Primary Mortgage Market Survey; NAR Existing Home Sales & Affordability; Census Bureau New Residential Construction; Zillow Home Value Index Dec 2025. Mortgage rate 2025 avg: ~6.7%. Lock-in effect: ~85% of outstanding mortgages carry rates below 5%.</p>
   </div>
 
@@ -3489,16 +3501,19 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Row 1: FFR chart full-width -->
   <div class="panel">
-    <div class="panel-title">Fed Funds Rate — Actual vs FOMC Dot Plot 2026F</div>
+    <div class="panel-title">Fed Funds at 3.64% — markets price modest cuts, dot plot still hawkish for 2026</div>
     <div class="panel-sub">Actual year-end rate + Dec 2025 SEP median dots · Wall St consensus · Federal Reserve</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 01</span><span class="pm-sep">|</span><span class="pm-source">Federal Reserve + FOMC SEP</span><span class="pm-sep">|</span><span class="pm-asof">As of May 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed daily</span></div>
     <div class="ch320"><canvas id="c-ffr" role="img" aria-label="Federal funds rate, target and effective"></canvas></div>
+    <div class="so-what">Core PCE at 3.2% blocks any cut — until inflation sustainably trends toward 2.5%, the dot plot is the ceiling, not the floor.</div>
     <p class="src">Sources: Federal Reserve H.15; FOMC Dec 2025 SEP (dot plot); GS, JPM, MS forecasts (Jan 2026).</p>
   </div>
 
   <!-- Row 2: Fed Liquidity (B3.4) — Fed balance sheet, reserves, RRP, TGA -->
   <div class="panel">
-    <div class="panel-title">Fed Liquidity — Balance Sheet, Reserves, RRP &amp; TGA</div>
+    <div class="panel-title">Fed balance sheet still draining via QT — reserves are the buffer to watch</div>
     <div class="panel-sub">Weekly · FRED H.4.1 (WALCL/WRESBAL/RRPONTSYD/WTREGEN) · QT trajectory and liquidity drain into reserves/Treasury cash</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">FRED H.4.1</span><span class="pm-sep">|</span><span class="pm-asof">As of May 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed weekly</span></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#336BCC;border-radius:2px"></span><span style="font-size:10.5px;color:#336BCC;font-weight:600">Fed Total Assets (L)</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#1A9E5A;border-radius:2px"></span><span style="font-size:10.5px;color:#1A9E5A;font-weight:600">Bank Reserves (R)</span></div>
@@ -3511,18 +3526,22 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Row 3: Rate history table -->
   <div class="panel">
-    <div class="panel-title">Fed Rate Cycle History &amp; Wall St Forecasts</div>
+    <div class="panel-title">Wall Street sees 50–75bp of cuts by year-end — Fed dots imply only 25bp</div>
     <div class="panel-sub">FOMC rate path 2018–2026F · bank NIM cycle · card issuer yield · GS / JPM / MS targets</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 03</span><span class="pm-sep">|</span><span class="pm-source">Fed H.15 + FOMC SEP + Wall St research</span><span class="pm-sep">|</span><span class="pm-asof">As of May 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed quarterly</span></div>
     <div class="dtable-wrap"><table class="dtable" id="yield-tbl"></table></div>
+    <div class="so-what">The gap between street and SEP medians is the most important consensus error to track — when the Fed is more hawkish than the market, risk assets re-price first.</div>
     <p class="src">Sources: Federal Reserve H.15; FOMC December 2025 SEP; ICE BofA US Corporate &amp; High Yield indices; Goldman Sachs, JPMorgan, Morgan Stanley rate forecasts Jan 2026.</p>
   </div>
 
   <!-- Row 3: Bank Card Funding Mix -->
   <div class="panel">
-    <div class="panel-title">Card Issuer Funding Mix — Deposits vs Market Borrowing</div>
+    <div class="panel-title">Deposit-rich issuers (JPM, BAC) carry a 200bp funding-cost edge over wholesale-funded peers</div>
     <div class="panel-sub">Bank-wide deposits vs total loans · L/D ratio · FDIC Call Reports &amp; 10-K filings · Q4 2025</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 04</span><span class="pm-sep">|</span><span class="pm-source">FDIC Call Reports + 10-K filings</span><span class="pm-sep">|</span><span class="pm-asof">As of Q4 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed quarterly</span></div>
     <div class="ch300"><canvas id="c-bank-funding" role="img" aria-label="Bank funding costs and deposit trends"></canvas></div>
     <div class="dtable-wrap"><table class="dtable" id="bank-funding-tbl"></table></div>
+    <div class="so-what">Wholesale-dependent issuers (COF, DFS, BFH, SYF) face the steepest NIM compression if Fed cuts come slower than the curve expects — watch their funding-cost trajectory in Q2.</div>
     <p class="src">Sources: FDIC Call Reports (Schedule RC-E, RC-M) Q4 2025; Company 10-K/10-Q filings; Federal Reserve H.8; S&amp;P Global Market Intelligence. Deposits &amp; Total Loans = bank-wide figures ($B). L/D ratio = total loans / total deposits; &gt;100% means loans exceed deposits, requiring wholesale funding. Card Yield = card portfolio interest yield where disclosed in quarterly earnings supplements or 10-K; &quot;—&quot; = not separately reported. Rate sensitivity = estimated NII impact of +100bp rate shock. Tickers: JPM = JPMorgan Chase; BAC = Bank of America; CITI = Citigroup; COF = Capital One; DFS = Discover Financial; AXP = American Express; BCS = Barclays; SYF = Synchrony Financial; BFH = Bread Financial.</p>
   </div>
 
@@ -3531,8 +3550,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Row 5: 10Y Treasury Yield vs Card 90+ DPD -->
   <div class="panel">
-    <div class="panel-title">10Y Treasury Yield vs Card 90+ DPD — Yield &amp; Credit Risk Signal</div>
+    <div class="panel-title">10Y at 4.47% has held above card delinquency cycle peaks — credit stress is building beneath the yield signal</div>
     <div class="panel-sub">Annual avg yields (FRED DGS10/DGS2) · Card 90+ DPD % (NY Fed HHDC) · Shaded band = yield curve inversion · 2000–Mar'26</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 05</span><span class="pm-sep">|</span><span class="pm-source">FRED H.15 + NY Fed HHDC</span><span class="pm-sep">|</span><span class="pm-asof">As of Mar 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">10Y Yield</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#336BCC;border-radius:2px;border-top:2px dashed #336BCC"></span><span style="font-size:10.5px;color:#336BCC;font-weight:600">2Y Yield</span></div>
@@ -3540,6 +3560,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:10px;background:rgba(214,64,69,.12);border:1px solid rgba(214,64,69,.3);border-radius:2px"></span><span style="font-size:10.5px;color:#94A3B8">Inversion zone</span></div>
     </div>
     <div style="height:340px"><canvas id="c-treasury" role="img" aria-label="Treasury yield curve, 2-year and 10-year spreads"></canvas></div>
+    <div class="so-what">A higher-for-longer 10Y + rising card delinquencies is the textbook setup for a credit-cycle pivot — issuer reserves and NCO guidance are the next signals to watch.</div>
     <p class="src">Source: Federal Reserve H.15 (Treasury yields); NY Fed HHDC (Card 90+ DPD). Annual data, 2000–present.</p>
   </div>
 
