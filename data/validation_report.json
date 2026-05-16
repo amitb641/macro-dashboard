@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-16T04:26:03.007272Z",
+  "validated_at": "2026-05-16T04:37:44.381371Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 577,
+    "total_checks": 575,
     "passed": 550,
-    "failed": 27,
+    "failed": 25,
     "skipped": 8,
     "critical_divergences": 1
   },
@@ -146,30 +146,12 @@
     },
     {
       "check": "NFP_VS_ADP.adp completeness",
-      "html_value": "11/12 filled",
-      "source_value": "92% (min 50%)",
-      "difference": 1,
+      "html_value": "11/13 filled",
+      "source_value": "85% (min 50%)",
+      "difference": 2,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.adp label sync",
-      "html_value": "12 values",
-      "source_value": "13 labels",
-      "difference": 1,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
-    },
-    {
-      "check": "NFP_VS_ADP series length sync",
-      "html_value": "{'bls': 13, 'adp': 12}",
-      "source_value": "All series same length",
-      "difference": 1,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
     },
     {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
@@ -779,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-16T04:24:33.578364Z",
+      "collected_at": "2026-05-16T04:36:24.923620Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
