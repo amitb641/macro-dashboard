@@ -1156,14 +1156,26 @@ def patch_commentary(html, tab_id, text):
 def _patch_panel_legend_chips(html, panel_anchor, cur_label, prv_label):
     """Update the three month-token legend chips inside a single MoM panel.
 
-    Scopes replacements to the ~1500 bytes after `panel_anchor` (a substring
+    Scopes replacements to the ~1500 bytes after the anchor (a substring
     that uniquely identifies the panel title) so we don't bleed into other
     panels. Updates both the "<cur> accelerating/cooling/improved/worsened"
     chips and the prior-month baseline chip (purple swatch #8878B8bb).
+
+    `panel_anchor` accepts either a single string OR a tuple of strings.
+    Tuples are tried in order, first hit wins — same precedent as
+    validator._PANEL_DATA_MAP. Pass (new_title, legacy_title) so that
+    finding-first sweeps stay backwards-compatible during the transition.
     """
-    idx = html.find(panel_anchor)
+    anchors = (panel_anchor,) if isinstance(panel_anchor, str) else tuple(panel_anchor)
+    idx = -1
+    matched = None
+    for a in anchors:
+        idx = html.find(a)
+        if idx >= 0:
+            matched = a
+            break
     if idx < 0:
-        warnings.append(f'_patch_panel_legend_chips: anchor "{panel_anchor}" not found')
+        warnings.append(f'_patch_panel_legend_chips: none of {anchors!r} found')
         return html
     end = idx + 1500
     chunk = html[idx:end]
@@ -1911,8 +1923,12 @@ def render_labor(html, data, vals, tabs):
                 html = re.sub(
                     r"(Change in unemployment rate vs prior month · BLS CPS · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                     rf"\g<1>{u_cur} vs {u_prv}", html, count=1)
-                # Anchor uses finding-first panel-title (post style_guide §23.1 sweep).
-                html = _patch_panel_legend_chips(html, 'Unemployment is rising broadly across sectors', u_cur, u_prv)
+                # Tuple anchor — finding-first title first, legacy second (style_guide §23.1).
+                html = _patch_panel_legend_chips(
+                    html,
+                    ('Unemployment is rising broadly across sectors',
+                     'Unemployment by Sector — Monthly MoM Change (pp)'),
+                    u_cur, u_prv)
                 applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
 
             # ── Auto-patch commentary values when Agent 3 doesn't refresh ──
@@ -1992,9 +2008,12 @@ def render_labor(html, data, vals, tabs):
                     rf'\g<1>{cur_lbl}', html, count=1)
 
                 # Update sector legend labels (current-month + prior-month chips).
-                # Anchor is the finding-first panel-title (post style_guide §23.1 sweep);
-                # legacy "Monthly Job Change by Sector" anchor is no longer in the title.
-                html = _patch_panel_legend_chips(html, 'Hiring is now concentrated in healthcare and leisure', cur_lbl, prev_lbl)
+                # Tuple anchor — finding-first title first, legacy panel-sub fallback second.
+                html = _patch_panel_legend_chips(
+                    html,
+                    ('Hiring is now concentrated in healthcare and leisure',
+                     'Monthly Job Change by Sector'),
+                    cur_lbl, prev_lbl)
                 # The "improved/worsened vs Mon" trailing word is short month name
                 short_prv = prev_lbl.split("'")[0]
                 html = re.sub(
@@ -2066,8 +2085,13 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"(YoY % by category · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+( · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{c_cur} vs {c_prv}\g<2>{c_cur}", html, count=1)
-            # Scope chip updates to the CPI by Category panel only
-            html = _patch_panel_legend_chips(html, 'CPI by Category', c_cur, c_prv)
+            # Scope chip updates to the CPI by Category panel only — tuple anchor:
+            # finding-first title first, legacy "CPI by Category" panel-sub as fallback.
+            html = _patch_panel_legend_chips(
+                html,
+                ('Energy and transport categories are pulling the basket higher',
+                 'CPI by Category'),
+                c_cur, c_prv)
             html = re.sub(
                 r"(Monthly YoY % change by category\. )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                 rf"\g<1>{c_cur} vs {c_prv}", html, count=1)
@@ -2095,8 +2119,12 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"(PCE chain-type price index by component · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{p_cur}", html, count=1)
-            # Anchor uses finding-first panel-title.
-            html = _patch_panel_legend_chips(html, 'Energy and housing components are pulling the PCE basket higher', p_cur, p_prv)
+            # Tuple anchor — finding-first title first, legacy panel-title as fallback.
+            html = _patch_panel_legend_chips(
+                html,
+                ('Energy and housing components are pulling the PCE basket higher',
+                 'PCE by Component — YoY %'),
+                p_cur, p_prv)
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     # ── Auto-patch PCE commentary numbers ────────────────────────────
