@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-05-15T14:16:52Z",
+  "generated_at": "2026-05-16T03:04:39Z",
   "pieces_audited": 14,
   "llm_enabled": true,
-  "llm_calls_used": 15,
+  "llm_calls_used": 14,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 15,
+    "calls_used": 14,
     "anthropic_key_set": true
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 4,
-    "minor": 1
+    "warning": 1,
+    "minor": 0
   },
   "pieces": [
     {
@@ -108,38 +108,9 @@
       "label": "html:commentary-yield",
       "text_preview": "The 10Y-2Y spread at 48bp reflects a curve that has re-steepened from inversion but has not normalized to levels consistent with a healthy expansion. With Fed Funds at 3.64% and the 2Y at 3.98%, marke",
       "sentence_count": 3,
-      "findings": [
-        {
-          "rule": "style_guide §2.1",
-          "severity": "warning",
-          "detail": "Commentary is 3 sentences but the third sentence is heavily clause-stuffed, violating the 'one declarative claim per sentence' rule.",
-          "fixable": "Split into two sentences: 'The Fed remains on hold — Core PCE at 3.2% gives no cover for easing.' followed by 'A cut before inflation sustainably approaches 2.5% risks a credibility-damaging re-acceleration.'",
-          "origin": "llm_audit"
-        },
-        {
-          "rule": "style_guide §2.3",
-          "severity": "warning",
-          "detail": "Core PCE cited at 3.2% — this figure is not verifiable against the provided data context and is likely stale or incorrect. Current Core PCE YoY is well below 3.2% as of recent BEA releases (running closer to 2.6-2.8% range). If the dashboard KPI tile shows a different value, this is a cross-surface mismatch violating Validator Pass 3e. [critic downgraded]",
-          "fixable": "Replace '3.2%' with the value shown in the current render cycle's Core PCE KPI tile.",
-          "origin": "llm_audit"
-        },
-        {
-          "rule": "style_guide §2.3",
-          "severity": "warning",
-          "detail": "Forward-looking claim — 'risks a credibility-damaging re-acceleration' — is presented as the dashboard's own assessment with no institutional attribution (no Fed, Goldman, CME, etc. cited).",
-          "fixable": "Attribute explicitly, e.g. 'risks what Fed officials have described as a credibility-damaging re-acceleration' or cite a specific institutional source.",
-          "origin": "llm_audit"
-        },
-        {
-          "rule": "style_guide §2.2",
-          "severity": "minor",
-          "detail": "'sustainably approaches' is mild hedging filler that softens an otherwise declarative sentence.",
-          "fixable": "Replace 'sustainably approaches 2.5%' with 'returns to 2.5% on a durable basis' or simply 'falls to 2.5%'.",
-          "origin": "llm_audit"
-        }
-      ],
-      "llm_confidence": "medium",
-      "critique_confirms_critical": false
+      "findings": [],
+      "llm_confidence": null,
+      "critique_confirms_critical": null
     },
     {
       "label": "html:commentary-fiscal",

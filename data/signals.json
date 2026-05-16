@@ -1,15 +1,15 @@
 {
-  "analyzed_at": "2026-05-15T14:02:25.379026Z",
+  "analyzed_at": "2026-05-16T03:00:29.834714Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 1,
   "flagged_count": 2,
   "values": {
     "ffr": 3.64,
-    "dgs2": 3.98,
-    "dgs5": 4.12,
-    "dgs10": 4.46,
-    "dgs30": 5.03,
+    "dgs2": 4.0,
+    "dgs5": 4.13,
+    "dgs10": 4.47,
+    "dgs30": 5.02,
     "ig_oas": 76,
     "hy_oas": 276,
     "unrate": 4.3,
@@ -34,7 +34,7 @@
     "brent": 111.37,
     "gdp_growth_q": 2.0,
     "cc_delinq": 2.94,
-    "spread_10_2_bp": 48
+    "spread_10_2_bp": 47
   },
   "signals": {
     "ffr": {
@@ -45,8 +45,8 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.46,
-      "delta": 0.04,
+      "value": 4.47,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 3.98,
-      "delta": 0.03,
+      "value": 4.0,
+      "delta": 0.05,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.12,
-      "delta": 0.05,
+      "value": 4.13,
+      "delta": 0.06,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 5.03,
-      "delta": 0.05,
+      "value": 5.02,
+      "delta": 0.04,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 48,
-      "delta": 1,
+      "value": 47,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -253,7 +253,5 @@
       "alert": null
     }
   ],
-  "raw_errors": [
-    "FRED AHETPI: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
-  ]
+  "raw_errors": []
 }

@@ -1,14 +1,16 @@
 {
-  "checked_at": "2026-05-15T14:04:00.202692Z",
+  "checked_at": "2026-05-16T03:01:41.531530Z",
   "status": "FAIL",
   "summary": {
     "total_checks": 364,
     "passed": 352,
     "failed": 12,
-    "js_errors": 0,
+    "js_errors": 1,
     "console_errors": 0
   },
-  "js_errors": [],
+  "js_errors": [
+    "Maximum call stack size exceeded"
+  ],
   "console_errors": [],
   "findings": [
     {
@@ -79,25 +81,25 @@
     },
     {
       "category": "Outlook",
-      "check": "Panel \"2025 Quarterly GDP \u2014 BEA Estimates\" has title",
+      "check": "Panel \"EX 12025 Quarterly GDP \u2014 BEA Estimates\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Outlook",
-      "check": "Panel \"2024 vs 2025 vs 2026F \u2014 Key Macro Indica\" has title",
+      "check": "Panel \"EX 22024 vs 2025 vs 2026F \u2014 Key Macro In\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Outlook",
-      "check": "Panel \"2026 Forecast Scenarios \u2014 Institution Co\" has title",
+      "check": "Panel \"EX 32026 Forecast Scenarios \u2014 Institutio\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Outlook",
-      "check": "Panel \"Key 2025 Actuals & 2026 Macro Themes\" has title",
+      "check": "Panel \"EX 4Key 2025 Actuals & 2026 Macro Themes\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -332,13 +334,13 @@
     },
     {
       "category": "GDP",
-      "check": "Panel \"GDP Commentary \u2014 2025 Growth & 2026 Outl\" has title",
+      "check": "Panel \"EX 1GDP Commentary \u2014 2025 Growth & 2026 \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "GDP",
-      "check": "Panel \"Broad Sector Groups \u2014 Real GDP % Change\" has title",
+      "check": "Panel \"EX 2Broad Sector Groups \u2014 Real GDP % Cha\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -411,43 +413,43 @@
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Jobs Market Commentary \u2014 2025 & 2026 Out\" has title",
+      "check": "Panel \"EX 1Jobs Market Commentary \u2014 2025 & 2026\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Monthly Employment Change \u2014 BLS Total No\" has title",
+      "check": "Panel \"EX 2Monthly Employment Change \u2014 BLS Tota\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Monthly Job Change by Sector \u2014 Mar'26 vs\" has title",
+      "check": "Panel \"EX 3Monthly Job Change by Sector \u2014 Mar'2\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Total Nonfarm Payrolls Added \u2014 Annual (t\" has title",
+      "check": "Panel \"EX 4Total Nonfarm Payrolls Added \u2014 Annua\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Job Gains by Sector \u2014 2025 vs 2024 (thou\" has title",
+      "check": "Panel \"EX 5Job Gains by Sector \u2014 2025 vs 2024 (\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Employment Change by Sector \u2014 Annual Net\" has title",
+      "check": "Panel \"EX 6Employment Change by Sector \u2014 Annual\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Jobs",
-      "check": "Panel \"Labour Market Churn \u2014 JOLTS Openings, Qu\" has title",
+      "check": "Panel \"EX 7Labour Market Churn \u2014 JOLTS Openings\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -520,43 +522,43 @@
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Unemployment Commentary \u2014 Trends & Risk \" has title",
+      "check": "Panel \"EX 1Unemployment Commentary \u2014 Trends & R\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Monthly Unemployment Rate \u2014 13-Month Tre\" has title",
+      "check": "Panel \"EX 2Monthly Unemployment Rate \u2014 13-Month\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Unemployment by Sector \u2014 Monthly MoM Cha\" has title",
+      "check": "Panel \"EX 3Unemployment by Sector \u2014 Monthly MoM\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"National Unemployment Rate \u2014 Annual Aver\" has title",
+      "check": "Panel \"EX 4National Unemployment Rate \u2014 Annual \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Unemployment by Sector \u2014 2025 vs 2024 (%\" has title",
+      "check": "Panel \"EX 5Unemployment by Sector \u2014 2025 vs 202\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Weekly Jobless Claims \u2014 Initial & Contin\" has title",
+      "check": "Panel \"EX 6Weekly Jobless Claims \u2014 Initial & Co\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Unemployment",
-      "check": "Panel \"Unemployment Rate by Industry \u2014 Annual D\" has title",
+      "check": "Panel \"EX 7Unemployment Rate by Industry \u2014 Annu\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -617,31 +619,31 @@
     },
     {
       "category": "Wages",
-      "check": "Panel \"Wage Growth Commentary \u2014 Nominal vs Real\" has title",
+      "check": "Panel \"EX 1Wage Growth Commentary \u2014 Nominal vs \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Wages",
-      "check": "Panel \"Monthly Wage Growth \u2014 Nominal vs Real Yo\" has title",
+      "check": "Panel \"EX 2Monthly Wage Growth \u2014 Nominal vs Rea\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Wages",
-      "check": "Panel \"Nominal vs Real Wage Growth \u2014 Annual His\" has title",
+      "check": "Panel \"EX 3Nominal vs Real Wage Growth \u2014 Annual\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Wages",
-      "check": "Panel \"Avg Hourly Earnings by Sector \u2014 2025 vs \" has title",
+      "check": "Panel \"EX 4Avg Hourly Earnings by Sector \u2014 2025\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Wages",
-      "check": "Panel \"Wage Growth by Sector \u2014 Annual Nominal %\" has title",
+      "check": "Panel \"EX 5Wage Growth by Sector \u2014 Annual Nomin\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -714,43 +716,43 @@
     },
     {
       "category": "CPI",
-      "check": "Panel \"CPI Commentary \u2014 Inflation Trajectory & \" has title",
+      "check": "Panel \"EX 1CPI Commentary \u2014 Inflation Trajector\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Headline CPI re-accelerates above Core f\" has title",
+      "check": "Panel \"EX 2Headline CPI re-accelerates above Co\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Energy and transport categories are pull\" has title",
+      "check": "Panel \"EX 3Energy and transport categories are \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Annual CPI is still well above the Fed's\" has title",
+      "check": "Panel \"EX 4Annual CPI is still well above the F\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Goods inflation has normalised; services\" has title",
+      "check": "Panel \"EX 5Goods inflation has normalised; serv\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Category-level annual rates show four st\" has title",
+      "check": "Panel \"EX 6Category-level annual rates show fou\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "CPI",
-      "check": "Panel \"Trimmed-mean and median CPI track headli\" has title",
+      "check": "Panel \"EX 7Trimmed-mean and median CPI track he\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -943,61 +945,61 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Consumer & PCE Commentary \u2014 Spending Hea\" has title",
+      "check": "Panel \"EX 1Consumer & PCE Commentary \u2014 Spending\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Personal Saving Rate \u2014 Last 13 Months\" has title",
+      "check": "Panel \"EX 2Personal Saving Rate \u2014 Last 13 Month\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Personal Saving Rate \u2014 Annual Averages (\" has title",
+      "check": "Panel \"EX 3Personal Saving Rate \u2014 Annual Averag\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Household Debt & Delinquencies \u2014 NY Fed \" has title",
+      "check": "Panel \"EX 4Household Debt & Delinquencies \u2014 NY \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Debt Service Ratio (TDSP) \u2014 % of Disposa\" has title",
+      "check": "Panel \"EX 5Debt Service Ratio (TDSP) \u2014 % of Dis\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
+      "check": "Panel \"EX 6Consumer Sentiment \u2014 Last 13 MonthsP\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Consumer Sentiment \u2014 Annual (2000\u20132025)\" has title",
+      "check": "Panel \"EX 7Consumer Sentiment \u2014 Annual (2000\u201320\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"PCE Price Index \u2014 Monthly Headline vs Co\" has title",
+      "check": "Panel \"EX 8PCE Price Index \u2014 Monthly Headline v\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"PCE Price Index \u2014 Annual Headline vs Cor\" has title",
+      "check": "Panel \"EX 9PCE Price Index \u2014 Annual Headline vs\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"PCE by Component \u2014 YoY % (Mar'26 vs Feb'\" has title",
+      "check": "Panel \"EX 10PCE by Component \u2014 YoY % (Mar'26 vs\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1064,37 +1066,37 @@
     },
     {
       "category": "Rates & Yields",
-      "check": "Panel \"Fed Rates Commentary \u2014 Policy Stance & T\" has title",
+      "check": "Panel \"EX 1Fed Rates Commentary \u2014 Policy Stance\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Rates & Yields",
-      "check": "Panel \"Fed Funds Rate \u2014 Actual vs FOMC Dot Plot\" has title",
+      "check": "Panel \"EX 2Fed Funds Rate \u2014 Actual vs FOMC Dot \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Rates & Yields",
-      "check": "Panel \"Fed Liquidity \u2014 Balance Sheet, Reserves,\" has title",
+      "check": "Panel \"EX 3Fed Liquidity \u2014 Balance Sheet, Reser\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Rates & Yields",
-      "check": "Panel \"Fed Rate Cycle History & Wall St Forecas\" has title",
+      "check": "Panel \"EX 4Fed Rate Cycle History & Wall St For\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Rates & Yields",
-      "check": "Panel \"Card Issuer Funding Mix \u2014 Deposits vs Ma\" has title",
+      "check": "Panel \"EX 5Card Issuer Funding Mix \u2014 Deposits v\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Rates & Yields",
-      "check": "Panel \"10Y Treasury Yield vs Card 90+ DPD \u2014 Yie\" has title",
+      "check": "Panel \"EX 610Y Treasury Yield vs Card 90+ DPD \u2014\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1167,37 +1169,37 @@
     },
     {
       "category": "Credit",
-      "check": "Panel \"Credit Commentary \u2014 Spread Complacency &\" has title",
+      "check": "Panel \"EX 1Credit Commentary \u2014 Spread Complacen\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Credit",
-      "check": "Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
+      "check": "Panel \"EX 2Delinquency Rates by Product \u2014 90+ D\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Credit",
-      "check": "Panel \"Net Charge-Off Rates \u2014 Card Specialists \" has title",
+      "check": "Panel \"EX 3Net Charge-Off Rates \u2014 Card Speciali\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Credit",
-      "check": "Panel \"Senior Loan Officer Survey (SLOOS) \u2014 Tig\" has title",
+      "check": "Panel \"EX 4Senior Loan Officer Survey (SLOOS) \u2014\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Credit",
-      "check": "Panel \"Consumer Credit Growth \u2014 Revolving vs No\" has title",
+      "check": "Panel \"EX 5Consumer Credit Growth \u2014 Revolving v\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Credit",
-      "check": "Panel \"Household Debt Composition & Stress \u2014 Q3\" has title",
+      "check": "Panel \"EX 6Household Debt Composition & Stress \" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1252,31 +1254,31 @@
     },
     {
       "category": "Banking",
-      "check": "Panel \"Banks Commentary \u2014 Earnings, NII & Credi\" has title",
+      "check": "Panel \"EX 1Banks Commentary \u2014 Earnings, NII & C\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Banking",
-      "check": "Panel \"Big 9 Banks \u2014 Q1 2026 Earnings Compariso\" has title",
+      "check": "Panel \"EX 2Big 9 Banks \u2014 Q1 2026 Earnings Compa\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Banking",
-      "check": "Panel \"FY2026 NII Guidance \u2014 Updated After Q1 P\" has title",
+      "check": "Panel \"EX 3FY2026 NII Guidance \u2014 Updated After \" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Banking",
-      "check": "Panel \"Net Charge-Off Rates \u2014 Q1 2026 Actuals &\" has title",
+      "check": "Panel \"EX 4Net Charge-Off Rates \u2014 Q1 2026 Actua\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Banking",
-      "check": "Panel \"Bank-by-Bank Earnings Commentary \u2014 Key T\" has title",
+      "check": "Panel \"EX 5Bank-by-Bank Earnings Commentary \u2014 K\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1361,43 +1363,43 @@
     },
     {
       "category": "Housing",
-      "check": "Panel \"Housing Commentary \u2014 Affordability Crisi\" has title",
+      "check": "Panel \"EX 1Housing Commentary \u2014 Affordability C\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Housing",
-      "check": "Panel \"Monthly Housing Trend \u2014 Case-Shiller YoY\" has title",
+      "check": "Panel \"EX 2Monthly Housing Trend \u2014 Case-Shiller\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Housing",
-      "check": "Panel \"Home Price Index \u2014 Case-Shiller & FHFA (\" has title",
+      "check": "Panel \"EX 3Home Price Index \u2014 Case-Shiller & FH\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Housing",
-      "check": "Panel \"30-Year Mortgage Rate vs Fed Funds Rate\" has title",
+      "check": "Panel \"EX 430-Year Mortgage Rate vs Fed Funds R\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Housing",
-      "check": "Panel \"Housing Starts \u2014 Single-Family vs Multi-\" has title",
+      "check": "Panel \"EX 5Housing Starts \u2014 Single-Family vs Mu\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Housing",
-      "check": "Panel \"Affordability Index & Months Supply\" has title",
+      "check": "Panel \"EX 6Affordability Index & Months Supply\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Housing",
-      "check": "Panel \"Metro Home Price Performance \u2014 Key Marke\" has title",
+      "check": "Panel \"EX 7Metro Home Price Performance \u2014 Key M\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1464,49 +1466,49 @@
     },
     {
       "category": "Oil",
-      "check": "Panel \"Oil Commentary \u2014 Supply Shock & Macro Tr\" has title",
+      "check": "Panel \"EX 1Oil Commentary \u2014 Supply Shock & Macr\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"WTI & Brent \u2014 Annual History\" has title",
+      "check": "Panel \"EX 2WTI & Brent \u2014 Annual History\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2026 \" has title",
+      "check": "Panel \"EX 3WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"Oil Supply Shock Tracker \u2014 Daily Closes\" has title",
+      "check": "Panel \"EX 4Oil Supply Shock Tracker \u2014 Daily Clo\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"Full Oil Impact Chain \u2014 Prices to Credit\" has title",
+      "check": "Panel \"EX 5Full Oil Impact Chain \u2014 Prices to Cr\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"Sector Margin Impact \u2014 Oil Sensitivity\" has title",
+      "check": "Panel \"EX 6Sector Margin Impact \u2014 Oil Sensitivi\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"WTI Price History with Recession Shading\" has title",
+      "check": "Panel \"EX 7WTI Price History with Recession Sha\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Oil",
-      "check": "Panel \"Historical Oil Shock Episodes\" has title",
+      "check": "Panel \"EX 8Historical Oil Shock Episodes\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1530,31 +1532,31 @@
     },
     {
       "category": "Sources",
-      "check": "Panel \"KPI Signal Color Logic\" has title",
+      "check": "Panel \"EX 1KPI Signal Color Logic\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Sources",
-      "check": "Panel \"Dashboard Tab Index\" has title",
+      "check": "Panel \"EX 2Dashboard Tab Index\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Sources",
-      "check": "Panel \"Key Definitions\" has title",
+      "check": "Panel \"EX 3Key Definitions\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Sources",
-      "check": "Panel \"\ud83d\udd2d Forecast Institutions \u2014 Methodology No\" has title",
+      "check": "Panel \"EX 4\ud83d\udd2d Forecast Institutions \u2014 Methodolog\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Sources",
-      "check": "Panel \"Dynamic Commentary \u2014 AI-Generated from L\" has title",
+      "check": "Panel \"EX 5Dynamic Commentary \u2014 AI-Generated fr\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1609,37 +1611,37 @@
     },
     {
       "category": "Validator",
-      "check": "Panel \"Pass 1: Internal Consistency\" has title",
+      "check": "Panel \"EX 1Pass 1: Internal Consistency\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Validator",
-      "check": "Panel \"Pass 2: Source Verification\" has title",
+      "check": "Panel \"EX 2Pass 2: Source Verification\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Validator",
-      "check": "Panel \"Pass 3: Data Staleness\" has title",
+      "check": "Panel \"EX 3Pass 3: Data Staleness\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Validator",
-      "check": "Panel \"Pass 3f: Schema Contract\" has title",
+      "check": "Panel \"EX 4Pass 3f: Schema Contract\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Validator",
-      "check": "Panel \"Pass 3g: Seed Drift\" has title",
+      "check": "Panel \"EX 5Pass 3g: Seed Drift\" has title",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "Validator",
-      "check": "Panel \"Pass 3h: Collector Errors\" has title",
+      "check": "Panel \"EX 6Pass 3h: Collector Errors\" has title",
       "pass": true,
       "severity": "ok"
     },
