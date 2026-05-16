@@ -1,6 +1,6 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-05-16 17:53 UTC._
+_Generated 2026-05-16 21:49 UTC._
 
 - **Prod ref:** `main`
 - **Dev ref:** `dev/multi-expert-improvements`
@@ -26,8 +26,8 @@ are producing a meaningfully different pipeline verdict than prod.
 |---|---|---|---|
 | status | WARN | WARN | same |
 | total_checks | 520 | 575 | +55 |
-| passed | 505 | 550 | +45 |
-| failed | 15 | 25 | +10 |
+| passed | 505 | 561 | +56 |
+| failed | 15 | 14 | -1 |
 | skipped | 1 | 8 | +7 |
 | critical_divergences | 0 | 1 | +1 |
 
@@ -66,7 +66,6 @@ are producing a meaningfully different pipeline verdict than prod.
 ## Divergences detected
 
 - **[WARNING]** validator_critical_count_divergence — prod_criticals=0 dev_criticals=1
-- **[WARNING]** validator_failed_count_divergence — prod_failed=15 dev_failed=25
 - **[WARNING]** signal_flagged_count_divergence — prod=1 dev=2
 
 ## Recommended fixes
@@ -78,12 +77,6 @@ Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Full status trac
 - **Detail:** prod_criticals=0 dev_criticals=1
 - **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 - **Fingerprint:** `parallel_compare:validator_critical_count_divergence:cfa5fd800344`
-
-### validator_failed_count_divergence  _(seen 3× · status: open)_
-
-- **Detail:** prod_failed=15 dev_failed=30
-- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
-- **Fingerprint:** `parallel_compare:validator_failed_count_divergence:60c2262a6006`
 
 ### signal_flagged_count_divergence  _(seen 3× · status: open)_
 
