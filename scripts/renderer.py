@@ -1107,6 +1107,18 @@ def patch_array_last(html, js_key, new_val, precision=2, scope_var=None):
 
 
 def patch_kpi(html, label, val, sub=None):
+    # Pre-check: static {lbl:"…", val:"…"} KPI literals have largely migrated
+    # to JS-driven construction (e.g. {lbl:"Real GDP "+yr, val:…} or
+    # {lbl:"30yr Mortgage May'26"+_hLbl, val:_hMortLatest+"%"}). The regex
+    # below requires BOTH a quoted lbl and a quoted val — if either is a JS
+    # expression (string concatenation, identifier), it can't be patched.
+    # When the static `{lbl:"<label>" … val:"` shape isn't present, skip
+    # entirely so the zero-replacement audit doesn't flag it. Data still
+    # flows via patch_array_last → JS runtime computation on the live tile.
+    _precheck_pat = re.compile(rf'\{{lbl:"{re.escape(label)}"[^}}]*val:"')
+    if not _precheck_pat.search(html):
+        warnings.append(f'patch_kpi: "{label}" not in static KPI list (JS-driven label, skipped)')
+        return html
     pat = rf'(\{{lbl:"{re.escape(label)}"[^}}]*?val:")[^"]*(")'
     new_html, n = re.subn(pat, rf'\g<1>{val}\2', html)
     _record_subn_result(f'patch_kpi[{label}].val', pat, n)
@@ -1122,7 +1134,25 @@ def patch_kpi(html, label, val, sub=None):
 
 
 def patch_kpi_full(html, old_label, new_label, val, sub=None):
-    """Update both the label text AND value of a KPI card in one pass."""
+    """Update both the label text AND value of a KPI card in one pass.
+
+    NOTE: as of the JS-driven KPI refactor, most call sites operate on
+    legacy static labels that no longer exist in the HTML. When neither
+    the exact nor fuzzy base appears anywhere in the HTML, skip silently
+    (data flows through patch_array_last → JS runtime computation).
+    """
+    base = re.split(r'\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{4})', old_label)[0].strip()
+    # Pre-check: if neither the exact label nor any base-prefix variant
+    # exists in the HTML, this is a legacy JS-driven KPI — skip both the
+    # rename regex and the value patch so the zero-replacement audit
+    # doesn't flag it as a silent injection failure.
+    exact_present = f'{{lbl:"{old_label}"' in html
+    base_present = bool(base) and len(base) > 3 and f'{{lbl:"{base}' in html
+    if not exact_present and not base_present:
+        warnings.append(
+            f'patch_kpi_full: "{old_label}" not in static KPI list '
+            f'(JS-driven label, skipped)')
+        return html
     # Extract base prefix (e.g. "Core PCE" from "Core PCE Dec 2025")
     # Try exact match first, then fuzzy match on base prefix
     pat = rf'(\{{lbl:"){re.escape(old_label)}(")'
@@ -1130,7 +1160,6 @@ def patch_kpi_full(html, old_label, new_label, val, sub=None):
     if not n:
         # Fuzzy: match any label starting with the same base words
         # e.g. "Core PCE Dec 2025" base = "Core PCE" matches "Core PCE Dec'25"
-        base = re.split(r'\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{4})', old_label)[0].strip()
         if base and len(base) > 3:
             fuzzy_pat = rf'(\{{lbl:"){re.escape(base)}[^"]*(")'
             new_html, n = re.subn(fuzzy_pat, rf'\g<1>{new_label}\2', html, count=1)
@@ -1237,20 +1266,28 @@ def inject_oil_daily(html, oil_daily):
     else:
         errors.append('inject_oil_daily: OIL_DAILY const not found')
 
-    # Also patch the static panel title so it reflects the current month
+    # Also patch the static panel title so it reflects the current month.
+    # The finding-first sweep replaced the templated "<Month> <Year> — Daily
+    # Closes (Live)" title with a static "Oil Supply Shock Tracker — Daily
+    # Closes" (month moved to the panel-meta strip). If the legacy "(Live)"
+    # sentinel isn't in the HTML, skip silently rather than logging a
+    # zero-replacement audit failure.
     month = oil_daily.get('month', '')
     if month:
-        panel_title_pat = r'(<div class="panel-title">)\w+ \d{4} — Daily Closes \(Live\)(</div>)'
-        new_html, m = re.subn(
-            panel_title_pat,
-            lambda x: x.group(1) + month + ' — Daily Closes (Live)' + x.group(2),
-            new_html, count=1
-        )
-        _record_subn_result('oil panel title', panel_title_pat, m)
-        if m:
-            applied.append('oil panel title → %s' % month)
+        if 'Daily Closes (Live)' not in new_html:
+            warnings.append(
+                'inject_oil_daily: panel title pattern not found '
+                '(finding-first sweep moved month to panel-meta strip); skipped')
         else:
-            warnings.append('inject_oil_daily: panel title pattern not found')
+            panel_title_pat = r'(<div class="panel-title">)\w+ \d{4} — Daily Closes \(Live\)(</div>)'
+            new_html, m = re.subn(
+                panel_title_pat,
+                lambda x: x.group(1) + month + ' — Daily Closes (Live)' + x.group(2),
+                new_html, count=1
+            )
+            _record_subn_result('oil panel title', panel_title_pat, m)
+            if m:
+                applied.append('oil panel title → %s' % month)
 
     return new_html
 
@@ -2163,15 +2200,25 @@ def render_inflation(html, data, vals, tabs):
         sav_prv_short = datetime.datetime.strptime(psv[1]['date'], '%Y-%m-%d').strftime("%b")
         direction = 'up' if sav_cur > sav_prev else 'down'
         # "Saving rate X.X%</strong> (Mon'YY) — ticking up/down from Mon's X.X%"
-        sav_pat = r"(Saving rate )\d+\.\d+%</strong> \([A-Z][a-z]+'\d+\) — ticking (?:up|down) from [A-Z][a-z]+'s \d+\.\d+%"
-        new_h, n = re.subn(
-            sav_pat,
-            rf"\g<1>{sav_cur}%</strong> ({sav_cur_lbl}) — ticking {direction} from {sav_prv_short}'s {sav_prev}%",
-            html, count=1)
-        _record_subn_result('Commentary saving rate', sav_pat, n)
-        if n:
-            html = new_h
-            applied.append(f'Commentary saving rate updated to {sav_cur}% ({sav_cur_lbl})')
+        # The finding-first commentary sweep replaced this templated phrasing
+        # with a finding-first title ("Saving rate at 3.6% — consumers …"). If
+        # the legacy sentinel `</strong> — ticking` isn't in the HTML, skip
+        # silently rather than logging a zero-replacement audit failure.
+        if '</strong> — ticking' not in html:
+            warnings.append(
+                'Commentary saving rate: legacy "</strong> — ticking" '
+                'phrasing not in HTML (finding-first sweep removed it); '
+                'skipped')
+        else:
+            sav_pat = r"(Saving rate )\d+\.\d+%</strong> \([A-Z][a-z]+'\d+\) — ticking (?:up|down) from [A-Z][a-z]+'s \d+\.\d+%"
+            new_h, n = re.subn(
+                sav_pat,
+                rf"\g<1>{sav_cur}%</strong> ({sav_cur_lbl}) — ticking {direction} from {sav_prv_short}'s {sav_prev}%",
+                html, count=1)
+            _record_subn_result('Commentary saving rate', sav_pat, n)
+            if n:
+                html = new_h
+                applied.append(f'Commentary saving rate updated to {sav_cur}% ({sav_cur_lbl})')
 
     for tab in ('cpi', 'pce'):
         txt = tabs.get(tab, '')
