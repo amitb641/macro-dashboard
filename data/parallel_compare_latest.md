@@ -1,6 +1,6 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-05-16 03:31 UTC._
+_Generated 2026-05-16 13:08 UTC._
 
 - **Prod ref:** `main`
 - **Dev ref:** `dev/multi-expert-improvements`
@@ -25,9 +25,9 @@ are producing a meaningfully different pipeline verdict than prod.
 | Metric | Prod (main) | Dev (parallel) | Delta |
 |---|---|---|---|
 | status | WARN | WARN | same |
-| total_checks | 520 | 577 | +57 |
+| total_checks | 520 | 575 | +55 |
 | passed | 505 | 550 | +45 |
-| failed | 15 | 27 | +12 |
+| failed | 15 | 25 | +10 |
 | skipped | 1 | 8 | +7 |
 | critical_divergences | 0 | 1 | +1 |
 
@@ -48,7 +48,7 @@ are producing a meaningfully different pipeline verdict than prod.
 | risk_level | HIGH | HIGH | same |
 | alert_count | 3 | 3 | 0 |
 | watch_count | 1 | 1 | 0 |
-| flagged_count | 0 | 2 | +2 |
+| flagged_count | 1 | 2 | +1 |
 | total_signals | 0 | 0 | 0 |
 
 ### Raw data anchors (latest values)
@@ -60,14 +60,14 @@ are producing a meaningfully different pipeline verdict than prod.
 | Personal Saving Rate | — | — | — |
 | Fed Funds Rate | 3.64 | 3.64 | 0 |
 | WTI Crude | — | — | — |
-| 10Y Treasury | 4.46 | 4.47 | +0.01 |
+| 10Y Treasury | 4.47 | 4.47 | 0 |
 | Unemployment Rate | 7.2 | 7.2 | 0 |
 
 ## Divergences detected
 
 - **[WARNING]** validator_critical_count_divergence — prod_criticals=0 dev_criticals=1
-- **[WARNING]** validator_failed_count_divergence — prod_failed=15 dev_failed=27
-- **[WARNING]** signal_flagged_count_divergence — prod=0 dev=2
+- **[WARNING]** validator_failed_count_divergence — prod_failed=15 dev_failed=25
+- **[WARNING]** signal_flagged_count_divergence — prod=1 dev=2
 
 ## Recommended fixes
 
