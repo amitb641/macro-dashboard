@@ -299,6 +299,11 @@ def run_visual_qa(take_screenshots=False):
                                           #                 escapes its var)
                     'rgb(122, 144, 168)', # #7A8FA8 — --muted (panel-level
                                           #                 commentary tints)
+                    'rgb(30, 41, 59)',    # #1E293B — Slate-800, applied by
+                                          # theme-overlay.css on body.themed-sm
+                                          # .fc-note (sanctioned themed variant
+                                          # per 8pt-grid visual audit). Uniform
+                                          # across all 12 swept tabs; not drift.
                 }
                 _check(
                     tab_name, 'Commentary color matches palette',
