@@ -218,7 +218,21 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "🌑 Shadow update (dev): $(date -u +'%Y-%m-%d')"
-            git push origin HEAD:dev/multi-expert-improvements
+            # Retry-with-rebase up to 3 times to handle the race where an
+            # interactive commit lands while this job is running. Without
+            # this, parallel pushes during active development always show
+            # the CI as failed even though the pipeline itself ran clean.
+            for attempt in 1 2 3; do
+              if git push origin HEAD:dev/multi-expert-improvements; then
+                echo "Shadow push succeeded on attempt $attempt"
+                exit 0
+              fi
+              echo "Push rejected (attempt $attempt) — rebasing onto latest dev"
+              git fetch origin dev/multi-expert-improvements
+              git rebase origin/dev/multi-expert-improvements || { git rebase --abort; exit 1; }
+            done
+            echo "::error::Shadow push failed after 3 rebase retries"
+            exit 1
           fi
 
       # ───────────────────────────────────────────────────────────────
