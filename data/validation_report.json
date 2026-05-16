@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-14T16:13:59.983118Z",
+  "validated_at": "2026-05-16T13:07:05.321226Z",
   "status": "WARN",
   "summary": {
     "total_checks": 520,
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.46,
-      "fresh_api_value": 4.46,
+      "raw_data_value": 4.47,
+      "fresh_api_value": 4.47,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -700,7 +700,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 43,
+      "age_days": 45,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -708,7 +708,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-04-01",
-      "age_days": 43,
+      "age_days": 45,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-04-01",
-      "age_days": 43,
+      "age_days": 45,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 74,
+      "age_days": 76,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 74,
+      "age_days": 76,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,7 +740,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 43,
+      "age_days": 45,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -748,7 +748,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 102,
+      "age_days": 104,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -756,7 +756,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-14",
-      "age_days": 0,
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 13,
+      "age_days": 15,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-14T16:12:19.539012Z",
+      "collected_at": "2026-05-16T13:06:01.674385Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.46,
+      "reference": 4.47,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.46,
-        "data[\"dgs10\"]": 4.46
+        "KPIS 10Y Treasury": 4.47,
+        "data[\"dgs10\"]": 4.47
       },
       "severity": "ok",
       "pass": true
