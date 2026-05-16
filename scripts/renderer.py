@@ -1911,7 +1911,8 @@ def render_labor(html, data, vals, tabs):
                 html = re.sub(
                     r"(Change in unemployment rate vs prior month · BLS CPS · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+",
                     rf"\g<1>{u_cur} vs {u_prv}", html, count=1)
-                html = _patch_panel_legend_chips(html, 'Unemployment by Sector', u_cur, u_prv)
+                # Anchor uses finding-first panel-title (post style_guide §23.1 sweep).
+                html = _patch_panel_legend_chips(html, 'Unemployment is rising broadly across sectors', u_cur, u_prv)
                 applied.append(f'Unemployment tab month refs updated to {u_prv}/{u_cur}')
 
             # ── Auto-patch commentary values when Agent 3 doesn't refresh ──
@@ -2086,10 +2087,16 @@ def render_inflation(html, data, vals, tabs):
             html = re.sub(
                 r"PCE by Component — YoY % \([A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+\)",
                 f"PCE by Component — YoY % ({p_cur} vs {p_prv})", html, count=1)
+            # Panel-sub now carries the month pair (Cur vs Prv · sorted by Cur)
+            # post style_guide §23.1 sweep. Legacy single-token form kept as fallback.
+            html = re.sub(
+                r"(PCE chain-type price index by component · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+( · sorted by )[A-Z][a-z]+'\d+",
+                rf"\g<1>{p_cur} vs {p_prv}\g<2>{p_cur}", html, count=1)
             html = re.sub(
                 r"(PCE chain-type price index by component · sorted by )[A-Z][a-z]+'\d+",
                 rf"\g<1>{p_cur}", html, count=1)
-            html = _patch_panel_legend_chips(html, 'PCE by Component', p_cur, p_prv)
+            # Anchor uses finding-first panel-title.
+            html = _patch_panel_legend_chips(html, 'Energy and housing components are pulling the PCE basket higher', p_cur, p_prv)
             applied.append(f'PCE tab month refs updated to {p_prv}/{p_cur}')
 
     # ── Auto-patch PCE commentary numbers ────────────────────────────
