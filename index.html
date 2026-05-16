@@ -252,8 +252,24 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
   // single source of truth. Persisted in localStorage.md_theme.
   MD.setTheme = function(t){
     var root = document.documentElement;
-    if (t === "dark") root.setAttribute("data-theme", "dark");
-    else root.removeAttribute("data-theme");
+    var body = document.body;
+    // Legacy theme-overlay.css uses body.themed-sm to hardcode light
+    // panel colors that beat our CSS variables on specificity. We
+    // stash the class on dark, restore on light, so dark-mode wins
+    // cleanly without re-styling every legacy rule.
+    if (t === "dark") {
+      root.setAttribute("data-theme", "dark");
+      if (body && body.classList.contains("themed-sm")){
+        body.classList.remove("themed-sm");
+        body.setAttribute("data-md-had-themed-sm", "1");
+      }
+    } else {
+      root.removeAttribute("data-theme");
+      if (body && body.getAttribute("data-md-had-themed-sm") === "1"){
+        body.classList.add("themed-sm");
+        body.removeAttribute("data-md-had-themed-sm");
+      }
+    }
     try{ localStorage.setItem("md_theme", t === "dark" ? "dark" : "light"); }catch(e){}
     var btn = document.querySelector(".theme-toggle");
     if (btn){
