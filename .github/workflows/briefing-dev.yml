@@ -229,7 +229,16 @@ jobs:
               fi
               echo "Push rejected (attempt $attempt) — rebasing onto latest dev"
               git fetch origin dev/multi-expert-improvements
-              git rebase origin/dev/multi-expert-improvements || { git rebase --abort; exit 1; }
+              # Stash any post-commit working-tree drift (e.g. version.json
+              # re-touched by a downstream step) so the rebase has a clean
+              # tree. Untracked artifacts included; pop is best-effort.
+              git stash push --include-untracked --message "ci-rebase-shadow" || true
+              if ! git rebase origin/dev/multi-expert-improvements; then
+                git rebase --abort || true
+                git stash pop || true
+                exit 1
+              fi
+              git stash pop || true
             done
             echo "::error::Shadow push failed after 3 rebase retries"
             exit 1
