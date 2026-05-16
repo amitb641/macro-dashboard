@@ -437,7 +437,10 @@ def rebuild_charts(html, data):
         # Ensure last data point always has a visible label showing the latest week's date
         if labels:
             d = datetime.datetime.strptime(icsa_sorted[-1]['date'], '%Y-%m-%d')
-            labels[-1] = d.strftime("%-d %b'%y")  # e.g. "8 Mar'26"
+            # `%-d` (no zero-pad) is Linux/macOS-only — Windows raises
+            # ValueError("Invalid format string"). Build the day manually so
+            # both platforms produce e.g. "8 Mar'26" identically.
+            labels[-1] = f'{d.day} ' + d.strftime("%b'%y")
         if labels:
             html = _inject_const(html, 'CLAIMS_WEEKLY', {
                 'labels': labels, 'initial': initial, 'continued': continued})
