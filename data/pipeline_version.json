@@ -1,63 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-16T03:41:36.122254Z",
+  "last_updated": "2026-05-16T04:20:36.747638Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-05-08T15:29:04.018660Z",
-      "git_sha": "74a2291",
-      "git_branch": "main",
-      "collected_at": "2026-05-08T15:27:14.021283Z",
-      "series_count": 79,
-      "collector_errors": 1,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-04-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-03-01",
-          "value": 330.293
-        },
-        "payrolls": {
-          "date": "2026-04-01",
-          "value": 158736.0
-        },
-        "treasury_10y": {
-          "date": "2026-05-06",
-          "value": 4.36
-        },
-        "fed_funds": {
-          "date": "2026-04-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "ELEVATED",
-      "alert_count": 2,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 481,
-        "passed": 469,
-        "failed": 12,
-        "skipped": 1,
-        "critical_divergences": 0
-      },
-      "html_size": 533611,
-      "data_changes": [
-        {
-          "indicator": "payrolls",
-          "old": 158637.0,
-          "new": 158736.0,
-          "delta": 99.0
-        },
-        {
-          "indicator": "treasury_10y",
-          "old": 4.4,
-          "new": 4.36,
-          "delta": -0.04
-        }
-      ]
-    },
     {
       "run_at": "2026-05-09T13:02:32.016685Z",
       "git_sha": "7abdc40",
@@ -918,6 +863,51 @@
         "critical_divergences": 1
       },
       "html_size": 634036
+    },
+    {
+      "run_at": "2026-05-16T04:20:36.747638Z",
+      "git_sha": "8d49fe5",
+      "git_branch": "dev/multi-expert-improvements",
+      "collected_at": "2026-05-16T04:15:49.266487Z",
+      "series_count": 90,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-04-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-04-01",
+          "value": 332.407
+        },
+        "payrolls": {
+          "date": "2026-04-01",
+          "value": 158736.0
+        },
+        "treasury_10y": {
+          "date": "2026-05-14",
+          "value": 4.47,
+          "source": "FRED:DGS10",
+          "fetched_at": "2026-05-16T04:15:52.642564Z"
+        },
+        "fed_funds": {
+          "date": "2026-04-01",
+          "value": 3.64,
+          "source": "FRED:FEDFUNDS",
+          "fetched_at": "2026-05-16T04:15:49.431511Z"
+        }
+      },
+      "risk_level": "HIGH",
+      "alert_count": 3,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 577,
+        "passed": 550,
+        "failed": 27,
+        "skipped": 8,
+        "critical_divergences": 1
+      },
+      "html_size": 662125
     }
   ]
 }
