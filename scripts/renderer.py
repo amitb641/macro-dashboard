@@ -1980,12 +1980,20 @@ def render_labor(html, data, vals, tabs):
                     r'Monthly Job Change by Sector — [A-Z][a-z]+\'\d+ vs [A-Z][a-z]+\'\d+ \(thousands\)',
                     f"Monthly Job Change by Sector — {prev_lbl} vs {cur_lbl} (thousands)",
                     html, count=1)
+                # Panel-sub now carries the month pair (Prv vs Cur · sorted by Cur)
+                # to satisfy validator Pass 3d after finding-first title sweep.
+                html = re.sub(
+                    r"(BLS CES major sector breakdown · MoM net payroll change · )[A-Z][a-z]+'\d+ vs [A-Z][a-z]+'\d+( · sorted by )[A-Z][a-z]+'\d+",
+                    rf"\g<1>{prev_lbl} vs {cur_lbl}\g<2>{cur_lbl}", html, count=1)
+                # Legacy-form fallback (in case any panel still uses the pre-sweep subtitle)
                 html = re.sub(
                     r'(BLS CES major sector breakdown · month-over-month net payroll change · sorted by )[A-Z][a-z]+\'\d+',
                     rf'\g<1>{cur_lbl}', html, count=1)
 
-                # Update sector legend labels (current-month + prior-month chips)
-                html = _patch_panel_legend_chips(html, 'Monthly Job Change by Sector', cur_lbl, prev_lbl)
+                # Update sector legend labels (current-month + prior-month chips).
+                # Anchor is the finding-first panel-title (post style_guide §23.1 sweep);
+                # legacy "Monthly Job Change by Sector" anchor is no longer in the title.
+                html = _patch_panel_legend_chips(html, 'Hiring is now concentrated in healthcare and leisure', cur_lbl, prev_lbl)
                 # The "improved/worsened vs Mon" trailing word is short month name
                 short_prv = prev_lbl.split("'")[0]
                 html = re.sub(

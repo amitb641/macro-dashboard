@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-16T03:37:30Z";
+  var BUILD_V = "2026-05-16T03:53:42Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2689,9 +2689,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   </div>
   <div class="sector-grid" id="sector-grid"></div>
   <div class="panel" style="margin-top:16px">
-    <div class="panel-title">Broad Sector Groups — Real GDP % Change</div>
+    <div class="panel-title">Real GDP held 2.0% in 2025 — but the sector mix is tilting toward defensives</div>
     <div class="panel-sub">Annual YoY · E = estimate · F = forecast (Deloitte / EY-Parthenon)</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 01</span><span class="pm-sep">|</span><span class="pm-source">BEA GDP by Industry</span><span class="pm-sep">|</span><span class="pm-asof">As of Q4 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed quarterly</span></div>
     <div class="dtable-wrap"><table class="dtable" id="gdp-tbl"></table></div>
+    <div class="so-what">Healthcare and government carry the headline; consumer cyclicals and construction are the soft underbelly if the oil shock transmits further.</div>
     <p class="src">Sources: BEA GDP by Industry — Q4 2024 Third Estimate (Mar 2025) · Q4 2025 Advance Estimate (Feb 2026) · Forecasts: Deloitte U.S. Economic Outlook Q4 2025, EY-Parthenon.</p>
   </div>
 </div>
@@ -2870,36 +2872,44 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <!-- Monthly MoM Chart -->
   <div class="panel">
-    <div class="panel-title">Monthly Wage Growth — Nominal vs Real YoY % (13-Month Trend)</div>
+    <div class="panel-title">Wage growth decelerated 30bp to 3.6% — real-wage buffer is now only 40bp</div>
     <div class="panel-sub">Atlanta Fed Wage Growth Tracker 3MMA · nominal (solid) vs real CPI-adjusted (dashed) · tracks wage growth for continuously-employed workers (controls for composition)</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 01</span><span class="pm-sep">|</span><span class="pm-source">Atlanta Fed WGT 3MMA</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div class="ch300"><canvas id="c-wage-mom" role="img" aria-label="Wage growth month-over-month, 13-month trend"></canvas></div>
+    <div class="so-what">A thinning real-wage cushion plus 3.6% savings rate means consumer spending is increasingly drawn from buffers — vulnerable to any renewed inflation impulse.</div>
     <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3-Month Moving Average, Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a>. Real wages = nominal minus CPI YoY. Atlanta Fed's tracker follows the same workers over 12 months, unlike BLS AHE which can be biased by composition shifts when the mix of workers in the sample changes.</p>
   </div>
 
   <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Nominal vs Real Wage Growth — Annual History</div>
+      <div class="panel-title">Real wages turned positive in 2024 — but the cushion has stayed thin into 2026</div>
       <div class="panel-sub">Atlanta Fed WGT 3MMA · Dec reading per year (solid) vs real inflation-adjusted (dashed)</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">Atlanta Fed WGT</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
       <div class="ch300"><canvas id="c-wage-line" role="img" aria-label="Average hourly earnings, year-over-year trend"></canvas></div>
+      <div class="so-what">2021–22 real wages were negative; the 2024–26 buffer is positive but small — leaves no shock absorber for renewed energy passthrough.</div>
       <p class="src">Source: <a href="https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO" target="_blank" rel="noopener">Atlanta Fed Wage Growth Tracker — 3MMA Unweighted Median Hourly (FRED: <code>FRBATLWGT3MMAUMHWGO</code>)</a> · nominal = each year's December 3MMA reading (annual headline rate for continuously-employed workers). Real = nominal minus CPI Dec-YoY. Falls back to BLS AHETPI Dec-YoY (vintage-pinned) until Atlanta Fed series is collected.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Avg Hourly Earnings by Sector — 2025 vs 2024</div>
+      <div class="panel-title">Sector wage growth shows broad cooling — leisure leads the moderation</div>
       <div class="panel-sub">Nominal YoY % change · 2025 vs 2024 · BLS CES Table B-3 (Atlanta Fed WGT has no sector breakdown — this surface keeps BLS AHE)</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 03</span><span class="pm-sep">|</span><span class="pm-source">BLS CES Table B-3</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>2025 higher</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>2025 lower</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>2024</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-wage-bar" role="img" aria-label="Wage growth by sector, year-over-year"></canvas></div>
+      <div class="so-what">If sector wage growth keeps cooling broadly, the Fed gains room to ease — but only after Core PCE comes off 3.2%.</div>
       <p class="src">Source: BLS Current Employment Statistics (CES) Table B-3. Nominal YoY % change by sector.</p>
     </div>
   </div>
   <div class="panel">
-    <div class="panel-title">Wage Growth by Sector — Annual Nominal %</div>
+    <div class="panel-title">2021–22 nominal wage peaks have fully unwound — sector dispersion has normalised</div>
     <div class="panel-sub">BLS CES Table B-3 · sector-level AHE YoY · Atlanta Fed WGT has no sector decomposition, so this breakdown uses BLS · real wages were negative in 2021–22 despite high nominal gains (peak CPI)</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 04</span><span class="pm-sep">|</span><span class="pm-source">BLS CES0500000003</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
     <div class="dtable-wrap"><table class="dtable" id="wage-tbl"></table></div>
+    <div class="so-what">The 2021–22 nominal spike was inflation-erased; the 2024–26 disinflation period is the first real wage gain workers have seen this cycle.</div>
     <p class="src">Source: BLS Series CES0500000003 (Avg Hourly Earnings, All Private, SA) · Each year = average of 12 monthly YoY % readings. Headline dashboard wage-growth number uses Atlanta Fed WGT 3MMA; this sector table stays on BLS AHE because Atlanta Fed does not publish sector-level wage growth.</p>
   </div>
 </div>
@@ -2917,20 +2927,24 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Monthly MoM Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Monthly Employment Change — BLS Total Nonfarm vs ADP Private (thousands)</div>
+      <div class="panel-title">NFP slipped to 115K — below the ~150K labour-market stability threshold</div>
       <div class="panel-sub">BLS CES = Total Nonfarm (includes government) · ADP = Private sector only (excludes government) · divergences reflect methodology differences · <a href="https://adpemploymentreport.com">adpemploymentreport.com</a></div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 01</span><span class="pm-sep">|</span><span class="pm-source">BLS CES + ADP</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div class="ch300"><canvas id="c-nfp-vs-adp" role="img" aria-label="Nonfarm payrolls versus ADP employment, monthly change"></canvas></div>
+      <div class="so-what">One print below threshold is not a trend; two would shift the Fed's calculus materially — watch the May NFP release.</div>
       <p class="src">Sources: BLS CES Total Nonfarm (FRED PAYEMS, auto-updated). ADP National Employment Report (private sector only, manually updated). BLS and ADP use different methodologies and coverage — divergences are common and informative.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Monthly Job Change by Sector — Mar'26 vs Apr'26 (thousands)</div>
-      <div class="panel-sub">BLS CES major sector breakdown · month-over-month net payroll change · sorted by Apr'26</div>
+      <div class="panel-title">Hiring is now concentrated in healthcare and leisure — cyclicals are flat</div>
+      <div class="panel-sub">BLS CES major sector breakdown · MoM net payroll change · Mar'26 vs Apr'26 · sorted by Apr'26</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">BLS CES</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Apr'26 improved vs Mar</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Apr'26 worsened vs Mar</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Mar'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-sector-mom" role="img" aria-label="Job changes by sector, month-over-month"></canvas></div>
+      <div class="so-what">Cyclical sectors going flat means private demand is stalling — only non-cyclical hiring is sustaining the headline payroll number.</div>
       <p class="src">Source: BLS CES major sector breakdown. Monthly net payroll change, seasonally adjusted.</p>
     </div>
   </div>
@@ -2938,34 +2952,41 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <!-- Annual Charts -->
   <div class="two-up">
     <div class="panel">
-      <div class="panel-title">Total Nonfarm Payrolls Added — Annual (thousands)</div>
+      <div class="panel-title">2025 added ~+116K — the slowest non-recession year since 2010</div>
       <div class="panel-sub">Net job gains/losses · BLS CES · seasonally adjusted · <span style="color:#336BCC;font-style:italic">2026F base case +1,000K · range +800K–+1,200K · tariff-adjusted · pre-tariff consensus was +1,500K</span></div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 03</span><span class="pm-sep">|</span><span class="pm-source">BLS CES</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
       <div class="ch300"><canvas id="c-jobs-total" role="img" aria-label="Total nonfarm payrolls, level over time"></canvas></div>
+      <div class="so-what">Jan 2026 benchmark revision slashed 2025 by −862K; the labour market entered 2026 weaker than headlines suggested at the time.</div>
       <p class="src">Source: BLS Current Employment Statistics (CES), seasonally adjusted. Annual net job gains/losses.</p>
     </div>
     <div class="panel">
-      <div class="panel-title">Job Gains by Sector — 2025 vs 2024 (thousands)</div>
+      <div class="panel-title">2025 sector mix shows construction and manufacturing softening vs healthcare</div>
       <div class="panel-sub">Annual net change in payroll employment · BLS CES · → indicates sub-sector</div>
+      <div class="panel-meta"><span class="pm-exhibit">Exhibit 04</span><span class="pm-sep">|</span><span class="pm-source">BLS CES</span><span class="pm-sep">|</span><span class="pm-asof">As of Dec 2025</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed annually</span></div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>2025 higher</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>2025 lower</span>
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>2024</span>
       </div>
       <div class="ch-inline" style="position:relative;height:480px"><canvas id="c-jobs-bar" role="img" aria-label="Jobs by sector, annual change"></canvas></div>
+      <div class="so-what">Goods-producing sectors are the leading indicator; their fade in 2025 typically precedes services weakness by 6–9 months.</div>
       <p class="src">Source: BLS Current Employment Statistics (CES). Annual net change in payroll employment by sector.</p>
     </div>
   </div>
   <div class="panel">
-    <div class="panel-title">Employment Change by Sector — Annual Net (thousands)</div>
+    <div class="panel-title">2025 net adds (+116K Dec-to-Dec) trailed expectations after benchmark revision</div>
     <div class="panel-sub">BLS CES · seasonally adjusted · 2025 revised to +116K total (Jan 2026 benchmark, Dec-to-Dec PAYEMS)</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 05</span><span class="pm-sep">|</span><span class="pm-source">BLS CES (post-benchmark)</span><span class="pm-sep">|</span><span class="pm-asof">As of Mar 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div class="dtable-wrap"><table class="dtable" id="jobs-tbl"></table></div>
+    <div class="so-what">Healthcare + leisure carried two-thirds of 2025's headline; without them, total private payrolls would have shown a contraction.</div>
     <p class="src">Source: BLS CES (seasonally adjusted, post-Jan 2026 benchmark revision). Mar 2026: +178K, led by healthcare (+90K), leisure (+44K), construction (+26K). 2025 full-year (Dec-to-Dec): +116K after benchmark revision slashed prior estimates by −862K.</p>
   </div>
 
   <!-- JOLTS labour-market churn (B3.1) — openings, quits, hires, V/U ratio -->
   <div class="panel">
-    <div class="panel-title">Labour Market Churn — JOLTS Openings, Quits, Hires &amp; V/U Ratio</div>
+    <div class="panel-title">JOLTS V/U ratio has normalised toward 1.0 — the post-pandemic tightness has ended</div>
     <div class="panel-sub">BLS JOLTS (JTSJOL/JTSQUL/JTSHIL) + UNEMPLOY · monthly · last 24 months · V/U = vacancies per unemployed worker (Fed tightness gauge, normal ≈ 1.0)</div>
+    <div class="panel-meta"><span class="pm-exhibit">Exhibit 06</span><span class="pm-sep">|</span><span class="pm-source">BLS JOLTS + UNEMPLOY</span><span class="pm-sep">|</span><span class="pm-asof">As of Apr 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin:10px 0 6px">
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#336BCC;border-radius:2px"></span><span style="font-size:10.5px;color:#336BCC;font-weight:600">Openings (L)</span></div>
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#1A9E5A;border-radius:2px"></span><span style="font-size:10.5px;color:#1A9E5A;font-weight:600">Hires (L)</span></div>
@@ -2973,6 +2994,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <div style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:28px;height:3px;background:#8878B8;border-radius:2px;border-top:2px dashed #8878B8"></span><span style="font-size:10.5px;color:#8878B8;font-weight:600">V/U Ratio (R)</span></div>
     </div>
     <div class="ch320"><canvas id="c-jolts" role="img" aria-label="JOLTS labour churn: job openings, quits, and hires"></canvas></div>
+    <div class="so-what">Falling quits historically precede payroll deceleration by 3–6 months — this is consistent with the soft Apr NFP and rising U-6.</div>
     <p class="src">Sources: BLS JOLTS (Job Openings &amp; Labor Turnover Survey) — series JTSJOL/JTSQUL/JTSHIL (thousands, seasonally adjusted). BLS Current Population Survey UNEMPLOY (level, thousands SA). V/U ratio = openings ÷ unemployed: above 1.0 means more job postings than job seekers (a labour-market tightness signal cited by the Fed during the 2022–2024 cycle). Quits rate is the canonical "confidence to leave" indicator — falling quits historically precede payroll deceleration by 3–6 months.</p>
   </div>
 
