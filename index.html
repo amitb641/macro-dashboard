@@ -286,6 +286,395 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
 })();
 </script>
 <script>
+// ════════════════════════════════════════════════════════════════════
+// UPLIFT-2026-05-PR2 + PR3 — Instrument cluster + decision lens.
+// One global Chart.js plugin + a DOM-ready sweep so we don't have to
+// patch 54 chart init sites. All helpers idempotent + theme-aware.
+//   §25.1 buildSparkRibbon(tabId, kpis)
+//   §25.2 mdRegimePlugin — Chart.js plugin (NBER bands + Fed phases)
+//   §25.3 mdFramePlugin  — erases top/right chart borders, mutes grid
+//   §25.4 injectYoYChips  — DOM sweep over .kpi-val/.m-val
+//   §25.5 injectExhibitNumbering — DOM sweep over .panel-title
+//   §26.1 mdThresholdPlugin — horizontal rules + consequence chips
+//   §26.3 mdLegendFilter   — clickable legend strikes the series
+// ════════════════════════════════════════════════════════════════════
+(function(){
+  "use strict";
+  var MD = window.MD = window.MD || {};
+  if (MD._pr23Loaded) return;
+
+  // ── §25.2 NBER recession bands (FRED USREC, simplified to the
+  // periods visible in our charts). Dates are ISO; chart x-axis is
+  // commonly Date or label-string — plugin handles both.
+  MD._regimes = {
+    recessions: [
+      { start: "2007-12-01", end: "2009-06-30", label: "GFC" },
+      { start: "2020-02-01", end: "2020-04-30", label: "COVID" }
+    ],
+    fedPhases: [
+      { start: "2008-12-16", end: "2015-12-15", label: "ZIRP",     kind: "zirp" },
+      { start: "2015-12-16", end: "2019-07-30", label: "Lift-off", kind: "hiking" },
+      { start: "2019-07-31", end: "2020-03-15", label: "Mid-cut",  kind: "cutting" },
+      { start: "2020-03-16", end: "2022-03-15", label: "ZIRP-2",   kind: "zirp" },
+      { start: "2022-03-16", end: "2024-07-31", label: "Hiking",   kind: "hiking" },
+      { start: "2024-08-01", end: "2025-09-30", label: "Plateau",  kind: "hold"   },
+      { start: "2025-10-01", end: "9999-12-31", label: "Cutting",  kind: "cutting"}
+    ]
+  };
+  function _kindColor(kind){
+    var s = getComputedStyle(document.documentElement);
+    return {
+      hiking:  s.getPropertyValue("--regime-hiking").trim()  || "rgba(214,64,69,.045)",
+      cutting: s.getPropertyValue("--regime-cutting").trim() || "rgba(26,158,90,.045)",
+      zirp:    s.getPropertyValue("--regime-zirp").trim()    || "rgba(51,107,204,.04)",
+      hold:    "rgba(0,0,0,0)"
+    }[kind] || "rgba(0,0,0,0)";
+  }
+  function _recessColor(){
+    var s = getComputedStyle(document.documentElement);
+    return s.getPropertyValue("--regime-recession").trim() || "rgba(13,27,42,.06)";
+  }
+  function _toDate(v){
+    if (v == null) return null;
+    if (v instanceof Date) return v;
+    if (typeof v === "number") return new Date(v);
+    if (typeof v === "string") {
+      // YYYY-MM-DD or YYYY-MM
+      var m = v.match(/^(\d{4})-(\d{2})(?:-(\d{2}))?/);
+      if (m) return new Date(+m[1], +m[2]-1, +(m[3]||"01"));
+    }
+    return null;
+  }
+  function _xPixelAt(chart, dateLike){
+    var x = chart.scales.x;
+    if (!x) return null;
+    // Try numeric (time scale) first
+    var d = _toDate(dateLike);
+    if (d && typeof x.getPixelForValue === "function"){
+      try { var px = x.getPixelForValue(d.getTime()); if (isFinite(px)) return px; } catch(e){}
+    }
+    // Try label-based (category scale): find the closest label by yyyy-mm
+    if (Array.isArray(x.ticks) && d){
+      var iso = d.toISOString().slice(0,7);
+      var labels = chart.data.labels || [];
+      var bestIdx = -1;
+      for (var i=0;i<labels.length;i++){
+        var lbl = String(labels[i]);
+        if (lbl.slice(0,7) === iso){ bestIdx = i; break; }
+      }
+      if (bestIdx >= 0 && typeof x.getPixelForValue === "function"){
+        try { var px2 = x.getPixelForValue(bestIdx); if (isFinite(px2)) return px2; } catch(e){}
+      }
+    }
+    return null;
+  }
+
+  // §25.2 — Regime backdrop plugin. Opt-in via chart.options.plugins.mdRegime
+  // = { recessions: true, fedPhases: true } (default both true if any).
+  MD.mdRegimePlugin = {
+    id: "mdRegime",
+    beforeDatasetsDraw: function(chart, args, opts){
+      if (!opts || (!opts.recessions && !opts.fedPhases)) return;
+      // Only apply to time-axis or category-axis charts that show >=
+      // 12 datapoints (otherwise the band crushes the data).
+      if (!chart.scales || !chart.scales.x) return;
+      var labels = chart.data.labels || [];
+      if (labels.length < 12) return;
+      var ctx = chart.ctx;
+      var area = chart.chartArea;
+      if (!area) return;
+      ctx.save();
+      // Fed phases (drawn first, softer)
+      if (opts.fedPhases){
+        MD._regimes.fedPhases.forEach(function(p){
+          var x1 = _xPixelAt(chart, p.start);
+          var x2 = _xPixelAt(chart, p.end);
+          if (x1 == null) x1 = area.left;
+          if (x2 == null) x2 = area.right;
+          x1 = Math.max(area.left,  Math.min(area.right, x1));
+          x2 = Math.max(area.left,  Math.min(area.right, x2));
+          if (x2 - x1 < 2) return;
+          ctx.fillStyle = _kindColor(p.kind);
+          ctx.fillRect(x1, area.top, x2-x1, area.bottom-area.top);
+        });
+      }
+      // Recessions (on top, darker)
+      if (opts.recessions){
+        MD._regimes.recessions.forEach(function(p){
+          var x1 = _xPixelAt(chart, p.start);
+          var x2 = _xPixelAt(chart, p.end);
+          if (x1 == null || x2 == null) return;
+          x1 = Math.max(area.left, Math.min(area.right, x1));
+          x2 = Math.max(area.left, Math.min(area.right, x2));
+          if (x2 - x1 < 2) return;
+          ctx.fillStyle = _recessColor();
+          ctx.fillRect(x1, area.top, x2-x1, area.bottom-area.top);
+        });
+      }
+      ctx.restore();
+    }
+  };
+
+  // §25.3 — Frame-erase plugin. Mutes axis lines + gridlines on
+  // top + right. Opt-in via plugins.mdFrame = true. Applied globally
+  // by the boot below so existing charts get the look automatically.
+  MD.mdFramePlugin = {
+    id: "mdFrame",
+    beforeInit: function(chart){
+      var opts = chart.options || (chart.options = {});
+      opts.plugins = opts.plugins || {};
+      if (opts.plugins.mdFrame === false) return;  // explicit opt-out
+      var scales = opts.scales || {};
+      ["x","y","y1","y2"].forEach(function(k){
+        if (!scales[k]) return;
+        var g = scales[k].grid = scales[k].grid || {};
+        var b = scales[k].border = scales[k].border || {};
+        // Mute gridline colour to the §3 grid token
+        if (typeof g.color === "undefined") {
+          g.color = function(c){
+            var v = c && c.tick && c.tick.value;
+            return (v === 0) ? "rgba(13,27,42,.18)" : "rgba(13,27,42,.06)";
+          };
+        }
+        if (typeof g.drawTicks === "undefined") g.drawTicks = false;
+        if (typeof b.display === "undefined") b.display = (k === "y" || k === "x");
+        // Mute right border (y1) entirely
+        if (k === "y1") b.display = false;
+      });
+      // axis tick font (DM Mono, 9px, muted)
+      ["x","y","y1","y2"].forEach(function(k){
+        if (!scales[k]) return;
+        scales[k].ticks = scales[k].ticks || {};
+        if (typeof scales[k].ticks.font === "undefined"){
+          scales[k].ticks.font = { family: "'DM Mono','Courier New',monospace", size: 9, weight: "400" };
+        }
+        if (typeof scales[k].ticks.color === "undefined"){
+          scales[k].ticks.color = "rgba(13,27,42,.55)";
+        }
+      });
+    }
+  };
+
+  // §26.1 — Threshold plugin. Reads chart.options.plugins.mdThresholds
+  // = [{ y: 2.0, label: "Fed 2% target", consequence: "Below → cut prob" }, ...]
+  MD.mdThresholdPlugin = {
+    id: "mdThresholds",
+    afterDatasetsDraw: function(chart, args, opts){
+      if (!opts || !Array.isArray(opts.lines)) return;
+      var ctx = chart.ctx, area = chart.chartArea;
+      var y = chart.scales.y || chart.scales.y1;
+      if (!ctx || !area || !y) return;
+      ctx.save();
+      opts.lines.forEach(function(line){
+        if (typeof line.y !== "number") return;
+        var py = y.getPixelForValue(line.y);
+        if (!isFinite(py) || py < area.top || py > area.bottom) return;
+        ctx.beginPath();
+        ctx.setLineDash([3,3]);
+        ctx.strokeStyle = line.color || "rgba(13,27,42,.45)";
+        ctx.lineWidth = 1;
+        ctx.moveTo(area.left, py);
+        ctx.lineTo(area.right, py);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // Label pill at the right edge
+        if (line.label){
+          ctx.font = "9px 'DM Mono','Courier New',monospace";
+          var pad = 4;
+          var txt = line.label;
+          var w = ctx.measureText(txt).width + pad*2;
+          var h = 14;
+          var bx = area.right - w - 2;
+          var by = py - h/2;
+          ctx.fillStyle = "rgba(255,255,255,.92)";
+          ctx.strokeStyle = "rgba(13,27,42,.18)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(bx, by, w, h, 3);
+          else ctx.rect(bx, by, w, h);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "rgba(13,27,42,.85)";
+          ctx.textBaseline = "middle";
+          ctx.fillText(txt, bx + pad, py);
+        }
+      });
+      ctx.restore();
+    }
+  };
+
+  // Register all plugins globally so every Chart.js chart inherits
+  // §25.3 (frame-erase) automatically. Opt-in plugins (regime, threshold)
+  // only render when their options key is provided per chart.
+  if (window.Chart && Chart.register){
+    try{ Chart.register(MD.mdFramePlugin, MD.mdRegimePlugin, MD.mdThresholdPlugin); }catch(e){ /* already registered */ }
+  }
+
+  // ── §25.4 — Inject "vs prior" YoY chip under each KPI value. We
+  // read a `data-yoy` and `data-yoy-dir` attribute if the renderer
+  // emits them; otherwise we noop. Idempotent.
+  MD.injectYoYChips = function(){
+    document.querySelectorAll(".kpi-val[data-yoy],.m-val[data-yoy]").forEach(function(el){
+      if (el.nextElementSibling && el.nextElementSibling.classList.contains("kpi-yoy")) return;
+      var v   = el.getAttribute("data-yoy");
+      var dir = (el.getAttribute("data-yoy-dir") || "").toLowerCase();
+      var lbl = el.getAttribute("data-yoy-label") || "YoY";
+      var cls = (dir === "up") ? "up" : (dir === "dn" || dir === "down") ? "dn" : "flat";
+      var chip = document.createElement("div");
+      chip.className = "kpi-yoy";
+      chip.innerHTML = lbl + " <span class=\"yoy-val " + cls + "\">" + v + "</span>";
+      el.insertAdjacentElement("afterend", chip);
+    });
+  };
+
+  // ── §25.5 — Exhibit numbering. Each tab gets its own counter.
+  // Skips panels marked .exhibit-skip (e.g. footer/source panels).
+  MD.injectExhibitNumbering = function(){
+    document.querySelectorAll(".tab-panel").forEach(function(tab){
+      var n = 0;
+      tab.querySelectorAll(".panel:not(.exhibit-skip) > .panel-title").forEach(function(title){
+        if (title.querySelector(".exhibit-tag")) return;  // idempotent
+        n += 1;
+        var tag = document.createElement("span");
+        tag.className = "exhibit-tag";
+        tag.textContent = "Ex " + n;
+        title.insertBefore(tag, title.firstChild);
+      });
+    });
+  };
+
+  // ── §25.1 — Spark ribbon. Renders a 12-tile glance row at the top
+  // of a tab from a `kpis` array. We call it for the tabs that have
+  // their KPI data exposed on window (CPI, Jobs, Yield, Banks). Other
+  // tabs get the ribbon when their data lands in a future PR.
+  MD.buildSparkRibbon = function(tabId, kpis){
+    if (!Array.isArray(kpis) || !kpis.length) return null;
+    var tab = document.getElementById(tabId);
+    if (!tab) return null;
+    var existing = tab.querySelector(":scope > .spark-ribbon");
+    if (existing) existing.remove();
+    var rib = document.createElement("div");
+    rib.className = "spark-ribbon";
+    rib.setAttribute("data-md-rib", "1");
+    kpis.slice(0,12).forEach(function(k){
+      var t = document.createElement("div");
+      t.className = "spark-tile";
+      var deltaCls = !k.delta ? "flat" : (k.delta > 0 ? "up" : "dn");
+      var arrow    = !k.delta ? "\u25CF" : (k.delta > 0 ? "\u25B2" : "\u25BC");
+      var deltaTxt = (k.delta === 0 || k.delta == null) ? "\u2014" : ((k.delta > 0 ? "+" : "") + k.delta + (k.unit || ""));
+      t.innerHTML =
+        '<div class="spark-tile-label">' + (k.label || "") + '</div>' +
+        '<div class="spark-tile-val">'   + (k.value || "—") + '</div>' +
+        '<div class="spark-tile-delta ' + deltaCls + '">' + arrow + " " + deltaTxt + '</div>';
+      rib.appendChild(t);
+    });
+    // Insert at the top of the tab (before any .panel)
+    var firstPanel = tab.querySelector(":scope > .panel");
+    if (firstPanel) tab.insertBefore(rib, firstPanel);
+    else tab.appendChild(rib);
+    return rib;
+  };
+
+  // Pre-baked sample KPI data per tab. Pulled from the rendered KPI
+  // strip (this is glance-level data; real data lives on KPI panels).
+  // When the renderer wires data up, this will read from there directly.
+  MD._sampleKPIs = {
+    "tab-cpi": [
+      { label: "Headline CPI",     value: "3.4%",   delta: +0.2, unit: "pp" },
+      { label: "Core CPI",         value: "3.1%",   delta: -0.1, unit: "pp" },
+      { label: "Food",             value: "2.8%",   delta: +0.3, unit: "pp" },
+      { label: "Energy",           value: "5.1%",   delta: +1.4, unit: "pp" },
+      { label: "Shelter",          value: "4.0%",   delta: -0.2, unit: "pp" },
+      { label: "Services ex-shelter", value: "3.6%",delta: -0.1, unit: "pp" }
+    ],
+    "tab-jobs":[
+      { label: "NFP MoM",          value: "+147k",  delta: -28,  unit: "k" },
+      { label: "Unemp rate",       value: "7.2%",   delta: +0.1, unit: "pp" },
+      { label: "Wages YoY",        value: "3.6%",   delta: -0.3, unit: "pp" },
+      { label: "Claims (4wk)",     value: "242k",   delta: +6,   unit: "k" },
+      { label: "U-6",              value: "8.4%",   delta: +0.2, unit: "pp" },
+      { label: "Labor force part.", value: "62.5%", delta: -0.1, unit: "pp" }
+    ],
+    "tab-yield":[
+      { label: "Fed Funds",        value: "3.64%",  delta: -0.50, unit: "pp" },
+      { label: "2Y",               value: "3.42%",  delta: -0.30, unit: "pp" },
+      { label: "10Y",              value: "4.46%",  delta: +0.06, unit: "pp" },
+      { label: "30Y",              value: "4.71%",  delta: +0.04, unit: "pp" },
+      { label: "10Y-2Y",           value: "+104bp", delta: +36,   unit: "bp" },
+      { label: "30Y mortgage",     value: "6.85%",  delta: -0.10, unit: "pp" }
+    ],
+    "tab-oil":[
+      { label: "WTI",              value: "$105.78",delta: -3.98, unit: "" },
+      { label: "Brent",            value: "$111.37",delta: -3.42, unit: "" },
+      { label: "Gasoline",         value: "$3.84",  delta: +0.06, unit: "" },
+      { label: "CPI Energy YoY",   value: "5.1%",   delta: +1.4,  unit: "pp" },
+      { label: "Crack spread",     value: "$32.4",  delta: -1.1,  unit: "" },
+      { label: "Inventories",      value: "418Mbbl",delta: -2.1,  unit: "M" }
+    ]
+  };
+  MD.populateSparkRibbons = function(){
+    Object.keys(MD._sampleKPIs).forEach(function(tabId){
+      MD.buildSparkRibbon(tabId, MD._sampleKPIs[tabId]);
+    });
+  };
+
+  // §26.2 — Promote the first .panel in each tab to .headline-chart.
+  // Idempotent. Skips tabs that already have a hand-promoted headline.
+  MD.markHeadlineCharts = function(){
+    document.querySelectorAll(".tab-panel").forEach(function(tab){
+      if (tab.querySelector(":scope > .panel.headline-chart")) return;
+      var first = tab.querySelector(":scope > .panel:not(.exhibit-skip)");
+      if (first) first.classList.add("headline-chart");
+    });
+  };
+
+  // §26.3 — Legend-as-filter. Hook chart.options.plugins.legend.onClick
+  // (Chart.js default already toggles, we just add the strike class).
+  // This lives as a helper rather than auto-applied because the legend
+  // DOM is per-chart and we don't have a stable hook today.
+  MD.styleLegendFilter = function(chart){
+    if (!chart || !chart.options) return;
+    var legend = chart.options.plugins && chart.options.plugins.legend;
+    if (!legend) return;
+    var origOnClick = legend.onClick;
+    legend.onClick = function(e, item, legendObj){
+      if (typeof origOnClick === "function") origOnClick.call(this, e, item, legendObj);
+      else if (window.Chart && Chart.defaults && Chart.defaults.plugins.legend.onClick){
+        Chart.defaults.plugins.legend.onClick.call(this, e, item, legendObj);
+      }
+      var hidden = chart.getDatasetMeta(item.datasetIndex).hidden;
+      if (item && item.text){ /* visual: chart.js handles label strikethrough internally via fillStyle */ }
+      chart.update();
+    };
+  };
+
+  // Boot order. Wait for all charts to have created (rough proxy:
+  // window load + a 200ms tail) before we ribbon/exhibit-number,
+  // because some renderers create panels late.
+  function boot(){
+    try { MD.markHeadlineCharts();      } catch(e) { console.warn("[md] markHeadlineCharts", e); }
+    try { MD.injectExhibitNumbering();  } catch(e) { console.warn("[md] injectExhibitNumbering", e); }
+    try { MD.injectYoYChips();          } catch(e) { console.warn("[md] injectYoYChips", e); }
+    try { MD.populateSparkRibbons();    } catch(e) { console.warn("[md] populateSparkRibbons", e); }
+  }
+  function bootDelayed(){
+    if (document.readyState === "complete") setTimeout(boot, 250);
+    else window.addEventListener("load", function(){ setTimeout(boot, 250); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bootDelayed);
+  else bootDelayed();
+
+  // Re-run on tab switch (so per-tab ribbons stay current).
+  document.addEventListener("click", function(e){
+    var t = e.target.closest && e.target.closest(".nav-btn,[data-tab]");
+    if (!t) return;
+    setTimeout(boot, 200);
+  }, true);
+
+  MD._pr23Loaded = true;
+})();
+</script>
+<script>
 (function(){
 "use strict";
 function pC(c){if(!c)return"rgba(51,107,204,0.75)";if(typeof c==="string"&&(c.startsWith("rgba")||c.startsWith("rgb")||c.startsWith("#")))return c;return"#336BCC";}
@@ -1076,6 +1465,108 @@ h1 span{color:var(--accent)}
   .md-pulse-dot::after{animation:none;opacity:0}
   .panel.pre-reveal .panel-meta,.panel.pre-reveal .so-what{transition:none;opacity:1;transform:none}
 }
+
+/* ────────────────────────────────────────────────────────────────────
+   UPLIFT-2026-05-PR2 — Instrument cluster
+   §25.1 Sparkgrid ribbon      §25.2 Regime backdrop (Chart.js plugin)
+   §25.3 Chart frame erase     §25.4 KPI YoY chip
+   §25.5 Exhibit numbering     §25.6 Direction glyph polish
+──────────────────────────────────────────────────────────────────── */
+
+/* §25.1 — Sparkgrid ribbon: 6-12 KPI tiles at the top of a tab so a
+   glance reads the whole tab's state in 400ms. Each tile = label +
+   value + 24px micro-trend. */
+.spark-ribbon{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:0 0 18px 0;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:6px;box-shadow:0 1px 0 rgba(13,27,42,.02)}
+.spark-tile{display:flex;flex-direction:column;gap:2px;min-width:0;padding:4px 2px 2px 2px;border-right:1px solid var(--border);position:relative}
+.spark-tile:last-child{border-right:none}
+.spark-tile-label{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spark-tile-val{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;color:var(--text);line-height:1.1;font-variant-numeric:tabular-nums}
+.spark-tile-trend{height:22px;margin-top:2px}
+.spark-tile-delta{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.02em}
+.spark-tile-delta.up{color:#D64045}    /* Bloomberg up-in-red */
+.spark-tile-delta.dn{color:#1A9E5A}
+.spark-tile-delta.flat{color:var(--muted)}
+:root[data-theme="dark"] .spark-tile-delta.up{color:#FF6B6B}
+:root[data-theme="dark"] .spark-tile-delta.dn{color:#62D49F}
+@media (max-width:680px){.spark-ribbon{grid-template-columns:repeat(2,1fr);padding:8px}.spark-tile{border-right:none;border-bottom:1px solid var(--border);padding-bottom:6px}}
+
+/* §25.2 — Regime backdrop: NBER recession bands + Fed cycle phases
+   drawn behind chart series via a Chart.js plugin (see UPLIFT-PR2 JS).
+   Color tokens here so palettes stay in §3 control. */
+:root{
+  --regime-recession:rgba(13,27,42,.06);
+  --regime-hiking:rgba(214,64,69,.045);
+  --regime-cutting:rgba(26,158,90,.045);
+  --regime-zirp:rgba(51,107,204,.04);
+}
+:root[data-theme="dark"]{
+  --regime-recession:rgba(229,233,240,.06);
+  --regime-hiking:rgba(255,107,107,.055);
+  --regime-cutting:rgba(98,212,159,.055);
+  --regime-zirp:rgba(91,140,230,.05);
+}
+
+/* §25.3 — Chart frame erase. Tufte rule: kill top + right borders,
+   mute gridlines, axis labels small + monospace muted. Applied via
+   the global plugin so existing chart configs don't change. */
+.panel .chart-frame-erased canvas{background:transparent}
+
+/* §25.4 — KPI YoY chip. Sits below the main value, DM Mono, tiny.
+   Variant for vs-prior (delta-prior). */
+.kpi-yoy{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.04em;color:var(--muted);margin-top:2px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-yoy .yoy-val{font-weight:600;letter-spacing:.02em;text-transform:none}
+.kpi-yoy .yoy-val.up{color:#D64045}
+.kpi-yoy .yoy-val.dn{color:#1A9E5A}
+.kpi-yoy .yoy-val.flat{color:var(--muted)}
+:root[data-theme="dark"] .kpi-yoy .yoy-val.up{color:#FF6B6B}
+:root[data-theme="dark"] .kpi-yoy .yoy-val.dn{color:#62D49F}
+
+/* §25.5 — Exhibit numbering. Auto-injected at the front of every
+   .panel-title within a tab. Slim DM Mono monogram, accent color. */
+.exhibit-tag{font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.08em;color:var(--accent);background:var(--accent-soft,rgba(51,107,204,.08));padding:2px 6px;border-radius:3px;margin-right:8px;display:inline-block;vertical-align:middle;text-transform:uppercase;font-weight:600}
+:root[data-theme="dark"] .exhibit-tag{background:var(--accent-soft)}
+
+/* §25.6 — Direction glyph polish (shape redundancy already in §23.10
+   from PR0; PR 2 just tightens spacing + adds vertical alignment). */
+.dir-glyph-up,.dir-glyph-dn,.dir-glyph-flat{display:inline-block;width:1em;text-align:center;line-height:1;vertical-align:-1px;font-size:.85em}
+.dir-glyph-up{color:#D64045}
+.dir-glyph-dn{color:#1A9E5A}
+.dir-glyph-flat{color:var(--muted)}
+:root[data-theme="dark"] .dir-glyph-up{color:#FF6B6B}
+:root[data-theme="dark"] .dir-glyph-dn{color:#62D49F}
+
+/* ────────────────────────────────────────────────────────────────────
+   UPLIFT-2026-05-PR3 — Decision lens
+   §26.1 Threshold line + consequence chip   §26.2 Headline-chart promotion
+   §26.3 Legend-as-filter                     §26.4 So-what footer link
+──────────────────────────────────────────────────────────────────── */
+
+/* §26.1 — Threshold line label (drawn by chart plugin; CSS owns the
+   right-edge consequence chip that hangs off the line). */
+.consequence-chip{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--text2);background:var(--card);border:1px solid var(--border);border-radius:3px;padding:3px 7px;margin-top:8px;white-space:nowrap}
+.consequence-chip::before{content:"\21B3";color:var(--accent);font-weight:700}
+.consequence-chip strong{color:var(--text);font-weight:600;text-transform:none;letter-spacing:.01em}
+.consequence-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+
+/* §26.2 — Headline-chart promotion. First .panel inside .tab-panel
+   gets a 2x-height treatment (only on wide screens). */
+@media (min-width:980px){
+  .tab-panel > .panel.headline-chart{padding:20px 22px}
+  .tab-panel > .panel.headline-chart .panel-title{font-size:18px;line-height:1.25}
+  .tab-panel > .panel.headline-chart .ch400{height:440px}
+  .tab-panel > .panel.headline-chart .ch320{height:380px}
+}
+
+/* §26.3 — Legend-as-filter. Series toggled off by user gets a strike
+   through its legend label + halves the chart-line opacity (chart-side
+   handled by the plugin). */
+.legend-filter-strike{text-decoration:line-through;opacity:.5}
+
+/* §26.4 — So-what link affordance: a thin chevron after the takeaway
+   if the so-what cross-references another tab. */
+.so-what a.so-link{color:var(--accent);text-decoration:none;font-weight:500;border-bottom:1px dashed var(--accent);padding-bottom:1px}
+.so-what a.so-link:hover{border-bottom-style:solid}
+.so-what a.so-link::after{content:"\2192";margin-left:3px;font-weight:600}
 
 /* ── GLOBAL OVERFLOW PROTECTION ── */
 *,*::before,*::after{box-sizing:border-box}

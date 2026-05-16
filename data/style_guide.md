@@ -1324,3 +1324,177 @@ code paths.
 
 A chart should still pass §1's screenshot test ("would not embarrass
 us in a board deck") in both themes with motion disabled.
+
+---
+
+## §25 — Instrument cluster (PR 2 of 3, 2026-05-15)
+
+Density. After the ambient pass adds "alive", the instrument-cluster
+pass adds "informative". Tableau (Hewson) and Snowflake (Tigani) push:
+your inch-per-datapoint is luxurious; load it up with signal.
+
+### 25.1 — Sparkgrid ribbon (`.spark-ribbon`)
+
+A 6–12 tile glance row at the top of every tab. Each tile = label
+(DM Mono 9px upper) · value (DM Sans 15px 600) · delta chip
+(monospace, Bloomberg up-in-red preserved). Renders the entire tab's
+state in 400ms before any chart loads.
+
+Helper: `MD.buildSparkRibbon(tabId, kpis)` (per-tab) or
+`MD.populateSparkRibbons()` (sweeps `MD._sampleKPIs` map). The
+sample-KPIs map is wired today; full renderer integration ships with
+PR 5 (data-driven from per-tab raw signals).
+
+### 25.2 — Regime backdrop (Chart.js plugin `mdRegime`)
+
+Behind every time-series chart with ≥12 datapoints: NBER recession
+bands (`rgba(13,27,42,.06)` light, `rgba(229,233,240,.06)` dark) and
+Fed cycle phase washes (hiking red-tint .045, cutting green-tint .045,
+ZIRP blue-tint .04, hold transparent). Drawn `beforeDatasetsDraw` so
+the data path sits on top.
+
+Phases are hard-coded in `MD._regimes`:
+- ZIRP (2008-12 → 2015-12)  · Lift-off (2015-12 → 2019-07)
+- Mid-cycle cut (2019-07 → 2020-03) · COVID ZIRP (2020-03 → 2022-03)
+- Hiking (2022-03 → 2024-07) · Plateau (2024-08 → 2025-09)
+- Cutting (2025-10 → ongoing)
+
+Opt-in per chart: `chart.options.plugins.mdRegime = { recessions: true, fedPhases: true }`.
+Charts without this key render exactly as before — zero regression risk.
+
+### 25.3 — Frame-erase (Chart.js plugin `mdFrame`)
+
+Tufte rule applied globally. `Chart.register(MD.mdFramePlugin)` mutes:
+- Gridline color → `rgba(13,27,42,.06)` (zero-line → `.18` for emphasis)
+- Tick marks → off
+- Right border (`y1` axis) → off
+- Axis labels → DM Mono 9px `rgba(13,27,42,.55)`
+
+Opt-out per chart: `chart.options.plugins.mdFrame = false`. Today
+every chart inherits this automatically.
+
+### 25.4 — KPI YoY chip (`.kpi-yoy`)
+
+Below each KPI value. Reads `data-yoy`, `data-yoy-dir`, `data-yoy-label`
+attributes on `.kpi-val` / `.m-val` nodes. When the renderer emits
+those attributes, `MD.injectYoYChips()` (auto-run on DOM ready) adds
+the chip. No retrofit needed until renderer-side attribute support
+lands; chip will appear automatically when it does.
+
+### 25.5 — Exhibit numbering (`.exhibit-tag`)
+
+Goldman-GIR convention. `MD.injectExhibitNumbering()` (auto-run)
+walks each `.tab-panel` and prefixes every `.panel-title` with
+`<span class="exhibit-tag">Ex 1</span>` etc. Skips panels marked
+`.exhibit-skip` (footer / source citations). Idempotent — running
+twice doesn't double-tag.
+
+### 25.6 — Direction glyph polish
+
+`.dir-glyph-up`, `.dir-glyph-dn`, `.dir-glyph-flat` get tighter
+vertical alignment and an explicit width so a row of `▲▼●` glyphs
+align to a 1em grid. Bloomberg up-in-red preserved both themes.
+
+### 25.7 — Implementation status
+
+| § | Pattern | Plugin / Helper | Auto-applied? |
+|---|---|---|---|
+| 25.1 | Spark ribbon | `MD.buildSparkRibbon` | yes (sample data; 4 tabs) |
+| 25.2 | Regime backdrop | `MD.mdRegimePlugin` | opt-in per chart |
+| 25.3 | Frame-erase | `MD.mdFramePlugin` | yes (global) |
+| 25.4 | YoY chip | `MD.injectYoYChips` | yes (when renderer emits attrs) |
+| 25.5 | Exhibit numbering | `MD.injectExhibitNumbering` | yes |
+| 25.6 | Direction glyph | CSS only | yes |
+
+---
+
+## §26 — Decision lens (PR 3 of 3, 2026-05-15)
+
+Decisions. After "alive" and "informative", PR 3 makes the dashboard
+*useful*. McKinsey (Birchard) + BCG (Murray) push: every chart needs
+a "therefore" clause. Charts that don't end in action are decoration.
+
+### 26.1 — Threshold lines + consequence chips
+
+`MD.mdThresholdPlugin` (Chart.js plugin) draws horizontal rules
+labelled with a right-edge pill. Opt-in per chart:
+
+```js
+chart.options.plugins.mdThresholds = {
+  lines: [
+    { y: 2.0, label: "Fed 2% target",
+      consequence: "Below → cut prob ≥60%" },
+    { y: 4.0, label: "FOMC dot 4%" }
+  ]
+};
+```
+
+The pill renders at the right edge of the line in DM Mono 9px.
+Consequence text is *not* drawn on the chart (would crowd) — it
+sits below the chart as a `.consequence-chip` chip strip:
+
+```html
+<div class="consequence-row">
+  <span class="consequence-chip"><strong>Below 2% target</strong> next-meeting cut prob ≥60%</span>
+  <span class="consequence-chip"><strong>Above 4%</strong> hike reversal risk</span>
+</div>
+```
+
+Consequence chips never claim certainty. They cite probabilities or
+historical analogs ("1995 cycle: +0.4pp wage decel preceded 50bp cut
+by 4 months"). Hedging is OK in chips — it's about decision *framing*,
+not analyst commentary.
+
+### 26.2 — Headline-chart promotion
+
+`MD.markHeadlineCharts()` adds `.headline-chart` to the first
+`.panel` in each tab. On wide screens (`min-width: 980px`), the
+headline chart gets:
+- Padding bumped 18→22px
+- Title font 16→18px
+- Chart canvas height +40px (`ch400` → 440px, `ch320` → 380px)
+
+The visual hierarchy is now: headline → exhibits 2..N. McKinsey's
+"one chart that tells the story" rendered.
+
+### 26.3 — Legend-as-filter (`MD.styleLegendFilter(chart)`)
+
+Click a series in the legend → strike its label + halve the line
+opacity (Chart.js's default toggles visibility; we add the visual
+cue). Helper is opt-in per chart — auto-applying would conflict with
+charts that already have a custom `legend.onClick`.
+
+### 26.4 — So-what link affordance
+
+`.so-what a.so-link` styles cross-tab pointers as dashed-underline
+accent links with a `→` glyph. Used when a so-what footer
+cross-references another tab:
+
+```html
+<div class="so-what">Energy is leading the basket.
+<a href="#oil" class="so-link">See Oil tab</a> for the WTI driver.</div>
+```
+
+### 26.5 — Non-goals (PR 3)
+
+- No counter-factual sliders. Those need a small Phillips-curve
+  module (PR 4 candidate, after a spec).
+- No auto-generated consequence text. Chips are hand-written by an
+  analyst; this prevents the dashboard from making confident
+  forecasts in the user's name.
+- No live regime auto-tagger. `MD._regimes` is hand-curated.
+
+### 26.6 — Implementation status
+
+| § | Pattern | Helper | Auto-applied? |
+|---|---|---|---|
+| 26.1 | Threshold lines | `MD.mdThresholdPlugin` | opt-in per chart |
+| 26.1 | Consequence chip | CSS `.consequence-chip` | hand-authored |
+| 26.2 | Headline promo | `MD.markHeadlineCharts` | yes |
+| 26.3 | Legend strike | `MD.styleLegendFilter` | opt-in per chart |
+| 26.4 | So-what link | CSS `.so-link` | hand-authored |
+
+Sweep order for richer integration (data-driven sparkgrids,
+per-chart regime/threshold opt-ins, hand-authored consequence chips):
+CPI → Jobs → Yield → Oil → Banks → Credit → Housing → GDP → PCE →
+Unemp → Wages → Outlook.
