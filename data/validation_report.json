@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-16T17:48:30.422276Z",
+  "validated_at": "2026-05-16T21:44:25.981645Z",
   "status": "WARN",
   "summary": {
     "total_checks": 575,
-    "passed": 550,
-    "failed": 25,
+    "passed": 561,
+    "failed": 14,
     "skipped": 8,
     "critical_divergences": 1
   },
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-16T17:46:46.898457Z",
+      "collected_at": "2026-05-16T21:43:14.286278Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1797,9 +1797,9 @@
     },
     {
       "check": "Visual: GDP \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: GDP \u2014 Panel \"EX 1GDP Commentary \u2014 2025 Growth & 2026 \" has title",
@@ -1875,9 +1875,9 @@
     },
     {
       "check": "Visual: Jobs \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Jobs \u2014 Panel \"EX 1Jobs Market Commentary \u2014 2025 & 2026\" has title",
@@ -1983,9 +1983,9 @@
     },
     {
       "check": "Visual: Unemployment \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Unemployment \u2014 Panel \"EX 1Unemployment Commentary \u2014 Trends & R\" has title",
@@ -2079,9 +2079,9 @@
     },
     {
       "check": "Visual: Wages \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Wages \u2014 Panel \"EX 1Wage Growth Commentary \u2014 Nominal vs \" has title",
@@ -2175,9 +2175,9 @@
     },
     {
       "check": "Visual: CPI \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: CPI \u2014 Panel \"EX 1CPI Commentary \u2014 Inflation Trajector\" has title",
@@ -2403,9 +2403,9 @@
     },
     {
       "check": "Visual: Consumer & PCE \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Consumer & PCE \u2014 Panel \"EX 1Consumer & PCE Commentary \u2014 Spending\" has title",
@@ -2523,9 +2523,9 @@
     },
     {
       "check": "Visual: Rates & Yields \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Rates & Yields \u2014 Panel \"EX 1Fed Rates Commentary \u2014 Policy Stance\" has title",
@@ -2625,9 +2625,9 @@
     },
     {
       "check": "Visual: Credit \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Credit \u2014 Panel \"EX 1Credit Commentary \u2014 Spread Complacen\" has title",
@@ -2709,9 +2709,9 @@
     },
     {
       "check": "Visual: Banking \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Banking \u2014 Panel \"EX 1Banks Commentary \u2014 Earnings, NII & C\" has title",
@@ -2817,9 +2817,9 @@
     },
     {
       "check": "Visual: Housing \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Housing \u2014 Panel \"EX 1Housing Commentary \u2014 Affordability C\" has title",
@@ -2919,9 +2919,9 @@
     },
     {
       "check": "Visual: Oil \u2014 Commentary color matches palette",
-      "severity": "warning",
-      "pass": false,
-      "detail": "computed color 'rgb(30, 41, 59)' (style_guide \u00a74)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Oil \u2014 Panel \"EX 1Oil Commentary \u2014 Supply Shock & Macr\" has title",
