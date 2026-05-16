@@ -290,9 +290,29 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
     else MD.setTheme("light");
   };
 
+  // Race-condition guard: theme-overlay.js may add body.themed-sm AFTER
+  // MD.setTheme("dark") has already stripped it. Watch body.class and
+  // re-strip whenever themed-sm reappears while dark is active.
+  MD._installThemedSmGuard = function(){
+    if (MD._themedSmGuardInstalled) return;
+    var body = document.body;
+    if (!body || typeof MutationObserver === "undefined") return;
+    var obs = new MutationObserver(function(){
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (isDark && body.classList.contains("themed-sm")){
+        body.classList.remove("themed-sm");
+        body.setAttribute("data-md-had-themed-sm", "1");
+      }
+    });
+    obs.observe(body, { attributes: true, attributeFilter: ["class"] });
+    MD._themedSmGuard = obs;
+    MD._themedSmGuardInstalled = true;
+  };
+
   // Auto-init on DOM ready
   function boot(){
     MD.initThemeFromStorage();
+    MD._installThemedSmGuard();
     MD.initScrollReveal();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
