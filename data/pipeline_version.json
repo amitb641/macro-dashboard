@@ -1,57 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-05-16T04:20:36.747638Z",
+  "last_updated": "2026-05-16T04:29:19.369926Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-05-09T13:02:32.016685Z",
-      "git_sha": "7abdc40",
-      "git_branch": "main",
-      "collected_at": "2026-05-09T13:00:40.996400Z",
-      "series_count": 79,
-      "collector_errors": 1,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-04-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-03-01",
-          "value": 330.293
-        },
-        "payrolls": {
-          "date": "2026-04-01",
-          "value": 158736.0
-        },
-        "treasury_10y": {
-          "date": "2026-05-07",
-          "value": 4.41
-        },
-        "fed_funds": {
-          "date": "2026-04-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "ELEVATED",
-      "alert_count": 2,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 481,
-        "passed": 469,
-        "failed": 12,
-        "skipped": 1,
-        "critical_divergences": 0
-      },
-      "html_size": 533679,
-      "data_changes": [
-        {
-          "indicator": "treasury_10y",
-          "old": 4.36,
-          "new": 4.41,
-          "delta": 0.05
-        }
-      ]
-    },
     {
       "run_at": "2026-05-09T14:56:53.750529Z",
       "git_sha": "31abf88",
@@ -895,6 +846,51 @@
           "value": 3.64,
           "source": "FRED:FEDFUNDS",
           "fetched_at": "2026-05-16T04:15:49.431511Z"
+        }
+      },
+      "risk_level": "HIGH",
+      "alert_count": 3,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 577,
+        "passed": 550,
+        "failed": 27,
+        "skipped": 8,
+        "critical_divergences": 1
+      },
+      "html_size": 662125
+    },
+    {
+      "run_at": "2026-05-16T04:29:19.369926Z",
+      "git_sha": "3390fc8",
+      "git_branch": "dev/multi-expert-improvements",
+      "collected_at": "2026-05-16T04:24:33.578364Z",
+      "series_count": 90,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-04-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-04-01",
+          "value": 332.407
+        },
+        "payrolls": {
+          "date": "2026-04-01",
+          "value": 158736.0
+        },
+        "treasury_10y": {
+          "date": "2026-05-14",
+          "value": 4.47,
+          "source": "FRED:DGS10",
+          "fetched_at": "2026-05-16T04:24:34.081605Z"
+        },
+        "fed_funds": {
+          "date": "2026-04-01",
+          "value": 3.64,
+          "source": "FRED:FEDFUNDS",
+          "fetched_at": "2026-05-16T04:24:33.683330Z"
         }
       },
       "risk_level": "HIGH",
