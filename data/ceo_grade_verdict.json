@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-05-17T03:43:20Z",
+  "generated_at": "2026-05-17T04:07:55Z",
   "overall": "FAIL",
   "strict": true,
   "headline": "❌ CEO-grade gate FAILED — 1 critical finding(s) block publish.",
   "totals": {
     "critical": 1,
-    "warning": 12
+    "warning": 10
   },
   "missing": [],
   "layers": {
@@ -13,7 +13,7 @@
       "layer": "validator",
       "status": "FAIL",
       "critical": 1,
-      "warning": 11,
+      "warning": 9,
       "skipped": 8,
       "total": 574,
       "validator_status": "WARN"
