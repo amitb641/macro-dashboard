@@ -269,17 +269,31 @@ def run_visual_qa(take_screenshots=False):
             # outside numbers (BAD: "$3.5B" counts the "." — we strip
             # digits-around-dot first).
             if commentary:
-                txt = (commentary.inner_text() or '').strip()
-                # Strip decimal points inside numbers so "$3.5B" doesn't
-                # inflate the sentence count.
-                import re as _re
-                cleaned = _re.sub(r'(?<=\d)\.(?=\d)', '', txt)
-                sentence_count = sum(cleaned.count(c) for c in '.!?')
-                in_band = 2 <= sentence_count <= 4
-                _check(
-                    tab_name, 'Commentary sentence count in [2,4]', in_band,
-                    f'{sentence_count} sentences (style_guide §2)',
+                # The Dashboard tab's #commentary-stack is the how-it-works
+                # intro (`.hiw-lead` paragraphs) — onboarding copy, not
+                # standard 2–4-sentence data commentary. Skip the band
+                # check when ALL children are .hiw-lead, since style_guide
+                # §2 governs data commentary, not the intro panel.
+                hiw_only = commentary.evaluate(
+                    "el => el.children.length > 0 && "
+                    "Array.from(el.children).every("
+                    "  c => c.classList.contains('hiw-lead'))"
                 )
+                if not hiw_only:
+                    txt = (commentary.inner_text() or '').strip()
+                    # Strip decimal points inside numbers so "$3.5B" doesn't
+                    # inflate the sentence count. Also strip dots inside
+                    # uppercase abbreviations like "U.S." which the bare
+                    # period-count would otherwise treat as two sentences.
+                    import re as _re
+                    cleaned = _re.sub(r'(?<=\d)\.(?=\d)', '', txt)
+                    cleaned = _re.sub(r'(?<=\b[A-Z])\.(?=[A-Z]\b)', '', cleaned)
+                    sentence_count = sum(cleaned.count(c) for c in '.!?')
+                    in_band = 2 <= sentence_count <= 4
+                    _check(
+                        tab_name, 'Commentary sentence count in [2,4]', in_band,
+                        f'{sentence_count} sentences (style_guide §2)',
+                    )
 
             # ── Color drift: no ad-hoc rgb() colors on commentary copy ──
             # style_guide §4: commentary uses --text2. Catches the case

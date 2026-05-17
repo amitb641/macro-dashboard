@@ -370,7 +370,13 @@ def _bls_latest(series_id):
             series = body['Results']['series'][0]['data']
             if series:
                 latest = series[0]
-                return f"{latest['periodName']} {latest['year']}", round(float(latest['value']))
+                # Preserve 3dp — BLS publishes CPI index to ~3 decimals
+                # (e.g. 332.407). round(float(v)) with no ndigits arg
+                # silently truncated to integer, which caused spurious
+                # cross_source divergence warnings for cpi_all/core_cpi
+                # when comparing against FRED's full-precision values.
+                # NFP series are whole-numbered so 3dp is harmless there.
+                return f"{latest['periodName']} {latest['year']}", round(float(latest['value']), 3)
     except Exception:
         pass
     return None
