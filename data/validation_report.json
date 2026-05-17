@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-17T01:41:50.547853Z",
+  "validated_at": "2026-05-17T03:40:02.372565Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 575,
+    "total_checks": 574,
     "passed": 562,
-    "failed": 13,
-    "skipped": 9,
+    "failed": 12,
+    "skipped": 8,
     "critical_divergences": 1
   },
   "internal_consistency": [
@@ -671,7 +671,7 @@
     {
       "check": "BLS Total Nonfarm (latest)",
       "raw_data_value": 158736,
-      "fresh_api_value": 158736,
+      "fresh_api_value": 158736.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-17T01:40:30.598595Z",
+      "collected_at": "2026-05-17T03:38:49.870985Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3038,12 +3038,6 @@
       "detail": ""
     },
     {
-      "check": "Visual: Dashboard \u2014 Commentary sentence count in [2,4]",
-      "severity": "warning",
-      "pass": false,
-      "detail": "8 sentences (style_guide \u00a72)"
-    },
-    {
       "check": "Visual: Dashboard \u2014 Commentary color matches palette",
       "severity": "ok",
       "pass": true,
@@ -3673,8 +3667,13 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4.3,
+      "diff": 0.0,
+      "tol": 0.215,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
@@ -3682,10 +3681,10 @@
       "severity": "warning",
       "metric": "cpi_all",
       "fred": 332.407,
-      "bls": 333,
-      "diff": 0.593,
+      "bls": 333.02,
+      "diff": 0.613,
       "tol": 0.333,
-      "note": "FRED 332.407 vs BLS 333 (\u0394=0.5930, tol=0.3330). One side may be stale or revised."
+      "note": "FRED 332.407 vs BLS 333.02 (\u0394=0.6130, tol=0.3330). One side may be stale or revised."
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
@@ -3693,10 +3692,10 @@
       "severity": "warning",
       "metric": "core_cpi",
       "fred": 335.423,
-      "bls": 336,
-      "diff": 0.577,
-      "tol": 0.336,
-      "note": "FRED 335.423 vs BLS 336 (\u0394=0.5770, tol=0.3360). One side may be stale or revised."
+      "bls": 335.803,
+      "diff": 0.38,
+      "tol": 0.3358,
+      "note": "FRED 335.423 vs BLS 335.803 (\u0394=0.3800, tol=0.3358). One side may be stale or revised."
     }
   ],
   "noise_floor": [

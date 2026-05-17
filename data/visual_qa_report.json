@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-05-17T01:42:04.598308Z",
-  "status": "WARN",
+  "checked_at": "2026-05-17T03:40:16.366748Z",
+  "status": "PASS",
   "summary": {
-    "total_checks": 364,
+    "total_checks": 363,
     "passed": 363,
-    "failed": 1,
+    "failed": 0,
     "js_errors": 1,
     "console_errors": 0
   },
@@ -1566,13 +1566,6 @@
       "check": "No undefined/NaN/null values",
       "pass": true,
       "severity": "ok"
-    },
-    {
-      "category": "Dashboard",
-      "check": "Commentary sentence count in [2,4]",
-      "pass": false,
-      "severity": "warning",
-      "detail": "8 sentences (style_guide \u00a72)"
     },
     {
       "category": "Dashboard",
