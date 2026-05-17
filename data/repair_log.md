@@ -1,3 +1,33 @@
+## Repair Agent — 2026-05-17T01:41:50.547853Z
+
+- **Status**: WARN
+- **Total checks**: 575
+- **Passed**: 562
+- **Failed**: 13
+- **Critical divergences**: 1
+
+### Earnings verbatim
+_1 critical · 9 warning · 0 stale_
+
+- 🔴 **transcript_archive_coverage** — zero transcripts archived in data/transcripts/Q1_2026 for a quarter with 9 reported bank(s); verbatim gate is fully off — every quoted span ships unverified. Operator must archive transcripts per CLAUDE.md "Update Workflow" before publish.
+- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: Dashboard — Commentary sentence count in [2,4]** — 
+
+
+---
+
 ## Repair Agent — 2026-05-16T21:44:25.981645Z
 
 - **Status**: WARN
