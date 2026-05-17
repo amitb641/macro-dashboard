@@ -1611,8 +1611,12 @@ def check_cross_source(data):
     # Anchor series is what the collector stored under `data[<key>]`.
     pairs = [
         ('unrate',    'UNRATE',     'LNS14000000', 0.05),
-        ('cpi_all',   'CPIAUCSL',   'CUUR0000SA0', 0.001),
-        ('core_cpi',  'CPILFESL',   'CUUR0000SA0L1E', 0.001),
+        # FRED CPIAUCSL/CPILFESL are seasonally-adjusted; pair with the SA
+        # BLS series (CUSR…) not the NSA series (CUUR…). The NSA pairing
+        # baked in a seasonal-adjustment offset of ~0.5pt which was firing
+        # spurious cross_source warnings every cycle.
+        ('cpi_all',   'CPIAUCSL',   'CUSR0000SA0',    0.001),
+        ('core_cpi',  'CPILFESL',   'CUSR0000SA0L1E', 0.001),
     ]
 
     if not FRED_KEY or not BLS_KEY:
