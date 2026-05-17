@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-17 04:09 UTC._
+_Generated 2026-05-17 16:03 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `206855fc43e5` — 🌑 Shadow update (dev): 2026-05-17
+- **Commit:** `5df9e6cc5f80` — 🌑 Shadow update (dev): 2026-05-17
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
@@ -17,25 +17,13 @@ fired yet. The paired diff (when both branches are fresh) is in
 ## Headline
 
 - **CEO-grade verdict:** **—**
-- **Validator:** 564 passed / 10 failed / 1 critical
+- **Validator:** 574 passed / 0 failed / 0 critical
 - **Editorial:** 0 critical, 0 warning
 - **Signals:** risk=HIGH, alerts=3, watch=1
 
 ## Findings that need attention
 
-**Validator criticals:**
-
-- earnings_verbatim:transcript_archive_coverage
-
-## Recommended fixes
-
-Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Status tracking and resolution notes live in `data/parallel_findings_ledger.md` (open / monitoring / resolved).
-
-### earnings_verbatim:transcript_archive_coverage  _(seen 4× · status: open)_
-
-- **Detail:** 
-- **Fix:** Archive the missing earnings transcripts under `data/transcripts/<Quarter>/<TICKER>.txt`. Validator Pass 3c (verbatim gate) requires the transcript text be present for every quoted span in `data/bank_earnings.json`. See CLAUDE.md → 'Update Workflow (Q2 2026 onward)' for the full flow.
-- **Fingerprint:** `validator:earnings_verbatim:transcript_archive_cov:87fb43e0cdb7`
+_None at critical severity._
 
 ---
 
@@ -48,19 +36,19 @@ Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Status tracking 
 | verdict | — |
 | strict_mode | — |
 | layer_count | 5 |
-| layers | validator=FAIL, visual_qa=PASS, vision_review=PASS, editorial=WARN, repair_incident=PASS |
+| layers | validator=PASS, visual_qa=PASS, vision_review=PASS, editorial=WARN, repair_incident=PASS |
 | reasons | (none) |
 
 ### Validator (10-pass)
 
 | Metric | Value |
 |---|---|
-| status | WARN |
+| status | PASS |
 | total_checks | 574 |
-| passed | 564 |
-| failed | 10 |
+| passed | 574 |
+| failed | 0 |
 | skipped | 8 |
-| critical_divergences | 1 |
+| critical_divergences | 0 |
 
 ### Editorial review
 
