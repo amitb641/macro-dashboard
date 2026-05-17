@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-05-17T04:04:39.968733Z",
-  "status": "WARN",
+  "validated_at": "2026-05-17T15:58:25.371688Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 574,
-    "passed": 564,
-    "failed": 10,
+    "passed": 574,
+    "failed": 0,
     "skipped": 8,
-    "critical_divergences": 1
+    "critical_divergences": 0
   },
   "internal_consistency": [
     {
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-17T04:03:16.744273Z",
+      "collected_at": "2026-05-17T15:57:16.861347Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1040,58 +1040,49 @@
       "pass": true
     },
     {
-      "check": "JPM: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/JPM.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "JPM: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "BAC: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/BAC.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "BAC: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "WFC: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/WFC.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "WFC: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "C: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/C.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "C: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "GS: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/GS.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "GS: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "COF: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/COF.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "COF: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "AXP: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/AXP.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "AXP: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "SYF: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/SYF.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "SYF: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "USB: transcript archived for verbatim check",
-      "severity": "warning",
-      "pass": false,
-      "reason": "no file at data/transcripts/Q1_2026/USB.txt \u2014 verbatim gate skipped for this bank (operator should archive transcript before quarter close)"
+      "check": "USB: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "BCS: pending (reports 2026-04-30)",
@@ -1100,12 +1091,11 @@
     },
     {
       "check": "transcript_archive_coverage",
-      "severity": "critical",
-      "pass": false,
-      "reason": "zero transcripts archived in data/transcripts/Q1_2026 for a quarter with 9 reported bank(s); verbatim gate is fully off \u2014 every quoted span ships unverified. Operator must archive transcripts per CLAUDE.md \"Update Workflow\" before publish.",
+      "severity": "ok",
+      "pass": true,
       "reported": 9,
-      "archived": 0,
-      "coverage_pct": 0.0
+      "archived": 9,
+      "coverage_pct": 100.0
     }
   ],
   "schema_contract": [
