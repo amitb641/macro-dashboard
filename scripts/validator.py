@@ -706,6 +706,39 @@ def _norm_for_match(s):
     return ' '.join(s.split())
 
 
+def _verbatim_match(quoted_span, transcript_norm):
+    """Test whether a quoted span appears in the (already normalized)
+    transcript. Two semantics:
+
+    1. A literal ellipsis inside the quoted span ("foo...bar") is treated
+       as "speaker continues, skipping intermediate words" — split on
+       runs of 3+ periods and require each segment to appear in order.
+       This is consistent with journalistic ellipsis convention and
+       prevents the verbatim gate from rejecting a true verbatim
+       quote that was published with intermediate words elided.
+
+    2. Trailing runs of 3+ periods ("foo....") are author truncation
+       markers — strip them before matching. Real sentence-ending
+       periods (one `.`) remain literal so legitimate punctuation
+       differences are still caught.
+    """
+    span = _norm_for_match(quoted_span)
+    # Strip trailing 3+ period markers.
+    span = re.sub(r'\.{3,}$', '', span).strip()
+    if not span:
+        return True  # nothing left to match
+    # Split on internal 3+ period markers; require every non-empty
+    # segment to appear in transcript_norm IN ORDER.
+    segments = [seg.strip() for seg in re.split(r'\.{3,}', span) if seg.strip()]
+    cursor = 0
+    for seg in segments:
+        idx = transcript_norm.find(seg, cursor)
+        if idx < 0:
+            return False
+        cursor = idx + len(seg)
+    return True
+
+
 def check_earnings_verbatim():
     """Validate data/bank_earnings.json and enforce verbatim quotes when
     transcripts are archived.
@@ -814,7 +847,7 @@ def check_earnings_verbatim():
             if not val:
                 continue
             for quoted in quoted_re.findall(val):
-                if _norm_for_match(quoted) not in transcript_norm:
+                if not _verbatim_match(quoted, transcript_norm):
                     mismatches.append({'field': field, 'quote_excerpt': quoted[:100]})
 
         if mismatches:
