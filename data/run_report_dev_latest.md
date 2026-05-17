@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-17 03:45 UTC._
+_Generated 2026-05-17 04:09 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `4358f83ea805` — 🌑 Shadow update (dev): 2026-05-17
+- **Commit:** `206855fc43e5` — 🌑 Shadow update (dev): 2026-05-17
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
@@ -17,7 +17,7 @@ fired yet. The paired diff (when both branches are fresh) is in
 ## Headline
 
 - **CEO-grade verdict:** **—**
-- **Validator:** 562 passed / 12 failed / 1 critical
+- **Validator:** 564 passed / 10 failed / 1 critical
 - **Editorial:** 0 critical, 0 warning
 - **Signals:** risk=HIGH, alerts=3, watch=1
 
@@ -57,8 +57,8 @@ Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Status tracking 
 |---|---|
 | status | WARN |
 | total_checks | 574 |
-| passed | 562 |
-| failed | 12 |
+| passed | 564 |
+| failed | 10 |
 | skipped | 8 |
 | critical_divergences | 1 |
 
