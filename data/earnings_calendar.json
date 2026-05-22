@@ -1,6 +1,9 @@
 {
   "quarter": "Q2 2026",
-  "season": {"start": "2026-07-10", "end": "2026-08-05"},
+  "season": {
+    "start": "2026-07-10",
+    "end": "2026-08-05"
+  },
   "maintained_by": "human-in-the-loop",
   "notes": "Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it.",
   "banks": [
@@ -102,17 +105,6 @@
       "transcript_url_candidates": [
         "https://www.fool.com/earnings/call-transcripts/2026/07/23/amex-axp-q2-2026-earnings-call-transcript/",
         "https://seekingalpha.com/article/q2-2026-axp-earnings-call-transcript"
-      ]
-    },
-    {
-      "ticker": "BCS",
-      "bank": "Barclays US (BCUS)",
-      "ceo": "C.S. Venkatakrishnan, Barclays Group CEO",
-      "color": "#1E4FA3",
-      "expected_report_date": "2026-07-30",
-      "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/30/barclays-bcs-q2-2026-earnings-call-transcript/",
-        "https://home.barclays/investor-relations/results-and-reports/"
       ]
     }
   ]
