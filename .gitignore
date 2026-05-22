@@ -9,3 +9,5 @@ mockups/*.preview.png
 # tmp files kept inside the repo so validator's Path.relative_to() calls
 # in error messages remain valid). Cleaned up in test teardown.
 tests/_scratch/
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
