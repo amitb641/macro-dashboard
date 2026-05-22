@@ -43,14 +43,22 @@
     ];
     emptyMap.forEach(function(spec){
       var data = window[spec.dataVar];
-      // Paint overlay if the data var is missing entirely OR present-but-empty.
-      // Skip only when real data is present (labels populated).
-      var hasData = data && (data.labels || []).length > 0;
-      if (hasData) return;
       var canvas = document.getElementById(spec.canvas);
       if (!canvas) return;
       var parent = canvas.parentElement;
-      if (!parent || parent.querySelector('.sm-empty-state')) return;
+      if (!parent) return;
+      // Paint overlay if the data var is missing entirely OR present-but-empty.
+      // Skip when real data is present (labels populated) — and REMOVE any
+      // stale overlay left over from an earlier paint (handles the case where
+      // the placeholder painted before the data hydrated, e.g. cached HTML
+      // page or slow inline-script execution).
+      var hasData = data && (data.labels || []).length > 0;
+      var existing = parent.querySelector('.sm-empty-state');
+      if (hasData) {
+        if (existing) existing.remove();
+        return;
+      }
+      if (existing) return;
       var overlay = document.createElement('div');
       overlay.className = 'sm-empty-state';
       overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;font-family:"DM Mono",monospace;color:#5A6B7D;font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:24px;pointer-events:none;';
@@ -70,8 +78,11 @@
   function activate(){
     document.body.classList.add('themed-sm');
     try { injectMetaStrip(); } catch(e){}
-    // wait one tick for chart-init code to run, then paint placeholders
+    // wait one tick for chart-init code to run, then paint placeholders.
+    // Re-run at +2s so any late-hydrating data var (cached HTML, delayed
+    // inline-script execution) still clears a stale overlay.
     setTimeout(function(){ try { paintEmptyStates(); } catch(e){} }, 300);
+    setTimeout(function(){ try { paintEmptyStates(); } catch(e){} }, 2000);
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', activate);
