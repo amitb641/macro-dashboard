@@ -262,12 +262,9 @@ jobs:
                   python scripts/renderer.py || echo "::warning::renderer failed during conflict resolution; proceeding with human index.html as-is"
                   if ! git diff --quiet -- index.html; then
                     git add index.html
-                    git commit -m "Re-render after rebase conflict resolution
-
-Human pushed an index.html edit while this CI run was generating its
-own. Rebase preferred the human side; this commit re-runs the renderer
-to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts)
-on top of the preserved structural edits."
+                    git commit \
+                      -m "Re-render after rebase conflict resolution" \
+                      -m "Human pushed an index.html edit while this CI run was generating its own. Rebase preferred the human side; this commit re-runs the renderer to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts) on top of the preserved structural edits."
                   fi
                 else
                   echo "::error::Rebase conflict in non-generated files: $non_generated"
