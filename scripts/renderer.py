@@ -1649,8 +1649,11 @@ def rebuild_cpi_breadth(html, data):
 
     Sources (collector.py):
       * cpi_trimmed (TRMMEANCPIM157SFRBCLE) — Cleveland Fed 16% trimmed-mean,
-        already MoM annualised (BLS M157 series convention).
-      * cpi_median (MEDCPIM157SFRBCLE) — Cleveland Fed median, MoM annualised.
+        raw 1-month percent change. Despite the M157 suffix in the FRED series
+        ID, the published values are NOT annualised (empirically ~0.2-0.4%/mo).
+        We annualise here to match headline.
+      * cpi_median (MEDCPIM157SFRBCLE) — Cleveland Fed median, raw 1-month
+        percent change. Same annualisation transform applied.
       * cpi_all (CPIAUCSL) — BLS headline CPI level. We compute MoM annualised
         as `((cur/prev)**12 - 1) * 100` to make all three lines comparable
         (annualised rate, not 12-month YoY).
@@ -1696,12 +1699,17 @@ def rebuild_cpi_breadth(html, data):
         return html
     common = common[-24:]
 
+    # Compound-annualise trimmed/median from raw MoM % so all three series
+    # plot on the same y-axis. Headline is already annualised above.
+    def _annualise(v):
+        return ((1.0 + v / 100.0) ** 12 - 1.0) * 100.0
+
     labels = [month_label(d) for d in common]
     obj = {
         'labels': labels,
         'headline_mom_ann': [round(headline_mom[d], 2) for d in common],
-        'trimmed':          [round(t[d], 2) for d in common],
-        'median':           [round(m[d], 2) for d in common],
+        'trimmed':          [round(_annualise(t[d]), 2) for d in common],
+        'median':           [round(_annualise(m[d]), 2) for d in common],
     }
     new_json = json.dumps(obj, separators=(', ', ':'))
     pattern = r'const CPI_BREADTH\s*=\s*\{[^;]*\};'
@@ -3101,6 +3109,18 @@ def render():
     ver_file = ROOT / 'version.json'
     ver_file.write_text(json.dumps({"v": build_v}), encoding='utf-8')
     html = re.sub(r'var BUILD_V\s*=\s*"[^"]*"', f'var BUILD_V = "{build_v}"', html)
+
+    # Cache-bust unfingerprinted static assets so browser caches don't serve
+    # a stale theme-overlay.{js,css} after the file content changes on origin.
+    # Idempotent: any existing ?v=... query string is replaced with the
+    # current build_v.
+    def _bust(mm):
+        return f'{mm.group(1)}="{mm.group(2)}?v={build_v}"'
+    html = re.sub(
+        r'(href|src)="(theme-overlay\.(?:js|css))(?:\?v=[^"]*)?"',
+        _bust,
+        html,
+    )
 
     # VALIDATION_REPORT is no longer inlined — dashboard fetches
     # data/validation_report.json at runtime (see METHODOLOGY.md §5).
