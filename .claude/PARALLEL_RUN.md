@@ -1,9 +1,34 @@
 # Parallel Run: prod (main) vs dev/multi-expert-improvements
 
 > **Start date:** 2026-05-14
-> **Planned merge-decision date:** 2026-06-14 (T+1 month — extended from
-> original T+2 weeks for tighter observation of the new gates)
-> **Status:** Active — observation mode
+> **Planned merge-decision date:** ~~2026-06-14~~ **INDEFINITE (per user
+> directive 2026-05-23)**
+> **Status:** Active — observation mode, **no scheduled promotion**
+
+## ⚠️ Active policy (2026-05-23 — durable across sessions)
+
+The user explicitly directed: **"keep the dev dashboard independent
+from main"** and **"we're going to run dev dashboard indefinitely
+separate until further notice."**
+
+What this means for any Claude session resuming this trial:
+
+- **Do NOT** cherry-pick, merge, or rebase any `dev/multi-expert-improvements`
+  commit into `main` without an explicit, in-session user instruction
+  authorizing the specific change.
+- The original T+1 month merge-decision date (2026-06-14) is **paused**.
+  Treat the trial window as open-ended.
+- Visual + editorial enhancements (typography, reading bar, delta block,
+  print stylesheet, skeleton states, color-blind alt, vintage badges,
+  sparklines, footnote ladder, etc.) all land on **dev only**.
+- The Vercel preview at `macro-dashboard-dev.vercel.app` is the dev
+  surface; `main` continues to serve the conservative production page.
+- If a bug fix is genuinely critical and needs to land on `main`, ask
+  the user before pushing — do not autopilot.
+
+Promotion criteria, if/when the user re-opens the question: still
+gated on smoke 29/29, validator 208/208, visual_qa static-check sweep
+4/4, plus ≥4 consecutive Saturday cycles of clean dev runs.
 
 This document tracks the parallel-run trial of the
 `dev/multi-expert-improvements` branch against production (`main`).
