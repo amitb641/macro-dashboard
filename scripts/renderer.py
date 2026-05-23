@@ -916,6 +916,15 @@ def rebuild_charts(html, data):
                         sector_names = ast.literal_eval('[' + sectors_match.group(1) + ']')
                     except Exception:
                         sector_names = []
+            # Cold-start fallback: when both round-trip (no prior state.json
+            # entry for SECTOR_MOM) and inline-scrape (placeholder is now
+            # `let SECTOR_MOM = null;` so the regex above matches nothing)
+            # come up empty, default to the canonical sector ordering from
+            # the _SECTOR_CES dict. The dict's insertion order matches the
+            # historical inline-literal ordering, so chart layout doesn't
+            # shift on the first post-migration run.
+            if not sector_names:
+                sector_names = list(_SECTOR_CES.values())
 
             if sector_names:
                 # Determine month keys from BLS data
