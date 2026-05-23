@@ -254,9 +254,62 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
   // dark mode, the prior implementation lives in git (commit b2ba19b
   // and earlier).
 
+  // §24.4 — Non-breaking spaces between numbers and units. Print-grade
+  // typography demands that "4.25 %" never breaks across a line; same
+  // for "$84 bbl", "150 bps", "+2.1 YoY", "$3.47 /gal". TreeWalker
+  // visits only text nodes, skipping <script>/<style>/<code>/<pre>/
+  // <textarea> so source/JSON literals aren't munged. Regex is anchored
+  // on (digit|%|]|)|letter)\s+(unit-token) and a small allowlist of
+  // unit tokens. Idempotent — running twice is a no-op since after the
+  // first pass the space is already U+00A0.
+  MD.initNbspUnits = function(){
+    if (MD._nbspInit) return;
+    MD._nbspInit = true;
+    var SKIP = { SCRIPT:1, STYLE:1, CODE:1, PRE:1, TEXTAREA:1, NOSCRIPT:1, SVG:1 };
+    // Unit tokens — % bp bps bbl YoY MoM QoQ WoW pp ppt
+    // Also "/gal" "/bbl" "/lb" "/oz" "/hr" — slash-prefixed compound units.
+    var UNIT_RE = /(\d)(\s)(%|bps?|bbl|YoY|MoM|QoQ|WoW|ppt?|p\.p\.)(?![A-Za-z])/g;
+    var SLASH_RE = /(\d)(\s)(\/(?:gal|bbl|lb|oz|hr|day|week|month|yr))/g;
+    var root = document.body || document.documentElement;
+    if (!root || !root.ownerDocument || !document.createTreeWalker) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(n){
+        var p = n.parentNode;
+        while (p && p.nodeType === 1){
+          if (SKIP[p.tagName]) return NodeFilter.FILTER_REJECT;
+          p = p.parentNode;
+        }
+        // Skip text inside an input/select (form controls don't carry
+        // display text via children, but defensive).
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var node, batch = [];
+    while ((node = walker.nextNode())){
+      var t = node.nodeValue;
+      if (!t) continue;
+      if (t.indexOf(' ') < 0) continue;
+      // Quick pre-test to avoid running both regexes on every node.
+      if (!/\d\s(?:%|bp|bbl|YoY|MoM|QoQ|WoW|ppt?|p\.p\.|\/(?:gal|bbl|lb|oz|hr|day|week|month|yr))/.test(t)) continue;
+      batch.push(node);
+    }
+    batch.forEach(function(n){
+      var t = n.nodeValue;
+      t = t.replace(UNIT_RE, function(_, d, _s, u){ return d + '\u00a0' + u; });
+      t = t.replace(SLASH_RE, function(_, d, _s, u){ return d + '\u00a0' + u; });
+      if (t !== n.nodeValue) n.nodeValue = t;
+    });
+  };
+
   // Auto-init on DOM ready
   function boot(){
     MD.initScrollReveal();
+    // Run nbsp pass after a microtask so any synchronous DOM
+    // mutations from later <script> blocks have settled. Re-run once
+    // after 600ms to catch any client-side rendering (Chart.js
+    // labels, dynamically injected commentary).
+    try { MD.initNbspUnits(); } catch(e){}
+    setTimeout(function(){ MD._nbspInit = false; try { MD.initNbspUnits(); } catch(e){} }, 600);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();

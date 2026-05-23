@@ -238,6 +238,27 @@ body.themed-sm .kpi-lbl {
   letter-spacing: .18em !important; text-transform: uppercase !important;
   color: #5A6B7D !important; margin-bottom: 8px !important;
 }
+/* ── 2026-05-23 enrichment pass: print-grade numeric typography ──
+   Every numeric surface gets tabular-nums + lining-nums so decimal
+   points align vertically across tiles, and ss01 stylistic set so DM
+   Sans uses its straight-sided digits (which scan better at small
+   sizes than the default geometric ones). Applied broadly: KPIs,
+   m-vals, dtable cells, chart-area labels. */
+body.themed-sm .kpi-val,
+body.themed-sm .m-val,
+body.themed-sm .card-growth,
+body.themed-sm .dtable td,
+body.themed-sm .dtable th,
+body.themed-sm .kpi-sub,
+body.themed-sm .kpi-delta,
+body.themed-sm .panel-meta,
+body.themed-sm .ms-bar-val,
+body.themed-sm .pm-asof,
+body.themed-sm .pm-exhibit {
+  font-variant-numeric: tabular-nums lining-nums !important;
+  font-feature-settings: 'tnum' 1, 'lnum' 1, 'ss01' 1 !important;
+}
+
 /* .kpi-val is the ONLY surface allowed to use DM Serif Display.
    Enforced by scripts/visual_qa.py::check_serif_scope. */
 body.themed-sm .kpi-val {
