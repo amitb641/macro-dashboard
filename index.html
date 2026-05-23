@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-23T20:12:00Z";
+  var BUILD_V = "2026-05-23T21:36:35Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -3891,6 +3891,7 @@ window.MD._hydrationState = null;  // last fetched bundle, for debugging
       if (s.FED_LIQUIDITY_DATA !== undefined) { try { FED_LIQUIDITY_DATA = s.FED_LIQUIDITY_DATA; } catch(_){ window.FED_LIQUIDITY_DATA = s.FED_LIQUIDITY_DATA; } }
       if (s.WHAT_CHANGED !== undefined)       { try { WHAT_CHANGED       = s.WHAT_CHANGED;       } catch(_){ window.WHAT_CHANGED       = s.WHAT_CHANGED;       } }
       if (s.RELEASE_CAL !== undefined)        { try { RELEASE_CAL        = s.RELEASE_CAL;        } catch(_){ window.RELEASE_CAL        = s.RELEASE_CAL;        } }
+      if (s.NFP_BLS_MOM !== undefined)        { try { NFP_BLS_MOM        = s.NFP_BLS_MOM;        } catch(_){ window.NFP_BLS_MOM        = s.NFP_BLS_MOM;        } }
       // (Additional keys will be migrated in subsequent commits.)
     } else {
       console.warn('[hydrate] state.json unavailable — dashboard will render with placeholders');
@@ -4067,7 +4068,7 @@ const SECTOR_MOM = {
 // Placeholder empty arrays render the canvas as no-op until first pipeline run.
 let JOLTS_DATA = null;
 // Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
-const NFP_BLS_MOM = {"labels":["May'24", "Jun'24", "Jul'24", "Aug'24", "Sep'24", "Oct'24", "Nov'24", "Dec'24", "Jan'25", "Feb'25", "Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "bls":[78, 87, 53, 9, 155, 33, 134, 237, -48, 42, 67, 108, 13, -20, 64, -70, 76, -140, 41, -17, 160, -156, 185, 115]};
+let NFP_BLS_MOM = null;
 
 // ── Debt Service Ratio (TDSP) — auto-rebuilt by renderer.py from FRED TDSP
 const TDSP_HIST = {"labels":["2018 Q3", "2018 Q4", "2019 Q1", "2019 Q2", "2019 Q3", "2019 Q4", "2020 Q1", "2020 Q2", "2020 Q3", "2020 Q4", "2021 Q1", "2021 Q2", "2021 Q3", "2021 Q4", "2022 Q1", "2022 Q2", "2022 Q3", "2022 Q4", "2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4", "2025 Q1", "2025 Q2", "2025 Q3", "2025 Q4"], "data":[11.6, 11.7, 11.5, 11.6, 11.6, 11.7, 11.6, 9.7, 10.1, 10.4, 9.1, 9.8, 10.0, 10.2, 10.5, 10.7, 10.6, 10.7, 10.6, 10.6, 10.7, 11.1, 11.1, 11.0, 11.1, 11.1, 11.1, 11.1, 11.3, 11.3]};
@@ -5131,6 +5132,9 @@ function buildWagesTab(){
 // ════════════════════════════════════════════════════
 function buildJobsTab(){
   if(builtTabs.jobs) return; builtTabs.jobs=1;
+  // Hydration guard: NFP_BLS_MOM is null until /api/state.json resolves.
+  // Tab-builders fire on click (always post-hydration), so this is defensive.
+  if (!NFP_BLS_MOM || !Array.isArray(NFP_BLS_MOM.bls)) { builtTabs.jobs=0; return; }
 
   // ── Jobs Tiles (dynamic) ──
   // Helper: get latest year's job key from JOBS_SECTORS (e.g. "j25", "j26")
@@ -8890,8 +8894,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
      lines fully reverts to the un-themed look.
      ═══════════════════════════════════════════════════════════════ -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T20:12:00Z">
-<script src="theme-overlay.js?v=2026-05-23T20:12:00Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T21:36:35Z">
+<script src="theme-overlay.js?v=2026-05-23T21:36:35Z"></script>
 <!-- Vercel Web Analytics — owner-only beacon (no visible UI for visitors). Enable at vercel.com/<team>/macro-dashboard-dev/analytics. -->
 <script defer src="/_vercel/insights/script.js"></script>
 </body>

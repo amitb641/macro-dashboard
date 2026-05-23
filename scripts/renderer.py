@@ -818,13 +818,13 @@ def rebuild_charts(html, data):
             nfp_bls.append(chg)
         if nfp_labels:
             # Update NFP_BLS_MOM (24-month history)
-            bls_json = json.dumps({'labels': nfp_labels, 'bls': nfp_bls}, separators=(', ', ':'))
-            pattern = r'const NFP_BLS_MOM\s*=\s*\{[\s\S]*?\};'
-            new_decl = f'const NFP_BLS_MOM = {bls_json};'
-            new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+            payload = {'labels': nfp_labels, 'bls': nfp_bls}
+            _api_writer.register('NFP_BLS_MOM', payload)
+            pattern = r'(?:const|let|var)\s+NFP_BLS_MOM\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+            new_html, n = re.subn(pattern, 'let NFP_BLS_MOM = null;', html, count=1)
             _record_subn_result('NFP_BLS_MOM', pattern, n)
             if n:
-                applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
+                applied.append(f'NFP_BLS_MOM registered to state.json ({len(nfp_labels)} months); inline zeroed')
                 html = new_html
 
             # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP)
