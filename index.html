@@ -8173,6 +8173,41 @@ function buildStackTab(){
 function _initDashboard(){
   // SVG engine is inline — no CDN wait needed. Build default tab immediately.
   buildFCTab();
+  // Tier 1 anti-clone hydration: state.json arrives async via /api/state.json.
+  // The default tab builds *before* hydration completes, so tabs whose
+  // builders include a "no data yet, bail out" guard (currently fc, jobs,
+  // cpi, pce, banks, oil) draw nothing on first paint. Tabs that *use*
+  // migrated data without a guard (wages, yield, fiscal, validator) would
+  // render with null fields if visited pre-hydration. Wire a one-shot
+  // callback that fires after _hydrate() finishes: reset every builtTabs
+  // marker so the active tab rebuilds with real data, and any tab the
+  // user visits later starts fresh.
+  function _rebuildAfterHydrate(){
+    try {
+      if (typeof builtTabs === 'object' && builtTabs) {
+        for (var k in builtTabs) {
+          if (Object.prototype.hasOwnProperty.call(builtTabs, k)) builtTabs[k] = 0;
+        }
+      }
+      var activeBtn = document.querySelector('.nav-btn.active');
+      var t = (activeBtn && activeBtn.dataset && activeBtn.dataset.tab) || 'fc';
+      if (typeof _b52_activateTab === 'function') {
+        _b52_activateTab(t);
+      } else {
+        if (t === 'fc'   && typeof buildFCTab   === 'function') buildFCTab();
+        if (t === 'jobs' && typeof buildJobsTab === 'function') buildJobsTab();
+      }
+    } catch (e) { console.error('[hydrate] rebuild-after-hydrate failed', e); }
+  }
+  // Either hydration already finished (raced ahead of us) → run now;
+  // or queue the callback to fire when _hydrate() resolves.
+  if (window.MD && window.MD._hydrationDone) {
+    _rebuildAfterHydrate();
+  } else {
+    window.MD = window.MD || {};
+    window.MD._hydrationCallbacks = window.MD._hydrationCallbacks || [];
+    window.MD._hydrationCallbacks.push(_rebuildAfterHydrate);
+  }
 }
 
 // ── B5.1: Chart lifecycle helpers ──────────────────────────────────
