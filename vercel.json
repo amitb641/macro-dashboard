@@ -5,6 +5,9 @@
       "maxDuration": 5
     }
   },
+  "rewrites": [
+    { "source": "/api/state.json", "destination": "/api/state" }
+  ],
   "headers": [
     {
       "source": "/api/state.json",
