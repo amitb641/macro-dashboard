@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-23T19:53:17.829098Z",
+  "validated_at": "2026-05-23T20:17:23.935774Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 206,
+    "total_checks": 207,
     "passed": 203,
-    "failed": 3,
+    "failed": 4,
     "skipped": 18,
     "critical_divergences": 0
   },
@@ -734,7 +734,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T19:50:47.620169Z",
+      "collected_at": "2026-05-23T20:14:57.297097Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1352,6 +1352,12 @@
     }
   ],
   "collector_errors": [
+    {
+      "check": "Collector error",
+      "pass": false,
+      "severity": "warning",
+      "note": "BLS: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    },
     {
       "check": "Collector error",
       "pass": false,
