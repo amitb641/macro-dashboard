@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-23T05:16:43.521068Z",
-  "status": "WARN",
+  "validated_at": "2026-05-23T06:00:51.763289Z",
+  "status": "PASS",
   "summary": {
-    "total_checks": 213,
-    "passed": 210,
-    "failed": 3,
+    "total_checks": 211,
+    "passed": 211,
+    "failed": 0,
     "skipped": 8,
     "critical_divergences": 0
   },
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T05:14:38.354607Z",
+      "collected_at": "2026-05-23T05:59:04.903328Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1422,22 +1422,9 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED AHETPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED PCEPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=202"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED PCEPILFE@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPILFE&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_e"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
