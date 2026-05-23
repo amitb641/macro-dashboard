@@ -131,6 +131,53 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
     el.classList.toggle("skeleton", !!on);
   };
 
+  // §15.3 — Boot-time skeleton sweep. Any JS-rendered region that's
+  // empty at first paint gets a shimmer so the user sees activity
+  // instead of a flash of empty layout (cf. CLS / "loading limbo").
+  // Auto-strips when the region gains its first child element via
+  // MutationObserver. No-op if regions already populated.
+  MD.initSkeletons = function(){
+    if (MD._skelInit) return;
+    MD._skelInit = true;
+    var targets = [
+      { sel: '#kpi-strip',     h: 56  },
+      { sel: '#sm-delta-row',  h: 88  },
+      { sel: '#ms-bars',       h: 64  },
+    ];
+    var painted = [];
+    targets.forEach(function(t){
+      var el = document.querySelector(t.sel);
+      if (!el) return;
+      if (el.children.length || (el.textContent || '').trim().length) return;
+      el.classList.add('skeleton');
+      el.style.minHeight = t.h + 'px';
+      painted.push(el);
+    });
+    if (!painted.length) return;
+    if (!('MutationObserver' in window)) {
+      // Fallback: strip after 1500ms regardless.
+      setTimeout(function(){ painted.forEach(function(el){ el.classList.remove('skeleton'); el.style.minHeight = ''; }); }, 1500);
+      return;
+    }
+    painted.forEach(function(el){
+      var obs = new MutationObserver(function(){
+        if (el.children.length || (el.textContent || '').trim().length){
+          el.classList.remove('skeleton');
+          el.style.minHeight = '';
+          obs.disconnect();
+        }
+      });
+      obs.observe(el, { childList: true, characterData: true, subtree: true });
+    });
+    // Safety net — strip after 3s even if no mutation fires.
+    setTimeout(function(){ painted.forEach(function(el){ el.classList.remove('skeleton'); el.style.minHeight = ''; }); }, 3000);
+  };
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ try { MD.initSkeletons(); } catch(e){} });
+  } else {
+    try { MD.initSkeletons(); } catch(e){}
+  }
+
   MD._upliftLoaded = true;
 })();
 </script>
@@ -2400,15 +2447,71 @@ table{border-collapse:collapse}
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PRINT / PDF
-═══════════════════════════════════════════════════════════════ */
-@media print{
-  .nav-grouped,.download-btn,.filter-row,.sort-row{display:none!important}
-  .panel{break-inside:avoid;page-break-inside:avoid}
-  body{padding:0;font-size:10pt}
-  .ch400,.ch320,.ch300{height:220px!important}
-  .split-stack{height:260px!important}
-  canvas{max-height:220px}
+   PRINT / PDF — CEO-deliverable layout. Targets 4-5 pages letter:
+   page 1: wordmark + Macro State + delta block + KPI strip
+   page 2-3: visible-tab panels (charts at 220px, captions visible)
+   page 4-5: appendix (Sources + Validator) — only if user prints all
+
+   Goals:
+     * Force light backgrounds, black text, no shadow noise
+     * Hide interactive chrome (nav, toolbar, reading bar, tooltips)
+     * Page-break-avoid on every .panel + .card + .ms-card
+     * Show every tab's content (override .tabpane.active gate so all
+       panes flow into the print), with a tab name header before each
+     * Constrain chart canvas heights and let Chart.js redraw on
+       @media print (responsive: true already handles this)
+=══════════════════════════════════════════════════════════════ */
+@media print {
+  /* Page setup — letter, 0.5in margins, no headers/footers. */
+  @page { size: letter; margin: 0.5in 0.55in; }
+
+  /* Light theme forced; remove gradients and shadows. */
+  html, body { background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body.themed-sm * { box-shadow: none !important; }
+  body, body.themed-sm { padding: 0 !important; font-size: 10pt !important; }
+
+  /* Hide chrome that doesn't belong in a deliverable. */
+  .nav-grouped, .download-btn, .filter-row, .sort-row,
+  .theme-toggle, .sm-readbar, .sr-only-focusable,
+  .pulse-dot, .nav-icon, .ms-bar-fill,
+  .skeleton { display: none !important; animation: none !important; }
+
+  /* Show every tab pane (don't hide non-active ones). */
+  .tabpane, .tabpane.active { display: block !important; }
+  .tabpane { break-before: page; page-break-before: always; }
+  .tabpane:first-of-type { break-before: auto; page-break-before: auto; }
+
+  /* Above-the-fold blocks shouldn't split. */
+  .sm-delta-block, .ms-card, #macro-state-card,
+  .panel, .card, .kpi-tile {
+    break-inside: avoid !important; page-break-inside: avoid !important;
+  }
+
+  /* Chart heights — collapse all tier classes to 220px and
+     constrain raw canvases so a tile doesn't claim a full page. */
+  .ch-hero, .ch-std, .ch-mini,
+  .ch400, .ch320, .ch300 { height: 220px !important; }
+  .split-stack { height: 260px !important; }
+  canvas { max-height: 220px !important; }
+
+  /* Force palette-safe borders (no gradients on the delta block). */
+  .sm-delta-block { background: #fff !important; border: 1px solid #888 !important; }
+  .sm-delta-chip  { border: 1px solid #444 !important; background: #fff !important; }
+  .panel, .card   { border: 1px solid #bbb !important; }
+
+  /* Bigger panel titles in print + visible exhibit number. */
+  .panel-title { font-size: 12pt !important; font-weight: 700 !important; }
+  .pm-exhibit { font-size: 9pt !important; color: #000 !important; }
+
+  /* Avoid orphan headings. */
+  h1, h2, h3, .panel-title { break-after: avoid; page-break-after: avoid; }
+
+  /* Link URLs in footnote-style (revealed in print). */
+  a[href]:not(.no-print-url)::after {
+    content: " (" attr(href) ")"; font-size: 8pt; color: #555;
+  }
+  /* Don't bloat in-page anchors. */
+  a[href^="#"]::after { content: ""; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
