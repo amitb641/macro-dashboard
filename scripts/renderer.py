@@ -1041,28 +1041,70 @@ def rebuild_charts(html, data):
         ffr = round(ffr_by_yr[yr], 1) if yr in ffr_by_yr else None
         return [gdp, u, cpi, wage, ffr]
 
-    # Find every actNN: [...] inside FC_MACRO and patch each
-    fc_block_re = re.search(r'const FC_MACRO\s*=\s*\{[^}]+\}', html, re.DOTALL)
-    if fc_block_re:
-        fc_block = fc_block_re.group(0)
-        for m in re.finditer(r'(act(\d{2})):\s*\[([^\]]+)\]', fc_block):
-            act_key, yy, existing_str = m.group(1), m.group(2), m.group(3)
-            yr = 2000 + int(yy)
-            new_vals = _fc_actuals_for_year(yr)
-            if sum(v is not None for v in new_vals) < 3:
-                continue  # not enough data — leave seed alone
-            existing_vals = [float(v.strip()) for v in existing_str.split(',')]
-            final_vals = [new_vals[i] if new_vals[i] is not None else existing_vals[i]
-                          for i in range(min(len(new_vals), len(existing_vals)))]
-            if final_vals == existing_vals:
-                continue  # no change
-            new_arr = ', '.join(str(v) for v in final_vals)
-            pat_fc = rf'({re.escape(act_key)}:\s*\[)[^\]]+(\])'
-            new_html5, n5 = re.subn(pat_fc, rf'\g<1>{new_arr}\2', html, count=1)
-            _record_subn_result(f'FC_MACRO.{act_key}', pat_fc, n5)
-            if n5:
-                applied.append(f'FC_MACRO.{act_key} updated {final_vals}')
-                html = new_html5
+    # ── FC_MACRO capture + register to state.json (Tier 1 wave 3d) ─────
+    # Strategy: load the parent object from read_prior() first (round-trip
+    # against last run's state.json), fall back to inline-HTML scrape (only
+    # works on the very first cold-start before placeholder takes over),
+    # then fall back to hardcoded defaults so renderer never trips even on
+    # a brand-new checkout. Then patch each actNN via _fc_actuals_for_year
+    # using existing values as the per-metric backfill source, register
+    # the full payload, and zero the inline declaration.
+    _FC_DEFAULTS = {
+        'labels': ["Real GDP %", "Unemployment %", "CPI Inflation %",
+                   "Wage Growth %", "Fed Funds Rate %"],
+        'act24': [2.8, 4.1, 2.9, 4.0, 5.1],
+        'act25': [2.1, 4.4, 2.7, 3.8, 4.2],
+        'f26':   [2.2, 4.4, 2.9, 3.2, 3.9],
+    }
+    fc_payload = None
+    prior_fc = _api_writer.read_prior('FC_MACRO')
+    if isinstance(prior_fc, dict) and isinstance(prior_fc.get('labels'), list):
+        fc_payload = {k: list(v) if isinstance(v, list) else v
+                      for k, v in prior_fc.items()}
+    else:
+        fc_block_re = re.search(r'const\s+FC_MACRO\s*=\s*\{([^}]+)\}', html, re.DOTALL)
+        if fc_block_re:
+            fc_block = fc_block_re.group(1)
+            labels_m = re.search(r'labels:\s*\[([^\]]+)\]', fc_block)
+            if labels_m:
+                import ast
+                try:
+                    fc_payload = {'labels': ast.literal_eval('[' + labels_m.group(1) + ']')}
+                    for am in re.finditer(r'(act\d{2}|f\d{2}):\s*\[([^\]]+)\]', fc_block):
+                        fc_payload[am.group(1)] = [float(v.strip()) for v in am.group(2).split(',')]
+                except Exception:
+                    fc_payload = None
+    if not fc_payload:
+        fc_payload = {k: (list(v) if isinstance(v, list) else v)
+                      for k, v in _FC_DEFAULTS.items()}
+
+    # Patch every actNN entry from FRED, preserving per-metric existing
+    # values where the source data is insufficient.
+    patched_keys = []
+    for key in list(fc_payload.keys()):
+        m = re.fullmatch(r'act(\d{2})', key)
+        if not m:
+            continue
+        yr = 2000 + int(m.group(1))
+        new_vals = _fc_actuals_for_year(yr)
+        if sum(v is not None for v in new_vals) < 3:
+            continue  # not enough data — leave seed alone
+        existing_vals = fc_payload[key]
+        final_vals = [new_vals[i] if i < len(new_vals) and new_vals[i] is not None
+                      else (existing_vals[i] if i < len(existing_vals) else None)
+                      for i in range(max(len(new_vals), len(existing_vals)))]
+        if final_vals != existing_vals:
+            fc_payload[key] = final_vals
+            patched_keys.append(f'{key}={final_vals}')
+
+    _api_writer.register('FC_MACRO', fc_payload)
+    pattern_fc = r'(?:const|let|var)\s+FC_MACRO\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+    new_html5, n5 = re.subn(pattern_fc, 'let FC_MACRO = null;', html, count=1)
+    _record_subn_result('FC_MACRO', pattern_fc, n5)
+    if n5:
+        suffix = f' (patched {", ".join(patched_keys)})' if patched_keys else ''
+        applied.append(f'FC_MACRO registered to state.json{suffix}; inline zeroed')
+        html = new_html5
 
     # ── Oil tile values (auto-update from OIL_ANNUAL data) ────────────
     wti_a = data.get('wti_annual', [])
