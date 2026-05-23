@@ -252,9 +252,27 @@ jobs:
                 #     review.
                 conflicted=$(git diff --name-only --diff-filter=U)
                 echo "Conflicted files: $conflicted"
-                non_generated=$(echo "$conflicted" | grep -Ev '^(index\.html|data/state\.json)$' || true)
+                # Whitelist: anything the pipeline itself writes. The
+                # shadow-bot push (`🌑 Shadow update`) regenerates all
+                # of these every run, so any conflict in this set is
+                # the parallel-write race, not a human edit overlap.
+                #   - index.html                  (renderer)
+                #   - data/*.json                 (collector, analyzer,
+                #                                  briefing, validator,
+                #                                  visual_qa, vision,
+                #                                  editorial, ceo_grade,
+                #                                  state bundle, version)
+                #   - data/screenshots/*.png      (visual_qa)
+                #   - data/repair_log.md          (repair_agent)
+                #   - data/agent_memory.jsonl    (audit log)
+                #   - data/incident_reports/*.md (diagnostician)
+                #   - data/transcripts/**         (earnings agent)
+                #   - data/parallel_compare_*.*  (parallel-run trial)
+                #   - data/run_report_*.md        (parallel-run trial)
+                #   - version.json                (build stamp)
+                non_generated=$(echo "$conflicted" | grep -Ev '^(index\.html|version\.json|data/[^/]+\.json|data/[^/]+\.jsonl|data/[^/]+\.md|data/screenshots/.+\.png|data/incident_reports/.+\.md|data/transcripts/.+|data/parallel_compare_.+|data/run_report_.+)$' || true)
                 if [ -z "$non_generated" ] && [ -n "$conflicted" ]; then
-                  echo "Conflict scoped to renderer outputs ($conflicted) — preferring upstream, re-rendering on top"
+                  echo "Conflict scoped to pipeline outputs ($conflicted) — preferring upstream, re-rendering on top"
                   for f in $conflicted; do
                     git checkout --ours -- "$f"
                     git add "$f"
@@ -267,16 +285,23 @@ jobs:
                   }
                   # Refresh renderer-managed regions on top of the
                   # preserved upstream state (both inline-JS in
-                  # index.html and the state.json bundle).
+                  # index.html and the state.json bundle). Other
+                  # pipeline-output files (analyzer outputs, validation
+                  # report, screenshots, etc.) are NOT regenerated here
+                  # — we keep upstream's copy. That's intentional: this
+                  # job's analyzer/validator already ran earlier in the
+                  # pipeline and those artifacts are downstream of the
+                  # same raw_data; keeping upstream avoids spawning a
+                  # fresh full-pipeline sub-run during conflict cleanup.
                   python scripts/renderer.py || echo "::warning::renderer failed during conflict resolution; proceeding with upstream files as-is"
                   if ! git diff --quiet -- index.html data/state.json; then
                     git add index.html data/state.json
                     git commit \
                       -m "Re-render after rebase conflict resolution" \
-                      -m "Upstream pushed renderer-output edits while this CI run was generating its own. Rebase preferred upstream; this commit re-runs the renderer to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts, state.json bundle) on top of the preserved structural edits."
+                      -m "Upstream pushed pipeline-output edits while this CI run was generating its own. Rebase preferred upstream across all generated files (data/*.json, screenshots, repair_log, etc.); this commit re-runs the renderer to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts, state.json bundle) on top of the preserved structural state."
                   fi
                 else
-                  echo "::error::Rebase conflict in non-renderer-output files: $non_generated"
+                  echo "::error::Rebase conflict in non-pipeline-output files: $non_generated"
                   git rebase --abort || true
                   git stash pop || true
                   exit 1
