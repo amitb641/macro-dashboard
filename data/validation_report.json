@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-05-23T18:54:41.425312Z",
+  "validated_at": "2026-05-23T19:10:57.807439Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 211,
-    "passed": 211,
+    "total_checks": 214,
+    "passed": 214,
     "failed": 0,
     "skipped": 15,
     "critical_divergences": 0
@@ -60,6 +60,33 @@
       "source_value": 115,
       "difference": 0.0,
       "tolerance": 5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "KPI Unemployment",
+      "html_value": 4.3,
+      "source_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "KPI CPI YoY",
+      "html_value": 3.8,
+      "source_value": 3.78,
+      "difference": 0.02,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "KPI Core PCE",
+      "html_value": 3.2,
+      "source_value": 3.2,
+      "difference": 0.0,
+      "tolerance": 0.05,
       "severity": "ok",
       "pass": true
     },
@@ -761,7 +788,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T18:53:06.735064Z",
+      "collected_at": "2026-05-23T19:08:39.623587Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
