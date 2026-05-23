@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-23T18:22:11.916904Z",
+  "validated_at": "2026-05-23T18:54:41.425312Z",
   "status": "PASS",
   "summary": {
     "total_checks": 211,
     "passed": 211,
     "failed": 0,
-    "skipped": 16,
+    "skipped": 15,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -625,32 +625,47 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 129.279,
+      "fresh_api_value": 129.279,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.57,
+      "fresh_api_value": 4.57,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158736.0,
+      "fresh_api_value": 158736.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 6.51,
+      "fresh_api_value": 6.51,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -746,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T18:20:30.165786Z",
+      "collected_at": "2026-05-23T18:53:06.735064Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -946,76 +961,76 @@
   ],
   "metric_consistency": [
     {
-      "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
-      "reference": 115.0,
+      "check": "NFP MoM latest (K): \u22652 surfaces extractable",
       "surfaces": {
         "NFP_BLS_MOM.bls[-1]": 115.0,
-        "KPIS Jobs tile": 115.0,
+        "KPIS Jobs tile": "MISSING",
         "Commentary payrolls": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "Unemployment rate (%): surfaces agree within \u00b10.1 (ref: U_MONTHLY.data[-1])",
-      "reference": 4.3,
+      "check": "Unemployment rate (%): \u22652 surfaces extractable",
       "surfaces": {
         "U_MONTHLY.data[-1]": 4.3,
-        "KPIS Unemployment": 4.3,
+        "KPIS Unemployment": "MISSING",
         "Commentary U-3": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "CPI YoY latest (%): surfaces agree within \u00b10.15 (ref: CPI_MONTHLY.headline[-1])",
-      "reference": 3.8,
+      "check": "CPI YoY latest (%): \u22652 surfaces extractable",
       "surfaces": {
         "CPI_MONTHLY.headline[-1]": 3.8,
-        "KPIS CPI YoY": 3.8
+        "KPIS CPI YoY": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
-      "reference": 3.2,
+      "check": "Core PCE YoY latest (%): \u22652 surfaces extractable",
       "surfaces": {
         "PCE_MONTHLY.core[-1]": 3.2,
-        "KPIS Core PCE": 3.2
+        "KPIS Core PCE": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 44.8,
+      "check": "UMich sentiment latest: \u22652 surfaces extractable",
       "surfaces": {
         "UMCSENT_MONTHLY.data[-1]": 44.8,
-        "KPIS UMich Sentiment": 44.8
+        "KPIS UMich Sentiment": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "Fed Funds latest (%): surfaces agree within \u00b10.05 (ref: KPIS Fed Funds)",
-      "reference": 3.64,
+      "check": "Fed Funds latest (%): \u22652 surfaces extractable",
       "surfaces": {
-        "KPIS Fed Funds": 3.64,
+        "KPIS Fed Funds": "MISSING",
         "data[\"ffr\"]": 3.64
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.57,
+      "check": "10Y Treasury latest (%): \u22652 surfaces extractable",
       "surfaces": {
-        "KPIS 10Y Treasury": 4.57,
+        "KPIS 10Y Treasury": "MISSING",
         "data[\"dgs10\"]": 4.57
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     }
   ],
   "earnings_verbatim": [
@@ -1465,20 +1480,35 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4.3,
+      "diff": 0.0,
+      "tol": 0.215,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "cpi_all",
+      "fred": 332.407,
+      "bls": 332.407,
+      "diff": 0.0,
+      "tol": 0.3324,
+      "note": null
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 335.423,
+      "diff": 0.0,
+      "tol": 0.3354,
+      "note": null
     }
   ],
   "noise_floor": [
@@ -1632,7 +1662,7 @@
   ],
   "secret_leaks": [
     {
-      "check": "Secret leak scan (18 JSON files)",
+      "check": "Secret leak scan (19 JSON files)",
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"
