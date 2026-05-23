@@ -248,71 +248,14 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
     pending.forEach(function(p){ io.observe(p); });
   };
 
-  // §24.3 — Theme management. data-theme="dark" on <html> is the
-  // single source of truth. Persisted in localStorage.md_theme.
-  MD.setTheme = function(t){
-    var root = document.documentElement;
-    var body = document.body;
-    // Legacy theme-overlay.css uses body.themed-sm to hardcode light
-    // panel colors that beat our CSS variables on specificity. We
-    // stash the class on dark, restore on light, so dark-mode wins
-    // cleanly without re-styling every legacy rule.
-    if (t === "dark") {
-      root.setAttribute("data-theme", "dark");
-      if (body && body.classList.contains("themed-sm")){
-        body.classList.remove("themed-sm");
-        body.setAttribute("data-md-had-themed-sm", "1");
-      }
-    } else {
-      root.removeAttribute("data-theme");
-      if (body && body.getAttribute("data-md-had-themed-sm") === "1"){
-        body.classList.add("themed-sm");
-        body.removeAttribute("data-md-had-themed-sm");
-      }
-    }
-    try{ localStorage.setItem("md_theme", t === "dark" ? "dark" : "light"); }catch(e){}
-    var btn = document.querySelector(".theme-toggle");
-    if (btn){
-      var glyph = btn.querySelector(".tt-glyph");
-      var label = btn.querySelector(".tt-label");
-      if (glyph) glyph.textContent = (t === "dark") ? "\u263C" : "\u263E";  // sun ↔ moon
-      if (label) label.textContent = (t === "dark") ? "Light" : "Dark";
-    }
-  };
-  MD.toggleTheme = function(){
-    var cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    MD.setTheme(cur === "dark" ? "light" : "dark");
-  };
-  MD.initThemeFromStorage = function(){
-    var saved = null;
-    try{ saved = localStorage.getItem("md_theme"); }catch(e){}
-    if (saved === "dark") MD.setTheme("dark");
-    else MD.setTheme("light");
-  };
-
-  // Race-condition guard: theme-overlay.js may add body.themed-sm AFTER
-  // MD.setTheme("dark") has already stripped it. Watch body.class and
-  // re-strip whenever themed-sm reappears while dark is active.
-  MD._installThemedSmGuard = function(){
-    if (MD._themedSmGuardInstalled) return;
-    var body = document.body;
-    if (!body || typeof MutationObserver === "undefined") return;
-    var obs = new MutationObserver(function(){
-      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      if (isDark && body.classList.contains("themed-sm")){
-        body.classList.remove("themed-sm");
-        body.setAttribute("data-md-had-themed-sm", "1");
-      }
-    });
-    obs.observe(body, { attributes: true, attributeFilter: ["class"] });
-    MD._themedSmGuard = obs;
-    MD._themedSmGuardInstalled = true;
-  };
+  // §24.3 — Dark-mode JS removed 2026-05-22 (light-only dashboard).
+  // MD.setTheme / MD.toggleTheme / MD.initThemeFromStorage and the
+  // themed-sm guard MutationObserver are gone. If we ever resurrect
+  // dark mode, the prior implementation lives in git (commit b2ba19b
+  // and earlier).
 
   // Auto-init on DOM ready
   function boot(){
-    MD.initThemeFromStorage();
-    MD._installThemedSmGuard();
     MD.initScrollReveal();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
@@ -1465,38 +1408,11 @@ h1 span{color:var(--accent)}
 .panel.revealed .panel-meta,
 .panel.revealed .so-what{opacity:1;transform:none}
 
-/* §24.3 Dark-mode palette. Attribute-driven so a single toggle swaps
-   every variable; no per-element overrides except where contrast
-   demands it (nav, semantic up/dn, now-pill, so-what rule). */
-:root[data-theme="dark"]{
-  --bg:#0F1419; --bg2:#161B25; --card:#161B25;
-  --border:#243042; --border2:#2A3648;
-  --text:#E5E9F0; --text2:#A8B2C1; --muted:#7A8696;
-  --accent:#5B8CE6; --accent-soft:rgba(91,140,230,.14);
-  --grid:rgba(229,233,240,.08);
-}
-:root[data-theme="dark"] body{background:var(--bg);color:var(--text)}
-:root[data-theme="dark"] .nav-grouped{background:#1B2230;border-color:var(--border)}
-:root[data-theme="dark"] .nav-btn{color:var(--text2)}
-:root[data-theme="dark"] .nav-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
-:root[data-theme="dark"] .nav-btn.active{color:var(--accent);background:var(--accent-soft)}
-:root[data-theme="dark"] .up{color:#FF6B6B}      /* Bloomberg up-in-red preserved */
-:root[data-theme="dark"] .dn{color:#62D49F}
-:root[data-theme="dark"] .so-what{color:var(--text2);border-left-color:var(--accent)}
-:root[data-theme="dark"] .so-what::before{color:var(--accent)}
-:root[data-theme="dark"] .chart-now-pill{background:rgba(22,27,37,.92);color:var(--text);border-color:var(--border)}
-:root[data-theme="dark"] .md-pulse-dot{box-shadow:0 0 0 2px rgba(22,27,37,.85)}
-:root[data-theme="dark"] .panel-meta{color:var(--muted)}
-:root[data-theme="dark"] .dtable th{background:#1B2230;color:var(--text2)}
-:root[data-theme="dark"] .dtable td{border-color:var(--border)}
-:root[data-theme="dark"] .skeleton{background:linear-gradient(90deg,#1B2230 0%,#243042 50%,#1B2230 100%)}
-
-/* §24.4 Theme-toggle pill — top-right of the page, DM Mono so it
-   reads as an instrument label, not a CTA. */
-.theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
-.theme-toggle:hover{color:var(--text);border-color:var(--text2)}
-.theme-toggle .tt-glyph{width:12px;height:12px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;line-height:1}
-@media (max-width:680px){.theme-toggle{top:8px;right:8px;padding:5px 8px;font-size:9px}}
+/* §24.3 + §24.4 — Dark-mode palette + theme-toggle CSS removed
+   2026-05-22 (light-only dashboard). The :root[data-theme="dark"]
+   block and the .theme-toggle pill were ~30 lines of dead code
+   after the toggle button was removed from the HTML. If we ever
+   resurrect dark mode, the prior CSS lives in git history. */
 @media (prefers-reduced-motion: reduce){
   .md-pulse-dot::after{animation:none;opacity:0}
   .panel.pre-reveal .panel-meta,.panel.pre-reveal .so-what{transition:none;opacity:1;transform:none}
@@ -2600,7 +2516,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <a href="#main-content" class="sr-only-focusable">Skip to dashboard content</a>
 
-<!-- dark-mode toggle removed 2026-05-22 per user — dashboard is light-only -->
+<!-- Publication wordmark (top-left). Renderer.py::update_meta patches
+     issue + week from data/pipeline_version.json each run. -->
+<div class="sm-wordmark" id="sm-wordmark"><span>Macro/24</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 21</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 21 2026</span></div>
 
 <div class="eyebrow">BEA · BLS · Fed Reserve · EIA — Updated weekly</div>
 <h1>U.S. <span>Macro</span> Dashboard</h1>
@@ -3180,6 +3098,16 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <!-- ══ FORECAST ══ -->
 <div class="tab-panel active" id="tab-fc">
+  <!-- Macro State hero card — single-line verdict + 4-bar scorecard.
+       Reads MACRO_STATE constant (patched weekly by renderer.py from
+       data/signals.json). Above-the-fold answer to "is it good or bad?". -->
+  <div class="macro-state" id="macro-state-card">
+    <div class="ms-eyebrow">Macro State · As of <span id="ms-asof">May 2026</span></div>
+    <div class="ms-verdict"><span class="ms-chip" id="ms-chip">HIGH RISK</span><span id="ms-verdict-text">Late-cycle: soft-landing path intact, but inflation re-accelerated to 3.78% and credit stress is building beneath the surface.</span></div>
+    <div class="ms-bars" id="ms-bars"></div>
+    <p class="src" style="border-top:none;padding-top:8px;margin-top:12px">Synthesised from data/signals.json — risk level reflects 3 alerts (CPI, oil, core PCE), 2 watches (10Y yield, debt service), 1 flagged (wages cooling).</p>
+  </div>
+
   <div class="fc-note" id="commentary-gdp">Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The combination of slowing NFP, a 3.6% savings rate, and WTI at $109.8 creates a credible path to sub-1% growth within two quarters. Inventory and net export dynamics could provide temporary offsets, but domestic demand is the linchpin and it is weakening.</div>
 
   <!-- 2025 Quarterly Breakdown -->
@@ -3363,10 +3291,10 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
     <!-- Chart legend -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">
-      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:3px;background:#7C3AED;border-radius:2px"></span>Recession Probability %</span>
-      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:6px;height:12px;background:rgba(37,99,235,.6);border-radius:1px"></span><span style="display:inline-block;width:6px;height:8px;background:rgba(185,28,28,.7);border-radius:1px;margin-left:-2px"></span>SLOOS Tightening % (bars)</span>
-      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;border-top:2px dashed #EF4444"></span>Card 90+ DPD %</span>
-      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(239,68,68,.10);border:1px solid rgba(239,68,68,.25);border-radius:2px"></span>NBER recession</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:3px;background:#8878B8;border-radius:2px"></span>Recession Probability %</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:6px;height:12px;background:rgba(51,107,204,.6);border-radius:1px"></span><span style="display:inline-block;width:6px;height:8px;background:rgba(214,64,69,.7);border-radius:1px;margin-left:-2px"></span>SLOOS Tightening % (bars)</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;border-top:2px dashed #D64045"></span>Card 90+ DPD %</span>
+      <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(214,64,69,.10);border:1px solid rgba(214,64,69,.25);border-radius:2px"></span>NBER recession</span>
     </div>
 
     <!-- SLOOS Chart.js chart — rendered directly using bundled Chart.js (_ChartJS) -->
@@ -6495,19 +6423,23 @@ function buildCreditTab(){
   }};
 
   if(typeof _ChartJS === "function") new _ChartJS(document.getElementById('c-sloos'),{
+    /* 2026-05-22 — colors snapped to style_guide.md §4.1 palette.
+       Was: #7C3AED (purple), #2563EB / #B91C1C (bars), #EF4444 (DPD).
+       Now: #8878B8 (palette purple), #336BCC (palette accent),
+            #D64045 (palette red), #CC8A00 (palette amber). */
     type:'line', plugins:[recPlugin],
     data:{labels:SL, datasets:[
       {type:'bar', label:'SLOOS Tightening', data:SS,
-        backgroundColor:SS.map(function(v){return v>40?'rgba(185,28,28,.8)':v>20?'rgba(37,99,235,.7)':v>0?'rgba(37,99,235,.45)':v>-10?'rgba(16,185,129,.4)':'rgba(16,185,129,.6)';}),
-        borderColor:SS.map(function(v){return v>40?'rgba(185,28,28,.95)':v>20?'rgba(37,99,235,.85)':v>0?'rgba(37,99,235,.6)':v>-10?'rgba(16,185,129,.55)':'rgba(16,185,129,.75)';}),
+        backgroundColor:SS.map(function(v){return v>40?'rgba(214,64,69,.8)':v>20?'rgba(51,107,204,.7)':v>0?'rgba(51,107,204,.45)':v>-10?'rgba(26,158,90,.4)':'rgba(26,158,90,.6)';}),
+        borderColor:SS.map(function(v){return v>40?'rgba(214,64,69,.95)':v>20?'rgba(51,107,204,.85)':v>0?'rgba(51,107,204,.6)':v>-10?'rgba(26,158,90,.55)':'rgba(26,158,90,.75)';}),
         borderWidth:1, borderRadius:2, yAxisID:'y', order:3, barPercentage:1.0, categoryPercentage:0.95},
-      {label:'Recession Probability', data:SR, borderColor:'#7C3AED', backgroundColor:'rgba(124,58,237,.03)',
+      {label:'Recession Probability', data:SR, borderColor:'#8878B8', backgroundColor:'rgba(136,120,184,.03)',
         borderWidth:2.5, fill:true, tension:0.35, yAxisID:'y', order:2,
-        segment:{borderColor:function(ctx){return ctx.p1.parsed.y>40?'#DC2626':ctx.p1.parsed.y>20?'#D97706':'#7C3AED';},
-          backgroundColor:function(ctx){return ctx.p1.parsed.y>40?'rgba(220,38,38,.04)':ctx.p1.parsed.y>20?'rgba(217,119,6,.03)':'rgba(124,58,237,.03)';}}},
-      {label:'Card 90+ DPD', data:SC, borderColor:'#EF4444', backgroundColor:'transparent',
+        segment:{borderColor:function(ctx){return ctx.p1.parsed.y>40?'#D64045':ctx.p1.parsed.y>20?'#CC8A00':'#8878B8';},
+          backgroundColor:function(ctx){return ctx.p1.parsed.y>40?'rgba(214,64,69,.04)':ctx.p1.parsed.y>20?'rgba(204,138,0,.03)':'rgba(136,120,184,.03)';}}},
+      {label:'Card 90+ DPD', data:SC, borderColor:'#D64045', backgroundColor:'transparent',
         borderWidth:2.5, borderDash:[6,3], fill:false, tension:0.35, spanGaps:true, yAxisID:'y1', order:1,
-        segment:{borderColor:function(ctx){return(ctx.p1.parsed.y||0)>9?'#DC2626':(ctx.p1.parsed.y||0)>7?'#F97316':'#EF4444';}, borderDash:function(){return[6,3];}}}
+        segment:{borderColor:function(ctx){return(ctx.p1.parsed.y||0)>9?'#D64045':(ctx.p1.parsed.y||0)>7?'#CC8A00':'#D64045';}, borderDash:function(){return[6,3];}}}
     ]},
     options:{responsive:true, maintainAspectRatio:false, animation:false,
       interaction:{mode:'index', intersect:false},
@@ -6520,7 +6452,7 @@ function buildCreditTab(){
         x:{display:true, grid:{display:false}, ticks:{font:{size:9,weight:500}, color:'#9CA3AF', maxRotation:0, autoSkip:true, maxTicksLimit:14}, border:{display:false}},
         y:{position:'left', min:-30, max:80, title:{display:true, text:'Recession Prob / SLOOS %', font:{size:10,weight:600}, color:'#4B5563'},
           grid:{color:'rgba(0,0,0,.04)', drawTicks:false}, ticks:{font:{size:9}, color:'#9CA3AF', padding:6, stepSize:20}, border:{display:false}},
-        y1:{position:'right', min:3, max:15, title:{display:true, text:'Card 90+ DPD %', font:{size:10,weight:600}, color:'#EF4444'},
+        y1:{position:'right', min:3, max:15, title:{display:true, text:'Card 90+ DPD %', font:{size:10,weight:600}, color:'#D64045'},
           grid:{display:false, drawTicks:false}, ticks:{font:{size:9}, color:'#9CA3AF', padding:6, stepSize:3}, border:{display:false}}
       }
     }
@@ -8024,6 +7956,55 @@ if(document.readyState === 'loading'){
 //       "quarterly"= manual update after earnings / govt releases
 //       "manual"  = ad-hoc, no schedule
 
+
+// ══════════════════════════════════════════════════════════════════
+// MACRO_STATE — Above-the-fold verdict card. Patched weekly by
+// renderer.py::render_macro_state from data/signals.json. Each bar
+// is 0-100 (higher = healthier). Status maps: good (≥66), watch
+// (33-65), stress (<33). Verdict text is one sentence.
+// ══════════════════════════════════════════════════════════════════
+const MACRO_STATE = {
+  asof: "May 2026",
+  risk: "HIGH",   // HIGH | MEDIUM | LOW
+  verdict: "Late-cycle: soft-landing path intact, but inflation re-accelerated to 3.78% and credit stress is building beneath the surface.",
+  bars: [
+    {label: "Growth",     score: 55, status: "watch",  detail: "GDP +2.0% · NFP slowing"},
+    {label: "Labor",      score: 62, status: "watch",  detail: "Unrate 4.3% · wages 3.6% ▼"},
+    {label: "Inflation",  score: 28, status: "stress", detail: "CPI 3.78% · Core PCE 3.2%"},
+    {label: "Credit",     score: 50, status: "watch",  detail: "Card DPD 9.8% · HY OAS 278bp"}
+  ]
+};
+
+function buildMacroState(){
+  var card = document.getElementById('macro-state-card');
+  if(!card) return;
+  var chip = document.getElementById('ms-chip');
+  if(chip){
+    chip.className = 'ms-chip ' + (MACRO_STATE.risk==='HIGH'?'high':MACRO_STATE.risk==='MEDIUM'?'medium':'low');
+    chip.textContent = MACRO_STATE.risk + ' RISK';
+  }
+  var asof = document.getElementById('ms-asof');
+  if(asof) asof.textContent = MACRO_STATE.asof;
+  var vt = document.getElementById('ms-verdict-text');
+  if(vt) vt.textContent = MACRO_STATE.verdict;
+  var bars = document.getElementById('ms-bars');
+  if(bars){
+    bars.innerHTML = MACRO_STATE.bars.map(function(b){
+      var pct = Math.max(0, Math.min(100, b.score));
+      return '<div>'
+        + '<div class="ms-bar-lbl">'+b.label+'</div>'
+        + '<div class="ms-bar-track"><div class="ms-bar-fill '+b.status+'" style="width:'+pct+'%"></div></div>'
+        + '<div class="ms-bar-val">'+b.detail+'</div>'
+        + '</div>';
+    }).join('');
+  }
+}
+// Build on DOM ready (Outlook tab is the default visible tab).
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', buildMacroState);
+} else {
+  buildMacroState();
+}
 
 // Signal thresholds for AI agent tab
 const SIGNAL_THRESHOLDS = [

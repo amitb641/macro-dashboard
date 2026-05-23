@@ -3,6 +3,16 @@
    Ported from .preview-stack/index-themed.html (May 13 mockup).
    All rules scoped to `body.themed-sm` so the theme cleanly
    toggles on/off. Data + JS unchanged.
+
+   2026-05-22 — visual audit pass:
+   • Every padding/margin/gap snapped to the 4pt grid
+     (4/8/12/16/20/24/28/32/40/48/56/64). Off-grid values
+     enforced by scripts/visual_qa.py::check_spacing_grid.
+   • Serif (DM Serif Display) reserved for .kpi-val only.
+     Secondary numbers (.m-val, .card-growth) now DM Sans 600,
+     so the page has exactly one "magazine cover" treatment.
+   • Chart-height tiers added: .ch-hero (480px), .ch-std (300px),
+     .ch-mini (180px). Lets the eye rest between panels.
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── core typography + page chrome ────────────────────────────── */
@@ -36,24 +46,41 @@ body.themed-sm { padding-top: 32px !important; }
    flagged as a dark element on the otherwise light new theme. Block
    removed surgically — no other theme rules touched. */
 
+/* ── identity wordmark (top-left publication mark) ────────────────
+   Quiet 11px DM Mono mark in the corner — turns the dashboard from
+   "internal tool" into "publication". Reads pipeline_version.json
+   via renderer.py at build time. */
+body.themed-sm .sm-wordmark {
+  position: fixed; top: 16px; left: 48px; z-index: 50;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+  color: #5A6B7D;
+  user-select: none; pointer-events: none;
+}
+body.themed-sm .sm-wordmark .sm-wm-sep { color: #CBD5E1; padding: 0 8px; }
+body.themed-sm .sm-wordmark .sm-wm-issue { color: #0D1B2A; }
+@media (max-width: 1080px) { body.themed-sm .sm-wordmark { left: 32px; } }
+@media (max-width: 720px)  { body.themed-sm .sm-wordmark { left: 20px; font-size: 10px; } }
+
 /* ── hero ─────────────────────────────────────────────────────── */
 body.themed-sm .eyebrow {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; font-weight: 700 !important;
   letter-spacing: .2em !important; text-transform: uppercase !important;
   color: #5A6B7D !important;
-  margin-bottom: 14px !important;
+  margin-bottom: 16px !important;
   background: none !important; border: none !important; padding: 0 !important;
 }
 /* Hero: dialled back from 62px serif to 44px sans per visual-designer
    audit. Magazine-cover scale eroded scan hierarchy on a 12-tab
    reference dashboard; FT/Bloomberg/Stripe all use conservative hero
-   weight. Serif reserved for KPI values + commentary pull-quotes. */
+   weight. Serif reserved for KPI values only. */
 body.themed-sm > h1 {
   font-family: 'DM Sans', system-ui, sans-serif !important;
   font-size: 44px !important; font-weight: 700 !important;
   line-height: 1.08 !important; letter-spacing: -.02em !important;
-  color: #0D1B2A !important; margin: 0 0 18px !important;
+  color: #0D1B2A !important; margin: 0 0 16px !important;
 }
 body.themed-sm > h1 span {
   font-weight: 700 !important; color: #1E4A8C !important;
@@ -71,7 +98,7 @@ body.themed-sm .subtitle {
 /* ── meta strip (WEEK · MONTH · PIPELINE OK · LAST RUN) ───────── */
 body.themed-sm .sm-meta {
   display: flex; align-items: center; gap: 16px;
-  padding: 0 0 18px 0; margin: 0 0 18px 0;
+  padding: 0 0 16px 0; margin: 0 0 16px 0;
   border-bottom: 1px solid #E2E8F0;
   font-family: 'DM Mono', monospace;
   font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase;
@@ -84,13 +111,92 @@ body.themed-sm .sm-meta .sm-meta-dot {
 body.themed-sm .sm-meta .sm-meta-sep { color: #CBD5E1; }
 body.themed-sm .sm-meta .sm-meta-bold { color: #0D1B2A; font-weight: 700; }
 
+/* ── Macro State hero card (above-the-fold verdict) ───────────────
+   Single-sentence state-of-the-economy + 4-bar mini-scorecard.
+   Renderer.py::render_macro_state patches MACRO_STATE constant
+   from data/signals.json each pipeline run. */
+body.themed-sm .macro-state {
+  background: #fff !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  padding: 24px 28px !important;
+  margin: 0 0 28px 0 !important;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03) !important;
+}
+body.themed-sm .macro-state .ms-eyebrow {
+  font-family: 'DM Mono', monospace !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  letter-spacing: .2em !important; text-transform: uppercase !important;
+  color: #5A6B7D !important;
+  margin-bottom: 8px !important;
+}
+body.themed-sm .macro-state .ms-verdict {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 20px !important; font-weight: 600 !important;
+  line-height: 1.35 !important; letter-spacing: -.01em !important;
+  color: #0D1B2A !important;
+  margin: 0 0 16px 0 !important;
+}
+body.themed-sm .macro-state .ms-chip {
+  display: inline-block;
+  font-family: 'DM Mono', monospace !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  letter-spacing: .15em !important; text-transform: uppercase !important;
+  padding: 2px 8px !important; border-radius: 3px !important;
+  margin-right: 8px !important; vertical-align: middle;
+}
+body.themed-sm .macro-state .ms-chip.high {
+  background: #FCEEEE !important; color: #B91C1C !important;
+}
+body.themed-sm .macro-state .ms-chip.medium {
+  background: #FEF3C7 !important; color: #B45309 !important;
+}
+body.themed-sm .macro-state .ms-chip.low {
+  background: #EBF7EF !important; color: #15803D !important;
+}
+body.themed-sm .macro-state .ms-bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #F1F5F9;
+}
+body.themed-sm .macro-state .ms-bar-lbl {
+  font-family: 'DM Mono', monospace !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  letter-spacing: .15em !important; text-transform: uppercase !important;
+  color: #5A6B7D !important;
+  margin-bottom: 8px !important;
+}
+body.themed-sm .macro-state .ms-bar-track {
+  position: relative;
+  background: #F1F5F9;
+  border-radius: 999px;
+  height: 6px;
+  overflow: hidden;
+}
+body.themed-sm .macro-state .ms-bar-fill {
+  position: absolute; top: 0; left: 0; bottom: 0;
+  border-radius: 999px;
+  transition: width .35s ease;
+}
+body.themed-sm .macro-state .ms-bar-fill.good   { background: #1A9E5A; }
+body.themed-sm .macro-state .ms-bar-fill.watch  { background: #CC8A00; }
+body.themed-sm .macro-state .ms-bar-fill.stress { background: #D64045; }
+body.themed-sm .macro-state .ms-bar-val {
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 13px !important; font-weight: 600 !important;
+  color: #0D1B2A !important;
+  margin-top: 8px !important;
+}
+
 /* ── signal legend row ────────────────────────────────────────── */
 body.themed-sm .kpi-strip + div {
   border-top: 1px solid #E2E8F0 !important;
   border-bottom: 1px solid #E2E8F0 !important;
   padding: 12px 0 !important;
-  margin: -6px 0 28px 0 !important;
-  gap: 22px !important;
+  margin: -8px 0 28px 0 !important;
+  gap: 24px !important;
 }
 body.themed-sm .kpi-strip + div > span {
   font-family: 'DM Mono', monospace !important;
@@ -100,13 +206,13 @@ body.themed-sm .kpi-strip + div > span {
 
 /* ── KPI tiles: 3px top accent stripe + serif value ───────────── */
 body.themed-sm .kpi-strip {
-  gap: 14px !important;
+  gap: 16px !important;
   margin-bottom: 20px !important;
 }
 body.themed-sm .kpi {
   border: 1px solid #E2E8F0 !important;
   border-radius: 12px !important;
-  padding: 20px 22px 18px !important;
+  padding: 20px 24px 16px !important;
   box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03) !important;
   position: relative !important; overflow: hidden !important;
   transition: transform .15s ease, box-shadow .15s ease !important;
@@ -132,6 +238,8 @@ body.themed-sm .kpi-lbl {
   letter-spacing: .18em !important; text-transform: uppercase !important;
   color: #5A6B7D !important; margin-bottom: 8px !important;
 }
+/* .kpi-val is the ONLY surface allowed to use DM Serif Display.
+   Enforced by scripts/visual_qa.py::check_serif_scope. */
 body.themed-sm .kpi-val {
   font-family: 'DM Serif Display', Georgia, serif !important;
   font-size: 30px !important; font-weight: 400 !important;
@@ -141,11 +249,11 @@ body.themed-sm .kpi-val {
 body.themed-sm .kpi-sub {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; color: #5A6B7D !important;
-  letter-spacing: .04em !important; margin-top: 7px !important;
+  letter-spacing: .04em !important; margin-top: 8px !important;
 }
 body.themed-sm .kpi-delta {
   font-family: 'DM Mono', monospace !important;
-  font-size: 10px !important; padding: 1px 6px !important;
+  font-size: 10px !important; padding: 2px 8px !important;
   border-radius: 3px !important; font-weight: 700 !important;
 }
 
@@ -160,7 +268,7 @@ body.themed-sm .nav-grouped {
   flex-wrap: wrap !important;
 }
 body.themed-sm .nav-group {
-  display: flex !important; align-items: center !important; gap: 10px !important;
+  display: flex !important; align-items: center !important; gap: 12px !important;
 }
 body.themed-sm .nav-group-lbl {
   font-family: 'DM Mono', monospace !important;
@@ -175,7 +283,7 @@ body.themed-sm .nav-btn {
   background: transparent !important;
   border: 1px solid transparent !important;
   border-radius: 6px !important;
-  padding: 7px 12px !important;
+  padding: 8px 12px !important;
   color: #334E68 !important;
   box-shadow: none !important;
   transition: all .15s ease !important;
@@ -183,7 +291,7 @@ body.themed-sm .nav-btn {
 body.themed-sm .nav-btn .nav-icon {
   filter: saturate(.35) opacity(.7) !important;
   width: 16px !important; height: 16px !important;
-  margin-right: 6px !important;
+  margin-right: 8px !important;
 }
 body.themed-sm .nav-btn:hover {
   background: #F1F5F9 !important;
@@ -205,7 +313,7 @@ body.themed-sm .download-btn {
   font-size: 10px !important; letter-spacing: .15em !important;
   text-transform: uppercase !important;
   background: #0D1B2A !important; color: #fff !important;
-  border: none !important; padding: 7px 14px !important;
+  border: none !important; padding: 8px 16px !important;
   border-radius: 6px !important; box-shadow: none !important;
 }
 
@@ -214,7 +322,7 @@ body.themed-sm .panel {
   background: #fff !important;
   border: 1px solid #E2E8F0 !important;
   border-radius: 12px !important;
-  padding: 26px 28px !important;
+  padding: 24px 28px !important;
   box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03) !important;
   margin-bottom: 20px !important;
   transition: box-shadow .15s ease, transform .15s ease !important;
@@ -235,7 +343,7 @@ body.themed-sm .panel-sub {
   font-family: 'DM Mono', monospace !important;
   font-size: 10px !important; font-weight: 700 !important;
   letter-spacing: .15em !important; text-transform: uppercase !important;
-  color: #5A6B7D !important; margin-bottom: 18px !important;
+  color: #5A6B7D !important; margin-bottom: 16px !important;
 }
 
 /* commentary CASE 1 — wrapped inside .panel
@@ -245,7 +353,7 @@ body.themed-sm .panel .fc-note {
   border: none !important;
   border-left: 3px solid #336BCC !important;
   border-radius: 0 !important;
-  padding: 4px 0 4px 14px !important;
+  padding: 4px 0 4px 16px !important;
   margin-top: 8px !important;
   margin-bottom: 0 !important;
   font-size: 14px !important;
@@ -259,7 +367,7 @@ body.themed-sm .tab-panel > .fc-note {
   border: 1px solid #E2E8F0 !important;
   border-left: 3px solid #336BCC !important;
   border-radius: 12px !important;
-  padding: 22px 26px 22px 24px !important;
+  padding: 24px !important;
   margin-top: 0 !important;
   margin-bottom: 28px !important;
   font-size: 14px !important;
@@ -285,8 +393,8 @@ body.themed-sm .vintage-note {
   font-size: 9.5px !important; color: #5A6B7D !important;
   letter-spacing: .06em !important; text-transform: uppercase !important;
   border-top: 1px solid #F1F5F9;
-  padding-top: 10px !important;
-  margin-top: 14px !important;
+  padding-top: 12px !important;
+  margin-top: 16px !important;
 }
 
 /* ── metric tiles ─────────────────────────────────────────────── */
@@ -295,7 +403,7 @@ body.themed-sm .metric {
   border: 1px solid #E2E8F0 !important;
   border-left: 1px solid #E2E8F0 !important;
   border-radius: 12px !important;
-  padding: 18px 20px 16px !important;
+  padding: 20px 20px 16px !important;
   box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03) !important;
   position: relative !important; overflow: hidden !important;
 }
@@ -318,10 +426,14 @@ body.themed-sm .m-lbl {
   text-transform: uppercase !important; color: #5A6B7D !important;
   font-weight: 700 !important;
 }
+/* .m-val DEMOTED from DM Serif Display to DM Sans 600.
+   Visual audit: two competing "hero numbers" per screen (KPI serif
+   + metric serif) split the hierarchy signal. Now exactly one serif
+   treatment per page — the .kpi-val tiles. */
 body.themed-sm .m-val {
-  font-family: 'DM Serif Display', Georgia, serif !important;
-  font-size: 26px !important; font-weight: 400 !important;
-  letter-spacing: -.005em !important; line-height: 1.05 !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 24px !important; font-weight: 600 !important;
+  letter-spacing: -.01em !important; line-height: 1.05 !important;
   color: #0D1B2A !important;
 }
 body.themed-sm .m-sub {
@@ -335,7 +447,7 @@ body.themed-sm .sector-card {
   background: #fff !important;
   border: 1px solid #E2E8F0 !important;
   border-radius: 10px !important;
-  padding: 14px 16px !important;
+  padding: 16px !important;
   transition: border-color .15s ease, transform .12s ease !important;
 }
 body.themed-sm .sector-card:hover {
@@ -345,7 +457,7 @@ body.themed-sm .sector-card:hover {
 }
 body.themed-sm .sector-card .card-name {
   font-family: 'DM Sans', sans-serif !important;
-  font-size: 12.5px !important; font-weight: 600 !important;
+  font-size: 13px !important; font-weight: 600 !important;
   color: #0D1B2A !important;
 }
 body.themed-sm .sector-card .card-share {
@@ -353,9 +465,10 @@ body.themed-sm .sector-card .card-share {
   font-size: 10px !important; letter-spacing: .08em !important;
   text-transform: uppercase !important;
 }
+/* .card-growth DEMOTED from DM Serif Display to DM Sans 600 (see .m-val) */
 body.themed-sm .sector-card .card-growth {
-  font-family: 'DM Serif Display', Georgia, serif !important;
-  font-size: 24px !important; font-weight: 400 !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 22px !important; font-weight: 600 !important;
   letter-spacing: -.01em !important;
 }
 
@@ -365,7 +478,7 @@ body.themed-sm .up, body.themed-sm .dn {
   font-size: 10px !important; font-weight: 700 !important;
   letter-spacing: .06em !important;
   border-radius: 3px !important;
-  padding: 2px 6px !important;
+  padding: 2px 8px !important;
 }
 body.themed-sm .up { background: #EBF7EF !important; color: #15803D !important; border-color: rgba(21,128,61,.15) !important; }
 body.themed-sm .dn { background: #FCEEEE !important; color: #B91C1C !important; border-color: rgba(185,28,28,.15) !important; }
@@ -381,12 +494,12 @@ body.themed-sm .dtable th {
   color: #5A6B7D !important;
   background: #F7F8FA !important;
   border-bottom: 1px solid #E2E8F0 !important;
-  padding: 11px 12px !important;
+  padding: 12px !important;
 }
 body.themed-sm .dtable td {
   font-family: 'DM Sans', sans-serif !important;
-  font-size: 12.5px !important;
-  padding: 11px 12px !important;
+  font-size: 13px !important;
+  padding: 12px !important;
   border-bottom-color: #F1F5F9 !important;
 }
 body.themed-sm .dtable tbody tr:hover {
@@ -407,6 +520,7 @@ body.themed-sm .sort-btn {
   border: 1px solid #E2E8F0 !important;
   background: #fff !important;
   color: #334E68 !important;
+  padding: 8px 12px !important;
 }
 body.themed-sm .sort-btn.active {
   background: #0D1B2A !important; border-color: #0D1B2A !important;
@@ -418,6 +532,17 @@ body.themed-sm .two-up {
   gap: 20px !important;
 }
 
+/* ── chart height tiers ───────────────────────────────────────────
+   Replaces the monotone 300px-everywhere pattern. Pick one tier per
+   chart based on importance:
+   • .ch-hero — 480px, reserved for ≤2 marquee charts per tab
+   • .ch-std  — 300px, the default reference-grade height
+   • .ch-mini — 180px, sparkline-style supporting charts
+   Apply to the wrapping <div> that owns the <canvas>. */
+body.themed-sm .ch-hero { position: relative; height: 480px; margin-bottom: 8px; }
+body.themed-sm .ch-std  { position: relative; height: 300px; margin-bottom: 8px; }
+body.themed-sm .ch-mini { position: relative; height: 180px; margin-bottom: 8px; }
+
 /* ── motion: gentle reveal on tab content ─────────────────────── */
 @keyframes smFadeIn {
   from { opacity: 0; transform: translateY(4px); }
@@ -426,7 +551,8 @@ body.themed-sm .two-up {
 body.themed-sm .tab-panel:not([style*="display: none"]) > .panel,
 body.themed-sm .tab-panel:not([style*="display: none"]) > .metric-row,
 body.themed-sm .tab-panel:not([style*="display: none"]) > .sector-grid,
-body.themed-sm .tab-panel:not([style*="display: none"]) > .two-up {
+body.themed-sm .tab-panel:not([style*="display: none"]) > .two-up,
+body.themed-sm .tab-panel:not([style*="display: none"]) > .macro-state {
   animation: smFadeIn .35s ease both;
 }
 body.themed-sm .tab-panel > *:nth-child(1) { animation-delay: 0s; }
@@ -454,13 +580,14 @@ body.themed-sm .sort-btn:focus-visible {
 @media (max-width: 720px) {
   body.themed-sm { padding: 28px 20px 56px !important; }
   body.themed-sm > h1 { font-size: 30px !important; }
+  body.themed-sm .macro-state .ms-bars { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ── split-stack chart container (dual-axis-lie remediation) ──────
    Used by c-housing-mom and c-afford — each panel now hosts two
    stacked single-axis canvases instead of a misleading dual-axis
    chart. Theme-side rules just make sure the stack inherits panel
-   spacing + radius without competing with .ch300. */
+   spacing + radius without competing with .ch-std. */
 body.themed-sm .split-stack {
   display: flex; flex-direction: column; gap: 8px;
   width: 100%; height: 300px;
@@ -470,7 +597,7 @@ body.themed-sm .split-stack-row {
 }
 body.themed-sm .split-stack-row + .split-stack-row {
   border-top: 1px dashed #E2E8F0;
-  padding-top: 6px;
+  padding-top: 8px;
 }
 
 /* ── empty-state overlay (B3 charts pending first pipeline run) ───

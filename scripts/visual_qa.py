@@ -66,6 +66,150 @@ def _check(category, name, condition, detail='', severity='warning'):
         print(f'  FAIL  [{category}] {name} — {detail}')
 
 
+# ════════════════════════════════════════════════════════════════════
+# Static visual-contract checks (no browser). Added 2026-05-22 after
+# the visual-design audit. These enforce the style_guide.md contract
+# against theme-overlay.css and index.html source, so drift fails CI
+# before the page is even rendered.
+# ════════════════════════════════════════════════════════════════════
+
+# Spacing tokens allowed under §5.1 of style_guide.md. 4pt grid.
+# Sub-4 values (1/2/3px) allowed for borders/affordances only — those
+# are detected by context ("border:", "outline:", "::before content").
+_GRID_TOKENS = {0, 4, 8, 12, 16, 20, 24, 28, 32, 40, 44, 48, 56, 60, 64, 72, 80, 96, 120}
+
+# Approved palette (style_guide.md §4.1). Lowercased hex.
+_PALETTE = {
+    # neutrals
+    '#f7f8fa', '#fafbfc', '#ffffff', '#fff', '#0d1b2a', '#1e293b', '#334e68',
+    '#475569', '#5a6b7d', '#7a8fa8', '#94a3b8', '#cbd5e1', '#e2e8f0', '#f1f5f9',
+    # semantic
+    '#336bcc', '#1e4a8c', '#1a9e5a', '#d64045', '#cc8a00', '#8878b8',
+    # action states + dark text/links
+    '#15803d', '#b91c1c', '#b45309', '#ebf7ef', '#fceeee', '#fef3c7',
+    # transparent / inherit
+    'transparent', 'none', 'inherit', 'currentcolor',
+}
+
+
+def check_spacing_grid():
+    """Fail if theme-overlay.css contains off-grid padding/margin/gap values.
+    style_guide.md §5.1 — 4pt grid tokens only."""
+    import re
+    css_file = ROOT / 'theme-overlay.css'
+    if not css_file.exists():
+        _check('contract', 'spacing_grid_file', False, 'theme-overlay.css missing', 'critical')
+        return
+    src = css_file.read_text(encoding='utf-8')
+    # Strip block comments
+    src = re.sub(r'/\*.*?\*/', '', src, flags=re.S)
+    offenders = []
+    # Match padding/margin/gap with px values. Allow 0, allow 1-3px on
+    # border/outline/box-shadow lines (handled by line filter).
+    pat = re.compile(r'(padding|margin|gap)\s*:\s*([^;]+);', re.I)
+    for lineno, line in enumerate(src.splitlines(), 1):
+        # Skip border-affordance lines
+        if 'border' in line.lower() and 'border-radius' not in line.lower() and 'border-bottom-color' not in line.lower():
+            continue
+        for m in pat.finditer(line):
+            for px in re.findall(r'(-?\d+)px', m.group(2)):
+                v = abs(int(px))
+                # Sub-4 px allowed only as border-affordance (caught above)
+                if v <= 3:
+                    continue
+                if v not in _GRID_TOKENS:
+                    offenders.append(f'line {lineno}: {m.group(1)} {v}px (in `{line.strip()[:90]}`)')
+    if offenders:
+        _check('contract', 'spacing_grid', False,
+               f'{len(offenders)} off-grid value(s): ' + '; '.join(offenders[:5]),
+               'warning')
+    else:
+        _check('contract', 'spacing_grid', True)
+
+
+def check_palette_compliance():
+    """Fail if theme-overlay.css uses hex colors outside the approved palette.
+    style_guide.md §4.1 palette is the source of truth."""
+    import re
+    css_file = ROOT / 'theme-overlay.css'
+    if not css_file.exists():
+        _check('contract', 'palette_compliance_file', False, 'theme-overlay.css missing', 'critical')
+        return
+    src = css_file.read_text(encoding='utf-8')
+    src = re.sub(r'/\*.*?\*/', '', src, flags=re.S)
+    hexes = set(m.lower() for m in re.findall(r'#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3}', src))
+    offenders = sorted(hexes - _PALETTE)
+    if offenders:
+        _check('contract', 'palette_compliance', False,
+               f'{len(offenders)} off-palette hex(es) in theme-overlay.css: ' + ', '.join(offenders[:8]),
+               'warning')
+    else:
+        _check('contract', 'palette_compliance', True)
+
+
+def check_panel_meta():
+    """Fail if any <div class="panel"> in index.html is missing the
+    pm-exhibit / pm-source / pm-asof / pm-cadence chain. Microcopy
+    ladder enforcement — every panel speaks the same way."""
+    import re
+    html_file = ROOT / 'index.html'
+    if not html_file.exists():
+        _check('contract', 'panel_meta_file', False, 'index.html missing', 'critical')
+        return
+    src = html_file.read_text(encoding='utf-8')
+    # Find panel blocks: from `<div class="panel"` to the next closing
+    # `</div>` that matches it. Cheap heuristic: split into panels by
+    # detecting `class="panel"` then look at the next ~1500 chars.
+    pat = re.compile(r'<div[^>]*class="[^"]*\bpanel\b[^"]*"[^>]*>', re.I)
+    required = ['pm-exhibit', 'pm-source', 'pm-asof', 'pm-cadence']
+    missing = []
+    starts = [m.start() for m in pat.finditer(src)]
+    starts.append(len(src))  # sentinel
+    for i in range(len(starts) - 1):
+        # Clip each panel's slice to the next panel's start so we
+        # never read meta from a downstream sibling.
+        slice_ = src[starts[i]:starts[i+1]]
+        if 'panel-meta' not in slice_:
+            # Commentary wrappers / chart-only containers — skip.
+            continue
+        absent = [r for r in required if r not in slice_]
+        if absent:
+            title_m = re.search(r'<div class="panel-title">([^<]{0,80})', slice_)
+            label = title_m.group(1).strip() if title_m else f'offset {starts[i]}'
+            missing.append(f'"{label}" missing: ' + ','.join(absent))
+    if missing:
+        _check('contract', 'panel_meta', False,
+               f'{len(missing)} panel(s) missing meta chips: ' + '; '.join(missing[:4]),
+               'warning')
+    else:
+        _check('contract', 'panel_meta', True)
+
+
+def check_serif_scope():
+    """Fail if DM Serif Display is applied to any selector other than
+    .kpi-val. The visual audit forbids competing 'hero number' treatments."""
+    import re
+    css_file = ROOT / 'theme-overlay.css'
+    if not css_file.exists():
+        return
+    src = css_file.read_text(encoding='utf-8')
+    src = re.sub(r'/\*.*?\*/', '', src, flags=re.S)
+    # Walk every rule block; flag any selector that references
+    # DM Serif Display but isn't .kpi-val.
+    offenders = []
+    for m in re.finditer(r'([^{}]+)\{([^{}]+)\}', src):
+        selector = m.group(1).strip()
+        body = m.group(2)
+        if 'DM Serif Display' in body and '.kpi-val' not in selector:
+            offenders.append(selector[:80])
+    if offenders:
+        _check('contract', 'serif_scope', False,
+               f'{len(offenders)} non-.kpi-val selector(s) use DM Serif Display: ' + '; '.join(offenders[:3]),
+               'warning')
+    else:
+        _check('contract', 'serif_scope', True)
+
+
 def run_visual_qa(take_screenshots=False):
     global PASS, FAIL, findings
     PASS = 0
@@ -80,6 +224,16 @@ def run_visual_qa(take_screenshots=False):
 
     if take_screenshots:
         SCREEN_DIR.mkdir(parents=True, exist_ok=True)
+
+    # ── Static visual-contract checks (no browser) ──
+    # Added 2026-05-22 after visual-design audit. These enforce the
+    # style_guide.md contract against source files; drift fails the
+    # build before any rendering happens.
+    print('  Static contract checks...')
+    check_spacing_grid()
+    check_palette_compliance()
+    check_panel_meta()
+    check_serif_scope()
 
     with sync_playwright() as p:
         # Use PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH env var if set, otherwise auto-detect

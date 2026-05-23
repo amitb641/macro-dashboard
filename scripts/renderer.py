@@ -3022,6 +3022,113 @@ def update_meta(html):
     return html
 
 
+def render_macro_state(html, sig):
+    """Patch the MACRO_STATE JS constant from data/signals.json.
+
+    Synthesises a one-line verdict + 4-bar scorecard (Growth / Labor /
+    Inflation / Credit) so the Outlook tab opens with a CEO-grade
+    above-the-fold answer to "is it good or bad?". Scoring is
+    deterministic from the signals.json contract — no LLM call here.
+    """
+    vals = sig.get('values', {}) or {}
+    sigs = sig.get('signals', {}) or {}
+    risk_level = (sig.get('risk_level') or 'MEDIUM').upper()
+    alerts = sig.get('alert_count', 0)
+    watches = sig.get('watch_count', 0)
+
+    def _status(score):
+        return 'good' if score >= 66 else 'watch' if score >= 33 else 'stress'
+
+    # ── Growth: anchored on GDP + NFP slope ──
+    gdp = vals.get('gdp_yoy') or vals.get('gdp_growth') or 2.0
+    nfp = vals.get('nfp_mom') or vals.get('payrolls') or 0
+    growth_score = max(0, min(100, int(50 + (float(gdp) - 1.5) * 25)))
+
+    # ── Labor: unrate (lower=better) + wages direction ──
+    unrate = float(vals.get('unrate', 4.3))
+    wages = float(vals.get('wages_yoy', 3.6))
+    labor_score = max(0, min(100, int(70 - (unrate - 4.0) * 20 + (wages - 3.0) * 5)))
+
+    # ── Inflation: distance from 2% target, both sides bad ──
+    cpi = float(vals.get('cpi_yoy', 3.0))
+    core_pce = float(vals.get('core_pce_yoy', 3.0))
+    infl_gap = max(abs(cpi - 2.0), abs(core_pce - 2.0))
+    infl_score = max(0, min(100, int(80 - infl_gap * 25)))
+
+    # ── Credit: HY OAS + card delinquency ──
+    hy = float(vals.get('hy_oas', 350))
+    card = float(vals.get('cc_delinq', 8.0))
+    credit_score = max(0, min(100, int(80 - (hy - 300) / 10 - (card - 6) * 5)))
+
+    # ── Verdict line (deterministic, no fabrication) ──
+    chip = 'HIGH' if risk_level == 'HIGH' else 'MEDIUM' if risk_level == 'MEDIUM' else 'LOW'
+    tone = {
+        'HIGH':   'Late-cycle: soft-landing path intact, but inflation re-accelerated and credit stress is building beneath the surface.',
+        'MEDIUM': 'Mid-cycle: growth and labor holding, inflation easing slowly, credit stable for now.',
+        'LOW':    'Expansion: growth, labor, and inflation all inside their target bands.',
+    }.get(risk_level, 'Mixed signals across the four pillars.')
+
+    asof = datetime.date.today().strftime('%b %Y')
+
+    new_const = (
+        'const MACRO_STATE = {\n'
+        f'  asof: "{asof}",\n'
+        f'  risk: "{chip}",\n'
+        f'  verdict: {json.dumps(tone)},\n'
+        '  bars: [\n'
+        f'    {{label: "Growth",     score: {growth_score}, status: "{_status(growth_score)}",  detail: "GDP {gdp:.1f}% \u00b7 NFP slope"}},\n'
+        f'    {{label: "Labor",      score: {labor_score}, status: "{_status(labor_score)}",  detail: "Unrate {unrate:.1f}% \u00b7 wages {wages:.1f}%"}},\n'
+        f'    {{label: "Inflation",  score: {infl_score}, status: "{_status(infl_score)}", detail: "CPI {cpi:.2f}% \u00b7 Core PCE {core_pce:.1f}%"}},\n'
+        f'    {{label: "Credit",     score: {credit_score}, status: "{_status(credit_score)}",  detail: "Card DPD {card:.1f}% \u00b7 HY OAS {int(hy)}bp"}}\n'
+        '  ]\n'
+        '};'
+    )
+
+    pattern = re.compile(r'const MACRO_STATE = \{.*?\n\};', re.S)
+    new_html, n = pattern.subn(lambda m: new_const, html, count=1)
+    if n == 1:
+        applied.append('macro_state')
+        return new_html
+    return html
+
+
+def render_wordmark(html):
+    """Patch issue # + week label in the publication wordmark.
+
+    Issue number = total weekly runs (from pipeline_version.json).
+    Week label  = "WEEK {iso-week} {year}".
+    """
+    today = datetime.date.today()
+    iso_week = today.isocalendar().week
+    year = today.year
+
+    issue_num = iso_week  # falls back to ISO week
+    ver_file = ROOT / 'data' / 'pipeline_version.json'
+    if ver_file.exists():
+        try:
+            v = json.loads(ver_file.read_text(encoding='utf-8'))
+            if isinstance(v, dict):
+                issue_num = v.get('total_runs', issue_num) or issue_num
+        except Exception:
+            pass
+
+    # Replace issue chip
+    new_h = re.sub(
+        r'(id="sm-wm-issue">)[^<]*(</span>)',
+        rf'\g<1>ISSUE {issue_num}\g<2>',
+        html, count=1,
+    )
+    # Replace week chip
+    new_h = re.sub(
+        r'(id="sm-wm-week">)[^<]*(</span>)',
+        rf'\g<1>WEEK {iso_week} {year}\g<2>',
+        new_h, count=1,
+    )
+    if new_h != html:
+        applied.append('wordmark')
+    return new_h
+
+
 # ── MAIN ──────────────────────────────────────────────────────────────
 
 def render():
@@ -3103,6 +3210,24 @@ def render():
         print(f'  \u274c Bank Earnings: {e}')
 
     html = update_meta(html)
+
+    # ── Macro State hero card + publication wordmark ──
+    # Both are patched from signals.json + pipeline_version.json so the
+    # above-the-fold verdict and identity strip refresh weekly. Idempotent
+    # regex patches; first failure logs but doesn't break the pipeline.
+    try:
+        html = render_macro_state(html, sig)
+        print('  \u2705 Macro State hero card')
+    except Exception as e:
+        errors.append(f'Macro State: {e}')
+        print(f'  \u274c Macro State: {e}')
+
+    try:
+        html = render_wordmark(html)
+        print('  \u2705 Wordmark (issue / week)')
+    except Exception as e:
+        errors.append(f'Wordmark: {e}')
+        print(f'  \u274c Wordmark: {e}')
 
     # Write version.json and sync BUILD_V in index.html for cache-busting
     build_v = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
