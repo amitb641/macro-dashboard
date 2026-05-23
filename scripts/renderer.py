@@ -2656,20 +2656,19 @@ def update_shock_tracker(html, data, vals):
         "phases": phases
     }
 
-    new_json = json.dumps(tracker, separators=(', ', ':'), ensure_ascii=False)
-    new_decl = f'const SHOCK_TRACKER = {new_json};'
-    # Match the full declaration whether the current HTML has it on a single
-    # line (typical — renderer writes single-line JSON) or multi-line.
-    # Anchor on the trailing '// OIL_DAILY' comment that always follows.
-    pattern = r'const SHOCK_TRACKER\s*=\s*\{[\s\S]*?\};(?=\s*\n\s*//\s*OIL_DAILY)'
-    # Use lambda to avoid regex interpreting \u escapes in replacement string
-    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
-    # NB: this pattern is the one CLAUDE.md flags — the trailing lookahead
-    # requires `\n  // OIL_DAILY` on the next line; single-line JSON output
-    # from prior runs can collapse the surrounding whitespace and break it.
+    # Tier 1 anti-clone migration: SHOCK_TRACKER is now served via
+    # /api/state.json. Register the full payload and patch the inline
+    # declaration to a `let SHOCK_TRACKER = null;` placeholder. The
+    # trailing `// OIL_DAILY` lookahead anchor is preserved because the
+    # comment lives outside the matched declaration.
+    _api_writer.register('SHOCK_TRACKER', tracker)
+    placeholder = 'let SHOCK_TRACKER = null;'  # boot loader hydrates from /api/state.json
+    # Accept both legacy literal and placeholder shapes (idempotent re-runs).
+    pattern = r'(?:const|let|var)\s+SHOCK_TRACKER\s*=\s*(?:\{[\s\S]*?\}|null)\s*;(?=\s*\n\s*//\s*OIL_DAILY)'
+    new_html, n = re.subn(pattern, lambda m: placeholder, html, count=1)
     _record_subn_result('SHOCK_TRACKER', pattern, n)
     if n:
-        applied.append(f'SHOCK_TRACKER updated ({weeks} weeks, WTI ${wti_now:.0f})')
+        applied.append(f'SHOCK_TRACKER registered to state.json ({weeks} weeks, WTI ${wti_now:.0f}); inline zeroed')
         html = new_html
     else:
         warnings.append('update_shock_tracker: SHOCK_TRACKER const not matched')
@@ -3193,15 +3192,15 @@ def update_bank_cards(html):
                 entry[k] = b[k]
         new_entries.append(entry)
 
-    new_json = json.dumps(new_entries, ensure_ascii=False, separators=(',', ':'))
-    new_decl = f'const BANK_COMMENTARY = {new_json};'
-    # Match both multi-line original and single-line renderer output.
-    pattern = re.compile(r'const BANK_COMMENTARY\s*=\s*\[[\s\S]*?\n?\];')
-    # Lambda replacement avoids regex backref interpretation of \u escapes.
-    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    # Tier 1 anti-clone migration: BANK_COMMENTARY served via /api/state.json.
+    # Register payload and patch inline declaration to placeholder.
+    _api_writer.register('BANK_COMMENTARY', new_entries)
+    placeholder = 'let BANK_COMMENTARY = null;'  # boot loader hydrates from /api/state.json
+    pattern = re.compile(r'(?:const|let|var)\s+BANK_COMMENTARY\s*=\s*(?:\[[\s\S]*?\n?\]|null)\s*;')
+    new_html, n = re.subn(pattern, lambda m: placeholder, html, count=1)
     _record_subn_result('BANK_COMMENTARY', pattern, n)
     if n:
-        applied.append(f'BANK_COMMENTARY rebuilt ({len(new_entries)} banks, {reported} reported)')
+        applied.append(f'BANK_COMMENTARY registered to state.json ({len(new_entries)} banks, {reported} reported); inline zeroed')
         return new_html
     warnings.append('update_bank_cards: BANK_COMMENTARY pattern not matched')
     return html
@@ -3267,24 +3266,28 @@ def render_macro_state(html, sig):
 
     asof = datetime.date.today().strftime('%b %Y')
 
-    new_const = (
-        'const MACRO_STATE = {\n'
-        f'  asof: "{asof}",\n'
-        f'  risk: "{chip}",\n'
-        f'  verdict: {json.dumps(tone)},\n'
-        '  bars: [\n'
-        f'    {{label: "Growth",     score: {growth_score}, status: "{_status(growth_score)}",  detail: "GDP {gdp:.1f}% \u00b7 NFP slope"}},\n'
-        f'    {{label: "Labor",      score: {labor_score}, status: "{_status(labor_score)}",  detail: "Unrate {unrate:.1f}% \u00b7 wages {wages:.1f}%"}},\n'
-        f'    {{label: "Inflation",  score: {infl_score}, status: "{_status(infl_score)}", detail: "CPI {cpi:.2f}% \u00b7 Core PCE {core_pce:.1f}%"}},\n'
-        f'    {{label: "Credit",     score: {credit_score}, status: "{_status(credit_score)}",  detail: "Card DPD {card:.1f}% \u00b7 HY OAS {int(hy)}bp"}}\n'
-        '  ]\n'
-        '};'
-    )
+    # Tier 1 anti-clone migration: MACRO_STATE served via /api/state.json.
+    # Build the dict directly so it can be registered as JSON; the inline
+    # declaration becomes a `let MACRO_STATE = null;` placeholder.
+    payload = {
+        'asof': asof,
+        'risk': chip,
+        'verdict': tone,
+        'bars': [
+            {'label': 'Growth',    'score': growth_score, 'status': _status(growth_score), 'detail': f'GDP {gdp:.1f}% \u00b7 NFP slope'},
+            {'label': 'Labor',     'score': labor_score,  'status': _status(labor_score),  'detail': f'Unrate {unrate:.1f}% \u00b7 wages {wages:.1f}%'},
+            {'label': 'Inflation', 'score': infl_score,   'status': _status(infl_score),   'detail': f'CPI {cpi:.2f}% \u00b7 Core PCE {core_pce:.1f}%'},
+            {'label': 'Credit',    'score': credit_score, 'status': _status(credit_score), 'detail': f'Card DPD {card:.1f}% \u00b7 HY OAS {int(hy)}bp'},
+        ],
+    }
+    _api_writer.register('MACRO_STATE', payload)
 
-    pattern = re.compile(r'const MACRO_STATE = \{.*?\n\};', re.S)
-    new_html, n = pattern.subn(lambda m: new_const, html, count=1)
+    placeholder = 'let MACRO_STATE = null;'  # boot loader hydrates from /api/state.json
+    # Accept legacy multi-line literal AND the new placeholder (idempotent).
+    pattern = re.compile(r'(?:const|let|var)\s+MACRO_STATE\s*=\s*(?:\{.*?\n\}|null)\s*;', re.S)
+    new_html, n = pattern.subn(lambda m: placeholder, html, count=1)
     if n == 1:
-        applied.append('macro_state')
+        applied.append('MACRO_STATE registered to state.json; inline zeroed')
         return new_html
     return html
 

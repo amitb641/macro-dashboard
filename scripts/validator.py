@@ -168,22 +168,58 @@ def check_internal(html, data, sig_vals):
             _check('NFP BLS MoM (latest)', html_bls[-1], source_nfp, 'jobs')
 
     # ── KPI strip values ──
-    kpis_match = re.search(r'const KPIS\s*=\s*(\[[\s\S]*?\]);', html)
-    if kpis_match and sig_vals:
+    # Tier 1 anti-clone: KPIS migrated to /api/state.json. Prefer the
+    # structured payload; fall back to inline regex extraction so this
+    # works against pre-migration HTML too.
+    kpis_payload = None
+    state_path = Path(__file__).resolve().parent.parent / 'data' / 'state.json'
+    if state_path.exists():
+        try:
+            _state = json.loads(state_path.read_text(encoding='utf-8'))
+            if isinstance(_state.get('KPIS'), list):
+                kpis_payload = _state['KPIS']
+        except (json.JSONDecodeError, OSError):
+            pass
+
+    def _kpi_val(metric):
+        """Look up a KPI's numeric value by metric key from state.json payload."""
+        if not kpis_payload:
+            return None
+        for card in kpis_payload:
+            if isinstance(card, dict) and card.get('metric') == metric:
+                v = card.get('val', '')
+                m = re.match(r'[+]?([\d.]+)', str(v))
+                if m:
+                    try:
+                        return float(m.group(1))
+                    except ValueError:
+                        return None
+        return None
+
+    if sig_vals and (kpis_payload is not None or 'const KPIS' in html or 'let KPIS' in html):
         # Check unemployment KPI
-        unemp_kpi = re.search(r'"metric":"unemp"[^}]*"val":"([\d.]+)%"', html)
-        if unemp_kpi and 'unrate' in sig_vals:
-            _check('KPI Unemployment', float(unemp_kpi.group(1)), sig_vals['unrate'], 'rate')
+        unemp_v = _kpi_val('unemp')
+        if unemp_v is None:
+            m = re.search(r'"metric":"unemp"[^}]*"val":"([\d.]+)%"', html)
+            unemp_v = float(m.group(1)) if m else None
+        if unemp_v is not None and 'unrate' in sig_vals:
+            _check('KPI Unemployment', unemp_v, sig_vals['unrate'], 'rate')
 
         # Check CPI KPI
-        cpi_kpi = re.search(r'"metric":"cpi"[^}]*"val":"([\d.]+)%"', html)
-        if cpi_kpi and 'cpi_yoy' in sig_vals:
-            _check('KPI CPI YoY', float(cpi_kpi.group(1)), sig_vals['cpi_yoy'], 'rate')
+        cpi_v = _kpi_val('cpi')
+        if cpi_v is None:
+            m = re.search(r'"metric":"cpi"[^}]*"val":"([\d.]+)%"', html)
+            cpi_v = float(m.group(1)) if m else None
+        if cpi_v is not None and 'cpi_yoy' in sig_vals:
+            _check('KPI CPI YoY', cpi_v, sig_vals['cpi_yoy'], 'rate')
 
         # Check Core PCE KPI
-        pce_kpi = re.search(r'"metric":"pce"[^}]*"val":"[+]?([\d.]+)%"', html)
-        if pce_kpi and 'core_pce_yoy' in sig_vals:
-            _check('KPI Core PCE', float(pce_kpi.group(1)), sig_vals['core_pce_yoy'], 'rate')
+        pce_v = _kpi_val('pce')
+        if pce_v is None:
+            m = re.search(r'"metric":"pce"[^}]*"val":"[+]?([\d.]+)%"', html)
+            pce_v = float(m.group(1)) if m else None
+        if pce_v is not None and 'core_pce_yoy' in sig_vals:
+            _check('KPI Core PCE', pce_v, sig_vals['core_pce_yoy'], 'rate')
 
     # ── Oil tiles vs OIL_ANNUAL ──
     oil_annual = _extract_js_const(html, 'OIL_ANNUAL')
@@ -590,8 +626,25 @@ def check_staleness(data, collected_at):
 # ═══════════════════════════════════════════════════════════════════════
 
 def _extract_shock_tracker(html):
-    """Extract SHOCK_TRACKER JSON, anchored on trailing '// OIL_DAILY' comment
-    (the const is single-line nested JSON, so naive non-greedy regex fails)."""
+    """Extract SHOCK_TRACKER JSON.
+
+    Tier 1 anti-clone migration changed the inline declaration to a
+    `let SHOCK_TRACKER = null;` placeholder — the real payload now
+    lives in ``data/state.json``. This function checks state.json
+    first; if absent (legacy or partial-migration HTML), it falls
+    back to the inline literal anchored by the trailing
+    ``// OIL_DAILY`` comment.
+    """
+    # Preferred path — read from state.json.
+    state_path = Path(__file__).resolve().parent.parent / 'data' / 'state.json'
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text(encoding='utf-8'))
+            if isinstance(state.get('SHOCK_TRACKER'), dict):
+                return state['SHOCK_TRACKER']
+        except (json.JSONDecodeError, OSError):
+            pass  # fall through to legacy inline-literal extraction
+    # Legacy / fallback — inline literal in index.html.
     m = re.search(r'const SHOCK_TRACKER\s*=\s*(\{[\s\S]*?\});(?=\s*\n\s*//\s*OIL_DAILY)', html)
     if not m:
         return None
