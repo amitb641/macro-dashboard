@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-23T16:53:39Z";
+  var BUILD_V = "2026-05-23T17:03:05Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2808,6 +2808,20 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <span class="sm-delta-asof" id="sm-delta-asof">vs prior weekly</span>
   </div>
   <div class="sm-delta-row" id="sm-delta-row"></div>
+</section>
+
+<!-- §32 Release calendar strip — next 7 days of major US macro
+     releases. JS-rendered from RELEASE_CAL const (patched weekly by
+     renderer.render_release_calendar from data/release_calendar.json).
+     7 day-cells, one per calendar day, with release titles stacked
+     inside. Empty days render as a faint dash. Paired with the
+     What-changed block above: backward-looking + forward-looking. -->
+<section class="rcal-strip-wrap" id="rcal-strip-wrap" aria-label="Next 7 days of economic releases">
+  <div class="rcal-hdr">
+    <span class="rcal-eyebrow">Next 7 days</span>
+    <span class="rcal-asof" id="rcal-asof">Major US releases</span>
+  </div>
+  <div class="rcal-strip" id="rcal-strip" role="list"></div>
 </section>
 
 <div class="kpi-strip" id="kpi-strip" role="region" aria-label="Headline KPI strip"></div>
@@ -8356,6 +8370,83 @@ if (document.readyState === 'loading'){
   buildDeltaBlock();
 }
 
+// ══════════════════════════════════════════════════════════════════
+// RELEASE_CAL — Next 7 days of major US macro releases. Patched
+// weekly by renderer.py::render_release_calendar from
+// data/release_calendar.json (filtered to [today, today+6d]).
+// importance: 'high'|'med'|'low'; series='holiday' = market closure.
+// ══════════════════════════════════════════════════════════════════
+const RELEASE_CAL = {"today":"2026-05-23", "window_end":"2026-05-29", "releases":[{"date":"2026-05-25", "time":"", "series":"holiday", "title":"Memorial Day \u2014 markets closed", "agency":"US", "importance":"low"}, {"date":"2026-05-27", "time":"10:00 ET", "series":"conf", "title":"Conf. Board Consumer Confidence May", "agency":"Conf. Board", "importance":"med"}, {"date":"2026-05-27", "time":"14:00 ET", "series":"fomc", "title":"FOMC Minutes (May 6\u20137 meeting)", "agency":"Fed", "importance":"high"}, {"date":"2026-05-28", "time":"08:30 ET", "series":"gdp", "title":"GDP Q1 Second Estimate", "agency":"BEA", "importance":"high"}, {"date":"2026-05-28", "time":"08:30 ET", "series":"icsa", "title":"Initial Jobless Claims", "agency":"DoL", "importance":"med"}, {"date":"2026-05-29", "time":"08:30 ET", "series":"pce", "title":"PCE Inflation Apr", "agency":"BEA", "importance":"high"}, {"date":"2026-05-29", "time":"08:30 ET", "series":"pi", "title":"Personal Income & Spending Apr", "agency":"BEA", "importance":"med"}, {"date":"2026-05-29", "time":"10:00 ET", "series":"umcsent", "title":"UMich Sentiment Final May", "agency":"UMich", "importance":"med"}]};
+
+function buildReleaseCalStrip(){
+  var host = document.getElementById('rcal-strip');
+  if (!host) return;
+  var today = RELEASE_CAL.today;
+  if (!today){ host.innerHTML = ''; return; }
+  // Build 7 contiguous day buckets starting today
+  var startMs = Date.parse(today + 'T00:00:00');
+  if (isNaN(startMs)){ host.innerHTML = ''; return; }
+  var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var buckets = [];
+  for (var i = 0; i < 7; i++){
+    var d = new Date(startMs + i * 86400000);
+    var iso = d.toISOString().slice(0, 10);
+    buckets.push({
+      iso: iso,
+      dow: DOW[d.getUTCDay()],
+      dom: d.getUTCDate(),
+      items: []
+    });
+  }
+  // Bin releases by date
+  var releases = (RELEASE_CAL.releases || []);
+  for (var j = 0; j < releases.length; j++){
+    var r = releases[j];
+    for (var k = 0; k < buckets.length; k++){
+      if (buckets[k].iso === r.date){ buckets[k].items.push(r); break; }
+    }
+  }
+  // Render
+  function dot(imp){
+    var c = imp === 'high' ? '#D64045' : imp === 'med' ? '#CC8A00' : '#94A3B8';
+    return '<span class="rcal-dot" style="background:' + c + '" aria-hidden="true"></span>';
+  }
+  host.innerHTML = buckets.map(function(b, idx){
+    var isToday = (b.iso === today);
+    var hasHoliday = b.items.some(function(it){ return it.series === 'holiday'; });
+    var cls = 'rcal-day'
+      + (isToday ? ' is-today' : '')
+      + (hasHoliday ? ' is-holiday' : '')
+      + (!b.items.length ? ' is-empty' : '');
+    var head = '<div class="rcal-day-hdr">'
+             +   '<span class="rcal-dow">' + b.dow + '</span>'
+             +   '<span class="rcal-dom">' + b.dom + '</span>'
+             + '</div>';
+    var body;
+    if (!b.items.length){
+      body = '<div class="rcal-empty" aria-hidden="true">&mdash;</div>';
+    } else {
+      body = '<ul class="rcal-items" role="list">' + b.items.map(function(it){
+        var imp = (it.importance || 'low').toLowerCase();
+        var titleTxt = (it.title || '').replace(/</g, '&lt;');
+        var meta = (it.time ? it.time : '') + (it.time && it.agency ? ' \u00b7 ' : '') + (it.agency || '');
+        return '<li class="rcal-item imp-' + imp + '" role="listitem">'
+             +   dot(imp)
+             +   '<span class="rcal-item-title">' + titleTxt + '</span>'
+             +   (meta ? '<span class="rcal-item-meta">' + meta + '</span>' : '')
+             + '</li>';
+      }).join('') + '</ul>';
+    }
+    return '<div class="' + cls + '" role="listitem" aria-label="' + b.dow + ' ' + b.dom + ', ' + b.items.length + ' release' + (b.items.length === 1 ? '' : 's') + '">'
+         + head + body + '</div>';
+  }).join('');
+}
+if (document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', buildReleaseCalStrip);
+} else {
+  buildReleaseCalStrip();
+}
+
 // Signal thresholds for AI agent tab
 const SIGNAL_THRESHOLDS = [
   {name:"HY OAS",         watch:"450bp",  alert:"500bp"},
@@ -8691,8 +8782,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
      lines fully reverts to the un-themed look.
      ═══════════════════════════════════════════════════════════════ -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T16:53:39Z">
-<script src="theme-overlay.js?v=2026-05-23T16:53:39Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T17:03:05Z">
+<script src="theme-overlay.js?v=2026-05-23T17:03:05Z"></script>
 <!-- Vercel Web Analytics — owner-only beacon (no visible UI for visitors). Enable at vercel.com/<team>/macro-dashboard-dev/analytics. -->
 <script defer src="/_vercel/insights/script.js"></script>
 </body>

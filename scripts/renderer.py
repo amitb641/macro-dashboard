@@ -3389,6 +3389,65 @@ def render_what_changed(html, sig):
     return html
 
 
+def render_release_calendar(html):
+    """Patch the RELEASE_CAL JS constant from data/release_calendar.json.
+
+    Filters the hand-curated calendar to a [today, today+7d] window
+    and emits the slice as a JS const. Client-side renderer builds
+    a 7-cell horizontal strip (one cell per calendar day) at the
+    top of the dashboard so the reader sees what's coming this week.
+
+    The JSON file is human-maintained (refreshed quarterly); the
+    pipeline never mutates it. Missing file = silent no-op (the
+    placeholder const stays at its default empty value).
+    """
+    cal_file = ROOT / 'data' / 'release_calendar.json'
+    if not cal_file.exists():
+        warnings.append('render_release_calendar: data/release_calendar.json missing — skipping')
+        return html
+
+    try:
+        cal = json.loads(cal_file.read_text(encoding='utf-8'))
+    except Exception as e:
+        warnings.append(f'render_release_calendar: bad JSON ({e}) — skipping')
+        return html
+
+    today = datetime.date.today()
+    window_end = today + datetime.timedelta(days=6)  # inclusive 7-day window
+    in_window = []
+    for r in cal.get('releases', []):
+        try:
+            d = datetime.datetime.strptime(r.get('date', ''), '%Y-%m-%d').date()
+        except Exception:
+            continue
+        if today <= d <= window_end:
+            # Keep only the fields the client renders — drop free-form
+            # notes and the maintainer comment block.
+            in_window.append({
+                'date':       r.get('date'),
+                'time':       r.get('time', ''),
+                'series':     r.get('series', ''),
+                'title':      r.get('title', ''),
+                'agency':     r.get('agency', ''),
+                'importance': r.get('importance', 'low'),
+            })
+    # Stable sort: date asc, then time asc (string sort works for HH:MM ET)
+    in_window.sort(key=lambda x: (x.get('date') or '', x.get('time') or ''))
+
+    payload = {'today': today.isoformat(), 'window_end': window_end.isoformat(),
+               'releases': in_window}
+    new_decl = f'const RELEASE_CAL = {json.dumps(payload, separators=(", ", ":"))};'
+
+    pattern = re.compile(r'const RELEASE_CAL\s*=\s*\{[\s\S]*?\};')
+    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    _record_subn_result('RELEASE_CAL', pattern, n)
+    if n:
+        applied.append(f'release_calendar ({len(in_window)} releases in next 7d)')
+        return new_html
+    warnings.append('render_release_calendar: RELEASE_CAL placeholder not matched')
+    return html
+
+
 def render_wordmark(html):
     """Patch issue # + week label in the publication wordmark.
 
@@ -3525,6 +3584,13 @@ def render():
     except Exception as e:
         errors.append(f'What-changed: {e}')
         print(f'  \u274c What-changed: {e}')
+
+    try:
+        html = render_release_calendar(html)
+        print('  \u2705 Release calendar (7-day)')
+    except Exception as e:
+        errors.append(f'Release calendar: {e}')
+        print(f'  \u274c Release calendar: {e}')
 
     try:
         html = render_wordmark(html)

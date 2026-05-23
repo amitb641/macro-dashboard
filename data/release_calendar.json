@@ -1,0 +1,26 @@
+{
+  "updated": "2026-05-23",
+  "maintained_by": "human-in-the-loop",
+  "notes": "Forward calendar of major US macro releases — used by renderer.render_release_calendar to populate the 7-day strip at the top of the dashboard. Refresh quarterly (or when a new FOMC schedule drops). Schema per entry: date (ISO YYYY-MM-DD), time (ET clock or empty), series (short token), title (display string), agency (BLS/BEA/Fed/etc), importance ('high'|'med'|'low'). Renderer filters to [today, today+7d] and ignores past dates. Times in ET; conversion left to client. Holidays go in as series='holiday' importance='low' so the strip can shade them.",
+  "releases": [
+    {"date": "2026-05-25", "time": "",         "series": "holiday", "title": "Memorial Day \u2014 markets closed", "agency": "US",  "importance": "low"},
+    {"date": "2026-05-27", "time": "10:00 ET", "series": "conf",    "title": "Conf. Board Consumer Confidence May",   "agency": "Conf. Board", "importance": "med"},
+    {"date": "2026-05-27", "time": "14:00 ET", "series": "fomc",    "title": "FOMC Minutes (May 6\u20137 meeting)",     "agency": "Fed", "importance": "high"},
+    {"date": "2026-05-28", "time": "08:30 ET", "series": "gdp",     "title": "GDP Q1 Second Estimate",                  "agency": "BEA", "importance": "high"},
+    {"date": "2026-05-28", "time": "08:30 ET", "series": "icsa",    "title": "Initial Jobless Claims",                  "agency": "DoL", "importance": "med"},
+    {"date": "2026-05-29", "time": "08:30 ET", "series": "pce",     "title": "PCE Inflation Apr",                       "agency": "BEA", "importance": "high"},
+    {"date": "2026-05-29", "time": "08:30 ET", "series": "pi",      "title": "Personal Income & Spending Apr",          "agency": "BEA", "importance": "med"},
+    {"date": "2026-05-29", "time": "10:00 ET", "series": "umcsent", "title": "UMich Sentiment Final May",               "agency": "UMich", "importance": "med"},
+    {"date": "2026-06-03", "time": "10:00 ET", "series": "jolts",   "title": "JOLTS Job Openings Apr",                  "agency": "BLS", "importance": "med"},
+    {"date": "2026-06-04", "time": "08:15 ET", "series": "adp",     "title": "ADP Employment May",                      "agency": "ADP", "importance": "med"},
+    {"date": "2026-06-04", "time": "10:00 ET", "series": "ism",     "title": "ISM Services May",                        "agency": "ISM", "importance": "med"},
+    {"date": "2026-06-06", "time": "08:30 ET", "series": "nfp",     "title": "Jobs Report (NFP) May",                   "agency": "BLS", "importance": "high"},
+    {"date": "2026-06-11", "time": "08:30 ET", "series": "cpi",     "title": "CPI May",                                 "agency": "BLS", "importance": "high"},
+    {"date": "2026-06-11", "time": "14:00 ET", "series": "fomc",    "title": "FOMC Decision \u2014 June meeting + SEP", "agency": "Fed", "importance": "high"},
+    {"date": "2026-06-12", "time": "08:30 ET", "series": "ppi",     "title": "PPI May",                                 "agency": "BLS", "importance": "med"},
+    {"date": "2026-06-13", "time": "10:00 ET", "series": "umcsent", "title": "UMich Sentiment Prelim June",             "agency": "UMich", "importance": "med"},
+    {"date": "2026-06-17", "time": "08:30 ET", "series": "retail",  "title": "Retail Sales May",                        "agency": "Census", "importance": "med"},
+    {"date": "2026-06-26", "time": "08:30 ET", "series": "pce",     "title": "PCE Inflation May",                       "agency": "BEA", "importance": "high"},
+    {"date": "2026-07-03", "time": "08:30 ET", "series": "nfp",     "title": "Jobs Report (NFP) June",                  "agency": "BLS", "importance": "high"}
+  ]
+}

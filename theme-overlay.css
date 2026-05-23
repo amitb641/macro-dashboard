@@ -886,6 +886,164 @@ body.themed-sm .kpi-spark polyline {
   vector-effect: non-scaling-stroke;
 }
 
+/* §32 Release calendar strip — 7 day-cells, one per calendar day,
+   forward-looking pair to the §28 What-changed delta block. Major
+   US macro releases (NFP, CPI, PCE, FOMC, GDP) for the next week.
+   Importance dot encodes market impact:
+     high → #D64045 (red)
+     med  → #CC8A00 (gold)
+     low  → #94A3B8 (gray, also holiday/closure)
+   Today's cell gets a left accent bar so the eye finds "now". */
+body.themed-sm .rcal-strip-wrap {
+  margin: 12px 0 16px;
+}
+body.themed-sm .rcal-hdr {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+body.themed-sm .rcal-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #334E68;
+}
+body.themed-sm .rcal-asof {
+  font-size: 9px;
+  color: #5A6B7D;
+  letter-spacing: 0.02em;
+}
+body.themed-sm .rcal-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FAFBFC;
+  padding: 4px;
+}
+body.themed-sm .rcal-day {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 8px 8px 8px;
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+body.themed-sm .rcal-day.is-today {
+  border-color: #336BCC;
+  box-shadow: inset 4px 0 0 0 #336BCC;
+  padding-left: 12px;
+}
+body.themed-sm .rcal-day.is-empty {
+  background: #F7F8FA;
+  border-style: dashed;
+}
+body.themed-sm .rcal-day.is-holiday {
+  background: #F1F5F9;
+}
+body.themed-sm .rcal-day-hdr {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+body.themed-sm .rcal-dow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #5A6B7D;
+}
+body.themed-sm .rcal-day.is-today .rcal-dow {
+  color: #336BCC;
+}
+body.themed-sm .rcal-dom {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1;
+}
+body.themed-sm .rcal-empty {
+  font-size: 14px;
+  color: #CBD5E1;
+  margin: auto;
+}
+body.themed-sm ul.rcal-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+body.themed-sm .rcal-item {
+  display: grid;
+  grid-template-columns: 8px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 4px;
+  align-items: start;
+  padding: 2px 0;
+  font-size: 9.5px;
+  line-height: 1.35;
+}
+body.themed-sm .rcal-item + .rcal-item {
+  border-top: 1px dashed #E2E8F0;
+  padding-top: 4px;
+  margin-top: 2px;
+}
+body.themed-sm .rcal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 4px;
+  grid-row: 1;
+}
+body.themed-sm .rcal-item-title {
+  color: #1E293B;
+  font-weight: 600;
+  grid-column: 2;
+  grid-row: 1;
+}
+body.themed-sm .rcal-item.imp-high .rcal-item-title {
+  color: #0D1B2A;
+}
+body.themed-sm .rcal-item-meta {
+  color: #5A6B7D;
+  font-size: 8.5px;
+  letter-spacing: 0.02em;
+  grid-column: 2;
+  grid-row: 2;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* Narrow viewports collapse the 7-column grid to a vertical stack
+   so each day-cell stays legible. */
+@media (max-width: 720px) {
+  body.themed-sm .rcal-strip {
+    grid-template-columns: 1fr;
+  }
+  body.themed-sm .rcal-day {
+    min-height: 0;
+  }
+  body.themed-sm .rcal-day.is-empty {
+    display: none;  /* don't bloat mobile with empty days */
+  }
+}
+/* Print: keep strip but flatten background so ink isn't wasted */
+@media print {
+  body.themed-sm .rcal-strip {
+    background: #fff !important;
+    border-color: #CBD5E1 !important;
+    page-break-inside: avoid;
+  }
+  body.themed-sm .rcal-day {
+    box-shadow: none !important;
+  }
+}
+
 /* ── prefers-reduced-motion: kill every transition + animation ────
    Visual audit flagged missing motion-reduction clause despite the
    smFadeIn animation and hover transitions. WCAG 2.3.3. */
