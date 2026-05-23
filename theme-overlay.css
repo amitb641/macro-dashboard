@@ -652,6 +652,42 @@ body.themed-sm [tabindex]:focus-visible {
   border-radius: 6px;
 }
 
+/* ── §27 sm-readbar: reading-time + section count + scroll progress ──
+   Sticky strip below the wordmark. Renders nothing on print (#7 print
+   stylesheet will handle that). Compact + numeric — uses tabular-nums
+   from the typography pass so the time estimate doesn't shift width
+   when it animates from "~10" to "~12" mid-load. */
+body.themed-sm .sm-readbar {
+  display: flex !important; align-items: center !important;
+  gap: 16px !important;
+  margin: 4px 0 20px 0 !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 11px !important; color: #5A6B7D !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+  letter-spacing: .04em !important;
+}
+body.themed-sm .sm-rb-meta {
+  display: inline-flex !important; align-items: center !important;
+  gap: 8px !important;
+  font-weight: 600 !important; color: #475569 !important;
+  white-space: nowrap !important;
+}
+body.themed-sm .sm-rb-dot {
+  color: #CBD5E1 !important; font-weight: 400 !important;
+}
+body.themed-sm .sm-rb-track {
+  flex: 1 1 auto !important; height: 4px !important;
+  background: #E2E8F0 !important; border-radius: 2px !important;
+  overflow: hidden !important; min-width: 80px !important;
+  max-width: 360px !important;
+}
+body.themed-sm .sm-rb-fill {
+  width: 0%; height: 100% !important;
+  background: linear-gradient(90deg, #336BCC 0%, #1A9E5A 100%) !important;
+  transition: width 120ms linear !important;
+  border-radius: 2px !important;
+}
+
 /* ── prefers-reduced-motion: kill every transition + animation ────
    Visual audit flagged missing motion-reduction clause despite the
    smFadeIn animation and hover transitions. WCAG 2.3.3. */
