@@ -180,9 +180,26 @@ body.themed-sm .macro-state .ms-bar-fill {
   border-radius: 999px;
   transition: width .35s ease;
 }
-body.themed-sm .macro-state .ms-bar-fill.good   { background: #1A9E5A; }
-body.themed-sm .macro-state .ms-bar-fill.watch  { background: #CC8A00; }
-body.themed-sm .macro-state .ms-bar-fill.stress { background: #D64045; }
+/* §29 color-blind alt encoding — bar fills layer a low-opacity
+   diagonal stripe pattern on top of the solid hue. good = no stripe
+   (clean), watch = 30deg pinstripe, stress = 90deg dense stripe.
+   Texture distinguishes states even when red/green look identical
+   to a deuteranope viewer. */
+body.themed-sm .macro-state .ms-bar-fill.good   {
+  background-color: #1A9E5A;
+}
+body.themed-sm .macro-state .ms-bar-fill.watch  {
+  background-color: #CC8A00;
+  background-image: repeating-linear-gradient(
+    45deg, transparent 0 4px, rgba(255,255,255,.35) 4px 6px
+  );
+}
+body.themed-sm .macro-state .ms-bar-fill.stress {
+  background-color: #D64045;
+  background-image: repeating-linear-gradient(
+    90deg, transparent 0 3px, rgba(255,255,255,.45) 3px 5px
+  );
+}
 body.themed-sm .macro-state .ms-bar-val {
   font-family: 'DM Sans', sans-serif !important;
   font-size: 13px !important; font-weight: 600 !important;
@@ -503,6 +520,11 @@ body.themed-sm .up, body.themed-sm .dn {
 }
 body.themed-sm .up { background: #EBF7EF !important; color: #15803D !important; border-color: rgba(21,128,61,.15) !important; }
 body.themed-sm .dn { background: #FCEEEE !important; color: #B91C1C !important; border-color: rgba(185,28,28,.15) !important; }
+/* §29 color-blind alt encoding — direction also carried by a glyph
+   prefix, not just hue. ::before triangle is content-only (not in
+   the DOM), so screen readers continue to read just the number. */
+body.themed-sm .up::before { content: '\25B2\00a0'; }
+body.themed-sm .dn::before { content: '\25BC\00a0'; }
 
 /* ── tables ───────────────────────────────────────────────────── */
 body.themed-sm .dtable {
