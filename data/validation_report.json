@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-23T21:44:33.859323Z",
+  "validated_at": "2026-05-23T22:06:59.701112Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 203,
-    "passed": 200,
-    "failed": 3,
+    "total_checks": 201,
+    "passed": 197,
+    "failed": 4,
     "skipped": 15,
     "critical_divergences": 0
   },
@@ -94,15 +94,6 @@
       "check": "Case-Shiller YoY (latest)",
       "html_value": 0.7,
       "source_value": 0.7,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "FC_MACRO unemployment 2025",
-      "html_value": 4.4,
-      "source_value": 4.4,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -716,7 +707,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T21:42:56.924600Z",
+      "collected_at": "2026-05-23T22:04:41.755950Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1321,42 +1312,10 @@
   ],
   "seed_drift": [
     {
-      "check": "Seed drift: FC_MACRO.act24 (yr=2024)",
-      "pass": true,
-      "severity": "ok",
-      "seed": [
-        2.8,
-        4.1,
-        2.9,
-        4.0,
-        5.1
-      ],
-      "expected": [
-        2.8,
-        4.1,
-        2.9,
-        4.0,
-        5.1
-      ]
-    },
-    {
-      "check": "Seed drift: FC_MACRO.act25 (yr=2025)",
-      "pass": true,
-      "severity": "ok",
-      "seed": [
-        2.1,
-        4.4,
-        2.7,
-        3.8,
-        4.2
-      ],
-      "expected": [
-        2.1,
-        4.4,
-        2.7,
-        3.8,
-        4.2
-      ]
+      "check": "FC_MACRO block present",
+      "pass": false,
+      "severity": "warning",
+      "note": "const FC_MACRO not found in index.html"
     }
   ],
   "visual_qa": [

@@ -1,3 +1,26 @@
+## Repair Agent — 2026-05-23T22:06:59.701112Z
+
+- **Status**: WARN
+- **Total checks**: 201
+- **Passed**: 197
+- **Failed**: 4
+- **Critical divergences**: 0
+
+### Seed drift
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **FC_MACRO block present** — const FC_MACRO not found in index.html
+
+### Panel data
+_0 critical · 3 warning · 0 stale_
+
+- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
+- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
+- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
+
+
+---
+
 ## Repair Agent — 2026-05-23T21:44:33.859323Z
 
 - **Status**: WARN
@@ -1367,42 +1390,6 @@ _0 critical · 0 warning · 2 stale_
 
 - ⏰ **Staleness: unrate** — 62d old (limit 55d)
 - ⏰ **Staleness: payems** — 62d old (limit 55d)
-
-### Earnings verbatim
-_0 critical · 9 warning · 0 stale_
-
-- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
-- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
-- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
-- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
-- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
-- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
-- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
-- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
-- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
-
-
----
-
-## Repair Agent — 2026-05-01T13:31:04.033268Z
-
-- **Status**: WARN
-- **Total checks**: 481
-- **Passed**: 468
-- **Failed**: 13
-- **Critical divergences**: 0
-
-### Internal consistency
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **NFP_VS_ADP.adp label sync** — 
-- ⚠️ **NFP_VS_ADP series length sync** — 
-
-### Staleness
-_0 critical · 0 warning · 2 stale_
-
-- ⏰ **Staleness: unrate** — 61d old (limit 55d)
-- ⏰ **Staleness: payems** — 61d old (limit 55d)
 
 ### Earnings verbatim
 _0 critical · 9 warning · 0 stale_
