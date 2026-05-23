@@ -1373,16 +1373,18 @@ def rebuild_u_sector_mom(html, data):
         cur_vals = [sector_data.get(s, {}).get('cur_val', 0) for s in sector_names]
         prv_vals = [sector_data.get(s, {}).get('prv_val', 0) for s in sector_names]
 
-        new_obj = (f'const U_SECTOR_MOM = {{\n'
-                   f'  sectors:{json.dumps(sector_names)},\n'
-                   f'  {prv_k}: {json.dumps(prv_vals)},\n'
-                   f'  {cur_k}: {json.dumps(cur_vals)}\n'
-                   f'}};')
-        pattern = r'const U_SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
-        new_html, n = re.subn(pattern, new_obj, html, count=1)
+        # Tier 1 anti-clone: register payload to state.json, zero out inline literal.
+        payload = {
+            'sectors': sector_names,
+            prv_k: prv_vals,
+            cur_k: cur_vals,
+        }
+        _api_writer.register('U_SECTOR_MOM', payload)
+        pattern = r'(?:const|let|var)\s+U_SECTOR_MOM\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+        new_html, n = re.subn(pattern, 'let U_SECTOR_MOM = null;', html, count=1)
         _record_subn_result('U_SECTOR_MOM', pattern, n)
         if n:
-            applied.append(f'U_SECTOR_MOM rebuilt ({len(sector_data)} sectors, {prv_k}/{cur_k})')
+            applied.append(f'U_SECTOR_MOM registered to state.json ({len(sector_data)} sectors, {prv_k}/{cur_k}); inline zeroed')
             html = new_html
     else:
         warnings.append(
@@ -1424,13 +1426,14 @@ def rebuild_cpi_cat_mom(html, data):
             short.append(f'{data_key}(n={len(series)})')
 
     if len(entries) >= 8:
-        new_json = json.dumps(entries, separators=(', ', ':'))
-        pattern = r'const CPI_CAT_MOM\s*=\s*\[[\s\S]*?\];'
-        new_html, n = re.subn(pattern, f'const CPI_CAT_MOM = {new_json};', html, count=1)
+        # Tier 1 anti-clone: register to state.json, replace inline with null placeholder.
+        _api_writer.register('CPI_CAT_MOM', entries)
+        pattern = r'(?:const|let|var)\s+CPI_CAT_MOM\s*=\s*(?:\[[\s\S]*?\]|null)\s*;'
+        new_html, n = re.subn(pattern, 'let CPI_CAT_MOM = null;', html, count=1)
         _record_subn_result('CPI_CAT_MOM', pattern, n)
         if n:
             keys = [k for k in entries[0] if k not in ('cat', 'color')]
-            applied.append(f'CPI_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
+            applied.append(f'CPI_CAT_MOM registered to state.json ({len(entries)} cats, {"/".join(keys)}); inline zeroed')
             html = new_html
     else:
         warnings.append(
@@ -1469,13 +1472,14 @@ def rebuild_pce_cat_mom(html, data):
             short.append(f'{data_key}(n={len(series)})')
 
     if len(entries) == len(PCE_CATS):
-        new_json = json.dumps(entries, separators=(', ', ':'))
-        pattern = r'const PCE_CAT_MOM\s*=\s*\[[\s\S]*?\];'
-        new_html, n = re.subn(pattern, f'const PCE_CAT_MOM = {new_json};', html, count=1)
+        # Tier 1 anti-clone: register to state.json, replace inline with null placeholder.
+        _api_writer.register('PCE_CAT_MOM', entries)
+        pattern = r'(?:const|let|var)\s+PCE_CAT_MOM\s*=\s*(?:\[[\s\S]*?\]|null)\s*;'
+        new_html, n = re.subn(pattern, 'let PCE_CAT_MOM = null;', html, count=1)
         _record_subn_result('PCE_CAT_MOM', pattern, n)
         if n:
             keys = [k for k in entries[0] if k != 'cat']
-            applied.append(f'PCE_CAT_MOM rebuilt ({len(entries)} cats, {"/".join(keys)})')
+            applied.append(f'PCE_CAT_MOM registered to state.json ({len(entries)} cats, {"/".join(keys)}); inline zeroed')
             html = new_html
     else:
         warnings.append(
@@ -1545,12 +1549,13 @@ def rebuild_treasury_data(html, data):
             card90.append(None)
 
     obj = {'labels': common, 'dgs10': dgs10, 'dgs2': dgs2, 'spread': spread, 'card90': card90}
-    new_json = json.dumps(obj, separators=(', ', ':'))
-    pattern = r'const TREASURY_DATA\s*=\s*\{[^;]*\};'
-    new_html, n = re.subn(pattern, f'const TREASURY_DATA = {new_json};', html, count=1)
+    # Tier 1 anti-clone: register payload to state.json, zero out inline literal.
+    _api_writer.register('TREASURY_DATA', obj)
+    pattern = r'(?:const|let|var)\s+TREASURY_DATA\s*=\s*(?:\{[^;]*\}|null)\s*;'
+    new_html, n = re.subn(pattern, 'let TREASURY_DATA = null;', html, count=1)
     _record_subn_result('TREASURY_DATA', pattern, n)
     if n:
-        applied.append(f'TREASURY_DATA rebuilt ({len(common)} points, latest {common[-1]})')
+        applied.append(f'TREASURY_DATA registered to state.json ({len(common)} points, latest {common[-1]}); inline zeroed')
         html = new_html
     return html
 
@@ -1579,12 +1584,13 @@ def rebuild_oil_prod_spread(html, data):
     spread = [round(w - b, 1) for w, b in zip(wti, brent)]
 
     obj = {'labels': common, 'spread': spread}
-    new_json = json.dumps(obj, separators=(', ', ':'))
-    pattern = r'const OIL_SPREAD\s*=\s*\{[^;]*\};'
-    new_html, n = re.subn(pattern, f'const OIL_SPREAD = {new_json};', html, count=1)
+    # Tier 1 anti-clone: register payload to state.json, zero out inline literal.
+    _api_writer.register('OIL_SPREAD', obj)
+    pattern = r'(?:const|let|var)\s+OIL_SPREAD\s*=\s*(?:\{[^;]*\}|null)\s*;'
+    new_html, n = re.subn(pattern, 'let OIL_SPREAD = null;', html, count=1)
     _record_subn_result('OIL_SPREAD', pattern, n)
     if n:
-        applied.append(f'OIL_SPREAD rebuilt ({len(common)} years)')
+        applied.append(f'OIL_SPREAD registered to state.json ({len(common)} years); inline zeroed')
         html = new_html
     return html
 
