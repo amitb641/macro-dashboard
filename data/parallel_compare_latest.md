@@ -1,6 +1,6 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-05-23 23:00 UTC._
+_Generated 2026-05-23 23:19 UTC._
 
 - **Prod ref:** `main`
 - **Dev ref:** `dev/multi-expert-improvements`
@@ -25,9 +25,9 @@ are producing a meaningfully different pipeline verdict than prod.
 | Metric | Prod (main) | Dev (parallel) | Delta |
 |---|---|---|---|
 | status | WARN | WARN | same |
-| total_checks | 520 | 201 | -319 |
-| passed | 505 | 197 | -308 |
-| failed | 15 | 4 | -11 |
+| total_checks | 520 | 202 | -318 |
+| passed | 505 | 199 | -306 |
+| failed | 15 | 3 | -12 |
 | skipped | 1 | 15 | +14 |
 | critical_divergences | 0 | 0 | 0 |
 
@@ -65,7 +65,7 @@ are producing a meaningfully different pipeline verdict than prod.
 
 ## Divergences detected
 
-- **[WARNING]** validator_failed_count_divergence — prod_failed=15 dev_failed=4
+- **[WARNING]** validator_failed_count_divergence — prod_failed=15 dev_failed=3
 - **[WARNING]** signal_flagged_count_divergence — prod=2 dev=1
 
 ## Recommended fixes
