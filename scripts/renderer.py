@@ -3002,6 +3002,119 @@ def rebuild_kpi_strip(html, data, vals):
         if v:
             c['badge'] = v
 
+    # ── §1 Sparklines post-pass ────────────────────────────────────
+    # Emit a small ordered list of values for each card so the client
+    # can render an inline SVG polyline next to the headline number.
+    # Three reduction modes:
+    #   - 'levels': series values directly (rate %, sentiment, count)
+    #   - 'yoy'   : 12-month YoY % for each of the last N months
+    #   - 'mom'   : month-on-month diff in original units (NFP)
+    # Rate cards (Fed Funds, 10Y) are intentionally skipped — their
+    # weekly drift is too small to read at sparkline scale and would
+    # just look like a noisy horizontal line.
+    def _spark_levels(series, n=18):
+        if not series or len(series) < 2:
+            return None
+        sl = [o['value'] for o in series[:n] if isinstance(o, dict) and 'value' in o]
+        if len(sl) < 2:
+            return None
+        return list(reversed(sl))  # oldest -> newest, chronological L-to-R
+
+    def _spark_yoy_series(series, n=12):
+        if not series or len(series) < 13:
+            return None
+        # Build a (year, month) -> value index so we can match calendar
+        # months across the series irrespective of irregular cadence.
+        ym = {}
+        for o in series:
+            try:
+                d = datetime.datetime.strptime(o['date'], '%Y-%m-%d')
+                ym[(d.year, d.month)] = o['value']
+            except Exception:
+                continue
+        out = []
+        # Walk the n most-recent observations and look up the same
+        # calendar month one year prior. Skip points where the year-ago
+        # value is missing (rather than back-fill with NaN).
+        for o in series[:n]:
+            try:
+                d = datetime.datetime.strptime(o['date'], '%Y-%m-%d')
+            except Exception:
+                continue
+            prior = ym.get((d.year - 1, d.month))
+            if prior is None or prior == 0:
+                continue
+            out.append(round((o['value'] - prior) / prior * 100, 2))
+        if len(out) < 2:
+            return None
+        return list(reversed(out))
+
+    def _spark_mom_diff(series, n=12):
+        if not series or len(series) < 3:
+            return None
+        # Walk newest-first pairs and compute MoM delta in original units.
+        diffs = []
+        for i in range(min(n, len(series) - 1)):
+            try:
+                diffs.append(round(series[i]['value'] - series[i + 1]['value'], 2))
+            except Exception:
+                continue
+        if len(diffs) < 2:
+            return None
+        return list(reversed(diffs))
+
+    # metric → (series_key, mode, post-divisor, max_points)
+    # max_points caps history so the sparkline stays readable at small
+    # widths (~72px). Weekly series get more points than monthly.
+    _METRIC_TO_SPARK = {
+        'jobs':    ('payems',           'mom',    None,    12),
+        'claims':  ('icsa',             'levels', 1000.0,  26),  # → 'K' scale
+        'unemp':   ('unrate',           'levels', None,    18),
+        'wages':   ('wage_growth_atl',  'levels', None,    18),
+        'cpi':     ('cpi_all',          'yoy',    None,    18),
+        'pce':     ('pce',              'yoy',    None,    18),
+        'umcsent': ('umcsent',          'levels', None,    18),
+        'dsr':     ('tdsp',             'levels', None,    12),
+    }
+    for c in cards:
+        m = c.get('metric')
+        mapping = _METRIC_TO_SPARK.get(m)
+        if not mapping:
+            continue
+        lbl = c.get('lbl') if isinstance(c.get('lbl'), str) else ''
+        # Sahm Rule shares metric='unemp' with Unemployment but is a
+        # derived signal — sparkling the level would mislead. Skip it
+        # by checking the label prefix.
+        if m == 'unemp' and lbl.startswith('Sahm'):
+            continue
+        # Wages YoY: prefer Atlanta Fed WGT (already YoY %); if
+        # absent, fall back to YoY series computed off AHETPI levels.
+        series_key, mode, divisor, max_pts = mapping
+        # PCE metric is shared between Core PCE and Headline PCE
+        # cards — disambiguate by label so each spark tracks the
+        # right series rather than both ending on the headline value.
+        if m == 'pce' and lbl.startswith('Core PCE'):
+            series_key = 'pce_core'
+        series = data.get(series_key) or []
+        if m == 'wages' and not series:
+            series = data.get('ahetpi') or []
+            mode = 'yoy'
+        if not series:
+            continue
+        if mode == 'levels':
+            vals = _spark_levels(series, n=max_pts)
+        elif mode == 'yoy':
+            vals = _spark_yoy_series(series, n=max_pts)
+        elif mode == 'mom':
+            vals = _spark_mom_diff(series, n=max_pts)
+        else:
+            vals = None
+        if not vals:
+            continue
+        if divisor:
+            vals = [round(v / divisor, 3) for v in vals]
+        c['spark'] = vals
+
     # Inject as JS
     cards_json = json.dumps(cards, separators=(', ', ':'))
     pattern = r'const KPIS\s*=\s*\[[\s\S]*?\];'

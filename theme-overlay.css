@@ -863,6 +863,29 @@ body.themed-sm .fn-flash {
   100% { background: transparent; }
 }
 
+/* §31 KPI sparklines — tiny inline trend graphics rendered between
+   the headline number and the sub-line. currentColor picks up the
+   tile's metric tint via the parent .kpi-spark-wrap inline style.
+   opacity:0.55 keeps the big number as the focal point; sparkline
+   is decorative (aria-hidden) — the trend information is already
+   in the delta arrow + sub-text. */
+body.themed-sm .kpi-spark-wrap {
+  margin: 4px 0 0;
+  line-height: 0;
+  height: 18px;
+  display: block;
+}
+body.themed-sm .kpi-spark {
+  display: block;
+  width: 72px;
+  height: 18px;
+  overflow: visible;
+  opacity: 0.55;
+}
+body.themed-sm .kpi-spark polyline {
+  vector-effect: non-scaling-stroke;
+}
+
 /* ── prefers-reduced-motion: kill every transition + animation ────
    Visual audit flagged missing motion-reduction clause despite the
    smFadeIn animation and hover transitions. WCAG 2.3.3. */
