@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-23T19:10:57.807439Z",
-  "status": "PASS",
+  "validated_at": "2026-05-23T19:53:17.829098Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 214,
-    "passed": 214,
-    "failed": 0,
-    "skipped": 15,
+    "total_checks": 206,
+    "passed": 203,
+    "failed": 3,
+    "skipped": 18,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -451,51 +451,6 @@
       "pass": true
     },
     {
-      "check": "TREASURY_DATA.dgs10 completeness",
-      "html_value": "37/37 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 18,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "TREASURY_DATA.dgs2 completeness",
-      "html_value": "37/37 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 18,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "TREASURY_DATA.spread completeness",
-      "html_value": "37/37 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 18,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "TREASURY_DATA.card90 completeness",
-      "html_value": "28/37 filled",
-      "source_value": "76% (min 50%)",
-      "difference": 9,
-      "tolerance": 18,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "OIL_SPREAD.spread completeness",
-      "html_value": "11/11 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 5,
-      "severity": "ok",
-      "pass": true
-    },
-    {
       "check": "STARTS_DATA.sf completeness",
       "html_value": "36/36 filled",
       "source_value": "100% (min 50%)",
@@ -694,15 +649,6 @@
       "tolerance": 0.05,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158736,
-      "fresh_api_value": 158736.0,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
-      "pass": true
     }
   ],
   "staleness": [
@@ -788,7 +734,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T19:08:39.623587Z",
+      "collected_at": "2026-05-23T19:50:47.620169Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -879,58 +825,16 @@
   ],
   "panel_data_consistency": [
     {
-      "check": "Energy and transport categories are pulling the basket higher: title months match CPI_CAT_MOM keys",
-      "title_months": [
-        "apr",
-        "mar"
-      ],
-      "data_keys": [
-        "apr",
-        "mar"
-      ],
-      "severity": "ok",
-      "pass": true
+      "check": "Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable",
+      "severity": "warning",
+      "pass": false,
+      "reason": "Could not parse const CPI_CAT_MOM from HTML"
     },
     {
-      "check": "Energy and transport categories are pulling the basket higher: prior-month chip matches title",
-      "expected_prior": "Mar'26",
-      "chips_found": [
-        "Apr'26",
-        "Mar'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Mar'26"
-      ],
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys",
-      "title_months": [
-        "feb",
-        "mar"
-      ],
-      "data_keys": [
-        "feb",
-        "mar"
-      ],
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "Energy and housing components are pulling the PCE basket higher: prior-month chip matches title",
-      "expected_prior": "Feb'26",
-      "chips_found": [
-        "Mar'26",
-        "Feb'26",
-        "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
-      ],
-      "severity": "ok",
-      "pass": true
+      "check": "Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable",
+      "severity": "warning",
+      "pass": false,
+      "reason": "Could not parse const PCE_CAT_MOM from HTML"
     },
     {
       "check": "Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys",
@@ -1449,9 +1353,10 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector errors: none recorded",
-      "pass": true,
-      "severity": "ok"
+      "check": "Collector error",
+      "pass": false,
+      "severity": "warning",
+      "note": "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
     }
   ],
   "seed_drift": [
@@ -1507,35 +1412,20 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "unrate",
-      "fred": 4.3,
-      "bls": 4.3,
-      "diff": 0.0,
-      "tol": 0.215,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=True, bls=False)"
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "cpi_all",
-      "fred": 332.407,
-      "bls": 332.407,
-      "diff": 0.0,
-      "tol": 0.3324,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=True, bls=False)"
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "core_cpi",
-      "fred": 335.423,
-      "bls": 335.423,
-      "diff": 0.0,
-      "tol": 0.3354,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=True, bls=False)"
     }
   ],
   "noise_floor": [
