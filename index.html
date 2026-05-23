@@ -399,15 +399,26 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
   // by the boot below so existing charts get the look automatically.
   MD.mdFramePlugin = {
     id: "mdFrame",
+    // CAUTION (2026-05-23): never use the `obj.prop = obj.prop || {}`
+    // pattern on chart.options.scales here. Chart.js v4's `chart.options`
+    // is a Proxy-backed scope-resolver; an unconditional write — even to
+    // assign the same value back — triggers a recursive `set` trap that
+    // overflows the call stack on every chart construction (silent blank
+    // canvas, see SLOOS exhibit). Only write when the slot is genuinely
+    // missing.
     beforeInit: function(chart){
-      var opts = chart.options || (chart.options = {});
-      opts.plugins = opts.plugins || {};
-      if (opts.plugins.mdFrame === false) return;  // explicit opt-out
-      var scales = opts.scales || {};
+      var opts = chart.options;
+      if (!opts) return;
+      if (opts.plugins && opts.plugins.mdFrame === false) return;  // explicit opt-out
+      var scales = opts.scales;
+      if (!scales) return;
       ["x","y","y1","y2"].forEach(function(k){
-        if (!scales[k]) return;
-        var g = scales[k].grid = scales[k].grid || {};
-        var b = scales[k].border = scales[k].border || {};
+        var s = scales[k];
+        if (!s) return;
+        // Only allocate sub-objects if absent — never write-back through proxy.
+        if (!s.grid) s.grid = {};
+        if (!s.border) s.border = {};
+        var g = s.grid, b = s.border;
         // Mute gridline colour to the §3 grid token
         if (typeof g.color === "undefined") {
           g.color = function(c){
@@ -422,13 +433,15 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
       });
       // axis tick font (DM Mono, 9px, muted)
       ["x","y","y1","y2"].forEach(function(k){
-        if (!scales[k]) return;
-        scales[k].ticks = scales[k].ticks || {};
-        if (typeof scales[k].ticks.font === "undefined"){
-          scales[k].ticks.font = { family: "'DM Mono','Courier New',monospace", size: 9, weight: "400" };
+        var s = scales[k];
+        if (!s) return;
+        if (!s.ticks) s.ticks = {};
+        var t = s.ticks;
+        if (typeof t.font === "undefined"){
+          t.font = { family: "'DM Mono','Courier New',monospace", size: 9, weight: "400" };
         }
-        if (typeof scales[k].ticks.color === "undefined"){
-          scales[k].ticks.color = "rgba(13,27,42,.55)";
+        if (typeof t.color === "undefined"){
+          t.color = "rgba(13,27,42,.55)";
         }
       });
     }
