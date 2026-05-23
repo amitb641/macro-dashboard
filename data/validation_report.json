@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-23T22:54:56.183213Z",
+  "validated_at": "2026-05-23T23:14:04.433673Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 201,
-    "passed": 197,
-    "failed": 4,
+    "total_checks": 202,
+    "passed": 199,
+    "failed": 3,
     "skipped": 15,
     "critical_divergences": 0
   },
@@ -707,7 +707,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T22:53:10.968366Z",
+      "collected_at": "2026-05-23T23:12:19.703309Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1312,10 +1312,44 @@
   ],
   "seed_drift": [
     {
-      "check": "FC_MACRO block present",
-      "pass": false,
-      "severity": "warning",
-      "note": "const FC_MACRO not found in index.html"
+      "check": "Seed drift: FC_MACRO.act24 (yr=2024)",
+      "pass": true,
+      "severity": "ok",
+      "source": "state.json",
+      "seed": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ],
+      "expected": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ]
+    },
+    {
+      "check": "Seed drift: FC_MACRO.act25 (yr=2025)",
+      "pass": true,
+      "severity": "ok",
+      "source": "state.json",
+      "seed": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ],
+      "expected": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ]
     }
   ],
   "visual_qa": [
