@@ -1,6 +1,6 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-05-23 22:12 UTC._
+_Generated 2026-05-23 23:00 UTC._
 
 - **Prod ref:** `main`
 - **Dev ref:** `dev/multi-expert-improvements`
