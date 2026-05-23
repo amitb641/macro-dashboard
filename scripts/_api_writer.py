@@ -38,7 +38,10 @@ Both behaviours match the renderer's existing "rebuild each run from
 raw data" contract — there's no incremental-update mode to worry
 about.
 
-This module never reads ``data/state.json``. It's write-only.
+``read_prior(key)`` reads the previous run's value for a key from
+``data/state.json`` — used by rebuild functions that preserve a
+manually-curated field across runs (e.g. NFP_VS_ADP.adp). All other
+behaviour is write-only.
 """
 from __future__ import annotations
 
@@ -120,6 +123,60 @@ def keys() -> list[str]:
     return sorted(_STATE.keys())
 
 
+# Cache of the prior on-disk state.json, loaded lazily on first
+# read_prior() call. Used by rebuild functions that need to preserve
+# manually-curated fields (e.g. NFP_VS_ADP.adp, SECTOR_MOM.sectors
+# ordering, FC_MACRO actNN seed history) across runs without scraping
+# them out of the live HTML via regex.
+_PRIOR_LOADED = False
+_PRIOR_CACHE: Dict[str, Any] = {}
+
+
+def _ensure_prior_loaded() -> None:
+    """Load ``data/state.json`` into the prior-cache on first access.
+
+    Idempotent — subsequent calls are no-ops. Missing file or invalid
+    JSON yields an empty cache (so callers get ``None`` from
+    ``read_prior`` and fall through to their own defaults).
+    """
+    global _PRIOR_LOADED
+    if _PRIOR_LOADED:
+        return
+    _PRIOR_LOADED = True
+    try:
+        if _STATE_FILE.exists():
+            obj = json.loads(_STATE_FILE.read_text(encoding='utf-8'))
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    if k != '_meta':
+                        _PRIOR_CACHE[k] = v
+    except (OSError, json.JSONDecodeError):
+        # Treat any read/parse failure as "no prior state" — the
+        # renderer's fall-back paths handle that case.
+        pass
+
+
+def read_prior(key: str, default: Any = None) -> Any:
+    """Return the previous run's payload for ``key`` from ``data/state.json``.
+
+    First call lazily loads the file. Subsequent calls hit an in-memory
+    cache. Returns ``default`` if the file is missing, unreadable, or
+    doesn't contain the key.
+
+    This is the round-trip half of state.json: lets rebuild functions
+    that previously regex-scraped preserved fields from the live HTML
+    (e.g. manually-curated ADP entries on NFP_VS_ADP) read them from
+    the canonical state instead.
+    """
+    if not isinstance(key, str) or not key:
+        return default
+    _ensure_prior_loaded()
+    return _PRIOR_CACHE.get(key, default)
+
+
 def reset() -> None:
     """Drop all registered state. Used by tests; never by the renderer."""
     _STATE.clear()
+    global _PRIOR_LOADED
+    _PRIOR_LOADED = False
+    _PRIOR_CACHE.clear()

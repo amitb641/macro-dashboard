@@ -827,22 +827,37 @@ def rebuild_charts(html, data):
                 applied.append(f'NFP_BLS_MOM registered to state.json ({len(nfp_labels)} months); inline zeroed')
                 html = new_html
 
-            # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP)
+            # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP).
+            # ADP is manually curated — we round-trip it through prior state.json
+            # rather than scraping the live HTML (Tier 1 anti-clone: HTML has
+            # been migrated to `let NFP_VS_ADP = null;`, so the regex source no
+            # longer exists). One-time bootstrap: if no prior state, fall back
+            # to scraping inline HTML for the ADP array on first run.
             bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
             lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
-            # Extract existing ADP array from HTML to preserve it
-            adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
-            if adp_match:
-                adp_str = adp_match.group(1).strip()
-                new_vs = (f'const NFP_VS_ADP = {{\n'
-                          f'  labels:{json.dumps(lbl_12)},\n'
-                          f'  bls:   {json.dumps(bls_12)},\n'
-                          f'  adp:   [{adp_str}]')
-                pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
-                new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)
-                _record_subn_result('NFP_VS_ADP.bls', pattern_vs, n2)
+            adp_arr = None
+            prior_nva = _api_writer.read_prior('NFP_VS_ADP')
+            if isinstance(prior_nva, dict) and isinstance(prior_nva.get('adp'), list):
+                adp_arr = prior_nva['adp']
+            else:
+                # Bootstrap fallback: scrape inline HTML (works first-run only).
+                adp_match = re.search(r'(?:const|let|var)\s+NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
+                if adp_match:
+                    try:
+                        adp_arr = json.loads('[' + adp_match.group(1).strip() + ']')
+                    except json.JSONDecodeError:
+                        adp_arr = None
+            if adp_arr is not None:
+                # Trim or pad ADP to match BLS window length (best-effort —
+                # ADP refreshes are out-of-band, so a mismatch is benign).
+                adp_aligned = adp_arr[-MONTHLY_TREND_WINDOW:]
+                payload_nva = {'labels': lbl_12, 'bls': bls_12, 'adp': adp_aligned}
+                _api_writer.register('NFP_VS_ADP', payload_nva)
+                pattern_vs = r'(?:const|let|var)\s+NFP_VS_ADP\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+                new_html2, n2 = re.subn(pattern_vs, 'let NFP_VS_ADP = null;', html, count=1)
+                _record_subn_result('NFP_VS_ADP', pattern_vs, n2)
                 if n2:
-                    applied.append(f'NFP_VS_ADP.bls updated ({len(bls_12)} months, ADP preserved)')
+                    applied.append(f'NFP_VS_ADP registered to state.json ({len(bls_12)} months, ADP preserved via prior state); inline zeroed')
                     html = new_html2
 
     # ── SECTOR_MOM (auto-rebuild from BLS sector data) ────────────
@@ -884,49 +899,55 @@ def rebuild_charts(html, data):
                     prev2_val = round(float(series[2]['value']))
                     sector_mom_data[sector_name]['prev_chg'] = prev_val - prev2_val
 
-        # Read existing SECTOR_MOM sectors list from HTML
-        sm_match = re.search(r'const SECTOR_MOM\s*=\s*\{', html)
-        if sm_match and sector_mom_data:
-            # Get the sector order from current HTML
-            sectors_match = re.search(
-                r'const SECTOR_MOM\s*=\s*\{[^}]*sectors:\s*\[([^\]]*)\]', html)
-            if sectors_match:
-                import ast
-                try:
-                    sector_names = ast.literal_eval('[' + sectors_match.group(1) + ']')
-                except Exception:
-                    sector_names = []
+        # Build the SECTOR_MOM payload from BLS data + a sector-ordering
+        # source. Order comes from prior state.json (round-trip); on a
+        # cold run with no prior state, we bootstrap-scrape inline HTML.
+        if sector_mom_data:
+            sector_names = []
+            prior_sm = _api_writer.read_prior('SECTOR_MOM')
+            if isinstance(prior_sm, dict) and isinstance(prior_sm.get('sectors'), list):
+                sector_names = list(prior_sm['sectors'])
+            else:
+                sectors_match = re.search(
+                    r'(?:const|let|var)\s+SECTOR_MOM\s*=\s*\{[^}]*sectors:\s*\[([^\]]*)\]', html)
+                if sectors_match:
+                    import ast
+                    try:
+                        sector_names = ast.literal_eval('[' + sectors_match.group(1) + ']')
+                    except Exception:
+                        sector_names = []
 
-                if sector_names:
-                    # Determine month keys from data
-                    any_sector = next(iter(sector_mom_data.values()))
-                    cur_key = any_sector['cur_key']
-                    prev_key = any_sector.get('prev_key', cur_key)
+            if sector_names:
+                # Determine month keys from BLS data
+                any_sector = next(iter(sector_mom_data.values()))
+                cur_key = any_sector['cur_key']
+                prev_key = any_sector.get('prev_key', cur_key)
 
-                    cur_vals = []
-                    prev_vals = []
-                    updated_count = 0
-                    for s in sector_names:
-                        if s in sector_mom_data:
-                            cur_vals.append(sector_mom_data[s]['cur_chg'])
-                            prev_vals.append(sector_mom_data[s].get('prev_chg', 0))
-                            updated_count += 1
-                        else:
-                            cur_vals.append(0)
-                            prev_vals.append(0)
+                cur_vals = []
+                prev_vals = []
+                updated_count = 0
+                for s in sector_names:
+                    if s in sector_mom_data:
+                        cur_vals.append(sector_mom_data[s]['cur_chg'])
+                        prev_vals.append(sector_mom_data[s].get('prev_chg', 0))
+                        updated_count += 1
+                    else:
+                        cur_vals.append(0)
+                        prev_vals.append(0)
 
-                    if updated_count >= 10:  # Only rebuild if we have most sectors
-                        new_sm = (f'const SECTOR_MOM = {{\n'
-                                  f'  sectors:{json.dumps(sector_names)},\n'
-                                  f'  {prev_key}:  {json.dumps(prev_vals)},\n'
-                                  f'  {cur_key}:  {json.dumps(cur_vals)}\n'
-                                  f'}};')
-                        pattern_sm = r'const SECTOR_MOM\s*=\s*\{[\s\S]*?\};'
-                        new_html3, n3 = re.subn(pattern_sm, lambda m: new_sm, html, count=1)
-                        _record_subn_result('SECTOR_MOM', pattern_sm, n3)
-                        if n3:
-                            applied.append(f'SECTOR_MOM rebuilt ({updated_count} sectors, {prev_key} & {cur_key})')
-                            html = new_html3
+                if updated_count >= 10:  # Only rebuild if we have most sectors
+                    payload_sm = {
+                        'sectors': sector_names,
+                        prev_key:  prev_vals,
+                        cur_key:   cur_vals,
+                    }
+                    _api_writer.register('SECTOR_MOM', payload_sm)
+                    pattern_sm = r'(?:const|let|var)\s+SECTOR_MOM\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+                    new_html3, n3 = re.subn(pattern_sm, 'let SECTOR_MOM = null;', html, count=1)
+                    _record_subn_result('SECTOR_MOM', pattern_sm, n3)
+                    if n3:
+                        applied.append(f'SECTOR_MOM registered to state.json ({updated_count} sectors, {prev_key} & {cur_key}); inline zeroed')
+                        html = new_html3
 
     # ── JOBS_SECTORS annual totals (auto-update latest year from BLS) ──
     if bls_sectors:

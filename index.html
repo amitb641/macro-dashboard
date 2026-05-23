@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-23T21:37:17Z";
+  var BUILD_V = "2026-05-23T21:41:04Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -3892,6 +3892,8 @@ window.MD._hydrationState = null;  // last fetched bundle, for debugging
       if (s.WHAT_CHANGED !== undefined)       { try { WHAT_CHANGED       = s.WHAT_CHANGED;       } catch(_){ window.WHAT_CHANGED       = s.WHAT_CHANGED;       } }
       if (s.RELEASE_CAL !== undefined)        { try { RELEASE_CAL        = s.RELEASE_CAL;        } catch(_){ window.RELEASE_CAL        = s.RELEASE_CAL;        } }
       if (s.NFP_BLS_MOM !== undefined)        { try { NFP_BLS_MOM        = s.NFP_BLS_MOM;        } catch(_){ window.NFP_BLS_MOM        = s.NFP_BLS_MOM;        } }
+      if (s.NFP_VS_ADP !== undefined)         { try { NFP_VS_ADP         = s.NFP_VS_ADP;         } catch(_){ window.NFP_VS_ADP         = s.NFP_VS_ADP;         } }
+      if (s.SECTOR_MOM !== undefined)         { try { SECTOR_MOM         = s.SECTOR_MOM;         } catch(_){ window.SECTOR_MOM         = s.SECTOR_MOM;         } }
       // (Additional keys will be migrated in subsequent commits.)
     } else {
       console.warn('[hydrate] state.json unavailable — dashboard will render with placeholders');
@@ -4051,17 +4053,9 @@ const WAGE_SECTORS = [
 
 // ── BLS vs ADP Monthly Comparison ────────────────────
 // BLS side auto-updated by renderer from PAYEMS. ADP manually maintained from adpemploymentreport.com
-const NFP_VS_ADP = {
-  labels:["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"],
-  bls:   [108, 13, -20, 64, -70, 76, -140, 41, -17, 160, -156, 185, 115],
-  adp:   [62, 152, 150, 122, 99, 143, 239, 146, 122, 11, 63, null, null]
-};
+let NFP_VS_ADP = null;
 // Monthly sector breakdown (BLS CES major sectors, thousands)
-const SECTOR_MOM = {
-  sectors:["Healthcare", "Retail Trade", "State & Local Govt", "Education (Pvt)", "Construction", "Financial Activities", "Mining & Energy", "Information (Tech)", "Transport & Warehousing", "Leisure & Hospitality", "Manufacturing", "Prof. & Biz Services", "Federal Government"],
-  mar26:  [91, 18, 12, 0, 16, -19, 2, -6, 22, 29, 15, 26, -15],
-  apr26:  [53, 22, 0, -8, 9, -11, 3, -13, 30, 14, -2, 7, -9]
-};
+let SECTOR_MOM = null;
 // JOLTS labour-market churn (B3.1). Renderer (rebuild_jolts_data) overwrites
 // from raw_data.json keys jolts_hist/quits/hires/unemploy_hist. All four
 // series are BLS monthly, level in thousands SA; V/U = openings / unemployed.
@@ -5132,9 +5126,13 @@ function buildWagesTab(){
 // ════════════════════════════════════════════════════
 function buildJobsTab(){
   if(builtTabs.jobs) return; builtTabs.jobs=1;
-  // Hydration guard: NFP_BLS_MOM is null until /api/state.json resolves.
-  // Tab-builders fire on click (always post-hydration), so this is defensive.
-  if (!NFP_BLS_MOM || !Array.isArray(NFP_BLS_MOM.bls)) { builtTabs.jobs=0; return; }
+  // Hydration guard: NFP_BLS_MOM / NFP_VS_ADP / SECTOR_MOM all hydrate
+  // from /api/state.json. Tab-builders fire on click (always
+  // post-hydration), so this is defensive — bail and reset the
+  // builtTabs flag so a late hydration can rebuild on next tab visit.
+  if (!NFP_BLS_MOM || !Array.isArray(NFP_BLS_MOM.bls))   { builtTabs.jobs=0; return; }
+  if (!NFP_VS_ADP  || !Array.isArray(NFP_VS_ADP.bls))    { builtTabs.jobs=0; return; }
+  if (!SECTOR_MOM  || !Array.isArray(SECTOR_MOM.sectors)){ builtTabs.jobs=0; return; }
 
   // ── Jobs Tiles (dynamic) ──
   // Helper: get latest year's job key from JOBS_SECTORS (e.g. "j25", "j26")
@@ -8894,8 +8892,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
      lines fully reverts to the un-themed look.
      ═══════════════════════════════════════════════════════════════ -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T21:37:17Z">
-<script src="theme-overlay.js?v=2026-05-23T21:37:17Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T21:41:04Z">
+<script src="theme-overlay.js?v=2026-05-23T21:41:04Z"></script>
 <!-- Vercel Web Analytics — owner-only beacon (no visible UI for visitors). Enable at vercel.com/<team>/macro-dashboard-dev/analytics. -->
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
