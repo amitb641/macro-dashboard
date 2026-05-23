@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-23T20:17:23.935774Z",
+  "validated_at": "2026-05-23T21:44:33.859323Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 207,
-    "passed": 203,
-    "failed": 4,
-    "skipped": 18,
+    "total_checks": 203,
+    "passed": 200,
+    "failed": 3,
+    "skipped": 15,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -51,15 +51,6 @@
       "source_value": 4.3,
       "difference": 0.0,
       "tolerance": 0.05,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "NFP BLS MoM (latest)",
-      "html_value": 115,
-      "source_value": 115,
-      "difference": 0.0,
-      "tolerance": 5,
       "severity": "ok",
       "pass": true
     },
@@ -158,24 +149,6 @@
       "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 6,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.bls completeness",
-      "html_value": "13/13 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 6,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.adp completeness",
-      "html_value": "11/13 filled",
-      "source_value": "85% (min 50%)",
-      "difference": 2,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
@@ -649,6 +622,15 @@
       "tolerance": 0.05,
       "severity": "ok",
       "pass": true
+    },
+    {
+      "check": "BLS Total Nonfarm (latest)",
+      "raw_data_value": 158736,
+      "fresh_api_value": 158736.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
+      "pass": true
     }
   ],
   "staleness": [
@@ -734,7 +716,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T20:14:57.297097Z",
+      "collected_at": "2026-05-23T21:42:56.924600Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -837,31 +819,10 @@
       "reason": "Could not parse const PCE_CAT_MOM from HTML"
     },
     {
-      "check": "Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys",
-      "title_months": [
-        "apr",
-        "mar"
-      ],
-      "data_keys": [
-        "apr",
-        "mar"
-      ],
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "Hiring is now concentrated in healthcare and leisure: prior-month chip matches title",
-      "expected_prior": "Mar'26",
-      "chips_found": [
-        "Mar'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Mar'26"
-      ],
-      "severity": "ok",
-      "pass": true
+      "check": "Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable",
+      "severity": "warning",
+      "pass": false,
+      "reason": "Could not parse const SECTOR_MOM from HTML"
     },
     {
       "check": "Unemployment is rising broadly across sectors: title months match U_SECTOR_MOM keys",
@@ -894,13 +855,13 @@
     {
       "check": "NFP MoM latest (K): \u22652 surfaces extractable",
       "surfaces": {
-        "NFP_BLS_MOM.bls[-1]": 115.0,
+        "NFP_BLS_MOM.bls[-1]": "MISSING",
         "KPIS Jobs tile": "MISSING",
         "Commentary payrolls": "MISSING"
       },
       "severity": "skipped",
       "pass": true,
-      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+      "reason": "only 0 surface(s) extractable; cross-check needs \u22652"
     },
     {
       "check": "Unemployment rate (%): \u22652 surfaces extractable",
@@ -1353,16 +1314,9 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "BLS: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -1418,20 +1372,35 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=True, bls=False)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4.3,
+      "diff": 0.0,
+      "tol": 0.215,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=True, bls=False)"
+      "severity": "ok",
+      "metric": "cpi_all",
+      "fred": 332.407,
+      "bls": 332.407,
+      "diff": 0.0,
+      "tol": 0.3324,
+      "note": null
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=True, bls=False)"
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 335.423,
+      "diff": 0.0,
+      "tol": 0.3354,
+      "note": null
     }
   ],
   "noise_floor": [
