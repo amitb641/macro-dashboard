@@ -2716,6 +2716,45 @@ def rebuild_kpi_strip(html, data, vals):
         sign = '+' if d > 0 else ''
         return cur, prev, f'{sign}{d}', d
 
+    # ── §8 Vintage-badge helpers ───────────────────────────────────
+    # Publish-lag table from data/playbook.md / known_normal.json.
+    # If a series' latest observation is older than 1.5x its expected
+    # cadence, flag STALE. Datasets released within the last 7 days
+    # earn a FRESH badge. UMich already carries its own PRELIM badge
+    # (set elsewhere) so we don't override it.
+    _PUBLISH_LAG_DAYS = {
+        # series_key: typical days between latest obs and present
+        'gasoline': 7, 'wti': 7, 'brent': 7, 'icsa': 7, 'ccsa': 7,    # weekly
+        'unrate': 35, 'nfp': 35, 'cpi': 45, 'core_cpi': 45,            # monthly
+        'cpiengsl': 45, 'cpi_food_away': 45, 'cpi_transport': 45,
+        'pce': 65, 'core_pce': 65, 'psavert': 65,                     # monthly w/ lag
+        'umcsent': 30, 'retail': 45, 'jolts': 50,
+        'tdsp': 120, 'gdp_yoy': 100,                                  # quarterly
+        'rate30': 7, 'ig_oas': 1, 'hy_oas': 1, 'dgs10': 1, 'ffr': 1,  # daily
+        'cc_delinq': 100,
+    }
+
+    def _vintage_badge(series_key, latest_iso_date):
+        """Return 'STALE' | 'FRESH' | None for a given latest data point.
+
+        - STALE: latest obs is older than 1.5x publish-lag
+        - FRESH: latest obs is within last 7 days (new release)
+        - None: in normal range — let other badge logic (PRELIM) take over
+        """
+        if not latest_iso_date or series_key not in _PUBLISH_LAG_DAYS:
+            return None
+        try:
+            obs = datetime.datetime.strptime(latest_iso_date, '%Y-%m-%d').date()
+        except Exception:
+            return None
+        age_days = (datetime.date.today() - obs).days
+        lag = _PUBLISH_LAG_DAYS[series_key]
+        if age_days <= 7:
+            return 'FRESH'
+        if age_days > int(lag * 1.5):
+            return 'STALE'
+        return None
+
     def _yoy_pair(series):
         """Return (latest_yoy, prior_month_yoy) from index series.
         Matches by calendar month (not index position) to handle gaps.
@@ -2937,6 +2976,31 @@ def rebuild_kpi_strip(html, data, vals):
 
     if not cards:
         return html
+
+    # §8 vintage-badge post-pass — annotate STALE/FRESH on every card
+    # that doesn't already carry an explicit badge (PRELIM from UMich).
+    # Mapping from card.metric to the raw_data series key. Unknown
+    # metrics get no auto-badge.
+    _METRIC_TO_SERIES = {
+        'jobs': 'nfp', 'claims': 'icsa', 'unemp': 'unrate',
+        'wages': 'ahetpi', 'cpi': 'cpi', 'pce': 'pce',
+        'umcsent': 'umcsent', 'dsr': 'tdsp',
+        'rate': 'rate30',  # 30y mortgage — closest weekly proxy
+    }
+    for c in cards:
+        if c.get('badge'):
+            continue  # respect explicit badges (e.g. UMich PRELIM)
+        m = c.get('metric')
+        series_key = _METRIC_TO_SERIES.get(m)
+        if not series_key:
+            continue
+        series = data.get(series_key) or []
+        if not series:
+            continue
+        latest = series[0].get('date') if isinstance(series[0], dict) else None
+        v = _vintage_badge(series_key, latest)
+        if v:
+            c['badge'] = v
 
     # Inject as JS
     cards_json = json.dumps(cards, separators=(', ', ':'))

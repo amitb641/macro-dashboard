@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-23T05:48:05Z";
+  var BUILD_V = "2026-05-23T06:01:32Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -4345,17 +4345,34 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Jobs Apr'26", "val":"+115K", "metric":"jobs", "delta":-70, "chg":"-70K", "sub":"Prior: +185K (Mar'26)"}, {"lbl":"Initial Claims May'26", "val":"211K", "metric":"claims", "delta":12000, "chg":"+12K", "inv":true, "sub":"Prior wk: 199K (May'26)"}, {"lbl":"Unemployment Apr'26", "val":"4.3%", "metric":"unemp", "delta":0.0, "chg":"0.0pp", "inv":true, "sub":"Prior: 4.3% (Mar'26)"}, {"lbl":"Sahm Rule Apr'26", "val":"+0.20pp", "metric":"unemp", "delta":0.2, "chg":"OK", "inv":true, "sub":"3M avg 4.33% \u2212 12M low 4.13% \u00b7 trigger \u2265 +0.5pp"}, {"lbl":"Wage Growth Apr'26", "val":"3.6%", "metric":"wages", "delta":-0.3, "chg":"-0.3pp", "sub":"Prior: 3.9% (Mar'26) \u00b7 Atlanta Fed WGT 3MMA"}, {"lbl":"CPI YoY Apr'26", "val":"3.8%", "metric":"cpi", "delta":0.49, "chg":"+0.5pp", "inv":true, "sub":"MoM: +0.64% \u00b7 YoY: 3.8% \u00b7 3M avg: 3.2% \u00b7 Prior: 3.3% (Mar'26)"}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Prior: 3.0% (Feb'26)"}, {"lbl":"Headline PCE Mar'26", "val":"3.5%", "metric":"pce", "delta":0.67, "chg":"+0.7pp", "inv":true, "sub":"Prior: 2.8% (Feb'26) \u00b7 BEA PCEPI"}, {"lbl":"UMich Sentiment May'26", "val":"44.8", "metric":"umcsent", "delta":-5.0, "chg":"-5.0", "badge":null, "sub":"MoM: -5.0 \u00b7 YoY: -7.4 \u00b7 Prior: 49.8 (Apr'26)"}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)"}, {"lbl":"Fed Funds Apr'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury May'26", "val":"4.57%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 4.08% \u00b7 Spread: +49bp"}];
+const KPIS = [{"lbl":"Jobs Apr'26", "val":"+115K", "metric":"jobs", "delta":-70, "chg":"-70K", "sub":"Prior: +185K (Mar'26)"}, {"lbl":"Initial Claims May'26", "val":"211K", "metric":"claims", "delta":12000, "chg":"+12K", "inv":true, "sub":"Prior wk: 199K (May'26)", "badge":"STALE"}, {"lbl":"Unemployment Apr'26", "val":"4.3%", "metric":"unemp", "delta":0.0, "chg":"0.0pp", "inv":true, "sub":"Prior: 4.3% (Mar'26)"}, {"lbl":"Sahm Rule Apr'26", "val":"+0.20pp", "metric":"unemp", "delta":0.2, "chg":"OK", "inv":true, "sub":"3M avg 4.33% \u2212 12M low 4.13% \u00b7 trigger \u2265 +0.5pp"}, {"lbl":"Wage Growth Apr'26", "val":"3.6%", "metric":"wages", "delta":-0.3, "chg":"-0.3pp", "sub":"Prior: 3.9% (Mar'26) \u00b7 Atlanta Fed WGT 3MMA"}, {"lbl":"CPI YoY Apr'26", "val":"3.8%", "metric":"cpi", "delta":0.49, "chg":"+0.5pp", "inv":true, "sub":"MoM: +0.64% \u00b7 YoY: 3.8% \u00b7 3M avg: 3.2% \u00b7 Prior: 3.3% (Mar'26)"}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Prior: 3.0% (Feb'26)"}, {"lbl":"Headline PCE Mar'26", "val":"3.5%", "metric":"pce", "delta":0.67, "chg":"+0.7pp", "inv":true, "sub":"Prior: 2.8% (Feb'26) \u00b7 BEA PCEPI"}, {"lbl":"UMich Sentiment May'26", "val":"44.8", "metric":"umcsent", "delta":-5.0, "chg":"-5.0", "badge":null, "sub":"MoM: -5.0 \u00b7 YoY: -7.4 \u00b7 Prior: 49.8 (Apr'26)"}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)", "badge":"STALE"}, {"lbl":"Fed Funds Apr'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury May'26", "val":"4.57%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 4.08% \u00b7 Spread: +49bp"}];
 function _releaseBadge(tag){
   if(!tag) return '';
   const up = String(tag).toUpperCase();
-  const isPrelim = up === 'PRELIM' || up === 'PRELIMINARY';
-  const color = isPrelim ? '#CC8A00' : '#1A9E5A';
-  const bg    = isPrelim ? '#fffbeb' : '#f0fdf4';
-  const bd    = isPrelim ? 'rgba(204,138,0,.22)' : 'rgba(13,122,74,.22)';
+  // §8 vintage-badge palette — 5 named tones drive everything.
+  //   PRELIM   — gold, "preliminary read, may revise"
+  //   FINAL    — green, "fixed final value"
+  //   REVISED  — gold, "value was revised vs prior print"
+  //   FRESH    — blue, "released this week"
+  //   STALE    — red, "publish lag exceeded — value may be out of date"
+  //   default  — neutral gray (used for source acronyms: BLS/BEA/etc)
+  let color, bg, bd, label = up;
+  if (up === 'PRELIM' || up === 'PRELIMINARY') {
+    color = '#CC8A00'; bg = '#fffbeb'; bd = 'rgba(204,138,0,.22)'; label = 'PRELIM';
+  } else if (up === 'FINAL') {
+    color = '#1A9E5A'; bg = '#f0fdf4'; bd = 'rgba(13,122,74,.22)';
+  } else if (up === 'REVISED') {
+    color = '#CC8A00'; bg = '#fffbeb'; bd = 'rgba(204,138,0,.22)';
+  } else if (up === 'FRESH') {
+    color = '#336BCC'; bg = '#EAF1FB'; bd = 'rgba(51,107,204,.22)';
+  } else if (up === 'STALE') {
+    color = '#B91C1C'; bg = '#FCEEEE'; bd = 'rgba(185,28,28,.22)';
+  } else {
+    color = '#5A6B7D'; bg = '#F1F5F9'; bd = 'rgba(90,107,125,.22)';
+  }
   return `<span style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:10px;
     font-size:8.5px;font-weight:700;letter-spacing:.06em;vertical-align:1px;
-    color:${color};background:${bg};border:1px solid ${bd}">${isPrelim ? 'PRELIM' : 'FINAL'}</span>`;
+    color:${color};background:${bg};border:1px solid ${bd}">${label}</span>`;
 }
 document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
   const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
@@ -8642,8 +8659,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
      lines fully reverts to the un-themed look.
      ═══════════════════════════════════════════════════════════════ -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T05:48:05Z">
-<script src="theme-overlay.js?v=2026-05-23T05:48:05Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T06:01:32Z">
+<script src="theme-overlay.js?v=2026-05-23T06:01:32Z"></script>
 <!-- Vercel Web Analytics — owner-only beacon (no visible UI for visitors). Enable at vercel.com/<team>/macro-dashboard-dev/analytics. -->
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
