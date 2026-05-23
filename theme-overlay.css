@@ -31,17 +31,10 @@ body.themed-sm { padding-top: 32px !important; }
   body.themed-sm { max-width: 2200px !important; margin: 0 auto !important; }
 }
 
-/* ── subtle top accent bar (replaces fixed dev banner) ────────────
-   Visual designer flagged the original 56px fixed navy banner as
-   dead real-estate for a scrolling CEO dashboard. Replaced with a
-   2px brand-accent edge — present, but doesn't steal scroll height. */
-body.themed-sm::before {
-  content: '';
-  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-  height: 2px;
-  background: linear-gradient(90deg, #336BCC 0%, #1E4A8C 60%, #0D1B2A 100%);
-  pointer-events: none;
-}
+/* ── top accent bar removed (2026-05-22) ──────────────────────────
+   The 2px navy gradient edge bar (#336BCC → #1E4A8C → #0D1B2A) was
+   flagged as a dark element on the otherwise light new theme. Block
+   removed surgically — no other theme rules touched. */
 
 /* ── hero ─────────────────────────────────────────────────────── */
 body.themed-sm .eyebrow {
