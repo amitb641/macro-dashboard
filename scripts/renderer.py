@@ -1648,12 +1648,12 @@ def rebuild_fiscal_data(html, data):
         'latest_pct': latest_pct,
         'avg_post1965': avg_post1965,
     }
-    new_json = json.dumps(obj, separators=(', ', ':'))
-    pattern = r'const FISCAL_DATA\s*=\s*\{[^;]*\};'
-    new_html, n = re.subn(pattern, f'const FISCAL_DATA = {new_json};', html, count=1)
+    _api_writer.register('FISCAL_DATA', obj)
+    pattern = r'(?:const|let|var)\s+FISCAL_DATA\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+    new_html, n = re.subn(pattern, 'let FISCAL_DATA = null;', html, count=1)
     _record_subn_result('FISCAL_DATA', pattern, n)
     if n:
-        applied.append(f'FISCAL_DATA rebuilt ({len(labels)} FY rows, latest FY{labels[-1]} {latest_pct:+.2f}%, post-1965 avg {avg_post1965:+.2f}%)')
+        applied.append(f'FISCAL_DATA registered to state.json ({len(labels)} FY rows, latest FY{labels[-1]} {latest_pct:+.2f}%, post-1965 avg {avg_post1965:+.2f}%); inline zeroed')
         html = new_html
     else:
         warnings.append('FISCAL_DATA rebuild: const pattern not matched (HTML may already be on a newer schema)')
@@ -1727,13 +1727,13 @@ def rebuild_cpi_breadth(html, data):
         'trimmed':          [round(_annualise(t[d]), 2) for d in common],
         'median':           [round(_annualise(m[d]), 2) for d in common],
     }
-    new_json = json.dumps(obj, separators=(', ', ':'))
-    pattern = r'const CPI_BREADTH\s*=\s*\{[^;]*\};'
-    new_html, n = re.subn(pattern, f'const CPI_BREADTH = {new_json};', html, count=1)
+    _api_writer.register('CPI_BREADTH', obj)
+    pattern = r'(?:const|let|var)\s+CPI_BREADTH\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+    new_html, n = re.subn(pattern, 'let CPI_BREADTH = null;', html, count=1)
     _record_subn_result('CPI_BREADTH', pattern, n)
     if n:
-        applied.append(f'CPI_BREADTH rebuilt ({len(common)} months, latest {common[-1]}, '
-                       f'headline {obj["headline_mom_ann"][-1]:+.1f}% · trimmed {obj["trimmed"][-1]:+.1f}% · median {obj["median"][-1]:+.1f}%)')
+        applied.append(f'CPI_BREADTH registered to state.json ({len(common)} months, latest {common[-1]}, '
+                       f'headline {obj["headline_mom_ann"][-1]:+.1f}% · trimmed {obj["trimmed"][-1]:+.1f}% · median {obj["median"][-1]:+.1f}%); inline zeroed')
         html = new_html
     else:
         warnings.append('CPI_BREADTH rebuild: const pattern not matched (HTML may already be on a newer schema)')
@@ -1802,12 +1802,12 @@ def rebuild_jolts_data(html, data):
         'hires': hires_arr,
         'vu': vu,
     }
-    new_json = json.dumps(obj, separators=(', ', ':'))
-    pattern = r'const JOLTS_DATA\s*=\s*\{[^;]*\};'
-    new_html, n = re.subn(pattern, f'const JOLTS_DATA = {new_json};', html, count=1)
+    _api_writer.register('JOLTS_DATA', obj)
+    pattern = r'(?:const|let|var)\s+JOLTS_DATA\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+    new_html, n = re.subn(pattern, 'let JOLTS_DATA = null;', html, count=1)
     _record_subn_result('JOLTS_DATA', pattern, n)
     if n:
-        applied.append(f'JOLTS_DATA rebuilt ({len(common)} months, latest {common[-1]}, V/U {vu[-1]})')
+        applied.append(f'JOLTS_DATA registered to state.json ({len(common)} months, latest {common[-1]}, V/U {vu[-1]}); inline zeroed')
         html = new_html
     else:
         warnings.append('JOLTS_DATA rebuild: const pattern not matched (HTML may already be on a newer schema)')
@@ -1870,12 +1870,12 @@ def rebuild_fed_liquidity_data(html, data):
         'rrpontsyd': [_bn(c[d]) for d in common_dates],
         'tga':       [_bn(d_[d]) for d in common_dates],
     }
-    new_json = json.dumps(obj, separators=(', ', ':'))
-    pattern = r'const FED_LIQUIDITY_DATA\s*=\s*\{[^;]*\};'
-    new_html, n = re.subn(pattern, f'const FED_LIQUIDITY_DATA = {new_json};', html, count=1)
+    _api_writer.register('FED_LIQUIDITY_DATA', obj)
+    pattern = r'(?:const|let|var)\s+FED_LIQUIDITY_DATA\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
+    new_html, n = re.subn(pattern, 'let FED_LIQUIDITY_DATA = null;', html, count=1)
     _record_subn_result('FED_LIQUIDITY_DATA', pattern, n)
     if n:
-        applied.append(f'FED_LIQUIDITY_DATA rebuilt ({len(common_dates)} weeks, latest {common_dates[-1]})')
+        applied.append(f'FED_LIQUIDITY_DATA registered to state.json ({len(common_dates)} weeks, latest {common_dates[-1]}); inline zeroed')
         html = new_html
     else:
         warnings.append('FED_LIQUIDITY_DATA rebuild: const pattern not matched (HTML may already be on a newer schema)')
@@ -3371,7 +3371,7 @@ def render_what_changed(html, sig):
     candidates.sort(key=lambda x: x[0], reverse=True)
     top = candidates[:3]
 
-    items_js = []
+    items = []
     for _score, sid, s, d, alert in top:
         meta = META.get(sid)
         if meta:
@@ -3385,35 +3385,27 @@ def render_what_changed(html, sig):
             delta_str = f'{d:+.2f}'
         direction = 'up' if d > 0 else 'down' if d < 0 else 'flat'
         tone = 'alert' if alert == 'alert' else 'watch' if alert == 'watch' else 'ok'
-        items_js.append(
-            '    { '
-            f'label: {json.dumps(label)}, '
-            f'delta: {json.dumps(delta_str)}, '
-            f'unit: {json.dumps(unit)}, '
-            f'dir: {json.dumps(direction)}, '
-            f'tone: {json.dumps(tone)}, '
-            f'note: {json.dumps(note)}'
-            ' }'
-        )
+        items.append({
+            'label': label,
+            'delta': delta_str,
+            'unit':  unit,
+            'dir':   direction,
+            'tone':  tone,
+            'note':  note,
+        })
 
-    if not items_js:
-        # Don't emit a stale block — leave the existing const intact.
+    if not items:
+        # Don't emit a stale block — leave the existing placeholder intact.
         return html
 
     asof = datetime.date.today().strftime('vs prior weekly \u00b7 %b %Y')
-    new_const = (
-        'const WHAT_CHANGED = {\n'
-        f'  asof: {json.dumps(asof)},\n'
-        '  items: [\n'
-        + ',\n'.join(items_js) + '\n'
-        '  ]\n'
-        '};'
-    )
+    payload = {'asof': asof, 'items': items}
 
-    pattern = re.compile(r'const WHAT_CHANGED = \{.*?\n\};', re.S)
-    new_html, n = pattern.subn(lambda m: new_const, html, count=1)
+    _api_writer.register('WHAT_CHANGED', payload)
+    pattern = re.compile(r'(?:const|let|var)\s+WHAT_CHANGED\s*=\s*(?:\{[\s\S]*?\}|null)\s*;', re.S)
+    new_html, n = pattern.subn(lambda m: 'let WHAT_CHANGED = null;', html, count=1)
     if n == 1:
-        applied.append('what_changed')
+        applied.append(f'WHAT_CHANGED registered to state.json ({len(items)} items); inline zeroed')
         return new_html
     return html
 
@@ -3465,13 +3457,13 @@ def render_release_calendar(html):
 
     payload = {'today': today.isoformat(), 'window_end': window_end.isoformat(),
                'releases': in_window}
-    new_decl = f'const RELEASE_CAL = {json.dumps(payload, separators=(", ", ":"))};'
 
-    pattern = re.compile(r'const RELEASE_CAL\s*=\s*\{[\s\S]*?\};')
-    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    _api_writer.register('RELEASE_CAL', payload)
+    pattern = re.compile(r'(?:const|let|var)\s+RELEASE_CAL\s*=\s*(?:\{[\s\S]*?\}|null)\s*;')
+    new_html, n = re.subn(pattern, 'let RELEASE_CAL = null;', html, count=1)
     _record_subn_result('RELEASE_CAL', pattern, n)
     if n:
-        applied.append(f'release_calendar ({len(in_window)} releases in next 7d)')
+        applied.append(f'RELEASE_CAL registered to state.json ({len(in_window)} releases in next 7d); inline zeroed')
         return new_html
     warnings.append('render_release_calendar: RELEASE_CAL placeholder not matched')
     return html
