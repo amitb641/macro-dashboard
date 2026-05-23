@@ -1,5 +1,5 @@
 {
-  "generated_at": "May 16, 2026",
+  "generated_at": "May 23, 2026",
   "risk_level": "MODERATE",
   "risk_rationale": "",
   "outlook_headline": "",
@@ -11,10 +11,10 @@
     "wages": "",
     "cpi": "Headline CPI at 3.8% YoY is running 180bp above the Fed's implicit tolerance band, and the 110bp gap between headline and Core CPI (2.7%) points squarely to energy as the accelerant, with WTI at $105.8 making near-term disinflation unlikely. Core CPI at 2.7% is moderating but still above target, and any oil-driven headline re-acceleration will complicate the Fed's communication significantly. Cuts are off the table until headline sustainably approaches 3.0% or below.",
     "pce": "Core PCE at 3.2% is the Fed's primary target metric and remains 120bp above the 2% objective, confirming that underlying demand-driven inflation is not yet tamed. The personal saving rate of 3.6% is low by historical standards, indicating consumers are funding spending by drawing down buffers rather than income growth, a pattern that is unsustainable. Together, these readings describe a consumer who is simultaneously driving inflation and becoming financially fragile.",
-    "yield": "The 10Y-2Y spread has re-steepened to 46bp, moving from inversion toward a positively sloped curve \u2014 a transition that historically has coincided with rising recession probability rather than resolved stress. The Fed Funds rate at 3.64% sits below both the 2Y (4.00%) and 10Y (4.46%), suggesting markets price some residual easing but not aggressively so. With Core PCE at 3.2%, the real Fed Funds rate is barely positive, limiting the Fed's ability to declare policy sufficiently restrictive.",
+    "yield": "",
     "credit": "IG OAS at 77bp and HY OAS at 282bp reflect a credit market that has not priced the deteriorating macro backdrop \u2014 both spreads are tight relative to a HIGH risk environment with rising unemployment and consumer stress. HY at 282bp is particularly complacent given 4.3% U-3, 2.9% CC delinquency, and slowing NFP; historical spread levels at comparable macro conditions have been materially wider. Credit risk is asymmetrically skewed to the downside, and any growth shock would trigger a sharp spread repricing.",
-    "housing": "The 30-year mortgage at 6.37% continues to lock existing homeowners into their properties and crush affordability for new buyers, yet Housing Starts at 1,502K remain relatively resilient \u2014 likely reflecting multi-family completions rather than a demand surge. Affordability is structurally broken for first-time buyers with rates at 6.37% and prices elevated, compressing transaction volumes. A sustained move in the 10Y above 4.5% would transmit directly into mortgage rates above 6.5%, further freezing the market.",
-    "oil": "WTI at $105.8 and Brent at $111.4 represent a significant macro risk that is not fully discounted in current equity or credit pricing. At these levels, energy functions as a tax on consumers already running a 3.6% savings rate, and the CPI/PCE re-acceleration risk is material given energy's direct and indirect price-setting role. The Fed cannot look through $111 Brent the way it might a transient spike; sustained prices at this level will force a hawkish response even into a slowing growth environment.",
+    "housing": "",
+    "oil": "",
     "banks": "Net interest income tailwinds are fading as funding costs catch up to asset yields in a 3.64% Fed Funds environment, compressing bank margins relative to the 2023-2024 peak. Credit card delinquency at 2.9% is a direct warning signal for consumer-facing lenders, and further deterioration in the labor market would accelerate charge-off cycles. Banks with heavy unsecured consumer exposure face a dual headwind: NII compression and rising loan loss provisions entering a period of weakening employment."
   },
   "kpi_updates": {
@@ -23,20 +23,20 @@
     "fed_bias": "On Hold"
   },
   "signal_flags": [],
-  "agent3_ran_at": "2026-05-16T13:06:20.897152Z",
+  "agent3_ran_at": "2026-05-23T13:08:19.470162Z",
   "refreshed_tabs": [
-    "wages"
+    "yield",
+    "oil",
+    "housing"
   ],
   "carried_forward": [
     "gdp",
     "jobs",
     "unemp",
+    "wages",
     "cpi",
     "pce",
-    "yield",
     "credit",
-    "housing",
-    "oil",
     "banks"
   ]
 }

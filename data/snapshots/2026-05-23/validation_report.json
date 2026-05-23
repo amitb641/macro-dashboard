@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-13T00:48:30.405902Z",
+  "validated_at": "2026-05-23T13:09:04.259729Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 512,
-    "passed": 498,
-    "failed": 14,
+    "total_checks": 520,
+    "passed": 505,
+    "failed": 15,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -326,28 +326,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "45/45 filled",
+      "html_value": "55/55 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 22,
+      "tolerance": 27,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "45/45 filled",
+      "html_value": "55/55 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 22,
+      "tolerance": 27,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "29/45 filled",
+      "html_value": "35/55 filled",
       "source_value": "64% (min 0%)",
-      "difference": 16,
-      "tolerance": 22,
+      "difference": 20,
+      "tolerance": 27,
       "severity": "ok",
       "pass": true
     },
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.42,
-      "fresh_api_value": 4.42,
+      "raw_data_value": 4.57,
+      "fresh_api_value": 4.57,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -679,8 +679,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.37,
-      "fresh_api_value": 6.37,
+      "raw_data_value": 6.51,
+      "fresh_api_value": 6.51,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -700,7 +700,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 42,
+      "age_days": 52,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -708,7 +708,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-04-01",
-      "age_days": 42,
+      "age_days": 52,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-04-01",
-      "age_days": 42,
+      "age_days": 52,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 73,
+      "age_days": 83,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 73,
+      "age_days": 83,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,7 +740,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 42,
+      "age_days": 52,
       "max_lag_days": 55,
       "severity": "ok",
       "pass": true
@@ -748,15 +748,15 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-02-01",
-      "age_days": 101,
+      "age_days": 111,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-05-07",
-      "age_days": 6,
+      "latest_date": "2026-05-21",
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 12,
+      "age_days": 22,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -772,14 +772,14 @@
     {
       "check": "UMich Sentiment release status",
       "latest_date": "2026-05-01",
-      "release_status": "preliminary",
-      "severity": "info",
+      "release_status": "final",
+      "severity": "ok",
       "pass": true,
-      "note": "Preliminary \u2014 subject to revision in end-of-month final release"
+      "note": "Final release"
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-13T00:46:41.118131Z",
+      "collected_at": "2026-05-23T13:08:02.230141Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1026,10 +1026,10 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 48.2,
+      "reference": 44.8,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 48.2,
-        "KPIS UMich Sentiment": 48.2
+        "UMCSENT_MONTHLY.data[-1]": 44.8,
+        "KPIS UMich Sentiment": 44.8
       },
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.42,
+      "reference": 4.57,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.42,
-        "data[\"dgs10\"]": 4.42
+        "KPIS 10Y Treasury": 4.57,
+        "data[\"dgs10\"]": 4.57
       },
       "severity": "ok",
       "pass": true
@@ -1742,6 +1742,30 @@
       "detail": ""
     },
     {
+      "check": "Visual: GDP \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Panel \"\ud83d\udcc8 GDP Commentary \u2014 2025 Growth & 2026 Ou\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: GDP \u2014 Panel \"Broad Sector Groups \u2014 Real GDP % Change\" has title",
       "severity": "ok",
       "pass": true,
@@ -2258,7 +2282,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2337,6 +2361,12 @@
     },
     {
       "check": "Visual: Rates & Yields \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"\ud83c\udfdb Fed Rates Commentary \u2014 Policy Stance &\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2432,6 +2462,12 @@
       "detail": ""
     },
     {
+      "check": "Visual: Credit \u2014 Panel \"\ud83d\udcc9 Credit Commentary \u2014 Spread Complacency\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Credit \u2014 Panel \"Delinquency Rates by Product \u2014 90+ Days \" has title",
       "severity": "ok",
       "pass": true,
@@ -2505,6 +2541,12 @@
     },
     {
       "check": "Visual: Banking \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"\ud83c\udfe6 Banks Commentary \u2014 Earnings, NII & Cre\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2702,6 +2744,12 @@
       "detail": ""
     },
     {
+      "check": "Visual: Oil \u2014 Panel \"\ud83d\udee2 Oil Commentary \u2014 Supply Shock & Macro \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Oil \u2014 Panel \"WTI & Brent \u2014 Annual History\" has title",
       "severity": "ok",
       "pass": true,
@@ -2811,9 +2859,9 @@
     },
     {
       "check": "Visual: Dashboard \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "severity": "warning",
+      "pass": false,
+      "detail": "8 sentences (style_guide \u00a72)"
     },
     {
       "check": "Visual: Dashboard \u2014 Commentary color matches palette",
