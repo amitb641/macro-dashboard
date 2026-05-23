@@ -3092,6 +3092,126 @@ def render_macro_state(html, sig):
     return html
 
 
+def render_what_changed(html, sig):
+    """Patch WHAT_CHANGED JS const with top-3 WoW moves from signals.json.
+
+    Selection: |delta| ranks all flagged + non-flagged signals; alerted
+    items get a 2x score multiplier, watched get 1.5x. The top 3 are
+    emitted with a human label, signed delta, unit, direction, tone,
+    and a deterministic one-line note (note table is keyed on signal
+    id — no LLM call).
+    """
+    sigs = (sig or {}).get('signals', {}) or {}
+    if not isinstance(sigs, dict) or not sigs:
+        return html
+
+    # Per-signal metadata: label, unit, formatter, default note.
+    META = {
+        'wti':           ('WTI Crude',      '/bbl',  lambda d: f'{d:+.2f}',  'Oil shock chain extending'),
+        'gasoline':      ('Gasoline',       '/gal',  lambda d: f'{d:+.2f}',  'Pump prices flowing through'),
+        'dgs10':         ('10Y Treasury',   'bp',    lambda d: f'{int(round(d*100)):+d}', 'Term premium re-pricing'),
+        'dgs2':          ('2Y Treasury',    'bp',    lambda d: f'{int(round(d*100)):+d}', 'Front-end repricing'),
+        'ffr':           ('Fed Funds',      'bp',    lambda d: f'{int(round(d*100)):+d}', 'Policy stance shift'),
+        'hy_oas':        ('HY OAS',         'bp',    lambda d: f'{int(round(d)):+d}',     'Credit risk repricing'),
+        'ig_oas':        ('IG OAS',         'bp',    lambda d: f'{int(round(d)):+d}',     'Investment-grade spreads moving'),
+        'cpi_yoy':       ('CPI YoY',        'pp',    lambda d: f'{d:+.1f}',  'Headline inflation print'),
+        'core_pce_yoy':  ('Core PCE YoY',   'pp',    lambda d: f'{d:+.1f}',  'Fed-preferred gauge'),
+        'core_cpi_yoy':  ('Core CPI YoY',   'pp',    lambda d: f'{d:+.1f}',  'Sticky inflation reading'),
+        'unrate':        ('Unemployment',   'pp',    lambda d: f'{d:+.1f}',  'Labor market repricing'),
+        'wages_yoy':     ('Wages YoY',      'pp',    lambda d: f'{d:+.1f}',  'Cooling labor market'),
+        'jolts':         ('Job Openings',   'k',     lambda d: f'{int(round(d)):+d}', 'Labor demand shift'),
+        'umcsent':       ('UMich Sentiment','pts',   lambda d: f'{d:+.1f}',  'Consumer mood shift'),
+        'retail_yoy':    ('Retail Sales',   'pp',    lambda d: f'{d:+.1f}',  'Consumer spending pulse'),
+        'tdsp':          ('Debt Service',   'pp',    lambda d: f'{d:+.2f}',  'Household debt burden'),
+        'cc_delinq':     ('Card DPD',       'pp',    lambda d: f'{d:+.1f}',  'Consumer credit stress'),
+        'saving_rate':   ('Saving Rate',    'pp',    lambda d: f'{d:+.1f}',  'Household savings buffer'),
+    }
+
+    # Per-signal natural-scale denominators used to convert raw |delta|
+    # into a comparable cross-series score. Without this, ICSA (22k
+    # claims) would always dominate WTI ($2.49/bbl) on raw magnitude.
+    SCALE = {
+        'wti': 1.0, 'gasoline': 0.05,
+        'dgs10': 0.05, 'dgs2': 0.05, 'ffr': 0.05,
+        'hy_oas': 25.0, 'ig_oas': 10.0,
+        'cpi_yoy': 0.1, 'core_pce_yoy': 0.1, 'core_cpi_yoy': 0.1,
+        'unrate': 0.1, 'wages_yoy': 0.2,
+        'jolts': 200.0, 'umcsent': 2.0, 'retail_yoy': 0.3,
+        'tdsp': 0.1, 'cc_delinq': 0.2, 'saving_rate': 0.3,
+    }
+
+    candidates = []
+    for sid, s in sigs.items():
+        if not isinstance(s, dict):
+            continue
+        # Gate: only emit signals we have a META entry for (so labels
+        # and units are guaranteed). Skips raw series like 'icsa' that
+        # would otherwise outrank narrative-relevant moves.
+        if sid not in META:
+            continue
+        delta = s.get('delta', 0)
+        try:
+            d = float(delta)
+        except Exception:
+            continue
+        if d == 0:
+            continue
+        alert = (s.get('alert') or '').lower()
+        mult = 2.0 if alert == 'alert' else 1.5 if alert == 'watch' else 1.0
+        scale = SCALE.get(sid, 1.0)
+        score = (abs(d) / scale) * mult
+        candidates.append((score, sid, s, d, alert))
+
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    top = candidates[:3]
+
+    items_js = []
+    for _score, sid, s, d, alert in top:
+        meta = META.get(sid)
+        if meta:
+            label, unit, fmt, note = meta
+            try:
+                delta_str = fmt(d)
+            except Exception:
+                delta_str = f'{d:+.2f}'
+        else:
+            label, unit, note = sid.replace('_', ' ').title(), '', 'WoW change'
+            delta_str = f'{d:+.2f}'
+        direction = 'up' if d > 0 else 'down' if d < 0 else 'flat'
+        tone = 'alert' if alert == 'alert' else 'watch' if alert == 'watch' else 'ok'
+        items_js.append(
+            '    { '
+            f'label: {json.dumps(label)}, '
+            f'delta: {json.dumps(delta_str)}, '
+            f'unit: {json.dumps(unit)}, '
+            f'dir: {json.dumps(direction)}, '
+            f'tone: {json.dumps(tone)}, '
+            f'note: {json.dumps(note)}'
+            ' }'
+        )
+
+    if not items_js:
+        # Don't emit a stale block — leave the existing const intact.
+        return html
+
+    asof = datetime.date.today().strftime('vs prior weekly \u00b7 %b %Y')
+    new_const = (
+        'const WHAT_CHANGED = {\n'
+        f'  asof: {json.dumps(asof)},\n'
+        '  items: [\n'
+        + ',\n'.join(items_js) + '\n'
+        '  ]\n'
+        '};'
+    )
+
+    pattern = re.compile(r'const WHAT_CHANGED = \{.*?\n\};', re.S)
+    new_html, n = pattern.subn(lambda m: new_const, html, count=1)
+    if n == 1:
+        applied.append('what_changed')
+        return new_html
+    return html
+
+
 def render_wordmark(html):
     """Patch issue # + week label in the publication wordmark.
 
@@ -3221,6 +3341,13 @@ def render():
     except Exception as e:
         errors.append(f'Macro State: {e}')
         print(f'  \u274c Macro State: {e}')
+
+    try:
+        html = render_what_changed(html, sig)
+        print('  \u2705 What-changed delta block')
+    except Exception as e:
+        errors.append(f'What-changed: {e}')
+        print(f'  \u274c What-changed: {e}')
 
     try:
         html = render_wordmark(html)

@@ -652,6 +652,84 @@ body.themed-sm [tabindex]:focus-visible {
   border-radius: 6px;
 }
 
+/* ── §28 sm-delta-block: "What changed this week" — top-3 WoW moves ──
+   Three-chip horizontal strip above the KPI strip. Each chip carries
+   an arrow glyph (color-blind safe: glyph encodes direction, not just
+   color), label, signed delta+unit, and a one-line note. Tone classes
+   (alert/watch/ok) tint border + arrow. */
+body.themed-sm .sm-delta-block {
+  margin: 16px 0 20px 0 !important;
+  padding: 16px !important;
+  background: linear-gradient(180deg, #FAFBFC 0%, #FFFFFF 100%) !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 2px rgba(15,23,42,.04) !important;
+}
+body.themed-sm .sm-delta-hdr {
+  display: flex !important; align-items: baseline !important;
+  justify-content: space-between !important;
+  margin-bottom: 12px !important;
+  gap: 12px !important; flex-wrap: wrap !important;
+}
+body.themed-sm .sm-delta-eyebrow {
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 10px !important; font-weight: 700 !important;
+  letter-spacing: .14em !important; text-transform: uppercase !important;
+  color: #336BCC !important;
+}
+body.themed-sm .sm-delta-asof {
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  font-size: 10px !important; font-weight: 500 !important;
+  color: #94A3B8 !important; letter-spacing: .04em !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+}
+body.themed-sm .sm-delta-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 12px !important;
+}
+body.themed-sm .sm-delta-chip {
+  display: flex !important; align-items: flex-start !important;
+  gap: 12px !important; padding: 12px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-left-width: 3px !important;
+  border-radius: 8px !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+}
+body.themed-sm .sm-delta-chip.tone-alert { border-left-color: #D64045 !important; }
+body.themed-sm .sm-delta-chip.tone-watch { border-left-color: #CC8A00 !important; }
+body.themed-sm .sm-delta-chip.tone-ok    { border-left-color: #1A9E5A !important; }
+body.themed-sm .sm-dc-arrow {
+  flex: 0 0 16px !important; font-size: 14px !important; line-height: 1.4 !important;
+  font-weight: 700 !important;
+}
+body.themed-sm .sm-delta-chip.tone-alert .sm-dc-arrow { color: #D64045 !important; }
+body.themed-sm .sm-delta-chip.tone-watch .sm-dc-arrow { color: #CC8A00 !important; }
+body.themed-sm .sm-delta-chip.tone-ok    .sm-dc-arrow { color: #1A9E5A !important; }
+body.themed-sm .sm-dc-body {
+  display: flex !important; flex-direction: column !important;
+  gap: 4px !important; min-width: 0 !important;
+}
+body.themed-sm .sm-dc-label {
+  font-size: 10px !important; font-weight: 600 !important;
+  letter-spacing: .08em !important; text-transform: uppercase !important;
+  color: #5A6B7D !important;
+}
+body.themed-sm .sm-dc-val {
+  font-size: 16px !important; font-weight: 700 !important;
+  color: #1E293B !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+}
+body.themed-sm .sm-dc-unit {
+  font-size: 11px !important; font-weight: 500 !important;
+  color: #5A6B7D !important;
+}
+body.themed-sm .sm-dc-note {
+  font-size: 11px !important; font-weight: 400 !important;
+  color: #5A6B7D !important; line-height: 1.4 !important;
+}
+
 /* ── §27 sm-readbar: reading-time + section count + scroll progress ──
    Sticky strip below the wordmark. Renders nothing on print (#7 print
    stylesheet will handle that). Compact + numeric — uses tabular-nums
