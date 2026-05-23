@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-  var BUILD_V = "2026-05-23T17:03:05Z";
+  var BUILD_V = "2026-05-23T18:47:47Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -3834,6 +3834,68 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <script>
 // ════════════════════════════════════════════════════
+// HYDRATION BOOT LOADER  (Tier 1 anti-clone)
+// ════════════════════════════════════════════════════
+// The dashboard's data layer is being migrated from inline JS
+// constants in this file to an Origin-gated /api/state.json
+// endpoint. Each migrated symbol is declared as a `let X = null`
+// placeholder below; the boot loader fetches the bundle and
+// assigns the real values before the dashboard renders.
+//
+// Endpoint resolution order:
+//   1. /api/state.json   — production (Vercel function, Origin-gated)
+//   2. /data/state.json  — local dev (plain static file)
+//
+// Hydration callbacks: any code that depends on a migrated symbol
+// must register a callback via MD._hydrationCallbacks.push(fn).
+// Callbacks fire after assignment, in registration order. If
+// hydration has already completed by the time a callback registers
+// (e.g. a script loaded after _hydrate finished), it should
+// check MD._hydrationDone and invoke itself.
+window.MD = window.MD || {};
+window.MD._hydrationCallbacks = window.MD._hydrationCallbacks || [];
+window.MD._hydrationDone = false;
+window.MD._hydrationState = null;  // last fetched bundle, for debugging
+
+(function _bootHydrate(){
+  async function _fetchState(){
+    const endpoints = ['/api/state.json', '/data/state.json'];
+    for (const url of endpoints) {
+      try {
+        const r = await fetch(url, { credentials: 'omit', cache: 'no-store' });
+        if (r.ok) return await r.json();
+      } catch(_) { /* try next */ }
+    }
+    return null;
+  }
+  async function _hydrate(){
+    const s = await _fetchState();
+    window.MD._hydrationState = s;
+    if (s) {
+      // Assign each known key onto the global scope. We assign via
+      // window so we don't have to re-declare the `let` symbols
+      // here (the script-level `let X = null;` declarations below
+      // remain authoritative for the inline references).
+      if (s.KPIS !== undefined) { try { KPIS = s.KPIS; } catch(_){ window.KPIS = s.KPIS; } }
+      // (Additional keys will be migrated in subsequent commits.)
+    } else {
+      console.warn('[hydrate] state.json unavailable — dashboard will render with placeholders');
+    }
+    window.MD._hydrationDone = true;
+    const cbs = window.MD._hydrationCallbacks.slice();
+    window.MD._hydrationCallbacks.length = 0;
+    for (const fn of cbs) {
+      try { fn(); } catch(e) { console.error('[hydrate] callback failed', e); }
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _hydrate);
+  } else {
+    _hydrate();
+  }
+})();
+
+// ════════════════════════════════════════════════════
 // DATA
 // ════════════════════════════════════════════════════
 
@@ -3898,7 +3960,7 @@ const GDP_BROAD = [
 ];
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
-const U_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[5.6, 6.9, 7.5, 6.9, 6.1, 5.6, 5.4, 4.9, 4.5, 4.2, 4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3]};
+const U_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[5.6, 6.9, 7.5, 6.9, 6.1, 5.6, 5.4, 4.9, 4.5, 4.2, 4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.6, 3.6, 4.0, 4.3]};
 const U_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "data":[4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.4, 4.3, 4.3]};
 const U_SECTOR_MOM = {
   sectors:["Construction","Hotel & Lodging","Restaurant Workers","Retail Trade","Information/Tech","Transport & Warehousing","Manufacturing","Prof. & Biz Services","Agriculture & Mining","Wholesale Trade","Healthcare & Education","Financial Activities","Government"],
@@ -4354,7 +4416,7 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Jobs Apr'26", "val":"+115K", "metric":"jobs", "delta":-70, "chg":"-70K", "sub":"Prior: +185K (Mar'26)", "spark":[13.0, -20.0, 64.0, -70.0, 76.0, -140.0, 41.0, -17.0, 160.0, -156.0, 185.0, 115.0]}, {"lbl":"Initial Claims May'26", "val":"211K", "metric":"claims", "delta":12000, "chg":"+12K", "inv":true, "sub":"Prior wk: 199K (May'26)", "badge":"STALE", "spark":[222.0, 218.0, 216.0, 235.0, 224.0, 215.0, 203.0, 207.0, 201.0, 210.0, 211.0, 230.0, 230.0, 208.0, 211.0, 214.0, 213.0, 205.0, 211.0, 203.0, 218.0, 208.0, 215.0, 190.0, 199.0, 211.0]}, {"lbl":"Unemployment Apr'26", "val":"4.3%", "metric":"unemp", "delta":0.0, "chg":"0.0pp", "inv":true, "sub":"Prior: 4.3% (Mar'26)", "spark":[4.1, 4.2, 4.1, 4.0, 4.2, 4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.4, 4.3, 4.3]}, {"lbl":"Sahm Rule Apr'26", "val":"+0.20pp", "metric":"unemp", "delta":0.2, "chg":"OK", "inv":true, "sub":"3M avg 4.33% \u2212 12M low 4.13% \u00b7 trigger \u2265 +0.5pp"}, {"lbl":"Wage Growth Apr'26", "val":"3.6%", "metric":"wages", "delta":-0.3, "chg":"-0.3pp", "sub":"Prior: 3.9% (Mar'26) \u00b7 Atlanta Fed WGT 3MMA", "spark":[4.7, 4.3, 4.2, 4.2, 4.3, 4.3, 4.3, 4.3, 4.1, 4.1, 4.0, 4.1, 4.0, 3.7, 3.6, 3.7, 3.9, 3.6]}, {"lbl":"CPI YoY Apr'26", "val":"3.8%", "metric":"cpi", "delta":0.49, "chg":"+0.5pp", "inv":true, "sub":"MoM: +0.64% \u00b7 YoY: 3.8% \u00b7 3M avg: 3.2% \u00b7 Prior: 3.3% (Mar'26)", "spark":[2.58, 2.72, 2.87, 2.99, 2.8, 2.38, 2.33, 2.38, 2.68, 2.74, 2.94, 3.02, 2.7, 2.65, 2.39, 2.43, 3.29, 3.78]}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Prior: 3.0% (Feb'26)", "spark":[2.99, 2.98, 2.99, 2.78, 2.97, 2.67, 2.61, 2.78, 2.81, 2.86, 2.91, 2.83, 2.75, 2.83, 2.97, 3.08, 3.0, 3.2]}, {"lbl":"Headline PCE Mar'26", "val":"3.5%", "metric":"pce", "delta":0.67, "chg":"+0.7pp", "inv":true, "sub":"Prior: 2.8% (Feb'26) \u00b7 BEA PCEPI", "spark":[2.48, 2.59, 2.73, 2.61, 2.71, 2.36, 2.28, 2.46, 2.59, 2.61, 2.75, 2.79, 2.71, 2.82, 2.88, 2.86, 2.83, 3.5]}, {"lbl":"UMich Sentiment May'26", "val":"44.8", "metric":"umcsent", "delta":-5.0, "chg":"-5.0", "badge":null, "sub":"MoM: -5.0 \u00b7 YoY: -7.4 \u00b7 Prior: 49.8 (Apr'26)", "spark":[74.0, 71.7, 64.7, 57.0, 52.2, 52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6, 53.3, 49.8, 44.8]}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)", "badge":"STALE", "spark":[10.564065, 10.576964, 10.747803, 11.096103, 11.058844, 11.0193, 11.138746, 11.122474, 11.105374, 11.124175, 11.257951, 11.323096]}, {"lbl":"Fed Funds Apr'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury May'26", "val":"4.57%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 4.08% \u00b7 Spread: +49bp"}];
+let KPIS = null;
 function _releaseBadge(tag){
   if(!tag) return '';
   const up = String(tag).toUpperCase();
@@ -4416,25 +4478,41 @@ function _kpiSpark(vals){
        + '</svg>';
 }
 
-document.getElementById("kpi-strip").innerHTML = KPIS.map(k=>{
-  const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
-  const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
-  const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
-  const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
-  const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
-  const b = _releaseBadge(k.badge);
-  const s = _kpiSpark(k.spark);
-  const sWrap = s ? `<div class="kpi-spark-wrap" style="color:${col}">${s}</div>` : '';
-  // a11y: roll label + value + delta into one aria-label so screen
-  // readers announce the tile as a single unit instead of three.
-  // Sparkline is aria-hidden — its trend information is already
-  // captured in the delta + sub text.
-  const _aria = `${k.lbl}: ${k.val}${k.chg ? ', change ' + k.chg : ''}. ${k.sub || ''}`
-    .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
-  return `<div class="kpi" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
-  <div class="kpi-val" style="color:${col}">${k.val}${d}</div>${sWrap}
-  <div class="kpi-sub">${k.sub}</div></div>`;
-}).join("");
+// Tier 1 anti-clone: KPIS arrives from /api/state.json after boot.
+// _renderKpiStrip() is wired into the hydration callback chain (see
+// the boot loader at the foot of this script tag); calling it before
+// hydration is a no-op so the page degrades gracefully.
+function _renderKpiStrip(){
+  if (!Array.isArray(KPIS) || KPIS.length === 0) return;
+  const strip = document.getElementById("kpi-strip");
+  if (!strip) return;
+  strip.innerHTML = KPIS.map(k=>{
+    const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
+    const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
+    const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
+    const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
+    const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
+    const b = _releaseBadge(k.badge);
+    const s = _kpiSpark(k.spark);
+    const sWrap = s ? `<div class="kpi-spark-wrap" style="color:${col}">${s}</div>` : '';
+    // a11y: roll label + value + delta into one aria-label so screen
+    // readers announce the tile as a single unit instead of three.
+    // Sparkline is aria-hidden — its trend information is already
+    // captured in the delta + sub text.
+    const _aria = `${k.lbl}: ${k.val}${k.chg ? ', change ' + k.chg : ''}. ${k.sub || ''}`
+      .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
+    return `<div class="kpi" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
+    <div class="kpi-val" style="color:${col}">${k.val}${d}</div>${sWrap}
+    <div class="kpi-sub">${k.sub}</div></div>`;
+  }).join("");
+}
+// Register _renderKpiStrip() with the hydration chain.
+// MD.onHydrate is defined in the boot loader; if hydration has
+// already completed by the time this script tag is evaluated, the
+// helper invokes the callback synchronously.
+window.MD = window.MD || {};
+(window.MD._hydrationCallbacks = window.MD._hydrationCallbacks || []).push(_renderKpiStrip);
+if (window.MD._hydrationDone) _renderKpiStrip();
 
 // ════════════════════════════════════════════════════
 // GDP TAB
@@ -4945,7 +5023,10 @@ function buildWagesTab(){
   if(builtTabs.wages) return; builtTabs.wages=1;
 
   // TDSP metric (from KPI data if available)
-  const tdspKpi = KPIS.find(k=>k.lbl.includes("Debt Service"));
+  // Guard against null KPIS (hydration not yet complete / failed —
+  // see Tier 1 anti-clone boot loader). Falls through to the hardcoded
+  // ~9.8% baseline a few lines down via the ternary.
+  const tdspKpi = (Array.isArray(KPIS) ? KPIS : []).find(k=>k.lbl.includes("Debt Service"));
   const tdspVal = tdspKpi ? tdspKpi.val : "~9.8%";
   const tdspSub = tdspKpi ? tdspKpi.sub : "% of disposable income";
 
@@ -5296,7 +5377,7 @@ function buildFCTab(){
 // ════════════════════════════════════════════════════
 const PCE_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "headline":[4.9, 2.6, 2.6, 2.2, 2.1, 2.0, 2.4, 1.1, 0.8, 2.1, 2.5, 1.1, 2.1, 2.1, 2.8, 2.9, 2.3, 3.5, 0.1, 2.1, 1.5, 2.5, 1.6, 1.4, 0.7, 0.3, 1.7, 1.8, 1.9, 1.6, 1.3, 6.1, 5.5, 2.8, 2.7, 2.9], "core":[4.0, 3.5, 2.8, 2.5, 2.2, 2.1, 1.9, 1.5, 1.4, 1.4, 1.9, 1.7, 1.8, 1.6, 2.1, 2.3, 2.3, 2.4, 1.1, 1.5, 1.1, 2.0, 1.7, 1.5, 1.4, 1.2, 1.8, 1.6, 2.0, 1.5, 1.5, 5.2, 5.0, 3.1, 3.0, 3.0]};
 const PCE_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"], "headline":[2.4, 2.3, 2.5, 2.6, 2.6, 2.7, 2.8, 2.7, 2.8, 2.9, 2.9, 2.8, 3.5], "core":[2.7, 2.6, 2.8, 2.8, 2.9, 2.9, 2.8, 2.8, 2.8, 3.0, 3.1, 3.0, 3.2]};
-const SAVING_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[8.4, 8.9, 9.4, 7.8, 6.8, 6.9, 6.3, 6.0, 6.5, 4.6, 4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
+const SAVING_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[8.4, 8.9, 9.4, 7.8, 6.8, 6.9, 6.3, 6.0, 6.5, 4.6, 4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.5, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
 const SAVING_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26"], "data":[5.1, 5.5, 4.9, 4.6, 4.5, 4.4, 4.3, 4.0, 4.0, 3.9, 4.5, 3.9, 3.6]};
 const UMCSENT_MONTHLY = {"labels":["May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26"], "data":[52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6, 53.3, 49.8, 44.8], "statuses":["final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final"]};
 const PCE_CATS = [
@@ -5819,7 +5900,7 @@ const CREDIT_DEBT_TABLE = [
 // ════════════════════════════════════════════════════
 // HOUSING & RATES DATA
 // ════════════════════════════════════════════════════
-const HOUSING_MONTHLY = {"labels":["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "caseShiller":[2.8, 2.3, 1.9, 1.6, 1.5, 1.3, 1.3, 1.3, 1.1, 0.8, 0.7, 0.7, 0.7], "mortgage30":[6.73, 6.82, 6.82, 6.72, 6.59, 6.35, 6.25, 6.24, 6.19, 6.1, 6.05, 6.18, 6.33]};
+const HOUSING_MONTHLY = {"labels":["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "caseShiller":[2.8, 2.3, 1.9, 1.6, 1.5, 1.3, 1.3, 1.3, 1.1, 0.8, 0.7, 0.7, 0.7], "mortgage30":[6.72, 6.82, 6.82, 6.72, 6.59, 6.35, 6.25, 6.24, 6.19, 6.1, 6.05, 6.18, 6.33]};
 const HPI_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "cs":[77, 76, 76, 77, 80, 81, 83, 85, 90, 96, 105, 113, 122, 134, 150, 172, 183, 180, 164, 148, 145, 139, 141, 154, 165, 172, 181, 191, 202, 209, 222, 260, 298, 306, 321, 328], "fhfa":[79, 78, 79, 80, 82, 83, 85, 88, 93, 99, 108, 117, 126, 138, 155, 177, 189, 185, 169, 153, 149, 143, 145, 159, 170, 177, 186, 197, 208, 216, 229, 268, 307, 315, 331, 338]};
 const MORTGAGE_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2027F"], "rate30":[10.13, 9.25, 8.39, 7.31, 8.38, 7.93, 7.81, 7.6, 6.94, 7.44, 8.05, 6.97, 6.54, 5.83, 5.84, 5.87, 6.41, 6.34, 6.03, 5.04, 4.69, 4.45, 3.66, 3.98, 4.17, 3.85, 3.65, 3.99, 4.54, 3.94, 3.11, 2.96, 5.34, 6.81, 6.72, 6.6, 6.51], "ffr":[8.1, 5.69, 3.52, 3.02, 4.2, 5.84, 5.3, 5.46, 5.35, 4.97, 6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 4.21, 3.75]};
 const STARTS_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "sf":[901, 835, 1032, 1131, 1191, 1082, 1154, 1136, 1278, 1306, 1232, 1272, 1363, 1505, 1604, 1718, 1474, 1036, 616, 442, 471, 434, 537, 619, 646, 712, 785, 848, 871, 889, 1000, 1129, 1004, 947, 1015, 1465], "mf":[303, 174, 170, 161, 255, 279, 314, 338, 344, 341, 341, 330, 347, 349, 345, 354, 338, 306, 284, 112, 114, 178, 247, 309, 354, 395, 392, 356, 375, 403, 394, 474, 546, 474, 355, 415]};
@@ -5843,7 +5924,7 @@ const HOUSING_METROS = [
 
 // Treasury yield history (annual avg from FRED DGS10, DGS2) + latest
 // Card 90+ DPD aligned to same annual labels (NY Fed HHDC, annual or latest quarterly)
-const TREASURY_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "May'26"], "dgs10":[8.55, 7.86, 7.01, 5.87, 7.09, 6.57, 6.44, 6.35, 5.26, 5.65, 6.03, 5.02, 4.61, 4.01, 4.27, 4.29, 4.8, 4.63, 3.66, 3.26, 3.22, 2.78, 1.8, 2.35, 2.54, 2.14, 1.84, 2.33, 2.91, 2.14, 0.89, 1.45, 2.95, 3.96, 4.21, 4.29, 4.57], "dgs2":[8.16, 6.49, 4.77, 4.05, 5.94, 6.15, 5.84, 5.99, 5.13, 5.43, 6.26, 3.83, 2.64, 1.65, 2.38, 3.85, 4.82, 4.36, 2.01, 0.96, 0.7, 0.45, 0.28, 0.31, 0.46, 0.69, 0.83, 1.4, 2.53, 1.97, 0.39, 0.27, 2.99, 4.58, 4.37, 3.81, 4.08], "spread":[0.39, 1.37, 2.24, 1.82, 1.15, 0.42, 0.6, 0.36, 0.13, 0.22, -0.23, 1.19, 1.97, 2.36, 1.89, 0.44, -0.02, 0.27, 1.65, 2.3, 2.52, 2.33, 1.52, 2.04, 2.08, 1.45, 1.01, 0.93, 0.38, 0.17, 0.5, 1.18, -0.04, -0.62, -0.16, 0.48, 0.49], "card90":[null, null, null, null, null, null, null, null, null, 4.58, 4.51, 4.86, 4.86, 4.47, 4.12, 3.7, 4.01, 4.25, 5.03, 6.53, 4.9, 3.54, 2.88, 2.5, 2.23, 2.14, 2.25, 2.48, 2.52, 2.58, 2.31, 1.64, 1.96, 2.81, 3.17, 3.01, 2.92]};
+const TREASURY_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "May'26"], "dgs10":[8.55, 7.86, 7.01, 5.87, 7.09, 6.57, 6.44, 6.35, 5.26, 5.65, 6.03, 5.02, 4.61, 4.01, 4.27, 4.29, 4.8, 4.63, 3.66, 3.26, 3.22, 2.78, 1.8, 2.35, 2.54, 2.14, 1.84, 2.33, 2.91, 2.14, 0.89, 1.45, 2.95, 3.96, 4.21, 4.29, 4.57], "dgs2":[8.16, 6.49, 4.77, 4.05, 5.94, 6.15, 5.84, 5.99, 5.13, 5.43, 6.26, 3.83, 2.64, 1.65, 2.38, 3.85, 4.82, 4.36, 2.01, 0.96, 0.7, 0.45, 0.28, 0.31, 0.46, 0.69, 0.83, 1.4, 2.53, 1.97, 0.39, 0.27, 2.99, 4.58, 4.37, 3.81, 4.08], "spread":[0.39, 1.37, 2.24, 1.82, 1.15, 0.42, 0.6, 0.36, 0.13, 0.22, -0.23, 1.19, 1.97, 2.36, 1.89, 0.44, -0.02, 0.27, 1.65, 2.3, 2.52, 2.33, 1.52, 2.04, 2.08, 1.45, 1.01, 0.93, 0.38, 0.17, 0.5, 1.18, -0.04, -0.62, -0.16, 0.48, 0.49], "card90":[null, null, null, null, null, null, null, null, null, 4.58, 4.51, 4.86, 4.86, 4.47, 4.12, 3.7, 4.01, 4.25, 5.03, 6.53, 4.9, 3.54, 2.88, 2.5, 2.23, 2.13, 2.25, 2.48, 2.52, 2.58, 2.31, 1.64, 1.96, 2.81, 3.17, 3.0, 2.92]};
 const FFR_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "GS 26F", "JPM 26F", "MS 26F"], "actual":[8.1, 5.69, 3.52, 3.02, 4.2, 5.84, 5.3, 5.46, 5.35, 4.97, 6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 3.64, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.21, 3.25, 3.75, 3.25]};
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
@@ -6968,8 +7049,12 @@ function buildYieldTab(){
 
   // Read FFR + 10Y from KPIS so the tiles can never drift from the top strip
   // (renderer rebuilds KPIS once from raw data; tiles just mirror it).
-  var _ffrKpi = KPIS.find(function(k){return k.metric==="rate"&&k.lbl.indexOf("Fed Funds")===0;}) || {};
-  var _t10Kpi = KPIS.find(function(k){return k.metric==="rate"&&k.lbl.indexOf("10Y Treasury")===0;}) || {};
+  // Guard against null KPIS (Tier 1 anti-clone hydration not complete);
+  // the `|| {}` tail already handles missing entries, so an empty list
+  // degrades to the "—" placeholders.
+  var _KPIS_R = Array.isArray(KPIS) ? KPIS : [];
+  var _ffrKpi = _KPIS_R.find(function(k){return k.metric==="rate"&&k.lbl.indexOf("Fed Funds")===0;}) || {};
+  var _t10Kpi = _KPIS_R.find(function(k){return k.metric==="rate"&&k.lbl.indexOf("10Y Treasury")===0;}) || {};
   var _ffrVal = _ffrKpi.val || "—";
   var _ffrLbl = _ffrKpi.lbl || "Fed Funds Rate";
   var _t10Val = _t10Kpi.val || "—";
@@ -8782,8 +8867,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
      lines fully reverts to the un-themed look.
      ═══════════════════════════════════════════════════════════════ -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T17:03:05Z">
-<script src="theme-overlay.js?v=2026-05-23T17:03:05Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-05-23T18:47:47Z">
+<script src="theme-overlay.js?v=2026-05-23T18:47:47Z"></script>
 <!-- Vercel Web Analytics — owner-only beacon (no visible UI for visitors). Enable at vercel.com/<team>/macro-dashboard-dev/analytics. -->
 <script defer src="/_vercel/insights/script.js"></script>
 </body>

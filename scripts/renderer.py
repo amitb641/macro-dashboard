@@ -9,6 +9,16 @@ No LLM. Output: index.html (updated in-place).
 import os, re, json, datetime, math, sys
 from pathlib import Path
 
+# Tier 1 anti-clone: state-bundle writer. Renderer functions register
+# their JSON payloads here instead of (or in addition to) inlining
+# them as JS literals; render() calls flush() at the end. See
+# scripts/_api_writer.py for the full rationale.
+# Sibling-module import — works when renderer.py is invoked as
+# `python scripts/renderer.py` (script dir is on sys.path) and when
+# the test suite imports renderer from scripts/.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import _api_writer  # noqa: E402
+
 
 ROOT      = Path(__file__).parent.parent
 HTML_FILE = ROOT / 'index.html'
@@ -3115,17 +3125,27 @@ def rebuild_kpi_strip(html, data, vals):
             vals = [round(v / divisor, 3) for v in vals]
         c['spark'] = vals
 
-    # Inject as JS
-    cards_json = json.dumps(cards, separators=(', ', ':'))
-    pattern = r'const KPIS\s*=\s*\[[\s\S]*?\];'
-    new_decl = f'const KPIS = {cards_json};'
-    new_html, n = re.subn(pattern, lambda m: new_decl, html, count=1)
+    # Tier 1 anti-clone migration: KPIS is now served via /api/state.json
+    # (Origin-gated) rather than inlined in the page. The renderer
+    # registers the payload here and patches the inline declaration to
+    # a `let KPIS = null;` placeholder. The boot loader in index.html
+    # hydrates from the API endpoint (or /data/state.json in local dev)
+    # and then calls _renderKpiStrip().
+    #
+    # Accept BOTH the legacy `const KPIS = [...];` literal AND the new
+    # `let KPIS = null;` placeholder so a re-run of the renderer against
+    # an already-migrated HTML stays idempotent. Both shapes patch to
+    # the placeholder.
+    _api_writer.register('KPIS', cards)
+    pattern = r'(?:const|let|var)\s+KPIS\s*=\s*(?:\[[\s\S]*?\]|null)\s*;'
+    placeholder = 'let KPIS = null;'  # boot loader hydrates from /api/state.json
+    new_html, n = re.subn(pattern, lambda m: placeholder, html, count=1)
     _record_subn_result('KPIS', pattern, n)
     if n:
-        applied.append(f'KPIS rebuilt ({len(cards)} cards with MoM deltas)')
+        applied.append(f'KPIS registered to state.json ({len(cards)} cards); inline declaration zeroed')
         return new_html
     else:
-        warnings.append('rebuild_kpi_strip: KPIS array not matched')
+        warnings.append('rebuild_kpi_strip: KPIS declaration not matched')
         return html
 
 
@@ -3604,6 +3624,20 @@ def render():
     ver_file = ROOT / 'version.json'
     ver_file.write_text(json.dumps({"v": build_v}), encoding='utf-8')
     html = re.sub(r'var BUILD_V\s*=\s*"[^"]*"', f'var BUILD_V = "{build_v}"', html)
+
+    # Tier 1 anti-clone: flush the registered state-bundle keys to
+    # data/state.json. The /api/state.json serverless function reads
+    # this file at request time. BUILD_V is exposed via env so the
+    # bundle's _meta carries the same version stamp as index.html.
+    try:
+        os.environ['BUILD_V'] = build_v
+        out = _api_writer.flush()
+        ks = _api_writer.keys()
+        applied.append(f'state.json flushed ({len(ks)} keys: {", ".join(ks) or "—"})')
+        print(f'  \u2705 state.json \u2192 {out.relative_to(ROOT)} ({len(ks)} keys)')
+    except Exception as e:
+        errors.append(f'state.json flush: {e}')
+        print(f'  \u274c state.json flush: {e}')
 
     # Cache-bust unfingerprinted static assets so browser caches don't serve
     # a stale theme-overlay.{js,css} after the file content changes on origin.

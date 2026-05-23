@@ -251,9 +251,12 @@ def test_renderer(tmp_dir):
         size = len(html.encode('utf-8'))
         _test('HTML size > 100KB', size > 100_000, f'only {size:,} bytes')
 
-        # Check critical JS constants exist
+        # Check critical JS constants exist. KPIS migrated to
+        # /api/state.json (Tier 1 anti-clone) — its inline form is
+        # now `let KPIS = null;` placeholder, so accept either shape.
         for const in ['KPIS', 'CPI_MONTHLY', 'U_MONTHLY', 'NFP_VS_ADP']:
-            _test(f'const {const} present', f'const {const}' in html)
+            present = (f'const {const}' in html) or (f'let {const}' in html)
+            _test(f'const {const} present', present)
 
         # Check no Python tracebacks
         _test('No tracebacks in HTML', 'Traceback' not in html)
