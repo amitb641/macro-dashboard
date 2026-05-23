@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-05-23T19:51:23.705837Z",
+  "analyzed_at": "2026-05-23T20:15:42.512346Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 2,
@@ -249,6 +249,7 @@
     }
   ],
   "raw_errors": [
+    "BLS: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
     "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
   ]
 }
