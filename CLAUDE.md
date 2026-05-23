@@ -81,8 +81,9 @@ Supporting scripts:
 
 ## Key Files
 - `METHODOLOGY.md` — Source of truth for indicator definitions, formulas, thresholds, and confirmation logic. Update whenever a threshold or rule changes.
-- `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
+- `index.html` — Single-page dashboard (~460KB). Most JS chart-data constants are now hydrated at runtime from `/api/state.json` (Tier 1 anti-clone migration) — the inline declarations are `let X = null;` placeholders that the boot loader fills before any `buildXTab()` reader fires. Renderer outputs both `index.html` (placeholders + structural HTML) and `data/state.json` (the data payload) every run; both are treated equivalently in CI conflict resolution.
 - `data/raw_data.json` — All collected API data
+- `data/state.json` — **Tier 1 anti-clone state bundle.** Renderer output, written by `scripts/_api_writer.py`'s module-level accumulator (`register(key, payload)` calls during patch functions, single `flush()` at end of render). Vercel serverless function `api/state.js` reads this file at request time and serves it via Origin-gated `/api/state.json` (CORS-locked to the dashboard's own domain; no-referer requests pass through for direct loads, cross-origin requests get 403). Treat as renderer output (alongside `index.html`) in any CI rebase/merge conflict logic. 18 keys at last count: `BANK_COMMENTARY, CPI_BREADTH, CPI_CAT_MOM, FC_MACRO, FED_LIQUIDITY_DATA, FISCAL_DATA, JOLTS_DATA, KPIS, MACRO_STATE, NFP_BLS_MOM, NFP_VS_ADP, OIL_SPREAD, PCE_CAT_MOM, RELEASE_CAL, SECTOR_MOM, SHOCK_TRACKER, TREASURY_DATA, WHAT_CHANGED`. The `_api_writer.read_prior(key)` helper lazy-loads the previous run's payload so rebuild functions can round-trip manually-curated fields (e.g. `NFP_VS_ADP.adp`, `SECTOR_MOM.sectors` ordering, `FC_MACRO.f26`) without scraping the now-null inline literals.
 - `data/signals.json` — Analyzer output
 - `data/bank_earnings.json` — Quarterly earnings commentary (source of truth for `BANK_COMMENTARY` in `index.html`; renderer patches it in via `update_bank_cards`; Agent 9 writes it autonomously)
 - `data/earnings_calendar.json` — Per-quarter bank reporting dates + transcript URL candidates; Agent 9's input (maintained quarterly by a human)
@@ -136,7 +137,7 @@ Rules:
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 10 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), earnings commentary (verbatim), visual QA, vision review
+- Validator runs 10 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g — reads `FC_MACRO.actNN` from `data/state.json` first, falls back to inline HTML scrape for pre-migration / cold-start runs), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), earnings commentary (verbatim), visual QA, vision review
 - CEO-grade gate (`python scripts/ceo_grade_gate.py`) aggregates the verdicts into a single PASS/WARN/FAIL/SKIP decision and writes `data/ceo_grade_verdict.json` — this is the publish-readiness contract
 
 ## Commit Conventions
