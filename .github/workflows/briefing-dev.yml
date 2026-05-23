@@ -234,40 +234,49 @@ jobs:
               # tree. Untracked artifacts included; pop is best-effort.
               git stash push --include-untracked --message "ci-rebase-shadow" || true
               if ! git rebase origin/dev/multi-expert-improvements; then
-                # Content conflict during rebase. Common case: a human just
-                # pushed an index.html edit (Barclays removal, nav hide, etc)
-                # that conflicts with this run's shadow-rendered index.html.
+                # Content conflict during rebase. Common cases:
+                #   (a) human pushed an index.html edit (Barclays removal,
+                #       nav hide, etc.) that conflicts with this run's
+                #       shadow-rendered index.html; or
+                #   (b) Tier 1 anti-clone migration: another push regenerated
+                #       data/state.json with a different key set / write
+                #       timestamp while this run was rendering its own.
                 # Resolution policy:
-                #   - If the only conflicted files are auto-generated
-                #     (index.html), prefer the human side (--ours during
-                #     rebase = the commit on remote we're rebasing onto)
-                #     and re-render to refresh data-side regions on top.
-                #   - If any non-generated file conflicts, bail — a human
-                #     edit overlaps a CI-managed data file, needs review.
+                #   - If every conflicted file is a renderer output
+                #     (currently index.html and data/state.json), prefer
+                #     the upstream side (--ours during rebase = the commit
+                #     on remote we're rebasing onto) and re-run the
+                #     renderer to refresh data-side regions on top.
+                #   - If any non-renderer-output file conflicts, bail —
+                #     a human edit overlaps a CI-managed file, needs
+                #     review.
                 conflicted=$(git diff --name-only --diff-filter=U)
                 echo "Conflicted files: $conflicted"
-                non_generated=$(echo "$conflicted" | grep -v '^index\.html$' || true)
+                non_generated=$(echo "$conflicted" | grep -Ev '^(index\.html|data/state\.json)$' || true)
                 if [ -z "$non_generated" ] && [ -n "$conflicted" ]; then
-                  echo "Conflict scoped to index.html — preferring human edits, re-rendering data on top"
-                  git checkout --ours -- index.html
-                  git add index.html
+                  echo "Conflict scoped to renderer outputs ($conflicted) — preferring upstream, re-rendering on top"
+                  for f in $conflicted; do
+                    git checkout --ours -- "$f"
+                    git add "$f"
+                  done
                   GIT_EDITOR=true git -c core.editor=true rebase --continue || {
-                    echo "::error::rebase --continue failed even after resolving index.html"
+                    echo "::error::rebase --continue failed even after resolving $conflicted"
                     git rebase --abort || true
                     git stash pop || true
                     exit 1
                   }
-                  # Refresh renderer-managed regions of index.html on top
-                  # of the preserved human structural edits.
-                  python scripts/renderer.py || echo "::warning::renderer failed during conflict resolution; proceeding with human index.html as-is"
-                  if ! git diff --quiet -- index.html; then
-                    git add index.html
+                  # Refresh renderer-managed regions on top of the
+                  # preserved upstream state (both inline-JS in
+                  # index.html and the state.json bundle).
+                  python scripts/renderer.py || echo "::warning::renderer failed during conflict resolution; proceeding with upstream files as-is"
+                  if ! git diff --quiet -- index.html data/state.json; then
+                    git add index.html data/state.json
                     git commit \
                       -m "Re-render after rebase conflict resolution" \
-                      -m "Human pushed an index.html edit while this CI run was generating its own. Rebase preferred the human side; this commit re-runs the renderer to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts) on top of the preserved structural edits."
+                      -m "Upstream pushed renderer-output edits while this CI run was generating its own. Rebase preferred upstream; this commit re-runs the renderer to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts, state.json bundle) on top of the preserved structural edits."
                   fi
                 else
-                  echo "::error::Rebase conflict in non-generated files: $non_generated"
+                  echo "::error::Rebase conflict in non-renderer-output files: $non_generated"
                   git rebase --abort || true
                   git stash pop || true
                   exit 1
