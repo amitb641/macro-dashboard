@@ -411,6 +411,31 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
     }, true);
   };
 
+  // §24.6 Footnote ladder — smooth-scroll from inline [N] anchors to
+  // the numbered ladder at panel bottom + brief flash on the target
+  // <li> so the eye finds it. Replaces ad-hoc <details> collapsibles
+  // (provenance one glance away, not one click away).
+  MD.initFootnotes = function(){
+    if (MD._fnInit) return; MD._fnInit = true;
+    document.addEventListener('click', function(e){
+      var a = e.target && e.target.closest && e.target.closest('.fn-anchor a');
+      if (!a) return;
+      var href = a.getAttribute('href') || '';
+      if (href.charAt(0) !== '#') return;
+      var t = document.getElementById(href.slice(1));
+      if (!t) return;
+      e.preventDefault();
+      try { t.scrollIntoView({behavior:'smooth', block:'center'}); }
+      catch(_) { t.scrollIntoView(); }
+      try { t.classList.add('fn-flash'); } catch(_){}
+      setTimeout(function(){ try { t.classList.remove('fn-flash'); } catch(_){} }, 1400);
+      // Reflect anchor in URL hash without an extra jump.
+      if (history && history.replaceState) {
+        try { history.replaceState(null, '', href); } catch(_){}
+      }
+    }, true);
+  };
+
   // Auto-init on DOM ready
   function boot(){
     MD.initScrollReveal();
@@ -421,6 +446,7 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
     try { MD.initNbspUnits(); } catch(e){}
     setTimeout(function(){ MD._nbspInit = false; try { MD.initNbspUnits(); } catch(e){} }, 600);
     try { MD.initReadingBar(); } catch(e){}
+    try { MD.initFootnotes(); } catch(e){}
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
@@ -3558,7 +3584,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div style="position:relative;height:310px;margin-bottom:8px"><canvas id="c-sloos" role="img" aria-label="SLOOS senior loan officer survey, tightening standards"></canvas></div>
     <div id="sloos-heatmap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3"></div>
     <div class="sloos-narrative" style="margin:8px 0 6px;padding:8px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:10.5px;color:#374151;line-height:1.65">
-      <strong style="color:#1F2937">Risk assessment:</strong> Credit card delinquencies lag recession probability by approximately 5 quarters <span style="color:#6B7280">(r = 0.50)</span> — once the yield curve signals distress, card losses are already building beneath the surface. SLOOS bank tightening serves as the transmission mechanism, forecasting elevated card stress roughly 3 quarters forward <span style="color:#6B7280">(r = 0.48)</span>. Notably, card delinquencies deteriorate ahead of broader consumer credit products <span style="color:#6B7280">(all-product DQ r = 0.27, ~5Q lag)</span>, positioning cards as the earliest observable stress indicator in the consumer credit cycle.
+      <strong style="color:#1F2937">Risk assessment:</strong> Credit card delinquencies lag recession probability by approximately 5 quarters<sup class="fn-anchor"><a href="#fn-sloos-1" aria-label="See footnote 1 — Card DPD vs Recession Probability correlation">[1]</a></sup> — once the yield curve signals distress, card losses are already building beneath the surface. SLOOS bank tightening serves as the transmission mechanism, forecasting elevated card stress roughly 3 quarters forward<sup class="fn-anchor"><a href="#fn-sloos-2" aria-label="See footnote 2 — SLOOS tightening vs Card DPD correlation">[2]</a></sup>. Notably, card delinquencies deteriorate ahead of broader consumer credit products<sup class="fn-anchor"><a href="#fn-sloos-3" aria-label="See footnote 3 — All-product DQ correlation and lag">[3]</a></sup>, positioning cards as the earliest observable stress indicator in the consumer credit cycle.
     </div>
     <div id="sloos-signal" style="display:flex;align-items:center;gap:0;margin-top:8px;flex-wrap:wrap"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:6px;border-top:1px solid #F0F1F3;font-size:9px;color:#9CA3AF">
@@ -3567,47 +3593,16 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
 
     <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
-    <details style="margin-top:6px;font-size:10px;color:#7a90aa">
-      <summary style="cursor:pointer;font-weight:600;color:#334E68">Correlation findings</summary>
-      <div style="margin-top:6px;line-height:1.7">
-        <p style="margin:4px 0 8px"><strong>Key takeaways:</strong></p>
-        <ul style="margin:0 0 10px 16px;padding:0;list-style:disc">
-          <li style="margin-bottom:4px">The yield curve is the earliest warning — inversions precede bank tightening and credit losses by <strong>15–30 months</strong></li>
-          <li style="margin-bottom:4px">SLOOS tightening is the transmission mechanism — when banks restrict lending, borrower stress follows within <strong>2–4 quarters</strong></li>
-          <li style="margin-bottom:4px">Card 90+ DPD is the lagging confirmation — delinquencies rise last, peaking <strong>5–10 quarters</strong> after the yield curve first signals trouble</li>
-          <li style="margin-bottom:4px"><strong>Current read (Q4'25):</strong> Recession prob. down to 19% (from 71% peak), SLOOS near neutral (+2%), but Card DPD remains elevated at 9.8% — the lag effect from 2023 tightening is still playing out</li>
-        </ul>
-        <p style="margin:4px 0"><strong>Lag timing (quarters):</strong></p>
-        <table style="margin:6px 0 8px;border-collapse:collapse;font-size:10px;width:100%;max-width:520px">
-          <tr style="border-bottom:1px solid #E5E7EB">
-            <th style="text-align:left;padding:4px 8px;color:#334E68;font-weight:700">Signal pair</th>
-            <th style="text-align:center;padding:4px 8px;color:#334E68;font-weight:700">Lead time</th>
-            <th style="text-align:left;padding:4px 8px;color:#334E68;font-weight:700">Example</th>
-          </tr>
-          <tr style="border-bottom:1px solid #F0F1F3">
-            <td style="padding:4px 8px">Yield Curve inversion → Recession Prob rises</td>
-            <td style="text-align:center;padding:4px 8px;font-weight:600">1–2 Q</td>
-            <td style="padding:4px 8px;color:#6B7280">Curve inverted Q3'22, prob peaked Q1'24 at 71%</td>
-          </tr>
-          <tr style="border-bottom:1px solid #F0F1F3">
-            <td style="padding:4px 8px">Recession Prob → SLOOS Tightening</td>
-            <td style="text-align:center;padding:4px 8px;font-weight:600">2–4 Q</td>
-            <td style="padding:4px 8px;color:#6B7280">Prob rose Q3'07, SLOOS peaked Q3'08 (+60%)</td>
-          </tr>
-          <tr style="border-bottom:1px solid #F0F1F3">
-            <td style="padding:4px 8px">SLOOS Tightening → Card 90+ DPD</td>
-            <td style="text-align:center;padding:4px 8px;font-weight:600">2–4 Q</td>
-            <td style="padding:4px 8px;color:#6B7280">SLOOS peaked Q3'08, Card DPD peaked Q1'10 (13.7%)</td>
-          </tr>
-          <tr>
-            <td style="padding:4px 8px">Full cycle: Yield Curve → Card losses</td>
-            <td style="text-align:center;padding:4px 8px;font-weight:600">5–10 Q</td>
-            <td style="padding:4px 8px;color:#6B7280">~15–30 months end-to-end</td>
-          </tr>
-        </table>
-        <div id="sloos-corr-detail" style="margin-top:6px;line-height:1.6"></div>
-      </div>
-    </details>
+    <div class="fn-ladder-wrap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3">
+      <div class="fn-ladder-title">Footnotes</div>
+      <ol class="fn-ladder">
+        <li id="fn-sloos-1"><strong>r&nbsp;=&nbsp;0.50</strong> · Card 90+ DPD lags Recession Probability by ~5 quarters. Full cycle (yield-curve inversion → card losses) runs <strong>15–30 months</strong> end-to-end — curve inverted Q3'22, recession prob peaked Q1'24 at 71%, card stress still feeding through Q4'25.</li>
+        <li id="fn-sloos-2"><strong>r&nbsp;=&nbsp;0.48</strong> · SLOOS bank tightening leads Card 90+ DPD by ~3 quarters (2–4 Q range). Last full cycle: SLOOS peaked Q3'08, Card DPD peaked Q1'10 at 13.7% — the 2008 SLOOS shock fed through with a 6-quarter lag.</li>
+        <li id="fn-sloos-3"><strong>all-product DQ r&nbsp;=&nbsp;0.27</strong> · Card 90+ DPD leads broader consumer-credit DQ by ~5 quarters, making cards the <em>earliest observable</em> stress signal in the consumer credit cycle — ahead of auto, mortgage, and HELOC.</li>
+      </ol>
+      <p class="fn-current-read"><strong>Current read (Q4'25):</strong> Recession prob. down to 19% (from 71% peak), SLOOS near neutral (+2%), Card DPD elevated at 9.8% — the 2023 tightening lag is still playing out.</p>
+      <div id="sloos-corr-detail" style="margin-top:8px;line-height:1.6;font-size:10px;color:#6B7280"></div>
+    </div>
   </div>
   <div class="two-up">
     <div class="panel">

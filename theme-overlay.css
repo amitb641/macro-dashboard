@@ -788,6 +788,81 @@ body.themed-sm .sm-rb-fill {
   border-radius: 2px !important;
 }
 
+/* §30 footnote ladder — replaces ad-hoc <details> collapsibles with
+   numbered inline anchors ([N] superscripts) + an always-visible
+   ordered list at the panel bottom. Inline citations stay clean;
+   full provenance is one glance away rather than one click away.
+   Anchors smooth-scroll to the matching ladder item and briefly
+   flash it (motion-reduce killed by §motion-reduce block below). */
+body.themed-sm .fn-anchor {
+  font-size: 0.72em;
+  line-height: 0;
+  vertical-align: super;
+  margin-left: 1px;
+  white-space: nowrap;
+}
+body.themed-sm .fn-anchor a {
+  color: #336BCC;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+body.themed-sm .fn-anchor a:hover,
+body.themed-sm .fn-anchor a:focus-visible {
+  background: rgba(51, 107, 204, 0.10);
+  text-decoration: underline;
+  outline: none;
+}
+body.themed-sm .fn-ladder-wrap {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #475569;
+}
+body.themed-sm .fn-ladder-title {
+  font-size: 9px;
+  font-weight: 700;
+  color: #334E68;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+body.themed-sm ol.fn-ladder {
+  margin: 0;
+  padding: 0 0 0 20px;
+  list-style: decimal;
+  list-style-position: outside;
+}
+body.themed-sm ol.fn-ladder li {
+  margin: 0 0 4px;
+  padding-left: 4px;
+  font-variant-numeric: tabular-nums lining-nums;
+  scroll-margin-top: 80px;
+}
+body.themed-sm ol.fn-ladder li::marker {
+  font-weight: 700;
+  color: #336BCC;
+}
+body.themed-sm ol.fn-ladder li strong {
+  color: #1E293B;
+}
+body.themed-sm .fn-current-read {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed #E2E8F0;
+  font-size: 10px;
+  color: #5A6B7D;
+  line-height: 1.6;
+}
+body.themed-sm .fn-flash {
+  animation: fnFlash 1.4s ease-out;
+}
+@keyframes fnFlash {
+  0%   { background: rgba(51, 107, 204, 0.10); }
+  100% { background: transparent; }
+}
+
 /* ── prefers-reduced-motion: kill every transition + animation ────
    Visual audit flagged missing motion-reduction clause despite the
    smFadeIn animation and hover transitions. WCAG 2.3.3. */
