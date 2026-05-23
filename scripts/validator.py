@@ -1519,27 +1519,65 @@ def _fc_macro_expected(data, yr):
 
 
 def check_seed_drift(html, data):
-    """Pass 3g — Compare static seeds in index.html against fresh recompute."""
+    """Pass 3g — Compare static seeds against fresh recompute.
+
+    Source-of-truth resolution for FC_MACRO.actNN:
+        1. data/state.json (post-Tier 1 anti-clone migration — the inline
+           literal is now `let FC_MACRO = null;` and state.json carries
+           the actual values).
+        2. Inline `const FC_MACRO = {...}` scrape in index.html (legacy /
+           cold-start path for pre-migration runs).
+
+    Either source produces the same `{actNN: [seed values]}` mapping; the
+    drift comparison logic below is unchanged.
+    """
     findings = []
     labels = ['GDP', 'U', 'CPI', 'Wage', 'FFR']
 
-    # FC_MACRO.actNN — historical actuals; revised by BEA/BLS over time
-    fc_block = re.search(r'const FC_MACRO\s*=\s*\{[^}]+\}', html, re.DOTALL)
-    if not fc_block:
+    # ── Source resolution ──────────────────────────────────────────────
+    act_seeds = {}
+    source = None
+    state_path = Path(__file__).resolve().parent.parent / 'data' / 'state.json'
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text(encoding='utf-8'))
+            fc = state.get('FC_MACRO') if isinstance(state, dict) else None
+            if isinstance(fc, dict):
+                for k, v in fc.items():
+                    if re.fullmatch(r'act\d{2}', k) and isinstance(v, list):
+                        try:
+                            act_seeds[k] = [float(x) for x in v]
+                        except (TypeError, ValueError):
+                            pass
+                if act_seeds:
+                    source = 'state.json'
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    if not act_seeds:
+        # Legacy / cold-start fallback: scrape inline literal
+        fc_block = re.search(r'const FC_MACRO\s*=\s*\{[^}]+\}', html, re.DOTALL)
+        if fc_block:
+            for m in re.finditer(r'(act(\d{2})):\s*\[([^\]]+)\]', fc_block.group(0)):
+                try:
+                    act_seeds[m.group(1)] = [float(v.strip()) for v in m.group(3).split(',')]
+                except ValueError:
+                    continue
+            if act_seeds:
+                source = 'index.html (inline)'
+
+    if not act_seeds:
         findings.append({
-            'check': 'FC_MACRO block present',
+            'check': 'FC_MACRO source present',
             'pass': False, 'severity': 'warning',
-            'note': 'const FC_MACRO not found in index.html',
+            'note': 'FC_MACRO not found in data/state.json or index.html — Pass 3g cannot verify seed drift',
         })
         return findings
 
-    for m in re.finditer(r'(act(\d{2})):\s*\[([^\]]+)\]', fc_block.group(0)):
-        act_key, yy = m.group(1), m.group(2)
-        yr = 2000 + int(yy)
-        try:
-            seed = [float(v.strip()) for v in m.group(3).split(',')]
-        except ValueError:
-            continue
+    # ── Drift comparison ───────────────────────────────────────────────
+    for act_key in sorted(act_seeds.keys()):
+        yr = 2000 + int(act_key[3:])
+        seed = act_seeds[act_key]
         expected = _fc_macro_expected(data, yr)
 
         diverged = []
@@ -1555,16 +1593,18 @@ def check_seed_drift(html, data):
             findings.append({
                 'check': f'Seed drift: FC_MACRO.{act_key} (yr={yr})',
                 'pass': False, 'severity': sev,
+                'source': source,
                 'seed': seed, 'expected': expected,
                 'diverged': diverged,
                 'note': '; '.join(diverged),
             })
             for d in diverged:
-                print(f'  🔴 FC_MACRO.{act_key} ({yr}): {d}')
+                print(f'  🔴 FC_MACRO.{act_key} ({yr}, src={source}): {d}')
         else:
             findings.append({
                 'check': f'Seed drift: FC_MACRO.{act_key} (yr={yr})',
                 'pass': True, 'severity': 'ok',
+                'source': source,
                 'seed': seed, 'expected': expected,
             })
     return findings
