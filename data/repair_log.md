@@ -1,3 +1,21 @@
+## Repair Agent — 2026-05-24T04:29:04.974624Z
+
+- **Status**: WARN
+- **Total checks**: 202
+- **Passed**: 199
+- **Failed**: 3
+- **Critical divergences**: 0
+
+### Panel data
+_0 critical · 3 warning · 0 stale_
+
+- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
+- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
+- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
+
+
+---
+
 ## Repair Agent — 2026-05-24T04:11:31.511730Z
 
 - **Status**: WARN
@@ -1266,41 +1284,6 @@ _0 critical · 9 warning · 0 stale_
 - **Passed**: 470
 - **Failed**: 11
 - **Critical divergences**: 0
-
-### Internal consistency
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **NFP_VS_ADP.adp label sync** — 
-- ⚠️ **NFP_VS_ADP series length sync** — 
-
-### Earnings verbatim
-_0 critical · 9 warning · 0 stale_
-
-- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
-- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
-- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
-- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
-- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
-- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
-- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
-- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
-- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
-
-
----
-
-## Repair Agent — 2026-05-11T16:36:44.772977Z
-
-- **Status**: WARN
-- **Total checks**: 481
-- **Passed**: 469
-- **Failed**: 12
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 1 warning · 0 stale_
-
-- ⚠️ **Collector error** — ALFRED PAYEMS@2026-03-31: 500 Server Error: Internal Server Error for url: https://api.stlouisfed.org/fred/series/observations?series_id=PAYEMS&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start
 
 ### Internal consistency
 _0 critical · 2 warning · 0 stale_
