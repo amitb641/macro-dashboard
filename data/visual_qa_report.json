@@ -1,18 +1,40 @@
 {
-  "checked_at": "2026-05-17T15:58:39.025452Z",
+  "checked_at": "2026-05-24T05:42:42.088113Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 363,
-    "passed": 363,
+    "total_checks": 430,
+    "passed": 430,
     "failed": 0,
-    "js_errors": 1,
+    "js_errors": 0,
     "console_errors": 0
   },
-  "js_errors": [
-    "Maximum call stack size exceeded"
-  ],
+  "js_errors": [],
   "console_errors": [],
   "findings": [
+    {
+      "category": "contract",
+      "check": "spacing_grid",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "contract",
+      "check": "palette_compliance",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "contract",
+      "check": "panel_meta",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "contract",
+      "check": "serif_scope",
+      "pass": true,
+      "severity": "ok"
+    },
     {
       "category": "global",
       "check": "Page has title",
@@ -76,6 +98,30 @@
     {
       "category": "Outlook",
       "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Outlook",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
       "pass": true,
       "severity": "ok"
     },
@@ -315,6 +361,12 @@
     },
     {
       "category": "GDP",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "GDP",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -388,6 +440,42 @@
     {
       "category": "Jobs",
       "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Jobs",
+      "check": "Panel \"EXHIBIT 06\" painted body content",
       "pass": true,
       "severity": "ok"
     },
@@ -501,6 +589,42 @@
     },
     {
       "category": "Unemployment",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
+      "check": "Panel \"EXHIBIT 06\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Unemployment",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -597,6 +721,30 @@
     },
     {
       "category": "Wages",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Wages",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -688,6 +836,42 @@
     {
       "category": "CPI",
       "check": "Chart canvas 4 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "CPI",
+      "check": "Panel \"EXHIBIT 06\" painted body content",
       "pass": true,
       "severity": "ok"
     },
@@ -921,6 +1105,72 @@
     },
     {
       "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 06\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 07\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 08\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 09\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 10\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
+      "check": "Panel \"EXHIBIT 11\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Consumer & PCE",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -1041,6 +1291,36 @@
     },
     {
       "category": "Rates & Yields",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Rates & Yields",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -1143,6 +1423,36 @@
     },
     {
       "category": "Credit",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Credit",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -1222,6 +1532,30 @@
     {
       "category": "Banking",
       "check": "Chart canvas 1 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Banking",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
       "pass": true,
       "severity": "ok"
     },
@@ -1335,6 +1669,42 @@
     },
     {
       "category": "Housing",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
+      "check": "Panel \"EXHIBIT 06\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Housing",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -1432,6 +1802,36 @@
     {
       "category": "Oil",
       "check": "Chart canvas 3 has size",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"EXHIBIT 01\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"EXHIBIT 02\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"EXHIBIT 03\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"EXHIBIT 04\" painted body content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Oil",
+      "check": "Panel \"EXHIBIT 05\" painted body content",
       "pass": true,
       "severity": "ok"
     },
@@ -1545,7 +1945,7 @@
     },
     {
       "category": "Sources",
-      "check": "Panel \"EX 5Dynamic Commentary \u2014 AI-Generated fr\" has title",
+      "check": "Panel \"EX 5Dynamic Commentary\" has title",
       "pass": true,
       "severity": "ok"
     },
