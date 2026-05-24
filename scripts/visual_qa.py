@@ -411,6 +411,73 @@ def run_visual_qa(take_screenshots=False):
                     _check(tab_name, f'Chart canvas {i} has size', has_size,
                            f'{box["width"]:.0f}x{box["height"]:.0f}px')
 
+            # ── Per-panel paint coverage (EX 5 regression guard) ──
+            # Every panel labelled with a `pm-exhibit` chip (e.g. "Exhibit 05")
+            # must paint *something* in its body — at minimum: a sized canvas,
+            # a sized inline SVG, a populated data-table/grid, or meaningful
+            # text content (not just chips/badges).
+            #
+            # Background: the oil tab's "Full Oil Impact Chain" panel
+            # (Exhibit 05) shipped completely blank for weeks. The two PHASE
+            # chips at the top rendered (so panel-level text-length and
+            # panel-title checks passed) but the actual `<div
+            # id="oil-impact-chain">` body never got filled — root cause was
+            # a `let SHOCK_TRACKER = null;` declared inside `buildOilTab()`
+            # that shadowed the script-scope hydration target. Caught
+            # post-hoc from a user screenshot. This check would have caught
+            # it the same day.
+            #
+            # The assertion is intentionally lenient: any one of canvas/SVG/
+            # table/text-body counts as "painted". A truly empty body
+            # (placeholder div + chips only) is the failure mode.
+            exhibit_panels = panel.query_selector_all('.panel .pm-exhibit, .pm-exhibit')
+            for ex_chip in exhibit_panels:
+                ex_label = (ex_chip.inner_text() or '').strip()
+                # Walk up to the enclosing .panel — that's the surface we're
+                # asserting paint on. Skip if we can't find one (defensive).
+                panel_el = ex_chip.evaluate_handle(
+                    "el => el.closest('.panel')"
+                ).as_element()
+                if not panel_el:
+                    continue
+                paint_signal = panel_el.evaluate(
+                    """el => {
+                        // Sized canvas or svg
+                        for (const c of el.querySelectorAll('canvas, svg')) {
+                            const r = c.getBoundingClientRect();
+                            if (r.width > 30 && r.height > 30) return 'canvas/svg';
+                        }
+                        // Populated data-table or grid wrapper (rows present)
+                        for (const t of el.querySelectorAll('.dtable-wrap, .dtable, table, .grid, .stk-grid')) {
+                            if (t.children && t.children.length > 0) return 'table/grid';
+                        }
+                        // Non-trivial body text — exclude the meta-chip ladder
+                        // (panel-title/sub/meta/badges/chips) so a panel that
+                        // has ONLY chip labels and no actual content fails.
+                        const clone = el.cloneNode(true);
+                        clone.querySelectorAll(
+                            '.panel-title, .panel-sub, .panel-meta, ' +
+                            '.so-what, .badge, .chip, .pill, ' +
+                            'span[style*="border-radius"]'
+                        ).forEach(n => n.remove());
+                        const body = (clone.innerText || '').trim();
+                        if (body.length > 40) return 'text';
+                        // Any non-empty dynamic container that holds children
+                        for (const d of el.querySelectorAll('div[id]')) {
+                            if (d.children && d.children.length > 0) return 'container';
+                        }
+                        return '';
+                    }"""
+                )
+                _check(
+                    tab_name,
+                    f'Panel "{ex_label}" painted body content',
+                    bool(paint_signal),
+                    f'{ex_label}: no canvas/svg/table/text/container in body '
+                    f'— possible hydration shadow or empty placeholder',
+                    severity='critical',
+                )
+
             # ── Layout consistency: commentary positioned above charts ──
             # Canonical rule: every chart tab with a `<div class="fc-note"
             # id="commentary-<tab>">` element should render it ABOVE the
