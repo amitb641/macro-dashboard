@@ -286,6 +286,24 @@ def run_visual_qa(take_screenshots=False):
         page.goto(file_url, wait_until='networkidle')
         page.wait_for_timeout(1000)  # Let charts render
 
+        # Tier 1 anti-clone: wait for hydration to finish before running
+        # any tab-click checks. _hydrate() fetches /api/state.json (fails on
+        # file://, falls through to /data/state.json which the route above
+        # serves from disk) then triggers _rebuildAfterHydrate to rewire
+        # tabs. If we click before that callback fires, the click target
+        # can become unstable as the tab panel re-renders mid-click,
+        # producing the "Timeout 30000ms" failure on btn.click(). Poll
+        # for window.MD._hydrationDone with a 5s ceiling — well above
+        # typical fetch-from-disk latency (~50ms).
+        try:
+            page.wait_for_function(
+                'window.MD && window.MD._hydrationDone === true',
+                timeout=5000
+            )
+        except Exception as _hyd_err:
+            print(f'  WARN  Hydration did not signal _hydrationDone within 5s '
+                  f'({_hyd_err}). Continuing — checks may be flaky.')
+
         # ── Global checks ──────────────────────────────────────────
         print('\n  ── Global Checks ──')
 
