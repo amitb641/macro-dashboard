@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-24 19:55 UTC._
+_Generated 2026-05-24 20:07 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `c35bc81b7983` — 🌑 Shadow update (dev): 2026-05-24
+- **Commit:** `12077aa9c6cc` — 🌑 Shadow update (dev): 2026-05-24
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
@@ -17,7 +17,7 @@ fired yet. The paired diff (when both branches are fresh) is in
 ## Headline
 
 - **CEO-grade verdict:** **—**
-- **Validator:** 375 passed / 15 failed / 0 critical
+- **Validator:** 628 passed / 3 failed / 0 critical
 - **Editorial:** 0 critical, 0 warning
 - **Signals:** risk=HIGH, alerts=3, watch=2
 
@@ -36,7 +36,7 @@ _None at critical severity._
 | verdict | — |
 | strict_mode | — |
 | layer_count | 5 |
-| layers | validator=WARN, visual_qa=WARN, vision_review=PASS, editorial=WARN, repair_incident=PASS |
+| layers | validator=WARN, visual_qa=PASS, vision_review=PASS, editorial=WARN, repair_incident=PASS |
 | reasons | (none) |
 
 ### Validator (10-pass)
@@ -44,9 +44,9 @@ _None at critical severity._
 | Metric | Value |
 |---|---|
 | status | WARN |
-| total_checks | 390 |
-| passed | 375 |
-| failed | 15 |
+| total_checks | 631 |
+| passed | 628 |
+| failed | 3 |
 | skipped | 14 |
 | critical_divergences | 0 |
 
