@@ -267,10 +267,11 @@ jobs:
                 #   - data/agent_memory.jsonl    (audit log)
                 #   - data/incident_reports/*.md (diagnostician)
                 #   - data/transcripts/**         (earnings agent)
+                #   - data/snapshots/**           (snapshot.py rolling backups)
                 #   - data/parallel_compare_*.*  (parallel-run trial)
                 #   - data/run_report_*.md        (parallel-run trial)
                 #   - version.json                (build stamp)
-                non_generated=$(echo "$conflicted" | grep -Ev '^(index\.html|version\.json|data/[^/]+\.json|data/[^/]+\.jsonl|data/[^/]+\.md|data/screenshots/.+\.png|data/incident_reports/.+\.md|data/transcripts/.+|data/parallel_compare_.+|data/run_report_.+)$' || true)
+                non_generated=$(echo "$conflicted" | grep -Ev '^(index\.html|version\.json|data/[^/]+\.json|data/[^/]+\.jsonl|data/[^/]+\.md|data/screenshots/.+\.png|data/incident_reports/.+\.md|data/transcripts/.+|data/snapshots/.+|data/parallel_compare_.+|data/run_report_.+)$' || true)
                 if [ -z "$non_generated" ] && [ -n "$conflicted" ]; then
                   echo "Conflict scoped to pipeline outputs ($conflicted) — preferring upstream, re-rendering on top"
                   for f in $conflicted; do
