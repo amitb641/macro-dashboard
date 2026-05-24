@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "python scripts/minify_html.py",
   "functions": {
     "api/state.js": {
       "maxDuration": 5

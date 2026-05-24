@@ -200,6 +200,14 @@ def check_panel_meta():
         _check('contract', 'panel_meta_file', False, 'index.html missing', 'critical')
         return
     src = html_file.read_text(encoding='utf-8')
+    # Strip inline <script> blocks before scanning so that querySelector
+    # string literals inside JS (e.g. '.panel-meta') don't confuse the
+    # panel-slice heuristic. This is especially important when the
+    # minifier consolidates all inline JS at end-of-body — without
+    # stripping, the last panel's slice extends into the 300KB+ JS chunk
+    # and triggers false positives on string-literal occurrences of
+    # 'panel-meta' that appear there as DOM selector arguments.
+    src = re.sub(r'<script(?![^>]+src=)[^>]*>.*?</script>', '', src, flags=re.DOTALL | re.IGNORECASE)
     # Find panel blocks: from `<div class="panel"` to the next closing
     # `</div>` that matches it. Cheap heuristic: split into panels by
     # detecting `class="panel"` then look at the next ~1500 chars.
@@ -409,7 +417,7 @@ def run_visual_qa(take_screenshots=False):
                 return strip ? strip.children.length : 0;
             }''')
             _check('global', 'KPI strip has tiles',
-                   (isinstance(kpi_strip, int) and kpi_strip > 0) or len(kpi_strip) > 0,
+                   (isinstance(kpi_strip, int) and kpi_strip > 0),
                    'No KPI tiles found')
         else:
             _check('global', 'KPI strip has tiles', len(kpi_strip) > 0,
@@ -887,14 +895,25 @@ def run_visual_qa(take_screenshots=False):
         # The table below is the source-of-truth lexicon. Update it AND
         # data/style_guide.md §4.5 together — never one without the other.
         html_source = HTML_FILE.read_text(encoding='utf-8')
+        # Normalise unicode-escaped sequences so annotation searches
+        # match even when the source went through esbuild (which
+        # converts non-ASCII chars like en-dash to \uXXXX escapes).
+        def _decode_escapes(s: str) -> str:
+            import re as _re
+            return _re.sub(
+                r'\\u([0-9a-fA-F]{4})',
+                lambda m: chr(int(m.group(1), 16)),
+                s,
+            )
+        html_source_norm = _decode_escapes(html_source)
         ANNOTATION_LEXICON = [
             # (label, min_occurrences, owner_charts)
             ('Fed 2% target',         2, 'c-cpi-mom, c-pce-mom (+ PCE annual series legend)'),
             ('Hormuz shock, Mar 2026', 3, 'c-cpi-mom, c-pce-mom, c-oil-monthly'),
-            ('Neutral rate, 2.5–3.0%', 1, 'c-ffr'),
+            ('Neutral rate, 2.5\u20133.0%', 1, 'c-ffr'),
         ]
         for label, min_n, owners in ANNOTATION_LEXICON:
-            n = html_source.count(label)
+            n = html_source_norm.count(label)
             _check(
                 'annotations',
                 f'lexicon: "{label}" present ≥{min_n}× ({owners})',
