@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-24T07:21:17.471108Z",
+  "validated_at": "2026-05-24T17:44:45.177113Z",
   "status": "WARN",
   "summary": {
     "total_checks": 631,
     "passed": 628,
     "failed": 3,
-    "skipped": 14,
+    "skipped": 20,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -589,29 +589,20 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "raw_data_value": 3.64,
-      "fresh_api_value": 3.64,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158736.0,
-      "fresh_api_value": 158736.0,
-      "difference": 0.0,
-      "tolerance": 5,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.51,
-      "fresh_api_value": 6.51,
-      "difference": 0.0,
-      "tolerance": 0.05,
-      "severity": "ok",
+      "severity": "skipped",
+      "reason": "API unavailable (key missing or timeout)",
       "pass": true
     },
     {
@@ -707,7 +698,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-24T07:19:55.361405Z",
+      "collected_at": "2026-05-24T17:43:28.973572Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3939,35 +3930,20 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "unrate",
-      "fred": 4.3,
-      "bls": 4.3,
-      "diff": 0.0,
-      "tol": 0.215,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "cpi_all",
-      "fred": 332.407,
-      "bls": 332.407,
-      "diff": 0.0,
-      "tol": 0.3324,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "core_cpi",
-      "fred": 335.423,
-      "bls": 335.423,
-      "diff": 0.0,
-      "tol": 0.3354,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     }
   ],
   "noise_floor": [
