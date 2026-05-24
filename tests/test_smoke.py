@@ -272,6 +272,78 @@ def test_renderer(tmp_dir):
           f'{len(hard_errors)} errors: {hard_errors[:3]}')
 
 
+def test_hydration_wiring(tmp_dir):
+    """Test Tier 1 anti-clone hydration is wired end-to-end.
+
+    Regression guard for the "blank charts on first paint" bug:
+    every `let X = null;` Tier 1 placeholder must have a matching
+    `s.X !== undefined` hydration assignment in the boot loader, AND
+    a real callback must be pushed to `MD._hydrationCallbacks` so
+    tabs rebuild once state.json arrives. Without the callback,
+    guarded tab builders (FC, jobs, cpi, pce, banks, oil) bail out
+    on first paint and never re-render.
+    """
+    print('\n── Test: Hydration wiring (Tier 1 anti-clone) ──')
+    html_file = tmp_dir / 'index.html'
+    if not html_file.exists():
+        _test('index.html exists for hydration check', False, 'no file')
+        return
+    html = html_file.read_text(encoding='utf-8')
+
+    # 1. Find every `let X = null;` placeholder — these are Tier 1 markers.
+    placeholders = set(re.findall(r'let\s+([A-Z][A-Z0-9_]+)\s*=\s*null\s*;', html))
+    _test('At least one Tier 1 placeholder present',
+          len(placeholders) >= 5,
+          f'found {len(placeholders)}: {sorted(placeholders)}')
+
+    # 2. Each placeholder must have a hydration assignment line.
+    missing_assigns = [k for k in placeholders
+                       if not re.search(rf's\.{k}\s*!==\s*undefined', html)]
+    _test('Every placeholder has hydration assign',
+          not missing_assigns,
+          f'no `s.X !== undefined` for: {missing_assigns}')
+
+    # 3. Boot loader infrastructure present.
+    _test('MD._hydrationCallbacks queue declared',
+          'window.MD._hydrationCallbacks' in html)
+    _test('MD._hydrationDone flag declared',
+          'window.MD._hydrationDone' in html)
+    _test('Hydration fetches /api/state.json first',
+          "'/api/state.json'" in html or '"/api/state.json"' in html)
+    _test('Hydration falls back to /data/state.json',
+          "'/data/state.json'" in html or '"/data/state.json"' in html)
+
+    # 4. Critical: a real callback must actually be pushed onto the
+    # queue. The naked queue with no pushers is the exact bug that
+    # left charts blank — _hydrate() runs, finds an empty callback
+    # array, and the guarded tab builders never get re-invoked.
+    # Count only push() calls in executable code, NOT in `//`/`/*` doc
+    # comments (the boot loader has a comment that documents the API
+    # shape — it would falsely satisfy a naive regex).
+    real_push_sites = []
+    for line in html.splitlines():
+        if '_hydrationCallbacks.push' not in line:
+            continue
+        # Strip leading whitespace then check the first non-space token
+        # is not a comment marker.
+        stripped = line.lstrip()
+        if stripped.startswith('//') or stripped.startswith('*') or stripped.startswith('/*'):
+            continue
+        if re.search(r'_hydrationCallbacks\.push\s*\(', line):
+            real_push_sites.append(line.strip()[:120])
+    _test('At least one REAL callback pushed to hydration queue',
+          len(real_push_sites) >= 1,
+          'no executable `_hydrationCallbacks.push(` found — guarded tabs will stay blank '
+          '(comments do not count)')
+
+    # 5. Race-safe registration: if _hydrate() finishes before the
+    # callback registers, the registrant must check _hydrationDone
+    # and self-invoke. Otherwise scripts loaded async miss the train.
+    _test('Race-safe done check present',
+          'MD._hydrationDone' in html and re.search(r'if\s*\([^)]*_hydrationDone', html) is not None,
+          'no `if (...MD._hydrationDone)` guard around callback push')
+
+
 def test_validator_offline(tmp_dir):
     """Test validator runs in offline mode (no API keys)."""
     print('\n── Test: Validator (offline) ──')
@@ -465,6 +537,7 @@ def main():
         test_analyzer(tmp_dir)
         test_renderer(tmp_dir)
         test_renderer_idempotent(tmp_dir)
+        test_hydration_wiring(tmp_dir)
         test_validator_offline(tmp_dir)
         test_snapshot(tmp_dir)
         test_healthcheck_module()
