@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-24 20:07 UTC._
+_Generated 2026-05-24 21:47 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `12077aa9c6cc` — 🌑 Shadow update (dev): 2026-05-24
+- **Commit:** `29bc864e0d48` — 🌑 Shadow update (dev): 2026-05-24
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
@@ -47,7 +47,7 @@ _None at critical severity._
 | total_checks | 631 |
 | passed | 628 |
 | failed | 3 |
-| skipped | 14 |
+| skipped | 23 |
 | critical_divergences | 0 |
 
 ### Editorial review
