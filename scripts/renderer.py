@@ -3220,13 +3220,40 @@ def rebuild_kpi_strip(html, data, vals):
     # an already-migrated HTML stays idempotent. Both shapes patch to
     # the placeholder.
     _api_writer.register('KPIS', cards)
-    # Cross-cycle overlay: preserve prior run's KPIS in state.json so the
-    # toggle UI can show week-over-week deltas without a second fetch.
-    # read_prior() reads current data/state.json (last week's run) BEFORE
-    # flush() overwrites it — so this must stay here, before any flush().
-    _prior_kpis = _api_writer.read_prior('KPIS')
-    if _prior_kpis is not None:
-        _api_writer.register('PRIOR_KPIS', _prior_kpis)
+    # Cross-cycle overlay: register ~1-month-ago KPIS so the toggle UI can
+    # show month-over-month comparison without a second fetch.
+    # Uses data/kpis_history.json — a rolling dated log (≤13 entries).
+    # Renderer appends today's KPIS, then reads back the entry closest to
+    # 28 days ago as PRIOR_KPIS. First-run graceful: file missing → no key.
+    try:
+        import datetime as _dt, json as _json
+        _KPIS_HIST = ROOT / 'data' / 'kpis_history.json'
+        _today_str = _dt.date.today().isoformat()
+        # Load existing history (oldest-first list of {date, kpis}).
+        _hist = []
+        if _KPIS_HIST.exists():
+            try:
+                _hist = _json.loads(_KPIS_HIST.read_text('utf-8'))
+            except Exception:
+                _hist = []
+        # Append today's entry (deduplicate same-day re-runs).
+        _hist = [e for e in _hist if e.get('date') != _today_str]
+        _hist.append({'date': _today_str, 'kpis': cards})
+        # Keep most recent 13 weeks (≈ one quarter).
+        _hist.sort(key=lambda e: e['date'], reverse=True)
+        _hist = _hist[:13]
+        _KPIS_HIST.write_text(_json.dumps(_hist, separators=(',', ':')), 'utf-8')
+        # Find entry closest to 28 days ago.
+        _target = _dt.date.today() - _dt.timedelta(days=28)
+        _best = min(
+            (e for e in _hist if e['date'] < _today_str),
+            key=lambda e: abs((_dt.date.fromisoformat(e['date']) - _target).days),
+            default=None,
+        )
+        if _best is not None:
+            _api_writer.register('PRIOR_KPIS', _best['kpis'])
+    except Exception as _exc:
+        warnings.append(f'kpis_history: {_exc}')
     pattern = r'(?:const|let|var)\s+KPIS\s*=\s*(?:\[[\s\S]*?\]|null)\s*;'
     placeholder = 'let KPIS = null;'  # boot loader hydrates from /api/state.json
     new_html, n = re.subn(pattern, lambda m: placeholder, html, count=1)
