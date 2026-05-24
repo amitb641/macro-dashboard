@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-24T06:41:07.945458Z",
+  "validated_at": "2026-05-24T07:21:17.471108Z",
   "status": "WARN",
   "summary": {
     "total_checks": 631,
@@ -707,7 +707,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-24T06:39:52.844735Z",
+      "collected_at": "2026-05-24T07:19:55.361405Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4121,7 +4121,7 @@
   ],
   "secret_leaks": [
     {
-      "check": "Secret leak scan (19 JSON files)",
+      "check": "Secret leak scan (20 JSON files)",
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"
