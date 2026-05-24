@@ -12,7 +12,8 @@
     var eyebrow = document.querySelector('body > .eyebrow');
     if (!eyebrow) return;
     var now = new Date();
-    var wk  = Math.ceil((((now - new Date(now.getFullYear(),0,1))/86400000) + 1)/7);
+    // WEEK is already on the wordmark above; sm-meta carries the
+    // pieces the wordmark doesn't (month-year + operational status).
     var mo  = now.toLocaleString('en-US',{month:'short'}).toUpperCase();
     var yr  = now.getFullYear();
     var pad = function(n){ return n<10 ? '0'+n : ''+n; };
@@ -22,8 +23,6 @@
     meta.className = 'sm-meta';
     meta.innerHTML =
       '<span class="sm-meta-dot"></span>' +
-      '<span>WEEK ' + wk + '</span>' +
-      '<span class="sm-meta-sep">·</span>' +
       '<span>' + mo + ' ' + yr + '</span>' +
       '<span class="sm-meta-sep">·</span>' +
       '<span class="sm-meta-bold">PIPELINE OK</span>' +
