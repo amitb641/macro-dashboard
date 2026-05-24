@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-05-24T20:02:49.742411Z",
-  "status": "PASS",
+  "checked_at": "2026-05-24T21:37:00.257523Z",
+  "status": "WARN",
   "summary": {
     "total_checks": 430,
-    "passed": 430,
-    "failed": 0,
+    "passed": 429,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -2396,8 +2396,9 @@
     {
       "category": "data",
       "check": "TREASURY_DATA.card90 completeness",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "10/11 empty (9% filled, min 50%)"
     },
     {
       "category": "data",
