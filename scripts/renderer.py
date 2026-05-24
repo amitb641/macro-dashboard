@@ -2736,13 +2736,19 @@ def update_shock_tracker(html, data, vals):
 
     # Tier 1 anti-clone migration: SHOCK_TRACKER is now served via
     # /api/state.json. Register the full payload and patch the inline
-    # declaration to a `let SHOCK_TRACKER = null;` placeholder. The
-    # trailing `// OIL_DAILY` lookahead anchor is preserved because the
-    # comment lives outside the matched declaration.
+    # declaration to a `let SHOCK_TRACKER = null;` placeholder.
+    #
+    # Placement note: the placeholder lives at SCRIPT scope (just before
+    # `function buildOilTab() {`), not inside the tab builder. A previous
+    # iteration placed it inside the function, which shadowed the
+    # hydration target and left oil-impact-chain blank on the live page
+    # (the boot loader's reassignment hit `window.SHOCK_TRACKER` instead
+    # of the function-local let). The regex anchors on the declaration
+    # itself; no comment anchor required since SHOCK_TRACKER is unique.
     _api_writer.register('SHOCK_TRACKER', tracker)
     placeholder = 'let SHOCK_TRACKER = null;'  # boot loader hydrates from /api/state.json
     # Accept both legacy literal and placeholder shapes (idempotent re-runs).
-    pattern = r'(?:const|let|var)\s+SHOCK_TRACKER\s*=\s*(?:\{[\s\S]*?\}|null)\s*;(?=\s*\n\s*//\s*OIL_DAILY)'
+    pattern = r'(?:const|let|var)\s+SHOCK_TRACKER\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
     new_html, n = re.subn(pattern, lambda m: placeholder, html, count=1)
     _record_subn_result('SHOCK_TRACKER', pattern, n)
     if n:

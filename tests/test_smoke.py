@@ -343,6 +343,39 @@ def test_hydration_wiring(tmp_dir):
           'MD._hydrationDone' in html and re.search(r'if\s*\([^)]*_hydrationDone', html) is not None,
           'no `if (...MD._hydrationDone)` guard around callback push')
 
+    # 6. Critical: every Tier 1 placeholder must live at SCRIPT scope,
+    # not inside a function body. A placeholder declared inside a
+    # tab-builder is function-local — the boot loader's
+    # `SHOCK_TRACKER = s.SHOCK_TRACKER` style assignment then targets
+    # the global window object instead of the intended `let`, and the
+    # consumer code reads the local null. This was the EX 5 oil-impact-
+    # chain blank-panel bug (shipped post the first hydration fix).
+    lines = html.splitlines()
+    function_ranges = []
+    for i, line in enumerate(lines, start=1):
+        if re.match(r'^function (\w+)\(', line):
+            depth = 0
+            started = False
+            for j in range(i - 1, len(lines)):
+                depth += lines[j].count('{') - lines[j].count('}')
+                if '{' in lines[j]:
+                    started = True
+                if started and depth == 0:
+                    function_ranges.append((i, j + 1))
+                    break
+    misplaced = []
+    for i, line in enumerate(lines, start=1):
+        m = re.match(r'^\s*let ([A-Z][A-Z_]+)\s*=\s*null\s*;', line)
+        if not m:
+            continue
+        for fs, fe in function_ranges:
+            if fs < i <= fe:
+                misplaced.append(f'{m.group(1)} at line {i} (inside function starting line {fs})')
+                break
+    _test('Every Tier 1 placeholder at script scope (not inside a function)',
+          not misplaced,
+          f'shadowed-local placeholders detected: {misplaced[:5]}' if misplaced else '')
+
 
 def test_validator_offline(tmp_dir):
     """Test validator runs in offline mode (no API keys)."""

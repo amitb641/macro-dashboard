@@ -132,14 +132,17 @@ Rules:
 - After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 37/37 pass. The
+- Run `python tests/test_smoke.py` before pushing — must be 38/38 pass. The
   smoke suite includes a **Tier 1 hydration wiring** regression guard
   (`test_hydration_wiring`) that asserts every `let X = null;` placeholder
-  has a matching `s.X !== undefined` hydration assignment AND that at least
-  one real (non-comment) `MD._hydrationCallbacks.push(...)` exists. Without
-  the callback, guarded tab builders (fc, jobs, cpi, pce, banks, oil)
-  bail out on first paint and never rebuild after `fetch('/api/state.json')`
-  resolves — symptom is blank charts on the default Outlook tab.
+  (a) has a matching `s.X !== undefined` hydration assignment, (b) lives
+  at SCRIPT scope (not inside a function body — function-locals shadow the
+  hydration target and the consumer reads null; this was the EX 5 oil-
+  impact-chain blank-panel bug), AND (c) at least one real (non-comment)
+  `MD._hydrationCallbacks.push(...)` exists. Without the callback, guarded
+  tab builders (fc, jobs, cpi, pce, banks, oil) bail out on first paint
+  and never rebuild after `fetch('/api/state.json')` resolves — symptom is
+  blank charts on the default Outlook tab.
 - Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
@@ -189,7 +192,7 @@ Custom development lifecycle commands are available in `.claude/commands/`:
 - `/spec` — Define what to build (spec before code)
 - `/plan` — Plan implementation as small, atomic tasks
 - `/build` — Implement one slice at a time with verification
-- `/test` — Run all test layers: smoke (37/37), renderer, visual QA (224)
+- `/test` — Run all test layers: smoke (38/38), renderer, visual QA (224)
 - `/review` — Code review checklist (correctness, safety, scope, pipeline integrity)
 - `/code-simplify` — Simplify code without changing behavior
 - `/ship` — Pre-flight checks, push, and post-ship verification
