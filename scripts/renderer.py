@@ -3220,6 +3220,13 @@ def rebuild_kpi_strip(html, data, vals):
     # an already-migrated HTML stays idempotent. Both shapes patch to
     # the placeholder.
     _api_writer.register('KPIS', cards)
+    # Cross-cycle overlay: preserve prior run's KPIS in state.json so the
+    # toggle UI can show week-over-week deltas without a second fetch.
+    # read_prior() reads current data/state.json (last week's run) BEFORE
+    # flush() overwrites it — so this must stay here, before any flush().
+    _prior_kpis = _api_writer.read_prior('KPIS')
+    if _prior_kpis is not None:
+        _api_writer.register('PRIOR_KPIS', _prior_kpis)
     pattern = r'(?:const|let|var)\s+KPIS\s*=\s*(?:\[[\s\S]*?\]|null)\s*;'
     placeholder = 'let KPIS = null;'  # boot loader hydrates from /api/state.json
     new_html, n = re.subn(pattern, lambda m: placeholder, html, count=1)

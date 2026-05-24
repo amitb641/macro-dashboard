@@ -1953,6 +1953,21 @@ h1 span { color: var(--accent) !important; }
 .kpi-delta.up   { color: #1A9E5A; background: #f0fdf4; }
 .kpi-delta.down { color: #D64045; background: #fef2f2; }
 .kpi-delta.flat { color: #CC8A00; background: #fffbeb; }
+/* Cross-cycle overlay toggle */
+.kpi-strip-hdr { display: flex; justify-content: flex-end; margin-bottom: 6px; min-height: 0; }
+.kpi-prior-btn {
+  font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: #5A6B7D;
+  background: transparent; border: 1px solid #CBD5E1; border-radius: 4px;
+  padding: 3px 8px; cursor: pointer; transition: all .15s;
+}
+.kpi-prior-btn:hover { background: #f1f5f9; border-color: #94A3B8; color: #334155; }
+.kpi-prior-btn.active { background: #EFF6FF; border-color: #336BCC; color: #336BCC; }
+.kpi-prior-row {
+  font-family: 'DM Mono', monospace; font-size: 9px; color: #94A3B8;
+  margin-top: 5px; padding-top: 4px; border-top: 1px solid #e2e8f0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
 /* ── NAV TABS ── */
 /* Nav grouped — dark mode inherits pill styles via CSS vars, no overrides needed */
@@ -2804,6 +2819,16 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="rcal-strip" id="rcal-strip" role="list"></div>
 </section>
 
+<div class="kpi-strip-hdr">
+  <button id="kpi-prior-toggle" class="kpi-prior-btn" aria-pressed="false"
+    style="display:none" onclick="(function(){
+      var b=document.getElementById('kpi-prior-toggle');
+      window._kpiPriorMode=!window._kpiPriorMode;
+      b.setAttribute('aria-pressed',String(window._kpiPriorMode));
+      b.classList.toggle('active',window._kpiPriorMode);
+      if(typeof _renderKpiStrip==='function') _renderKpiStrip();
+    })()" title="Toggle prior-week comparison">◷ vs last week</button>
+</div>
 <div class="kpi-strip" id="kpi-strip" role="region" aria-label="Headline KPI strip"></div>
 <div id="main-content" tabindex="-1"></div>
 <div style="display:flex;gap:14px;align-items:center;margin:-14px 0 18px 0;flex-wrap:wrap">
@@ -3853,6 +3878,7 @@ window.MD._hydrationState = null;  // last fetched bundle, for debugging
       // here (the script-level `let X = null;` declarations below
       // remain authoritative for the inline references).
       if (s.KPIS !== undefined) { try { KPIS = s.KPIS; } catch(_){ window.KPIS = s.KPIS; } }
+      if (s.PRIOR_KPIS !== undefined) { try { PRIOR_KPIS = s.PRIOR_KPIS; } catch(_){ window.PRIOR_KPIS = s.PRIOR_KPIS; } }
       if (s.BANK_COMMENTARY !== undefined) { try { BANK_COMMENTARY = s.BANK_COMMENTARY; } catch(_){ window.BANK_COMMENTARY = s.BANK_COMMENTARY; } }
       if (s.SHOCK_TRACKER !== undefined)   { try { SHOCK_TRACKER   = s.SHOCK_TRACKER;   } catch(_){ window.SHOCK_TRACKER   = s.SHOCK_TRACKER;   } }
       if (s.MACRO_STATE !== undefined)     { try { MACRO_STATE     = s.MACRO_STATE;     } catch(_){ window.MACRO_STATE     = s.MACRO_STATE;     } }
@@ -4395,6 +4421,7 @@ function _kpiColor(metric, val){
   return '#CC8A00';
 }
 let KPIS = null;
+let PRIOR_KPIS = null;  // prior-run snapshot — hydrated from state.json for cross-cycle overlay
 function _releaseBadge(tag){
   if(!tag) return '';
   const up = String(tag).toUpperCase();
@@ -4464,6 +4491,18 @@ function _renderKpiStrip(){
   if (!Array.isArray(KPIS) || KPIS.length === 0) return;
   const strip = document.getElementById("kpi-strip");
   if (!strip) return;
+  // Show/hide prior-week toggle button based on data availability.
+  const toggleBtn = document.getElementById('kpi-prior-toggle');
+  if (toggleBtn) {
+    const hasPrior = Array.isArray(PRIOR_KPIS) && PRIOR_KPIS.length > 0;
+    toggleBtn.style.display = hasPrior ? '' : 'none';
+  }
+  const priorMode = !!(window._kpiPriorMode && Array.isArray(PRIOR_KPIS) && PRIOR_KPIS.length > 0);
+  // Build a lookup of prior-week cards by metric key for fast access.
+  const priorByMetric = {};
+  if (priorMode) {
+    PRIOR_KPIS.forEach(function(p){ if(p.metric) priorByMetric[p.metric] = p; });
+  }
   strip.innerHTML = KPIS.map(k=>{
     const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
     const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
@@ -4473,6 +4512,14 @@ function _renderKpiStrip(){
     const b = _releaseBadge(k.badge);
     const s = _kpiSpark(k.spark);
     const sWrap = s ? `<div class="kpi-spark-wrap" style="color:${col}">${s}</div>` : '';
+    // Prior-week comparison row (only in overlay mode).
+    let priorRow = '';
+    if (priorMode) {
+      const p = k.metric ? priorByMetric[k.metric] : null;
+      if (p && p.val) {
+        priorRow = `<div class="kpi-prior-row">Prior: ${p.val}</div>`;
+      }
+    }
     // a11y: roll label + value + delta into one aria-label so screen
     // readers announce the tile as a single unit instead of three.
     // Sparkline is aria-hidden — its trend information is already
@@ -4481,7 +4528,7 @@ function _renderKpiStrip(){
       .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
     return `<div class="kpi" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
     <div class="kpi-val" style="color:${col}">${k.val}${d}</div>${sWrap}
-    <div class="kpi-sub">${k.sub}</div></div>`;
+    <div class="kpi-sub">${k.sub}</div>${priorRow}</div>`;
   }).join("");
 }
 // Register _renderKpiStrip() with the hydration chain.
