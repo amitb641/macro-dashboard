@@ -1451,7 +1451,8 @@ body.sidebar-active.sidebar-collapsed{padding-left:72px!important}
 body.sidebar-active .nav-two-tier{display:none!important}
 .nsb-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 14px 14px;border-bottom:1px solid #d8dfed;flex-shrink:0}
 .nsb-brand{font-size:11px;font-weight:700;letter-spacing:.22em;color:#1e3a5f;white-space:nowrap;transition:opacity .15s;text-transform:uppercase}
-.nsb-collapsed .nsb-brand{opacity:0;pointer-events:none}
+.nsb-collapsed .nsb-brand{opacity:0;pointer-events:none;width:0;overflow:hidden;margin:0;padding:0}
+.nsb-collapsed .nsb-hdr{justify-content:center;padding-left:0;padding-right:0}
 .nsb-collapse-btn{background:none;border:none;color:#8a9bbd;cursor:pointer;padding:4px 6px;font-size:18px;line-height:1;flex-shrink:0;transition:transform .22s;border-radius:5px}
 .nsb-collapse-btn:hover{color:#334e68;background:rgba(30,58,95,.07)}
 .nsb-collapsed .nsb-collapse-btn{transform:rotate(180deg)}
@@ -7642,7 +7643,7 @@ document.addEventListener('keydown', function(e){
   var _html =
     '<aside id="nav-sidebar" class="nav-sidebar nsb-active" aria-label="Navigation">' +
     '<div class="nsb-hdr">' +
-      '<span class="nsb-brand">MACRO</span>' +
+      '<span class="nsb-brand">US MACRO</span>' +
       '<button class="nsb-collapse-btn" id="nsb-toggle" title="Collapse sidebar" aria-label="Toggle navigation sidebar">\u2039</button>' +
     '</div>' +
     '<div class="nsb-body" id="nsb-body">' + _nav + '</div>' +
@@ -7668,10 +7669,13 @@ document.addEventListener('keydown', function(e){
 
   // Collapse / expand
   var _nsb_col = false;
-  document.getElementById('nsb-toggle').addEventListener('click', function(){
+  var _nsb_btn = document.getElementById('nsb-toggle');
+  _nsb_btn.addEventListener('click', function(){
     _nsb_col = !_nsb_col;
     _sb.classList.toggle('nsb-collapsed', _nsb_col);
     document.body.classList.toggle('sidebar-collapsed', _nsb_col);
+    _nsb_btn.title = _nsb_col ? 'Expand sidebar' : 'Collapse sidebar';
+    _nsb_btn.setAttribute('aria-label', _nsb_col ? 'Expand navigation sidebar' : 'Collapse navigation sidebar');
   });
 
   // Tab click (event delegation)
