@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-24T17:44:45.177113Z",
+  "validated_at": "2026-05-24T19:49:59.178392Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 631,
-    "passed": 628,
-    "failed": 3,
-    "skipped": 20,
+    "total_checks": 390,
+    "passed": 375,
+    "failed": 15,
+    "skipped": 14,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -589,20 +589,29 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158736.0,
+      "fresh_api_value": 158736.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 6.51,
+      "fresh_api_value": 6.51,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -698,7 +707,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-24T17:43:28.973572Z",
+      "collected_at": "2026-05-24T19:49:09.583989Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1400,9 +1409,9 @@
     },
     {
       "check": "Visual: global \u2014 Nav buttons present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "severity": "warning",
+      "pass": false,
+      "detail": "found 5 buttons, expected 15"
     },
     {
       "check": "Visual: Outlook \u2014 Tab panel visible",
@@ -1729,1510 +1738,64 @@
       "detail": ""
     },
     {
-      "check": "Visual: Jobs \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Jobs \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"jobs\""
     },
     {
-      "check": "Visual: Jobs \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Unemployment \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"unemp\""
     },
     {
-      "check": "Visual: Jobs \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Wages \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"wages\""
     },
     {
-      "check": "Visual: Jobs \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: CPI \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"cpi\""
     },
     {
-      "check": "Visual: Jobs \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Consumer & PCE \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"pce\""
     },
     {
-      "check": "Visual: Jobs \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Rates & Yields \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"yield\""
     },
     {
-      "check": "Visual: Jobs \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Credit \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"credit\""
     },
     {
-      "check": "Visual: Jobs \u2014 Chart canvas 4 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Banking \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"banks\""
     },
     {
-      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Housing \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"housing\""
     },
     {
-      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 06\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 1Jobs Market Commentary \u2014 2025 & 2026\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 2NFP slipped to 115K \u2014 below the ~150\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 3Hiring is now concentrated in health\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 42025 added ~+116K \u2014 the slowest non-\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 52025 sector mix shows construction a\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 62025 net adds (+116K Dec-to-Dec) tra\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Jobs \u2014 Panel \"EX 7JOLTS V/U ratio has normalised towar\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Chart canvas 4 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 06\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 1Unemployment Commentary \u2014 Trends & R\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 2U-3 climbed to 4.3% \u2014 meaningful ris\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 3Unemployment is rising broadly acros\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 4Annual avg has risen for two consecu\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 52025 saw broad sector deterioration \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 6Initial claims remain orderly \u2014 but \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Unemployment \u2014 Panel \"EX 7Information and tech sectors carry e\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EX 1Wage Growth Commentary \u2014 Nominal vs \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EX 2Wage growth decelerated 30bp to 3.6%\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EX 3Real wages turned positive in 2024 \u2014\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EX 4Sector wage growth shows broad cooli\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Wages \u2014 Panel \"EX 52021\u201322 nominal wage peaks have full\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Chart canvas 4 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 06\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 1CPI Commentary \u2014 Inflation Trajector\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 2Headline CPI re-accelerates above Co\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 3Energy and transport categories are \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 4Annual CPI is still well above the F\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 5Goods inflation has normalised; serv\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 6Category-level annual rates show fou\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 Panel \"EX 7Trimmed-mean and median CPI track he\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 4 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 5 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 6 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 7 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 8 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Chart canvas 9 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 06\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 07\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 08\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 09\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 10\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 11\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 1Consumer & PCE Commentary \u2014 Spending\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 2Saving rate at 3.6% \u2014 consumers are \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 32025 saving rate is the lowest non-r\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 4Household debt at $18.59T \u2014 delinque\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 5Debt service ratio at ~11.3% \u2014 well \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 6UMich sentiment at 63.8 \u2014 consumers \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 7Annual sentiment hasn't recovered fr\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 8Core PCE at 3.2% \u2014 120bp above targe\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 9Annual core PCE has stayed above 3% \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 10Energy and housing components are p\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EX 1Fed Rates Commentary \u2014 Policy Stance\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EX 2Fed Funds at 3.64% \u2014 markets price m\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EX 3Fed balance sheet still draining via\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EX 4Wall Street sees 50\u201375bp of cuts by \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EX 5Deposit-rich issuers (JPM, BAC) carr\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Rates & Yields \u2014 Panel \"EX 610Y at 4.47% has held above card del\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Chart canvas 4 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EX 1Credit Commentary \u2014 Spread Complacen\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EX 2Card and auto delinquencies are risi\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EX 3Card specialists are running NCOs ~4\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EX 4SLOOS is near neutral \u2014 but the 2023\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EX 5Revolving credit growth has slowed s\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Credit \u2014 Panel \"EX 6Household debt at $18.59T \u2014 mortgage\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EX 1Banks Commentary \u2014 Earnings, NII & C\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EX 2Universal banks beat on trading and \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EX 3JPM trimmed NII guidance by $1.5B \u2014 \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EX 4NCO guidance is up ~50bp across card\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Banking \u2014 Panel \"EX 5Management tone converged on cautiou\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 4 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 5 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Chart canvas 6 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 06\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 1Housing Commentary \u2014 Affordability C\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 2Mortgage rate at 6.37% is keeping pr\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 3Home prices have doubled since 2012 \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 4Mortgage rate gap to Fed funds has w\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 5Starts at 1.50M are running ahead of\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 6Affordability index near record lows\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Housing \u2014 Panel \"EX 7Sun Belt is cooling, Northeast is fi\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Tab panel visible",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Tab has content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 No undefined/NaN/null values",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Chart canvas 0 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Chart canvas 1 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Chart canvas 2 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Chart canvas 3 has size",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 01\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 02\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 04\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 05\" painted body content",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Commentary positioned above first chart",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Commentary color matches palette",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 1Oil Commentary \u2014 Supply Shock & Macr\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 2Three oil shocks in 25 years have al\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 3Monthly average rose ~30% since Horm\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 4Oil Supply Shock Tracker \u2014 Daily Clo\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 5Full Oil Impact Chain \u2014 Prices to Cr\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 6Airlines and freight take 200\u2013400bp \" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 7Every major oil shock since 1973 has\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: Oil \u2014 Panel \"EX 8Past shocks averaged ~12 months from\" has title",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: Oil \u2014 Nav button exists",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no button for data-tab=\"oil\""
     },
     {
       "check": "Visual: Sources \u2014 Tab panel visible",
@@ -3878,9 +2441,9 @@
     },
     {
       "check": "Visual: data \u2014 SHOCK_TRACKER all 8 phase titles rendered",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "severity": "warning",
+      "pass": false,
+      "detail": "0/8 titles found"
     },
     {
       "check": "Visual: annotations \u2014 lexicon: \"Fed 2% target\" present \u22652\u00d7 (c-cpi-mom, c-pce-mom (+ PCE annual series legend))",
@@ -3930,20 +2493,35 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4.3,
+      "diff": 0.0,
+      "tol": 0.215,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "cpi_all",
+      "fred": 332.407,
+      "bls": 332.407,
+      "diff": 0.0,
+      "tol": 0.3324,
+      "note": null
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 335.423,
+      "diff": 0.0,
+      "tol": 0.3354,
+      "note": null
     }
   ],
   "noise_floor": [

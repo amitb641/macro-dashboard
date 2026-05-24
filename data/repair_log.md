@@ -1,3 +1,36 @@
+## Repair Agent — 2026-05-24T19:49:59.178392Z
+
+- **Status**: WARN
+- **Total checks**: 390
+- **Passed**: 375
+- **Failed**: 15
+- **Critical divergences**: 0
+
+### Panel data
+_0 critical · 3 warning · 0 stale_
+
+- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
+- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
+- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
+
+### Visual QA
+_0 critical · 12 warning · 0 stale_
+
+- ⚠️ **Visual: global — Nav buttons present** — 
+- ⚠️ **Visual: Jobs — Nav button exists** — 
+- ⚠️ **Visual: Unemployment — Nav button exists** — 
+- ⚠️ **Visual: Wages — Nav button exists** — 
+- ⚠️ **Visual: CPI — Nav button exists** — 
+- ⚠️ **Visual: Consumer & PCE — Nav button exists** — 
+- ⚠️ **Visual: Rates & Yields — Nav button exists** — 
+- ⚠️ **Visual: Credit — Nav button exists** — 
+- ⚠️ **Visual: Banking — Nav button exists** — 
+- ⚠️ **Visual: Housing — Nav button exists** — 
+- _… and 2 more_
+
+
+---
+
 ## Repair Agent — 2026-05-24T17:44:45.177113Z
 
 - **Status**: WARN
@@ -1150,52 +1183,6 @@ _0 critical · 3 warning · 0 stale_
 - ⚠️ **Collector error** — ALFRED AHETPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start=202
 - ⚠️ **Collector error** — ALFRED PCEPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start=2026-
 - ⚠️ **Collector error** — ALFRED PCEPILFE@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPILFE&api_key=8510a633d1530b31f395e351daa237c7&file_type=json&sort_order=desc&limit=480&realtime_start
-
-### Internal consistency
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **NFP_VS_ADP.adp label sync** — 
-- ⚠️ **NFP_VS_ADP series length sync** — 
-
-### Earnings verbatim
-_1 critical · 9 warning · 0 stale_
-
-- 🔴 **transcript_archive_coverage** — zero transcripts archived in data/transcripts/Q1_2026 for a quarter with 9 reported bank(s); verbatim gate is fully off — every quoted span ships unverified. Operator must archive transcripts per CLAUDE.md "Update Workflow" before publish.
-- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — verbatim gate skipped for this bank (operator should archive transcript before quarter close)
-
-### Visual QA
-_0 critical · 12 warning · 0 stale_
-
-- ⚠️ **Visual: GDP — Commentary color matches palette** — 
-- ⚠️ **Visual: Jobs — Commentary color matches palette** — 
-- ⚠️ **Visual: Unemployment — Commentary color matches palette** — 
-- ⚠️ **Visual: Wages — Commentary color matches palette** — 
-- ⚠️ **Visual: CPI — Commentary color matches palette** — 
-- ⚠️ **Visual: Consumer & PCE — Commentary color matches palette** — 
-- ⚠️ **Visual: Rates & Yields — Commentary color matches palette** — 
-- ⚠️ **Visual: Credit — Commentary color matches palette** — 
-- ⚠️ **Visual: Banking — Commentary color matches palette** — 
-- ⚠️ **Visual: Housing — Commentary color matches palette** — 
-- _… and 2 more_
-
-
----
-
-## Repair Agent — 2026-05-14T21:12:00.911939Z
-
-- **Status**: WARN
-- **Total checks**: 561
-- **Passed**: 534
-- **Failed**: 27
-- **Critical divergences**: 1
 
 ### Internal consistency
 _0 critical · 2 warning · 0 stale_
