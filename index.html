@@ -1440,6 +1440,39 @@ h1 span{color:var(--accent)}
 .nav-group+.nav-group:not(.nav-group-meta){padding-left:14px;border-left:1px solid #E5E7EB;margin-left:4px}
 .nav-btn-meta.active .nav-icon{filter:none}
 
+/* ── Option 3: Left Sidebar (NSB) ── */
+.nav-sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:#0f1f33;color:#c8d6e5;z-index:300;display:flex;flex-direction:column;transition:width .22s ease;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;display:none}
+.nav-sidebar.nsb-active{display:flex}
+.nav-sidebar.nsb-collapsed{width:52px}
+body.sidebar-active{margin-left:220px;transition:margin-left .22s ease}
+body.sidebar-active.sidebar-collapsed{margin-left:52px}
+body.sidebar-active .nav-two-tier{display:none}
+.nsb-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 14px 13px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.nsb-brand{font-size:13px;font-weight:700;letter-spacing:.16em;color:#fff;white-space:nowrap;transition:opacity .15s}
+.nsb-collapsed .nsb-brand{opacity:0;pointer-events:none}
+.nsb-collapse-btn{background:none;border:none;color:#4a7fa5;cursor:pointer;padding:4px 6px;font-size:18px;line-height:1;flex-shrink:0;transition:transform .22s;border-radius:4px}
+.nsb-collapse-btn:hover{color:#9fc4e0;background:rgba(255,255,255,.07)}
+.nsb-collapsed .nsb-collapse-btn{transform:rotate(180deg)}
+.nsb-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:6px 0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.1) transparent}
+.nsb-grp-label{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#3a5a74;padding:12px 15px 4px;white-space:nowrap;font-family:'DM Mono',monospace;transition:opacity .15s,height .15s,padding .15s}
+.nsb-collapsed .nsb-grp-label{opacity:0;height:0;padding-top:0;padding-bottom:0;overflow:hidden}
+.nsb-tab-btn{display:flex;align-items:center;gap:10px;width:100%;padding:7px 13px;background:none;border:none;border-left:3px solid transparent;color:#7fa5c0;font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:400;cursor:pointer;text-align:left;white-space:nowrap;transition:background .12s,color .12s,border-color .12s}
+.nsb-tab-btn:hover{background:rgba(255,255,255,.05);color:#cde4f5}
+.nsb-tab-btn.active{border-left-color:#4A9EE8;background:rgba(74,158,232,.13);color:#fff;font-weight:600}
+.nsb-tab-btn .nav-icon{width:18px;height:18px;flex-shrink:0;opacity:.65}
+.nsb-tab-btn.active .nav-icon{opacity:1}
+.nsb-tab-label{transition:opacity .15s}
+.nsb-collapsed .nsb-tab-label{opacity:0}
+.nsb-footer{border-top:1px solid rgba(255,255,255,.07);padding:8px 0 12px;flex-shrink:0}
+.nsb-footer-btn{display:flex;align-items:center;gap:10px;width:100%;padding:7px 13px;background:none;border:none;border-left:3px solid transparent;color:#3a5a74;font-family:'DM Sans',system-ui,sans-serif;font-size:12px;cursor:pointer;text-align:left;white-space:nowrap;transition:color .12s,background .12s,border-color .12s}
+.nsb-footer-btn:hover{color:#7fa5c0;background:rgba(255,255,255,.04)}
+.nsb-footer-btn.active{border-left-color:#4A9EE8;color:#fff;background:rgba(74,158,232,.08)}
+.nsb-footer-btn .nav-icon{width:16px;height:16px;flex-shrink:0;opacity:.5}
+.nsb-footer-btn.active .nav-icon{opacity:.9}
+.nsb-footer-label{transition:opacity .15s}
+.nsb-collapsed .nsb-footer-label{opacity:0}
+@media(max-width:900px){.nav-sidebar,.nav-sidebar.nsb-active{display:none!important}body.sidebar-active{margin-left:0!important}body.sidebar-active .nav-two-tier{display:block!important}}
+
 /* TAB */
 .tab-panel{display:none}.tab-panel.active{display:block}
 
@@ -2526,7 +2559,7 @@ table{border-collapse:collapse}
   body, body.themed-sm { padding: 0 !important; font-size: 10pt !important; }
 
   /* Hide chrome that doesn't belong in a deliverable. */
-  .nav-grouped, .nav-two-tier, .download-btn, .filter-row, .sort-row,
+  .nav-grouped, .nav-two-tier, .nav-sidebar, .download-btn, .filter-row, .sort-row,
   .theme-toggle, .sm-readbar, .sr-only-focusable,
   .pulse-dot, .nav-icon, .ms-bar-fill,
   .skeleton { display: none !important; animation: none !important; }
@@ -7555,6 +7588,104 @@ document.addEventListener('keydown', function(e){
   // Init: render overview sub-tabs and activate Outlook
   _renderT2('overview');
   if(typeof _b52_activateTab==='function') _b52_activateTab('fc');
+})();
+
+// ═══════════════════════════════════════════════════════
+// LEFT SIDEBAR CONTROLLER (Option 3 — NSB)
+// Dark-navy collapsible left rail. 220px wide → 52px icon-only.
+// body.sidebar-active shifts content right; body.sidebar-active
+// .nav-two-tier hides the horizontal nav.
+// ═══════════════════════════════════════════════════════
+(function(){
+  // Reuse same icon SVGs as two-tier nav
+  var _IC = {
+    fc:    '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EAF1FB"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#336BCC" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#336BCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    gdp:   '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="4" fill="#ECFDF5"/><path d="M4 14l3.5-3.5 2.5 2.5L16 7" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    jobs:  '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="10" rx="2" fill="#DBEAFE"/><rect x="3" y="7" width="14" height="10" rx="2" fill="none" stroke="#2563EB" stroke-width="1.4"/><path d="M7 7V5.5a3 3 0 016 0V7" fill="none" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round"/><rect x="8.5" y="10" width="3" height="2" rx=".5" fill="#2563EB"/></svg>',
+    unemp: '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="6.5" r="3" fill="#FEE2E2"/><circle cx="10" cy="6.5" r="3" fill="none" stroke="#DC2626" stroke-width="1.3"/><path d="M4.5 17.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.3" stroke-linecap="round"/><path d="M7.5 11l5 5.5M12.5 11l-5 5.5" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    wages: '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#FEF3C7"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#D97706" stroke-width="1.3"/><path d="M10 4.5v11" stroke="#D97706" stroke-width="1.4" stroke-linecap="round"/><path d="M7.5 7c0 0 .8-1.2 2.5-1.2s3 .9 3 2.2-1.3 2-3 2-3 .8-3 2 1.3 2.2 3 2.2 2.5-1.2 2.5-1.2" fill="none" stroke="#D97706" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    oil:   '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M10 2.5S5 8 5 12a5 5 0 0010 0c0-4-5-9.5-5-9.5z" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 14.5a2 2 0 01-2-1.8c0-1.2 2-3.2 2-3.2s2 2 2 3.2a2 2 0 01-2 1.8z" fill="#FDE047" stroke="#CA8A04" stroke-width="1"/></svg>',
+    cpi:   '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M3 17V8l7-5.5L17 8v9H3z" fill="#FEF2F2"/><path d="M3 17V8l7-5.5L17 8v9H3z" fill="none" stroke="#EF4444" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 8h14" stroke="#EF4444" stroke-width="1.3"/><rect x="8" y="12" width="4" height="5" rx=".5" fill="#FECACA" stroke="#EF4444" stroke-width="1"/><path d="M10 9v1.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/><path d="M8.5 9.5l3 0" stroke="#EF4444" stroke-width="1.2" stroke-linecap="round"/></svg>',
+    pce:   '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="7.5" cy="16" r="1.5" fill="#F97316"/><circle cx="14" cy="16" r="1.5" fill="#F97316"/><path d="M2.5 3.5h2l1.8 8.5h8.4l2.3-5.5H7" fill="#FFF7ED" stroke="#F97316" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    yield: '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="2" y="3" width="16" height="14" rx="2.5" fill="#EDE9FE"/><rect x="2" y="3" width="16" height="14" rx="2.5" fill="none" stroke="#7C3AED" stroke-width="1.3"/><rect x="2" y="3" width="16" height="4.5" rx="2.5" fill="#7C3AED"/><rect x="5" y="10" width="4" height="1.5" rx=".75" fill="#7C3AED" opacity=".4"/><rect x="5" y="13" width="6" height="1.5" rx=".75" fill="#7C3AED" opacity=".25"/></svg>',
+    credit:'<svg class="nav-icon" viewBox="0 0 20 20"><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="#E0E7FF"/><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="none" stroke="#4F46E5" stroke-width="1.3"/><rect x="1.5" y="4.5" width="17" height="4" rx="2.5" fill="#4F46E5"/><rect x="4.5" y="11.5" width="4" height="1.5" rx=".75" fill="#4F46E5" opacity=".35"/><circle cx="15" cy="12" r="1.5" fill="#4F46E5" opacity=".25"/></svg>',
+    banks: '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 8.5L10 3l7.5 5.5H2.5z" fill="#CFFAFE" stroke="#0891B2" stroke-width="1.2" stroke-linejoin="round"/><rect x="4.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="9" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="13.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="2" y="15" width="16" height="2" rx=".5" fill="#0891B2" opacity=".2"/><path d="M3 17h14" stroke="#0891B2" stroke-width="1.4" stroke-linecap="round"/></svg>',
+    fiscal:'<svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 17h15" stroke="#B45309" stroke-width="1.6" stroke-linecap="round"/><path d="M5 17V7m10 10V7" stroke="#B45309" stroke-width="1.4" stroke-linecap="round"/><path d="M3 7h14L10 2.5 3 7z" fill="#FEF3C7" stroke="#B45309" stroke-width="1.3" stroke-linejoin="round"/><path d="M7.5 17V9m5 8V9" stroke="#B45309" stroke-width="1.2" stroke-linecap="round" opacity=".55"/></svg>',
+    housing:'<svg class="nav-icon" viewBox="0 0 20 20"><path d="M3.5 10L10 4l6.5 6" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5v6.5a1.5 1.5 0 001.5 1.5h7A1.5 1.5 0 0015 16V9.5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.3" stroke-linejoin="round"/><rect x="8.5" y="13" width="3" height="4.5" rx=".5" fill="#BBF7D0" stroke="#16A34A" stroke-width="1"/></svg>'
+  };
+
+  var _GRPS = [
+    {k:'Overview',      tabs:[{t:'fc',l:'Outlook'},{t:'gdp',l:'GDP'}]},
+    {k:'Labor',         tabs:[{t:'jobs',l:'Jobs'},{t:'unemp',l:'Unemployment'},{t:'wages',l:'Wages'}]},
+    {k:'Inflation',     tabs:[{t:'oil',l:'Oil'},{t:'cpi',l:'CPI'},{t:'pce',l:'Consumer \u0026 PCE'}]},
+    {k:'Rates \u0026 Credit', tabs:[{t:'yield',l:'Fed Rates'},{t:'credit',l:'Credit'},{t:'banks',l:'Banks'},{t:'fiscal',l:'Fiscal'}]},
+    {k:'Sectors',       tabs:[{t:'housing',l:'Housing'}]}
+  ];
+
+  // Build nav HTML
+  var _nav = '';
+  _GRPS.forEach(function(g){
+    _nav += '<div class="nsb-grp-label">'+g.k+'</div>';
+    g.tabs.forEach(function(ti){
+      _nav += '<button class="nsb-tab-btn" data-tab="'+ti.t+'" title="'+ti.l+'">'+
+        (_IC[ti.t]||'')+'<span class="nsb-tab-label">'+ti.l+'</span></button>';
+    });
+  });
+
+  var _srcIcon = '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2" fill="#1e3a5f"/><path d="M6.5 7.5h7M6.5 10.5h5M6.5 13.5h3" stroke="#7fa5c0" stroke-width="1.2" stroke-linecap="round"/></svg>';
+  var _valIcon = '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M10 1.5l7.5 4v5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5v-5L10 1.5z" fill="#1e3a5f" stroke="#2d6a4f" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  var _html =
+    '<aside id="nav-sidebar" class="nav-sidebar nsb-active" aria-label="Navigation">' +
+    '<div class="nsb-hdr">' +
+      '<span class="nsb-brand">MACRO</span>' +
+      '<button class="nsb-collapse-btn" id="nsb-toggle" title="Collapse sidebar" aria-label="Toggle navigation sidebar">\u2039</button>' +
+    '</div>' +
+    '<div class="nsb-body" id="nsb-body">' + _nav + '</div>' +
+    '<div class="nsb-footer">' +
+      '<button class="nsb-footer-btn" data-tab="dict" title="Sources">'+_srcIcon+'<span class="nsb-footer-label">Sources</span></button>' +
+      '<button class="nsb-footer-btn" data-tab="validator" title="Validator">'+_valIcon+'<span class="nsb-footer-label">Validator</span></button>' +
+    '</div>' +
+    '</aside>';
+
+  // Inject sidebar as first child of body
+  var _tmp = document.createElement('div');
+  _tmp.innerHTML = _html;
+  var _sb = _tmp.firstChild;
+  document.body.insertBefore(_sb, document.body.firstChild);
+  document.body.classList.add('sidebar-active');
+
+  // Sync active highlight
+  function _nsb_sync(t){
+    _sb.querySelectorAll('[data-tab]').forEach(function(b){
+      b.classList.toggle('active', b.dataset.tab===t);
+    });
+  }
+
+  // Collapse / expand
+  var _nsb_col = false;
+  document.getElementById('nsb-toggle').addEventListener('click', function(){
+    _nsb_col = !_nsb_col;
+    _sb.classList.toggle('nsb-collapsed', _nsb_col);
+    document.body.classList.toggle('sidebar-collapsed', _nsb_col);
+  });
+
+  // Tab click (event delegation)
+  _sb.addEventListener('click', function(e){
+    var b = e.target.closest('[data-tab]');
+    if(!b) return;
+    if(typeof _b52_activateTab==='function') _b52_activateTab(b.dataset.tab);
+  });
+
+  // Wrap _b52_activateTab to keep sidebar in sync
+  var _nsb_orig = _b52_activateTab;
+  _b52_activateTab = function(t, opts){
+    _nsb_orig(t, opts);
+    _nsb_sync(t);
+  };
+
+  // Init active state
+  _nsb_sync('fc');
 })();
 
 // ═══════════════════════════════════════════════════════
