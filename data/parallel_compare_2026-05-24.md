@@ -1,6 +1,6 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-05-24 05:08 UTC._
+_Generated 2026-05-24 05:47 UTC._
 
 - **Prod ref:** `main`
 - **Dev ref:** `dev/multi-expert-improvements`
@@ -25,10 +25,10 @@ are producing a meaningfully different pipeline verdict than prod.
 | Metric | Prod (main) | Dev (parallel) | Delta |
 |---|---|---|---|
 | status | WARN | WARN | same |
-| total_checks | 520 | 202 | -318 |
-| passed | 505 | 199 | -306 |
+| total_checks | 520 | 631 | +111 |
+| passed | 505 | 628 | +123 |
 | failed | 15 | 3 | -12 |
-| skipped | 1 | 15 | +14 |
+| skipped | 1 | 14 | +13 |
 | critical_divergences | 0 | 0 | 0 |
 
 ### Editorial review
