@@ -1425,6 +1425,15 @@ h1 span{color:var(--accent)}
 .nav-btn-meta{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid transparent;color:#9CA3AF;font-size:12px;padding:8px 14px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;border-radius:9px;transition:all .15s;opacity:1}
 .nav-btn-meta:hover:not(.active){color:#6B7280;border-color:#E5E7EB}
 .nav-btn-meta.active{background:transparent;border-color:var(--accent);color:var(--accent);box-shadow:none}
+/* ── TWO-TIER NAV ── */
+.nav-two-tier{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:22px;overflow:hidden}
+.nav-t1{display:flex;align-items:center;gap:8px;padding:10px 18px;border-bottom:1px solid #F1F5F9}
+.nav-t1-groups{display:flex;gap:3px;flex:1;align-items:center}
+.nav-t1-meta{display:flex;gap:4px;align-items:center;margin-left:auto}
+.nav-t2{display:flex;align-items:center;gap:6px;padding:8px 18px 10px;min-height:46px}
+.nav-grp-btn{font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:500;color:#6B7280;background:transparent;border:1px solid transparent;border-radius:8px;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap;line-height:1}
+.nav-grp-btn:hover:not(.active){background:#F9FAFB;color:#374151}
+.nav-grp-btn.active{background:#1E3A5F;color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(30,58,95,.2)}
 /* Sticky nav — sticks to viewport top on scroll */
 .nav-grouped{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* Group separators — thin vertical rule between nav groups */
@@ -2465,6 +2474,11 @@ table{border-collapse:collapse}
   .nav-group-lbl{display:none}
   .nav-btn{white-space:nowrap;font-size:10px;padding:6px 10px;flex-shrink:0;gap:4px}
   .nav-btn .nav-icon{width:12px;height:12px}
+  .nav-t1{padding:8px 12px;gap:4px}
+  .nav-t1-meta{gap:2px}
+  .nav-t2{padding:6px 10px 8px;gap:4px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .nav-t2::-webkit-scrollbar{display:none}
+  .nav-grp-btn{padding:5px 10px;font-size:11px}
   .nav-btn-meta{font-size:9.5px;padding:5px 8px}
   .fc-note{font-size:10px;padding:9px;line-height:1.55}
   .sector-card{padding:12px}
@@ -2512,7 +2526,7 @@ table{border-collapse:collapse}
   body, body.themed-sm { padding: 0 !important; font-size: 10pt !important; }
 
   /* Hide chrome that doesn't belong in a deliverable. */
-  .nav-grouped, .download-btn, .filter-row, .sort-row,
+  .nav-grouped, .nav-two-tier, .download-btn, .filter-row, .sort-row,
   .theme-toggle, .sm-readbar, .sr-only-focusable,
   .pulse-dot, .nav-icon, .ms-bar-fill,
   .skeleton { display: none !important; animation: none !important; }
@@ -2842,53 +2856,23 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <span style="font-size:9px;color:#8878B8;font-weight:600">● Policy Rate</span>
 </div>
 
-<div class="nav-grouped">
-  <div class="nav-group">
-    <span class="nav-group-lbl">Overview</span>
-    <div class="nav-group-pills">
-      <button class="nav-btn active" data-tab="fc"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EAF1FB"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#336BCC" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#336BCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Outlook</button>
-      <button class="nav-btn" data-tab="gdp"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="4" fill="#ECFDF5"/><path d="M4 14l3.5-3.5 2.5 2.5L16 7" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>GDP</button>
+<div class="nav-two-tier" id="nav-two-tier" role="navigation" aria-label="Dashboard navigation">
+  <div class="nav-t1">
+    <div class="nav-t1-groups" id="nav-t1-groups" role="tablist" aria-label="Section">
+      <button class="nav-grp-btn active" data-group="overview" aria-selected="true" tabindex="0">Overview</button>
+      <button class="nav-grp-btn" data-group="labor" aria-selected="false" tabindex="-1">Labor</button>
+      <button class="nav-grp-btn" data-group="inflation" aria-selected="false" tabindex="-1">Inflation</button>
+      <button class="nav-grp-btn" data-group="rates" aria-selected="false" tabindex="-1">Rates &amp; Credit</button>
+      <button class="nav-grp-btn" data-group="sectors" aria-selected="false" tabindex="-1">Sectors</button>
     </div>
-  </div>
-  <div class="nav-group">
-    <span class="nav-group-lbl">Labor</span>
-    <div class="nav-group-pills">
-      <button class="nav-btn" data-tab="jobs"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="10" rx="2" fill="#DBEAFE"/><rect x="3" y="7" width="14" height="10" rx="2" fill="none" stroke="#2563EB" stroke-width="1.4"/><path d="M7 7V5.5a3 3 0 016 0V7" fill="none" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round"/><rect x="8.5" y="10" width="3" height="2" rx=".5" fill="#2563EB"/></svg>Jobs</button>
-      <button class="nav-btn" data-tab="unemp"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="6.5" r="3" fill="#FEE2E2"/><circle cx="10" cy="6.5" r="3" fill="none" stroke="#DC2626" stroke-width="1.3"/><path d="M4.5 17.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.3" stroke-linecap="round"/><path d="M7.5 11l5 5.5M12.5 11l-5 5.5" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>Unemployment</button>
-      <button class="nav-btn" data-tab="wages"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#FEF3C7"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#D97706" stroke-width="1.3"/><path d="M10 4.5v11" stroke="#D97706" stroke-width="1.4" stroke-linecap="round"/><path d="M7.5 7c0 0 .8-1.2 2.5-1.2s3 .9 3 2.2-1.3 2-3 2-3 .8-3 2 1.3 2.2 3 2.2 2.5-1.2 2.5-1.2" fill="none" stroke="#D97706" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Wages</button>
-    </div>
-  </div>
-  <div class="nav-group">
-    <span class="nav-group-lbl">Inflation</span>
-    <div class="nav-group-pills">
-      <button class="nav-btn" data-tab="oil"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M10 2.5S5 8 5 12a5 5 0 0010 0c0-4-5-9.5-5-9.5z" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 14.5a2 2 0 01-2-1.8c0-1.2 2-3.2 2-3.2s2 2 2 3.2a2 2 0 01-2 1.8z" fill="#FDE047" stroke="#CA8A04" stroke-width="1"/></svg>Oil</button>
-      <button class="nav-btn" data-tab="cpi"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M3 17V8l7-5.5L17 8v9H3z" fill="#FEF2F2"/><path d="M3 17V8l7-5.5L17 8v9H3z" fill="none" stroke="#EF4444" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 8h14" stroke="#EF4444" stroke-width="1.3"/><rect x="8" y="12" width="4" height="5" rx=".5" fill="#FECACA" stroke="#EF4444" stroke-width="1"/><path d="M10 9v1.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/><path d="M8.5 9.5l3 0" stroke="#EF4444" stroke-width="1.2" stroke-linecap="round"/></svg>CPI</button>
-      <button class="nav-btn" data-tab="pce"><svg class="nav-icon" viewBox="0 0 20 20"><circle cx="7.5" cy="16" r="1.5" fill="#F97316"/><circle cx="14" cy="16" r="1.5" fill="#F97316"/><path d="M2.5 3.5h2l1.8 8.5h8.4l2.3-5.5H7" fill="#FFF7ED" stroke="#F97316" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Consumer &amp; PCE</button>
-    </div>
-  </div>
-  <div class="nav-group">
-    <span class="nav-group-lbl">Rates &amp; Credit</span>
-    <div class="nav-group-pills">
-      <button class="nav-btn" data-tab="yield"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="2" y="3" width="16" height="14" rx="2.5" fill="#EDE9FE"/><rect x="2" y="3" width="16" height="14" rx="2.5" fill="none" stroke="#7C3AED" stroke-width="1.3"/><rect x="2" y="3" width="16" height="4.5" rx="2.5" fill="#7C3AED"/><rect x="5" y="10" width="4" height="1.5" rx=".75" fill="#7C3AED" opacity=".4"/><rect x="5" y="13" width="6" height="1.5" rx=".75" fill="#7C3AED" opacity=".25"/></svg>Fed Rates</button>
-      <button class="nav-btn" data-tab="credit"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="#E0E7FF"/><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="none" stroke="#4F46E5" stroke-width="1.3"/><rect x="1.5" y="4.5" width="17" height="4" rx="2.5" fill="#4F46E5"/><rect x="4.5" y="11.5" width="4" height="1.5" rx=".75" fill="#4F46E5" opacity=".35"/><circle cx="15" cy="12" r="1.5" fill="#4F46E5" opacity=".25"/></svg>Credit</button>
-      <button class="nav-btn" data-tab="banks"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 8.5L10 3l7.5 5.5H2.5z" fill="#CFFAFE" stroke="#0891B2" stroke-width="1.2" stroke-linejoin="round"/><rect x="4.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="9" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="13.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="2" y="15" width="16" height="2" rx=".5" fill="#0891B2" opacity=".2"/><path d="M3 17h14" stroke="#0891B2" stroke-width="1.4" stroke-linecap="round"/></svg>Banks</button>
-      <button class="nav-btn" data-tab="fiscal"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 17h15" stroke="#B45309" stroke-width="1.6" stroke-linecap="round"/><path d="M5 17V7m10 10V7" stroke="#B45309" stroke-width="1.4" stroke-linecap="round"/><path d="M3 7h14L10 2.5 3 7z" fill="#FEF3C7" stroke="#B45309" stroke-width="1.3" stroke-linejoin="round"/><path d="M7.5 17V9m5 8V9" stroke="#B45309" stroke-width="1.2" stroke-linecap="round" opacity=".55"/></svg>Fiscal</button>
-    </div>
-  </div>
-  <div class="nav-group">
-    <span class="nav-group-lbl">Sectors</span>
-    <div class="nav-group-pills">
-      <button class="nav-btn" data-tab="housing"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M3.5 10L10 4l6.5 6" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5v6.5a1.5 1.5 0 001.5 1.5h7A1.5 1.5 0 0015 16V9.5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.3" stroke-linejoin="round"/><rect x="8.5" y="13" width="3" height="4.5" rx=".5" fill="#BBF7D0" stroke="#16A34A" stroke-width="1"/></svg>Housing</button>
-    </div>
-  </div>
-  <div class="nav-group nav-group-meta">
-    <div class="nav-group-pills">
+    <div class="nav-t1-meta">
       <button class="nav-btn nav-btn-meta" data-tab="dict"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2" fill="#F1F5F9"/><rect x="3" y="3" width="14" height="14" rx="2" fill="none" stroke="#64748B" stroke-width="1.2"/><path d="M6.5 7.5h7M6.5 10.5h5M6.5 13.5h3" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/></svg>Sources</button>
       <button class="nav-btn nav-btn-meta" data-tab="stack" style="display:none"><svg class="nav-icon" viewBox="0 0 20 20"><rect x="2.5" y="2.5" width="6" height="6" rx="1.5" fill="#F1F5F9" stroke="#64748B" stroke-width="1.1"/><rect x="11.5" y="2.5" width="6" height="6" rx="1.5" fill="#E2E8F0" stroke="#64748B" stroke-width="1.1"/><rect x="2.5" y="11.5" width="6" height="6" rx="1.5" fill="#E2E8F0" stroke="#64748B" stroke-width="1.1"/><rect x="11.5" y="11.5" width="6" height="6" rx="1.5" fill="#F1F5F9" stroke="#64748B" stroke-width="1.1"/></svg>Dashboard</button>
       <button class="nav-btn nav-btn-meta" data-tab="validator"><svg class="nav-icon" viewBox="0 0 20 20"><path d="M10 1.5l7.5 4v5c0 4.5-3.2 8.2-7.5 9.5-4.3-1.3-7.5-5-7.5-9.5v-5L10 1.5z" fill="#ECFDF5" stroke="#059669" stroke-width="1.3" stroke-linejoin="round"/><path d="M7 10l2 2 4-4" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Validator</button>
       <button class="download-btn" id="download-btn" onclick="downloadFullHTML()" title="Download full dashboard" aria-label="Download the full dashboard as a standalone HTML file"><svg viewBox="0 0 20 20" width="14" height="14" style="vertical-align:-2px;margin-right:5px"><path d="M10 3v9m0 0l-3-3m3 3l3-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 14v2a1 1 0 001 1h10a1 1 0 001-1v-2" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Download</button>
     </div>
   </div>
+  <div class="nav-t2" id="nav-t2" role="tablist" aria-label="Tab"></div>
 </div>
 
 <!-- ══ GDP ══ -->
@@ -7370,7 +7354,7 @@ function buildFiscalTab(){
 // inactive for the <noscript> case (acceptable — page is unusable
 // without JS anyway since Chart.js renders all canvases).
 function _b52_decorateAriaTabs(){
-  var navContainer = document.querySelector('.nav-grouped');
+  var navContainer = document.querySelector('.nav-grouped') || document.getElementById('nav-t2');
   if (navContainer) {
     navContainer.setAttribute('role', 'tablist');
     navContainer.setAttribute('aria-orientation', 'horizontal');
@@ -7473,6 +7457,105 @@ document.addEventListener('keydown', function(e){
     _b52_activateTab(all[next].dataset.tab, { focusButton: true });
   }
 });
+
+// ═══════════════════════════════════════════════════════
+// TWO-TIER NAV CONTROLLER
+// ═══════════════════════════════════════════════════════
+(function(){
+  var _IC = {
+    fc:    '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EAF1FB"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#336BCC" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#336BCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    gdp:   '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="4" fill="#ECFDF5"/><path d="M4 14l3.5-3.5 2.5 2.5L16 7" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    jobs:  '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="10" rx="2" fill="#DBEAFE"/><rect x="3" y="7" width="14" height="10" rx="2" fill="none" stroke="#2563EB" stroke-width="1.4"/><path d="M7 7V5.5a3 3 0 016 0V7" fill="none" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round"/><rect x="8.5" y="10" width="3" height="2" rx=".5" fill="#2563EB"/></svg>',
+    unemp: '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="6.5" r="3" fill="#FEE2E2"/><circle cx="10" cy="6.5" r="3" fill="none" stroke="#DC2626" stroke-width="1.3"/><path d="M4.5 17.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.3" stroke-linecap="round"/><path d="M7.5 11l5 5.5M12.5 11l-5 5.5" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round"/></svg>',
+    wages: '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#FEF3C7"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#D97706" stroke-width="1.3"/><path d="M10 4.5v11" stroke="#D97706" stroke-width="1.4" stroke-linecap="round"/><path d="M7.5 7c0 0 .8-1.2 2.5-1.2s3 .9 3 2.2-1.3 2-3 2-3 .8-3 2 1.3 2.2 3 2.2 2.5-1.2 2.5-1.2" fill="none" stroke="#D97706" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    oil:   '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M10 2.5S5 8 5 12a5 5 0 0010 0c0-4-5-9.5-5-9.5z" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 14.5a2 2 0 01-2-1.8c0-1.2 2-3.2 2-3.2s2 2 2 3.2a2 2 0 01-2 1.8z" fill="#FDE047" stroke="#CA8A04" stroke-width="1"/></svg>',
+    cpi:   '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M3 17V8l7-5.5L17 8v9H3z" fill="#FEF2F2"/><path d="M3 17V8l7-5.5L17 8v9H3z" fill="none" stroke="#EF4444" stroke-width="1.3" stroke-linejoin="round"/><path d="M3 8h14" stroke="#EF4444" stroke-width="1.3"/><rect x="8" y="12" width="4" height="5" rx=".5" fill="#FECACA" stroke="#EF4444" stroke-width="1"/><path d="M10 9v1.5" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/><path d="M8.5 9.5l3 0" stroke="#EF4444" stroke-width="1.2" stroke-linecap="round"/></svg>',
+    pce:   '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="7.5" cy="16" r="1.5" fill="#F97316"/><circle cx="14" cy="16" r="1.5" fill="#F97316"/><path d="M2.5 3.5h2l1.8 8.5h8.4l2.3-5.5H7" fill="#FFF7ED" stroke="#F97316" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    yield: '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="2" y="3" width="16" height="14" rx="2.5" fill="#EDE9FE"/><rect x="2" y="3" width="16" height="14" rx="2.5" fill="none" stroke="#7C3AED" stroke-width="1.3"/><rect x="2" y="3" width="16" height="4.5" rx="2.5" fill="#7C3AED"/><rect x="5" y="10" width="4" height="1.5" rx=".75" fill="#7C3AED" opacity=".4"/><rect x="5" y="13" width="6" height="1.5" rx=".75" fill="#7C3AED" opacity=".25"/></svg>',
+    credit:'<svg class="nav-icon" viewBox="0 0 20 20"><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="#E0E7FF"/><rect x="1.5" y="4.5" width="17" height="11" rx="2.5" fill="none" stroke="#4F46E5" stroke-width="1.3"/><rect x="1.5" y="4.5" width="17" height="4" rx="2.5" fill="#4F46E5"/><rect x="4.5" y="11.5" width="4" height="1.5" rx=".75" fill="#4F46E5" opacity=".35"/><circle cx="15" cy="12" r="1.5" fill="#4F46E5" opacity=".25"/></svg>',
+    banks: '<svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 8.5L10 3l7.5 5.5H2.5z" fill="#CFFAFE" stroke="#0891B2" stroke-width="1.2" stroke-linejoin="round"/><rect x="4.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="9" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="13.5" y="9" width="2" height="6" fill="#CFFAFE" stroke="#0891B2" stroke-width="1"/><rect x="2" y="15" width="16" height="2" rx=".5" fill="#0891B2" opacity=".2"/><path d="M3 17h14" stroke="#0891B2" stroke-width="1.4" stroke-linecap="round"/></svg>',
+    fiscal:'<svg class="nav-icon" viewBox="0 0 20 20"><path d="M2.5 17h15" stroke="#B45309" stroke-width="1.6" stroke-linecap="round"/><path d="M5 17V7m10 10V7" stroke="#B45309" stroke-width="1.4" stroke-linecap="round"/><path d="M3 7h14L10 2.5 3 7z" fill="#FEF3C7" stroke="#B45309" stroke-width="1.3" stroke-linejoin="round"/><path d="M7.5 17V9m5 8V9" stroke="#B45309" stroke-width="1.2" stroke-linecap="round" opacity=".55"/></svg>',
+    housing:'<svg class="nav-icon" viewBox="0 0 20 20"><path d="M3.5 10L10 4l6.5 6" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5v6.5a1.5 1.5 0 001.5 1.5h7A1.5 1.5 0 0015 16V9.5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.3" stroke-linejoin="round"/><rect x="8.5" y="13" width="3" height="4.5" rx=".5" fill="#BBF7D0" stroke="#16A34A" stroke-width="1"/></svg>'
+  };
+  var _GRP = [
+    {k:'overview', tabs:[{t:'fc',l:'Outlook'},{t:'gdp',l:'GDP'}]},
+    {k:'labor',    tabs:[{t:'jobs',l:'Jobs'},{t:'unemp',l:'Unemployment'},{t:'wages',l:'Wages'}]},
+    {k:'inflation',tabs:[{t:'oil',l:'Oil'},{t:'cpi',l:'CPI'},{t:'pce',l:'Consumer &amp; PCE'}]},
+    {k:'rates',    tabs:[{t:'yield',l:'Fed Rates'},{t:'credit',l:'Credit'},{t:'banks',l:'Banks'},{t:'fiscal',l:'Fiscal'}]},
+    {k:'sectors',  tabs:[{t:'housing',l:'Housing'}]}
+  ];
+  var _T2G = {}; // tab → group key
+  _GRP.forEach(function(g){ g.tabs.forEach(function(ti){ _T2G[ti.t]=g.k; }); });
+  var _mem = {}; // per-group last active tab
+  _GRP.forEach(function(g){ _mem[g.k]=g.tabs[0].t; });
+  var _ag = 'overview'; // active group key
+
+  function _t2el(){ return document.getElementById('nav-t2'); }
+
+  function _renderT2(gk){
+    var el=_t2el(); if(!el)return;
+    var grp=null; for(var i=0;i<_GRP.length;i++){if(_GRP[i].k===gk){grp=_GRP[i];break;}}
+    if(!grp)return;
+    var at=_mem[gk]||grp.tabs[0].t;
+    el.innerHTML=grp.tabs.map(function(ti){
+      var on=ti.t===at;
+      return '<button class="nav-btn'+(on?' active':'')+'" data-tab="'+ti.t+'" role="tab" aria-selected="'+(on?'true':'false')+'" tabindex="'+(on?'0':'-1')+'">'+(_IC[ti.t]||'')+ti.l+'</button>';
+    }).join('');
+  }
+
+  function _syncGrpBtns(gk){
+    document.querySelectorAll('.nav-grp-btn').forEach(function(b){
+      var on=b.dataset.group===gk;
+      b.classList.toggle('active',on);
+      b.setAttribute('aria-selected',on?'true':'false');
+      b.setAttribute('tabindex',on?'0':'-1');
+    });
+  }
+
+  function _activateGroup(gk){
+    _ag=gk; _syncGrpBtns(gk); _renderT2(gk);
+    var t=_mem[gk];
+    if(typeof _b52_activateTab==='function') _b52_activateTab(t);
+  }
+
+  // Wrap _b52_activateTab to keep tier-1 in sync from any activation source
+  var _orig=_b52_activateTab;
+  _b52_activateTab=function(t,opts){
+    _orig(t,opts);
+    var g=_T2G[t];
+    if(g){
+      if(g!==_ag){ _ag=g; _syncGrpBtns(g); _renderT2(g); }
+      _mem[g]=t;
+      // Ensure correct sub-tab highlighted in t2
+      var el=_t2el();
+      if(el) el.querySelectorAll('.nav-btn').forEach(function(b){
+        var on=b.dataset.tab===t;
+        b.classList.toggle('active',on);
+        b.setAttribute('aria-selected',on?'true':'false');
+        b.setAttribute('tabindex',on?'0':'-1');
+      });
+    }
+  };
+
+  // Tier-1 group click
+  var t1=document.getElementById('nav-t1-groups');
+  if(t1) t1.addEventListener('click',function(e){
+    var b=e.target.closest('.nav-grp-btn'); if(!b)return;
+    _activateGroup(b.dataset.group);
+  });
+
+  // Tier-2 sub-tab click (event delegation — buttons are dynamic)
+  var t2=_t2el();
+  if(t2) t2.addEventListener('click',function(e){
+    var b=e.target.closest('.nav-btn[data-tab]'); if(!b)return;
+    _mem[_ag]=b.dataset.tab;
+    if(typeof _b52_activateTab==='function') _b52_activateTab(b.dataset.tab);
+  });
+
+  // Init: render overview sub-tabs and activate Outlook
+  _renderT2('overview');
+  if(typeof _b52_activateTab==='function') _b52_activateTab('fc');
+})();
 
 // ═══════════════════════════════════════════════════════
 // VALIDATOR TAB — Data Quality Report
