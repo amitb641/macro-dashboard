@@ -27,10 +27,7 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
 </script>
 <script>
 // ════════════════════════════════════════════════════════════════════
-// UPLIFT-2026-05 — chart annotation + a11y + value-pulse helpers.
-// Documented in style_guide.md §§4.5, 6.1, 6.7, 15.2. All helpers are
-// pure functions on `window.MD` so renderer.py can call them by name
-// when injecting chart configs.
+// Chart annotation + a11y + value-pulse helpers on window.MD.
 // ════════════════════════════════════════════════════════════════════
 (function(){
   "use strict";
@@ -2775,15 +2772,8 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <a href="#main-content" class="sr-only-focusable">Skip to dashboard content</a>
 
-<!-- Publication wordmark (top-left). Renderer.py::update_meta patches
-     issue + week from data/pipeline_version.json each run. -->
-<div class="sm-wordmark" id="sm-wordmark"><span>Macro/24</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 20</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 21 2026</span></div>
+<div class="sm-wordmark" id="sm-wordmark"><span>Macro/26</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 20</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 21</span></div>
 
-<!-- §27 reading-bar: estimated read time + section count + scroll
-     progress. Populated by MD.initReadingBar() at boot — read time
-     computed at 220 wpm from .panel text content, section count
-     pulled from .nav-btn (excluding .nav-btn-meta), and the progress
-     bar tracked on scroll via rAF. -->
 <div class="sm-readbar" id="sm-readbar" role="region" aria-label="Reading progress">
   <span class="sm-rb-meta"><span id="sm-rb-time">~12-min read</span><span class="sm-rb-dot">·</span><span id="sm-rb-sections">8 sections</span></span>
   <div class="sm-rb-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -2798,10 +2788,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 
 
-<!-- §28 What-changed-this-week delta block. JS-rendered from
-     WHAT_CHANGED const (patched by renderer.render_what_changed
-     from data/signals.json — top 3 by |delta| with alert boost).
-     Above the KPI strip so it carries the lead this week. -->
 <section class="sm-delta-block" id="sm-delta-block" aria-label="Top changes this week">
   <div class="sm-delta-hdr">
     <span class="sm-delta-eyebrow">What changed this week</span>
@@ -2810,12 +2796,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="sm-delta-row" id="sm-delta-row"></div>
 </section>
 
-<!-- §32 Release calendar strip — next 7 days of major US macro
-     releases. JS-rendered from RELEASE_CAL const (patched weekly by
-     renderer.render_release_calendar from data/release_calendar.json).
-     7 day-cells, one per calendar day, with release titles stacked
-     inside. Empty days render as a faint dash. Paired with the
-     What-changed block above: backward-looking + forward-looking. -->
 <section class="rcal-strip-wrap" id="rcal-strip-wrap" aria-label="Next 7 days of economic releases">
   <div class="rcal-hdr">
     <span class="rcal-eyebrow">Next 7 days</span>
@@ -3395,14 +3375,11 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <!-- ══ FORECAST ══ -->
 <div class="tab-panel active" id="tab-fc">
-  <!-- Macro State hero card — single-line verdict + 4-bar scorecard.
-       Reads MACRO_STATE constant (patched weekly by renderer.py from
-       data/signals.json). Above-the-fold answer to "is it good or bad?". -->
   <div class="macro-state" id="macro-state-card">
     <div class="ms-eyebrow">Macro State · As of <span id="ms-asof">May 2026</span></div>
     <div class="ms-verdict"><span class="ms-chip" id="ms-chip">HIGH RISK</span><span id="ms-verdict-text">Late-cycle: soft-landing path intact, but inflation re-accelerated to 3.78% and credit stress is building beneath the surface.</span></div>
     <div class="ms-bars" id="ms-bars"></div>
-    <p class="src" style="border-top:none;padding-top:8px;margin-top:12px">Synthesised from data/signals.json — risk level reflects 3 alerts (CPI, oil, core PCE), 2 watches (10Y yield, debt service), 1 flagged (wages cooling).</p>
+    <p class="src" style="border-top:none;padding-top:8px;margin-top:12px">Risk level reflects 3 alerts (CPI, oil, core PCE), 2 watches (10Y yield, debt service), 1 flagged (wages cooling).</p>
   </div>
 
   <div class="fc-note" id="commentary-gdp">Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The combination of slowing NFP, a 3.6% savings rate, and WTI at $109.8 creates a credible path to sub-1% growth within two quarters. Inventory and net export dynamics could provide temporary offsets, but domestic demand is the linchpin and it is weakening.</div>
@@ -3594,7 +3571,6 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:#374151"><span style="display:inline-block;width:14px;height:8px;background:rgba(214,64,69,.10);border:1px solid rgba(214,64,69,.25);border-radius:2px"></span>NBER recession</span>
     </div>
 
-    <!-- SLOOS Chart.js chart — rendered directly using bundled Chart.js (_ChartJS) -->
     <div style="position:relative;height:310px;margin-bottom:8px"><canvas id="c-sloos" role="img" aria-label="SLOOS senior loan officer survey, tightening standards"></canvas></div>
     <div id="sloos-heatmap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3"></div>
     <div class="sloos-narrative" style="margin:8px 0 6px;padding:8px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:10.5px;color:#374151;line-height:1.65">
@@ -3824,7 +3800,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div style="font-size:12px;color:var(--text2);line-height:1.7;padding:6px 4px 0">
       <p style="margin:0 0 8px"><strong>Hutchins Fiscal Impulse Measure</strong> (Brookings) decomposes the contribution of federal, state &amp; local government to quarterly GDP growth. It's the standard analyst gauge for whether fiscal policy is currently <em>adding to</em> or <em>subtracting from</em> aggregate demand. Published as a PDF / blog post each quarter — not available through FRED, BLS, or any other automated source — so updates land via manual curation in <code>data/fiscal_overrides.json</code> rather than the collector.</p>
       <p style="margin:0 0 8px"><strong>CBO Baseline Budget &amp; Economic Projections</strong> publishes 10-year deficit, debt-held-by-public, and net interest expenditure paths twice a year (Jan + Aug). Tables ship as PDF + Excel; the canonical numbers used here are the projected deficit-to-GDP ratio over the next 10 fiscal years. Each refresh requires reading the CBO Outlook PDF — also a manual-curation path.</p>
-      <p style="margin:0;color:#94A3B8;font-size:11.5px">Operationally: when Hutchins or CBO publish, edit <code>data/fiscal_overrides.json</code> with the new vintage and commit. Until that file is wired into renderer.py, this panel surfaces only the FRED-fetchable deficit/GDP series above plus the qualitative commentary at the top of the tab.</p>
+      <p style="margin:0;color:#94A3B8;font-size:11.5px">When Hutchins or CBO publish, this panel will surface their projections alongside the FRED deficit/GDP series above plus the qualitative commentary at the top of the tab.</p>
     </div>
     <p class="src">Sources (when curated): Brookings Hutchins Center on Fiscal &amp; Monetary Policy — Fiscal Impulse Measure (quarterly); Congressional Budget Office — Budget &amp; Economic Outlook (semi-annual).</p>
   </div>
@@ -3834,7 +3810,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <script>
 // ════════════════════════════════════════════════════
-// HYDRATION BOOT LOADER  (Tier 1 anti-clone)
+// HYDRATION BOOT LOADER
 // ════════════════════════════════════════════════════
 // The dashboard's data layer is being migrated from inline JS
 // constants in this file to an Origin-gated /api/state.json
@@ -4059,12 +4035,10 @@ let SECTOR_MOM = null;
 // JOLTS labour-market churn (B3.1). Renderer (rebuild_jolts_data) overwrites
 // from raw_data.json keys jolts_hist/quits/hires/unemploy_hist. All four
 // series are BLS monthly, level in thousands SA; V/U = openings / unemployed.
-// Placeholder empty arrays render the canvas as no-op until first pipeline run.
 let JOLTS_DATA = null;
-// Auto-rebuilt by renderer.py from PAYEMS (24-month MoM changes)
 let NFP_BLS_MOM = null;
 
-// ── Debt Service Ratio (TDSP) — auto-rebuilt by renderer.py from FRED TDSP
+// ── Debt Service Ratio (TDSP) — FRED TDSP
 const TDSP_HIST = {"labels":["2018 Q3", "2018 Q4", "2019 Q1", "2019 Q2", "2019 Q3", "2019 Q4", "2020 Q1", "2020 Q2", "2020 Q3", "2020 Q4", "2021 Q1", "2021 Q2", "2021 Q3", "2021 Q4", "2022 Q1", "2022 Q2", "2022 Q3", "2022 Q4", "2023 Q1", "2023 Q2", "2023 Q3", "2023 Q4", "2024 Q1", "2024 Q2", "2024 Q3", "2024 Q4", "2025 Q1", "2025 Q2", "2025 Q3", "2025 Q4"], "data":[11.6, 11.7, 11.5, 11.6, 11.6, 11.7, 11.6, 9.7, 10.1, 10.4, 9.1, 9.8, 10.0, 10.2, 10.5, 10.7, 10.6, 10.7, 10.6, 10.6, 10.7, 11.1, 11.1, 11.0, 11.1, 11.1, 11.1, 11.1, 11.3, 11.3]};
 
 // ── JOBS ─────────────────────────────────────────────
@@ -4482,7 +4456,7 @@ function _kpiSpark(vals){
        + '</svg>';
 }
 
-// Tier 1 anti-clone: KPIS arrives from /api/state.json after boot.
+// Hydration guard: KPIS arrives async after boot.
 // _renderKpiStrip() is wired into the hydration callback chain (see
 // the boot loader at the foot of this script tag); calling it before
 // hydration is a no-op so the page degrades gracefully.
@@ -4927,7 +4901,7 @@ function buildCPITab(){
   });
 
   // ── CPI Category MoM Chart — bar + dot (dynamic keys) ──
-  // Tier 1 anti-clone: CPI_CAT_MOM hydrated from /api/state.json; bail if not landed.
+  // Hydration guard: CPI_CAT_MOM arrives async; bail if not landed.
   if (!Array.isArray(CPI_CAT_MOM) || CPI_CAT_MOM.length === 0) return;
   var _cpiK = Object.keys(CPI_CAT_MOM[0]).filter(k=>k!=="cat"&&k!=="color");
   var _cpiCurK = _cpiK[_cpiK.length-1], _cpiPrvK = _cpiK.length>1?_cpiK[_cpiK.length-2]:_cpiCurK;
@@ -5030,7 +5004,7 @@ function buildWagesTab(){
 
   // TDSP metric (from KPI data if available)
   // Guard against null KPIS (hydration not yet complete / failed —
-  // see Tier 1 anti-clone boot loader). Falls through to the hardcoded
+  // see hydration boot loader). Falls through to the hardcoded
   // ~9.8% baseline a few lines down via the ternary.
   const tdspKpi = (Array.isArray(KPIS) ? KPIS : []).find(k=>k.lbl.includes("Debt Service"));
   const tdspVal = tdspKpi ? tdspKpi.val : "~9.8%";
@@ -5521,7 +5495,7 @@ function buildPCETab(){
   });
 
   // ── PCE Category MoM Chart (dynamic keys) ──
-  // Tier 1 anti-clone: PCE_CAT_MOM hydrated from /api/state.json; bail if not landed.
+  // Hydration guard: PCE_CAT_MOM arrives async; bail if not landed.
   if (!Array.isArray(PCE_CAT_MOM) || PCE_CAT_MOM.length === 0) return;
   var _pceK = Object.keys(PCE_CAT_MOM[0]).filter(k=>k!=="cat");
   var _pceCurK = _pceK[_pceK.length-1], _pcePrvK = _pceK.length>1?_pceK[_pceK.length-2]:_pceCurK;
@@ -5820,7 +5794,7 @@ function buildBanksTab(){
                                {bg:"#8878B822",fg:"#6b21a8"}; // Summary / FY25 Call
     return `<span style="font-size:8.5px;font-weight:700;letter-spacing:.04em;background:${c.bg};color:${c.fg};padding:1px 5px;border-radius:4px;margin-right:4px;vertical-align:1px">${s.toUpperCase()}</span>`;
   };
-  // Guard against null BANK_COMMENTARY (Tier 1 anti-clone hydration not complete).
+  // Guard against null BANK_COMMENTARY (async hydration not complete).
   if (!Array.isArray(BANK_COMMENTARY)) return;
   document.getElementById("bank-cards").innerHTML = BANK_COMMENTARY.map(b=>`
     <div style="background:var(--card);border:1px solid var(--border);border-top:3px solid ${b.color};border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)">
@@ -6002,7 +5976,7 @@ const OIL_EPISODES = [
 ];
 
 // SHOCK_TRACKER — Expected vs actual oil shock transmission (injected by renderer)
-// Tier 1 anti-clone: declared at script scope so the boot loader's
+// Declared at script scope so the boot loader's
 // `SHOCK_TRACKER = s.SHOCK_TRACKER` assignment (in _hydrate) targets THIS let
 // rather than creating window.SHOCK_TRACKER. Previously this lived inside
 // buildOilTab() where the function-local shadowed the hydrated value and the
@@ -6048,8 +6022,7 @@ function buildOilTab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}},
-        // Vertical marker at the Mar 2026 oil-shock onset (matches the
-        // hardcoded shock date in scripts/renderer.py:update_shock_tracker).
+        // Vertical marker at the Mar 2026 oil-shock onset.
         vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Hormuz shock, Mar 2026"}]}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:9},maxRotation:45,minRotation:0,
@@ -6304,7 +6277,7 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
   (function(){
     var el = document.getElementById("oil-impact-chain");
     if(!el) return;
-    // Guard against null SHOCK_TRACKER (Tier 1 anti-clone hydration not complete).
+    // Guard against null SHOCK_TRACKER (async hydration not complete).
     if (!SHOCK_TRACKER || !Array.isArray(SHOCK_TRACKER.phases)) return;
     var t = SHOCK_TRACKER;
     var wChg = t.wti_now - t.wti_pre;
@@ -7079,7 +7052,7 @@ function buildYieldTab(){
 
   // Read FFR + 10Y from KPIS so the tiles can never drift from the top strip
   // (renderer rebuilds KPIS once from raw data; tiles just mirror it).
-  // Guard against null KPIS (Tier 1 anti-clone hydration not complete);
+  // Guard against null KPIS (async hydration not complete);
   // the `|| {}` tail already handles missing entries, so an empty list
   // degrades to the "—" placeholders.
   var _KPIS_R = Array.isArray(KPIS) ? KPIS : [];
@@ -7148,7 +7121,7 @@ function buildYieldTab(){
 
   // ── 10Y Treasury Yield vs Card 90+ DPD chart ────────────────────────
   try{
-  // Tier 1 anti-clone: TREASURY_DATA hydrated from /api/state.json; skip chart if not landed.
+  // Hydration guard: TREASURY_DATA arrives async; skip chart if not landed.
   if (TREASURY_DATA && TREASURY_DATA.labels) {
   var tCtx = document.getElementById("c-treasury").getContext("2d");
   new Chart(tCtx,{
@@ -7968,7 +7941,6 @@ function buildStackTab(){
           </g>
         </g>
 
-        <!-- BAND B — PIPELINE (decluttered: no READY pills, no per-agent model pills, no sub-cadence text) -->
         <g transform="translate(80,210)"><rect width="113" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A0</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Preflight</text><rect x="10" y="46" width="74" height="10" rx="2" fill="#F1F4F9" /><text x="14" y="54" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1" fill="#7A8FA8">DETERMINISTIC</text></g>
         <g transform="translate(205,210)"><rect width="113" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A1</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Collector</text><rect x="10" y="46" width="74" height="10" rx="2" fill="#F1F4F9" /><text x="14" y="54" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1" fill="#7A8FA8">DETERMINISTIC</text></g>
         <g transform="translate(330,210)"><rect width="113" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" /><text x="10" y="20" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#336BCC">A2</text><text x="10" y="40" font-family="Instrument Serif, serif" font-size="14" fill="#0D1B2A">Analyzer</text><rect x="10" y="46" width="74" height="10" rx="2" fill="#F1F4F9" /><text x="14" y="54" font-family="DM Mono, monospace" font-size="7" font-weight="700" letter-spacing="1" fill="#7A8FA8">DETERMINISTIC</text></g>
@@ -7996,7 +7968,6 @@ function buildStackTab(){
           <path d="M449,350 C 449,365 449,385 449,395" />
         </g>
 
-        <!-- BAND C — QUALITY (slim stripes: label + count + det/agentic flag) -->
         <g font-family="DM Mono, monospace" font-weight="700" letter-spacing="1.4">
           <g transform="translate(80,400)"><rect width="738" height="22" rx="5" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="15" font-size="9" fill="#336BCC">PREFLIGHT</text><text x="500" y="15" font-size="9" fill="#7A8FA8">2 CHECKS</text><rect x="640" y="5" width="84" height="12" rx="3" fill="#F1F4F9" /><text x="649" y="14" font-size="7.5" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
           <g transform="translate(80,428)"><rect width="738" height="22" rx="5" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="15" font-size="9" fill="#336BCC">SMOKE</text><text x="500" y="15" font-size="9" fill="#7A8FA8">29 TESTS</text><rect x="640" y="5" width="84" height="12" rx="3" fill="#F1F4F9" /><text x="649" y="14" font-size="7.5" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
@@ -8004,14 +7975,12 @@ function buildStackTab(){
           <g transform="translate(80,484)"><rect width="738" height="22" rx="5" fill="#FFFFFF" stroke="#E2E8F0" /><text x="14" y="15" font-size="9" fill="#336BCC">VISUAL QA</text><text x="500" y="15" font-size="9" fill="#7A8FA8">~230 DOM CHECKS</text><rect x="640" y="5" width="84" height="12" rx="3" fill="#F1F4F9" /><text x="649" y="14" font-size="7.5" fill="#7A8FA8" letter-spacing="1.2">DETERMINISTIC</text></g>
         </g>
 
-        <!-- Publish gate strip — below all four Band C stripes (no longer overlaps VISUAL QA) -->
         <g transform="translate(80,520)">
           <rect width="738" height="22" rx="5" fill="url(#hiw-pub-fill)" />
           <text x="14" y="15" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="2.4" fill="#FFFFFF">PUBLISH GATE</text>
           <text x="500" y="15" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="rgba(255,255,255,.85)">VERDICT · PASS / WARN / FAIL</text>
         </g>
 
-        <!-- BAND D — GUARDRAILS (horizontal strip, replaces the old vertical sidebar) -->
         <g transform="translate(80,558)">
           <rect width="738" height="38" rx="8" fill="#F1F4F9" stroke="#E2E8F0" />
           <g transform="translate(12,7)"><rect width="173" height="24" rx="5" fill="#FFFFFF" stroke="rgba(136,120,184,.4)" /><text x="10" y="16" font-family="DM Mono, monospace" font-size="12" font-weight="700" fill="#5D4C92">🔒</text><text x="30" y="16" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#5D4C92">PATH ALLOWLIST</text></g>
@@ -8020,7 +7989,6 @@ function buildStackTab(){
           <g transform="translate(564,7)"><rect width="162" height="24" rx="5" fill="#FFFFFF" stroke="rgba(136,120,184,.4)" /><text x="10" y="16" font-family="DM Mono, monospace" font-size="12" font-weight="700" fill="#5D4C92">📝</text><text x="30" y="16" font-family="DM Mono, monospace" font-size="9" font-weight="700" letter-spacing="1.4" fill="#5D4C92">AUDIT LOG</text></g>
         </g>
 
-        <!-- Footer caption — model attribution (replaces per-agent CLAUDE SONNET pills) -->
         <text x="449" y="612" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" letter-spacing="1.2" fill="#7A8FA8">ALL AGENTIC STAGES RUN ON CLAUDE SONNET 4.6 · ROUTED THROUGH ALL FOUR GUARDRAILS</text>
       </svg>
     </div>
@@ -8049,25 +8017,25 @@ function buildStackTab(){
       <tbody>
         <tr>
           <td><span class="hiw-row-num">A3 · Stage 02</span><span class="hiw-cap-name">Briefing</span></td>
-          <td><span class="hiw-why-cat">Synthesis</span><span class="hiw-why-body">Input: <span class="hiw-mono">signals.json</span> (15+ regime-classified KPI deltas). Output: 2-4 sentence commentary per tab, citing this week's actual numbers. Every week's combination of deltas is new — a template can't compose new prose from them.</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on · briefing_agent.py</span></td>
+          <td><span class="hiw-why-cat">Synthesis</span><span class="hiw-why-body">Input: the signals feed (15+ regime-classified KPI deltas). Output: 2-4 sentence commentary per tab, citing this week's actual numbers. Every week's combination of deltas is new — a template can't compose new prose from them.</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">A8 · Stage 02</span><span class="hiw-cap-name">Vision Review</span></td>
           <td><span class="hiw-why-cat">Perception</span><span class="hiw-why-body">Multimodal input: PNG screenshots of each rendered tab. Flags layout, alignment, label collisions, and mis-bucketed colour usage that DOM-attribute checks cannot detect (e.g. a green-coded chart drawn in red).</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on · visual_review.py</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">always-on</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">A9 · Stage 02</span><span class="hiw-cap-name">Earnings</span></td>
           <td><span class="hiw-why-cat">Extraction</span><span class="hiw-why-body">Input: 60-90 min earnings-call transcripts (free-form text). Output per bank: a verbatim quote span plus 7 typed fields (economy, lending, credit, outlook, …). Speakers and topic boundaries aren't on fixed lines — no regex finds them.</span></td>
-          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">quarterly cron · earnings_agent.py</span></td>
+          <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">quarterly cron</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">💲 Cost cap</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
         <tr>
           <td><span class="hiw-row-num">A10 · Stage 03</span><span class="hiw-cap-name">Diagnostician</span></td>
-          <td><span class="hiw-why-cat">Diagnosis</span><span class="hiw-why-body">Input: <span class="hiw-mono">validation_report.json</span> failures + <span class="hiw-mono">playbook.md</span> + prior incident reports. Output: ranked probable causes per finding, citing playbook §X.Y. Memory-aware — recurring findings are re-weighted against first-seen.</span></td>
+          <td><span class="hiw-why-cat">Diagnosis</span><span class="hiw-why-body">Input: validator findings + the playbook + prior incident reports. Output: ranked probable causes per finding, citing playbook §X.Y. Memory-aware — recurring findings are re-weighted against first-seen.</span></td>
           <td class="hiw-mono-cell">claude-sonnet-4-6<span class="hiw-mono-sub">AGENT_DIAGNOSTICIAN_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🔒 Allowlist</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
@@ -8079,7 +8047,7 @@ function buildStackTab(){
         </tr>
         <tr>
           <td><span class="hiw-row-num">Phase 2.5</span><span class="hiw-cap-name">Editorial Review</span></td>
-          <td><span class="hiw-why-cat">Critique</span><span class="hiw-why-body">Deterministic linters check length, hedging filler, and fabricated numerics first. The LLM pass is opt-in: Sonnet audits tone + factuality against <span class="hiw-mono">style_guide.md §2</span>; Opus must concur before any "critical" verdict is promoted.</span></td>
+          <td><span class="hiw-why-cat">Critique</span><span class="hiw-why-body">Deterministic linters check length, hedging filler, and fabricated numerics first. The LLM pass is opt-in: Sonnet audits tone + factuality against the style guide; Opus must concur before any "critical" verdict is promoted.</span></td>
           <td class="hiw-mono-cell">sonnet + opus<span class="hiw-mono-sub">AGENT_EDITORIAL_REVIEW_ENABLED=1</span></td>
           <td><div class="hiw-guard-chips"><span class="hiw-gchip">🛡 Validator</span><span class="hiw-gchip">💲 Cost</span><span class="hiw-gchip">📝 Audit</span></div></td>
         </tr>
@@ -8101,17 +8069,17 @@ function buildStackTab(){
     <div class="hiw-gd">
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_DISABLE_ALL</div>
-        <p>Set to <span class="hiw-mono">1</span> to disable every LLM call. <span class="hiw-mono">_agent_guardrails.py</span> short-circuits <span class="hiw-mono">bounded_llm_call()</span> at import. The deterministic pipeline (A0–A2, A4–A7) still runs end-to-end.</p>
+        <p>Set to <span class="hiw-mono">1</span> to disable every LLM call. The guardrails module short-circuits the bounded LLM wrapper at import. The deterministic pipeline (A0–A2, A4–A7) still runs end-to-end.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>DIAGNOSTICIAN_<wbr>ENABLED</div>
-        <p>OFF: A10 runs in observer mode — read-only summary of validator findings to the run log. ON: also invokes Claude to write ranked-cause reports to <span class="hiw-mono">data/incident_reports/&lt;date&gt;.md</span>.</p>
+        <p>OFF: A10 runs in observer mode — read-only summary of validator findings to the run log. ON: also invokes Claude to write ranked-cause reports as dated incident notes.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
         <div class="hiw-env">AGENT_<wbr>EXPLAINER_<wbr>ENABLED</div>
-        <p>Emits one Claude-authored rationale per flagged signal to <span class="hiw-mono">data/signal_rationales.json</span>. Separate artifact — does not mutate <span class="hiw-mono">signals.json</span>; renderer is unchanged.</p>
+        <p>Emits one Claude-authored rationale per flagged signal to a separate rationales output. Read-only — does not mutate the signals feed; renderer is unchanged.</p>
         <span class="hiw-v">DEFAULT · OFF</span>
       </div>
       <div class="hiw-gd-tile">
@@ -8138,26 +8106,26 @@ function buildStackTab(){
         <span class="hiw-arrow">↗</span>
         <h3>Visual contract.</h3>
         <p>Typography, color, spacing, chart standards. Agents 7 (DOM checks) and 8 (vision review) cite the §-section they enforce.</p>
-        <div class="hiw-path">data/style_guide.md</div>
+        <div class="hiw-path">Style guide</div>
       </a>
       <a class="hiw-ct-card" href="#" data-doc="playbook">
         <span class="hiw-arrow">↗</span>
         <h3>Data + reasoning contract.</h3>
         <p>Publish-lag tables, noise floors per series, common-cause patterns, forbidden recommendations. A10 cites §X.Y when justifying diagnoses; when this file and an LLM disagree, this file wins.</p>
-        <div class="hiw-path">data/playbook.md</div>
+        <div class="hiw-path">Playbook</div>
       </a>
       <a class="hiw-ct-card is-new" href="#" data-doc="known_normal">
         <span class="hiw-new-mark">NEW</span>
         <span class="hiw-arrow">↗</span>
         <h3>Machine-readable normals.</h3>
         <p>Machine-readable mirror of playbook baselines: publish lag, noise floors, shock-tracker min-obs counts, model routing. Read by collector, validator, and renderer.</p>
-        <div class="hiw-path">data/known_normal.json</div>
+        <div class="hiw-path">Known-normal baselines</div>
       </a>
       <a class="hiw-ct-card" href="#" data-doc="methodology">
         <span class="hiw-arrow">↗</span>
         <h3>Indicator methodology.</h3>
         <p>Indicator definitions. Formulas, thresholds, and confirmation logic per series. Updated whenever a threshold or rule changes.</p>
-        <div class="hiw-path">METHODOLOGY.md</div>
+        <div class="hiw-path">Methodology</div>
       </a>
     </div>
 
@@ -8165,7 +8133,7 @@ function buildStackTab(){
       <span class="hiw-cdot"></span>
       <div class="hiw-cbody">
         <strong>The net effect.</strong>
-        Every number is sourced through six gates — preflight → smoke → validator → visual QA → vision review → editorial. Every agentic LLM call is bounded by <span class="hiw-mono">bounded_llm_call()</span>: path-allowlisted, cost-capped, written to <span class="hiw-mono">data/agent_memory.jsonl</span> (2,000-entry rolling FIFO). <span class="hiw-mono">AGENT_DISABLE_ALL=1</span> short-circuits the LLM tier entirely; the deterministic pipeline still runs.
+        Every number is sourced through six gates — preflight → smoke → validator → visual QA → vision review → editorial. Every agentic LLM call is bounded: path-allowlisted, cost-capped, written to a 2,000-entry rolling audit log. <span class="hiw-mono">AGENT_DISABLE_ALL=1</span> short-circuits the LLM tier entirely; the deterministic pipeline still runs.
       </div>
     </div>
   </section>
@@ -8178,7 +8146,7 @@ function buildStackTab(){
 function _initDashboard(){
   // SVG engine is inline — no CDN wait needed. Build default tab immediately.
   buildFCTab();
-  // Tier 1 anti-clone hydration: state.json arrives async via /api/state.json.
+  // Async hydration: state arrives async after boot.
   // The default tab builds *before* hydration completes, so tabs whose
   // builders include a "no data yet, bail out" guard (currently fc, jobs,
   // cpi, pce, banks, oil) draw nothing on first paint. Tabs that *use*
@@ -8406,15 +8374,10 @@ if(document.readyState === 'loading'){
 
 
 
-<!-- ══ AI AGENT PROCESS ══ -->
-
-
-
-<!-- ══ COMMENTARY NOTE ══ -->
   <div class="panel" style="margin-top:16px">
-    <div class="panel-title">Dynamic Commentary — AI-Generated from Live Data</div>
+    <div class="panel-title">Dynamic Commentary</div>
     <div class="fc-note">
-      All tab commentaries are <strong>dynamically generated</strong> by Claude AI (Agent 3) on each pipeline run. The AI reads the latest FRED/BLS/EIA data from signals.json, compares against prior snapshots, and writes fresh 2–3 sentence commentary for each tab. Commentary is injected into the dashboard via <code>id="commentary-{tab}"</code> markers. Tabs covered: GDP, Jobs, Unemployment, Wages, CPI, PCE, Fed Rates, Credit, Housing, Oil, Banks.
+      Every tab's commentary is regenerated each run from the latest FRED, BLS, and EIA data — comparing against prior snapshots and writing a fresh 2–3 sentence read. Tabs covered: GDP, Jobs, Unemployment, Wages, CPI, PCE, Fed Rates, Credit, Housing, Oil, Banks.
     </div>
   </div>
 </div>
@@ -8424,24 +8387,23 @@ if(document.readyState === 'loading'){
 <script>
 // ── Data status definitions ───────────────────────────────────────────
 // type: "live"    = FRED API, refreshes every page load + 15min
-//       "weekly"  = pipeline runs every Saturday 8am ET via GitHub Actions cron
+//       "weekly"  = refreshes every Saturday 8am ET
 //       "monthly" = 2nd Saturday deep refresh captures Jobs + CPI + PCE
 //       "quarterly"= manual update after earnings / govt releases
 //       "manual"  = ad-hoc, no schedule
 
 
 // ══════════════════════════════════════════════════════════════════
-// MACRO_STATE — Above-the-fold verdict card. Patched weekly by
-// renderer.py::render_macro_state from data/signals.json. Each bar
-// is 0-100 (higher = healthier). Status maps: good (≥66), watch
-// (33-65), stress (<33). Verdict text is one sentence.
+// MACRO_STATE — Above-the-fold verdict card. Each bar is 0-100
+// (higher = healthier). Status maps: good (≥66), watch (33-65),
+// stress (<33). Verdict text is one sentence.
 // ══════════════════════════════════════════════════════════════════
 let MACRO_STATE = null;
 
 function buildMacroState(){
   var card = document.getElementById('macro-state-card');
   if(!card) return;
-  // Tier 1 anti-clone: MACRO_STATE arrives from /api/state.json; guard.
+  // Hydration guard: MACRO_STATE arrives async; bail until landed.
   if (!MACRO_STATE || !Array.isArray(MACRO_STATE.bars)) return;
   var chip = document.getElementById('ms-chip');
   if(chip){
@@ -8473,10 +8435,8 @@ window.MD = window.MD || {};
 if (window.MD._hydrationDone) buildMacroState();
 
 // ══════════════════════════════════════════════════════════════════
-// WHAT_CHANGED — Top-3 week-over-week deltas. Patched weekly by
-// renderer.py::render_what_changed from data/signals.json. Picked by
-// |delta| with alert/watch boost. dir: 'up'|'down'|'flat'; tone:
-// 'alert'|'watch'|'ok'.
+// WHAT_CHANGED — Top-3 week-over-week deltas. Picked by |delta| with
+// alert/watch boost. dir: 'up'|'down'|'flat'; tone: 'alert'|'watch'|'ok'.
 // ══════════════════════════════════════════════════════════════════
 let WHAT_CHANGED = null;
 
@@ -8516,10 +8476,9 @@ window.MD = window.MD || {};
 if (window.MD._hydrationDone) buildDeltaBlock();
 
 // ══════════════════════════════════════════════════════════════════
-// RELEASE_CAL — Next 7 days of major US macro releases. Patched
-// weekly by renderer.py::render_release_calendar from
-// data/release_calendar.json (filtered to [today, today+6d]).
-// importance: 'high'|'med'|'low'; series='holiday' = market closure.
+// RELEASE_CAL — Next 7 days of major US macro releases (filtered to
+// [today, today+6d]). importance: 'high'|'med'|'low'; series='holiday'
+// = market closure.
 // ══════════════════════════════════════════════════════════════════
 let RELEASE_CAL = null;
 
@@ -8922,20 +8881,12 @@ function _captureAndDownload(TAB_IDS, origTabId){
 
 
 <div class="footer">
-  Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4'25 Earnings. Pipeline: Weekly Sat 8am ET + Monthly 2nd Sat 10am ET · Pre-flight → Collector → Analyzer → Claude AI Commentary → Renderer → Validator (9-pass) → Email → Repair Agent. All commentaries dynamically generated from live data. 2025 = actual. 2026F = consensus midpoint.
+  Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4'25 Earnings. Refreshed weekly (Sat 8am ET) with a deeper monthly refresh on the 2nd Saturday. 2025 = actual. 2026F = consensus midpoint.
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     SYSTEM-MAP theme overlay (B7) — promoted from index-dev.html
-     after multi-expert audit pass.
-     Activates by adding `themed-sm` class to body via theme-overlay.js.
-     All rules are scoped to `body.themed-sm` so removing these three
-     lines fully reverts to the un-themed look.
-     ═══════════════════════════════════════════════════════════════ -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="theme-overlay.css?v=2026-05-24T04:29:05Z">
 <script src="theme-overlay.js?v=2026-05-24T04:29:05Z"></script>
-<!-- Vercel Web Analytics — owner-only beacon (no visible UI for visitors). Enable at vercel.com/<team>/macro-dashboard-dev/analytics. -->
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

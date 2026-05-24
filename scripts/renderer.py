@@ -3573,10 +3573,10 @@ def render_wordmark(html):
         rf'\g<1>ISSUE {issue_num}\g<2>',
         html, count=1,
     )
-    # Replace week chip
+    # Replace week chip — year omitted (already on the Macro/YY mark)
     new_h = re.sub(
         r'(id="sm-wm-week">)[^<]*(</span>)',
-        rf'\g<1>WEEK {iso_week} {year}\g<2>',
+        rf'\g<1>WEEK {iso_week}\g<2>',
         new_h, count=1,
     )
     if new_h != html:
