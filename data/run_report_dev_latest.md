@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-05-24 23:01 UTC._
+_Generated 2026-05-24 23:52 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `4824efd01ed0` — 🌑 Shadow update (dev): 2026-05-24
+- **Commit:** `ac52f7f77d3f` — 🌑 Shadow update (dev): 2026-05-24
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
