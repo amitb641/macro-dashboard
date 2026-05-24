@@ -3798,7 +3798,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="panel-title">Fiscal Impulse &amp; CBO Baseline — Deferred Inputs</div>
     <div class="panel-sub">No public API · sourced quarterly from Brookings (Hutchins) + CBO publications</div>
     <div style="font-size:12px;color:var(--text2);line-height:1.7;padding:6px 4px 0">
-      <p style="margin:0 0 8px"><strong>Hutchins Fiscal Impulse Measure</strong> (Brookings) decomposes the contribution of federal, state &amp; local government to quarterly GDP growth. It's the standard analyst gauge for whether fiscal policy is currently <em>adding to</em> or <em>subtracting from</em> aggregate demand. Published as a PDF / blog post each quarter — not available through FRED, BLS, or any other automated source — so updates land via manual curation in <code>data/fiscal_overrides.json</code> rather than the collector.</p>
+      <p style="margin:0 0 8px"><strong>Hutchins Fiscal Impulse Measure</strong> (Brookings) decomposes the contribution of federal, state &amp; local government to quarterly GDP growth. It's the standard analyst gauge for whether fiscal policy is currently <em>adding to</em> or <em>subtracting from</em> aggregate demand. Published as a PDF / blog post each quarter — not available through FRED, BLS, or any other automated source — so updates land via manual curation rather than the collector.</p>
       <p style="margin:0 0 8px"><strong>CBO Baseline Budget &amp; Economic Projections</strong> publishes 10-year deficit, debt-held-by-public, and net interest expenditure paths twice a year (Jan + Aug). Tables ship as PDF + Excel; the canonical numbers used here are the projected deficit-to-GDP ratio over the next 10 fiscal years. Each refresh requires reading the CBO Outlook PDF — also a manual-curation path.</p>
       <p style="margin:0;color:#94A3B8;font-size:11.5px">When Hutchins or CBO publish, this panel will surface their projections alongside the FRED deficit/GDP series above plus the qualitative commentary at the top of the tab.</p>
     </div>
@@ -7484,8 +7484,8 @@ async function buildValidatorTab(){
       + '<div class="panel" style="margin:24px 0;padding:32px;text-align:center;color:#7A8FA8">'
       + '<div style="font-size:48px;margin-bottom:12px">🛡️</div>'
       + '<div style="font-size:15px;font-weight:600;color:#334E68;margin-bottom:8px">Validator has not run yet</div>'
-      + '<div style="font-size:12px">The validator agent runs after each pipeline execution.<br>'
-      + 'Run <code>python scripts/validator.py</code> locally, or wait for the next scheduled pipeline run.</div>'
+      + '<div style="font-size:12px">The validator runs after each pipeline execution.<br>'
+      + 'Wait for the next scheduled run, or refresh after the upcoming weekly cadence.</div>'
       + '</div>';
     return;
   }
@@ -7580,13 +7580,13 @@ async function buildValidatorTab(){
         "Recomputes static seeds (FC_MACRO actuals) from raw data each run; flags drift > per-metric tolerance against the value rendered into index.html.",
         rpt.seed_drift, noteCols)
     + findingsTable("Pass 3h: Collector Errors",
-        "Surfaces FRED/BLS 4xx/5xx errors recorded by Agent 1 (collector) into critical findings — no more silent skips on bad series IDs.",
+        "Surfaces FRED/BLS 4xx/5xx errors recorded by the collector into critical findings — no more silent skips on bad series IDs.",
         rpt.collector_errors, noteCols)
     + '<div class="fc-note" style="margin-top:12px;font-size:11px;color:#7A8FA8">'
-    + '<strong>How it works:</strong> Agent 6 (Validator) runs after the renderer and independently verifies all dashboard numbers. '
+    + '<strong>How it works:</strong> The validator runs after the renderer and independently verifies all dashboard numbers. '
     + 'Passes 1–3 check rendered consistency, fresh API revisions, and staleness. '
-    + 'The self-verification passes (3f schema contract · 3g seed drift · 3h collector errors) catch the bug class where rebuilds silently fail and stale seeds get rendered as fresh — see <code>docs/SELF_VERIFICATION.md</code>. '
-    + 'Report is saved to <code>data/validation_report.json</code>; Agent 10 (repair, observer mode) appends a structured per-run summary to <code>data/repair_log.md</code>.'
+    + 'The self-verification passes (3f schema contract · 3g seed drift · 3h collector errors) catch the bug class where rebuilds silently fail and stale seeds get rendered as fresh. '
+    + 'The repair observer appends a structured per-run summary to a rolling log for trend tracking.'
     + '</div>';
 }
 
@@ -8295,8 +8295,8 @@ if(document.readyState === 'loading'){
         <tr style="background:var(--bg2)"><td><strong>🛒 CPI</strong></td><td>Consumer price inflation — headline, core, and 8 component categories</td><td>CPI YoY, core CPI, shelter, food, energy by category</td><td><a href="https://www.bls.gov/cpi/" target="_blank" rel="noopener">BLS CPI-U</a> · <a href="https://fred.stlouisfed.org/series/CPIAUCSL" target="_blank" rel="noopener">FRED CPIAUCSL</a> · <a href="https://fred.stlouisfed.org/series/CPILFESL" target="_blank" rel="noopener">CPILFESL</a> (core)</td><td>Jan 2026</td></tr>
         <tr><td><strong>💳 Consumer &amp; PCE</strong></td><td>Fed's preferred inflation gauge, personal saving rate, consumer credit growth</td><td>PCE headline &amp; core YoY, saving rate %, credit growth</td><td><a href="https://www.bea.gov/data/income-saving/personal-income" target="_blank" rel="noopener">BEA Personal Income &amp; Outlays</a> (<a href="https://fred.stlouisfed.org/series/PCEPI" target="_blank" rel="noopener">PCEPI</a>, <a href="https://fred.stlouisfed.org/series/PCEPILFE" target="_blank" rel="noopener">PCEPILFE</a>) · <a href="https://www.federalreserve.gov/releases/g19/" target="_blank" rel="noopener">Fed G.19</a></td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>📈 Fed Rates</strong></td><td>Treasury yield curve, Fed funds rate history, FOMC dot plot, 2026 rate path, card issuer funding &amp; yield</td><td>2Y/10Y/30Y yields, 2Y–10Y spread, FOMC dots, card yield %</td><td><a href="https://www.federalreserve.gov/releases/h15/" target="_blank" rel="noopener">Fed H.15</a> · <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">FOMC SEP Dec 2025</a> · <a href="https://www.fdic.gov/" target="_blank" rel="noopener">FDIC</a> · Earnings</td><td>Mar 2026</td></tr>
-        <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td><a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">FRED ICE BofA</a> · <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed HHDC</a> · Bank earnings (Agent 9)</td><td>Q1 2026</td></tr>
-        <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>10-bank earnings commentary — NII, ROTCE, CET1, NCO, forward guidance + verbatim CEO quotes across 7 topic areas</td><td>Net income, NII, ROTCE %, CET1 %, FY26 NII guide, verbatim CEO commentary</td><td>Q1 2026 earnings transcripts (auto-fetched by Agent 9 during earnings weeks) · <code>data/bank_earnings.json</code></td><td>Q1 2026</td></tr>
+        <tr><td><strong>🔗 Credit</strong></td><td>Credit spreads, card delinquency, net charge-offs, lending standards</td><td>IG/HY OAS, 90+DPD delinquency, NCO rates, SLOOS</td><td><a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" rel="noopener">FRED ICE BofA</a> · <a href="https://www.newyorkfed.org/microeconomics/hhdc" target="_blank" rel="noopener">NY Fed HHDC</a> · Bank earnings</td><td>Q1 2026</td></tr>
+        <tr style="background:var(--bg2)"><td><strong>🏦 Banks</strong></td><td>10-bank earnings commentary — NII, ROTCE, CET1, NCO, forward guidance + verbatim CEO quotes across 7 topic areas</td><td>Net income, NII, ROTCE %, CET1 %, FY26 NII guide, verbatim CEO commentary</td><td>Q1 2026 earnings transcripts (auto-fetched during earnings weeks)</td><td>Q1 2026</td></tr>
         <tr><td><strong>🏠 Housing</strong></td><td>Home prices, mortgage rates, housing starts, affordability, metro table</td><td>HPI YoY, 30yr mortgage rate, starts, affordability index</td><td><a href="https://www.spglobal.com/spdji/en/indices/real-estate/sp-corelogic-case-shiller-us-national-home-price-nsa-index/" target="_blank" rel="noopener">Case-Shiller</a> · <a href="https://www.fhfa.gov/data/hpi" target="_blank" rel="noopener">FHFA</a> · <a href="https://www.census.gov/construction/nrc/" target="_blank" rel="noopener">Census</a> · <a href="https://www.freddiemac.com/pmms" target="_blank" rel="noopener">Freddie Mac</a> · <a href="https://www.nar.realtor/research-and-statistics" target="_blank" rel="noopener">NAR</a></td><td>Jan 2026</td></tr>
         <tr style="background:var(--bg2)"><td><strong>🛢️ Oil</strong></td><td>WTI/Brent prices, U.S. production, 2026 price outlook from 7 institutions</td><td>WTI/Brent $/bbl, U.S. mb/d, 2026 price range</td><td><a href="https://www.eia.gov/outlooks/steo/" target="_blank" rel="noopener">EIA STEO</a> · GS · JPM · <a href="https://www.iea.org/reports/oil-market-report" target="_blank" rel="noopener">IEA</a> · <a href="https://www.opec.org/opec_web/en/publications/338.htm" target="_blank" rel="noopener">OPEC</a></td><td>Feb 2026</td></tr>
       </tbody>

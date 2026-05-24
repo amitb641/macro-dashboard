@@ -16,6 +16,7 @@ Usage: python scripts/visual_qa.py [--screenshots]
 """
 
 import json, sys, datetime, os
+import contextlib, http.server, socket, socketserver, threading
 from pathlib import Path
 
 try:
@@ -28,6 +29,48 @@ ROOT       = Path(__file__).parent.parent
 HTML_FILE  = ROOT / 'index.html'
 RPT_FILE   = ROOT / 'data' / 'visual_qa_report.json'
 SCREEN_DIR = ROOT / 'data' / 'screenshots'
+
+
+@contextlib.contextmanager
+def _serve_root():
+    """Spin up a localhost HTTP server rooted at ROOT for the duration of
+    the visual-QA browser session.
+
+    Background
+    ----------
+    The page used to be loaded via a ``file://`` URL. Chromium then
+    routes ``fetch('/api/state.json')`` through Playwright's request
+    interceptor (set up with ``page.route`` below), which works on Linux
+    CI but is flaky on Windows Chromium — some builds simply refuse to
+    intercept ``file://`` ``fetch`` failures, so the page never finishes
+    hydration and the first ``btn.click()`` times out at 30s.
+
+    Serving over HTTP sidesteps the whole class of file://-CORS issues
+    and matches how the page actually runs on Vercel. The route()
+    interception below is kept as a belt-and-braces fallback (e.g. if
+    a future ``--file`` flag re-enables ``file://`` loading).
+
+    Uses port 0 to let the kernel pick an unused port. Thread-daemon
+    so an unexpected exit doesn't leave the server bound.
+    """
+    handler_cls = http.server.SimpleHTTPRequestHandler
+    # Pin the handler to ROOT regardless of CWD. SimpleHTTPRequestHandler
+    # added the `directory=` kwarg in 3.7; older callers chdir'd instead.
+    class _RootHandler(handler_cls):
+        def __init__(self, *a, **kw):
+            super().__init__(*a, directory=str(ROOT), **kw)
+        # Silence the per-request logs — they drown the QA output.
+        def log_message(self, fmt, *args):
+            return
+
+    with socketserver.TCPServer(('127.0.0.1', 0), _RootHandler) as httpd:
+        port = httpd.server_address[1]
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        try:
+            yield f'http://127.0.0.1:{port}'
+        finally:
+            httpd.shutdown()
 
 TAB_IDS = [
     'fc', 'gdp', 'jobs', 'unemp', 'wages', 'cpi',
@@ -235,7 +278,7 @@ def run_visual_qa(take_screenshots=False):
     check_panel_meta()
     check_serif_scope()
 
-    with sync_playwright() as p:
+    with _serve_root() as base_url, sync_playwright() as p:
         # Use PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH env var if set, otherwise auto-detect
         chrome_path = os.environ.get('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH', '')
         if not chrome_path:
@@ -255,20 +298,31 @@ def run_visual_qa(take_screenshots=False):
         )
         page = context.new_page()
 
-        # Collect console errors
+        # Collect console errors. Capture msg.location.url too because
+        # Chromium puts failed-resource URLs there, not in msg.text
+        # (text is the generic "Failed to load resource: 404" string).
         console_errors = []
-        page.on('console', lambda msg: console_errors.append(
-            {'type': msg.type, 'text': msg.text}
-        ) if msg.type in ('error', 'warning') else None)
+        def _on_console(msg):
+            if msg.type in ('error', 'warning'):
+                url = ''
+                try:
+                    loc = msg.location  # dict with url/line/column
+                    if isinstance(loc, dict):
+                        url = loc.get('url', '')
+                except Exception:
+                    pass
+                console_errors.append({'type': msg.type, 'text': msg.text, 'url': url})
+        page.on('console', _on_console)
 
         # Collect JS exceptions
         js_errors = []
         page.on('pageerror', lambda err: js_errors.append(str(err)))
 
-        # Browsers block fetch() from file:// origins (CORS). Route JSON
-        # data-blob fetches through Playwright and serve them from disk so
-        # post-v1.0.3 runtime-fetched data (VALIDATION_REPORT, etc.) can be
-        # verified in the visual-QA harness the same way it works on Pages.
+        # Belt-and-braces JSON route: with the local HTTP server above
+        # serving `data/*.json` natively, this interceptor is normally a
+        # no-op. It remains for back-compat with any future flag that
+        # re-enables ``file://`` loading (which can't fetch() data blobs
+        # at all without an interceptor).
         data_dir = HTML_FILE.parent / 'data'
         def _route_data(route, req):
             import os
@@ -281,19 +335,20 @@ def run_visual_qa(take_screenshots=False):
                 route.fulfill(status=404, body=f'Not found: {fname}')
         page.route('**/data/*.json', _route_data)
 
-        # Load page
-        file_url = f'file://{HTML_FILE.resolve()}'
-        page.goto(file_url, wait_until='networkidle')
+        # Load page over HTTP (see _serve_root). Same code path the live
+        # Vercel deploy uses — no file:// CORS quirks.
+        page.goto(f'{base_url}/index.html', wait_until='networkidle')
         page.wait_for_timeout(1000)  # Let charts render
 
-        # Tier 1 anti-clone: wait for hydration to finish before running
-        # any tab-click checks. _hydrate() fetches /api/state.json (fails on
-        # file://, falls through to /data/state.json which the route above
-        # serves from disk) then triggers _rebuildAfterHydrate to rewire
-        # tabs. If we click before that callback fires, the click target
-        # can become unstable as the tab panel re-renders mid-click,
-        # producing the "Timeout 30000ms" failure on btn.click(). Poll
-        # for window.MD._hydrationDone with a 5s ceiling — well above
+        # Wait for the async hydration boot loader to flip the done flag
+        # before running any tab-click checks. _hydrate() fetches
+        # /api/state.json (404 here — no Vercel function), falls through
+        # to /data/state.json (served by the local HTTP server above),
+        # then triggers _rebuildAfterHydrate to rewire tabs. If we click
+        # before that callback fires the click target can become unstable
+        # as the tab panel re-renders mid-click — producing the
+        # "Timeout 30000ms" failure on btn.click(). Poll for
+        # window.MD._hydrationDone with a 5s ceiling — well above
         # typical fetch-from-disk latency (~50ms).
         try:
             page.wait_for_function(
@@ -320,13 +375,28 @@ def run_visual_qa(take_screenshots=False):
         _check('global', 'No JS exceptions', len(js_errors) == 0,
                f'{len(js_errors)} errors: {js_errors[:3]}', severity='critical')
 
-        # Console errors (filter out benign ones)
+        # Console errors (filter out benign ones).
+        # Vercel-only paths 404 over local HTTP — no serverless
+        # functions, no analytics beacon. The state fetch falls back to
+        # /data/state.json; analytics is a no-op outside production.
+        # Match against msg.location.url since Chromium puts the failed
+        # URL there, not in the message text.
+        _expected_404_paths = (
+            '/api/state.json',
+            '/_vercel/insights/script.js',
+        )
+        def _is_expected_404(err):
+            if '404' not in err.get('text', ''):
+                return False
+            url = err.get('url', '')
+            return any(p in url for p in _expected_404_paths)
         real_errors = [e for e in console_errors
                        if e['type'] == 'error'
                        and 'favicon' not in e['text'].lower()
                        and 'net::ERR_FILE_NOT_FOUND' not in e['text']
                        and 'net::ERR_FAILED' not in e['text']  # file:// CORS
-                       and 'Access to fetch' not in e['text']]  # file:// CORS
+                       and 'Access to fetch' not in e['text']  # file:// CORS
+                       and not _is_expected_404(e)]
         _check('global', 'No console errors', len(real_errors) == 0,
                f'{len(real_errors)} errors: {[e["text"][:80] for e in real_errors[:3]]}')
 
@@ -362,7 +432,17 @@ def run_visual_qa(take_screenshots=False):
                 _check(tab_name, 'Nav button exists', False, f'no button for data-tab="{tab_id}"')
                 continue
 
-            btn.click()
+            # JS-dispatched click. The pill nav can sit near the
+            # viewport fold (~y=1055 on Windows headless at 1920×1080,
+            # within viewport on Linux CI), and Playwright's native
+            # click() treats partially-clipped elements as "not visible"
+            # even with force=True + scroll_into_view — times out at 30s
+            # locally. Dispatching .click() through page JS bypasses the
+            # stability check while still firing a real click event; the
+            # tab-panel-visible assertion two lines down independently
+            # verifies the click actually toggled the panel, so we lose
+            # no coverage by going around the native click pipeline.
+            btn.evaluate('el => el.click()')
             page.wait_for_timeout(500)  # Let tab build
 
             # Check tab panel is visible
