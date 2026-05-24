@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-05-24T00:42:14.087101Z",
+  "analyzed_at": "2026-05-24T04:10:01.381378Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 2,
@@ -248,5 +248,8 @@
       "alert": null
     }
   ],
-  "raw_errors": []
+  "raw_errors": [
+    "ALFRED AHETPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2026-03-31",
+    "ALFRED PCEPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2026-03-31"
+  ]
 }
