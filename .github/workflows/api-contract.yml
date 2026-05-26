@@ -6,9 +6,16 @@ on:
     - cron: '0 10 * * 2'
   workflow_dispatch:
 
+# Explicit permissions — required for GITHUB_TOKEN to authenticate checkout
+# and to allow the notify job to open issues.
+permissions:
+  contents: read
+
 jobs:
   api-check:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
 
@@ -29,6 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: api-check
     if: failure()
+    permissions:
+      issues: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Create issue for API contract break
         uses: actions/github-script@v7
