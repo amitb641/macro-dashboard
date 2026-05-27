@@ -821,8 +821,17 @@ def rebuild_charts(html, data):
                 adp_12 = (adp_12 + [None] * len(lbl_12))[:len(lbl_12)]
                 applied.append(f'NFP_VS_ADP.bls updated — ADP preserved (NPPTTL not collected)')
 
-            # Patch None slots with manually-verified values
+            # Patch None slots with manually-verified bootstrap values
             adp_12 = [_ADP_VERIFIED.get(l, v) for l, v in zip(lbl_12, adp_12)]
+
+            # Apply live-scraped ADP value (adpemploymentreport.com/ner_production.json)
+            # — overwrites any prior value for the current month with ground truth.
+            adp_latest = data.get('adp_latest')
+            if isinstance(adp_latest, dict) and adp_latest.get('label') in lbl_12:
+                _al_lbl = adp_latest['label']
+                _al_val = adp_latest['value']
+                adp_12 = [_al_val if l == _al_lbl else v for l, v in zip(lbl_12, adp_12)]
+                applied.append(f'NFP_VS_ADP — ADP live ({_al_lbl}={_al_val:+}K from adpemploymentreport.com)')
 
             new_vs = (f'const NFP_VS_ADP = {{\n'
                       f'  labels:{json.dumps(lbl_12)},\n'

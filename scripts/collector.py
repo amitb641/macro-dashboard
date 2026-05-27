@@ -328,6 +328,29 @@ def collect():
     # Fetched so renderer can detect a future series revival; renderer applies an
     # 18-month recency filter — stale obs fall through to prior-state.json round-trip.
     data['adp_nppttl']  = fred_obs('NPPTTL',     24)
+    # ADP live scrape — adpemploymentreport.com/ner_production.json returns the
+    # latest monthly headline as structured JSON (no browser needed).
+    # Gives one data point: current month. Historical months accumulate via
+    # prior-state.json round-trip in the renderer.
+    try:
+        _adp_r = requests.get('https://adpemploymentreport.com/ner_production.json',
+                              timeout=10, headers={'User-Agent': 'macro-dashboard/1.0'})
+        _adp_r.raise_for_status()
+        _adp_j = _adp_r.json()
+        _adp_val = int(_adp_j['reportOverview']['cards'][0]['metricValue'].replace(',', ''))
+        _adp_mon = _adp_j.get('reportMonth', '')   # e.g. "April"
+        _adp_yr  = str(_adp_j.get('reportYear', ''))  # e.g. "2026"
+        _adp_dt  = datetime.datetime.strptime(f'{_adp_mon} {_adp_yr}', '%B %Y')
+        data['adp_latest'] = {
+            'value': _adp_val,
+            'label': _adp_dt.strftime("%b'%y"),  # "Apr'26"
+            'month': _adp_mon,
+            'year':  _adp_yr,
+        }
+        print(f'✅ ADP latest: {_adp_val:+,}K ({_adp_mon} {_adp_yr})')
+    except Exception as _adp_err:
+        data['adp_latest'] = None
+        print(f'⚠️  ADP latest fetch failed: {_adp_err}')
     # Atlanta Fed Wage Growth Tracker — 3-Month MA, Unweighted Median, Hourly,
     # Overall. Measures wage growth for workers continuously employed over 12
     # months (controls for composition effects that bias AHETPI).
