@@ -1,17 +1,17 @@
 {
-  "analyzed_at": "2026-05-24T23:46:12.545190Z",
+  "analyzed_at": "2026-05-27T16:33:32.846926Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 2,
   "flagged_count": 1,
   "values": {
     "ffr": 3.64,
-    "dgs2": 4.08,
-    "dgs5": 4.25,
-    "dgs10": 4.57,
-    "dgs30": 5.1,
-    "ig_oas": 75,
-    "hy_oas": 278,
+    "dgs2": 4.13,
+    "dgs5": 4.27,
+    "dgs10": 4.56,
+    "dgs30": 5.07,
+    "ig_oas": 74,
+    "hy_oas": 272,
     "unrate": 4.3,
     "u6rate": 8.2,
     "nfp_level": 158736.0,
@@ -34,7 +34,7 @@
     "brent": 116.73,
     "gdp_growth_q": 2.0,
     "cc_delinq": 2.92,
-    "spread_10_2_bp": 49
+    "spread_10_2_bp": 43
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.57,
-      "delta": 0.15,
+      "value": 4.56,
+      "delta": 0.14,
       "direction": "stable",
       "flagged": false,
       "alert": "watch"
     },
     "ig_oas": {
-      "value": 75,
-      "delta": -3,
+      "value": 74,
+      "delta": -4,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 278,
-      "delta": -1,
+      "value": 272,
+      "delta": -7,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 4.08,
-      "delta": 0.13,
-      "direction": "stable",
-      "flagged": false,
-      "alert": null
-    },
-    "dgs5": {
-      "value": 4.25,
+      "value": 4.13,
       "delta": 0.18,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
+    "dgs5": {
+      "value": 4.27,
+      "delta": 0.2,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
     "dgs30": {
-      "value": 5.1,
-      "delta": 0.12,
+      "value": 5.07,
+      "delta": 0.09,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 49,
-      "delta": 2,
+      "value": 43,
+      "delta": -4,
       "direction": "stable",
       "flagged": false,
       "alert": null
