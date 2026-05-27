@@ -158,14 +158,32 @@ def check_internal(html, data, sig_vals):
         if html_u:
             _check('Unemployment rate (latest)', html_u[-1], unrate[0]['value'], 'rate')
 
-    # ── NFP_VS_ADP BLS vs PAYEMS ──
+    # ── NFP_VS_ADP BLS vs PAYEMS + ADP freshness ──
+    # Tier 1: NFP_VS_ADP lives in state.json; inline HTML has null placeholder.
     nfp_vs_adp = _extract_js_const(html, 'NFP_VS_ADP')
+    if not nfp_vs_adp:
+        _sp = Path(__file__).resolve().parent.parent / 'data' / 'state.json'
+        if _sp.exists():
+            try:
+                nfp_vs_adp = json.load(_sp.open()).get('NFP_VS_ADP')
+            except Exception:
+                pass
     payems = data.get('payems', [])
     if nfp_vs_adp and payems and len(payems) >= 2:
         html_bls = nfp_vs_adp.get('bls', [])
         if html_bls:
             source_nfp = round(payems[0]['value'] - payems[1]['value'])
             _check('NFP BLS MoM (latest)', html_bls[-1], source_nfp, 'jobs')
+
+        # ADP freshness check — warn if last 2 months are null (NPPTTL not flowing)
+        html_adp = nfp_vs_adp.get('adp', [])
+        if html_adp:
+            recent_adp = [v for v in html_adp[-2:] if v is not None]
+            if not recent_adp:
+                warnings.append(
+                    'ADP staleness: last 2 months are null — NPPTTL may not be '
+                    'collected (check FRED_API_KEY and series NPPTTL availability)'
+                )
 
     # ── KPI strip values ──
     # Tier 1 anti-clone: KPIS migrated to /api/state.json. Prefer the

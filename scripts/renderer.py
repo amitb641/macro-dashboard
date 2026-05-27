@@ -805,8 +805,12 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'TDSP_HIST', {
                 'labels': labels_t, 'data': values_t})
 
-    # ── NFP_VS_ADP (BLS side only — ADP is manually maintained) ────
+    # ── NFP_VS_ADP — BLS auto, ADP now auto via FRED NPPTTL ─────────
+    # ADP source: FRED NPPTTL (Total Nonfarm Private, MoM change, SA, K).
+    # NPPTTL is already a change series — values are monthly changes directly.
+    # Fallback chain: NPPTTL → prior state.json → inline HTML bootstrap (first run).
     payems = data.get('payems', [])
+    adp_raw = data.get('adp_nppttl', [])   # newest-first, value = MoM change (K)
     if payems and len(payems) >= 25:
         # Compute MoM changes for last 24 months (newest-first in source)
         months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes
@@ -827,37 +831,43 @@ def rebuild_charts(html, data):
                 applied.append(f'NFP_BLS_MOM registered to state.json ({len(nfp_labels)} months); inline zeroed')
                 html = new_html
 
-            # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP).
-            # ADP is manually curated — we round-trip it through prior state.json
-            # rather than scraping the live HTML (Tier 1 anti-clone: HTML has
-            # been migrated to `let NFP_VS_ADP = null;`, so the regex source no
-            # longer exists). One-time bootstrap: if no prior state, fall back
-            # to scraping inline HTML for the ADP array on first run.
             bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
             lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
+
+            # Build ADP array — preference order:
+            # 1. FRED NPPTTL (auto, current) — index values directly (already MoM changes)
+            # 2. Prior state.json (round-trip, one run behind)
+            # 3. Bootstrap inline HTML scrape (first run only)
             adp_arr = None
-            prior_nva = _api_writer.read_prior('NFP_VS_ADP')
-            if isinstance(prior_nva, dict) and isinstance(prior_nva.get('adp'), list):
-                adp_arr = prior_nva['adp']
+            if adp_raw and len(adp_raw) >= 1:
+                adp_by_lbl = {
+                    datetime.datetime.strptime(o['date'], '%Y-%m-%d').strftime("%b'%y"): round(o['value'])
+                    for o in adp_raw
+                }
+                adp_arr = [adp_by_lbl.get(l) for l in lbl_12]  # None where ADP not yet published
+                applied.append(f'NFP_VS_ADP — ADP auto-NPPTTL ({sum(1 for v in adp_arr if v is not None)}/{len(adp_arr)} months)')
             else:
-                # Bootstrap fallback: scrape inline HTML (works first-run only).
-                adp_match = re.search(r'(?:const|let|var)\s+NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
-                if adp_match:
-                    try:
-                        adp_arr = json.loads('[' + adp_match.group(1).strip() + ']')
-                    except json.JSONDecodeError:
-                        adp_arr = None
+                prior_nva = _api_writer.read_prior('NFP_VS_ADP')
+                if isinstance(prior_nva, dict) and isinstance(prior_nva.get('adp'), list):
+                    adp_arr = prior_nva['adp']
+                else:
+                    # Bootstrap: scrape inline HTML (first run only — Tier 1 migrated to null)
+                    adp_match = re.search(r'(?:const|let|var)\s+NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
+                    if adp_match:
+                        try:
+                            adp_arr = json.loads('[' + adp_match.group(1).strip() + ']')
+                        except json.JSONDecodeError:
+                            adp_arr = None
+
             if adp_arr is not None:
-                # Trim or pad ADP to match BLS window length (best-effort —
-                # ADP refreshes are out-of-band, so a mismatch is benign).
-                adp_aligned = adp_arr[-MONTHLY_TREND_WINDOW:]
+                adp_aligned = adp_arr[-MONTHLY_TREND_WINDOW:] if not adp_raw else adp_arr
                 payload_nva = {'labels': lbl_12, 'bls': bls_12, 'adp': adp_aligned}
                 _api_writer.register('NFP_VS_ADP', payload_nva)
                 pattern_vs = r'(?:const|let|var)\s+NFP_VS_ADP\s*=\s*(?:\{[\s\S]*?\}|null)\s*;'
                 new_html2, n2 = re.subn(pattern_vs, 'let NFP_VS_ADP = null;', html, count=1)
                 _record_subn_result('NFP_VS_ADP', pattern_vs, n2)
                 if n2:
-                    applied.append(f'NFP_VS_ADP registered to state.json ({len(bls_12)} months, ADP preserved via prior state); inline zeroed')
+                    applied.append(f'NFP_VS_ADP registered to state.json ({len(bls_12)} months); inline zeroed')
                     html = new_html2
 
     # ── SECTOR_MOM (auto-rebuild from BLS sector data) ────────────

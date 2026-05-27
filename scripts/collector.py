@@ -405,6 +405,10 @@ def collect():
     data['u6rate']      = fred_obs('U6RATE',     14)
     data['payems']      = fred_obs('PAYEMS',     480)
     data['ahetpi']      = fred_obs('AHETPI',     480)
+    # ADP National Employment Report — Total Nonfarm Private, MoM change (SA, K).
+    # FRED NPPTTL: published ~2 days before BLS NFP; covers private sector only.
+    # Previously hardcoded in HTML — now auto-fetched so the chart stays current.
+    data['adp_nppttl']  = fred_obs('NPPTTL',     24)
     # Atlanta Fed Wage Growth Tracker — 3-Month MA, Unweighted Median, Hourly,
     # Overall. Measures wage growth for workers continuously employed over 12
     # months (controls for composition effects that bias AHETPI).
