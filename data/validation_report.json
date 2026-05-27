@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-27T18:54:40.180268Z",
+  "validated_at": "2026-05-27T22:50:39.958735Z",
   "status": "WARN",
   "summary": {
     "total_checks": 520,
     "passed": 505,
     "failed": 15,
-    "skipped": 1,
+    "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.56,
-      "fresh_api_value": 4.56,
+      "raw_data_value": 4.5,
+      "fresh_api_value": 4.5,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-27T18:53:27.589321Z",
+      "collected_at": "2026-05-27T22:49:31.478765Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -987,14 +987,14 @@
       "pass": true
     },
     {
-      "check": "CPI YoY latest (%): surfaces agree within \u00b10.15 (ref: CPI_MONTHLY.headline[-1])",
-      "reference": 3.8,
+      "check": "CPI YoY latest (%): \u22652 surfaces extractable",
       "surfaces": {
         "CPI_MONTHLY.headline[-1]": 3.8,
-        "KPIS CPI YoY": 3.8
+        "KPIS CPI YoY": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
       "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
@@ -1028,10 +1028,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.56,
+      "reference": 4.5,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.56,
-        "data[\"dgs10\"]": 4.56
+        "KPIS 10Y Treasury": 4.5,
+        "data[\"dgs10\"]": 4.5
       },
       "severity": "ok",
       "pass": true
