@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-05-27T16:34:36.242843Z",
+  "validated_at": "2026-05-27T17:08:21.493854Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 634,
-    "passed": 629,
+    "total_checks": 633,
+    "passed": 628,
     "failed": 5,
     "skipped": 14,
     "critical_divergences": 0
@@ -62,14 +62,6 @@
       "tolerance": 5,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "ADP freshness (NPPTTL)",
-      "html_value": "0/2 recent months populated",
-      "source_value": "NPPTTL via FRED",
-      "severity": "warning",
-      "pass": true,
-      "note": "NPPTTL discontinued 2022-05; ADP using prior-state round-trip"
     },
     {
       "check": "KPI Unemployment",
@@ -724,7 +716,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-27T16:33:18.292359Z",
+      "collected_at": "2026-05-27T17:07:04.910990Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
