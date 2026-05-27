@@ -1604,9 +1604,9 @@ body.sidebar-active .nav-two-tier{display:none!important}
   .dtable.responsive thead{display:none}
   .dtable.responsive tbody,.dtable.responsive tr{display:block;width:100%}
   .dtable.responsive tr{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-  .dtable.responsive td{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border:none;white-space:normal;max-width:none}
+  .dtable.responsive td{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border:none;white-space:normal;max-width:none!important}
   .dtable.responsive td:first-child{font-weight:600;color:var(--text);font-size:12px;border-bottom:1px solid var(--bg2);padding-bottom:6px;margin-bottom:4px}
-  .dtable.responsive td:not(:first-child)::before{content:attr(data-label);color:var(--muted);font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+  .dtable.responsive td:not(:first-child)::before{content:attr(data-label);color:var(--muted);font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;margin-right:8px;flex-shrink:0;white-space:nowrap}
   .dtable.responsive td:not(:first-child){text-align:right}
 }
 
@@ -2512,7 +2512,15 @@ table{border-collapse:collapse}
   .kpi-val{font-size:16px}
   .m-val{font-size:16px}
   .metric-row{grid-template-columns:1fr 1fr}
-  .dtable th,.dtable td{white-space:normal;word-break:break-word;font-size:10px;padding:5px 7px}
+  /* Compact table cells on phone, but keep white-space:nowrap so the
+     table overflows .dtable-wrap (which is overflow-x:auto) and the
+     user can swipe horizontally. Without this, headers like
+     "Institution" / "Recession Prob." wrap one letter per line as
+     the browser forces 9 columns into a 393px viewport. Tables that
+     need full mobile reflow opt in via `.dtable.responsive` (see
+     §17.2 — that block does its own white-space override). */
+  .dtable th,.dtable td{font-size:10px;padding:5px 7px}
+  .dtable.responsive th,.dtable.responsive td{white-space:normal;word-break:break-word}
   .nav-grouped{overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:3px 8px;padding:6px 8px 8px}
   .nav-grouped::-webkit-scrollbar{display:none}
   .nav-group{flex-shrink:0}
@@ -5414,7 +5422,10 @@ function buildFCTab(){
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
 
-  // Scenarios table
+  // Scenarios table — `.responsive` opts the table into the §17.2
+  // mobile card layout (<=600px); each <td> needs data-label so the
+  // collapsed card can display "LABEL: value" pairs.
+  document.getElementById("fc-scenarios-tbl").classList.add("responsive");
   const hd=["Institution","GDP 2026","Range / Scenario","Unemployment","CPI / PCE","Fed Rate Path","Recession Prob.","Key View","As of"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   FC_SCENARIOS.forEach(r=>{
@@ -5423,15 +5434,15 @@ function buildFCTab(){
     const rv=parseFloat(r.recession);
     const rc=rv<=20?"color:#1A9E5A":rv<=30?"color:#CC8A00":"color:#D64045";
     h+=`<tr>
-      <td style="font-weight:500;color:var(--text)">${r.inst}</td>
-      <td style="${gc};font-weight:600">${r.gdp26}</td>
-      <td style="color:#7A8FA8;font-style:italic">${r.gdp26hi}</td>
-      <td>${r.unemp}</td>
-      <td>${r.cpi}</td>
-      <td>${r.fed}</td>
-      <td style="${rc};font-weight:500">${r.recession}</td>
-      <td style="color:#7A8FA8;max-width:220px;white-space:normal;line-height:1.4">${r.note}</td>
-      <td style="color:#7A8FA8;font-style:italic;font-size:11px;white-space:nowrap">${r.vintage||"&mdash;"}</td>
+      <td data-label="Institution" style="font-weight:500;color:var(--text)">${r.inst}</td>
+      <td data-label="GDP 2026" style="${gc};font-weight:600">${r.gdp26}</td>
+      <td data-label="Range / Scenario" style="color:#7A8FA8;font-style:italic">${r.gdp26hi}</td>
+      <td data-label="Unemployment">${r.unemp}</td>
+      <td data-label="CPI / PCE">${r.cpi}</td>
+      <td data-label="Fed Rate Path">${r.fed}</td>
+      <td data-label="Recession Prob." style="${rc};font-weight:500">${r.recession}</td>
+      <td data-label="Key View" style="color:#7A8FA8;max-width:220px;white-space:normal;line-height:1.4">${r.note}</td>
+      <td data-label="As of" style="color:#7A8FA8;font-style:italic;font-size:11px;white-space:nowrap">${r.vintage||"&mdash;"}</td>
     </tr>`;
   });
   document.getElementById("fc-scenarios-tbl").innerHTML=h+"</tbody>";
