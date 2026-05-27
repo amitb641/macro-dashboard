@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-27T16:36:29.810234Z",
+  "validated_at": "2026-05-27T18:38:02.610894Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 521,
-    "passed": 504,
-    "failed": 17,
+    "total_checks": 520,
+    "passed": 505,
+    "failed": 15,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -146,30 +146,12 @@
     },
     {
       "check": "NFP_VS_ADP.adp completeness",
-      "html_value": "11/12 filled",
-      "source_value": "92% (min 50%)",
-      "difference": 1,
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.adp label sync",
-      "html_value": "12 values",
-      "source_value": "13 labels",
-      "difference": 1,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
-    },
-    {
-      "check": "NFP_VS_ADP series length sync",
-      "html_value": "{'bls': 13, 'adp': 12}",
-      "source_value": "All series same length",
-      "difference": 1,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
     },
     {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
@@ -779,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-27T16:35:17.397909Z",
+      "collected_at": "2026-05-27T18:36:53.268164Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1122,6 +1104,11 @@
     }
   ],
   "schema_contract": [
+    {
+      "check": "Schema contract: data['adp_latest']",
+      "pass": true,
+      "severity": "ok"
+    },
     {
       "check": "Schema contract: data['adp_nppttl']",
       "pass": true,
