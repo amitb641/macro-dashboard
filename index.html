@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-var BUILD_V = "2026-05-27T23:41:42Z";
+var BUILD_V = "2026-05-27T23:44:59Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -9175,8 +9175,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
 </div>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-05-27T23:41:42Z">
-<script src="theme-overlay.js?v=2026-05-27T23:41:42Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-05-27T23:44:59Z">
+<script src="theme-overlay.js?v=2026-05-27T23:44:59Z"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
