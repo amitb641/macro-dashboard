@@ -2529,8 +2529,12 @@ table{border-collapse:collapse}
   .nav-t1-meta{flex:0 0 auto;gap:2px;margin-left:6px}
   .nav-t2{padding:6px 10px 8px;gap:4px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
   .nav-t2::-webkit-scrollbar{display:none}
-  .nav-grp-btn{padding:5px 10px;font-size:11px;flex-shrink:0}
-  .nav-btn-meta{font-size:9.5px;padding:5px 8px;flex-shrink:0}
+  /* Touch-friendly nav buttons: min-height 36px keeps tap targets
+     above the noise floor (iOS HIG: 44pt ideal, 36pt acceptable for
+     dense secondary nav). Visual padding stays small so 5+ buttons
+     still fit horizontally on iPhone Pro. */
+  .nav-grp-btn{padding:7px 11px;font-size:11.5px;flex-shrink:0;min-height:36px}
+  .nav-btn-meta{font-size:10px;padding:7px 10px;flex-shrink:0;min-height:36px}
   .fc-note{font-size:10px;padding:9px;line-height:1.55}
   .sector-card{padding:12px}
   .card-name{font-size:11px}
