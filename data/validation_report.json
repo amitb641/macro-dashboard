@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-27T17:48:34.454864Z",
+  "validated_at": "2026-05-27T18:51:40.689776Z",
   "status": "WARN",
   "summary": {
     "total_checks": 634,
@@ -716,7 +716,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-27T17:47:11.416804Z",
+      "collected_at": "2026-05-27T18:50:18.877343Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4122,12 +4122,12 @@
       "severity": "ok",
       "metric": "rrpontsyd_bn",
       "floor": 100.0,
-      "prior": 0.965,
-      "latest": 1.787,
-      "delta": 0.822,
-      "abs_delta": 0.822,
+      "prior": 1.787,
+      "latest": 1.853,
+      "delta": 0.066,
+      "abs_delta": 0.066,
       "verdict": "within_noise",
-      "note": "PoP delta +0.822 \u2264 \u00b1100.0 \u2192 within_noise"
+      "note": "PoP delta +0.066 \u2264 \u00b1100.0 \u2192 within_noise"
     },
     {
       "check": "noise_floor[deficit_pct_gdp]",
