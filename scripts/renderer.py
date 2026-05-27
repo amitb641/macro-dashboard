@@ -2442,7 +2442,7 @@ def rebuild_kpi_strip(html, data, vals):
         if yoy_cur is not None and yoy_prev is not None:
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
-            lbl = f"CPI YoY {_mlbl(cpi[0]['date'])}"
+            lbl = f"Headline CPI {_mlbl(cpi[0]['date'])}"
             mom_str = f"MoM: {mom_pct:+.2f}% · " if mom_pct is not None else ""
             avg3m_str = f" · 3M avg: {avg3m:.1f}%" if avg3m is not None else ""
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'cpi',

@@ -2586,7 +2586,7 @@ let builtTabs = {"status": false};
 // ├─────────────────────┼──────────────┼──────────────┼──────────────┤
 // │ Unemployment %      │ < 4.0        │ 4.0 – 4.9    │ ≥ 5.0        │
 // │ Jobs (MoM, K)       │ > +100       │ 0 – +100     │ < 0          │
-// │ CPI YoY %           │ < 2.5        │ 2.5 – 3.5    │ ≥ 3.5        │
+// │ Headline CPI %           │ < 2.5        │ 2.5 – 3.5    │ ≥ 3.5        │
 // │ Core PCE YoY %      │ < 2.5        │ 2.5 – 3.0    │ ≥ 3.0        │
 // │ Wage Growth %       │ 3.0 – 4.5    │ < 3.0 or >4.5│ < 2.0 or >6  │
 // │ Initial Claims (K)  │ < 220        │ 220 – 280    │ ≥ 280        │
@@ -2615,7 +2615,7 @@ function _kpiColor(metric, val){
   if(t.green(n)) return '#1A9E5A';
   return '#CC8A00';
 }
-const KPIS = [{"lbl":"Jobs Apr'26", "val":"+115K", "metric":"jobs", "delta":-70, "chg":"-70K", "sub":"Prior: +185K (Mar'26)"}, {"lbl":"Initial Claims May'26", "val":"211K", "metric":"claims", "delta":12000, "chg":"+12K", "inv":true, "sub":"Prior wk: 199K (May'26)"}, {"lbl":"Unemployment Apr'26", "val":"4.3%", "metric":"unemp", "delta":0.0, "chg":"0.0pp", "inv":true, "sub":"Prior: 4.3% (Mar'26)"}, {"lbl":"Wage Growth Apr'26", "val":"3.6%", "metric":"wages", "delta":-0.3, "chg":"-0.3pp", "sub":"Prior: 3.9% (Mar'26) \u00b7 Atlanta Fed WGT 3MMA"}, {"lbl":"CPI YoY Apr'26", "val":"3.8%", "metric":"cpi", "delta":0.49, "chg":"+0.5pp", "inv":true, "sub":"MoM: +0.64% \u00b7 YoY: 3.8% \u00b7 3M avg: 3.2% \u00b7 Prior: 3.3% (Mar'26)"}, {"lbl":"Core CPI Apr'26", "val":"2.7%", "metric":"cpi", "delta":0.14, "chg":"+0.1pp", "inv":true, "sub":"Ex Food & Energy \u00b7 Prior: 2.6% (Mar'26)"}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Fed 2% target \u00b7 Prior: 3.0% (Feb'26)"}, {"lbl":"UMich Sentiment May'26", "val":"44.8", "metric":"umcsent", "delta":-5.0, "chg":"-5.0", "badge":null, "sub":"MoM: -5.0 \u00b7 YoY: -7.4 \u00b7 Prior: 49.8 (Apr'26)"}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)"}, {"lbl":"Fed Funds Apr'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury May'26", "val":"4.56%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 4.13% \u00b7 Spread: +43bp"}, {"lbl":"Sahm Rule Apr'26", "val":"+0.20pp", "metric":"unemp", "delta":0.2, "chg":"OK", "inv":true, "sub":"3M avg 4.33% \u2212 12M low 4.13% \u00b7 trigger \u2265 +0.5pp"}];
+const KPIS = [{"lbl":"Jobs Apr'26", "val":"+115K", "metric":"jobs", "delta":-70, "chg":"-70K", "sub":"Prior: +185K (Mar'26)"}, {"lbl":"Initial Claims May'26", "val":"211K", "metric":"claims", "delta":12000, "chg":"+12K", "inv":true, "sub":"Prior wk: 199K (May'26)"}, {"lbl":"Unemployment Apr'26", "val":"4.3%", "metric":"unemp", "delta":0.0, "chg":"0.0pp", "inv":true, "sub":"Prior: 4.3% (Mar'26)"}, {"lbl":"Wage Growth Apr'26", "val":"3.6%", "metric":"wages", "delta":-0.3, "chg":"-0.3pp", "sub":"Prior: 3.9% (Mar'26) \u00b7 Atlanta Fed WGT 3MMA"}, {"lbl":"Headline CPI Apr'26", "val":"3.8%", "metric":"cpi", "delta":0.49, "chg":"+0.5pp", "inv":true, "sub":"MoM: +0.64% \u00b7 YoY: 3.8% \u00b7 3M avg: 3.2% \u00b7 Prior: 3.3% (Mar'26)"}, {"lbl":"Core CPI Apr'26", "val":"2.7%", "metric":"cpi", "delta":0.14, "chg":"+0.1pp", "inv":true, "sub":"Ex Food & Energy \u00b7 Prior: 2.6% (Mar'26)"}, {"lbl":"Core PCE Mar'26", "val":"3.2%", "metric":"pce", "delta":0.2, "chg":"+0.2pp", "inv":true, "sub":"Fed 2% target \u00b7 Prior: 3.0% (Feb'26)"}, {"lbl":"UMich Sentiment May'26", "val":"44.8", "metric":"umcsent", "delta":-5.0, "chg":"-5.0", "badge":null, "sub":"MoM: -5.0 \u00b7 YoY: -7.4 \u00b7 Prior: 49.8 (Apr'26)"}, {"lbl":"Debt Service Ratio Q4'25", "val":"11.3%", "metric":"dsr", "delta":0.1, "chg":"+0.1pp", "inv":true, "sub":"% of disp. income \u00b7 Prior: 11.3% (Q3'25)"}, {"lbl":"Fed Funds Apr'26", "val":"3.64%", "metric":"rate", "delta":0, "chg":"", "sub":"FOMC range: 3.50\u20133.75% \u00b7 Effective rate"}, {"lbl":"10Y Treasury May'26", "val":"4.56%", "metric":"rate", "delta":0, "chg":"", "sub":"Daily \u00b7 2Y: 4.13% \u00b7 Spread: +43bp"}, {"lbl":"Sahm Rule Apr'26", "val":"+0.20pp", "metric":"unemp", "delta":0.2, "chg":"OK", "inv":true, "sub":"3M avg 4.33% \u2212 12M low 4.13% \u00b7 trigger \u2265 +0.5pp"}];
 function _releaseBadge(tag){
   if(!tag) return '';
   const up = String(tag).toUpperCase();
@@ -3025,7 +3025,7 @@ function buildCPITab(){
   var _cpiPeak = Math.max(...CPI_ANNUAL.data);
   var _cpiPeakIdx = CPI_ANNUAL.data.indexOf(_cpiPeak);
   document.getElementById("cpi-metrics").innerHTML = [
-    {lbl:"CPI YoY "+CPI_MONTHLY.labels[CPI_MONTHLY.labels.length-1], val:`+${cpiLatest}%`, sub:`Core: ${_cpiCore}% ex food & energy`, col:"#CC8A00"},
+    {lbl:"Headline CPI "+CPI_MONTHLY.labels[CPI_MONTHLY.labels.length-1], val:`+${cpiLatest}%`, sub:`Core: ${_cpiCore}% ex food & energy`, col:"#CC8A00"},
     {lbl:"Full Year 2025",         val:"+"+_cpiFY+"%",  sub:"YoY: "+(_cpiFY>=_cpiFYPrior?"+":"")+(_cpiFY-_cpiFYPrior).toFixed(1)+"pp vs +"+_cpiFYPrior+"% in 2024", col:"#CC8A00"},
     {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg", col:"#1A9E5A"},
     {lbl:"Stickiest Category",     val:_cpiSticky.cat+" +"+_cpiSticky[_ck]+"%", sub:"Down from "+_cpiSticky[_ckp]+"% prior year", col:"#336BCC"},
@@ -3037,8 +3037,8 @@ function buildCPITab(){
   new Chart(document.getElementById("c-cpi-mom").getContext("2d"),{
     type:"line",
     data:{labels:CPI_MONTHLY.labels,datasets:[
-      {label:"Headline CPI YoY %",data:CPI_MONTHLY.headline,borderColor:"#D64045",backgroundColor:"#D6404515",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
-      {label:"Core CPI YoY %",data:CPI_MONTHLY.core,borderColor:"#336BCC",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
+      {label:"Headline CPI %",data:CPI_MONTHLY.headline,borderColor:"#D64045",backgroundColor:"#D6404515",borderWidth:2.5,pointRadius:4,tension:0.3,fill:true},
+      {label:"Core CPI %",data:CPI_MONTHLY.core,borderColor:"#336BCC",borderWidth:2,pointRadius:4,tension:0.3,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"top",labels:{font:{size:10},usePointStyle:true,pointStyle:"circle"}},
       annotation:{annotations:{target:{type:"line",yMin:2.0,yMax:2.0,borderColor:"#1A9E5A",borderWidth:1.5,borderDash:[6,4],
@@ -3072,7 +3072,7 @@ function buildCPITab(){
   new Chart(document.getElementById("c-cpi-bar").getContext("2d"),{
     type:"bar",
     data:{labels:CPI_ANNUAL.labels,datasets:[
-      {label:"CPI YoY %",data:CPI_ANNUAL.data,
+      {label:"Headline CPI %",data:CPI_ANNUAL.data,
        backgroundColor:CPI_ANNUAL.data.map(v=>v>5?"#D64045bb":v>3?"#e0a040bb":"#336BCCcc"),
        borderRadius:4}
     ]},
@@ -6039,7 +6039,7 @@ if(document.readyState === 'loading'){
       <tbody>
         <tr><td>Unemployment Rate</td><td style="text-align:center">&lt; 4.0%</td><td style="text-align:center">4.0 – 4.9%</td><td style="text-align:center">≥ 5.0%</td><td style="font-size:10px;color:#7A8FA8">Sub-4% = full employment (NAIRU ~4%). Above 5% historically signals recession onset. Fed dual mandate target.</td></tr>
         <tr><td>Jobs MoM (K)</td><td style="text-align:center">&gt; +100K</td><td style="text-align:center">0 – +100K</td><td style="text-align:center">&lt; 0</td><td style="font-size:10px;color:#7A8FA8">+100K/mo = breakeven for population growth. Sub-zero = active contraction. Based on BLS CES nonfarm payrolls.</td></tr>
-        <tr><td>CPI YoY %</td><td style="text-align:center">&lt; 2.5%</td><td style="text-align:center">2.5 – 3.5%</td><td style="text-align:center">≥ 3.5%</td><td style="font-size:10px;color:#7A8FA8">Fed targets ~2% inflation. Below 2.5% = near target. Above 3.5% = persistent overshoot requiring policy response.</td></tr>
+        <tr><td>Headline CPI %</td><td style="text-align:center">&lt; 2.5%</td><td style="text-align:center">2.5 – 3.5%</td><td style="text-align:center">≥ 3.5%</td><td style="font-size:10px;color:#7A8FA8">Fed targets ~2% inflation. Below 2.5% = near target. Above 3.5% = persistent overshoot requiring policy response.</td></tr>
         <tr><td>Core PCE YoY %</td><td style="text-align:center">&lt; 2.5%</td><td style="text-align:center">2.5 – 3.0%</td><td style="text-align:center">≥ 3.0%</td><td style="font-size:10px;color:#7A8FA8">Fed's preferred inflation gauge. Tighter thresholds than CPI because PCE is the actual policy target. Above 3% = hawkish Fed.</td></tr>
         <tr><td>Wage Growth %</td><td style="text-align:center">3.0 – 4.5%</td><td style="text-align:center">Outside range</td><td style="text-align:center">&lt; 2% or &gt; 6%</td><td style="font-size:10px;color:#7A8FA8">Goldilocks zone: 3-4.5% supports consumption without fueling wage-price spiral. Below 2% = stagnation. Above 6% = overheating (2021-22 peak).</td></tr>
         <tr><td>Initial Claims (K)</td><td style="text-align:center">&lt; 220K</td><td style="text-align:center">220 – 280K</td><td style="text-align:center">≥ 280K</td><td style="font-size:10px;color:#7A8FA8">Pre-pandemic normal ~210K. Above 250K = labor market softening. 300K+ historically precedes recessions. Weekly leading indicator.</td></tr>
