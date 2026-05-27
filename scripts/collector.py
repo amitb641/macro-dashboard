@@ -419,7 +419,8 @@ def collect():
                               timeout=10, headers={'User-Agent': 'macro-dashboard/1.0'})
         _adp_r.raise_for_status()
         _adp_j = _adp_r.json()
-        _adp_val = int(_adp_j['reportOverview']['cards'][0]['metricValue'].replace(',', ''))
+        # metricValue is raw headcount e.g. "109,000" — divide by 1000 to get K
+        _adp_val = round(int(_adp_j['reportOverview']['cards'][0]['metricValue'].replace(',', '')) / 1000)
         _adp_mon = _adp_j.get('reportMonth', '')   # e.g. "April"
         _adp_yr  = str(_adp_j.get('reportYear', ''))  # e.g. "2026"
         _adp_dt  = datetime.datetime.strptime(f'{_adp_mon} {_adp_yr}', '%B %Y')
