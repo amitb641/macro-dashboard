@@ -2325,13 +2325,11 @@ def rebuild_kpi_strip(html, data, vals):
                       'delta': d, 'chg': f'{chg}pp', 'inv': True,
                       'sub': f"Prior: {prev:.1f}% ({_mlbl(unrate[1]['date'])})"})
 
-    # 3b. Sahm Rule (up ≥ +0.5pp = recession trigger). Defined as the
-    # 3-month average U-rate minus the lowest 3-month average from the
-    # prior 12 months. Has fired in 9 of 11 NBER recessions since 1948.
+    # 3b. Sahm Rule — computed here, appended at end of strip (moved to tail
+    # so the primary labor signals stay together at the front).
+    _sahm_card = None
     if unrate and len(unrate) >= 15:
-        # Newest-first series → take latest 3 for current avg
         recent3 = sum(o['value'] for o in unrate[:3]) / 3
-        # Compute rolling 3-mo avg for each of the prior 12 months and find min
         rolling = []
         for i in range(1, 13):
             window = unrate[i:i + 3]
@@ -2341,14 +2339,13 @@ def rebuild_kpi_strip(html, data, vals):
             min_prior = min(rolling)
             sahm = round(recent3 - min_prior, 2)
             sign = '+' if sahm > 0 else ''
-            # Triggered when ≥ +0.5pp; flag color codes the urgency
             triggered = sahm >= 0.5
-            cards.append({'lbl': f"Sahm Rule {_mlbl(unrate[0]['date'])}",
+            _sahm_card = {'lbl': f"Sahm Rule {_mlbl(unrate[0]['date'])}",
                           'val': f'{sign}{sahm:.2f}pp',
                           'metric': 'unemp',
                           'delta': sahm, 'chg': 'TRIGGERED' if triggered else 'OK',
                           'inv': True,
-                          'sub': f"3M avg {recent3:.2f}% − 12M low {min_prior:.2f}% · trigger ≥ +0.5pp"})
+                          'sub': f"3M avg {recent3:.2f}% − 12M low {min_prior:.2f}% · trigger ≥ +0.5pp"}
 
     # 4. Wages — Atlanta Fed Wage Growth Tracker 3MMA (up = good). Value is
     # already YoY % for continuously-employed workers. Falls back to AHETPI-YoY
@@ -2406,19 +2403,22 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
 
-    # 6. Core PCE YoY  (up = bad)
-    pce_core = data.get('pce_core', [])
-    if pce_core and len(pce_core) >= 14:
-        yoy_cur, yoy_prev = _yoy_pair(pce_core)
+    # 6. Core CPI YoY (ex Food & Energy, FRED CPILFESL)  (up = bad)
+    # Replaced Core PCE here: Core CPI prints ~30 days earlier than Core PCE
+    # and uses the same reference month as the Headline CPI tile above it,
+    # making the headline/core split immediately comparable on the strip.
+    cpi_core = data.get('cpi_core', [])
+    if cpi_core and len(cpi_core) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(cpi_core)
         if yoy_cur is not None and yoy_prev is not None:
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
-            lbl = f"Core PCE {_mlbl(pce_core[0]['date'])}"
-            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'pce',
+            lbl = f"Core CPI {_mlbl(cpi_core[0]['date'])}"
+            cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'cpi',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
-                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"})
+                          'sub': f"Ex Food & Energy · Prior: {yoy_prev:.1f}% ({_mlbl(cpi_core[1]['date'])})"})
 
-    # 7. Headline PCE YoY  (up = bad). Paired with Core PCE — when headline
+    # 7. Headline PCE YoY  (up = bad). Core PCE detail lives in the PCE tab.
     # detaches from core (e.g. an oil shock pushing energy through), the gap
     # is itself a signal worth seeing on the strip.
     pce_h = data.get('pce', [])
@@ -2482,6 +2482,12 @@ def rebuild_kpi_strip(html, data, vals):
         cards.append({'lbl': lbl, 'val': f'{dgs10["value"]:.2f}%', 'metric': 'rate',
                       'delta': 0, 'chg': '',
                       'sub': f"Daily{spr}"})
+
+    # Sahm Rule appended last — it's a derived recession-watch signal, not a
+    # primary data point, so it sits at the tail rather than interrupting the
+    # core labor cluster (Jobs / Claims / Unemployment).
+    if _sahm_card is not None:
+        cards.append(_sahm_card)
 
     if not cards:
         return html
