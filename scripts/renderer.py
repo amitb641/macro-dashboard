@@ -764,7 +764,9 @@ def rebuild_charts(html, data):
     # ADP side: FRED NPPTTL (Total Nonfarm Private, MoM change, SA, K).
     #   Previously manually maintained; now auto-fetched by collector.
     payems = data.get('payems', [])
-    adp_raw = data.get('adp_nppttl', [])   # newest-first, value = level (K)
+    # NPPTTL is a MoM *change* series (not a level) — values are already
+    # monthly employment changes in thousands. Do NOT compute a second diff.
+    adp_raw = data.get('adp_nppttl', [])   # newest-first, value = MoM change (K)
     if payems and len(payems) >= 25:
         months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes
         nfp_labels, nfp_bls = [], []
@@ -787,30 +789,28 @@ def rebuild_charts(html, data):
             bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
             lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
 
-            # Build ADP array aligned to lbl_12 labels
-            if adp_raw and len(adp_raw) >= 2:
-                # NPPTTL is a level series (thousands employed) — compute MoM change
-                adp_months_rev = list(reversed(adp_raw))  # oldest-first
+            # Build ADP array aligned to lbl_12 labels.
+            # NPPTTL values are already MoM changes — index directly by label.
+            if adp_raw and len(adp_raw) >= 1:
                 adp_by_label = {}
-                for i in range(1, len(adp_months_rev)):
-                    lbl = datetime.datetime.strptime(adp_months_rev[i]['date'], '%Y-%m-%d').strftime("%b'%y")
-                    chg = round(adp_months_rev[i]['value'] - adp_months_rev[i-1]['value'])
-                    adp_by_label[lbl] = chg
+                for obs in adp_raw:
+                    lbl = datetime.datetime.strptime(obs['date'], '%Y-%m-%d').strftime("%b'%y")
+                    adp_by_label[lbl] = round(obs['value'])
                 adp_12 = [adp_by_label.get(l) for l in lbl_12]  # None where ADP not yet published
                 new_vs = (f'const NFP_VS_ADP = {{\n'
                           f'  labels:{json.dumps(lbl_12)},\n'
                           f'  bls:   {json.dumps(bls_12)},\n'
                           f'  adp:   {json.dumps(adp_12)}')
-                applied.append(f'NFP_VS_ADP rebuilt — ADP auto ({sum(1 for v in adp_12 if v is not None)}/{len(adp_12)} months)')
+                applied.append(f'NFP_VS_ADP rebuilt — ADP auto-NPPTTL ({sum(1 for v in adp_12 if v is not None)}/{len(adp_12)} months)')
             else:
-                # ADP not yet collected — preserve existing array from HTML
+                # NPPTTL not yet available (no FRED key or first run) — preserve HTML
                 adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
                 adp_str = adp_match.group(1).strip() if adp_match else ''
                 new_vs = (f'const NFP_VS_ADP = {{\n'
                           f'  labels:{json.dumps(lbl_12)},\n'
                           f'  bls:   {json.dumps(bls_12)},\n'
                           f'  adp:   [{adp_str}]')
-                applied.append(f'NFP_VS_ADP.bls updated ({len(bls_12)} months, ADP preserved — NPPTTL not collected)')
+                applied.append(f'NFP_VS_ADP.bls updated — ADP preserved (NPPTTL not collected)')
 
             pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
             new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)

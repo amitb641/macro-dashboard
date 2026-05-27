@@ -166,6 +166,18 @@ def check_internal(html, data, sig_vals):
             source_nfp = round(payems[0]['value'] - payems[1]['value'])
             _check('NFP BLS MoM (latest)', html_bls[-1], source_nfp, 'jobs')
 
+        # ── ADP freshness check (NPPTTL auto-refresh) ──
+        # Warn if the ADP array has no non-null values in the last 2 months —
+        # that means NPPTTL fetch failed or the series is stale.
+        html_adp = nfp_vs_adp.get('adp', [])
+        if html_adp:
+            recent_adp = [v for v in html_adp[-2:] if v is not None]
+            if not recent_adp:
+                warnings.append(
+                    'ADP staleness: last 2 months are null — NPPTTL may not be '
+                    'collected (check FRED_API_KEY and series NPPTTL availability)'
+                )
+
     # ── KPI strip values ──
     kpis_match = re.search(r'const KPIS\s*=\s*(\[[\s\S]*?\]);', html)
     if kpis_match and sig_vals:
