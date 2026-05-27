@@ -406,8 +406,9 @@ def collect():
     data['payems']      = fred_obs('PAYEMS',     480)
     data['ahetpi']      = fred_obs('AHETPI',     480)
     # ADP National Employment Report — Total Nonfarm Private, MoM change (SA, K).
-    # FRED NPPTTL: published ~2 days before BLS NFP; covers private sector only.
-    # Previously hardcoded in HTML — now auto-fetched so the chart stays current.
+    # FRED NPPTTL was discontinued 2022-05 after ADP methodology revamp.
+    # Fetched so renderer can detect a future series revival; renderer applies an
+    # 18-month recency filter — stale obs fall through to prior-state.json round-trip.
     data['adp_nppttl']  = fred_obs('NPPTTL',     24)
     # Atlanta Fed Wage Growth Tracker — 3-Month MA, Unweighted Median, Hourly,
     # Overall. Measures wage growth for workers continuously employed over 12

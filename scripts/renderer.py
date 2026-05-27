@@ -808,9 +808,12 @@ def rebuild_charts(html, data):
     # ── NFP_VS_ADP — BLS auto, ADP now auto via FRED NPPTTL ─────────
     # ADP source: FRED NPPTTL (Total Nonfarm Private, MoM change, SA, K).
     # NPPTTL is already a change series — values are monthly changes directly.
-    # Fallback chain: NPPTTL → prior state.json → inline HTML bootstrap (first run).
+    # Fallback chain: NPPTTL (recent only) → prior state.json → inline HTML bootstrap (first run).
+    # FRED NPPTTL discontinued 2022-05 — filter to obs within 18 months so stale
+    # data does not crowd out the prior-state.json round-trip fallback.
     payems = data.get('payems', [])
-    adp_raw = data.get('adp_nppttl', [])   # newest-first, value = MoM change (K)
+    _nppttl_cutoff = (datetime.datetime.today() - datetime.timedelta(days=548)).strftime('%Y-%m-%d')
+    adp_raw = [o for o in data.get('adp_nppttl', []) if o.get('date', '') >= _nppttl_cutoff]
     if payems and len(payems) >= 25:
         # Compute MoM changes for last 24 months (newest-first in source)
         months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes

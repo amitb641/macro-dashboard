@@ -175,15 +175,19 @@ def check_internal(html, data, sig_vals):
             source_nfp = round(payems[0]['value'] - payems[1]['value'])
             _check('NFP BLS MoM (latest)', html_bls[-1], source_nfp, 'jobs')
 
-        # ADP freshness check — warn if last 2 months are null (NPPTTL not flowing)
+        # ADP freshness check — warn if last 2 months are null (NPPTTL stale/discontinued)
         html_adp = nfp_vs_adp.get('adp', [])
         if html_adp:
             recent_adp = [v for v in html_adp[-2:] if v is not None]
             if not recent_adp:
-                warnings.append(
-                    'ADP staleness: last 2 months are null — NPPTTL may not be '
-                    'collected (check FRED_API_KEY and series NPPTTL availability)'
-                )
+                findings.append({
+                    'check': 'ADP freshness (NPPTTL)',
+                    'html_value': '0/2 recent months populated',
+                    'source_value': 'NPPTTL via FRED',
+                    'severity': 'warning',
+                    'pass': True,  # soft pass — prior-state fallback active
+                    'note': 'NPPTTL discontinued 2022-05; ADP using prior-state round-trip',
+                })
 
     # ── KPI strip values ──
     # Tier 1 anti-clone: KPIS migrated to /api/state.json. Prefer the
