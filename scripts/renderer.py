@@ -792,6 +792,14 @@ def rebuild_charts(html, data):
             bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
             lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
 
+            # Manually-verified ADP monthly changes (K) from ADP press releases.
+            # Applied as a patch over None slots — update when new reports publish.
+            # Source: https://mediacenter.adp.com / adpemploymentreport.com
+            _ADP_VERIFIED = {
+                "Mar'26": 62,   # Released 2026-04-01
+                "Apr'26": 109,  # Released 2026-05-06
+            }
+
             # Build ADP array aligned to lbl_12 labels.
             # NPPTTL values are already MoM changes — index directly by label.
             if adp_raw and len(adp_raw) >= 1:
@@ -800,20 +808,26 @@ def rebuild_charts(html, data):
                     lbl = datetime.datetime.strptime(obs['date'], '%Y-%m-%d').strftime("%b'%y")
                     adp_by_label[lbl] = round(obs['value'])
                 adp_12 = [adp_by_label.get(l) for l in lbl_12]  # None where ADP not yet published
-                new_vs = (f'const NFP_VS_ADP = {{\n'
-                          f'  labels:{json.dumps(lbl_12)},\n'
-                          f'  bls:   {json.dumps(bls_12)},\n'
-                          f'  adp:   {json.dumps(adp_12)}')
                 applied.append(f'NFP_VS_ADP rebuilt — ADP auto-NPPTTL ({sum(1 for v in adp_12 if v is not None)}/{len(adp_12)} months)')
             else:
-                # NPPTTL not yet available (no FRED key or first run) — preserve HTML
+                # NPPTTL stale — parse existing HTML values as baseline
                 adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
                 adp_str = adp_match.group(1).strip() if adp_match else ''
-                new_vs = (f'const NFP_VS_ADP = {{\n'
-                          f'  labels:{json.dumps(lbl_12)},\n'
-                          f'  bls:   {json.dumps(bls_12)},\n'
-                          f'  adp:   [{adp_str}]')
+                try:
+                    adp_12 = json.loads('[' + adp_str + ']') if adp_str else []
+                except (json.JSONDecodeError, Exception):
+                    adp_12 = []
+                # Pad/trim to match lbl_12 length
+                adp_12 = (adp_12 + [None] * len(lbl_12))[:len(lbl_12)]
                 applied.append(f'NFP_VS_ADP.bls updated — ADP preserved (NPPTTL not collected)')
+
+            # Patch None slots with manually-verified values
+            adp_12 = [_ADP_VERIFIED.get(l, v) for l, v in zip(lbl_12, adp_12)]
+
+            new_vs = (f'const NFP_VS_ADP = {{\n'
+                      f'  labels:{json.dumps(lbl_12)},\n'
+                      f'  bls:   {json.dumps(bls_12)},\n'
+                      f'  adp:   {json.dumps(adp_12)}')
 
             pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
             new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)
