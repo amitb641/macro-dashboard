@@ -759,10 +759,13 @@ def rebuild_charts(html, data):
             html = _inject_const(html, 'TDSP_HIST', {
                 'labels': labels_t, 'data': values_t})
 
-    # ── NFP_VS_ADP (BLS side only — ADP is manually maintained) ────
+    # ── NFP_VS_ADP — both sides now auto-updated ─────────────────────
+    # BLS side: derived from PAYEMS MoM changes (as before).
+    # ADP side: FRED NPPTTL (Total Nonfarm Private, MoM change, SA, K).
+    #   Previously manually maintained; now auto-fetched by collector.
     payems = data.get('payems', [])
+    adp_raw = data.get('adp_nppttl', [])   # newest-first, value = level (K)
     if payems and len(payems) >= 25:
-        # Compute MoM changes for last 24 months (newest-first in source)
         months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes
         nfp_labels, nfp_bls = [], []
         for i in range(1, len(months)):
@@ -780,22 +783,39 @@ def rebuild_charts(html, data):
                 applied.append(f'NFP_BLS_MOM rebuilt ({len(nfp_labels)} months)')
                 html = new_html
 
-            # Also update BLS side of NFP_VS_ADP (13-month chart, preserving ADP)
+            # Build aligned BLS + ADP arrays for the 13-month side-by-side chart
             bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
             lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
-            # Extract existing ADP array from HTML to preserve it
-            adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
-            if adp_match:
-                adp_str = adp_match.group(1).strip()
+
+            # Build ADP array aligned to lbl_12 labels
+            if adp_raw and len(adp_raw) >= 2:
+                # NPPTTL is a level series (thousands employed) — compute MoM change
+                adp_months_rev = list(reversed(adp_raw))  # oldest-first
+                adp_by_label = {}
+                for i in range(1, len(adp_months_rev)):
+                    lbl = datetime.datetime.strptime(adp_months_rev[i]['date'], '%Y-%m-%d').strftime("%b'%y")
+                    chg = round(adp_months_rev[i]['value'] - adp_months_rev[i-1]['value'])
+                    adp_by_label[lbl] = chg
+                adp_12 = [adp_by_label.get(l) for l in lbl_12]  # None where ADP not yet published
+                new_vs = (f'const NFP_VS_ADP = {{\n'
+                          f'  labels:{json.dumps(lbl_12)},\n'
+                          f'  bls:   {json.dumps(bls_12)},\n'
+                          f'  adp:   {json.dumps(adp_12)}')
+                applied.append(f'NFP_VS_ADP rebuilt — ADP auto ({sum(1 for v in adp_12 if v is not None)}/{len(adp_12)} months)')
+            else:
+                # ADP not yet collected — preserve existing array from HTML
+                adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
+                adp_str = adp_match.group(1).strip() if adp_match else ''
                 new_vs = (f'const NFP_VS_ADP = {{\n'
                           f'  labels:{json.dumps(lbl_12)},\n'
                           f'  bls:   {json.dumps(bls_12)},\n'
                           f'  adp:   [{adp_str}]')
-                pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
-                new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)
-                if n2:
-                    applied.append(f'NFP_VS_ADP.bls updated ({len(bls_12)} months, ADP preserved)')
-                    html = new_html2
+                applied.append(f'NFP_VS_ADP.bls updated ({len(bls_12)} months, ADP preserved — NPPTTL not collected)')
+
+            pattern_vs = r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[[^\]]*\]'
+            new_html2, n2 = re.subn(pattern_vs, new_vs, html, count=1)
+            if n2:
+                html = new_html2
 
     # ── SECTOR_MOM (auto-rebuild from BLS sector data) ────────────
     bls_sectors = data.get('bls_sectors', {})
@@ -2418,19 +2438,19 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
                           'sub': f"Ex Food & Energy · Prior: {yoy_prev:.1f}% ({_mlbl(cpi_core[1]['date'])})"})
 
-    # 7. Headline PCE YoY  (up = bad). Core PCE detail lives in the PCE tab.
-    # detaches from core (e.g. an oil shock pushing energy through), the gap
-    # is itself a signal worth seeing on the strip.
-    pce_h = data.get('pce', [])
-    if pce_h and len(pce_h) >= 14:
-        yoy_cur, yoy_prev = _yoy_pair(pce_h)
+    # 7. Core PCE YoY (FRED PCEPILFE — Fed's 2% target gauge)  (up = bad)
+    # Both core measures shown side-by-side: CPI (slot 6) prints faster;
+    # PCE (slot 7) is what the Fed actually targets. Headline PCE moved to PCE tab.
+    pce_core = data.get('pce_core', [])
+    if pce_core and len(pce_core) >= 14:
+        yoy_cur, yoy_prev = _yoy_pair(pce_core)
         if yoy_cur is not None and yoy_prev is not None:
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
-            lbl = f"Headline PCE {_mlbl(pce_h[0]['date'])}"
+            lbl = f"Core PCE {_mlbl(pce_core[0]['date'])}"
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'pce',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
-                          'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(pce_h[1]['date'])}) · BEA PCEPI"})
+                          'sub': f"Fed 2% target · Prior: {yoy_prev:.1f}% ({_mlbl(pce_core[1]['date'])})"  })
 
     # 8. Consumer Sentiment (UMich)  (up = good)
     umcsent = data.get('umcsent', [])
