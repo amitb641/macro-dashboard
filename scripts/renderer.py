@@ -837,6 +837,14 @@ def rebuild_charts(html, data):
             bls_12 = nfp_bls[-MONTHLY_TREND_WINDOW:]
             lbl_12 = nfp_labels[-MONTHLY_TREND_WINDOW:]
 
+            # Manually-verified ADP monthly changes (K) from ADP press releases.
+            # Patches None slots after the fallback chain resolves — update when
+            # new reports publish. Source: https://mediacenter.adp.com
+            _ADP_VERIFIED = {
+                "Mar'26": 62,   # Released 2026-04-01
+                "Apr'26": 109,  # Released 2026-05-06
+            }
+
             # Build ADP array — preference order:
             # 1. FRED NPPTTL (auto, current) — index values directly (already MoM changes)
             # 2. Prior state.json (round-trip, one run behind)
@@ -863,6 +871,8 @@ def rebuild_charts(html, data):
                             adp_arr = None
 
             if adp_arr is not None:
+                # Patch None slots with manually-verified values before persisting
+                adp_arr = [_ADP_VERIFIED.get(l, v) for l, v in zip(lbl_12, adp_arr)]
                 adp_aligned = adp_arr[-MONTHLY_TREND_WINDOW:] if not adp_raw else adp_arr
                 payload_nva = {'labels': lbl_12, 'bls': bls_12, 'adp': adp_aligned}
                 _api_writer.register('NFP_VS_ADP', payload_nva)
