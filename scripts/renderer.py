@@ -871,8 +871,16 @@ def rebuild_charts(html, data):
                             adp_arr = None
 
             if adp_arr is not None:
-                # Patch None slots with manually-verified values before persisting
+                # Patch None slots with manually-verified bootstrap values
                 adp_arr = [_ADP_VERIFIED.get(l, v) for l, v in zip(lbl_12, adp_arr)]
+                # Apply live-scraped ADP value (adpemploymentreport.com/ner_production.json)
+                # — overwrites any prior value for the current month with ground truth.
+                adp_latest = data.get('adp_latest')
+                if isinstance(adp_latest, dict) and adp_latest.get('label') in lbl_12:
+                    _al_lbl = adp_latest['label']
+                    _al_val = adp_latest['value']
+                    adp_arr = [_al_val if l == _al_lbl else v for l, v in zip(lbl_12, adp_arr)]
+                    applied.append(f'NFP_VS_ADP — ADP live ({_al_lbl}={_al_val:+}K from adpemploymentreport.com)')
                 adp_aligned = adp_arr[-MONTHLY_TREND_WINDOW:] if not adp_raw else adp_arr
                 payload_nva = {'labels': lbl_12, 'bls': bls_12, 'adp': adp_aligned}
                 _api_writer.register('NFP_VS_ADP', payload_nva)
