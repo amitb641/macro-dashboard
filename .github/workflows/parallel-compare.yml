@@ -94,7 +94,12 @@ jobs:
             echo "No run-report changes"
           else
             git commit -m "📋 Run report (dev): $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push origin HEAD:dev/multi-expert-improvements
+            for attempt in 1 2 3; do
+              git pull --rebase origin dev/multi-expert-improvements && \
+              git push origin HEAD:dev/multi-expert-improvements && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
           fi
 
       - name: Upload per-run report artifact
@@ -141,7 +146,12 @@ jobs:
             echo "No comparison report changes"
           else
             git commit -m "📊 Parallel compare: $(date -u +'%Y-%m-%d')"
-            git push origin HEAD:dev/multi-expert-improvements
+            for attempt in 1 2 3; do
+              git pull --rebase origin dev/multi-expert-improvements && \
+              git push origin HEAD:dev/multi-expert-improvements && break
+              echo "Push attempt $attempt failed, retrying..."
+              sleep 5
+            done
           fi
 
       - name: Upload paired comparison artifact
