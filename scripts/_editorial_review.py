@@ -344,11 +344,17 @@ _COMMENTARY_RE = re.compile(
 def gather_commentaries() -> list[tuple[str, str]]:
     """Return list of (label, text) pairs from index.html + signals.json
     commentary fields. Strips trivial HTML before passing to auditors."""
+    # 'stack' is the "About this dashboard" section — deliberately multi-sentence
+    # pipeline description, not a per-tab macro commentary. Exempt from length rule.
+    _SENTENCE_EXEMPT = {'stack'}
+
     out: list[tuple[str, str]] = []
     if HTML_FILE.exists():
         html = HTML_FILE.read_text(encoding='utf-8')
         for m in _COMMENTARY_RE.finditer(html):
             tab = m.group(1)
+            if tab in _SENTENCE_EXEMPT:
+                continue
             body = re.sub(r'<[^>]+>', '', m.group(2)).strip()
             if body:
                 out.append((f'html:commentary-{tab}', body))
