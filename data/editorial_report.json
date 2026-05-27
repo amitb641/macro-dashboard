@@ -1,18 +1,18 @@
 {
-  "generated_at": "2026-05-27T21:22:38Z",
-  "pieces_audited": 14,
+  "generated_at": "2026-05-27T21:35:00Z",
+  "pieces_audited": 13,
   "llm_enabled": true,
-  "llm_calls_used": 14,
+  "llm_calls_used": 13,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 14,
+    "calls_used": 13,
     "anthropic_key_set": true
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 1,
+    "warning": 0,
     "minor": 0
   },
   "pieces": [
@@ -117,21 +117,6 @@
       "text_preview": "The federal deficit as a share of GDP is the single most direct measure of how much the government is adding to (or subtracting from) aggregate demand. At the current trajectory, deficits remain eleva",
       "sentence_count": 3,
       "findings": [],
-      "llm_confidence": null,
-      "critique_confirms_critical": null
-    },
-    {
-      "label": "html:commentary-stack",
-      "text_preview": "A weekly read on the U.S. economy — refreshed automatically, every chart sourced, every commentary written from this week's data.\n        Behind this dashboard is an automated pipeline that refreshes ",
-      "sentence_count": 8,
-      "findings": [
-        {
-          "rule": "style_guide §2 — commentary 2–4 sentences",
-          "severity": "warning",
-          "detail": "sentence_count=8 (band [2,4])",
-          "fixable": "rewrite to 2-4 declarative sentences"
-        }
-      ],
       "llm_confidence": null,
       "critique_confirms_critical": null
     }
