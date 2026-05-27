@@ -61,7 +61,14 @@ body.themed-sm .sm-wordmark {
 body.themed-sm .sm-wordmark .sm-wm-sep { color: #CBD5E1; padding: 0 8px; }
 body.themed-sm .sm-wordmark .sm-wm-issue { color: #0D1B2A; }
 @media (max-width: 1080px) { body.themed-sm .sm-wordmark { left: 32px; } }
-@media (max-width: 720px)  { body.themed-sm .sm-wordmark { left: 20px; font-size: 10px; } }
+@media (max-width: 900px)  {
+  /* Tablet + phone: hide the fixed wordmark. At <=900px the left
+     sidebar collapses and the page uses full viewport width, so the
+     position:fixed wordmark sits directly on top of the KPI strip
+     and the rest of the scrolling content. The issue/week info is
+     still surfaced inline via .sm-meta and the eyebrow. */
+  body.themed-sm .sm-wordmark { display: none; }
+}
 
 /* ── hero ─────────────────────────────────────────────────────── */
 body.themed-sm .eyebrow {

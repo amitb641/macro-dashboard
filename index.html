@@ -1474,7 +1474,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 .nsb-footer-btn.active .nav-icon{opacity:1}
 .nsb-footer-label{transition:opacity .15s}
 .nsb-collapsed .nsb-footer-label{opacity:0}
-@media(max-width:900px){.nav-sidebar,.nav-sidebar.nsb-active{display:none!important}body.sidebar-active{padding-left:20px!important}body.sidebar-active .nav-two-tier{display:flex!important}}
+@media(max-width:900px){.nav-sidebar,.nav-sidebar.nsb-active{display:none!important}body.sidebar-active{padding-left:20px!important}body.sidebar-active .nav-two-tier{display:flex!important;flex-direction:column!important}}
 @media(max-width:480px){body.sidebar-active{padding-left:12px!important}}
 
 /* TAB */
@@ -2477,6 +2477,14 @@ table{border-collapse:collapse}
   .nav-btn .nav-icon{width:13px;height:13px}
   .nav-btn-meta{font-size:10px;padding:6px 10px}
   .nav-group-meta{margin-left:0}
+  /* Two-tier nav on tablet: tier-1 needs to scroll horizontally so
+     the utility buttons (Sources, Validator) remain reachable when
+     the nav-t1-meta items don't fit alongside the 5 group buttons.
+     Vertical stacking of tier-1 above tier-2 is handled by the
+     parent <=900px media query. */
+  .nav-t1{width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .nav-t1::-webkit-scrollbar{display:none}
+  .nav-t2{width:100%}
   .metric-row{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
   .dtable{min-width:480px;font-size:11px}
   .dtable th,.dtable td{padding:7px 10px}
@@ -2511,12 +2519,18 @@ table{border-collapse:collapse}
   .nav-group-lbl{display:none}
   .nav-btn{white-space:nowrap;font-size:10px;padding:6px 10px;flex-shrink:0;gap:4px}
   .nav-btn .nav-icon{width:12px;height:12px}
-  .nav-t1{padding:8px 12px;gap:4px}
-  .nav-t1-meta{gap:2px}
-  .nav-t2{padding:6px 10px 8px;gap:4px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  /* Two-tier nav on phone: tier-1 scrolls horizontally and packs
+     utility buttons tight (no margin-left:auto), since the side-by-
+     side layout at <=900px is already stacked into a column by the
+     wider breakpoint. */
+  .nav-t1{padding:8px 10px;gap:6px;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
+  .nav-t1::-webkit-scrollbar{display:none}
+  .nav-t1-groups{flex:0 0 auto;gap:2px}
+  .nav-t1-meta{flex:0 0 auto;gap:2px;margin-left:6px}
+  .nav-t2{padding:6px 10px 8px;gap:4px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%}
   .nav-t2::-webkit-scrollbar{display:none}
-  .nav-grp-btn{padding:5px 10px;font-size:11px}
-  .nav-btn-meta{font-size:9.5px;padding:5px 8px}
+  .nav-grp-btn{padding:5px 10px;font-size:11px;flex-shrink:0}
+  .nav-btn-meta{font-size:9.5px;padding:5px 8px;flex-shrink:0}
   .fc-note{font-size:10px;padding:9px;line-height:1.55}
   .sector-card{padding:12px}
   .card-name{font-size:11px}
