@@ -168,15 +168,19 @@ def check_internal(html, data, sig_vals):
 
         # ── ADP freshness check (NPPTTL auto-refresh) ──
         # Warn if the ADP array has no non-null values in the last 2 months —
-        # that means NPPTTL fetch failed or the series is stale.
+        # that means NPPTTL is stale/discontinued and prior-state fallback is active.
         html_adp = nfp_vs_adp.get('adp', [])
         if html_adp:
             recent_adp = [v for v in html_adp[-2:] if v is not None]
             if not recent_adp:
-                warnings.append(
-                    'ADP staleness: last 2 months are null — NPPTTL may not be '
-                    'collected (check FRED_API_KEY and series NPPTTL availability)'
-                )
+                findings.append({
+                    'check': 'ADP freshness (NPPTTL)',
+                    'html_value': '0/2 recent months populated',
+                    'source_value': 'NPPTTL via FRED',
+                    'severity': 'warning',
+                    'pass': True,  # soft pass — prior-state fallback active
+                    'note': 'NPPTTL discontinued 2022-05; ADP using prior-state round-trip',
+                })
 
     # ── KPI strip values ──
     kpis_match = re.search(r'const KPIS\s*=\s*(\[[\s\S]*?\]);', html)

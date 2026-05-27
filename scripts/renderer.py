@@ -766,7 +766,10 @@ def rebuild_charts(html, data):
     payems = data.get('payems', [])
     # NPPTTL is a MoM *change* series (not a level) — values are already
     # monthly employment changes in thousands. Do NOT compute a second diff.
-    adp_raw = data.get('adp_nppttl', [])   # newest-first, value = MoM change (K)
+    # Note: FRED NPPTTL was discontinued 2022-05; filter to recent obs so stale
+    # data does not displace the prior-state.json round-trip fallback.
+    _nppttl_cutoff = (datetime.datetime.today() - datetime.timedelta(days=548)).strftime('%Y-%m-%d')
+    adp_raw = [o for o in data.get('adp_nppttl', []) if o.get('date', '') >= _nppttl_cutoff]
     if payems and len(payems) >= 25:
         months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes
         nfp_labels, nfp_bls = [], []
