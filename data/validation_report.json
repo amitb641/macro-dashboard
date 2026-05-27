@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-23T13:09:04.259729Z",
+  "validated_at": "2026-05-27T16:36:29.810234Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 520,
-    "passed": 505,
-    "failed": 15,
+    "total_checks": 521,
+    "passed": 504,
+    "failed": 17,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.57,
-      "fresh_api_value": 4.57,
+      "raw_data_value": 4.56,
+      "fresh_api_value": 4.56,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -700,15 +700,15 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 52,
+      "age_days": 56,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-04-01",
-      "age_days": 52,
+      "age_days": 56,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,7 +716,7 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-04-01",
-      "age_days": 52,
+      "age_days": 56,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -724,7 +724,7 @@
     {
       "check": "Staleness: pce",
       "latest_date": "2026-03-01",
-      "age_days": 83,
+      "age_days": 87,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -732,7 +732,7 @@
     {
       "check": "Staleness: pce_core",
       "latest_date": "2026-03-01",
-      "age_days": 83,
+      "age_days": 87,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,15 +740,15 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 52,
+      "age_days": 56,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cs_hpi",
-      "latest_date": "2026-02-01",
-      "age_days": 111,
+      "latest_date": "2026-03-01",
+      "age_days": 87,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -756,7 +756,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-21",
-      "age_days": 2,
+      "age_days": 6,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +764,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 22,
+      "age_days": 26,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-23T13:08:02.230141Z",
+      "collected_at": "2026-05-27T16:35:17.397909Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1046,10 +1046,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.57,
+      "reference": 4.56,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.57,
-        "data[\"dgs10\"]": 4.57
+        "KPIS 10Y Treasury": 4.56,
+        "data[\"dgs10\"]": 4.56
       },
       "severity": "ok",
       "pass": true
@@ -1122,6 +1122,11 @@
     }
   ],
   "schema_contract": [
+    {
+      "check": "Schema contract: data['adp_nppttl']",
+      "pass": true,
+      "severity": "ok"
+    },
     {
       "check": "Schema contract: data['ahetpi']",
       "pass": true,
