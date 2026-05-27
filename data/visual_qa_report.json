@@ -1,15 +1,18 @@
 {
-  "checked_at": "2026-05-27T16:36:29.805992Z",
+  "checked_at": "2026-05-27T16:30:20.350406Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 334,
-    "passed": 333,
-    "failed": 1,
+    "total_checks": 328,
+    "passed": 325,
+    "failed": 3,
     "js_errors": 0,
-    "console_errors": 0
+    "console_errors": 2
   },
   "js_errors": [],
-  "console_errors": [],
+  "console_errors": [
+    "Fetch API cannot load file:///C:/Users/amitb/Claude/macro-dashboard/version.json?_t=1779899394527. URL scheme \"file\" is not supported.",
+    "Fetch API cannot load file:///C:/Users/amitb/Claude/macro-dashboard/data/validation_report.json. URL scheme \"file\" is not supported."
+  ],
   "findings": [
     {
       "category": "global",
@@ -32,8 +35,9 @@
     {
       "category": "global",
       "check": "No console errors",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "2 errors: ['Fetch API cannot load file:///C:/Users/amitb/Claude/macro-dashboard/version.json', 'Fetch API cannot load file:///C:/Users/amitb/Claude/macro-dashboard/data/validat']"
     },
     {
       "category": "global",
@@ -1459,42 +1463,6 @@
       "severity": "ok"
     },
     {
-      "category": "Validator",
-      "check": "Panel \"Pass 1: Internal Consistency\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 2: Source Verification\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 3: Data Staleness\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 3f: Schema Contract\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 3g: Seed Drift\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Validator",
-      "check": "Panel \"Pass 3h: Collector Errors\" has title",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
       "category": "data",
       "check": "KPIS defined",
       "pass": true,
@@ -2001,8 +1969,9 @@
     {
       "category": "data",
       "check": "VALIDATION_REPORT present",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "error:Failed to fetch"
     },
     {
       "category": "data",
