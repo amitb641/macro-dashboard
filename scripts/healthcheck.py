@@ -17,12 +17,9 @@ except ImportError:
 
 REQUIRED_MARKERS = [
     'Macro Dashboard',          # Page title
-    # KPIS migrated to /api/state.json (Tier 1 anti-clone) —
-    # inline declaration is now `let KPIS = null;`. Match either
-    # shape so the marker still proves the renderer ran.
-    ('const KPIS', 'let KPIS'),
-    'const CPI_MONTHLY',        # CPI chart data
-    'const U_MONTHLY',          # Unemployment chart data
+    'KPIS',                     # KPI data (const or let null — Tier 1 migrated)
+    'CPI_MONTHLY',              # CPI chart data (const or let null — Tier 1 migrated)
+    'U_MONTHLY',                # Unemployment chart data (const or let null)
     'tab-panel',                # Tab structure present
 ]
 
@@ -60,15 +57,8 @@ def healthcheck(url):
                 print(f'  FAIL: Page too small ({size:,} bytes, expected >= {MIN_PAGE_SIZE:,})')
                 return False
 
-            # Check required content markers. A marker can be a single
-            # string OR a tuple of acceptable alternatives (any-of) — the
-            # tuple form lets us tolerate `const KPIS` → `let KPIS = null;`
-            # migration without breaking the gate.
-            def _matched(marker):
-                if isinstance(marker, tuple):
-                    return any(alt in body for alt in marker)
-                return marker in body
-            missing = [m for m in REQUIRED_MARKERS if not _matched(m)]
+            # Check required content markers
+            missing = [m for m in REQUIRED_MARKERS if m not in body]
             if missing:
                 print(f'  FAIL: Missing content markers: {missing}')
                 return False
