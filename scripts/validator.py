@@ -512,12 +512,15 @@ def check_staleness(data, collected_at):
     # slippage adding ~2 weeks). Case-Shiller has a ~70d HPI lag + release
     # around the last Tuesday of the following month.
     EXPECTED_LAGS = {
-        'unrate':    55,   # BLS Employment Situation, 1st Fri of following month
+        # BLS Employment Situation: published 1st Fri of following month.
+        # FRED reference date = 1st of reference month, so age at Saturday
+        # CI run can reach 56-58d. 65d gives ~1 week slack before next cycle.
+        'unrate':    65,
         'cpi_all':   75,   # Monthly, ~2-3 week lag; can span 2 release cycles
         'cpi_core':  75,
         'pce':       95,   # Monthly, ~4 week lag; can span 2 release cycles
         'pce_core':  95,
-        'payems':    55,   # BLS NFP, same release as UNRATE
+        'payems':    65,   # BLS NFP, same release as UNRATE — same 65d reasoning
         'cs_hpi':   120,   # S&P CoreLogic Case-Shiller — ~70d data lag + release window
         'mortgage30': 10,  # Weekly
         # UMich Consumer Sentiment: prelim ~mid-month, final ~end-of-month.
