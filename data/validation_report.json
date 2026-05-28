@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-28T05:01:57.380373Z",
+  "validated_at": "2026-05-28T05:32:58.663940Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 635,
-    "passed": 628,
-    "failed": 7,
-    "skipped": 14,
+    "total_checks": 644,
+    "passed": 640,
+    "failed": 4,
+    "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -146,6 +146,24 @@
     },
     {
       "check": "U_MONTHLY.data completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "NFP_VS_ADP.bls completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "NFP_VS_ADP.adp completeness",
       "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
@@ -420,6 +438,51 @@
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 2,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.dgs10 completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.dgs2 completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.spread completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.card90 completeness",
+      "html_value": "28/37 filled",
+      "source_value": "76% (min 50%)",
+      "difference": 9,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_SPREAD.spread completeness",
+      "html_value": "11/11 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 5,
       "severity": "ok",
       "pass": true
     },
@@ -716,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-28T04:59:37.186093Z",
+      "collected_at": "2026-05-28T05:31:07.179114Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -807,22 +870,85 @@
   ],
   "panel_data_consistency": [
     {
-      "check": "Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable",
-      "severity": "warning",
-      "pass": false,
-      "reason": "Could not parse const CPI_CAT_MOM from HTML"
+      "check": "Energy and transport categories are pulling the basket higher: title months match CPI_CAT_MOM keys",
+      "title_months": [
+        "apr",
+        "mar"
+      ],
+      "data_keys": [
+        "apr",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable",
-      "severity": "warning",
-      "pass": false,
-      "reason": "Could not parse const PCE_CAT_MOM from HTML"
+      "check": "Energy and transport categories are pulling the basket higher: prior-month chip matches title",
+      "expected_prior": "Mar'26",
+      "chips_found": [
+        "Apr'26",
+        "Mar'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
+      ],
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable",
-      "severity": "warning",
-      "pass": false,
-      "reason": "Could not parse const SECTOR_MOM from HTML"
+      "check": "Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Energy and housing components are pulling the PCE basket higher: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys",
+      "title_months": [
+        "apr",
+        "mar"
+      ],
+      "data_keys": [
+        "apr",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Hiring is now concentrated in healthcare and leisure: prior-month chip matches title",
+      "expected_prior": "Mar'26",
+      "chips_found": [
+        "Mar'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
+      ],
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Unemployment is rising broadly across sectors: title months match U_SECTOR_MOM keys",
@@ -853,26 +979,26 @@
   ],
   "metric_consistency": [
     {
-      "check": "NFP MoM latest (K): \u22652 surfaces extractable",
+      "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
+      "reference": 115.0,
       "surfaces": {
-        "NFP_BLS_MOM.bls[-1]": "MISSING",
-        "KPIS Jobs tile": "MISSING",
+        "NFP_BLS_MOM.bls[-1]": 115.0,
+        "KPIS Jobs tile": 115.0,
         "Commentary payrolls": "MISSING"
       },
-      "severity": "skipped",
-      "pass": true,
-      "reason": "only 0 surface(s) extractable; cross-check needs \u22652"
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "Unemployment rate (%): \u22652 surfaces extractable",
+      "check": "Unemployment rate (%): surfaces agree within \u00b10.1 (ref: U_MONTHLY.data[-1])",
+      "reference": 4.3,
       "surfaces": {
         "U_MONTHLY.data[-1]": 4.3,
-        "KPIS Unemployment": "MISSING",
+        "KPIS Unemployment": 4.3,
         "Commentary U-3": "MISSING"
       },
-      "severity": "skipped",
-      "pass": true,
-      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "CPI YoY latest (%): \u22652 surfaces extractable",
@@ -885,44 +1011,44 @@
       "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
-      "check": "Core PCE YoY latest (%): \u22652 surfaces extractable",
+      "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
+      "reference": 3.2,
       "surfaces": {
         "PCE_MONTHLY.core[-1]": 3.2,
-        "KPIS Core PCE": "MISSING"
+        "KPIS Core PCE": 3.2
       },
-      "severity": "skipped",
-      "pass": true,
-      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "UMich sentiment latest: \u22652 surfaces extractable",
+      "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
+      "reference": 44.8,
       "surfaces": {
         "UMCSENT_MONTHLY.data[-1]": 44.8,
-        "KPIS UMich Sentiment": "MISSING"
+        "KPIS UMich Sentiment": 44.8
       },
-      "severity": "skipped",
-      "pass": true,
-      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "Fed Funds latest (%): \u22652 surfaces extractable",
+      "check": "Fed Funds latest (%): surfaces agree within \u00b10.05 (ref: KPIS Fed Funds)",
+      "reference": 3.64,
       "surfaces": {
-        "KPIS Fed Funds": "MISSING",
+        "KPIS Fed Funds": 3.64,
         "data[\"ffr\"]": 3.64
       },
-      "severity": "skipped",
-      "pass": true,
-      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+      "severity": "ok",
+      "pass": true
     },
     {
-      "check": "10Y Treasury latest (%): \u22652 surfaces extractable",
+      "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
+      "reference": 4.5,
       "surfaces": {
-        "KPIS 10Y Treasury": "MISSING",
+        "KPIS 10Y Treasury": 4.5,
         "data[\"dgs10\"]": 4.5
       },
-      "severity": "skipped",
-      "pass": true,
-      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+      "severity": "ok",
+      "pass": true
     }
   ],
   "earnings_verbatim": [
@@ -4000,10 +4126,15 @@
     {
       "check": "noise_floor[core_cpi_yoy]",
       "pass": true,
-      "severity": "skipped",
+      "severity": "ok",
       "metric": "core_cpi_yoy",
       "floor": 0.3,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
+      "prior": 2.6,
+      "latest": 2.7,
+      "delta": 0.1,
+      "abs_delta": 0.1,
+      "verdict": "within_noise",
+      "note": "PoP delta +0.100 \u2264 \u00b10.3 \u2192 within_noise"
     },
     {
       "check": "noise_floor[saving_rate]",
@@ -4060,42 +4191,41 @@
     {
       "check": "noise_floor[jolts_openings]",
       "pass": true,
-      "severity": "skipped",
+      "severity": "ok",
       "metric": "jolts_openings",
       "floor": 200.0,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
-    },
-    {
-      "check": "noise_floor[jolts_quits]",
-      "pass": true,
-      "severity": "skipped",
-      "metric": "jolts_quits",
-      "floor": 150.0,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
-    },
-    {
-      "check": "noise_floor[jolts_hires]",
-      "pass": true,
-      "severity": "skipped",
-      "metric": "jolts_hires",
-      "floor": 150.0,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
+      "prior": 6922.0,
+      "latest": 6866.0,
+      "delta": -56.0,
+      "abs_delta": 56.0,
+      "verdict": "within_noise",
+      "note": "PoP delta -56.000 \u2264 \u00b1200.0 \u2192 within_noise"
     },
     {
       "check": "noise_floor[trimmed_mean_cpi_yoy]",
       "pass": true,
-      "severity": "skipped",
+      "severity": "ok",
       "metric": "trimmed_mean_cpi_yoy",
       "floor": 0.2,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
+      "prior": 0.186059761516599,
+      "latest": 0.425393874680946,
+      "delta": 0.2393,
+      "abs_delta": 0.2393,
+      "verdict": "real_signal",
+      "note": "PoP delta +0.239 > \u00b10.2 \u2192 real_signal"
     },
     {
       "check": "noise_floor[median_cpi_yoy]",
       "pass": true,
-      "severity": "skipped",
+      "severity": "ok",
       "metric": "median_cpi_yoy",
       "floor": 0.2,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
+      "prior": 0.190103312097589,
+      "latest": 0.401855047525523,
+      "delta": 0.2118,
+      "abs_delta": 0.2118,
+      "verdict": "real_signal",
+      "note": "PoP delta +0.212 > \u00b10.2 \u2192 real_signal"
     },
     {
       "check": "noise_floor[walcl_bn]",
@@ -4139,10 +4269,15 @@
     {
       "check": "noise_floor[deficit_pct_gdp]",
       "pass": true,
-      "severity": "skipped",
+      "severity": "ok",
       "metric": "deficit_pct_gdp",
       "floor": 0.5,
-      "reason": "underlying series not yet populated in raw_data (collector may not have run, or series newly added)"
+      "prior": -6.19625,
+      "latest": -5.76906,
+      "delta": 0.4272,
+      "abs_delta": 0.4272,
+      "verdict": "within_noise",
+      "note": "PoP delta +0.427 \u2264 \u00b10.5 \u2192 within_noise"
     }
   ],
   "secret_leaks": [
@@ -4151,6 +4286,18 @@
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"
+    }
+  ],
+  "coverage": [
+    {
+      "check": "validator coverage (migration-sensitive passes)",
+      "checks": 94,
+      "skipped": 1,
+      "skip_rate": 0.011,
+      "threshold": 0.15,
+      "pass": true,
+      "severity": "ok",
+      "note": null
     }
   ]
 }
