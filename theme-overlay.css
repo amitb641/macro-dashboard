@@ -34,8 +34,23 @@ body.themed-sm {
   box-sizing: border-box !important;
 }
 body.themed-sm { padding-top: 32px !important; }
+/* Sidebar offset — the NSB left rail is position:fixed (220px, or
+   52px collapsed). index.html sets body.sidebar-active{padding-left:
+   240px} but THIS file's `body.themed-sm{padding:…48px…!important}`
+   (above, loaded later) was overriding it at equal specificity, so
+   content slid under the fixed sidebar (172px overlap on desktop).
+   Re-assert the offset at 0,2,0 specificity so it wins. Sidebar is
+   hidden ≤900px (content full-width) — index.html already drops the
+   padding there, and that rule keeps winning because we scope this
+   to >900px only. */
+@media (min-width: 901px) {
+  body.themed-sm.sidebar-active { padding-left: 240px !important; }
+  body.themed-sm.sidebar-active.sidebar-collapsed { padding-left: 72px !important; }
+}
 @media (min-width: 1920px) {
   body.themed-sm { padding-left: 80px !important; padding-right: 80px !important; }
+  body.themed-sm.sidebar-active { padding-left: 240px !important; }
+  body.themed-sm.sidebar-active.sidebar-collapsed { padding-left: 72px !important; }
 }
 @media (min-width: 2400px) {
   body.themed-sm { max-width: 2200px !important; margin: 0 auto !important; }
