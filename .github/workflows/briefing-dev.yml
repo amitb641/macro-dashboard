@@ -97,6 +97,18 @@ jobs:
       - name: Agent 2 — Analyzer
         run: python scripts/analyzer.py
 
+      - name: Phase 2 Explainer — per-signal rationales (read-only)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # DEV-only: emit a sourced "why this matters" rationale per
+          # flagged signal to data/signal_rationales.json. Read-only
+          # (never mutates signals.json); capped at 10 signals/run and
+          # bounded by AGENT_MAX_LLM_CALLS + kill switch. The 10a
+          # diagnostician can consume these to enrich its reasoning.
+          AGENT_EXPLAINER_ENABLED: '1'
+        run: python -m scripts._signal_rationales
+        continue-on-error: true
+
       - name: Agent 3 — Analyst (claude-sonnet-4-6)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -118,8 +130,17 @@ jobs:
         run: python scripts/validator.py
         continue-on-error: true
 
-      - name: Agent 10 — Repair Agent (observer mode)
+      - name: Agent 10 — Repair Agent (Stage 10a diagnostician)
         if: always()
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # DEV-only: enable the read-only LLM diagnostician so it produces
+          # incident reports + the recurrence record that Stages 10b/10c
+          # need (≥3 weeks of shadow data per CLAUDE.md). Still writes no
+          # code/data/layout — bounded by AGENT_MAX_LLM_CALLS (≤15
+          # findings/run) and the kill switch. Prod (briefing.yml) stays
+          # in plain observer mode until the shadow data justifies promotion.
+          AGENT_DIAGNOSTICIAN_ENABLED: '1'
         run: python scripts/repair_agent.py
         continue-on-error: true
 
