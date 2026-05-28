@@ -1,0 +1,51 @@
+{
+  "generated_at": "2026-05-28T05:34:44Z",
+  "based_on_signals_at": "2026-05-28T05:34:05.597726Z",
+  "model": "claude-sonnet-4-6",
+  "budget_hit": false,
+  "guardrails": {
+    "disabled": false,
+    "diagnostician_enabled": false,
+    "max_llm_calls": 20,
+    "calls_used": 6,
+    "anthropic_key_set": true
+  },
+  "rationales": {
+    "dgs10": {
+      "value": 4.5,
+      "direction": "stable",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:dgs10) failed after retries: 400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages'))",
+      "playbook_cite": ""
+    },
+    "cpi_yoy": {
+      "value": 3.78,
+      "direction": "stable",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cpi_yoy) failed after retries: 400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages'))",
+      "playbook_cite": ""
+    },
+    "wti": {
+      "value": 112.25,
+      "direction": "stable",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wti) failed after retries: 400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages'))",
+      "playbook_cite": ""
+    },
+    "tdsp": {
+      "value": 11.323096,
+      "direction": "stable",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:tdsp) failed after retries: 400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages'))",
+      "playbook_cite": ""
+    },
+    "core_pce_yoy": {
+      "value": 3.2,
+      "direction": "stable",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:core_pce_yoy) failed after retries: 400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages'))",
+      "playbook_cite": ""
+    },
+    "wages_yoy": {
+      "value": 3.6,
+      "direction": "falling",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wages_yoy) failed after retries: 400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages'))",
+      "playbook_cite": ""
+    }
+  }
+}
