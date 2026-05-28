@@ -3957,10 +3957,10 @@ window.MD._hydrationState = null;  // last fetched bundle, for debugging
       if (s.TREASURY_DATA !== undefined)   { try { TREASURY_DATA   = s.TREASURY_DATA;   } catch(_){ window.TREASURY_DATA   = s.TREASURY_DATA;   } }
       if (s.OIL_SPREAD !== undefined)      { try { OIL_SPREAD      = s.OIL_SPREAD;      } catch(_){ window.OIL_SPREAD      = s.OIL_SPREAD;      } }
       if (s.FISCAL_DATA !== undefined)        { try { FISCAL_DATA        = s.FISCAL_DATA;        } catch(_){ window.FISCAL_DATA        = s.FISCAL_DATA;        } }
-      if (s.CPI_BREADTH !== undefined)        { try { CPI_BREADTH        = s.CPI_BREADTH;        } catch(_){ window.CPI_BREADTH        = s.CPI_BREADTH;        } }
-      if (s.JOLTS_DATA !== undefined)         { try { JOLTS_DATA         = s.JOLTS_DATA;         } catch(_){ window.JOLTS_DATA         = s.JOLTS_DATA;         } }
-      if (s.FED_LIQUIDITY_DATA !== undefined) { try { FED_LIQUIDITY_DATA = s.FED_LIQUIDITY_DATA; } catch(_){ window.FED_LIQUIDITY_DATA = s.FED_LIQUIDITY_DATA; } }
-      if (s.WHAT_CHANGED !== undefined)       { try { WHAT_CHANGED       = s.WHAT_CHANGED;       } catch(_){ window.WHAT_CHANGED       = s.WHAT_CHANGED;       } }
+      if (s.CPI_BREADTH !== undefined)        { try { CPI_BREADTH        = s.CPI_BREADTH;        } catch(_){} window.CPI_BREADTH        = s.CPI_BREADTH;        }
+      if (s.JOLTS_DATA !== undefined)         { try { JOLTS_DATA         = s.JOLTS_DATA;         } catch(_){} window.JOLTS_DATA         = s.JOLTS_DATA;         }
+      if (s.FED_LIQUIDITY_DATA !== undefined) { try { FED_LIQUIDITY_DATA = s.FED_LIQUIDITY_DATA; } catch(_){} window.FED_LIQUIDITY_DATA = s.FED_LIQUIDITY_DATA; }
+      if (s.WHAT_CHANGED !== undefined)       { try { WHAT_CHANGED       = s.WHAT_CHANGED;       } catch(_){} window.WHAT_CHANGED       = s.WHAT_CHANGED;       }
       if (s.RELEASE_CAL !== undefined)        { try { RELEASE_CAL        = s.RELEASE_CAL;        } catch(_){ window.RELEASE_CAL        = s.RELEASE_CAL;        } }
       if (s.NFP_BLS_MOM !== undefined)        { try { NFP_BLS_MOM        = s.NFP_BLS_MOM;        } catch(_){ window.NFP_BLS_MOM        = s.NFP_BLS_MOM;        } }
       if (s.NFP_VS_ADP !== undefined)         { try { NFP_VS_ADP         = s.NFP_VS_ADP;         } catch(_){ window.NFP_VS_ADP         = s.NFP_VS_ADP;         } }

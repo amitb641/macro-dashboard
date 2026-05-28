@@ -41,17 +41,22 @@
       { canvas: 'c-cpi-breadth',   dataVar: 'CPI_BREADTH',        label: 'Cleveland Fed trimmed/median CPI' }
     ];
     emptyMap.forEach(function(spec){
-      var data = window[spec.dataVar];
       var canvas = document.getElementById(spec.canvas);
       if (!canvas) return;
       var parent = canvas.parentElement;
       if (!parent) return;
-      // Paint overlay if the data var is missing entirely OR present-but-empty.
-      // Skip when real data is present (labels populated) — and REMOVE any
-      // stale overlay left over from an earlier paint (handles the case where
-      // the placeholder painted before the data hydrated, e.g. cached HTML
-      // page or slow inline-script execution).
-      var hasData = data && (data.labels || []).length > 0;
+      // Check data multiple ways — the data vars are declared `let` in
+      // the inline <script> in index.html, so they're NOT on `window`
+      // even after hydration. Instead, look at the actual Chart.js
+      // instance attached to the canvas: if Chart.getChart() returns
+      // a chart with non-empty labels, real data has rendered. Fall
+      // back to window[varName] for any future migration that does
+      // expose vars globally.
+      var data = window[spec.dataVar];
+      var chart = (window.Chart && window.Chart.getChart) ? window.Chart.getChart(canvas) : null;
+      var hasData =
+        (chart && chart.data && (chart.data.labels || []).length > 0) ||
+        (data  && (data.labels  || []).length > 0);
       var existing = parent.querySelector('.sm-empty-state');
       if (hasData) {
         if (existing) existing.remove();
@@ -82,6 +87,23 @@
     // inline-script execution) still clears a stale overlay.
     setTimeout(function(){ try { paintEmptyStates(); } catch(e){} }, 300);
     setTimeout(function(){ try { paintEmptyStates(); } catch(e){} }, 2000);
+    // Hook into the hydration system so the overlay is re-evaluated
+    // after /api/state.json resolves. Without this, the placeholder
+    // painted at 300/2000ms (before slow-mobile hydration completes)
+    // stayed forever even after FED_LIQUIDITY_DATA etc. populated —
+    // the chart drew real data underneath but the "Awaiting first
+    // pipeline run" overlay never lifted.
+    try {
+      window.MD = window.MD || {};
+      if (window.MD._hydrationDone) {
+        setTimeout(function(){ try { paintEmptyStates(); } catch(e){} }, 100);
+      } else {
+        window.MD._hydrationCallbacks = window.MD._hydrationCallbacks || [];
+        window.MD._hydrationCallbacks.push(function(){
+          setTimeout(function(){ try { paintEmptyStates(); } catch(e){} }, 100);
+        });
+      }
+    } catch(e){}
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', activate);
