@@ -1,3 +1,37 @@
+## Repair Agent — 2026-05-28T04:47:25.560724Z
+
+- **Status**: WARN
+- **Total checks**: 634
+- **Passed**: 627
+- **Failed**: 7
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Collector error** — ALFRED PCEPILFE@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPILFE&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_e
+
+### Staleness
+_0 critical · 0 warning · 2 stale_
+
+- ⏰ **Staleness: unrate** — 57d old (limit 55d)
+- ⏰ **Staleness: payems** — 57d old (limit 55d)
+
+### Panel data
+_0 critical · 3 warning · 0 stale_
+
+- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
+- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
+- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: contract — spacing_grid** — 
+
+
+---
+
 ## Repair Agent — 2026-05-28T04:33:45.286272Z
 
 - **Status**: WARN
@@ -960,18 +994,6 @@ No findings to surface — pipeline is clean. ✅
 ---
 
 ## Repair Agent — 2026-05-22T04:44:52.138793Z
-
-- **Status**: PASS
-- **Total checks**: 211
-- **Passed**: 211
-- **Failed**: 0
-- **Critical divergences**: 0
-
-No findings to surface — pipeline is clean. ✅
-
----
-
-## Repair Agent — 2026-05-22T04:25:51.506128Z
 
 - **Status**: PASS
 - **Total checks**: 211

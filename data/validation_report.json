@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-28T04:33:45.286272Z",
+  "validated_at": "2026-05-28T04:47:25.560724Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 635,
+    "total_checks": 634,
     "passed": 627,
-    "failed": 8,
+    "failed": 7,
     "skipped": 14,
     "critical_divergences": 0
   },
@@ -716,7 +716,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-28T04:31:46.909944Z",
+      "collected_at": "2026-05-28T04:45:38.977874Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1324,16 +1324,10 @@
   ],
   "collector_errors": [
     {
-      "check": "EIA fetch: RWTC",
+      "check": "Collector error",
       "pass": false,
       "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "EIA fetch: RBRTE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+      "note": "ALFRED PCEPILFE@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPILFE&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_e"
     }
   ],
   "seed_drift": [
@@ -1383,7 +1377,7 @@
       "check": "Visual: contract \u2014 spacing_grid",
       "severity": "warning",
       "pass": false,
-      "detail": "2 off-grid value(s): line 634: padding 14px (in `body.themed-sm .panel { padding: 14px 16px !important; margin-bottom: 14px !important; }`); line 636: gap 10px (in `body.themed-sm .sm-meta { font-size: 10px !important; letter-spacing: .08em !important; ga`)"
+      "detail": "2 off-grid value(s): line 644: padding 14px (in `body.themed-sm .panel { padding: 14px 16px !important; margin-bottom: 14px !important; }`); line 646: gap 10px (in `body.themed-sm .sm-meta { font-size: 10px !important; letter-spacing: .08em !important; ga`)"
     },
     {
       "check": "Visual: contract \u2014 palette_compliance",
