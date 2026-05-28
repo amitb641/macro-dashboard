@@ -5821,23 +5821,26 @@ function buildBanksTab(){
     {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#D64045"},
   ].map(m=>_mTile(m)).join("");
 
-  // Main comparison table
+  // Main comparison table — 11 cols × 9 banks is too dense to swipe
+  // on a phone; opt into .dtable.responsive (cards <=600px) with
+  // data-label on every cell.
+  document.getElementById("bank-tbl").classList.add("responsive");
   const hd2=["Bank","Q1 Rev","Q1 Net Income","Q1 EPS","ROTCE","CET1","Q1 NII","NCO Rate","FY26 NII/Rev Guide","FY26 NCO/Note","Outlook"];
   let h=`<thead><tr>${hd2.map((x,i)=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   BANK_RESULTS.forEach(r=>{
     const sig=r.signal==="bull"?"color:#1A9E5A":r.signal==="bear"?"color:#D64045":"color:#CC8A00";
     h+=`<tr>
-      <td style="font-weight:600;color:${r.color}">${r.name} <span style="font-weight:400;color:#9aa5c0">(${r.ticker})</span></td>
-      <td>${r.rev25}</td>
-      <td style="color:#1A9E5A;font-weight:500">${r.ni25}</td>
-      <td>${r.eps25}</td>
-      <td style="${sig}">${r.rotce}</td>
-      <td>${r.cet1}</td>
-      <td>${r.nii_q4}</td>
-      <td style="color:#CC8A00">${r.nco}</td>
-      <td style="color:#336BCC;font-weight:500">${r.nii26}</td>
-      <td style="color:#CC8A00">${r.nco26}</td>
-      <td>${trendPillPos(r.signal==="bull"?"↑ Rising":r.signal==="bear"?"↓ Falling":"→ Stable")}</td>
+      <td data-label="Bank" style="font-weight:600;color:${r.color}">${r.name} <span style="font-weight:400;color:#9aa5c0">(${r.ticker})</span></td>
+      <td data-label="Q1 Rev">${r.rev25}</td>
+      <td data-label="Q1 Net Income" style="color:#1A9E5A;font-weight:500">${r.ni25}</td>
+      <td data-label="Q1 EPS">${r.eps25}</td>
+      <td data-label="ROTCE" style="${sig}">${r.rotce}</td>
+      <td data-label="CET1">${r.cet1}</td>
+      <td data-label="Q1 NII">${r.nii_q4}</td>
+      <td data-label="NCO Rate" style="color:#CC8A00">${r.nco}</td>
+      <td data-label="FY26 NII/Rev Guide" style="color:#336BCC;font-weight:500">${r.nii26}</td>
+      <td data-label="FY26 NCO/Note" style="color:#CC8A00">${r.nco26}</td>
+      <td data-label="Outlook">${trendPillPos(r.signal==="bull"?"↑ Rising":r.signal==="bear"?"↓ Falling":"→ Stable")}</td>
     </tr>`;
   });
   document.getElementById("bank-tbl").innerHTML=h+"</tbody>";
@@ -6692,8 +6695,11 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
       }}
   });
 
-  // ── Episodes table ──
-  let epHtml=`<table class="dtable" style="width:100%;table-layout:fixed">
+  // ── Episodes table — "Event" + "Economic Consequence" are long
+  // narrative columns; opt into .responsive so each historical
+  // episode becomes a card on phones. table-layout:fixed is dropped
+  // from the class list because the responsive layout overrides it. */
+  let epHtml=`<table class="dtable responsive" style="width:100%">
     <thead><tr>
       <th style="text-align:left;width:72px">Period</th>
       <th style="text-align:left;width:28%">Event</th>
@@ -6703,11 +6709,11 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
     </tr></thead><tbody>`;
   OIL_EPISODES.forEach(e=>{
     epHtml+=`<tr>
-      <td style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:var(--text);white-space:nowrap">${e.yr}</td>
-      <td style="font-size:11px;font-weight:500;white-space:normal;word-break:break-word">${e.event}</td>
-      <td style="font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap;color:${e.change.startsWith("+")?"#D64045":"#1A9E5A"}">${e.change}</td>
-      <td style="font-family:'DM Mono',monospace;color:#CC8A00;font-weight:600;white-space:nowrap;font-size:10px">${e.wti_peak}</td>
-      <td style="font-size:10px;color:var(--text2);white-space:normal;word-break:break-word;line-height:1.45">${e.signal} ${e.consequence}</td>
+      <td data-label="Period" style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:var(--text);white-space:nowrap">${e.yr}</td>
+      <td data-label="Event" style="font-size:11px;font-weight:500;white-space:normal;word-break:break-word">${e.event}</td>
+      <td data-label="Change" style="font-family:'DM Mono',monospace;font-weight:700;white-space:nowrap;color:${e.change.startsWith("+")?"#D64045":"#1A9E5A"}">${e.change}</td>
+      <td data-label="Peak WTI" style="font-family:'DM Mono',monospace;color:#CC8A00;font-weight:600;white-space:nowrap;font-size:10px">${e.wti_peak}</td>
+      <td data-label="Economic Consequence" style="font-size:10px;color:var(--text2);white-space:normal;word-break:break-word;line-height:1.45">${e.signal} ${e.consequence}</td>
     </tr>`;
   });
   epHtml+=`</tbody></table>`;
@@ -6911,17 +6917,19 @@ function buildCreditTab(){
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
 
+  // 7 cols with a long-text "Banking Context" column → cards on phone.
+  document.getElementById("credit-debt-tbl").classList.add("responsive");
   const hd2=["Product","Balance","30+ DPD","90+ DPD","NCO Rate","Signal","Banking Context"];
   let h=`<thead><tr>${hd2.map((x,i)=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   CREDIT_DEBT_TABLE.forEach(r=>{
     h+=`<tr>
-      <td style="font-weight:500"><span class="dot" style="background:${r.color}"></span>${r.product}</td>
-      <td style="color:#336BCC;font-weight:500">${r.balance}</td>
-      <td style="color:#CC8A00">${r.dq30}</td>
-      <td style="color:#D64045">${r.dq90}</td>
-      <td style="color:#CC8A00;font-weight:500">${r.nco}</td>
-      <td><span style="font-size:9px;background:${r.color}22;color:${r.color};border:1px solid ${r.color}44;border-radius:10px;padding:2px 7px">${r.signal}</span></td>
-      <td style="color:#7A8FA8;white-space:normal;max-width:240px;font-size:10px">${r.note}</td>
+      <td data-label="Product" style="font-weight:500"><span class="dot" style="background:${r.color}"></span>${r.product}</td>
+      <td data-label="Balance" style="color:#336BCC;font-weight:500">${r.balance}</td>
+      <td data-label="30+ DPD" style="color:#CC8A00">${r.dq30}</td>
+      <td data-label="90+ DPD" style="color:#D64045">${r.dq90}</td>
+      <td data-label="NCO Rate" style="color:#CC8A00;font-weight:500">${r.nco}</td>
+      <td data-label="Signal"><span style="font-size:9px;background:${r.color}22;color:${r.color};border:1px solid ${r.color}44;border-radius:10px;padding:2px 7px">${r.signal}</span></td>
+      <td data-label="Banking Context" style="color:#7A8FA8;white-space:normal;max-width:240px;font-size:10px">${r.note}</td>
     </tr>`;
   });
   document.getElementById("credit-debt-tbl").innerHTML=h+"</tbody>";
@@ -7141,6 +7149,8 @@ function buildHousingTab(){
     });
   })();
 
+  // 6 cols including a long-text "Market Note" → cards on phone.
+  document.getElementById("housing-metro-tbl").classList.add("responsive");
   const hd2=["Metro","2024 YoY","2025 YoY","Trend","Median Price","Market Note"];
   let h=`<thead><tr>${hd2.map(x=>`<th style="text-align:left">${x}</th>`).join("")}</tr></thead><tbody>`;
   HOUSING_METROS.forEach(r=>{
@@ -7148,12 +7158,12 @@ function buildHousingTab(){
     const y24n=parseFloat(r.y24); const y25n=parseFloat(r.y25);
     const metroTrend=y25n>y24n?"↑ Rising":y25n<y24n?"↓ Falling":"→ Stable";
     h+=`<tr>
-      <td style="font-weight:500;color:var(--text)">${r.city}</td>
-      <td style="color:#336BCC">${r.y24}</td>
-      <td style="${p25};font-weight:500">${r.y25}</td>
-      <td>${trendPillPos(metroTrend)}</td>
-      <td style="color:#8878B8">${r.med}</td>
-      <td style="color:#7A8FA8;white-space:normal;font-size:10px">${r.note}</td>
+      <td data-label="Metro" style="font-weight:500;color:var(--text)">${r.city}</td>
+      <td data-label="2024 YoY" style="color:#336BCC">${r.y24}</td>
+      <td data-label="2025 YoY" style="${p25};font-weight:500">${r.y25}</td>
+      <td data-label="Trend">${trendPillPos(metroTrend)}</td>
+      <td data-label="Median Price" style="color:#8878B8">${r.med}</td>
+      <td data-label="Market Note" style="color:#7A8FA8;white-space:normal;font-size:10px">${r.note}</td>
     </tr>`;
   });
   document.getElementById("housing-metro-tbl").innerHTML=h+"</tbody>";
