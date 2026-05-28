@@ -1605,14 +1605,14 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
     <div class="panel">
       <div class="panel-title">Unemployment by Sector — Monthly MoM Change (pp)</div>
-      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Mar'26 vs Feb'26 · sorted by change</div>
+      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Apr'26 vs Mar'26 · sorted by change</div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Mar'26 rate rose</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 rate fell</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Apr'26 rate rose</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Apr'26 rate fell</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Mar'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom"></canvas></div>
-      <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
+      <p class="src">Source: BLS Current Population Survey (CPS), not seasonally adjusted (LNU04 series). Month-over-month change in unemployment rate by sector (percentage points).</p>
     </div>
   </div>
 
@@ -2393,9 +2393,9 @@ const GDP_BROAD = [
 const U_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[5.6, 6.9, 7.5, 6.9, 6.1, 5.6, 5.4, 4.9, 4.5, 4.2, 4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3]};
 const U_MONTHLY = {"labels":["Mar'25", "Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "data":[4.2, 4.2, 4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.4, 4.3, 4.3]};
 const U_SECTOR_MOM = {
-  sectors:["Construction","Hotel & Lodging","Restaurant Workers","Retail Trade","Information/Tech","Transport & Warehousing","Manufacturing","Prof. & Biz Services","Agriculture & Mining","Wholesale Trade","Healthcare & Education","Financial Activities","Government"],
-  feb26: [4.8, 5.1, 4.9, 4.4, 3.4, 3.5, 3.2, 3.1, 3.6, 3.0, 2.5, 2.3, 2.2],
-  mar26: [4.7, 5.0, 4.8, 4.3, 3.3, 3.4, 3.1, 3.0, 3.5, 2.9, 2.4, 2.2, 2.1]
+  sectors:["Construction","Manufacturing","Wholesale & Retail Trade","Transport & Warehousing","Information/Tech","Financial Activities","Prof. & Biz Services","Healthcare & Education","Leisure & Hospitality","Agriculture & Mining","Government"],
+  mar26: [6.7, 3.4, 4.4, 3.2, 3.6, 2.8, 4.2, 3.1, 6.2, 4.7, 2.5],
+  apr26: [3.8, 3.3, 5.0, 3.7, 3.8, 2.7, 4.1, 2.8, 5.4, 4.3, 2.3]
 };
 const U_SECTORS = [
   {s:"Cruise Line & Resort Workers",color:"#6C5CE7", u21:22.4,u22:8.2, u23:5.8, u24:5.2, u25:5.0},
@@ -5456,7 +5456,7 @@ function buildStackTab(){
     ["👷 Unemp",      "Continued Claims (CCSA)",        "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
     ["👷 Unemp",      "U-3 Unemployment Rate",          "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "U-6 Underemployment",            "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
-    ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Manual — no sector API"],
+    ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS LNU04 series","Monthly",    "Apr 2026",  "Auto — BLS API v2 (not SA)"],
     ["💵 Wages",      "Wage Growth (headline)",         "<a href='https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO' target='_blank' rel='noopener'>Atlanta Fed WGT 3MMA (FRBATLWGT3MMAUMHWGO)</a>", "Monthly", "Mar 2026", "Agent auto-pulls · continuously-employed workers, controls for composition"],
     ["💵 Wages",      "Avg Hourly Earnings (level)",    "BLS CES AHETPI",      "Monthly",    "Mar 2026",  "Agent auto-pulls · used for $/hr level and historical context"],
     ["💵 Wages",      "Wages by Sector",                "BLS CES",             "Annual",     "Jan 2026",  "Manual update each January · Atlanta Fed has no sector breakdown"],
