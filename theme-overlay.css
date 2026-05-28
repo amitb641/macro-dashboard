@@ -666,6 +666,15 @@ body.themed-sm .sort-btn:focus-visible {
   body.themed-sm .pm-asof,
   body.themed-sm .pm-cadence,
   body.themed-sm .pm-source { font-size: 10.5px !important; }
+  /* Bank earnings commentary cards have inline font-size:10px on the
+     per-theme rows (Economy / Lending / Cards / Macro / Tech / Credit
+     / Outlook). That's below the mobile reading floor — push to 11.5px
+     so the actual commentary reads cleanly. Targets the deep child
+     <div>s inside #bank-cards' card containers. */
+  body.themed-sm #bank-cards > div > div[style*="font-size:10px"] { font-size: 11.5px !important; line-height: 1.5 !important; }
+  /* Cross-bank themes panel — same body-size bump for the narrative
+     paragraph spans (inline font-size:10.5px in the template). */
+  body.themed-sm #bank-industry-themes span[style*="font-size:10.5px"] { font-size: 12px !important; line-height: 1.55 !important; }
 }
 
 /* ── split-stack chart container (dual-axis-lie remediation) ──────
