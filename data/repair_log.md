@@ -1,3 +1,38 @@
+## Repair Agent — 2026-05-28T04:33:45.286272Z
+
+- **Status**: WARN
+- **Total checks**: 635
+- **Passed**: 627
+- **Failed**: 8
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+
+### Staleness
+_0 critical · 0 warning · 2 stale_
+
+- ⏰ **Staleness: unrate** — 57d old (limit 55d)
+- ⏰ **Staleness: payems** — 57d old (limit 55d)
+
+### Panel data
+_0 critical · 3 warning · 0 stale_
+
+- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
+- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
+- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: contract — spacing_grid** — 
+
+
+---
+
 ## Repair Agent — 2026-05-28T02:32:20.729186Z
 
 - **Status**: WARN
@@ -937,18 +972,6 @@ No findings to surface — pipeline is clean. ✅
 ---
 
 ## Repair Agent — 2026-05-22T04:25:51.506128Z
-
-- **Status**: PASS
-- **Total checks**: 211
-- **Passed**: 211
-- **Failed**: 0
-- **Critical divergences**: 0
-
-No findings to surface — pipeline is clean. ✅
-
----
-
-## Repair Agent — 2026-05-22T04:07:42.259204Z
 
 - **Status**: PASS
 - **Total checks**: 211
