@@ -588,12 +588,16 @@ def check_staleness(data, collected_at):
     # slippage adding ~2 weeks). Case-Shiller has a ~70d HPI lag + release
     # around the last Tuesday of the following month.
     EXPECTED_LAGS = {
-        'unrate':    55,   # BLS Employment Situation, 1st Fri of following month
+        # BLS Employment Situation: published 1st Fri of following month.
+        # FRED reference date = 1st of the reference month, so by the time
+        # CI runs on the Saturday after the release, age can be ~56-58d.
+        # 65d gives ~1 week of slack before the next release cycle.
+        'unrate':    65,
         'cpi_all':   75,   # Monthly, ~2-3 week lag; can span 2 release cycles
         'cpi_core':  75,
         'pce':       95,   # Monthly, ~4 week lag; can span 2 release cycles
         'pce_core':  95,
-        'payems':    55,   # BLS NFP, same release as UNRATE
+        'payems':    65,   # BLS NFP, same release as UNRATE — same 65d reasoning
         'cs_hpi':   120,   # S&P CoreLogic Case-Shiller — ~70d data lag + release window
         'mortgage30': 10,  # Weekly
         # UMich Consumer Sentiment: prelim ~mid-month, final ~end-of-month.
@@ -1199,9 +1203,13 @@ def _extract_panel_chip_months(html, anchor):
     return _MONTH_LBL_RE.findall(chunk)
 
 
-def check_panel_data_consistency(html):
+def check_panel_data_consistency(html, state_data=None):
     """Pass 3d: verify each MoM panel's title month tokens match the months
-    encoded in the underlying JS data const + the prior-month legend chip."""
+    encoded in the underlying JS data const + the prior-month legend chip.
+
+    state_data: pre-loaded state.json payload dict (optional). When provided,
+    used as fallback for Tier 1 migrated constants (let X = null; in HTML).
+    """
     findings = []
     for anchor_candidates, var_name, key_fn in _PANEL_DATA_MAP:
         # Try each anchor candidate; first hit wins (style_guide §23.1
@@ -1238,14 +1246,17 @@ def check_panel_data_consistency(html):
         m1, m2 = title_months[0], title_months[1]
         keys = {m1[0].lower(), m2[0].lower()}
 
-        # Data const month keys
+        # Data const month keys — try inline HTML first, then state.json
+        # (Tier 1 migration: inline is 'let X = null;', payload in state.json)
         const_obj = _extract_js_const(html, var_name)
+        if const_obj is None and state_data is not None:
+            const_obj = state_data.get(var_name)
         if const_obj is None:
             findings.append({
                 'check': f'{anchor}: data const {var_name} extractable',
                 'severity': 'warning',
                 'pass': False,
-                'reason': f'Could not parse const {var_name} from HTML',
+                'reason': f'Could not parse {var_name} from HTML or state.json',
             })
             continue
         data_keys = set(k.lower()[:3] for k in (key_fn(const_obj) or []))
@@ -2092,6 +2103,15 @@ def validate():
     data = raw.get('data', {})
     collected_at = raw.get('collected_at', '')
 
+    # Load state.json once for all Tier 1 fallback consumers
+    _state_path = Path(__file__).resolve().parent.parent / 'data' / 'state.json'
+    state_data: dict = {}
+    if _state_path.exists():
+        try:
+            state_data = json.loads(_state_path.read_text(encoding='utf-8'))
+        except (json.JSONDecodeError, OSError):
+            pass
+
     sig_vals = {}
     if SIG_FILE.exists():
         sig = json.loads(SIG_FILE.read_text())
@@ -2126,7 +2146,7 @@ def validate():
 
     # Pass 3d: Panel title ↔ data const month consistency
     print('\n  ── Pass 3d: Panel Title vs Data Const Month Consistency ──')
-    panel_data = check_panel_data_consistency(html)
+    panel_data = check_panel_data_consistency(html, state_data=state_data)
     pd_pass = sum(1 for f in panel_data if f.get('pass'))
     pd_fail = sum(1 for f in panel_data if not f.get('pass') and f.get('severity') != 'skipped')
     print(f'  {pd_pass} passed, {pd_fail} failed')
