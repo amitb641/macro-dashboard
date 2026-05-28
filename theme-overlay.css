@@ -675,6 +675,15 @@ body.themed-sm .sort-btn:focus-visible {
   /* Cross-bank themes panel — same body-size bump for the narrative
      paragraph spans (inline font-size:10.5px in the template). */
   body.themed-sm #bank-industry-themes span[style*="font-size:10.5px"] { font-size: 12px !important; line-height: 1.55 !important; }
+  /* Metric tiles (.metric inside .metric-row) ship with 9px label /
+     9px sub — invisible on a phone. Push to 10.5px both, keep the
+     20px .m-val. .metric.dense variant gets the same floor. */
+  body.themed-sm .m-lbl,
+  body.themed-sm .metric.dense .m-lbl,
+  body.themed-sm .m-tile.dense .m-lbl { font-size: 10.5px !important; }
+  body.themed-sm .m-sub,
+  body.themed-sm .metric.dense .m-sub,
+  body.themed-sm .m-tile.dense .m-sub { font-size: 10.5px !important; }
 }
 
 /* ── split-stack chart container (dual-axis-lie remediation) ──────
