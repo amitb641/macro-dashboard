@@ -566,9 +566,30 @@ body.themed-sm .dtable td {
   font-size: 13px !important;
   padding: 12px !important;
   border-bottom-color: #F1F5F9 !important;
+  /* Top-align cells so when one column wraps to several lines (long
+     narrative columns like Key View / Market Note / Banking Context)
+     the short numeric cells sit at the row top instead of floating
+     mid-height with empty space below — reads as an intentional grid. */
+  vertical-align: top !important;
 }
 body.themed-sm .dtable tbody tr:hover {
   background: #FAFBFC !important;
+}
+/* Desktop only (>600px — below that the .responsive tables become
+   cards). The scenarios "Key View" cell carries inline max-width:220px
+   from the JS, which wraps a ~115-char sentence to ~10 lines and blows
+   the row height out to ~250px. Give the narrative columns more room
+   so they wrap to 3-4 lines and rows stay compact. */
+@media (min-width: 601px) {
+  /* min-width forces auto table-layout to actually allocate the column
+     this width. max-width alone is only a cap — the layout was
+     squeezing the narrative column to its longest-word width (~83px),
+     wrapping the sentence to ~14 lines and blowing row height to
+     ~290px. With a real width the column wraps to 3-4 lines. */
+  body.themed-sm #fc-scenarios-tbl td[data-label="Key View"] { min-width: 300px !important; max-width: 340px !important; }
+  body.themed-sm #credit-debt-tbl td[data-label="Banking Context"] { min-width: 280px !important; max-width: 320px !important; }
+  body.themed-sm #housing-metro-tbl td[data-label="Market Note"] { min-width: 240px !important; max-width: 300px !important; }
+  body.themed-sm #oil-episodes-tbl td[data-label="Economic Consequence"] { min-width: 280px !important; max-width: 340px !important; }
 }
 
 /* ── sort buttons ─────────────────────────────────────────────── */
