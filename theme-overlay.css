@@ -692,7 +692,7 @@ body.themed-sm .sort-btn:focus-visible {
   /* Hero typography. 30px wraps "U.S. Macro Dashboard" to two lines
      on iPhone Pro (393pt) — bring down to 26px so it stays on one
      line and the eye doesn't have to track a stacked title. */
-  body.themed-sm > h1 { font-size: 26px !important; line-height: 1.15 !important; margin-bottom: 10px !important; }
+  body.themed-sm > h1 { font-size: 26px !important; line-height: 1.15 !important; margin-bottom: 8px !important; }
   /* Subtitle: tighter line-height and reduced bottom margin so the
      hero block doesn't dominate the above-the-fold real estate. */
   body.themed-sm .subtitle { font-size: 13px !important; line-height: 1.5 !important; margin-bottom: 24px !important; }
@@ -735,15 +735,15 @@ body.themed-sm .sort-btn:focus-visible {
      of a 393px viewport (56px = 14% of width consumed by padding).
      Drop to 14/16 so the content area gets the room. Margin-bottom
      trimmed from 20 to 14 for the same reason. */
-  body.themed-sm .panel { padding: 14px 16px !important; margin-bottom: 14px !important; }
+  body.themed-sm .panel { padding: 12px 16px !important; margin-bottom: 12px !important; }
   /* Meta strip ("MAY 2026 · PIPELINE OK · LAST RUN …") at 9.5px with
      .2em letter-spacing wraps to 2 lines on iPhone Pro. Bump font
      and tighten letter-spacing so it sits on one line; allow flex
      to wrap if user shrinks viewport further. */
-  body.themed-sm .sm-meta { font-size: 10px !important; letter-spacing: .08em !important; gap: 10px !important; flex-wrap: wrap !important; padding-bottom: 10px !important; margin-bottom: 10px !important; }
+  body.themed-sm .sm-meta { font-size: 10px !important; letter-spacing: .08em !important; gap: 8px !important; flex-wrap: wrap !important; padding-bottom: 12px !important; margin-bottom: 12px !important; }
   /* Reading bar ("~3-min read · 2 sections + progress") slightly
      smaller margin so it doesn't crowd the meta strip. */
-  body.themed-sm .sm-readbar { font-size: 10.5px !important; margin: 2px 0 12px 0 !important; }
+  body.themed-sm .sm-readbar { font-size: 10.5px !important; margin: 4px 0 12px 0 !important; }
 }
 
 /* ── split-stack chart container (dual-axis-lie remediation) ──────
