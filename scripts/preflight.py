@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 COLLECTOR = ROOT / 'scripts' / 'collector.py'
 
 FRED_KEY = os.environ.get('FRED_API_KEY', '')
+BLS_KEY  = os.environ.get('BLS_API_KEY', '')
 ANTHROPIC_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 SKIP = os.environ.get('PREFLIGHT_SKIP', '') == '1'
 
@@ -126,6 +127,53 @@ def check_fred_id(sid: str, timeout: int = 10) -> tuple[str, str]:
     return 'warn', f'{last_status} (after 3 attempts)'
 
 
+def extract_bls_ids(src: str) -> list[str]:
+    """Pull BLS series IDs out of bls_fetch([...]) calls in collector.py."""
+    ids: set[str] = set()
+    # Matches quoted IDs inside bls_fetch([...]) — e.g. 'LNU04032231'
+    for m in re.finditer(r"bls_fetch\(\s*\[([^\]]+)\]", src, re.DOTALL):
+        ids |= set(re.findall(r"['\"]([A-Z0-9]+)['\"]", m.group(1)))
+    return sorted(ids)
+
+
+def check_bls_ids(series_ids: list[str], timeout: int = 20) -> tuple[bool, list[str], list[str]]:
+    """Validate BLS series IDs via API v2. Returns (all_ok, bad_ids, warn_msgs).
+    Uses BLS_KEY if set; falls back to anonymous (lower rate limit, still works
+    for pre-flight volume of ≤11 series). The 'Series does not exist' message
+    in the API response is the canonical signal for an invalid ID."""
+    if not series_ids:
+        return True, [], []
+
+    payload: dict = {'seriesid': series_ids, 'startyear': str(__import__('datetime').date.today().year), 'endyear': str(__import__('datetime').date.today().year)}
+    if BLS_KEY:
+        payload['registrationkey'] = BLS_KEY
+
+    try:
+        r = requests.post(
+            'https://api.bls.gov/publicAPI/v2/timeseries/data/',
+            json=payload, timeout=timeout)
+        r.raise_for_status()
+        body = r.json()
+    except Exception as e:
+        # Network/server error — warn, don't halt (BLS outages are transient)
+        return True, [], [f'BLS API unreachable: {e}']
+
+    # Collect "Series does not exist" from response messages
+    messages = body.get('message', [])
+    bad = [re.sub(r'.*Series (\S+).*', r'\1', msg) for msg in messages
+           if 'does not exist' in msg.lower()]
+
+    # Cross-check: series with 0 obs that aren't in the bad list (ambiguous)
+    zero_obs = [s['seriesID'] for s in body.get('Results', {}).get('series', [])
+                if not s.get('data') and s['seriesID'] not in bad]
+
+    warns = []
+    if zero_obs:
+        warns.append(f'BLS series returned 0 obs (may be valid but empty for this year): {zero_obs}')
+
+    return len(bad) == 0, bad, warns
+
+
 def main() -> int:
     if SKIP:
         print('[Agent 0] PREFLIGHT_SKIP=1 — skipping pre-flight checks')
@@ -198,7 +246,30 @@ def main() -> int:
         for sid, msg in transient:
             print(f'  - {sid}: {msg}')
 
-    print(f'[Agent 0] ✅ All {len(ids)} series IDs valid')
+    print(f'[Agent 0] ✅ All {len(ids)} FRED series IDs valid')
+
+    # ── BLS series ID validation ─────────────────────────────────────
+    src_text = COLLECTOR.read_text(encoding='utf-8')
+    bls_ids = extract_bls_ids(src_text)
+    if bls_ids:
+        print(f'[Agent 0] Pre-flight: checking {len(bls_ids)} BLS series IDs...')
+        bls_ok, bls_bad, bls_warns = check_bls_ids(bls_ids)
+        for w in bls_warns:
+            print(f'  ⚠  {w}')
+        if bls_ok:
+            print(f'  ✅ {len(bls_ids)} BLS series verified')
+        else:
+            print(f'  ❌ {len(bls_bad)} BLS series do not exist:')
+            for sid in bls_bad:
+                if sid not in _ALLOWLIST_FAIL:
+                    print(f'     - {sid}')
+            real_bad = [s for s in bls_bad if s not in _ALLOWLIST_FAIL]
+            if real_bad:
+                print('\n[Agent 0] ❌ Halting pipeline — fix scripts/collector.py '
+                      'BLS series IDs (BLS does not publish SA sector rates; use '
+                      'LNU04 not-SA series, or add to _ALLOWLIST_FAIL if intentional).')
+                return 1
+
     return 0
 
 
