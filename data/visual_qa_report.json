@@ -1,18 +1,15 @@
 {
-  "checked_at": "2026-05-28T04:48:57.085756Z",
-  "status": "WARN",
+  "checked_at": "2026-05-28T04:53:15.205111Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 430,
-    "passed": 429,
-    "failed": 1,
+    "passed": 430,
+    "failed": 0,
     "js_errors": 0,
-    "console_errors": 2
+    "console_errors": 0
   },
   "js_errors": [],
-  "console_errors": [
-    "Failed to load resource: net::ERR_CERT_AUTHORITY_INVALID",
-    "Failed to load resource: net::ERR_CERT_AUTHORITY_INVALID"
-  ],
+  "console_errors": [],
   "findings": [
     {
       "category": "contract",
@@ -59,9 +56,8 @@
     {
       "category": "global",
       "check": "No console errors",
-      "pass": false,
-      "severity": "warning",
-      "detail": "2 errors: ['Failed to load resource: net::ERR_CERT_AUTHORITY_INVALID', 'Failed to load resource: net::ERR_CERT_AUTHORITY_INVALID']"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "global",
