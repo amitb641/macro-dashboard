@@ -48,28 +48,55 @@ CRITICAL_THRESHOLD = 3
 #   Compare index.html rendered values against raw_data.json source
 # ═══════════════════════════════════════════════════════════════════════
 
+_STATE_PAYLOAD_CACHE = None
+
+
+def _state_payload():
+    """Load data/state.json once (the Tier-1 anti-clone hydration bundle).
+    Returns {} on any failure so callers treat every key as absent."""
+    global _STATE_PAYLOAD_CACHE
+    if _STATE_PAYLOAD_CACHE is None:
+        try:
+            # Use module-level ROOT (overridden to a tmp dir by the smoke
+            # test) so fixture runs don't read the real repo state.json.
+            sp = ROOT / 'data' / 'state.json'
+            _STATE_PAYLOAD_CACHE = json.loads(sp.read_text(encoding='utf-8'))
+        except (OSError, json.JSONDecodeError):
+            _STATE_PAYLOAD_CACHE = {}
+    return _STATE_PAYLOAD_CACHE
+
+
 def _extract_js_const(html, var_name):
-    """Extract a JS const object/array from HTML as a Python object."""
+    """Extract a JS const object/array from HTML as a Python object.
+
+    Post-Tier-1 anti-clone migration most data consts are now
+    `let VAR = null;` placeholders hydrated from /api/state.json at
+    runtime, so the inline HTML no longer carries the literal. When the
+    HTML parse misses, fall back to the state.json payload — otherwise
+    every migrated const reads as None and the validator silently loses
+    that surface (metric_consistency skips, panel_data warns)."""
     pattern = rf'const {var_name}\s*=\s*(\{{[\s\S]*?\}}|\[[\s\S]*?\]);'
     m = re.search(pattern, html)
-    if not m:
-        return None
-    raw = m.group(1)
-    # Try parsing as-is first (already valid JSON from renderer's _inject_const)
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        pass
-    # Fallback: Convert JS to JSON-ish: handle unquoted keys, trailing commas
-    raw = re.sub(r'(?<=[{,\n])\s*([a-zA-Z_]\w*)\s*:', r'"\1":', raw)
-    raw = re.sub(r',\s*([}\]])', r'\1', raw)
-    # Only replace single quotes if no double-quoted strings contain them
-    if "\"" not in raw or "'" not in raw:
-        raw = raw.replace("'", '"')
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        return None
+    if m:
+        raw = m.group(1)
+        # Try parsing as-is first (already valid JSON from renderer's _inject_const)
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            pass
+        # Fallback: Convert JS to JSON-ish: handle unquoted keys, trailing commas
+        raw2 = re.sub(r'(?<=[{,\n])\s*([a-zA-Z_]\w*)\s*:', r'"\1":', raw)
+        raw2 = re.sub(r',\s*([}\]])', r'\1', raw2)
+        # Only replace single quotes if no double-quoted strings contain them
+        if "\"" not in raw2 or "'" not in raw2:
+            raw2 = raw2.replace("'", '"')
+        try:
+            return json.loads(raw2)
+        except json.JSONDecodeError:
+            pass
+    # Tier-1 anti-clone fallback: inline literal is a null placeholder; the
+    # real payload lives in data/state.json (hydrated at runtime).
+    return _state_payload().get(var_name)
 
 
 def _yoy_from_index(series, n=1):
@@ -1850,21 +1877,26 @@ def _two_latest_from_series(data, key, value_key='value'):
         return (None, None)
 
 
+# Map each known_normal noise-floor metric to a (prior, latest) extractor.
+# Keys must match the actual collector output in raw_data['data'] — these
+# drifted after series renames/additions and were silently skipping
+# (e.g. 'trimmed_mean_cpi' was never written; collector writes 'cpi_trimmed').
 _NOISE_FLOOR_EXTRACTORS = {
-    'core_cpi_yoy':         lambda d, v: _two_latest_from_series(d, 'core_cpi_yoy'),
+    # core_cpi_yoy isn't collected as a YoY series — compute it from the
+    # CPILFESL index (cpi_core, newest-first) for the two latest months.
+    'core_cpi_yoy':         lambda d, v: (_yoy_from_index(d.get('cpi_core') or [], 2),
+                                          _yoy_from_index(d.get('cpi_core') or [], 1)),
     'saving_rate':          lambda d, v: _two_latest_from_series(d, 'psavert'),
     'umich_sentiment':      lambda d, v: _two_latest_from_series(d, 'umcsent'),
     'cc_delinq_90plus':     lambda d, v: _two_latest_from_series(d, 'cc_delinq'),
     'gasoline_usd_gal':     lambda d, v: _two_latest_from_series(d, 'gasoline'),
-    'jolts_openings':       lambda d, v: _two_latest_from_series(d, 'jolts_openings'),
-    'jolts_quits':          lambda d, v: _two_latest_from_series(d, 'jolts_quits'),
-    'jolts_hires':          lambda d, v: _two_latest_from_series(d, 'jolts_hires'),
-    'trimmed_mean_cpi_yoy': lambda d, v: _two_latest_from_series(d, 'trimmed_mean_cpi'),
-    'median_cpi_yoy':       lambda d, v: _two_latest_from_series(d, 'median_cpi'),
+    'jolts_openings':       lambda d, v: _two_latest_from_series(d, 'jolts_hist'),
+    'trimmed_mean_cpi_yoy': lambda d, v: _two_latest_from_series(d, 'cpi_trimmed'),
+    'median_cpi_yoy':       lambda d, v: _two_latest_from_series(d, 'cpi_median'),
     'walcl_bn':             lambda d, v: _two_latest_from_series(d, 'walcl'),
     'wresbal_bn':           lambda d, v: _two_latest_from_series(d, 'wresbal'),
     'rrpontsyd_bn':         lambda d, v: _two_latest_from_series(d, 'rrpontsyd'),
-    'deficit_pct_gdp':      lambda d, v: _two_latest_from_series(d, 'fyfsgda188s'),
+    'deficit_pct_gdp':      lambda d, v: _two_latest_from_series(d, 'deficit_gdp'),
 }
 
 
@@ -1973,6 +2005,34 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
                     schema_contract + collector_errors + seed_drift +
                     cross_source + noise_floor + secret_leaks)
 
+    # ── Coverage meta-check (Pass 3k) — guards against silent erosion ──
+    # The migration-sensitive passes (noise_floor, metric_consistency,
+    # panel_data, schema_contract) should NOT skip when raw_data +
+    # state.json are present. A high skip rate there means the validator
+    # silently lost a check (renamed series, migrated const, missing
+    # artifact) — exactly how those passes degraded after the Tier-1
+    # migration and went unnoticed because skips look benign. Excludes
+    # API/browser passes (source/visual/vision/cross_source) which
+    # legitimately skip without keys, and seasonal earnings_verbatim.
+    _cov = panel_data + metric_consistency + schema_contract + noise_floor
+    _cov_total = len(_cov)
+    _cov_skip = sum(1 for f in _cov if f.get('severity') == 'skipped')
+    _cov_rate = (_cov_skip / _cov_total) if _cov_total else 0.0
+    _COV_THRESHOLD = 0.15
+    coverage = [{
+        'check': 'validator coverage (migration-sensitive passes)',
+        'checks': _cov_total, 'skipped': _cov_skip,
+        'skip_rate': round(_cov_rate, 3), 'threshold': _COV_THRESHOLD,
+        'pass': _cov_rate <= _COV_THRESHOLD,
+        'severity': 'ok' if _cov_rate <= _COV_THRESHOLD else 'warning',
+        'note': None if _cov_rate <= _COV_THRESHOLD else (
+            f'{_cov_skip}/{_cov_total} migration-sensitive checks skipped '
+            f'(> {int(_COV_THRESHOLD*100)}%) — a check that should run is not '
+            f'running (renamed series / migrated const / missing state.json). '
+            f'Investigate before trusting the pass rate.'),
+    }]
+    all_findings = all_findings + coverage
+
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
     n_skip = sum(1 for f in all_findings if f.get('severity') == 'skipped')
@@ -2009,6 +2069,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'cross_source': cross_source,
         'noise_floor': noise_floor,
         'secret_leaks': secret_leaks,
+        'coverage': coverage,
     }
     return report
 
