@@ -2488,11 +2488,14 @@ table{border-collapse:collapse}
   .metric-row{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
   .dtable{min-width:480px;font-size:11px}
   .dtable th,.dtable td{padding:7px 10px}
-  .fc-note{font-size:10.5px;padding:10px}
-  .panel-title{font-size:11px}
-  .panel-sub{font-size:9.5px}
+  .fc-note{font-size:11.5px;padding:11px;line-height:1.6}
+  /* Panel-title is the lead-in to every chart/table; needs to read at
+     a phone glance, not look like fine print. Bump from 11px to 13px
+     and let it wrap to two lines if needed. panel-sub follows. */
+  .panel-title{font-size:13px;line-height:1.35}
+  .panel-sub{font-size:11px;line-height:1.5}
   .two-up{grid-template-columns:1fr}
-  .sort-btn{font-size:9.5px;padding:4px 8px}
+  .sort-btn{font-size:10.5px;padding:5px 10px;min-height:32px}
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2543,12 +2546,28 @@ table{border-collapse:collapse}
      still fit horizontally on iPhone Pro. */
   .nav-grp-btn{padding:7px 11px;font-size:11.5px;flex-shrink:0;min-height:36px}
   .nav-btn-meta{font-size:10px;padding:7px 10px;flex-shrink:0;min-height:36px}
-  .fc-note{font-size:10px;padding:9px;line-height:1.55}
+  .fc-note{font-size:11.5px;padding:10px;line-height:1.6}
   .sector-card{padding:12px}
-  .card-name{font-size:11px}
+  .card-name{font-size:11.5px}
   .card-growth{font-size:16px}
-  .kpi-lbl{font-size:8.5px}
+  .kpi-lbl{font-size:9.5px}
   h1{font-size:clamp(16px,5vw,22px)}
+  /* Bump secondary copy to the 10.5–11px floor that's actually
+     readable on a phone. The original 9–9.5px is below iOS Safari's
+     comfortable-read threshold once pinch-zoom is disabled. Newspaper
+     mobile apps use ≥11px for captions / source notes. */
+  .src{font-size:10.5px;line-height:1.55}
+  .panel-meta{font-size:10px;gap:4px 10px}
+  .fc-driver,.fc-risk{font-size:10.5px}
+  .panel-sub{font-size:10.5px;line-height:1.5}
+  /* Right-edge gradient fade hints horizontal scrollability on tables
+     whose content overflows the wrap. Pure CSS, no JS. */
+  .dtable-wrap{position:relative}
+  .dtable-wrap::after{
+    content:'';position:absolute;top:0;right:0;bottom:0;width:24px;
+    background:linear-gradient(to right,rgba(255,255,255,0),var(--card,#fff));
+    pointer-events:none;opacity:.85;border-radius:0 8px 8px 0;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -5051,20 +5070,27 @@ function buildCPITab(){
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
 
+  // data-label on every <td> so the .responsive card layout (<=600px)
+  // can show "LABEL: value" rows. Without these the cards rendered as
+  // a stack of bare values with no context (Datawrapper-style cards
+  // rely on attr(data-label) via the ::before pseudo-element).
   const hd=["Category","2022","2023","2024","2025","Trend"];
   let h=`<thead><tr>${hd.map((x,i)=>`<th style="text-align:${i?'right':'left'}">${x}</th>`).join("")}</tr></thead><tbody>`;
   CPI_CATS.forEach(c=>{
     const col=v=>v<0?"color:#336BCC":v>5?"color:#D64045":v>3?"color:#CC8A00":"color:#7A8FA8";
     const trendStr=c.c25<c.c24?"↓ Easing":c.c25>c.c24?"↑ Rising":"→ Stable";
-    h+=`<tr><td><span class="dot" style="background:${c.color}"></span>${c.cat}</td>
-      ${[c.c22,c.c23,c.c24,c.c25].map(v=>`<td style="${col(v)}">${v>=0?"+":""}${v}%</td>`).join("")}
-      <td>${trendPill(trendStr)}</td></tr>`;
+    h+=`<tr><td data-label="Category"><span class="dot" style="background:${c.color}"></span>${c.cat}</td>
+      <td data-label="2022" style="${col(c.c22)}">${c.c22>=0?"+":""}${c.c22}%</td>
+      <td data-label="2023" style="${col(c.c23)}">${c.c23>=0?"+":""}${c.c23}%</td>
+      <td data-label="2024" style="${col(c.c24)}">${c.c24>=0?"+":""}${c.c24}%</td>
+      <td data-label="2025" style="${col(c.c25)}">${c.c25>=0?"+":""}${c.c25}%</td>
+      <td data-label="Trend">${trendPill(trendStr)}</td></tr>`;
   });
   var _cA=CPI_ANNUAL.data,_cL=_cA.length;
   var _c22=_cA[_cL-4],_c23=_cA[_cL-3],_c24=_cA[_cL-2],_c25=_cA[_cL-1];
   var _cCol=v=>v>5?"#D64045":v>3?"#CC8A00":"#1A9E5A";
   var _cTr=_c25<_c24?"↓ Easing":_c25>_c24?"↑ Rising":"→ Stable";
-  h+=`<tr><td>All Items CPI</td><td style="color:${_cCol(_c22)}">+${_c22}%</td><td style="color:${_cCol(_c23)}">+${_c23}%</td><td style="color:${_cCol(_c24)}">+${_c24}%</td><td style="color:${_cCol(_c25)}">+${_c25}%</td><td>${trendPill(_cTr)}</td></tr>`;
+  h+=`<tr><td data-label="Category">All Items CPI</td><td data-label="2022" style="color:${_cCol(_c22)}">+${_c22}%</td><td data-label="2023" style="color:${_cCol(_c23)}">+${_c23}%</td><td data-label="2024" style="color:${_cCol(_c24)}">+${_c24}%</td><td data-label="2025" style="color:${_cCol(_c25)}">+${_c25}%</td><td data-label="Trend">${trendPill(_cTr)}</td></tr>`;
   document.getElementById("cpi-tbl").innerHTML=h+"</tbody>";
 
   // ── Inflation breadth chart (B3.3) ─────────────────────────────────

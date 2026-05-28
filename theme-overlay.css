@@ -631,6 +631,17 @@ body.themed-sm .sort-btn:focus-visible {
   body.themed-sm { padding: 28px 20px 56px !important; }
   body.themed-sm > h1 { font-size: 30px !important; }
   body.themed-sm .macro-state .ms-bars { grid-template-columns: repeat(2, 1fr); }
+  /* Mobile typography floor — pull secondary copy up from the
+     9–10px range that's hard to read on a phone. Newspaper-mobile
+     practice: caption / metadata at 11–12px, body at 14–15px. */
+  body.themed-sm .panel-sub { font-size: 11.5px !important; letter-spacing: .12em !important; line-height: 1.45 !important; }
+  body.themed-sm .src,
+  body.themed-sm .vintage-note { font-size: 10.5px !important; letter-spacing: .04em !important; line-height: 1.5 !important; }
+  body.themed-sm .panel-meta { font-size: 10.5px !important; }
+  body.themed-sm .pm-exhibit,
+  body.themed-sm .pm-asof,
+  body.themed-sm .pm-cadence,
+  body.themed-sm .pm-source { font-size: 10.5px !important; }
 }
 
 /* ── split-stack chart container (dual-axis-lie remediation) ──────
