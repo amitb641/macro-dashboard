@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-16T13:07:05.321226Z",
+  "validated_at": "2026-05-28T13:43:33.211462Z",
   "status": "WARN",
   "summary": {
     "total_checks": 520,
     "passed": 505,
     "failed": 15,
-    "skipped": 1,
+    "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -29,8 +29,8 @@
     },
     {
       "check": "PCE headline YoY (latest)",
-      "html_value": 3.5,
-      "source_value": 3.5,
+      "html_value": 3.8,
+      "source_value": 3.8,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -38,8 +38,8 @@
     },
     {
       "check": "PCE core YoY (latest)",
-      "html_value": 3.2,
-      "source_value": 3.2,
+      "html_value": 3.3,
+      "source_value": 3.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -146,30 +146,12 @@
     },
     {
       "check": "NFP_VS_ADP.adp completeness",
-      "html_value": "11/12 filled",
-      "source_value": "92% (min 50%)",
-      "difference": 1,
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.adp label sync",
-      "html_value": "12 values",
-      "source_value": "13 labels",
-      "difference": 1,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
-    },
-    {
-      "check": "NFP_VS_ADP series length sync",
-      "html_value": "{'bls': 13, 'adp': 12}",
-      "source_value": "All series same length",
-      "difference": 1,
-      "tolerance": 0,
-      "severity": "warning",
-      "pass": false
     },
     {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
@@ -326,28 +308,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "51/51 filled",
+      "html_value": "55/55 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 25,
+      "tolerance": 27,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "51/51 filled",
+      "html_value": "55/55 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 25,
+      "tolerance": 27,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "33/51 filled",
-      "source_value": "65% (min 0%)",
-      "difference": 18,
-      "tolerance": 25,
+      "html_value": "35/55 filled",
+      "source_value": "64% (min 0%)",
+      "difference": 20,
+      "tolerance": 27,
       "severity": "ok",
       "pass": true
     },
@@ -634,8 +616,8 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 130.344,
-      "fresh_api_value": 130.344,
+      "raw_data_value": 130.902,
+      "fresh_api_value": 130.902,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -643,8 +625,8 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 129.279,
-      "fresh_api_value": 129.279,
+      "raw_data_value": 129.63,
+      "fresh_api_value": 129.63,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -652,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.47,
-      "fresh_api_value": 4.47,
+      "raw_data_value": 4.5,
+      "fresh_api_value": 4.5,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -679,8 +661,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.36,
-      "fresh_api_value": 6.36,
+      "raw_data_value": 6.51,
+      "fresh_api_value": 6.51,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -700,15 +682,15 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 45,
+      "age_days": 57,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-04-01",
-      "age_days": 45,
+      "age_days": 57,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -716,23 +698,23 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-04-01",
-      "age_days": 45,
+      "age_days": 57,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce",
-      "latest_date": "2026-03-01",
-      "age_days": 76,
+      "latest_date": "2026-04-01",
+      "age_days": 57,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_core",
-      "latest_date": "2026-03-01",
-      "age_days": 76,
+      "latest_date": "2026-04-01",
+      "age_days": 57,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -740,23 +722,23 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 45,
+      "age_days": 57,
       "max_lag_days": 55,
-      "severity": "ok",
-      "pass": true
+      "severity": "stale",
+      "pass": false
     },
     {
       "check": "Staleness: cs_hpi",
-      "latest_date": "2026-02-01",
-      "age_days": 104,
+      "latest_date": "2026-03-01",
+      "age_days": 88,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-05-14",
-      "age_days": 2,
+      "latest_date": "2026-05-21",
+      "age_days": 7,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -764,7 +746,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 15,
+      "age_days": 27,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -772,14 +754,14 @@
     {
       "check": "UMich Sentiment release status",
       "latest_date": "2026-05-01",
-      "release_status": "preliminary",
-      "severity": "info",
+      "release_status": "final",
+      "severity": "ok",
       "pass": true,
-      "note": "Preliminary \u2014 subject to revision in end-of-month final release"
+      "note": "Final release"
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-16T13:06:01.674385Z",
+      "collected_at": "2026-05-28T13:42:14.067443Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -903,11 +885,11 @@
     {
       "check": "PCE by Component \u2014 YoY %: title months match PCE_CAT_MOM keys",
       "title_months": [
-        "feb",
+        "apr",
         "mar"
       ],
       "data_keys": [
-        "feb",
+        "apr",
         "mar"
       ],
       "severity": "ok",
@@ -915,14 +897,14 @@
     },
     {
       "check": "PCE by Component \u2014 YoY %: prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Mar'26",
       "chips_found": [
+        "Apr'26",
         "Mar'26",
-        "Feb'26",
-        "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
       ],
       "severity": "ok",
       "pass": true
@@ -1005,31 +987,31 @@
       "pass": true
     },
     {
-      "check": "CPI YoY latest (%): surfaces agree within \u00b10.15 (ref: CPI_MONTHLY.headline[-1])",
-      "reference": 3.8,
+      "check": "CPI YoY latest (%): \u22652 surfaces extractable",
       "surfaces": {
         "CPI_MONTHLY.headline[-1]": 3.8,
-        "KPIS CPI YoY": 3.8
+        "KPIS CPI YoY": "MISSING"
       },
-      "severity": "ok",
-      "pass": true
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
     },
     {
       "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
-      "reference": 3.2,
+      "reference": 3.3,
       "surfaces": {
-        "PCE_MONTHLY.core[-1]": 3.2,
-        "KPIS Core PCE": 3.2
+        "PCE_MONTHLY.core[-1]": 3.3,
+        "KPIS Core PCE": 3.3
       },
       "severity": "ok",
       "pass": true
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 48.2,
+      "reference": 44.8,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 48.2,
-        "KPIS UMich Sentiment": 48.2
+        "UMCSENT_MONTHLY.data[-1]": 44.8,
+        "KPIS UMich Sentiment": 44.8
       },
       "severity": "ok",
       "pass": true
@@ -1046,10 +1028,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.47,
+      "reference": 4.5,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.47,
-        "data[\"dgs10\"]": 4.47
+        "KPIS 10Y Treasury": 4.5,
+        "data[\"dgs10\"]": 4.5
       },
       "severity": "ok",
       "pass": true
@@ -1122,6 +1104,16 @@
     }
   ],
   "schema_contract": [
+    {
+      "check": "Schema contract: data['adp_latest']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['adp_nppttl']",
+      "pass": true,
+      "severity": "ok"
+    },
     {
       "check": "Schema contract: data['ahetpi']",
       "pass": true,
@@ -2282,7 +2274,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2306,7 +2298,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Mar'26 vs Feb'\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Apr'26 vs Mar'\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

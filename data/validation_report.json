@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-05-27T22:50:39.958735Z",
+  "validated_at": "2026-05-28T13:43:33.211462Z",
   "status": "WARN",
   "summary": {
     "total_checks": 520,
@@ -29,8 +29,8 @@
     },
     {
       "check": "PCE headline YoY (latest)",
-      "html_value": 3.5,
-      "source_value": 3.5,
+      "html_value": 3.8,
+      "source_value": 3.8,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -38,8 +38,8 @@
     },
     {
       "check": "PCE core YoY (latest)",
-      "html_value": 3.2,
-      "source_value": 3.2,
+      "html_value": 3.3,
+      "source_value": 3.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -616,8 +616,8 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 130.344,
-      "fresh_api_value": 130.344,
+      "raw_data_value": 130.902,
+      "fresh_api_value": 130.902,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -625,8 +625,8 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 129.279,
-      "fresh_api_value": 129.279,
+      "raw_data_value": 129.63,
+      "fresh_api_value": 129.63,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -682,7 +682,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
-      "age_days": 56,
+      "age_days": 57,
       "max_lag_days": 55,
       "severity": "stale",
       "pass": false
@@ -690,7 +690,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-04-01",
-      "age_days": 56,
+      "age_days": 57,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -698,23 +698,23 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-04-01",
-      "age_days": 56,
+      "age_days": 57,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce",
-      "latest_date": "2026-03-01",
-      "age_days": 87,
+      "latest_date": "2026-04-01",
+      "age_days": 57,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_core",
-      "latest_date": "2026-03-01",
-      "age_days": 87,
+      "latest_date": "2026-04-01",
+      "age_days": 57,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -722,7 +722,7 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
-      "age_days": 56,
+      "age_days": 57,
       "max_lag_days": 55,
       "severity": "stale",
       "pass": false
@@ -730,7 +730,7 @@
     {
       "check": "Staleness: cs_hpi",
       "latest_date": "2026-03-01",
-      "age_days": 87,
+      "age_days": 88,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
@@ -738,7 +738,7 @@
     {
       "check": "Staleness: mortgage30",
       "latest_date": "2026-05-21",
-      "age_days": 6,
+      "age_days": 7,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -746,7 +746,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-05-01",
-      "age_days": 26,
+      "age_days": 27,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -761,7 +761,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-27T22:49:31.478765Z",
+      "collected_at": "2026-05-28T13:42:14.067443Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -885,11 +885,11 @@
     {
       "check": "PCE by Component \u2014 YoY %: title months match PCE_CAT_MOM keys",
       "title_months": [
-        "feb",
+        "apr",
         "mar"
       ],
       "data_keys": [
-        "feb",
+        "apr",
         "mar"
       ],
       "severity": "ok",
@@ -897,14 +897,14 @@
     },
     {
       "check": "PCE by Component \u2014 YoY %: prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Mar'26",
       "chips_found": [
+        "Apr'26",
         "Mar'26",
-        "Feb'26",
-        "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
       ],
       "severity": "ok",
       "pass": true
@@ -998,10 +998,10 @@
     },
     {
       "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
-      "reference": 3.2,
+      "reference": 3.3,
       "surfaces": {
-        "PCE_MONTHLY.core[-1]": 3.2,
-        "KPIS Core PCE": 3.2
+        "PCE_MONTHLY.core[-1]": 3.3,
+        "KPIS Core PCE": 3.3
       },
       "severity": "ok",
       "pass": true
@@ -2298,7 +2298,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Mar'26 vs Feb'\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Apr'26 vs Mar'\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""

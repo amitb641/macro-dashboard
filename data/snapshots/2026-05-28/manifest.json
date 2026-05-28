@@ -1,17 +1,17 @@
 {
-  "snapshot_date": "2026-05-16",
-  "created_at": "2026-05-16T13:07:05.721391Z",
+  "snapshot_date": "2026-05-28",
+  "created_at": "2026-05-28T13:43:33.605375Z",
   "files": [
-    "validation_report.json",
-    "raw_data.json"
+    "raw_data.json",
+    "validation_report.json"
   ],
-  "html_size": 522083,
+  "html_size": 522429,
   "validation_status": "WARN",
   "validation_summary": {
     "total_checks": 520,
     "passed": 505,
     "failed": 15,
-    "skipped": 1,
+    "skipped": 2,
     "critical_divergences": 0
   }
 }
