@@ -119,11 +119,31 @@ class BudgetExhausted(RuntimeError):
 # In-process counter; reset per agent run by the entry point.
 _CALL_COUNT = {'n': 0}
 
+# Process-level hard stop. Set when the API returns an unrecoverable
+# ACCOUNT error (e.g. insufficient credits) — there's no point making the
+# remaining calls this run, they'd all 400 the same way. Fail fast: skip
+# the HTTP round-trips + retries so an out-of-credits run logs one clear
+# reason instead of burning ~250 calls (13 editorial pieces, 12 vision
+# tabs, N diagnostician findings, each × 3 retries with backoff).
+_HARD_STOP = {'reason': None}
+
+# Substring (lowercased) in the API error body that means "stop calling
+# this run". Specific on purpose — only genuinely unrecoverable account
+# states, never transient 5xx/429.
+_HARD_STOP_SIGNATURE = 'credit balance is too low'
+
 
 def reset_call_counter() -> None:
-    """Reset the in-process LLM-call counter. Call once at the top of
-    each agent's main() so multiple agents in one process share a budget."""
+    """Reset the in-process LLM-call counter and hard-stop flag. Call once
+    at the top of each agent's main() so multiple agents in one process
+    share a budget and a fresh credit-state assessment."""
     _CALL_COUNT['n'] = 0
+    _HARD_STOP['reason'] = None
+
+
+def hard_stop_reason() -> 'Optional[str]':
+    """The reason LLM calls are being skipped this run, or None."""
+    return _HARD_STOP['reason']
 
 
 def calls_used() -> int:
@@ -188,6 +208,18 @@ def bounded_llm_call(
     key = os.environ.get('ANTHROPIC_API_KEY')
     if not key:
         return None
+
+    # Fail-fast: a prior call this run hit an unrecoverable account error.
+    # Skip the HTTP round-trips entirely (they'd all fail identically) and
+    # mirror the post-retry failure contract — None for validator callers,
+    # raise otherwise — so caller behaviour is unchanged, just instant. No
+    # per-skip log entry: the reason was logged once when the stop tripped,
+    # so the audit log shows ~1 clear line instead of ~250 retries.
+    if _HARD_STOP['reason']:
+        if validator is not None:
+            return None
+        raise RuntimeError(
+            f'bounded_llm_call({purpose}) skipped — {_HARD_STOP["reason"]}')
 
     if _CALL_COUNT['n'] >= max_llm_calls():
         raise BudgetExhausted(
@@ -286,6 +318,7 @@ def bounded_llm_call(
             # the actual reason (bad model id / oversized prompt / schema
             # violation). The HTTPError keeps the response on `.response`.
             resp = getattr(e, 'response', None)
+            body_txt = ''
             if resp is not None:
                 try:
                     body_txt = (resp.text or '')[:600]
@@ -293,6 +326,13 @@ def bounded_llm_call(
                     body_txt = ''
                 if body_txt:
                     last_err = f'{e!r} | body: {body_txt}'
+            # Unrecoverable account error → trip the process hard stop and
+            # stop retrying now (no backoff sleeps for a billing problem).
+            # This call still logs its error+body below; subsequent calls
+            # this run short-circuit at the top.
+            if _HARD_STOP_SIGNATURE in body_txt.lower():
+                _HARD_STOP['reason'] = 'insufficient API credits (Anthropic billing)'
+                break
             continue
 
     # All retries failed. When a validator was supplied, returning None
