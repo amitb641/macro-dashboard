@@ -5866,7 +5866,10 @@ function buildBanksTab(){
     },
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9}},border:{display:false}},
+      // 6 long bank labels (JPM Total, JPM ex-Mkts, BofA, Wells Fargo,
+      // USB, Citi (NII)) collide horizontally at 295px. Rotate to 35°
+      // so they read cleanly without overlapping.
+      scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9},maxRotation:35,minRotation:35,autoSkip:false},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>"$"+v+"B"},min:0,max:115,border:{display:false}}}}
   });
 
@@ -5883,7 +5886,10 @@ function buildBanksTab(){
     },
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`NCO Rate: ${c.raw}%`}}},
-      scales:{x:{grid:{display:false},ticks:{color:"#7A8FA8",font:{size:9},maxRotation:35,minRotation:35},border:{display:false}},
+      // 11 multi-word labels at 35° still collide on 295px mobile;
+      // push to 50° so they read cleanly. Pair with autoSkip:false
+      // because every bank issuer matters — don't drop labels.
+      scales:{x:{grid:{display:false},ticks:{color:"#7A8FA8",font:{size:9},maxRotation:50,minRotation:50,autoSkip:false},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
 
@@ -6305,7 +6311,12 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
           x: {
             grid: { color: '#EEF1F7', drawTicks: false },
             border: { display: false },
-            ticks: { color: '#94A3B8', font: { size: 9 }, maxRotation: 0 },
+            // Original config used maxRotation:0 + 55 daily labels and
+            // they collided solid on a 295px mobile canvas. Cap to 4
+            // ticks with extra autoSkip padding so labels read cleanly
+            // without needing rotation (which the 300px canvas height
+            // is too short to comfortably absorb).
+            ticks: { color: '#94A3B8', font: { size: 9 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 4, autoSkipPadding: 24 },
           },
           y: {
             grid: { color: '#EEF1F7' },
@@ -8779,13 +8790,24 @@ let WHAT_CHANGED = null;
 
 function buildDeltaBlock(){
   var row = document.getElementById('sm-delta-row');
+  var block = document.getElementById('sm-delta-block');
   if (!row) return;
   // Hydration guard: WHAT_CHANGED is null until /api/state.json resolves.
-  if (!WHAT_CHANGED) return;
+  // Hide the whole block until we have data so the user doesn't see an
+  // empty "What changed this week · vs prior weekly" shell.
+  if (!WHAT_CHANGED){
+    if (block) block.style.display = 'none';
+    return;
+  }
   var asof = document.getElementById('sm-delta-asof');
   if (asof && WHAT_CHANGED.asof) asof.textContent = WHAT_CHANGED.asof;
   var items = (WHAT_CHANGED && WHAT_CHANGED.items) || [];
-  if (!items.length){ row.innerHTML = ''; return; }
+  if (!items.length){
+    row.innerHTML = '';
+    if (block) block.style.display = 'none';
+    return;
+  }
+  if (block) block.style.display = '';
   function arrow(d){
     return d === 'up' ? '\u25B2' : d === 'down' ? '\u25BC' : '\u25AC';
   }
@@ -9220,6 +9242,35 @@ function _captureAndDownload(TAB_IDS, origTabId){
 <div class="footer">
   Sources: BEA (GDP, PCE) · BLS (CPI, Jobs, Wages, Unemployment) · FRED (Yields, Spreads, Claims, TDSP) · EIA (Oil) · NY Fed (HHDC) · Bank Q4'25 Earnings. Refreshed weekly (Sat 8am ET) with a deeper monthly refresh on the 2nd Saturday. 2025 = actual. 2026F = consensus midpoint.
 </div>
+
+<!-- Floating back-to-top — appears on mobile after the user has
+     scrolled past the first viewport. Pure CSS sizing/position;
+     the show/hide and click handler live in a tiny inline script. -->
+<button id="btt-btn" type="button" aria-label="Back to top" hidden>
+  <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+    <path d="M10 14V5m0 0l-4 4m4-4l4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn = document.getElementById('btt-btn');
+  if (!btn) return;
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var y = window.scrollY || document.documentElement.scrollTop;
+    if (y > window.innerHeight) btn.hidden = false;
+    else btn.hidden = true;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, {passive:true});
+  btn.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+  update();
+})();
+</script>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="theme-overlay.css?v=2026-05-28T00:32:44Z">
