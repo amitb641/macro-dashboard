@@ -223,6 +223,19 @@ jobs:
           echo "   Recording verdict for parallel-run observation; continuing pipeline."
           cat data/ceo_grade_verdict.json || true
 
+      - name: LLM cost summary (observability)
+        # Per-run USD cost + failure-rate rollup across all agents this
+        # window (from data/agent_memory.jsonl). Surfaces the optimization
+        # levers: which agent/purpose spends most, and the wasted-call
+        # signal (a high fail % means broken requests burning budget for
+        # nothing — fix that before tuning token spend). Never blocks.
+        if: always()
+        continue-on-error: true
+        run: |
+          python scripts/inspect_agent_memory.py --cost --since "$(date -u +%Y-%m-%d)" || true
+          echo "── rolling window (last 2000 calls) ──"
+          python scripts/inspect_agent_memory.py --cost || true
+
       - name: Snapshot — Rolling data backup
         run: python scripts/snapshot.py
 

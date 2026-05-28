@@ -35,6 +35,9 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _models import cost_usd  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 MEMORY_FILE = ROOT / 'data' / 'agent_memory.jsonl'
 
@@ -83,6 +86,63 @@ def aggregate(entries: list[dict]) -> dict:
     }
 
 
+def cost_breakdown(entries: list[dict]) -> dict:
+    """Per-call cost rollup for optimization. Splits by model / agent /
+    purpose-prefix and tracks the wasted-call signal (failed calls cost
+    little but burn the per-run budget and indicate a broken agent)."""
+    out = {
+        'total_usd': 0.0, 'calls': len(entries), 'ok': 0, 'errors': 0,
+        'in_tokens': 0, 'out_tokens': 0, 'cache_read': 0, 'cache_write': 0,
+        'by_model': {}, 'by_agent': {}, 'by_purpose': {},
+        'first_ts': None, 'last_ts': None,
+    }
+    for e in entries:
+        ts = e.get('ts')
+        if ts:
+            out['first_ts'] = ts if out['first_ts'] is None else min(out['first_ts'], ts)
+            out['last_ts']  = ts if out['last_ts']  is None else max(out['last_ts'], ts)
+        is_err = 'error' in e
+        out['errors' if is_err else 'ok'] += 1
+        usage = e.get('usage') or {}
+        model = e.get('model', '?')
+        c = cost_usd(model, usage)
+        out['total_usd'] += c
+        out['in_tokens']   += usage.get('input_tokens', 0) or 0
+        out['out_tokens']  += usage.get('output_tokens', 0) or 0
+        out['cache_read']  += usage.get('cache_read_input_tokens', 0) or 0
+        out['cache_write'] += usage.get('cache_creation_input_tokens', 0) or 0
+        for dim, key in (('by_model', model),
+                         ('by_agent', e.get('agent', '?')),
+                         ('by_purpose', (e.get('purpose') or '?').split(':', 1)[0])):
+            d = out[dim].setdefault(key, {'usd': 0.0, 'calls': 0, 'errors': 0})
+            d['usd'] += c
+            d['calls'] += 1
+            d['errors'] += 1 if is_err else 0
+    return out
+
+
+def print_cost_report(entries: list[dict]) -> None:
+    cb = cost_breakdown(entries)
+    fail_pct = (cb['errors'] / cb['calls'] * 100) if cb['calls'] else 0.0
+    print('LLM COST REPORT — ' + str(MEMORY_FILE.relative_to(ROOT)))
+    print(f'  window:       {cb["first_ts"]} → {cb["last_ts"]}')
+    print(f'  total cost:   ${cb["total_usd"]:.4f}  ({cb["calls"]} calls)')
+    print(f'  calls:        {cb["ok"]} ok · {cb["errors"]} failed ({fail_pct:.0f}% fail)')
+    print(f'  tokens:       {cb["in_tokens"]:,} in · {cb["out_tokens"]:,} out · '
+          f'{cb["cache_read"]:,} cache-read · {cb["cache_write"]:,} cache-write')
+    if fail_pct >= 25:
+        print(f'  ⚠ HIGH FAILURE RATE ({fail_pct:.0f}%) — failed calls waste the '
+              f'per-run budget and usually mean a broken request (bad model id, '
+              f'oversized prompt, schema). Fix before optimizing spend.')
+    for label, dim in (('By model', 'by_model'),
+                       ('By agent', 'by_agent'),
+                       ('By purpose', 'by_purpose')):
+        print(f'  {label}:')
+        for k, d in sorted(cb[dim].items(), key=lambda kv: -kv[1]['usd']):
+            efail = (d['errors'] / d['calls'] * 100) if d['calls'] else 0
+            print(f'    ${d["usd"]:.4f}  {d["calls"]:>4} calls  {efail:>3.0f}% fail  {k}')
+
+
 def fmt_entry(e: dict, full: bool) -> str:
     head = (
         f'[{e.get("ts","?")}] {e.get("agent","?")}/{e.get("purpose","?")} '
@@ -119,6 +179,10 @@ def main(argv: list[str] | None = None) -> int:
                    help='Show last N entries instead of aggregate stats')
     p.add_argument('--full',    action='store_true',
                    help='Show full prompts and responses (otherwise summary lines)')
+    p.add_argument('--cost',    action='store_true',
+                   help='Show USD cost rollup (by model/agent/purpose) + failure rate')
+    p.add_argument('--since',   help='Only entries with ts >= this ISO prefix '
+                                     '(e.g. 2026-05-28 for today, or a run timestamp)')
     args = p.parse_args(argv)
 
     entries = load_entries()
@@ -127,6 +191,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.purpose:
         needle = args.purpose.lower()
         entries = [e for e in entries if needle in (e.get('purpose') or '').lower()]
+    if args.since:
+        entries = [e for e in entries if (e.get('ts') or '') >= args.since]
+
+    if args.cost:
+        print_cost_report(entries)
+        return 0
 
     if args.tail:
         for e in entries[-args.tail:]:

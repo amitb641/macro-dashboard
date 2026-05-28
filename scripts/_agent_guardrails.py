@@ -281,6 +281,18 @@ def bounded_llm_call(
             return text
         except Exception as e:
             last_err = e
+            # Capture the API response body on HTTP errors. raise_for_status()
+            # only carries the status line ("400 Client Error"), which hides
+            # the actual reason (bad model id / oversized prompt / schema
+            # violation). The HTTPError keeps the response on `.response`.
+            resp = getattr(e, 'response', None)
+            if resp is not None:
+                try:
+                    body_txt = (resp.text or '')[:600]
+                except Exception:
+                    body_txt = ''
+                if body_txt:
+                    last_err = f'{e!r} | body: {body_txt}'
             continue
 
     # All retries failed. When a validator was supplied, returning None
@@ -292,7 +304,7 @@ def bounded_llm_call(
         system=system, response=None, usage={},
         elapsed_sec=round(time.time() - started, 2),
         call_index=_CALL_COUNT['n'],
-        error=repr(last_err),
+        error=last_err if isinstance(last_err, str) else repr(last_err),
     )
     if validator is not None:
         return None
