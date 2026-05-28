@@ -653,7 +653,13 @@ body.themed-sm .sort-btn:focus-visible {
 
 @media (max-width: 720px) {
   body.themed-sm { padding: 28px 20px 56px !important; }
-  body.themed-sm > h1 { font-size: 30px !important; }
+  /* Hero typography. 30px wraps "U.S. Macro Dashboard" to two lines
+     on iPhone Pro (393pt) — bring down to 26px so it stays on one
+     line and the eye doesn't have to track a stacked title. */
+  body.themed-sm > h1 { font-size: 26px !important; line-height: 1.15 !important; margin-bottom: 10px !important; }
+  /* Subtitle: tighter line-height and reduced bottom margin so the
+     hero block doesn't dominate the above-the-fold real estate. */
+  body.themed-sm .subtitle { font-size: 13px !important; line-height: 1.5 !important; margin-bottom: 24px !important; }
   body.themed-sm .macro-state .ms-bars { grid-template-columns: repeat(2, 1fr); }
   /* Mobile typography floor — pull secondary copy up from the
      9–10px range that's hard to read on a phone. Newspaper-mobile
@@ -684,6 +690,24 @@ body.themed-sm .sort-btn:focus-visible {
   body.themed-sm .m-sub,
   body.themed-sm .metric.dense .m-sub,
   body.themed-sm .m-tile.dense .m-sub { font-size: 10.5px !important; }
+  /* Section-divider headers ("📈 SECTION 1 — Price & Supply") at 11px
+     get lost on a phone — they're meant to be a clear visual break
+     between mini-chapters within a tab. 12.5px with tighter top
+     margin reads as a proper heading. */
+  body.themed-sm .stk-section-title { font-size: 12.5px !important; margin-top: 20px !important; padding-bottom: 8px !important; }
+  /* Tighten panel padding on phones — desktop's 24/28 wastes too much
+     of a 393px viewport (56px = 14% of width consumed by padding).
+     Drop to 14/16 so the content area gets the room. Margin-bottom
+     trimmed from 20 to 14 for the same reason. */
+  body.themed-sm .panel { padding: 14px 16px !important; margin-bottom: 14px !important; }
+  /* Meta strip ("MAY 2026 · PIPELINE OK · LAST RUN …") at 9.5px with
+     .2em letter-spacing wraps to 2 lines on iPhone Pro. Bump font
+     and tighten letter-spacing so it sits on one line; allow flex
+     to wrap if user shrinks viewport further. */
+  body.themed-sm .sm-meta { font-size: 10px !important; letter-spacing: .08em !important; gap: 10px !important; flex-wrap: wrap !important; padding-bottom: 10px !important; margin-bottom: 10px !important; }
+  /* Reading bar ("~3-min read · 2 sections + progress") slightly
+     smaller margin so it doesn't crowd the meta strip. */
+  body.themed-sm .sm-readbar { font-size: 10.5px !important; margin: 2px 0 12px 0 !important; }
 }
 
 /* ── split-stack chart container (dual-axis-lie remediation) ──────
