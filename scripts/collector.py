@@ -185,15 +185,36 @@ def fred_alfred_obs(series_id, vintage_date, limit=14, freq=None):
               'file_type': 'json', 'sort_order': 'desc', 'limit': limit,
               'realtime_start': vintage_date, 'realtime_end': vintage_date}
     if freq: params['frequency'] = freq
-    try:
-        r = requests.get('https://api.stlouisfed.org/fred/series/observations',
-                         params=params, timeout=15)
-        r.raise_for_status()
-        return [_envelope(o['date'], float(o['value']),
-                          source=f'ALFRED:{series_id}@{vintage_date}')
-                for o in r.json().get('observations', []) if o['value'] != '.']
-    except Exception as e:
-        errors.append(f'ALFRED {series_id}@{vintage_date}: {e}'); return []
+    # Same retry-with-backoff as fred_obs(): the 8 back-to-back ALFRED
+    # vintage pulls (GDPC1/GDP/CPIAUCSL/PAYEMS/AHETPI/PCEPI/PCEPILFE…)
+    # can briefly push past FRED's 120 req/min limit, and the later
+    # ones (e.g. PCEPILFE) were getting a 429 with no retry → surfaced
+    # as a Pass 3h collector error every run. Wait out the 60s window.
+    last_err = None
+    for attempt in range(4):  # 0, 1, 2, 3
+        try:
+            r = requests.get('https://api.stlouisfed.org/fred/series/observations',
+                             params=params, timeout=15)
+            r.raise_for_status()
+            return [_envelope(o['date'], float(o['value']),
+                              source=f'ALFRED:{series_id}@{vintage_date}')
+                    for o in r.json().get('observations', []) if o['value'] != '.']
+        except requests.exceptions.HTTPError as e:
+            last_err = e
+            if r.status_code == 429 and attempt < 3:
+                wait = 30 * (attempt + 1)  # 30s, 60s, 90s
+                print(f'    ↻ ALFRED {series_id}@{vintage_date}: 429 rate limited, retry {attempt+1}/3 in {wait}s')
+                time.sleep(wait)
+                continue
+            if r.status_code >= 500 and attempt < 3:
+                wait = 2 ** attempt  # 1s, 2s, 4s
+                print(f'    ↻ ALFRED {series_id}@{vintage_date}: {r.status_code}, retry {attempt+1}/3 in {wait}s')
+                time.sleep(wait)
+                continue
+            break
+        except Exception as e:
+            last_err = e; break
+    errors.append(f'ALFRED {series_id}@{vintage_date}: {last_err}'); return []
 
 
 # ── UMich Survey of Consumers (direct) ───────────────────────────────
