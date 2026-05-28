@@ -133,7 +133,11 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "📊 Weekly update: $(date -u +'%Y-%m-%d')"
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push origin HEAD:main && break
+              echo "Push attempt $attempt failed, retrying in 5s..."
+              sleep 5
+            done
           fi
 
       - name: Setup Pages
@@ -162,7 +166,11 @@ jobs:
           git add index.html data/
           if ! git diff --staged --quiet; then
             git commit -m "🔄 Auto-rollback: health check failed $(date -u +'%Y-%m-%d')"
-            git push
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push origin HEAD:main && break
+              echo "Push attempt $attempt failed, retrying in 5s..."
+              sleep 5
+            done
           fi
 
   # ── Pipeline failure notification ──────────────────────────────────
