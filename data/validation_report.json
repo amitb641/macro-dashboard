@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-05-28T13:05:16.113911Z",
+  "validated_at": "2026-05-28T17:56:28.426908Z",
   "status": "WARN",
   "summary": {
     "total_checks": 643,
-    "passed": 640,
-    "failed": 3,
+    "passed": 642,
+    "failed": 1,
     "skipped": 1,
     "critical_divergences": 1
   },
@@ -326,28 +326,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "55/55 filled",
+      "html_value": "60/60 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 27,
+      "tolerance": 30,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "55/55 filled",
+      "html_value": "60/60 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 27,
+      "tolerance": 30,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "35/55 filled",
-      "source_value": "64% (min 0%)",
-      "difference": 20,
-      "tolerance": 27,
+      "html_value": "37/60 filled",
+      "source_value": "62% (min 0%)",
+      "difference": 23,
+      "tolerance": 30,
       "severity": "ok",
       "pass": true
     },
@@ -679,8 +679,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.51,
-      "fresh_api_value": 6.51,
+      "raw_data_value": 6.53,
+      "fresh_api_value": 6.53,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -701,9 +701,9 @@
       "check": "Staleness: unrate",
       "latest_date": "2026-04-01",
       "age_days": 57,
-      "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cpi_all",
@@ -741,9 +741,9 @@
       "check": "Staleness: payems",
       "latest_date": "2026-04-01",
       "age_days": 57,
-      "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
@@ -755,8 +755,8 @@
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-05-21",
-      "age_days": 7,
+      "latest_date": "2026-05-28",
+      "age_days": 0,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-28T13:04:02.959575Z",
+      "collected_at": "2026-05-28T17:55:17.073298Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true

@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-05-28T13:04:22.162040Z",
+  "analyzed_at": "2026-05-28T17:55:32.237739Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 2,
-  "flagged_count": 2,
+  "flagged_count": 4,
   "values": {
     "ffr": 3.64,
     "dgs2": 4.01,
@@ -11,7 +11,7 @@
     "dgs10": 4.5,
     "dgs30": 5.03,
     "ig_oas": 74,
-    "hy_oas": 272,
+    "hy_oas": 271,
     "unrate": 4.3,
     "u6rate": 8.2,
     "nfp_level": 158736.0,
@@ -24,14 +24,14 @@
     "pce_yoy": 3.77,
     "core_pce_yoy": 3.29,
     "saving_rate": 2.6,
-    "mortgage30": 6.51,
+    "mortgage30": 6.53,
     "housing_starts": 1465.0,
     "cs_hpi_yoy": 0.66,
     "umcsent": 44.8,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
-    "wti": 112.25,
-    "brent": 116.73,
+    "wti": 97.63,
+    "brent": 102.75,
     "gdp_growth_q": 1.6,
     "cc_delinq": 2.92,
     "spread_10_2_bp": 49
@@ -59,8 +59,8 @@
       "alert": null
     },
     "hy_oas": {
-      "value": 272,
-      "delta": -7,
+      "value": 271,
+      "delta": -8,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -94,17 +94,17 @@
       "alert": null
     },
     "wti": {
-      "value": 112.25,
-      "delta": 2.49,
-      "direction": "stable",
-      "flagged": false,
+      "value": 97.63,
+      "delta": -12.13,
+      "direction": "falling",
+      "flagged": true,
       "alert": "alert"
     },
     "mortgage30": {
-      "value": 6.51,
-      "delta": 0.14,
-      "direction": "stable",
-      "flagged": false,
+      "value": 6.53,
+      "delta": 0.16,
+      "direction": "rising",
+      "flagged": true,
       "alert": null
     },
     "wages_yoy": {
@@ -206,8 +206,8 @@
       "alert": null
     },
     "brent": {
-      "value": 116.73,
-      "delta": -1.53,
+      "value": 102.75,
+      "delta": -15.51,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -245,6 +245,16 @@
     {
       "key": "pce_yoy",
       "line": "pce_yoy: 3.77 (\u25b20.27 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "wti",
+      "line": "wti: 97.63 (\u25bc12.13 vs prior) [ALERT]",
+      "alert": "alert"
+    },
+    {
+      "key": "mortgage30",
+      "line": "mortgage30: 6.53 (\u25b20.16 vs prior)",
       "alert": null
     },
     {

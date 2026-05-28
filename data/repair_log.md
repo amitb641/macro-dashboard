@@ -1,3 +1,19 @@
+## Repair Agent — 2026-05-28T17:56:28.426908Z
+
+- **Status**: WARN
+- **Total checks**: 643
+- **Passed**: 642
+- **Failed**: 1
+- **Critical divergences**: 1
+
+### Panel data
+_1 critical · 0 warning · 0 stale_
+
+- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-05-28T13:05:16.113911Z
 
 - **Status**: WARN
@@ -1034,24 +1050,6 @@ No findings to surface — pipeline is clean. ✅
 - **Critical divergences**: 0
 
 No findings to surface — pipeline is clean. ✅
-
----
-
-## Repair Agent — 2026-05-23T05:16:43.521068Z
-
-- **Status**: WARN
-- **Total checks**: 213
-- **Passed**: 210
-- **Failed**: 3
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Collector error** — ALFRED AHETPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2
-- ⚠️ **Collector error** — ALFRED PCEPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=202
-- ⚠️ **Collector error** — ALFRED PCEPILFE@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPILFE&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_e
-
 
 ---
 
