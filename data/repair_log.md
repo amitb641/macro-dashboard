@@ -1,3 +1,25 @@
+## Repair Agent — 2026-05-28T13:05:16.113911Z
+
+- **Status**: WARN
+- **Total checks**: 643
+- **Passed**: 640
+- **Failed**: 3
+- **Critical divergences**: 1
+
+### Staleness
+_0 critical · 0 warning · 2 stale_
+
+- ⏰ **Staleness: unrate** — 57d old (limit 55d)
+- ⏰ **Staleness: payems** — 57d old (limit 55d)
+
+### Panel data
+_1 critical · 0 warning · 0 stale_
+
+- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-05-28T05:45:53.352154Z
 
 - **Status**: WARN
@@ -1030,18 +1052,6 @@ _0 critical · 3 warning · 0 stale_
 - ⚠️ **Collector error** — ALFRED PCEPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=202
 - ⚠️ **Collector error** — ALFRED PCEPILFE@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPILFE&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_e
 
-
----
-
-## Repair Agent — 2026-05-23T04:56:35.907215Z
-
-- **Status**: PASS
-- **Total checks**: 211
-- **Passed**: 211
-- **Failed**: 0
-- **Critical divergences**: 0
-
-No findings to surface — pipeline is clean. ✅
 
 ---
 

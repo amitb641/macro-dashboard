@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-05-28T05:45:53.352154Z",
+  "validated_at": "2026-05-28T13:05:16.113911Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 644,
+    "total_checks": 643,
     "passed": 640,
-    "failed": 4,
+    "failed": 3,
     "skipped": 1,
-    "critical_divergences": 0
+    "critical_divergences": 1
   },
   "internal_consistency": [
     {
@@ -29,8 +29,8 @@
     },
     {
       "check": "PCE headline YoY (latest)",
-      "html_value": 3.5,
-      "source_value": 3.5,
+      "html_value": 3.8,
+      "source_value": 3.8,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -38,8 +38,8 @@
     },
     {
       "check": "PCE core YoY (latest)",
-      "html_value": 3.2,
-      "source_value": 3.2,
+      "html_value": 3.3,
+      "source_value": 3.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -83,9 +83,9 @@
     },
     {
       "check": "KPI Core PCE",
-      "html_value": 3.2,
-      "source_value": 3.2,
-      "difference": 0.0,
+      "html_value": 3.3,
+      "source_value": 3.29,
+      "difference": 0.01,
       "tolerance": 0.05,
       "severity": "ok",
       "pass": true
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 130.344,
-      "fresh_api_value": 130.344,
+      "raw_data_value": 130.902,
+      "fresh_api_value": 130.902,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -643,8 +643,8 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 129.279,
-      "fresh_api_value": 129.279,
+      "raw_data_value": 129.63,
+      "fresh_api_value": 129.63,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -723,16 +723,16 @@
     },
     {
       "check": "Staleness: pce",
-      "latest_date": "2026-03-01",
-      "age_days": 88,
+      "latest_date": "2026-04-01",
+      "age_days": 57,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_core",
-      "latest_date": "2026-03-01",
-      "age_days": 88,
+      "latest_date": "2026-04-01",
+      "age_days": 57,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-28T05:43:28.730277Z",
+      "collected_at": "2026-05-28T13:04:02.959575Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -903,11 +903,11 @@
         "mar"
       ],
       "data_keys": [
-        "feb",
+        "apr",
         "mar"
       ],
-      "severity": "ok",
-      "pass": true
+      "severity": "divergence",
+      "pass": false
     },
     {
       "check": "Energy and housing components are pulling the PCE basket higher: prior-month chip matches title",
@@ -1012,10 +1012,10 @@
     },
     {
       "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
-      "reference": 3.2,
+      "reference": 3.3,
       "surfaces": {
-        "PCE_MONTHLY.core[-1]": 3.2,
-        "KPIS Core PCE": 3.2
+        "PCE_MONTHLY.core[-1]": 3.3,
+        "KPIS Core PCE": 3.3
       },
       "severity": "ok",
       "pass": true
@@ -1450,16 +1450,9 @@
   ],
   "collector_errors": [
     {
-      "check": "EIA fetch: RWTC",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "EIA fetch: RBRTE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -4142,12 +4135,12 @@
       "severity": "ok",
       "metric": "saving_rate",
       "floor": 0.3,
-      "prior": 3.9,
-      "latest": 3.6,
-      "delta": -0.3,
-      "abs_delta": 0.3,
-      "verdict": "within_noise",
-      "note": "PoP delta -0.300 \u2264 \u00b10.3 \u2192 within_noise"
+      "prior": 3.2,
+      "latest": 2.6,
+      "delta": -0.6,
+      "abs_delta": 0.6,
+      "verdict": "real_signal",
+      "note": "PoP delta -0.600 > \u00b10.3 \u2192 real_signal"
     },
     {
       "check": "noise_floor[umich_sentiment]",

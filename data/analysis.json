@@ -5,12 +5,12 @@
   "outlook_headline": "",
   "outlook_body": "",
   "tabs": {
-    "gdp": "Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The combination of slowing NFP, a 3.6% savings rate, and WTI at $109.8 creates a credible path to sub-1% growth within two quarters. Inventory and net export dynamics could provide temporary offsets, but domestic demand is the linchpin and it is weakening.",
+    "gdp": "",
     "jobs": "",
     "unemp": "U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% \u2014 a 190bp spread over U-3 \u2014 signals significant slack in hours and involuntary part-time work that the headline number obscures. This breadth of labor market weakness is inconsistent with a soft-landing narrative and points to genuine demand destruction in the jobs market.",
     "wages": "",
     "cpi": "Headline CPI at 3.8% YoY is running nearly 90bp above Core CPI at 2.7%, a gap almost entirely attributable to energy \u2014 WTI at $109.8 is the dominant driver and it is not yet fully reflected in downstream prices. Core CPI at 2.7% has not broken to target and risks re-acceleration as oil costs transmit through transportation, manufacturing, and services over the next 60-90 days. The Fed cannot cut rates with headline at 3.8% and an oil shock still propagating; rate relief is not imminent.",
-    "pce": "Core PCE at 3.2% \u2014 the Fed's preferred measure \u2014 remains 120bp above target and is the single most important number blocking any dovish pivot. Headline PCE at 3.5% reflects the same energy-driven wedge seen in CPI, and the savings rate at 3.6% confirms consumers are drawing down buffers rather than reducing spending voluntarily. The combination of elevated PCE, depleted savings, and surging energy costs represents a serious deterioration in the consumer's real income trajectory.",
+    "pce": "",
     "yield": "",
     "credit": "",
     "housing": "",
@@ -23,20 +23,20 @@
     "fed_bias": "On Hold"
   },
   "signal_flags": [],
-  "agent3_ran_at": "2026-05-28T05:44:58.836122Z",
+  "agent3_ran_at": "2026-05-28T13:04:22.867291Z",
   "refreshed_tabs": [
     "yield",
     "oil",
     "credit",
     "jobs",
     "wages",
+    "pce",
     "housing",
+    "gdp",
     "banks"
   ],
   "carried_forward": [
-    "gdp",
     "unemp",
-    "cpi",
-    "pce"
+    "cpi"
   ]
 }
