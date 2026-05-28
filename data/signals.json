@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-05-27T23:40:41.377800Z",
+  "analyzed_at": "2026-05-28T00:03:25.685942Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 2,
@@ -16,7 +16,7 @@
     "u6rate": 8.2,
     "nfp_level": 158736.0,
     "nfp_mom": 115,
-    "icsa": 211000.0,
+    "icsa": 209000.0,
     "ccsa": 1782000.0,
     "wages_yoy": 3.6,
     "cpi_yoy": 3.78,
@@ -122,8 +122,8 @@
       "alert": null
     },
     "icsa": {
-      "value": 211000.0,
-      "delta": 22000.0,
+      "value": 209000.0,
+      "delta": 20000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -248,5 +248,8 @@
       "alert": null
     }
   ],
-  "raw_errors": []
+  "raw_errors": [
+    "EIA RWTC: 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60",
+    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+  ]
 }
