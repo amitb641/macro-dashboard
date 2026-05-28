@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-05-28T01:16:42.785534Z",
-  "status": "PASS",
+  "checked_at": "2026-05-28T01:28:33.253129Z",
+  "status": "WARN",
   "summary": {
     "total_checks": 430,
-    "passed": 430,
-    "failed": 0,
+    "passed": 429,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -14,8 +14,9 @@
     {
       "category": "contract",
       "check": "spacing_grid",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "2 off-grid value(s): line 627: padding 14px (in `body.themed-sm .panel { padding: 14px 16px !important; margin-bottom: 14px !important; }`); line 629: gap 10px (in `body.themed-sm .sm-meta { font-size: 10px !important; letter-spacing: .08em !important; ga`)"
     },
     {
       "category": "contract",
