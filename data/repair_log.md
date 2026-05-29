@@ -1,3 +1,19 @@
+## Repair Agent — 2026-05-29T05:01:44.126282Z
+
+- **Status**: WARN
+- **Total checks**: 643
+- **Passed**: 642
+- **Failed**: 1
+- **Critical divergences**: 1
+
+### Panel data
+_1 critical · 0 warning · 0 stale_
+
+- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-05-29T01:47:20.762887Z
 
 - **Status**: WARN
@@ -1049,18 +1065,6 @@ No findings to surface — pipeline is clean. ✅
 ---
 
 ## Repair Agent — 2026-05-23T16:50:54.744598Z
-
-- **Status**: PASS
-- **Total checks**: 211
-- **Passed**: 211
-- **Failed**: 0
-- **Critical divergences**: 0
-
-No findings to surface — pipeline is clean. ✅
-
----
-
-## Repair Agent — 2026-05-23T06:10:54.827430Z
 
 - **Status**: PASS
 - **Total checks**: 211

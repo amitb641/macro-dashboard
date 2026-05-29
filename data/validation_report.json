@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-29T01:47:20.762887Z",
+  "validated_at": "2026-05-29T05:01:44.126282Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 720,
-    "passed": 641,
-    "failed": 79,
-    "skipped": 12,
+    "total_checks": 643,
+    "passed": 642,
+    "failed": 1,
+    "skipped": 1,
     "critical_divergences": 1
   },
   "internal_consistency": [
@@ -607,56 +607,83 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 332.407,
+      "fresh_api_value": 332.407,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 335.423,
+      "fresh_api_value": 335.423,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 130.902,
+      "fresh_api_value": 130.902,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 129.63,
+      "fresh_api_value": 129.63,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.48,
+      "fresh_api_value": 4.48,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158736.0,
+      "fresh_api_value": 158736.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 6.53,
+      "fresh_api_value": 6.53,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -752,8 +779,8 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-29T00:53:25.565208Z",
-      "age_hours": 0.9,
+      "collected_at": "2026-05-29T05:00:22.655865Z",
+      "age_hours": 0.0,
       "severity": "ok",
       "pass": true
     }
@@ -1015,10 +1042,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.5,
+      "reference": 4.48,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.5,
-        "data[\"dgs10\"]": 4.5
+        "KPIS 10Y Treasury": 4.48,
+        "data[\"dgs10\"]": 4.48
       },
       "severity": "ok",
       "pass": true
@@ -1423,472 +1450,9 @@
   ],
   "collector_errors": [
     {
-      "check": "FRED fetch: DFF",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DGS2",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=14"
-    },
-    {
-      "check": "FRED fetch: DGS5",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS5&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=14"
-    },
-    {
-      "check": "FRED fetch: DGS10",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DGS30",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DGS10",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DGS2",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: BAMLC0A0CM",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: BAMLH0A0HYM2",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: BAMLC0A0CM",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: BAMLH0A0HYM2",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: GASREGW",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=GASREGW&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=30"
-    },
-    {
-      "check": "FRED fetch: MORTGAGE30US",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=MORTGAGE30US&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=70"
-    },
-    {
-      "check": "FRED fetch: MORTGAGE15US",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=MORTGAGE15US&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=70"
-    },
-    {
-      "check": "FRED fetch: UNRATE",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=UNRATE&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
-    },
-    {
-      "check": "FRED fetch: U6RATE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: PAYEMS",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=PAYEMS&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
-    },
-    {
-      "check": "FRED fetch: AHETPI",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
-    },
-    {
-      "check": "FRED fetch: NPPTTL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: FRBATLWGT3MMAUMHWGO",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=FRBATLWGT3MMAUMHWGO&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=60"
-    },
-    {
-      "check": "FRED fetch: JTSJOL",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=JTSJOL&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=14"
-    },
-    {
-      "check": "FRED fetch: JTSQUL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: JTSHIL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: UNEMPLOY",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=UNEMPLOY&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=24"
-    },
-    {
-      "check": "FRED fetch: CPIAUCSL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CPILFESL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: PCEPI",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: PCEPILFE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: PSAVERT",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SAH1",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SEFV",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SETG",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SAM2",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SAF11",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SAF11&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=24"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SETA01",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SETA01&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=24"
-    },
-    {
-      "check": "FRED fetch: CPIAPPSL",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=CPIAPPSL&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=24"
-    },
-    {
-      "check": "FRED fetch: CUSR0000SETA02",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=CUSR0000SETA02&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=24"
-    },
-    {
-      "check": "FRED fetch: TRMMEANCPIM157SFRBCLE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: MEDCPIM157SFRBCLE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DGDSRG3M086SBEA",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DSERRG3M086SBEA",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DFXARG3M086SBEA",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DNRGRG3M086SBEA",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: HOUST",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: HOUST1F",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=HOUST1F&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
-    },
-    {
-      "check": "FRED fetch: PERMIT",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CSUSHPISA",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=CSUSHPISA&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480"
-    },
-    {
-      "check": "FRED fetch: GDPC1",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDPC1&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=12"
-    },
-    {
-      "check": "FRED fetch: A191RL1Q225SBEA",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DRCCLACBS",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DRCCLACBS&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=108"
-    },
-    {
-      "check": "FRED fetch: DRSFRMACBS",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DRSFRMACBS&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=12"
-    },
-    {
-      "check": "FRED fetch: TDSP",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: WALCL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: WRESBAL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: RRPONTSYD",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: WTREGEN",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: FYFSGDA188S",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: FEDFUNDS",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=FEDFUNDS&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=40&frequency=a"
-    },
-    {
-      "check": "FRED fetch: MORTGAGE30US",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=MORTGAGE30US&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=40&frequency=a"
-    },
-    {
-      "check": "FRED fetch: DGS10",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DGS2",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: BAMLC0A0CM",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: BAMLH0A0HYM2",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DCOILWTICO",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: DCOILBRENTEU",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: GDPC1",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: GDP",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=40&frequency=a"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED GDPC1@2026-03-31: 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDPC1&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=40&realtime_start=2026-03-31&realtime_end=2026-"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED GDP@2026-03-31: 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=GDP&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=40&realtime_start=2026-03-31&realtime_end=2026-03-3"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED CPIAUCSL@2026-03-31: HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED PAYEMS@2026-03-31: HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED AHETPI@2026-03-31: 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=20"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "ALFRED PCEPILFE@2026-03-31: HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: UMCSENT",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: CPIENGSL",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "FRED fetch: REVOLSL",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=REVOLSL&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=40&frequency=a"
-    },
-    {
-      "check": "FRED fetch: DCOILWTICO",
-      "pass": false,
-      "severity": "warning",
-      "note": "504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DCOILWTICO&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&frequency=m"
-    },
-    {
-      "check": "FRED fetch: DCOILBRENTEU",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -4520,8 +4084,13 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4.3,
+      "diff": 0.0,
+      "tol": 0.215,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
@@ -4537,8 +4106,13 @@
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 335.423,
+      "diff": 0.0,
+      "tol": 0.3354,
+      "note": null
     }
   ],
   "noise_floor": [
@@ -4652,12 +4226,12 @@
       "severity": "ok",
       "metric": "walcl_bn",
       "floor": 50.0,
-      "prior": 6728502.0,
-      "latest": 6713643.0,
-      "delta": -14859.0,
-      "abs_delta": 14859.0,
+      "prior": 6713643.0,
+      "latest": 6704383.0,
+      "delta": -9260.0,
+      "abs_delta": 9260.0,
       "verdict": "real_signal",
-      "note": "PoP delta -14859.000 > \u00b150.0 \u2192 real_signal"
+      "note": "PoP delta -9260.000 > \u00b150.0 \u2192 real_signal"
     },
     {
       "check": "noise_floor[wresbal_bn]",
@@ -4665,12 +4239,12 @@
       "severity": "ok",
       "metric": "wresbal_bn",
       "floor": 50.0,
-      "prior": 3102810.0,
-      "latest": 3129562.0,
-      "delta": 26752.0,
-      "abs_delta": 26752.0,
+      "prior": 3129562.0,
+      "latest": 3066560.0,
+      "delta": -63002.0,
+      "abs_delta": 63002.0,
       "verdict": "real_signal",
-      "note": "PoP delta +26752.000 > \u00b150.0 \u2192 real_signal"
+      "note": "PoP delta -63002.000 > \u00b150.0 \u2192 real_signal"
     },
     {
       "check": "noise_floor[rrpontsyd_bn]",
@@ -4678,12 +4252,12 @@
       "severity": "ok",
       "metric": "rrpontsyd_bn",
       "floor": 100.0,
-      "prior": 1.787,
-      "latest": 1.853,
-      "delta": 0.066,
-      "abs_delta": 0.066,
+      "prior": 1.853,
+      "latest": 1.163,
+      "delta": -0.69,
+      "abs_delta": 0.69,
       "verdict": "within_noise",
-      "note": "PoP delta +0.066 \u2264 \u00b1100.0 \u2192 within_noise"
+      "note": "PoP delta -0.690 \u2264 \u00b1100.0 \u2192 within_noise"
     },
     {
       "check": "noise_floor[deficit_pct_gdp]",
@@ -4701,7 +4275,7 @@
   ],
   "secret_leaks": [
     {
-      "check": "Secret leak scan (21 JSON files)",
+      "check": "Secret leak scan (27 JSON files)",
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"
