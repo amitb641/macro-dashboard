@@ -1,0 +1,4296 @@
+{
+  "validated_at": "2026-05-28T17:56:28.426908Z",
+  "status": "WARN",
+  "summary": {
+    "total_checks": 643,
+    "passed": 642,
+    "failed": 1,
+    "skipped": 1,
+    "critical_divergences": 1
+  },
+  "internal_consistency": [
+    {
+      "check": "CPI headline YoY (latest)",
+      "html_value": 3.8,
+      "source_value": 3.8,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI core YoY (latest)",
+      "html_value": 2.7,
+      "source_value": 2.7,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE headline YoY (latest)",
+      "html_value": 3.8,
+      "source_value": 3.8,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE core YoY (latest)",
+      "html_value": 3.3,
+      "source_value": 3.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment rate (latest)",
+      "html_value": 4.3,
+      "source_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "NFP BLS MoM (latest)",
+      "html_value": 115,
+      "source_value": 115,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "KPI Unemployment",
+      "html_value": 4.3,
+      "source_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "KPI CPI YoY",
+      "html_value": 3.8,
+      "source_value": 3.78,
+      "difference": 0.02,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "KPI Core PCE",
+      "html_value": 3.3,
+      "source_value": 3.29,
+      "difference": 0.01,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_ANNUAL WTI 2025",
+      "html_value": 65.4,
+      "source_value": 65.4,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Case-Shiller YoY (latest)",
+      "html_value": 0.7,
+      "source_value": 0.7,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI_MONTHLY.headline completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI_MONTHLY.core completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE_MONTHLY.headline completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE_MONTHLY.core completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "U_MONTHLY.data completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "NFP_VS_ADP.bls completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "NFP_VS_ADP.adp completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "HOUSING_MONTHLY.caseShiller completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "HOUSING_MONTHLY.mortgage30 completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_MONTHLY.wti completeness",
+      "html_value": "436/436 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 218,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_MONTHLY.brent completeness",
+      "html_value": "436/436 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 218,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SAVING_MONTHLY.data completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "UMCSENT_MONTHLY.data completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "UMCSENT_MONTHLY.statuses completeness",
+      "html_value": "13/13 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 6,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "U_ANNUAL.data completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI_ANNUAL.data completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE_ANNUAL.headline completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "PCE_ANNUAL.core completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "WAGE_ANNUAL.nominal completeness",
+      "html_value": "5/5 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 2,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "WAGE_ANNUAL.real completeness",
+      "html_value": "5/5 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 2,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "JOBS_ANNUAL.data completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SAVING_ANNUAL.data completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_ANNUAL.wti completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_ANNUAL.brent completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_DAILY.wti completeness",
+      "html_value": "60/60 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 30,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_DAILY.brent completeness",
+      "html_value": "60/60 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 30,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_DAILY.notes completeness",
+      "html_value": "37/60 filled",
+      "source_value": "62% (min 0%)",
+      "difference": 23,
+      "tolerance": 30,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CLAIMS_WEEKLY.initial completeness",
+      "html_value": "260/260 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 130,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CLAIMS_WEEKLY.continued completeness",
+      "html_value": "259/260 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 1,
+      "tolerance": 130,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "GDP_TOTAL_DATA.nominal completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "GDP_TOTAL_DATA.real completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FFR_DATA.actual completeness",
+      "html_value": "36/39 filled",
+      "source_value": "92% (min 50%)",
+      "difference": 3,
+      "tolerance": 19,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FFR_DATA.dots completeness",
+      "html_value": "4/39 filled",
+      "source_value": "10% (min 10%)",
+      "difference": 35,
+      "tolerance": 19,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "MORTGAGE_DATA.rate30 completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "MORTGAGE_DATA.ffr completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SPREADS_DATA.ig completeness",
+      "html_value": "4/4 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 2,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SPREADS_DATA.hy completeness",
+      "html_value": "4/4 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 2,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.dgs10 completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.dgs2 completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.spread completeness",
+      "html_value": "37/37 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TREASURY_DATA.card90 completeness",
+      "html_value": "28/37 filled",
+      "source_value": "76% (min 50%)",
+      "difference": 9,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_SPREAD.spread completeness",
+      "html_value": "11/11 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "STARTS_DATA.sf completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "STARTS_DATA.mf completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "HPI_DATA.cs completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "HPI_DATA.fhfa completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_VS_CPI.wti completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_VS_CPI.cpiEnergy completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_VS_SENTIMENT.wti completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_VS_SENTIMENT.sentiment completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_VS_HY.wti completeness",
+      "html_value": "3/3 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 1,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "OIL_VS_HY.hySpreads completeness",
+      "html_value": "3/3 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 1,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CREDIT_GROWTH.revolving completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CREDIT_GROWTH.nonrevolving completeness",
+      "html_value": "36/36 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 18,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "TDSP_HIST.data completeness",
+      "html_value": "30/30 filled",
+      "source_value": "100% (min 50%)",
+      "difference": 0,
+      "tolerance": 15,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "source_verification": [
+    {
+      "check": "FRED UNRATE (latest)",
+      "raw_data_value": 4.3,
+      "fresh_api_value": 4.3,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED CPIAUCSL (latest index)",
+      "raw_data_value": 332.407,
+      "fresh_api_value": 332.407,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED CPILFESL (core CPI index)",
+      "raw_data_value": 335.423,
+      "fresh_api_value": 335.423,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED PCEPI (PCE index)",
+      "raw_data_value": 130.902,
+      "fresh_api_value": 130.902,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED PCEPILFE (core PCE index)",
+      "raw_data_value": 129.63,
+      "fresh_api_value": 129.63,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED DGS10 (10Y yield)",
+      "raw_data_value": 4.5,
+      "fresh_api_value": 4.5,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED FEDFUNDS",
+      "raw_data_value": 3.64,
+      "fresh_api_value": 3.64,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED PAYEMS (latest level, 000s)",
+      "raw_data_value": 158736.0,
+      "fresh_api_value": 158736.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "FRED MORTGAGE30US",
+      "raw_data_value": 6.53,
+      "fresh_api_value": 6.53,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "BLS Total Nonfarm (latest)",
+      "raw_data_value": 158736,
+      "fresh_api_value": 158736.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "staleness": [
+    {
+      "check": "Staleness: unrate",
+      "latest_date": "2026-04-01",
+      "age_days": 57,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_all",
+      "latest_date": "2026-04-01",
+      "age_days": 57,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_core",
+      "latest_date": "2026-04-01",
+      "age_days": 57,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce",
+      "latest_date": "2026-04-01",
+      "age_days": 57,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_core",
+      "latest_date": "2026-04-01",
+      "age_days": 57,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: payems",
+      "latest_date": "2026-04-01",
+      "age_days": 57,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cs_hpi",
+      "latest_date": "2026-03-01",
+      "age_days": 88,
+      "max_lag_days": 120,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: mortgage30",
+      "latest_date": "2026-05-28",
+      "age_days": 0,
+      "max_lag_days": 10,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: umcsent",
+      "latest_date": "2026-05-01",
+      "age_days": 27,
+      "max_lag_days": 35,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "UMich Sentiment release status",
+      "latest_date": "2026-05-01",
+      "release_status": "final",
+      "severity": "ok",
+      "pass": true,
+      "note": "Final release"
+    },
+    {
+      "check": "Collection recency",
+      "collected_at": "2026-05-28T17:55:17.073298Z",
+      "age_hours": 0.0,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "shock_tracker": [
+    {
+      "check": "SHOCK_TRACKER extractable",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER phase count",
+      "actual": 8,
+      "expected": 8,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[0] Pump Prices Spike required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[1] Transport & Freight Costs required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[1] Transport & Freight Costs status consistent with MMA delta",
+      "status": "confirmed",
+      "post_minus_pre_pp": 1.7,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[2] CPI Energy Prints required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[2] CPI Energy Prints status consistent with MMA delta",
+      "status": "confirmed",
+      "post_minus_pre_pp": 50.4,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[3] Food & Services Inflation required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[3] Food & Services Inflation status consistent with MMA delta",
+      "status": "not_yet",
+      "post_minus_pre_pp": -1.4,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[4] Core Goods Inflation required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[5] Consumer Sentiment Falls required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[6] Savings Drawdown required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SHOCK_TRACKER[7] Delinquencies Climb required fields",
+      "missing": null,
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "panel_data_consistency": [
+    {
+      "check": "Energy and transport categories are pulling the basket higher: title months match CPI_CAT_MOM keys",
+      "title_months": [
+        "apr",
+        "mar"
+      ],
+      "data_keys": [
+        "apr",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Energy and transport categories are pulling the basket higher: prior-month chip matches title",
+      "expected_prior": "Mar'26",
+      "chips_found": [
+        "Apr'26",
+        "Mar'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "apr",
+        "mar"
+      ],
+      "severity": "divergence",
+      "pass": false
+    },
+    {
+      "check": "Energy and housing components are pulling the PCE basket higher: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys",
+      "title_months": [
+        "apr",
+        "mar"
+      ],
+      "data_keys": [
+        "apr",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Hiring is now concentrated in healthcare and leisure: prior-month chip matches title",
+      "expected_prior": "Mar'26",
+      "chips_found": [
+        "Mar'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment is rising broadly across sectors: title months match U_SECTOR_MOM keys",
+      "title_months": [
+        "feb",
+        "mar"
+      ],
+      "data_keys": [
+        "feb",
+        "mar"
+      ],
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment is rising broadly across sectors: prior-month chip matches title",
+      "expected_prior": "Feb'26",
+      "chips_found": [
+        "Mar'26",
+        "Feb'26",
+        "Mar'26",
+        "Mar'26",
+        "Feb'26"
+      ],
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "metric_consistency": [
+    {
+      "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
+      "reference": 115.0,
+      "surfaces": {
+        "NFP_BLS_MOM.bls[-1]": 115.0,
+        "KPIS Jobs tile": 115.0,
+        "Commentary payrolls": "MISSING"
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Unemployment rate (%): surfaces agree within \u00b10.1 (ref: U_MONTHLY.data[-1])",
+      "reference": 4.3,
+      "surfaces": {
+        "U_MONTHLY.data[-1]": 4.3,
+        "KPIS Unemployment": 4.3,
+        "Commentary U-3": "MISSING"
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "CPI YoY latest (%): \u22652 surfaces extractable",
+      "surfaces": {
+        "CPI_MONTHLY.headline[-1]": 3.8,
+        "KPIS CPI YoY": "MISSING"
+      },
+      "severity": "skipped",
+      "pass": true,
+      "reason": "only 1 surface(s) extractable; cross-check needs \u22652"
+    },
+    {
+      "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
+      "reference": 3.3,
+      "surfaces": {
+        "PCE_MONTHLY.core[-1]": 3.3,
+        "KPIS Core PCE": 3.3
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
+      "reference": 44.8,
+      "surfaces": {
+        "UMCSENT_MONTHLY.data[-1]": 44.8,
+        "KPIS UMich Sentiment": 44.8
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Fed Funds latest (%): surfaces agree within \u00b10.05 (ref: KPIS Fed Funds)",
+      "reference": 3.64,
+      "surfaces": {
+        "KPIS Fed Funds": 3.64,
+        "data[\"ffr\"]": 3.64
+      },
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
+      "reference": 4.5,
+      "surfaces": {
+        "KPIS 10Y Treasury": 4.5,
+        "data[\"dgs10\"]": 4.5
+      },
+      "severity": "ok",
+      "pass": true
+    }
+  ],
+  "earnings_verbatim": [
+    {
+      "check": "bank_earnings.json (9 banks)",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "JPM: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "BAC: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "WFC: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "C: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "GS: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "COF: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "AXP: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "SYF: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "USB: verbatim quotes in transcript",
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "transcript_archive_coverage",
+      "severity": "ok",
+      "pass": true,
+      "reported": 9,
+      "archived": 9,
+      "coverage_pct": 100.0
+    }
+  ],
+  "schema_contract": [
+    {
+      "check": "Schema contract: data['adp_latest']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['adp_nppttl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ahetpi']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ahetpi_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['bls_sectors']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['bls_unemp_sectors']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['brent_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['brent_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cc_delinq']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ccsa']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_all']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_all_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_core']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_food_away']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_median']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_transport']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpi_trimmed']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cpiengsl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['cs_hpi']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['deficit_gdp']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs10']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs10_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs2']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['dgs2_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['fedfunds_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ffr']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gasoline']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdp_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdp_annual_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdpc1_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['gdpc1_annual_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hires']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['houst']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['houst1f']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hy_oas']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['hy_oas_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['icsa']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ig_oas']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['ig_oas_monthly']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['jolts_hist']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['mortgage30']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['mortgage30_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['nonrevsl_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['oil_daily_chart']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['payems']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['payems_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_core']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_core_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['pce_pinned']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['psavert']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['quits']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['revolsl_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['rrpontsyd']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['tdsp']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['tga']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['u6rate']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['umcsent']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['umcsent_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['unemploy_hist']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['unrate']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['vintages']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wage_growth_atl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['walcl']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wresbal']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_monthly']",
+      "pass": true,
+      "severity": "ok"
+    }
+  ],
+  "collector_errors": [
+    {
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
+    }
+  ],
+  "seed_drift": [
+    {
+      "check": "Seed drift: FC_MACRO.act24 (yr=2024)",
+      "pass": true,
+      "severity": "ok",
+      "source": "state.json",
+      "seed": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ],
+      "expected": [
+        2.8,
+        4.1,
+        2.9,
+        4.0,
+        5.1
+      ]
+    },
+    {
+      "check": "Seed drift: FC_MACRO.act25 (yr=2025)",
+      "pass": true,
+      "severity": "ok",
+      "source": "state.json",
+      "seed": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ],
+      "expected": [
+        2.1,
+        4.4,
+        2.7,
+        3.8,
+        4.2
+      ]
+    }
+  ],
+  "visual_qa": [
+    {
+      "check": "Visual: contract \u2014 spacing_grid",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: contract \u2014 palette_compliance",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: contract \u2014 panel_meta",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: contract \u2014 serif_scope",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 Page has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 Page body has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 No JS exceptions",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 No console errors",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 KPI strip has tiles",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 Nav buttons present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EX 1Quarterly GDP swung wildly through 2\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EX 2Every consensus indicator deteriorat\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EX 32026 consensus brackets 1.4\u20132.4% GDP\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Outlook \u2014 Panel \"EX 4Six 2026 themes anchor the outlook: \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 5 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 6 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 7 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 8 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 9 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 10 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 11 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 12 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 13 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 14 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 15 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 16 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 17 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 18 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 19 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 20 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 21 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 22 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 23 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 24 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 25 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 26 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 27 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 28 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 29 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 30 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Chart canvas 31 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Panel \"EX 1GDP Commentary \u2014 2025 Growth & 2026 \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: GDP \u2014 Panel \"EX 2Real GDP held 2.0% in 2025 \u2014 but the\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EXHIBIT 06\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 1Jobs Market Commentary \u2014 2025 & 2026\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 2NFP slipped to 115K \u2014 below the ~150\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 3Hiring is now concentrated in health\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 42025 added ~+116K \u2014 the slowest non-\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 52025 sector mix shows construction a\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 62025 net adds (+116K Dec-to-Dec) tra\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Jobs \u2014 Panel \"EX 7JOLTS V/U ratio has normalised towar\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EXHIBIT 06\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 1Unemployment Commentary \u2014 Trends & R\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 2U-3 climbed to 4.3% \u2014 meaningful ris\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 3Unemployment is rising broadly acros\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 4Annual avg has risen for two consecu\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 52025 saw broad sector deterioration \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 6Initial claims remain orderly \u2014 but \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Unemployment \u2014 Panel \"EX 7Information and tech sectors carry e\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EX 1Wage Growth Commentary \u2014 Nominal vs \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EX 2Wage growth decelerated 30bp to 3.6%\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EX 3Real wages turned positive in 2024 \u2014\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EX 4Sector wage growth shows broad cooli\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Wages \u2014 Panel \"EX 52021\u201322 nominal wage peaks have full\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EXHIBIT 06\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 1CPI Commentary \u2014 Inflation Trajector\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 2Headline CPI re-accelerates above Co\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 3Energy and transport categories are \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 4Annual CPI is still well above the F\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 5Goods inflation has normalised; serv\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 6Category-level annual rates show fou\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 Panel \"EX 7Trimmed-mean and median CPI track he\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.1 panel title contains finite verb (finding-first)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.2 panel-meta strip present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: CPI \u2014 \u00a723.3 \"so what\" footer present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 5 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 6 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 7 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 8 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Chart canvas 9 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 06\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 07\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 08\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 09\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 10\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EXHIBIT 11\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 1Consumer & PCE Commentary \u2014 Spending\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 2Saving rate at 3.6% \u2014 consumers are \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 32025 saving rate is the lowest non-r\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 4Household debt at $18.59T \u2014 delinque\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 5Debt service ratio at ~11.3% \u2014 well \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 6UMich sentiment at 63.8 \u2014 consumers \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 7Annual sentiment hasn't recovered fr\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 8Core PCE at 3.2% \u2014 120bp above targe\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 9Annual core PCE has stayed above 3% \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Consumer & PCE \u2014 Panel \"EX 10Energy and housing components are p\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EX 1Fed Rates Commentary \u2014 Policy Stance\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EX 2Fed Funds at 3.64% \u2014 markets price m\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EX 3Fed balance sheet still draining via\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EX 4Wall Street sees 50\u201375bp of cuts by \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EX 5Deposit-rich issuers (JPM, BAC) carr\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Rates & Yields \u2014 Panel \"EX 610Y at 4.47% has held above card del\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EX 1Credit Commentary \u2014 Spread Complacen\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EX 2Card and auto delinquencies are risi\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EX 3Card specialists are running NCOs ~4\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EX 4SLOOS is near neutral \u2014 but the 2023\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EX 5Revolving credit growth has slowed s\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Credit \u2014 Panel \"EX 6Household debt at $18.59T \u2014 mortgage\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EX 1Banks Commentary \u2014 Earnings, NII & C\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EX 2Universal banks beat on trading and \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EX 3JPM trimmed NII guidance by $1.5B \u2014 \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EX 4NCO guidance is up ~50bp across card\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Banking \u2014 Panel \"EX 5Management tone converged on cautiou\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 4 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 5 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Chart canvas 6 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EXHIBIT 06\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 1Housing Commentary \u2014 Affordability C\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 2Mortgage rate at 6.37% is keeping pr\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 3Home prices have doubled since 2012 \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 4Mortgage rate gap to Fed funds has w\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 5Starts at 1.50M are running ahead of\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 6Affordability index near record lows\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Housing \u2014 Panel \"EX 7Sun Belt is cooling, Northeast is fi\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Chart canvas 0 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Chart canvas 1 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Chart canvas 2 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 01\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 02\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 03\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 04\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EXHIBIT 05\" painted body content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary positioned above first chart",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary sentence count in [2,4]",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 1Oil Commentary \u2014 Supply Shock & Macr\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 2Three oil shocks in 25 years have al\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 3Monthly average rose ~30% since Horm\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 4Oil Supply Shock Tracker \u2014 Daily Clo\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 5Full Oil Impact Chain \u2014 Prices to Cr\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 6Airlines and freight take 200\u2013400bp \" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 7Every major oil shock since 1973 has\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Oil \u2014 Panel \"EX 8Past shocks averaged ~12 months from\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Panel \"EX 1KPI Signal Color Logic\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Panel \"EX 2Dashboard Tab Index\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Panel \"EX 3Key Definitions\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Panel \"EX 4\ud83d\udd2d Forecast Institutions \u2014 Methodolog\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Sources \u2014 Panel \"EX 5Dynamic Commentary\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Dashboard \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Dashboard \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Dashboard \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Dashboard \u2014 Commentary color matches palette",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 No undefined/NaN/null values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"EX 1Pass 1: Internal Consistency\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"EX 2Pass 2: Source Verification\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"EX 3Pass 3: Data Staleness\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"EX 4Pass 3f: Schema Contract\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"EX 5Pass 3g: Seed Drift\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Validator \u2014 Panel \"EX 6Pass 3h: Collector Errors\" has title",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 KPIS defined",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 KPIS all have values",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 KPIS no NaN/undefined",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CPI_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CPI_MONTHLY.headline completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CPI_MONTHLY.core completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 PCE_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 PCE_MONTHLY.headline completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 PCE_MONTHLY.core completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 U_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 U_MONTHLY.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 NFP_VS_ADP has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 NFP_VS_ADP.bls completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 NFP_VS_ADP.adp completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 HOUSING_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 HOUSING_MONTHLY.caseShiller completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 HOUSING_MONTHLY.mortgage30 completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_MONTHLY.wti completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_MONTHLY.brent completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SAVING_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SAVING_MONTHLY.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 UMCSENT_MONTHLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 UMCSENT_MONTHLY.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 UMCSENT_MONTHLY.statuses completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 U_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 U_ANNUAL.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CPI_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CPI_ANNUAL.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 PCE_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 PCE_ANNUAL.headline completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 PCE_ANNUAL.core completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 WAGE_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 WAGE_ANNUAL.nominal completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 WAGE_ANNUAL.real completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 JOBS_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 JOBS_ANNUAL.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SAVING_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SAVING_ANNUAL.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_ANNUAL has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_ANNUAL.wti completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_ANNUAL.brent completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CLAIMS_WEEKLY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CLAIMS_WEEKLY.initial completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CLAIMS_WEEKLY.continued completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 GDP_TOTAL_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 GDP_TOTAL_DATA.nominal completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 GDP_TOTAL_DATA.real completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 FFR_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 FFR_DATA.actual completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 FFR_DATA.dots completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 MORTGAGE_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 MORTGAGE_DATA.rate30 completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 MORTGAGE_DATA.ffr completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SPREADS_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SPREADS_DATA.ig completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SPREADS_DATA.hy completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TREASURY_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TREASURY_DATA.dgs10 completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TREASURY_DATA.dgs2 completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TREASURY_DATA.spread completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TREASURY_DATA.card90 completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_SPREAD has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_SPREAD.spread completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 STARTS_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 STARTS_DATA.sf completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 STARTS_DATA.mf completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 HPI_DATA has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 HPI_DATA.cs completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 HPI_DATA.fhfa completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_CPI has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_CPI.wti completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_CPI.cpiEnergy completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_SENTIMENT has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_SENTIMENT.wti completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_SENTIMENT.sentiment completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_HY has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_HY.wti completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 OIL_VS_HY.hySpreads completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CREDIT_GROWTH has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CREDIT_GROWTH.revolving completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 CREDIT_GROWTH.nonrevolving completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TDSP_HIST has data",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 TDSP_HIST.data completeness",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 VALIDATION_REPORT present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SHOCK_TRACKER oil tab present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: data \u2014 SHOCK_TRACKER all 8 phase titles rendered",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: \"Fed 2% target\" present \u22652\u00d7 (c-cpi-mom, c-pce-mom (+ PCE annual series legend))",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: \"Hormuz shock, Mar 2026\" present \u22653\u00d7 (c-cpi-mom, c-pce-mom, c-oil-monthly)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: \"Neutral rate, 2.5\u20133.0%\" present \u22651\u00d7 (c-ffr)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: legacy string \"Fed 2% Target\" not present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: legacy string \"Mar 2026 oil shock\" not present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: legacy string \"FOMC neutral rate\" not present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: annotations \u2014 lexicon: legacy string \"\"Oil shock\"\" not present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "visual_review": [],
+  "cross_source": [
+    {
+      "check": "Cross-source: unrate (FRED vs BLS)",
+      "pass": true,
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.3,
+      "bls": 4.3,
+      "diff": 0.0,
+      "tol": 0.215,
+      "note": null
+    },
+    {
+      "check": "Cross-source: cpi_all (FRED vs BLS)",
+      "pass": true,
+      "severity": "ok",
+      "metric": "cpi_all",
+      "fred": 332.407,
+      "bls": 332.407,
+      "diff": 0.0,
+      "tol": 0.3324,
+      "note": null
+    },
+    {
+      "check": "Cross-source: core_cpi (FRED vs BLS)",
+      "pass": true,
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 335.423,
+      "bls": 335.423,
+      "diff": 0.0,
+      "tol": 0.3354,
+      "note": null
+    }
+  ],
+  "noise_floor": [
+    {
+      "check": "noise_floor[core_cpi_yoy]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "core_cpi_yoy",
+      "floor": 0.3,
+      "prior": 2.6,
+      "latest": 2.7,
+      "delta": 0.1,
+      "abs_delta": 0.1,
+      "verdict": "within_noise",
+      "note": "PoP delta +0.100 \u2264 \u00b10.3 \u2192 within_noise"
+    },
+    {
+      "check": "noise_floor[saving_rate]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "saving_rate",
+      "floor": 0.3,
+      "prior": 3.2,
+      "latest": 2.6,
+      "delta": -0.6,
+      "abs_delta": 0.6,
+      "verdict": "real_signal",
+      "note": "PoP delta -0.600 > \u00b10.3 \u2192 real_signal"
+    },
+    {
+      "check": "noise_floor[umich_sentiment]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "umich_sentiment",
+      "floor": 0.5,
+      "prior": 49.8,
+      "latest": 44.8,
+      "delta": -5.0,
+      "abs_delta": 5.0,
+      "verdict": "real_signal",
+      "note": "PoP delta -5.000 > \u00b10.5 \u2192 real_signal"
+    },
+    {
+      "check": "noise_floor[cc_delinq_90plus]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "cc_delinq_90plus",
+      "floor": 0.15,
+      "prior": 2.94,
+      "latest": 2.92,
+      "delta": -0.02,
+      "abs_delta": 0.02,
+      "verdict": "within_noise",
+      "note": "PoP delta -0.020 \u2264 \u00b10.15 \u2192 within_noise"
+    },
+    {
+      "check": "noise_floor[gasoline_usd_gal]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "gasoline_usd_gal",
+      "floor": 0.1,
+      "prior": 4.49,
+      "latest": 4.475,
+      "delta": -0.015,
+      "abs_delta": 0.015,
+      "verdict": "within_noise",
+      "note": "PoP delta -0.015 \u2264 \u00b10.1 \u2192 within_noise"
+    },
+    {
+      "check": "noise_floor[jolts_openings]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "jolts_openings",
+      "floor": 200.0,
+      "prior": 6922.0,
+      "latest": 6866.0,
+      "delta": -56.0,
+      "abs_delta": 56.0,
+      "verdict": "within_noise",
+      "note": "PoP delta -56.000 \u2264 \u00b1200.0 \u2192 within_noise"
+    },
+    {
+      "check": "noise_floor[trimmed_mean_cpi_yoy]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "trimmed_mean_cpi_yoy",
+      "floor": 0.2,
+      "prior": 0.186059761516599,
+      "latest": 0.425393874680946,
+      "delta": 0.2393,
+      "abs_delta": 0.2393,
+      "verdict": "real_signal",
+      "note": "PoP delta +0.239 > \u00b10.2 \u2192 real_signal"
+    },
+    {
+      "check": "noise_floor[median_cpi_yoy]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "median_cpi_yoy",
+      "floor": 0.2,
+      "prior": 0.190103312097589,
+      "latest": 0.401855047525523,
+      "delta": 0.2118,
+      "abs_delta": 0.2118,
+      "verdict": "real_signal",
+      "note": "PoP delta +0.212 > \u00b10.2 \u2192 real_signal"
+    },
+    {
+      "check": "noise_floor[walcl_bn]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "walcl_bn",
+      "floor": 50.0,
+      "prior": 6728502.0,
+      "latest": 6713643.0,
+      "delta": -14859.0,
+      "abs_delta": 14859.0,
+      "verdict": "real_signal",
+      "note": "PoP delta -14859.000 > \u00b150.0 \u2192 real_signal"
+    },
+    {
+      "check": "noise_floor[wresbal_bn]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "wresbal_bn",
+      "floor": 50.0,
+      "prior": 3102810.0,
+      "latest": 3129562.0,
+      "delta": 26752.0,
+      "abs_delta": 26752.0,
+      "verdict": "real_signal",
+      "note": "PoP delta +26752.000 > \u00b150.0 \u2192 real_signal"
+    },
+    {
+      "check": "noise_floor[rrpontsyd_bn]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "rrpontsyd_bn",
+      "floor": 100.0,
+      "prior": 1.787,
+      "latest": 1.853,
+      "delta": 0.066,
+      "abs_delta": 0.066,
+      "verdict": "within_noise",
+      "note": "PoP delta +0.066 \u2264 \u00b1100.0 \u2192 within_noise"
+    },
+    {
+      "check": "noise_floor[deficit_pct_gdp]",
+      "pass": true,
+      "severity": "ok",
+      "metric": "deficit_pct_gdp",
+      "floor": 0.5,
+      "prior": -6.19625,
+      "latest": -5.76906,
+      "delta": 0.4272,
+      "abs_delta": 0.4272,
+      "verdict": "within_noise",
+      "note": "PoP delta +0.427 \u2264 \u00b10.5 \u2192 within_noise"
+    }
+  ],
+  "secret_leaks": [
+    {
+      "check": "Secret leak scan (21 JSON files)",
+      "pass": true,
+      "severity": "ok",
+      "note": "no api_key/token/key= patterns detected"
+    }
+  ],
+  "coverage": [
+    {
+      "check": "validator coverage (migration-sensitive passes)",
+      "checks": 94,
+      "skipped": 1,
+      "skip_rate": 0.011,
+      "threshold": 0.15,
+      "pass": true,
+      "severity": "ok",
+      "note": null
+    }
+  ]
+}

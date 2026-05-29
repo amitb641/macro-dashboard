@@ -3278,7 +3278,7 @@ def rebuild_kpi_strip(html, data, vals):
     _api_writer.register('KPIS', cards)
     # Cross-cycle overlay: register ~1-month-ago KPIS so the toggle UI can
     # show month-over-month comparison without a second fetch.
-    # Uses data/kpis_history.json — a rolling dated log (≤13 entries).
+    # Uses data/kpis_history.json — a rolling dated log (≤104 entries, ≈2 years).
     # Renderer appends today's KPIS, then reads back the entry closest to
     # 28 days ago as PRIOR_KPIS. First-run graceful: file missing → no key.
     try:
@@ -3295,9 +3295,9 @@ def rebuild_kpi_strip(html, data, vals):
         # Append today's entry (deduplicate same-day re-runs).
         _hist = [e for e in _hist if e.get('date') != _today_str]
         _hist.append({'date': _today_str, 'kpis': cards})
-        # Keep most recent 13 weeks (≈ one quarter).
+        # Keep most recent 104 weeks (≈ 2 years of weekly runs).
         _hist.sort(key=lambda e: e['date'], reverse=True)
-        _hist = _hist[:13]
+        _hist = _hist[:104]
         _KPIS_HIST.write_text(_json.dumps(_hist, separators=(',', ':')), 'utf-8')
         # Find entry closest to 28 days ago.
         _target = _dt.date.today() - _dt.timedelta(days=28)
