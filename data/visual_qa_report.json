@@ -1,14 +1,16 @@
 {
-  "checked_at": "2026-05-28T17:56:42.547244Z",
+  "checked_at": "2026-05-29T01:47:34.926222Z",
   "status": "PASS",
   "summary": {
     "total_checks": 430,
     "passed": 430,
     "failed": 0,
-    "js_errors": 0,
+    "js_errors": 1,
     "console_errors": 0
   },
-  "js_errors": [],
+  "js_errors": [
+    "Cannot convert undefined or null to object"
+  ],
   "console_errors": [],
   "findings": [
     {
