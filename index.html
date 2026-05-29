@@ -3010,16 +3010,16 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
     <div class="panel">
       <div class="panel-title">Unemployment is rising broadly across sectors — the rate climb is not concentrated</div>
-      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Mar'26 vs Feb'26 · sorted by change</div>
+      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Apr'26 vs Mar'26 · sorted by change</div>
       <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">BLS CPS</span><span class="pm-sep">|</span><span class="pm-asof">As of Mar 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Mar'26 rate rose</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Mar'26 rate fell</span>
-        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Feb'26</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Apr'26 rate rose</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#1A9E5Acc;display:inline-block"></span>Apr'26 rate fell</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#8878B8bb;display:inline-block"></span>Mar'26</span>
       </div>
       <div class="ch-inline" style="position:relative;height:420px"><canvas id="c-unemp-mom" role="img" aria-label="Unemployment by sector, month-over-month change in percentage points"></canvas></div>
       <div class="so-what">Broad-based sector deterioration is the signature of demand-driven slack — typically precedes a faster headline rise within 2-3 prints.</div>
-      <p class="src">Source: BLS Current Population Survey (CPS), seasonally adjusted. Month-over-month change in unemployment rate by sector (percentage points).</p>
+      <p class="src">Source: BLS Current Population Survey (CPS), not seasonally adjusted (LNU04 series). Month-over-month change in unemployment rate by sector (percentage points).</p>
     </div>
   </div>
 
@@ -7956,7 +7956,7 @@ function buildStackTab(){
     ["👷 Unemp",      "Continued Claims (CCSA)",        "DOL / FRED",          "Weekly",     "Mar 2026",  "Agent pulls Thursdays · ~5yr history"],
     ["👷 Unemp",      "U-3 Unemployment Rate",          "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
     ["👷 Unemp",      "U-6 Underemployment",            "BLS CPS",             "Monthly",    "Feb 2026",  "Agent auto-pulls"],
-    ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Manual — no sector API"],
+    ["👷 Unemp",      "Unemployment by Sector",         "BLS CPS Table A-14",  "Annual",     "Jan 2026",  "Auto — BLS API v2 (not SA)"],
     ["💵 Wages",      "Wage Growth (headline)",         "<a href='https://fred.stlouisfed.org/series/FRBATLWGT3MMAUMHWGO' target='_blank' rel='noopener'>Atlanta Fed WGT 3MMA (FRBATLWGT3MMAUMHWGO)</a>", "Monthly", "Mar 2026", "Agent auto-pulls · continuously-employed workers, controls for composition"],
     ["💵 Wages",      "Avg Hourly Earnings (level)",    "BLS CES AHETPI",      "Monthly",    "Mar 2026",  "Agent auto-pulls · used for $/hr level and historical context"],
     ["💵 Wages",      "Wages by Sector",                "BLS CES",             "Annual",     "Jan 2026",  "Manual update each January · Atlanta Fed has no sector breakdown"],

@@ -1436,20 +1436,21 @@ def rebuild_u_sector_mom(html, data):
         warnings.append('U_SECTOR_MOM rebuild SKIPPED — bls_unemp_sectors missing from raw data')
         return html
 
+    # BLS does not publish SA sector unemployment rates.
+    # LNU04 (not seasonally adjusted) is the only available CPS series.
+    # 11 sectors — Hotel/Lodging and Restaurants consolidated into Leisure & Hospitality.
     SECTOR_MAP = {
-        'LNS14032200': 'Construction',
-        'LNS14033260': 'Hotel & Lodging',
-        'LNS14033270': 'Restaurant Workers',
-        'LNS14032500': 'Retail Trade',
-        'LNS14032800': 'Information/Tech',
-        'LNS14032600': 'Transport & Warehousing',
-        'LNS14032300': 'Manufacturing',
-        'LNS14033000': 'Prof. & Biz Services',
-        'LNS14032100': 'Agriculture & Mining',
-        'LNS14032400': 'Wholesale Trade',
-        'LNS14033100': 'Healthcare & Education',
-        'LNS14032900': 'Financial Activities',
-        'LNS14033400': 'Government',
+        'LNU04032231': 'Construction',
+        'LNU04032232': 'Manufacturing',
+        'LNU04032235': 'Wholesale & Retail Trade',
+        'LNU04032236': 'Transport & Warehousing',
+        'LNU04032237': 'Information/Tech',
+        'LNU04032238': 'Financial Activities',
+        'LNU04032239': 'Prof. & Biz Services',
+        'LNU04032240': 'Healthcare & Education',
+        'LNU04032241': 'Leisure & Hospitality',
+        'LNU04032230': 'Agriculture & Mining',
+        'LNU04028615': 'Government',
     }
     sector_names = list(SECTOR_MAP.values())
 
@@ -1489,9 +1490,33 @@ def rebuild_u_sector_mom(html, data):
         if n:
             applied.append(f'U_SECTOR_MOM registered to state.json ({len(sector_data)} sectors, {prv_k}/{cur_k}); inline zeroed')
             html = new_html
+
+            # Patch static panel subtitle + legend HTML labels so they
+            # always match the latest data month even before hydration.
+            def _ulbl(k):
+                import re as _re
+                m2 = _re.match(r'^([a-z]{3})(\d{2})$', k)
+                return (m2.group(1).capitalize() + "'" + m2.group(2)) if m2 else k
+            cur_l = _ulbl(cur_k)
+            prv_l = _ulbl(prv_k)
+            _month_pat = r"[A-Z][a-z]+'?\d*"
+            html = re.sub(
+                r"(BLS CPS \xb7 )" + _month_pat + r" vs " + _month_pat,
+                lambda m: m.group(1) + cur_l + ' vs ' + prv_l,
+                html, count=1)
+            html = re.sub(
+                r">" + _month_pat + r" rate rose<",
+                lambda m: '>' + cur_l + ' rate rose<', html, count=1)
+            html = re.sub(
+                r">" + _month_pat + r" rate fell<",
+                lambda m: '>' + cur_l + ' rate fell<', html, count=1)
+            html = re.sub(
+                r'(background:#8878B8bb;display:inline-block"></span>)' + _month_pat + r'</span>',
+                lambda m: m.group(1) + prv_l + '</span>', html, count=1)
+
     else:
         warnings.append(
-            f'U_SECTOR_MOM rebuild SKIPPED — only {len(sector_data)}/13 sectors '
+            f'U_SECTOR_MOM rebuild SKIPPED — only {len(sector_data)}/11 sectors '
             f'had >=2 obs (need >=10). Chart will display stale data.'
         )
 

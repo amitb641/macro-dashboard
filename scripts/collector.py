@@ -498,22 +498,24 @@ def collect():
         'CES9093000001',  # State & Local Government
     ])
 
-    # Sector unemployment rates (BLS CPS) for U_SECTOR_MOM auto-rebuild
+    # Sector unemployment rates (BLS CPS) for U_SECTOR_MOM auto-rebuild.
+    # NOTE: BLS does not publish seasonally-adjusted (LNS14) sector unemployment
+    # rates by industry. LNU04 (not seasonally adjusted) is the only available
+    # series. 11 sectors — Hotel/Lodging and Restaurants consolidated into
+    # Leisure & Hospitality (LNU04032241).
     print('  [Monthly] Sector Unemployment (CPS)...')
     data['bls_unemp_sectors'] = bls_fetch([
-        'LNS14032200',  # Construction
-        'LNS14033260',  # Hotel & Lodging (Accommodation)
-        'LNS14033270',  # Restaurant Workers (Food Services)
-        'LNS14032500',  # Retail Trade
-        'LNS14032800',  # Information/Tech
-        'LNS14032600',  # Transport & Warehousing
-        'LNS14032300',  # Manufacturing
-        'LNS14033000',  # Prof. & Biz Services
-        'LNS14032100',  # Agriculture & Mining
-        'LNS14032400',  # Wholesale Trade
-        'LNS14033100',  # Healthcare & Education
-        'LNS14032900',  # Financial Activities
-        'LNS14033400',  # Government
+        'LNU04032231',  # Construction
+        'LNU04032232',  # Manufacturing
+        'LNU04032235',  # Wholesale & Retail Trade
+        'LNU04032236',  # Transport & Warehousing
+        'LNU04032237',  # Information/Tech
+        'LNU04032238',  # Financial Activities
+        'LNU04032239',  # Prof. & Biz Services
+        'LNU04032240',  # Healthcare & Education
+        'LNU04032241',  # Leisure & Hospitality
+        'LNU04032230',  # Agriculture & Mining
+        'LNU04028615',  # Government
     ])
 
     print('  [Monthly] Inflation...')
