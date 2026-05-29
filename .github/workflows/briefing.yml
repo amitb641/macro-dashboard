@@ -110,8 +110,11 @@ jobs:
           echo "   Pipeline halted — fix data quality issues before publishing."
           exit 1
 
-      - name: Snapshot — Rolling data backup (keep last 3)
+      - name: Snapshot — Rolling data backup (keep last 52)
         run: python scripts/snapshot.py
+
+      - name: History Archive — Long-term lightweight record
+        run: python scripts/history_archive.py
 
       - name: Version Tracker — Record pipeline run
         run: python scripts/version_tracker.py
