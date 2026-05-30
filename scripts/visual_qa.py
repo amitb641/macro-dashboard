@@ -499,6 +499,67 @@ def run_visual_qa(take_screenshots=False):
                     _check(tab_name, f'Chart canvas {i} has size', has_size,
                            f'{box["width"]:.0f}x{box["height"]:.0f}px')
 
+            # ── Chart.js instance check (blank-chart regression guard) ──
+            # §QA-chartjs: every sized canvas must have a Chart.js instance
+            # registered via Chart.getChart(). A canvas present in the DOM
+            # with a non-zero bounding box but NO Chart.js instance means
+            # the buildXxxTab() function threw a TypeError before calling
+            # new Chart(...) — symptoms: blank panel, user has to notice it.
+            #
+            # Root cause: Object.keys(null) for a Tier-1 variable that
+            # failed hydration (e.g. U_SECTOR_MOM null after smoke-test
+            # state.json corruption) aborts the entire build function and
+            # leaves ALL canvases in that tab blank.
+            #
+            # Two-level severity:
+            #   critical — ALL sized canvases in the tab have no instance
+            #              (entire buildXxxTab() threw, whole tab is blank)
+            #   warning  — some canvases lack an instance
+            #              (one chart skipped, maybe an intentional null guard)
+            if canvases:
+                chartjs_check = panel.evaluate("""
+                    el => {
+                        const out = {total: 0, with_instance: 0, no_instance_ids: []};
+                        const chartAvail = (typeof Chart !== 'undefined'
+                                            && typeof Chart.getChart === 'function');
+                        if (!chartAvail) return null;  // Chart.js not loaded yet
+                        el.querySelectorAll('canvas').forEach(c => {
+                            const box = c.getBoundingClientRect();
+                            if (box.width <= 50 || box.height <= 50) return;
+                            out.total++;
+                            if (Chart.getChart(c)) {
+                                out.with_instance++;
+                            } else {
+                                out.no_instance_ids.push(c.id || '(no id)');
+                            }
+                        });
+                        return out;
+                    }
+                """)
+                if chartjs_check and chartjs_check.get('total', 0) > 0:
+                    total_c  = chartjs_check['total']
+                    with_c   = chartjs_check['with_instance']
+                    missing  = chartjs_check['no_instance_ids']
+                    if with_c == 0:
+                        # All charts blank — whole tab build function crashed
+                        _check(
+                            tab_name, 'Chart.js instances rendered (all blank = JS crash)',
+                            False,
+                            f'0/{total_c} canvases have Chart.js instance '
+                            f'— buildTab() likely threw before new Chart(...); '
+                            f'check Tier-1 null guards. Canvases: {missing[:5]}',
+                            severity='critical',
+                        )
+                    elif missing:
+                        # Partial — one or more charts blank (may be intentional null guard)
+                        _check(
+                            tab_name, f'Chart.js instances rendered ({len(missing)} canvas(es) blank)',
+                            False,
+                            f'{with_c}/{total_c} canvases have Chart.js instance; '
+                            f'blank: {missing[:5]}',
+                            severity='warning',
+                        )
+
             # ── Per-panel paint coverage (EX 5 regression guard) ──
             # Every panel labelled with a `pm-exhibit` chip (e.g. "Exhibit 05")
             # must paint *something* in its body — at minimum: a sized canvas,

@@ -223,6 +223,7 @@ def test_renderer(tmp_dir):
     """Test renderer produces valid HTML from fixture data."""
     print('\n── Test: Renderer ──')
     import renderer
+    import _api_writer
 
     # Point renderer to temp dir
     renderer.ROOT = tmp_dir
@@ -233,6 +234,16 @@ def test_renderer(tmp_dir):
     renderer.OVR_FILE = tmp_dir / 'data' / 'overrides.json'
     renderer.VAL_FILE = tmp_dir / 'data' / 'validation_report.json'
 
+    # Redirect _api_writer to the temp dir so renderer.render() does NOT
+    # overwrite the real data/state.json with synthetic fixture data.
+    # Without this, every smoke-test run corrupts the live state.json and
+    # blanks all Tier-1 charts (U_SECTOR_MOM, CPI_CAT_MOM, etc.) until
+    # the next full CI run rebuilds it from real API data.
+    _real_state_file = _api_writer._STATE_FILE
+    _real_state = _api_writer._STATE.copy()
+    _api_writer._STATE_FILE = tmp_dir / 'data' / 'state.json'
+    _api_writer._STATE = {}
+
     # Reset state
     renderer.applied = []
     renderer.errors = []
@@ -242,6 +253,10 @@ def test_renderer(tmp_dir):
         result = renderer.render()
     except SystemExit:
         result = False
+    finally:
+        # Always restore — even if render() throws
+        _api_writer._STATE_FILE = _real_state_file
+        _api_writer._STATE = _real_state
 
     html_file = tmp_dir / 'index.html'
     _test('index.html exists after render', html_file.exists())

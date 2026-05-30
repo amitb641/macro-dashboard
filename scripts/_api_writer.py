@@ -56,8 +56,12 @@ _STATE: Dict[str, Any] = {}
 
 # Where the state bundle lands. Resolved against repo root, not CWD,
 # so the renderer can be invoked from anywhere.
+# Override via MACRO_STATE_FILE env var for test isolation — without this,
+# test runs that call renderer.render() write synthetic data into the real
+# data/state.json and blank Tier-1 charts until the next CI run rebuilds it.
 _ROOT = Path(__file__).resolve().parent.parent
-_STATE_FILE = _ROOT / 'data' / 'state.json'
+_STATE_FILE = Path(os.environ['MACRO_STATE_FILE']) if 'MACRO_STATE_FILE' in os.environ \
+    else _ROOT / 'data' / 'state.json'
 
 
 def register(key: str, payload: Any) -> None:
