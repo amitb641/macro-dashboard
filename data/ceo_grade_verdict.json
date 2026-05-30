@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T05:02:09Z",
+  "generated_at": "2026-05-30T17:22:59Z",
   "overall": "FAIL",
   "strict": true,
   "headline": "❌ CEO-grade gate FAILED — 1 critical finding(s) block publish.",
@@ -14,7 +14,7 @@
       "status": "FAIL",
       "critical": 1,
       "warning": 0,
-      "skipped": 1,
+      "skipped": 7,
       "total": 643,
       "validator_status": "WARN"
     },
@@ -53,7 +53,7 @@
       "warning": 0,
       "skipped": 0,
       "total": 0,
-      "note": "today's incident report: data/incident_reports/2026-05-29.md"
+      "note": "today's incident report: data/incident_reports/2026-05-30.md"
     }
   }
 }
