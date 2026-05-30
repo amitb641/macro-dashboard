@@ -779,6 +779,59 @@ def run_visual_qa(take_screenshots=False):
                 screenshot_path = SCREEN_DIR / f'{tab_id}.png'
                 page.screenshot(path=str(screenshot_path), full_page=True)
 
+        # ── Runtime error sweep (§QA-observability) ─────────────────
+        # After visiting every tab, read window.MD._errors[].
+        # Any entry means a real JS exception escaped into the page —
+        # buildXxxTab() crash, hydration failure, unhandled rejection.
+        # tab_crash entries are the highest signal: they mean at least
+        # one chart panel is blank and the user has no way to know.
+        print('\n  ── Runtime Error Sweep ──')
+        runtime_errors = page.evaluate('''() => {
+            var md = window.MD || {};
+            return {
+                errors:            (md._errors || []).slice(),
+                hydration_success: md._hydrationSuccess,
+                missing_keys:      md._hydrationMissingKeys || []
+            };
+        }''')
+        rt_errors     = runtime_errors.get('errors', [])
+        hydration_ok  = runtime_errors.get('hydration_success', None)
+        missing_keys  = runtime_errors.get('missing_keys', [])
+
+        _check('global', 'Hydration: state.json loaded', hydration_ok is not False,
+               'state.json fetch failed — all Tier-1 charts rendered with null data',
+               severity='critical')
+        _check('global', 'Hydration: all Tier-1 keys present',
+               len(missing_keys) == 0,
+               f'missing keys: {missing_keys}',
+               severity='warning')
+
+        tab_crashes = [e for e in rt_errors if e.get('type') == 'tab_crash']
+        other_errors = [e for e in rt_errors
+                        if e.get('type') not in ('tab_crash',)
+                        # filter known-benign: Chart.js resize observer loop,
+                        # Vercel analytics 404, favicon 404
+                        and 'ResizeObserver loop' not in e.get('msg', '')
+                        and 'favicon' not in e.get('src', '').lower()]
+
+        if tab_crashes:
+            for tc in tab_crashes:
+                _check('global',
+                       f'Tab "{tc.get("tab","?")}" built without JS crash',
+                       False,
+                       tc.get('msg', '')[:120],
+                       severity='critical')
+        else:
+            _check('global', 'No tab build crashes (window.MD._errors tab_crash)', True)
+
+        if other_errors:
+            for oe in other_errors[:5]:
+                _check('global',
+                       f'No unhandled JS error: {oe.get("msg","")[:60]}',
+                       False,
+                       f'{oe.get("src","")}:{oe.get("line","")} — {oe.get("msg","")[:120]}',
+                       severity='warning')
+
         # ── Data integrity checks (in browser) ─────────────────────
         print('\n  ── Data Integrity Checks ──')
 

@@ -20,6 +20,41 @@ var BUILD_V = "2026-05-30T17:51:44Z";
 })();
 </script>
 <title>U.S. Macro Dashboard</title>
+<script>
+// ── Runtime Observability ─────────────────────────────────────────
+// Installed before all other scripts so no error escapes capture.
+// window.MD._errors[] collects every unhandled JS error and promise
+// rejection with source, line, and stack. visual_qa.py asserts the
+// array is empty after visiting every tab — zero-tolerance signal.
+// Hydration bootloader appends _hydrationSuccess + _hydrationMissingKeys.
+// _safeBuild() at the tab-dispatch layer gives per-tab attribution.
+(function(){
+  window.MD = window.MD || {};
+  window.MD._errors = window.MD._errors || [];
+
+  window.onerror = function(msg, src, line, col, err){
+    window.MD._errors.push({
+      type:  'error',
+      msg:   String(msg),
+      src:   String(src || '').replace(window.location.origin, ''),
+      line:  line, col: col,
+      stack: err && err.stack ? String(err.stack).slice(0, 600) : '',
+      ts:    Date.now()
+    });
+    return false; // don't suppress browser console output
+  };
+
+  window.onunhandledrejection = function(e){
+    var r = e.reason;
+    window.MD._errors.push({
+      type:  'unhandledrejection',
+      msg:   r instanceof Error ? r.message : String(r),
+      stack: r instanceof Error && r.stack ? String(r.stack).slice(0, 600) : '',
+      ts:    Date.now()
+    });
+  };
+})();
+</script>
 <script src="chart.umd.min.js"></script>
 <script>
 var _ChartJS = window.Chart;
@@ -3971,6 +4006,25 @@ window.MD._hydrationState = null;  // last fetched bundle, for debugging
     } else {
       console.warn('[hydrate] state.json unavailable — dashboard will render with placeholders');
     }
+    // Record hydration outcome for visual_qa.py + runtime debugging
+    window.MD._hydrationSuccess = !!s;
+    if (!s) {
+      window.MD._errors.push({
+        type: 'hydration_failure',
+        msg:  'state.json unavailable — all Tier-1 charts will render with null data',
+        ts:   Date.now()
+      });
+    } else {
+      // Record which Tier-1 keys were absent from the bundle (silent data gaps)
+      var _tier1Keys = ['KPIS','PRIOR_KPIS','BANK_COMMENTARY','SHOCK_TRACKER',
+        'MACRO_STATE','CPI_CAT_MOM','PCE_CAT_MOM','TREASURY_DATA','OIL_SPREAD',
+        'FISCAL_DATA','CPI_BREADTH','JOLTS_DATA','FED_LIQUIDITY_DATA','WHAT_CHANGED',
+        'RELEASE_CAL','NFP_BLS_MOM','NFP_VS_ADP','SECTOR_MOM','FC_MACRO','U_SECTOR_MOM'];
+      window.MD._hydrationMissingKeys = _tier1Keys.filter(function(k){ return s[k] === undefined; });
+      if (window.MD._hydrationMissingKeys.length) {
+        console.warn('[hydrate] missing keys in state.json:', window.MD._hydrationMissingKeys);
+      }
+    }
     window.MD._hydrationDone = true;
     const cbs = window.MD._hydrationCallbacks.slice();
     window.MD._hydrationCallbacks.length = 0;
@@ -7509,6 +7563,30 @@ function _b52_decorateCanvasLabels(){
     c.setAttribute('aria-label', label);
   });
 }
+// ── Tab build safety wrapper ──────────────────────────────────────
+// Isolates each buildXxxTab() crash so one broken tab never prevents
+// the others from rendering. Pushes a structured entry to
+// window.MD._errors[] so visual_qa.py can detect and report it.
+// Without this, a TypeError in buildUnempTab() silently blanked all
+// 4 unemp charts AND prevented all subsequent tabs from building
+// because the uncaught exception aborted the entire click handler.
+function _safeBuild(tabName, buildFn) {
+  try {
+    buildFn();
+  } catch(e) {
+    var entry = {
+      type:    'tab_crash',
+      tab:     tabName,
+      msg:     e && e.message ? e.message : String(e),
+      stack:   e && e.stack   ? String(e.stack).slice(0, 600) : '',
+      ts:      Date.now()
+    };
+    (window.MD = window.MD || {});
+    (window.MD._errors = window.MD._errors || []).push(entry);
+    console.error('[_safeBuild] ' + tabName + ' threw:', e);
+  }
+}
+
 function _b52_activateTab(t, opts){
   opts = opts || {};
   document.querySelectorAll('.nav-btn').forEach(function(b){
@@ -7523,22 +7601,25 @@ function _b52_activateTab(t, opts){
   var panel = document.getElementById('tab-' + t);
   if (!panel) return;
   panel.classList.add('active');
-  // Lazy-build tab content on first visit
-  if(t==='fc')        buildFCTab();
-  if(t==='gdp')       buildGDPTab();
-  if(t==='unemp')     buildUnempTab();
-  if(t==='cpi')       buildCPITab();
-  if(t==='wages')     buildWagesTab();
-  if(t==='jobs')      buildJobsTab();
-  if(t==='pce')       buildPCETab();
-  if(t==='banks')     buildBanksTab();
-  if(t==='oil')       buildOilTab();
-  if(t==='credit')    buildCreditTab();
-  if(t==='housing')   buildHousingTab();
-  if(t==='yield')     buildYieldTab();
-  if(t==='fiscal')    buildFiscalTab();
-  if(t==='stack')     buildStackTab();
-  if(t==='validator') buildValidatorTab();
+  // Lazy-build tab content on first visit.
+  // _safeBuild wraps each builder in try/catch so one crashing tab
+  // never prevents subsequent tabs from rendering, and pushes a
+  // structured entry to window.MD._errors[] for visual_qa.py to catch.
+  if(t==='fc')        _safeBuild('fc',        buildFCTab);
+  if(t==='gdp')       _safeBuild('gdp',       buildGDPTab);
+  if(t==='unemp')     _safeBuild('unemp',     buildUnempTab);
+  if(t==='cpi')       _safeBuild('cpi',       buildCPITab);
+  if(t==='wages')     _safeBuild('wages',     buildWagesTab);
+  if(t==='jobs')      _safeBuild('jobs',      buildJobsTab);
+  if(t==='pce')       _safeBuild('pce',       buildPCETab);
+  if(t==='banks')     _safeBuild('banks',     buildBanksTab);
+  if(t==='oil')       _safeBuild('oil',       buildOilTab);
+  if(t==='credit')    _safeBuild('credit',    buildCreditTab);
+  if(t==='housing')   _safeBuild('housing',   buildHousingTab);
+  if(t==='yield')     _safeBuild('yield',     buildYieldTab);
+  if(t==='fiscal')    _safeBuild('fiscal',    buildFiscalTab);
+  if(t==='stack')     _safeBuild('stack',     buildStackTab);
+  if(t==='validator') _safeBuild('validator', buildValidatorTab);
   // Canvases added by lazy-build need labelling too
   _b52_decorateCanvasLabels();
   if (opts.focusButton) {

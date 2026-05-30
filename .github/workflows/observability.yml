@@ -1,0 +1,144 @@
+name: Observability — Live Site Monitor
+
+# Runs every 6 hours against the production and dev URLs.
+# Opens a GitHub issue on failure so the team is notified between
+# weekly CI runs — without this, a broken deploy can go undetected
+# for up to 6 days until the next Saturday pipeline fires.
+#
+# Schedule: 0 */6 * * * (midnight, 6am, noon, 6pm UTC)
+# Trigger manually via workflow_dispatch for ad-hoc checks.
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'Override URL to check (leave blank for production)'
+        required: false
+        default: ''
+
+jobs:
+  healthcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Check production site
+        id: prod_check
+        env:
+          SITE_URL: ${{ github.event.inputs.url || secrets.PROD_URL || 'https://amitb641.github.io/macro-dashboard/' }}
+        run: |
+          echo "Checking: $SITE_URL"
+          python scripts/healthcheck.py "$SITE_URL"
+        continue-on-error: true
+
+      - name: Check dev site
+        id: dev_check
+        if: secrets.DEV_URL != ''
+        env:
+          DEV_URL: ${{ secrets.DEV_URL }}
+        run: |
+          echo "Checking dev: $DEV_URL"
+          python scripts/healthcheck.py "$DEV_URL"
+        continue-on-error: true
+
+      - name: Open issue on failure
+        if: steps.prod_check.outcome == 'failure' || steps.dev_check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prodFailed = '${{ steps.prod_check.outcome }}' === 'failure';
+            const devFailed  = '${{ steps.dev_check.outcome }}'  === 'failure';
+            const sites = [
+              prodFailed ? 'production' : null,
+              devFailed  ? 'dev'        : null,
+            ].filter(Boolean).join(' + ');
+
+            const title = `[Observability] Live site health check failed: ${sites} — ${new Date().toISOString().slice(0,16)}Z`;
+
+            // Check for an existing open issue with the same prefix to avoid spam
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              state: 'open',
+              labels: 'observability',
+            });
+            const dupe = existing.data.find(i => i.title.startsWith('[Observability] Live site health check failed'));
+            if (dupe) {
+              await github.rest.issues.createComment({
+                owner:      context.repo.owner,
+                repo:       context.repo.repo,
+                issue_number: dupe.number,
+                body: `Still failing at ${new Date().toISOString()} — run [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              });
+              return;
+            }
+
+            const body = [
+              '## Live Site Health Check Failed',
+              '',
+              `**Sites:** ${sites}`,
+              `**Run:** [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              `**Time:** ${new Date().toISOString()}`,
+              '',
+              '### What this means',
+              '- The deployed page returned an unexpected status code, or required markers were missing from the HTML.',
+              '- Charts may be blank, state.json may be unreachable, or the deploy itself may have failed.',
+              '',
+              '### Next steps',
+              '1. Open the failing run log above and check the healthcheck output',
+              '2. Visit the live URL manually and open DevTools → Console for JS errors',
+              '3. Check `data/state.json` is reachable at `/api/state.json`',
+              '4. If data is stale, trigger a manual `workflow_dispatch` on the Weekly Macro Update pipeline',
+              '',
+              '_Auto-opened by the Observability monitor — closes automatically when the next health check passes._',
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner:  context.repo.owner,
+              repo:   context.repo.repo,
+              title,
+              body,
+              labels: ['observability', 'pipeline-failure'],
+            });
+
+      - name: Close resolved issue on success
+        if: steps.prod_check.outcome == 'success' && steps.dev_check.outcome != 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const existing = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              state: 'open',
+              labels: 'observability',
+            });
+            for (const issue of existing.data.filter(i => i.title.startsWith('[Observability] Live site health check failed'))) {
+              await github.rest.issues.createComment({
+                owner:        context.repo.owner,
+                repo:         context.repo.repo,
+                issue_number: issue.number,
+                body: `Health check passing again as of ${new Date().toISOString()} — auto-closing.`,
+              });
+              await github.rest.issues.update({
+                owner:        context.repo.owner,
+                repo:         context.repo.repo,
+                issue_number: issue.number,
+                state:        'closed',
+              });
+            }
