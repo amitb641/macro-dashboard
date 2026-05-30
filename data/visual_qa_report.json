@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-05-30T17:09:48.107651Z",
+  "checked_at": "2026-05-30T19:35:05.068857Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 428,
-    "passed": 426,
+    "total_checks": 431,
+    "passed": 429,
     "failed": 2,
     "js_errors": 0,
     "console_errors": 0
@@ -2028,6 +2028,25 @@
       "severity": "ok"
     },
     {
+      "category": "global",
+      "check": "Hydration: state.json loaded",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "Hydration: all Tier-1 keys present",
+      "pass": false,
+      "severity": "warning",
+      "detail": "missing keys: ['NFP_VS_ADP']"
+    },
+    {
+      "category": "global",
+      "check": "No tab build crashes (window.MD._errors tab_crash)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
       "category": "data",
       "check": "KPIS defined",
       "pass": true,
@@ -2385,9 +2404,8 @@
     {
       "category": "data",
       "check": "TREASURY_DATA.card90 completeness",
-      "pass": false,
-      "severity": "warning",
-      "detail": "10/11 empty (9% filled, min 50%)"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "data",

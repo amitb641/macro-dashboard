@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-05-30T17:51:43.370784Z",
+  "validated_at": "2026-05-30T19:34:50.869536Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 643,
-    "passed": 642,
-    "failed": 1,
-    "skipped": 6,
+    "total_checks": 641,
+    "passed": 638,
+    "failed": 3,
+    "skipped": 7,
     "critical_divergences": 1
   },
   "internal_consistency": [
@@ -51,15 +51,6 @@
       "source_value": 4.3,
       "difference": 0.0,
       "tolerance": 0.05,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "NFP BLS MoM (latest)",
-      "html_value": 115,
-      "source_value": 115,
-      "difference": 0.0,
-      "tolerance": 5,
       "severity": "ok",
       "pass": true
     },
@@ -146,24 +137,6 @@
     },
     {
       "check": "U_MONTHLY.data completeness",
-      "html_value": "13/13 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 6,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.bls completeness",
-      "html_value": "13/13 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 6,
-      "severity": "ok",
-      "pass": true
-    },
-    {
-      "check": "NFP_VS_ADP.adp completeness",
       "html_value": "13/13 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
@@ -764,7 +737,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-30T17:30:43.475772Z",
+      "collected_at": "2026-05-30T19:13:21.546762Z",
       "age_hours": 0.3,
       "severity": "ok",
       "pass": true
@@ -3500,6 +3473,24 @@
       "detail": ""
     },
     {
+      "check": "Visual: global \u2014 Hydration: state.json loaded",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: global \u2014 Hydration: all Tier-1 keys present",
+      "severity": "warning",
+      "pass": false,
+      "detail": "missing keys: ['NFP_VS_ADP']"
+    },
+    {
+      "check": "Visual: global \u2014 No tab build crashes (window.MD._errors tab_crash)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: data \u2014 KPIS defined",
       "severity": "ok",
       "pass": true,
@@ -3566,22 +3557,10 @@
       "detail": ""
     },
     {
-      "check": "Visual: data \u2014 NFP_VS_ADP has data",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: data \u2014 NFP_VS_ADP.bls completeness",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
-    },
-    {
-      "check": "Visual: data \u2014 NFP_VS_ADP.adp completeness",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: data \u2014 NFP_VS_ADP defined",
+      "severity": "warning",
+      "pass": false,
+      "detail": "no labels"
     },
     {
       "check": "Visual: data \u2014 HOUSING_MONTHLY has data",
@@ -4091,13 +4070,8 @@
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "core_cpi",
-      "fred": 335.423,
-      "bls": 335.423,
-      "diff": 0.0,
-      "tol": 0.3354,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     }
   ],
   "noise_floor": [
