@@ -115,6 +115,15 @@ def check_fred_id(sid: str, timeout: int = 10) -> tuple[str, str]:
                 return 'fatal', '200 OK but no observations'
             return 'ok', f"200 OK (latest {obs[0].get('date', '?')})"
 
+        if r.status_code == 429:
+            # Rate-limited — transient, not a bad series ID. Back off and retry.
+            # Preflight fires 63 sequential requests at 0.7s gaps; occasionally
+            # the rolling FRED window fills when collector also ran recently.
+            last_status = f'429 Too Many Requests'
+            if attempt < 2:
+                time.sleep(5 * (attempt + 1))  # 5s, 10s
+            continue
+
         if 400 <= r.status_code < 500:
             return 'fatal', f'{r.status_code} {r.reason}'
 
@@ -123,7 +132,7 @@ def check_fred_id(sid: str, timeout: int = 10) -> tuple[str, str]:
         if attempt < 2:
             time.sleep(2 * (attempt + 1))  # 2s, 4s
 
-    # Exhausted retries on 5xx — warn, don't halt
+    # Exhausted retries on 429/5xx — warn, don't halt
     return 'warn', f'{last_status} (after 3 attempts)'
 
 
