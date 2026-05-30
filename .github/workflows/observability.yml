@@ -6,7 +6,6 @@ name: Observability — Live Site Monitor
 # for up to 6 days until the next Saturday pipeline fires.
 #
 # Schedule: 0 */6 * * * (midnight, 6am, noon, 6pm UTC)
-# Trigger manually via workflow_dispatch for ad-hoc checks.
 
 on:
   schedule:
@@ -49,10 +48,13 @@ jobs:
 
       - name: Check dev site
         id: dev_check
-        if: secrets.DEV_URL != ''
         env:
           DEV_URL: ${{ secrets.DEV_URL }}
         run: |
+          if [ -z "$DEV_URL" ]; then
+            echo "DEV_URL secret not set — skipping dev check"
+            exit 0
+          fi
           echo "Checking dev: $DEV_URL"
           python scripts/healthcheck.py "$DEV_URL"
         continue-on-error: true
@@ -71,7 +73,7 @@ jobs:
 
             const title = `[Observability] Live site health check failed: ${sites} — ${new Date().toISOString().slice(0,16)}Z`;
 
-            // Check for an existing open issue with the same prefix to avoid spam
+            // Check for an existing open issue to avoid spam
             const existing = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo:  context.repo.repo,
@@ -81,8 +83,8 @@ jobs:
             const dupe = existing.data.find(i => i.title.startsWith('[Observability] Live site health check failed'));
             if (dupe) {
               await github.rest.issues.createComment({
-                owner:      context.repo.owner,
-                repo:       context.repo.repo,
+                owner:        context.repo.owner,
+                repo:         context.repo.repo,
                 issue_number: dupe.number,
                 body: `Still failing at ${new Date().toISOString()} — run [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
               });
@@ -97,16 +99,14 @@ jobs:
               `**Time:** ${new Date().toISOString()}`,
               '',
               '### What this means',
-              '- The deployed page returned an unexpected status code, or required markers were missing from the HTML.',
-              '- Charts may be blank, state.json may be unreachable, or the deploy itself may have failed.',
+              '- The deployed page returned an unexpected status code, or required markers were missing.',
+              '- Charts may be blank, state.json may be unreachable, or the deploy may have failed.',
               '',
               '### Next steps',
-              '1. Open the failing run log above and check the healthcheck output',
-              '2. Visit the live URL manually and open DevTools → Console for JS errors',
-              '3. Check `data/state.json` is reachable at `/api/state.json`',
-              '4. If data is stale, trigger a manual `workflow_dispatch` on the Weekly Macro Update pipeline',
-              '',
-              '_Auto-opened by the Observability monitor — closes automatically when the next health check passes._',
+              '1. Check the failing run log above',
+              '2. Visit the live URL and open DevTools Console for JS errors',
+              '3. Verify `/api/state.json` is reachable',
+              '4. If data is stale, trigger a manual workflow_dispatch on the Weekly Macro Update pipeline',
             ].join('\n');
 
             await github.rest.issues.create({
@@ -118,7 +118,7 @@ jobs:
             });
 
       - name: Close resolved issue on success
-        if: steps.prod_check.outcome == 'success' && steps.dev_check.outcome != 'failure'
+        if: steps.prod_check.outcome == 'success'
         uses: actions/github-script@v7
         with:
           script: |
