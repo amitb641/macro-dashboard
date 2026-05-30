@@ -4862,6 +4862,7 @@ function buildUnempTab(){
   ].map(m=>_mTile(m)).join("");
 
   // ── Unemployment Sector MoM Chart — bar + dot (dynamic keys) ──
+  if(U_SECTOR_MOM){
   var _uK = Object.keys(U_SECTOR_MOM).filter(k=>k!=="sectors");
   var _uCurK = _uK[_uK.length-1], _uPrvK = _uK.length>1?_uK[_uK.length-2]:_uCurK;
   var _uCurL = _uCurK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
@@ -4881,6 +4882,7 @@ function buildUnempTab(){
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
+  }
 
   // ── Monthly Unemployment Rate Chart ──
   new Chart(document.getElementById("c-unemp-monthly").getContext("2d"),{
