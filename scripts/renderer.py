@@ -2302,7 +2302,7 @@ def render_inflation(html, data, vals, tabs):
     # ── Auto-update PCE tab month references ────────────────────────
     # Gated on rebuild_pce_cat_mom succeeding so title and PCE_CAT_MOM
     # data const always roll together.
-    pce_rebuilt = any(s.startswith('PCE_CAT_MOM rebuilt') for s in applied)
+    pce_rebuilt = any(s.startswith('PCE_CAT_MOM registered') for s in applied)
     pce_s = data.get('pce', [])
     if pce_rebuilt and pce_s and len(pce_s) >= 2:
         p_cur_d = pce_s[0].get('date', '')
