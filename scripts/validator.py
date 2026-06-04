@@ -345,6 +345,9 @@ def check_internal(html, data, sig_vals):
         SPARSE_OK = {
             'FFR_DATA.dots': 10,          # Fed dot plot: only forecast years populated
             'OIL_DAILY.notes': 0,         # big-move annotations are sparse by design
+            # FRED NPPTTL discontinued 2022-05-01 — only recent months (adp_latest +
+            # _ADP_VERIFIED) ever fill in. 12-month window yields 1-3 filled (~8-23%).
+            'NFP_VS_ADP.adp': 8,
         }
 
         # Collect data arrays for sync check

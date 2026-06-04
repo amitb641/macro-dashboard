@@ -959,6 +959,10 @@ def run_visual_qa(take_screenshots=False):
         SPARSE_OK = {
             'FFR_DATA.dots': 10,          # Fed dot plot: forecast years only
             'OIL_DAILY.notes': 0,         # big-move annotations are sparse by design
+            # FRED NPPTTL discontinued 2022-05-01 — only recent months (adp_latest +
+            # _ADP_VERIFIED) ever fill in. 12-month window typically yields 1-3 filled
+            # values (~8-23%). Threshold lowered to match permanent data contract.
+            'NFP_VS_ADP.adp': 8,
         }
         for chart_name, info in js_checks.get('charts', {}).items():
             if 'error' in info:
