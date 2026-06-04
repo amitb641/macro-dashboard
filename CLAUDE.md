@@ -1,5 +1,19 @@
 # Macro Dashboard — Claude Code Guidelines
 
+## Session Close Rule (MANDATORY)
+**Every Claude session that makes changes MUST update the project markdown before ending.**
+This is non-negotiable — the markdown is the project's institutional memory.
+
+At the end of every session, update these files (as applicable):
+- **`CLAUDE.md`** — add any new gotchas, architectural components, data contracts, or rules discovered. Add to `Known Gotchas`, `Runtime Observability`, or create a new section.
+- **`.claude/PARALLEL_RUN.md`** — append to the `## Log` table: date, event name, what was done + commit SHA. Update `## Known issues (active)` if a new data contract or workaround was added.
+- **`.claude/PENDING.md`** — update if work was completed or new tasks identified.
+- **`METHODOLOGY.md`** — update if any threshold, formula, series ID, or confirmation rule changed.
+
+The update commit message should be: `Docs: update [files] with [session topic]`
+
+If there is nothing to document (no code changes, no discoveries), explicitly confirm that in the session close.
+
 ## Quality Bar (CEO-Grade)
 
 This dashboard is published to a CEO-level audience. The bar across
