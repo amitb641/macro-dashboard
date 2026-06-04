@@ -870,6 +870,16 @@ def rebuild_charts(html, data):
                         except json.JSONDecodeError:
                             adp_arr = None
 
+            # Final fallback: NPPTTL discontinued 2022-05, prior state.json
+            # missing, and inline placeholder is now `null` — all three
+            # fallbacks exhausted. Initialize to Nones so _ADP_VERIFIED
+            # patches and adp_latest can still write the most recent months.
+            # Without this, NFP_VS_ADP is never registered → buildJobsTab()
+            # null-guard fires → all 4 charts blank with zero error signal.
+            if adp_arr is None:
+                adp_arr = [None] * len(lbl_12)
+                applied.append('NFP_VS_ADP — cold-start bootstrap (NPPTTL stale/missing; using _ADP_VERIFIED + adp_latest)')
+
             if adp_arr is not None:
                 # Patch None slots with manually-verified bootstrap values
                 adp_arr = [_ADP_VERIFIED.get(l, v) for l, v in zip(lbl_12, adp_arr)]
