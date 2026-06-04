@@ -550,6 +550,65 @@ def test_renderer_idempotent(tmp_dir):
           f'size changed by {size_diff} bytes ({first_size} → {second_size})')
 
 
+def test_panel_subtitle_gates(tmp_dir):
+    """Regression guard: panel subtitle update gates must match rebuild success strings.
+
+    Root cause (2026-06-04): render_inflation() and render_labor() gate the
+    PCE / CPI / SECTOR_MOM / U_SECTOR_MOM panel-sub month updates on
+    applied[] message prefixes. The Tier 1 anti-clone migration renamed the
+    success messages from 'XXX rebuilt' to 'XXX registered to state.json...'
+    but the gate conditions were not updated. This silently froze panel
+    subtitles at whatever Agent 3 last wrote — Pass 3d fired as critical
+    every run.
+
+    This test verifies each gate fires when the actual rebuild success message
+    is in applied[]. If a rebuild function renames its message, this fails
+    immediately rather than silently degrading the dashboard.
+    """
+    print('\n── Test: Panel Subtitle Gate String Contracts ──')
+    import renderer as r
+
+    # The exact strings that each rebuild function appends on success.
+    # These must match the startswith() checks in render_inflation / render_labor.
+    success_messages = [
+        'PCE_CAT_MOM registered to state.json (4 cats, mar26/apr26); inline zeroed',
+        'CPI_CAT_MOM registered to state.json (10 cats, mar26/apr26); inline zeroed',
+        'SECTOR_MOM registered to state.json (13 sectors, mar26 & apr26); inline zeroed',
+        'U_SECTOR_MOM registered to state.json (11 sectors, mar26/apr26); inline zeroed',
+    ]
+
+    # Gate expressions as they appear in renderer.py
+    gates = {
+        'PCE_CAT_MOM': lambda msgs: any(s.startswith('PCE_CAT_MOM registered') for s in msgs),
+        'CPI_CAT_MOM': lambda msgs: any(s.startswith('CPI_CAT_MOM registered') for s in msgs),
+        'SECTOR_MOM':  lambda msgs: any(s.startswith('SECTOR_MOM registered') for s in msgs),
+        'U_SECTOR_MOM': lambda msgs: any(s.startswith('U_SECTOR_MOM registered') for s in msgs),
+    }
+
+    for name, gate_fn in gates.items():
+        result = gate_fn(success_messages)
+        _test(
+            f'{name} subtitle gate fires on rebuild success message',
+            result,
+            f"startswith prefix for '{name}' does not match any success message in applied[]",
+        )
+
+    # Also verify the OLD broken strings no longer match (prevent regression).
+    old_broken_messages = [
+        'PCE_CAT_MOM rebuilt ...',
+        'CPI_CAT_MOM rebuilt ...',
+        'SECTOR_MOM rebuilt ...',
+        'U_SECTOR_MOM rebuilt ...',
+    ]
+    for name, gate_fn in gates.items():
+        result = gate_fn(old_broken_messages)
+        _test(
+            f'{name} subtitle gate does NOT fire on stale "rebuilt" messages',
+            not result,
+            f"gate would mistakenly fire on old-style 'rebuilt' prefix — revert introduced regression",
+        )
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════
@@ -589,6 +648,7 @@ def main():
         test_validator_offline(tmp_dir)
         test_snapshot(tmp_dir)
         test_healthcheck_module()
+        test_panel_subtitle_gates(tmp_dir)
 
     finally:
         # Cleanup

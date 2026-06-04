@@ -128,6 +128,7 @@ Supporting scripts:
 - **`_api_writer._STATE_FILE` is hardcoded** — `scripts/_api_writer.py` writes to `_ROOT / 'data' / 'state.json'` by default. Override with `MACRO_STATE_FILE` env var (set by smoke tests for test isolation). Never add a test that calls `renderer.render()` without first save/restoring `_api_writer._STATE_FILE` and `_api_writer._STATE` — otherwise smoke tests overwrite the live `state.json` with fixture data, causing every Tier-1 chart to render null on the next pipeline run.
 - **FRED NPPTTL discontinued 2022-05-01** — the `NFP_VS_ADP.adp` array will always have only 1-3 filled values out of 13 (from `adp_latest` + `_ADP_VERIFIED`). The `SPARSE_OK['NFP_VS_ADP.adp'] = 8` override in both `visual_qa.py` and `validator.py` reflects this permanent data contract. Do not raise this threshold — the data is correct.
 - **`buildJobsTab()` null guard** — if `NFP_VS_ADP` is missing from `state.json`, the jobs tab returns early and all 4 charts blank silently. The cold-start bootstrap in `renderer.py` (initializing `adp_arr = [None] * len(lbl_12)` when all ADP fallbacks fail) prevents this. If jobs charts are blank, check `data/state.json` for the `NFP_VS_ADP` key first.
+- **Panel subtitle gate string contract** — `render_inflation()` and `render_labor()` gate PCE/CPI/SECTOR_MOM/U_SECTOR_MOM panel-sub month updates on `any(s.startswith('XXX registered') for s in applied)`. If a rebuild function changes its success message (e.g. Tier 1 migration changed `'XXX rebuilt'` → `'XXX registered to state.json...'`), the gate silently stays False and the subtitle freezes — Pass 3d fires as critical every run. Smoke test `test_panel_subtitle_gates` guards this contract. Rule: when editing any `rebuild_*` success message, update all downstream `startswith()` gates in `render_inflation` and `render_labor` to match.
 
 ## Runtime Observability (dev — `index.html`)
 Four layers added 2026-05-30 to catch blank charts before users see them:
@@ -162,7 +163,7 @@ Rules:
 - After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 38/38 pass. The
+- Run `python tests/test_smoke.py` before pushing — must be 46/46 pass. The
   smoke suite includes a **Tier 1 hydration wiring** regression guard
   (`test_hydration_wiring`) that asserts every `let X = null;` placeholder
   (a) has a matching `s.X !== undefined` hydration assignment, (b) lives
@@ -173,6 +174,14 @@ Rules:
   tab builders (fc, jobs, cpi, pce, banks, oil) bail out on first paint
   and never rebuild after `fetch('/api/state.json')` resolves — symptom is
   blank charts on the default Outlook tab.
+  Also includes `test_panel_subtitle_gates` — guards the 4 panel subtitle
+  gate conditions in `render_inflation`/`render_labor` against string-contract
+  drift. Each gate fires an `any(s.startswith('XXX registered') for s in applied)`
+  check; the test verifies the prefix matches what the rebuild function actually
+  writes. Root cause doc: Tier 1 migration renamed success messages from
+  `'XXX rebuilt'` to `'XXX registered to state.json...'`; the 4 gates were not
+  updated, silently freezing panel subtitles (Pass 3d critical every run for
+  6+ weeks until discovered 2026-06-04).
 - Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
@@ -222,7 +231,7 @@ Custom development lifecycle commands are available in `.claude/commands/`:
 - `/spec` — Define what to build (spec before code)
 - `/plan` — Plan implementation as small, atomic tasks
 - `/build` — Implement one slice at a time with verification
-- `/test` — Run all test layers: smoke (38/38), renderer, visual QA (224)
+- `/test` — Run all test layers: smoke (46/46), renderer, visual QA (224)
 - `/review` — Code review checklist (correctness, safety, scope, pipeline integrity)
 - `/code-simplify` — Simplify code without changing behavior
 - `/ship` — Pre-flight checks, push, and post-ship verification

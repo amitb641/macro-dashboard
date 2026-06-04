@@ -2112,7 +2112,7 @@ def render_labor(html, data, vals, tabs):
     # rebuild_u_sector_mom succeeding (so the panel never advertises a
     # newer month than the data const carries). Commentary updates below
     # use unrate dates directly — they're not coupled to the sector chart.
-    u_rebuilt = any(s.startswith('U_SECTOR_MOM rebuilt') for s in applied)
+    u_rebuilt = any(s.startswith('U_SECTOR_MOM registered') for s in applied)
     unrate_s = data.get('unrate', [])
     if unrate_s and len(unrate_s) >= 2:
         u_cur_d = unrate_s[0].get('date', '')
@@ -2181,9 +2181,9 @@ def render_labor(html, data, vals, tabs):
     # ── Auto-update Jobs tab month references ────────────────────────
     # The Jobs tab has hardcoded month names in titles, legends, and tiles.
     # Sector-chart updates are gated on SECTOR_MOM having been rebuilt this
-    # run (rebuild_charts emits 'SECTOR_MOM rebuilt'). The Jobs metric tile
+    # run (rebuild_charts emits 'SECTOR_MOM registered'). The Jobs metric tile
     # header rolls from PAYEMS unconditionally — it's not bound to the chart.
-    sector_rebuilt = any(s.startswith('SECTOR_MOM rebuilt') for s in applied)
+    sector_rebuilt = any(s.startswith('SECTOR_MOM registered') for s in applied)
     payems_s = data.get('payems', [])
     if payems_s and len(payems_s) >= 2:
         cur_date = payems_s[0].get('date', '')
@@ -2272,7 +2272,7 @@ def render_inflation(html, data, vals, tabs):
     # Gated on rebuild_cpi_cat_mom succeeding, so title and data always roll
     # together. If the rebuild was skipped (insufficient obs), title stays put
     # so it can't drift past the data const.
-    cpi_rebuilt = any(s.startswith('CPI_CAT_MOM rebuilt') for s in applied)
+    cpi_rebuilt = any(s.startswith('CPI_CAT_MOM registered') for s in applied)
     cpi_s = data.get('cpi_all', [])
     if cpi_rebuilt and cpi_s and len(cpi_s) >= 2:
         cpi_cur = cpi_s[0].get('date', '')
