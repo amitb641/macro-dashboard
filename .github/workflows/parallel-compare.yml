@@ -23,6 +23,12 @@ on:
     types: [completed]
   workflow_dispatch:
 
+# Opt into Node.js 24 runner (default from 2026-06-16; Node.js 20 removed 2026-09-16).
+# Standard actions (checkout, setup-python, upload-artifact, github-script) are
+# compatible. Proactively set so the forced cutover on June 16 has no surprises.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   compare:
     runs-on: ubuntu-latest
