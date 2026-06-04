@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-06-04T05:30:18.880918Z",
-  "status": "WARN",
+  "validated_at": "2026-06-04T05:44:14.346070Z",
+  "status": "PASS",
   "summary": {
-    "total_checks": 651,
-    "passed": 646,
-    "failed": 5,
+    "total_checks": 649,
+    "passed": 649,
+    "failed": 0,
     "skipped": 1,
-    "critical_divergences": 1
+    "critical_divergences": 0
   },
   "internal_consistency": [
     {
@@ -326,28 +326,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "58/58 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 29,
+      "html_value": "60/62 filled",
+      "source_value": "97% (min 50%)",
+      "difference": 2,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "58/58 filled",
+      "html_value": "62/62 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 29,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "34/58 filled",
-      "source_value": "59% (min 0%)",
-      "difference": 24,
-      "tolerance": 29,
+      "html_value": "36/62 filled",
+      "source_value": "58% (min 0%)",
+      "difference": 26,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
@@ -763,15 +763,15 @@
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-04-01",
-      "age_days": 64,
+      "latest_date": "2026-05-01",
+      "age_days": 34,
       "max_lag_days": 35,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-04-01",
+      "latest_date": "2026-05-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-04T05:26:56.605033Z",
+      "collected_at": "2026-06-04T05:41:28.958185Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -899,26 +899,26 @@
     {
       "check": "Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys",
       "title_months": [
-        "feb",
+        "apr",
         "mar"
       ],
       "data_keys": [
         "apr",
         "mar"
       ],
-      "severity": "divergence",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Energy and housing components are pulling the PCE basket higher: prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Mar'26",
       "chips_found": [
+        "Apr'26",
         "Mar'26",
-        "Feb'26",
-        "Mar'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
+        "Apr'26",
+        "Apr'26",
+        "Apr'26",
+        "Mar'26"
       ],
       "severity": "ok",
       "pass": true
@@ -1022,10 +1022,10 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 49.8,
+      "reference": 44.8,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 49.8,
-        "KPIS UMich Sentiment": 49.8
+        "UMCSENT_MONTHLY.data[-1]": 44.8,
+        "KPIS UMich Sentiment": 44.8
       },
       "severity": "ok",
       "pass": true
@@ -1450,22 +1450,9 @@
   ],
   "collector_errors": [
     {
-      "check": "EIA fetch: RWTC",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "EIA fetch: RBRTE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -4179,12 +4166,12 @@
       "severity": "ok",
       "metric": "umich_sentiment",
       "floor": 0.5,
-      "prior": 53.3,
-      "latest": 49.8,
-      "delta": -3.5,
-      "abs_delta": 3.5,
+      "prior": 49.8,
+      "latest": 44.8,
+      "delta": -5.0,
+      "abs_delta": 5.0,
       "verdict": "real_signal",
-      "note": "PoP delta -3.500 > \u00b10.5 \u2192 real_signal"
+      "note": "PoP delta -5.000 > \u00b10.5 \u2192 real_signal"
     },
     {
       "check": "noise_floor[cc_delinq_90plus]",
