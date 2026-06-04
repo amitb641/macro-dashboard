@@ -1,3 +1,24 @@
+## Repair Agent — 2026-06-04T05:59:16.291196Z
+
+- **Status**: WARN
+- **Total checks**: 649
+- **Passed**: 647
+- **Failed**: 2
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Collector error** — UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: umcsent** — 64d old (limit 35d)
+
+
+---
+
 ## Repair Agent — 2026-06-04T05:44:14.346070Z
 
 - **Status**: PASS
@@ -1104,24 +1125,6 @@ _0 critical · 3 warning · 0 stale_
 ---
 
 ## Repair Agent — 2026-05-23T23:43:53.979078Z
-
-- **Status**: WARN
-- **Total checks**: 202
-- **Passed**: 199
-- **Failed**: 3
-- **Critical divergences**: 0
-
-### Panel data
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
-
-
----
-
-## Repair Agent — 2026-05-23T23:14:04.433673Z
 
 - **Status**: WARN
 - **Total checks**: 202
