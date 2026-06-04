@@ -111,6 +111,22 @@ Supporting scripts:
 - PCE staleness warnings are genuine data lag (~95 day publication delay), not bugs
 - Regex-replace patterns in `renderer.py` must match the JSON shape the renderer *itself writes back* — `json.dumps(..., separators=(', ', ':'))` produces single-line output, so patterns requiring `\n};` will silently fail after the first run (see `update_shock_tracker`)
 - UMich Consumer Sentiment: collector pulls direct from `sca.isr.umich.edu/files/tbcics.csv` first (gives prelim ~2 weeks before FRED's embargoed final). `umcsent` entries carry a `status` field (`'preliminary'` or `'final'`) — renderer/KPI/validator all treat missing status as `'final'` for back-compat
+- **`_api_writer._STATE_FILE` is hardcoded** — `scripts/_api_writer.py` writes to `_ROOT / 'data' / 'state.json'` by default. Override with `MACRO_STATE_FILE` env var (set by smoke tests for test isolation). Never add a test that calls `renderer.render()` without first save/restoring `_api_writer._STATE_FILE` and `_api_writer._STATE` — otherwise smoke tests overwrite the live `state.json` with fixture data, causing every Tier-1 chart to render null on the next pipeline run.
+- **FRED NPPTTL discontinued 2022-05-01** — the `NFP_VS_ADP.adp` array will always have only 1-3 filled values out of 13 (from `adp_latest` + `_ADP_VERIFIED`). The `SPARSE_OK['NFP_VS_ADP.adp'] = 8` override in both `visual_qa.py` and `validator.py` reflects this permanent data contract. Do not raise this threshold — the data is correct.
+- **`buildJobsTab()` null guard** — if `NFP_VS_ADP` is missing from `state.json`, the jobs tab returns early and all 4 charts blank silently. The cold-start bootstrap in `renderer.py` (initializing `adp_arr = [None] * len(lbl_12)` when all ADP fallbacks fail) prevents this. If jobs charts are blank, check `data/state.json` for the `NFP_VS_ADP` key first.
+
+## Runtime Observability (dev — `index.html`)
+Four layers added 2026-05-30 to catch blank charts before users see them:
+
+1. **`window.MD._errors[]`** — global JS error accumulator. Initialized before `<title>` via `onerror` + `onunhandledrejection` hooks. Every tab crash, hydration failure, and unhandled rejection is appended here with `{type, msg, stack, ts}`.
+2. **`window.MD._hydrationSuccess`** / **`window.MD._hydrationMissingKeys`** — set in `_hydrate()` bootloader. If state.json is unreachable, `_hydrationSuccess = false` and an entry is pushed to `_errors[]`. `_hydrationMissingKeys` lists any Tier-1 keys absent from the fetched payload.
+3. **`_safeBuild(tabName, buildFn)`** — wraps all 15 tab dispatch calls. Catches any `buildXxxTab()` exception, records it in `window.MD._errors[]` with tab name + stack trace, and logs to console. Prevents a single bad tab from killing others.
+4. **visual_qa runtime sweep** (§QA-observability) — after all tab checks, reads `window.MD._errors` via `page.evaluate()`. Hydration failure → critical. Tab crash → critical. Other errors → warning. Chart.js instance check (§QA-chartjs) verifies every visible canvas has a live `Chart.getChart()` instance, not just DOM presence.
+
+Also: `.github/workflows/observability.yml` — runs every 6 hours, checks prod + dev URLs via `scripts/healthcheck.py`, opens a GitHub issue on failure, adds comments on repeat failures, auto-closes on recovery. Secrets: `PROD_URL` (defaults to GitHub Pages URL), `DEV_URL` (optional; check skipped if absent).
+
+## Pipeline Metrics Timeseries
+`data/pipeline_metrics.json` — lightweight per-run timeseries written by `scripts/version_tracker.py` alongside the full `data/pipeline_version.json` audit trail. One row per run with: `run_at`, `git_sha`, `validation_status`, `validation_critical`, `validation_warnings`, `visual_qa_passed`, `visual_qa_failed`, `visual_qa_critical`, `ceo_grade`, `html_size`, `collector_errors`, `risk_level`. Rolling cap: last 52 entries (one year of weekly runs). Use this for trend analysis — `pipeline_version.json` has the full detail per run.
 
 ## Shock Tracker Data Contracts
 The Oil Impact Chain (`update_shock_tracker` in `renderer.py`) rebuilds `SHOCK_TRACKER` every run. Each phase reads from specific raw-data keys — if you change a key name or fetch count, the phase silently falls back to a hardcoded baseline. Audit the whole chain when touching any of these:

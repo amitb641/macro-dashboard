@@ -312,6 +312,13 @@ explaining what triggered the change.
   exercise. The verdict JSON is committed to dev for every run so
   findings are preserved for the comparison report. Promotion to main
   requires resolving these or accepting them as documented WARN-level.
+- **NFP_VS_ADP.adp always sparse** (data contract — NPPTTL discontinued
+  2022-05-01): the 12-month ADP array will always have only ~2 filled
+  values (adp_latest + _ADP_VERIFIED hardcodes). The 50% completeness
+  threshold in visual_qa.py + validator.py caused a CEO gate FAIL every
+  run. Fixed 2026-06-04: `SPARSE_OK['NFP_VS_ADP.adp'] = 8` in both
+  files. Not a regression — data is correct; the threshold was set
+  before the discontinuation.
 
 ## Log
 
@@ -324,3 +331,9 @@ explaining what triggered the change.
 | 2026-05-14 | Listener landed on main | `parallel-compare.yml` + `run_report.py` + `parallel_compare.py` cherry-picked to `main` (`016c02a`) so `workflow_run` listener registers. Pure listener-only commit; no `briefing.yml` / `data/` / `index.html` changes. `Parallel Compare (prod vs dev)` workflow now `active` in repo. |
 | 2026-05-14 | Gate fix verified | Run #2 (`25885014012`) completed past the CEO-grade gate in observation mode — all 11 agents ran, `ceo_grade_verdict.json` committed, snapshot created. Push failed only due to a concurrent manual push race (`45fa273` landed mid-run). Not a pipeline regression; expected to vanish once trial settles into Saturday-only cron. |
 | 2026-05-14 | Plan persisted | Plan + state snapshot section added near top of this doc; `CLAUDE.md` pointer added so future Claude sessions read this first when touching CI / dev / parallel-compare. |
+| 2026-05-30 | Blank chart prevention — 3-layer fix | Root cause: smoke test writing to real `data/state.json` via `_api_writer._STATE_FILE` (hardcoded path, not isolated). Fix: added `MACRO_STATE_FILE` env var override in `_api_writer.py`; smoke test save/restores the real path; `U_SECTOR_MOM` hydration assignment added to bootloader. Chart.js instance check added to `visual_qa.py` (§QA-chartjs). Commits `78af324`, `6fd4e5a`. |
+| 2026-05-30 | Observability layer (4-component) | Added: (1) `window.MD._errors[]` global JS error accumulator + onerror/onunhandledrejection hooks; (2) `_safeBuild(tabName, fn)` wraps all 15 tab dispatch calls so per-tab crashes are isolated and recorded; (3) visual_qa runtime sweep reads `window.MD._errors` after tab loop; (4) `observability.yml` — 6-hour cron healthcheck against prod+dev, opens/updates/closes GitHub issues on failure. Also: `version_tracker.py` extended with `pipeline_metrics.json` lightweight timeseries + `MAX_HISTORY` 20→52. Commit `4a844f0`. |
+| 2026-05-30 | Preflight 429 fix | FRED rate-limit (429) was incorrectly treated as a fatal bad-series error. Fixed: 429 now retries with 5s/10s backoff, returns `warn` (not `fatal`) after exhaustion. Commit `ba6dfa4`. |
+| 2026-05-30 | observability.yml YAML fix | `if: secrets.DEV_URL != ''` is invalid in GitHub Actions — secrets context forbidden in `if:` expressions. Moved to shell guard inside `run:` step. Commit `fc553d6`. |
+| 2026-06-04 | Jobs tab blank — NFP_VS_ADP cold-start bootstrap | Root cause: FRED `NPPTTL` discontinued 2022-05-01 → all three renderer fallbacks (NPPTTL stale-filtered → `read_prior` returns None → inline placeholder is `null`) exhausted simultaneously → `adp_arr = None` → `_ADP_VERIFIED` patches never ran → `NFP_VS_ADP` never registered in `state.json` → `buildJobsTab()` early return on null guard → all 4 charts blank, zero error signal. Fix: final fallback `adp_arr = [None] * len(lbl_12)` ensures `_ADP_VERIFIED` + `adp_latest` always patch in. Commit `5ca2a7d`. |
+| 2026-06-04 | CEO gate FAIL fix — NFP_VS_ADP.adp completeness | 50% threshold in `visual_qa.py` + `validator.py` SPARSE_OK tables caused FAIL every run (only 2/13 months filled = 15%). Updated to 8% in both files, matching the permanent NPPTTL-discontinued data contract. Commit `9a06c51` / `832d3a7`. |
