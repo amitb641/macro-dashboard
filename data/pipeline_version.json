@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
-  "last_updated": "2026-05-30T19:35:17.499735Z",
-  "total_runs": 21,
+  "last_updated": "2026-06-04T03:30:53.590329Z",
+  "total_runs": 22,
   "runs": [
     {
       "run_at": "2026-05-27T21:35:00.752953Z",
@@ -969,6 +969,71 @@
       "visual_qa_critical": 0,
       "ceo_grade": "FAIL",
       "html_size": 683471
+    },
+    {
+      "run_at": "2026-06-04T03:30:53.590329Z",
+      "git_sha": "5ca2a7d",
+      "git_branch": "dev/multi-expert-improvements",
+      "collected_at": "2026-06-04T03:27:03.499209Z",
+      "series_count": 92,
+      "collector_errors": 3,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-04-01",
+          "value": 4.3
+        },
+        "cpi_index": {
+          "date": "2026-04-01",
+          "value": 332.407
+        },
+        "payrolls": {
+          "date": "2026-04-01",
+          "value": 158736.0
+        },
+        "treasury_10y": {
+          "date": "2026-06-02",
+          "value": 4.46,
+          "source": "FRED:DGS10",
+          "fetched_at": "2026-06-04T03:27:04.920470Z"
+        },
+        "fed_funds": {
+          "date": "2026-05-01",
+          "value": 3.63,
+          "source": "FRED:FEDFUNDS",
+          "fetched_at": "2026-06-04T03:27:03.716160Z"
+        }
+      },
+      "risk_level": "HIGH",
+      "alert_count": 3,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 648,
+        "passed": 641,
+        "failed": 7,
+        "skipped": 1,
+        "critical_divergences": 1
+      },
+      "validation_critical": 0,
+      "validation_warnings": 0,
+      "visual_qa_passed": 432,
+      "visual_qa_failed": 1,
+      "visual_qa_critical": 0,
+      "ceo_grade": "FAIL",
+      "html_size": 683213,
+      "data_changes": [
+        {
+          "indicator": "treasury_10y",
+          "old": 4.45,
+          "new": 4.46,
+          "delta": 0.01
+        },
+        {
+          "indicator": "fed_funds",
+          "old": 3.64,
+          "new": 3.63,
+          "delta": -0.01
+        }
+      ]
     }
   ]
 }

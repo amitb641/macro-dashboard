@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-05-30T19:35:05.068857Z",
+  "checked_at": "2026-06-04T03:30:41.199217Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 431,
-    "passed": 429,
-    "failed": 2,
+    "total_checks": 433,
+    "passed": 432,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -2036,9 +2036,8 @@
     {
       "category": "global",
       "check": "Hydration: all Tier-1 keys present",
-      "pass": false,
-      "severity": "warning",
-      "detail": "missing keys: ['NFP_VS_ADP']"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "global",
@@ -2114,10 +2113,22 @@
     },
     {
       "category": "data",
-      "check": "NFP_VS_ADP defined",
+      "check": "NFP_VS_ADP has data",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "NFP_VS_ADP.bls completeness",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "data",
+      "check": "NFP_VS_ADP.adp completeness",
       "pass": false,
       "severity": "warning",
-      "detail": "no labels"
+      "detail": "11/13 empty (15% filled, min 50%)"
     },
     {
       "category": "data",
