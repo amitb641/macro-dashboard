@@ -1,3 +1,31 @@
+## Repair Agent — 2026-06-04T05:30:18.880918Z
+
+- **Status**: WARN
+- **Total checks**: 651
+- **Passed**: 646
+- **Failed**: 5
+- **Critical divergences**: 1
+
+### Collector errors
+_0 critical · 3 warning · 0 stale_
+
+- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+- ⚠️ **Collector error** — UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: umcsent** — 64d old (limit 35d)
+
+### Panel data
+_1 critical · 0 warning · 0 stale_
+
+- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-06-04T05:02:23.074788Z
 
 - **Status**: WARN
@@ -1100,29 +1128,6 @@ _0 critical · 3 warning · 0 stale_
 ---
 
 ## Repair Agent — 2026-05-23T22:54:56.183213Z
-
-- **Status**: WARN
-- **Total checks**: 201
-- **Passed**: 197
-- **Failed**: 4
-- **Critical divergences**: 0
-
-### Seed drift
-_0 critical · 1 warning · 0 stale_
-
-- ⚠️ **FC_MACRO block present** — const FC_MACRO not found in index.html
-
-### Panel data
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
-
-
----
-
-## Repair Agent — 2026-05-23T22:06:59.701112Z
 
 - **Status**: WARN
 - **Total checks**: 201
