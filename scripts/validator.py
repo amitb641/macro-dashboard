@@ -1988,7 +1988,93 @@ def check_noise_floor(data, sig_vals):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None, noise_floor=None, secret_leaks=None):
+def check_kpi_date_drift(data, state):
+    """Pass 3l — KPI date drift guard.
+
+    Verifies that the KPIS labels in state.json reflect the most recent
+    data available in raw_data.json. Catches the scenario where state.json
+    was committed with stale KPIS (e.g. from a conflict-resolution --theirs
+    that picked up a pre-collection state.json) while raw_data.json already
+    contains newer data — leaving the dashboard showing months-old values.
+
+    Checks the three highest-visibility KPIs: Jobs, Unemployment, CPI.
+    Expected KPI month is derived from the raw series' latest date.
+    Tolerance: state.json KPI label may trail by at most 1 calendar month
+    before this is flagged (FRED can be 1 month behind on initial release).
+    """
+    import datetime
+
+    def _series_latest_date(series_key):
+        arr = data.get(series_key, [])
+        if arr and isinstance(arr, list):
+            d = arr[0].get('date', '')
+            try:
+                return datetime.datetime.strptime(d[:7], '%Y-%m')
+            except ValueError:
+                pass
+        return None
+
+    def _kpi_label_date(kpis_list, metric_key):
+        """Return the datetime for the month embedded in a KPI label.
+        e.g. "Jobs Apr'26" → 2026-04-01.  Returns None if not parseable."""
+        for k in (kpis_list or []):
+            if k.get('metric') == metric_key:
+                lbl = k.get('lbl', '')
+                # Match patterns like "Apr'26" or "Apr '26"
+                m = re.search(r"([A-Za-z]{3})[\s']?(\d{2})$", lbl)
+                if m:
+                    try:
+                        return datetime.datetime.strptime(
+                            f"{m.group(1)} 20{m.group(2)}", '%b %Y')
+                    except ValueError:
+                        pass
+        return None
+
+    findings = []
+    kpis = state.get('KPIS', []) if isinstance(state, dict) else []
+
+    # Map: metric key in KPI → raw_data series key → allowed lag months
+    checks = [
+        ('jobs',   'payems',   1),
+        ('unemp',  'unrate',   1),
+        ('cpi',    'cpi_all',  2),  # CPI has ~6-week lag — allow 2 months
+    ]
+
+    for metric, series_key, max_lag_months in checks:
+        raw_dt   = _series_latest_date(series_key)
+        kpi_dt   = _kpi_label_date(kpis, metric)
+        if raw_dt is None or kpi_dt is None:
+            findings.append({
+                'check':    f'KPI date drift [{metric}]',
+                'pass':     True,
+                'severity': 'skipped',
+                'note':     f'raw_dt={raw_dt}, kpi_dt={kpi_dt} — cannot compare',
+            })
+            continue
+
+        lag_months = (raw_dt.year - kpi_dt.year) * 12 + (raw_dt.month - kpi_dt.month)
+        ok = lag_months <= max_lag_months
+
+        findings.append({
+            'check':        f'KPI date drift [{metric}]',
+            'pass':         ok,
+            'severity':     'critical' if not ok else 'ok',
+            'raw_latest':   raw_dt.strftime('%b %Y'),
+            'kpi_label_dt': kpi_dt.strftime('%b %Y'),
+            'lag_months':   lag_months,
+            'max_lag':      max_lag_months,
+            'note': (
+                f'raw {raw_dt.strftime("%b %Y")} vs KPI {kpi_dt.strftime("%b %Y")} '
+                f'— {lag_months}mo lag (max {max_lag_months}mo)'
+                if not ok else
+                f'OK — {lag_months}mo lag (max {max_lag_months}mo)'
+            ),
+        })
+
+    return findings
+
+
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None, noise_floor=None, secret_leaks=None, kpi_date_drift=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -2014,10 +2100,12 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         noise_floor = []
     if secret_leaks is None:
         secret_leaks = []
+    if kpi_date_drift is None:
+        kpi_date_drift = []
     all_findings = (internal + sources + staleness + visual + vision_review +
                     shock_tracker + earnings + panel_data + metric_consistency +
                     schema_contract + collector_errors + seed_drift +
-                    cross_source + noise_floor + secret_leaks)
+                    cross_source + noise_floor + secret_leaks + kpi_date_drift)
 
     # ── Coverage meta-check (Pass 3k) — guards against silent erosion ──
     # The migration-sensitive passes (noise_floor, metric_consistency,
@@ -2239,8 +2327,29 @@ def validate():
     sl_fail = sum(1 for f in secret_leaks if not f.get('pass'))
     print(f'  {sl_pass} passed, {sl_fail} failed')
 
+    # Pass 3l: KPI date drift (state.json KPIS lag vs raw_data latest dates)
+    # Catches the scenario where state.json was committed with stale KPIS
+    # (e.g. --theirs during a rebase conflict picked up a pre-collection
+    # version) while raw_data.json has newer data. Critical severity.
+    print('\n  ── Pass 3l: KPI Date Drift (KPIS label vs raw_data latest) ──')
+    _state_for_kpi_check: dict = {}
+    _state_path = ROOT / 'data' / 'state.json'
+    if _state_path.exists():
+        try:
+            _state_for_kpi_check = json.loads(_state_path.read_text(encoding='utf-8'))
+        except Exception:
+            pass
+    kpi_date_drift = check_kpi_date_drift(data, _state_for_kpi_check)
+    kdd_pass = sum(1 for f in kpi_date_drift if f.get('pass'))
+    kdd_fail = sum(1 for f in kpi_date_drift if not f.get('pass') and f.get('severity') != 'skipped')
+    kdd_skip = sum(1 for f in kpi_date_drift if f.get('severity') == 'skipped')
+    print(f'  {kdd_pass} passed, {kdd_fail} failed, {kdd_skip} skipped')
+    for f in kpi_date_drift:
+        icon = '  ✅' if f.get('pass') else ('  ⚠️' if f.get('severity') == 'skipped' else '  ❌')
+        print(f'{icon} [{f["check"]}] {f.get("note","")}')
+
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source, noise_floor, secret_leaks)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source, noise_floor, secret_leaks, kpi_date_drift)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
