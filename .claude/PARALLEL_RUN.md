@@ -319,6 +319,16 @@ explaining what triggered the change.
   run. Fixed 2026-06-04: `SPARSE_OK['NFP_VS_ADP.adp'] = 8` in both
   files. Not a regression — data is correct; the threshold was set
   before the discontinuation.
+- **PCE panel title-data drift** (Pass 3d — recurring, 2026-06-04+):
+  validator Pass 3d reports `title=['feb','mar'] vs data=['apr','mar']`
+  for the PCE MoM panel. The `PCE_CAT_MOM` data keys have `apr`/`mar`
+  while the AI-generated commentary title references `feb`. Root cause
+  not yet diagnosed — could be (a) commentary from Agent 3 regenerated
+  from stale context, or (b) PCE publication-lag data keying mismatch.
+  Marked `divergence` (critical) in validator; CEO gate runs in
+  observation mode on dev so it does not block publish. Needs
+  investigation to determine whether the title or the data key is wrong.
+  **Does not affect main/prod** (separate pipeline).
 
 ## Log
 
@@ -341,3 +351,4 @@ explaining what triggered the change.
 | 2026-06-04 | Add Pass 3l: KPI date drift guard | New validator pass compares KPI embedded month labels to raw_data latest dates. Jobs/Unemp: max 1-month lag; CPI: max 2-month lag. Critical severity — the Dec'25 bug would have triggered 3/3 FAIL with a 4-month lag. Prevents silent stale KPIS in future. Commit `2ff8f89`. |
 | 2026-06-04 | Fix dev pipeline run pile-up (concurrency group) | Multiple rapid pushes during a session queued 5+ simultaneous pipeline runs, each racing to push state.json back. Root cause of the Dec'25 stale KPIS. Added `concurrency: group: dev-pipeline-push` to `briefing-dev.yml` — new push cancels in-progress push-triggered run; scheduled + workflow_dispatch runs complete uninterrupted. Commit `5a677db`. |
 | 2026-06-04 | Fix preflight 429 backoff: global window-clear sleep | Saturated FRED window (from stale runs) caused per-series 5s+10s backoff to multiply to 7-16 min (63 series × 15s). Replaced with 60s first-429 sleep + 90s second — one global wait clears the window for all remaining series. Normal runs: unchanged (no 429s = 45s total). Commit `57b91b8`. |
+| 2026-06-04 | Upgrade all GitHub Actions to Node.js 24 native versions | All 8 workflow files (briefing-dev, briefing, earnings_agent, observability, parallel-compare, smoke-tests, api-contract, backtest) updated: checkout v4→v6, setup-python v5→v6, upload-artifact v4→v7, github-script v7→v9. Added `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'` belt-and-suspenders env var. Eliminates Node.js 20 deprecation warnings ahead of GitHub's June 16 forced-upgrade deadline. Run #128 verified: 7m 11s, no deprecation warnings, Pass 3l 3/3 PASS, visual_qa 433/433 PASS. Commit `67d9af4`. |
