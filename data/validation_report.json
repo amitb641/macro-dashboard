@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-06-04T05:59:16.291196Z",
-  "status": "WARN",
+  "validated_at": "2026-06-04T06:08:39.272645Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 649,
-    "passed": 647,
-    "failed": 2,
+    "passed": 649,
+    "failed": 0,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -763,15 +763,15 @@
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-04-01",
-      "age_days": 64,
+      "latest_date": "2026-05-01",
+      "age_days": 34,
       "max_lag_days": 35,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-04-01",
+      "latest_date": "2026-05-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-04T05:56:28.322330Z",
+      "collected_at": "2026-06-04T06:05:49.357283Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1022,10 +1022,10 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 49.8,
+      "reference": 44.8,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 49.8,
-        "KPIS UMich Sentiment": 49.8
+        "UMCSENT_MONTHLY.data[-1]": 44.8,
+        "KPIS UMich Sentiment": 44.8
       },
       "severity": "ok",
       "pass": true
@@ -1450,10 +1450,9 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -4167,12 +4166,12 @@
       "severity": "ok",
       "metric": "umich_sentiment",
       "floor": 0.5,
-      "prior": 53.3,
-      "latest": 49.8,
-      "delta": -3.5,
-      "abs_delta": 3.5,
+      "prior": 49.8,
+      "latest": 44.8,
+      "delta": -5.0,
+      "abs_delta": 5.0,
       "verdict": "real_signal",
-      "note": "PoP delta -3.500 > \u00b10.5 \u2192 real_signal"
+      "note": "PoP delta -5.000 > \u00b10.5 \u2192 real_signal"
     },
     {
       "check": "noise_floor[cc_delinq_90plus]",
