@@ -61,7 +61,7 @@ jobs:
           echo "Resolved branch: $(grep '^branch=' $GITHUB_OUTPUT | tail -1)"
 
       - name: Checkout dev branch (artifact destination)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: dev/multi-expert-improvements
           fetch-depth: 0
@@ -74,7 +74,7 @@ jobs:
           echo "dev HEAD:  $(git rev-parse HEAD)"
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
@@ -104,7 +104,7 @@ jobs:
           fi
 
       - name: Upload per-run report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: run-report-${{ steps.trigger.outputs.branch }}-${{ github.run_id }}
           path: data/run_report_${{ steps.trigger.outputs.branch }}_*.md
@@ -152,7 +152,7 @@ jobs:
 
       - name: Upload paired comparison artifact
         if: steps.freshness.outputs.skip != 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: parallel-compare-${{ github.run_id }}
           path: data/parallel_compare_*.md
