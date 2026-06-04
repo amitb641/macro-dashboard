@@ -116,12 +116,17 @@ def check_fred_id(sid: str, timeout: int = 10) -> tuple[str, str]:
             return 'ok', f"200 OK (latest {obs[0].get('date', '?')})"
 
         if r.status_code == 429:
-            # Rate-limited — transient, not a bad series ID. Back off and retry.
-            # Preflight fires 63 sequential requests at 0.7s gaps; occasionally
-            # the rolling FRED window fills when collector also ran recently.
-            last_status = f'429 Too Many Requests'
-            if attempt < 2:
-                time.sleep(5 * (attempt + 1))  # 5s, 10s
+            # Rate-limited — transient, not a bad series ID.
+            # Strategy: when window is saturated (e.g. multiple stale pipeline
+            # runs all hit FRED recently), short per-series backoffs don't help —
+            # the window is still full when we retry. Instead, use a global
+            # window-clear sleep (60s first hit, 90s second) so all *subsequent*
+            # series benefit from the same wait rather than each burning 15s.
+            last_status = '429 Too Many Requests'
+            wait = 60 if attempt == 0 else 90
+            print(f'  ⚠  {sid}: 429 — waiting {wait}s for FRED window to clear '
+                  f'(attempt {attempt+1}/3)', flush=True)
+            time.sleep(wait)
             continue
 
         if 400 <= r.status_code < 500:
