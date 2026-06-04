@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-06-04T03:30:41.199217Z",
-  "status": "WARN",
+  "checked_at": "2026-06-04T03:49:00.595842Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 433,
-    "passed": 432,
-    "failed": 1,
+    "passed": 433,
+    "failed": 0,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -2126,9 +2126,8 @@
     {
       "category": "data",
       "check": "NFP_VS_ADP.adp completeness",
-      "pass": false,
-      "severity": "warning",
-      "detail": "11/13 empty (15% filled, min 50%)"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "data",

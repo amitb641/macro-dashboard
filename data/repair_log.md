@@ -1,3 +1,25 @@
+## Repair Agent — 2026-06-04T03:48:46.265473Z
+
+- **Status**: WARN
+- **Total checks**: 647
+- **Passed**: 644
+- **Failed**: 3
+- **Critical divergences**: 1
+
+### Collector errors
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+
+### Panel data
+_1 critical · 0 warning · 0 stale_
+
+- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-06-04T03:30:27.043994Z
 
 - **Status**: WARN
@@ -1105,18 +1127,6 @@ _0 critical · 2 warning · 0 stale_
 - ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
 - ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
 
-
----
-
-## Repair Agent — 2026-05-23T19:10:57.807439Z
-
-- **Status**: PASS
-- **Total checks**: 214
-- **Passed**: 214
-- **Failed**: 0
-- **Critical divergences**: 0
-
-No findings to surface — pipeline is clean. ✅
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-06-04T03:29:29.744759Z",
+  "analyzed_at": "2026-06-04T03:47:47.288867Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 1,
@@ -27,7 +27,7 @@
     "mortgage30": 6.53,
     "housing_starts": 1465.0,
     "cs_hpi_yoy": 0.66,
-    "umcsent": 49.8,
+    "umcsent": 44.8,
     "atl_wage_3m": null,
     "tdsp": 11.323096,
     "wti": 95.96,
@@ -129,8 +129,8 @@
       "alert": null
     },
     "umcsent": {
-      "value": 49.8,
-      "delta": 1.6,
+      "value": 44.8,
+      "delta": -3.4,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -265,7 +265,6 @@
   ],
   "raw_errors": [
     "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
-    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
-    "UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv"
+    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
   ]
 }

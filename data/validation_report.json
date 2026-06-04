@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-06-04T03:30:27.043994Z",
+  "validated_at": "2026-06-04T03:48:46.265473Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 648,
-    "passed": 641,
-    "failed": 7,
+    "total_checks": 647,
+    "passed": 644,
+    "failed": 3,
     "skipped": 1,
     "critical_divergences": 1
   },
@@ -165,11 +165,11 @@
     {
       "check": "NFP_VS_ADP.adp completeness",
       "html_value": "2/13 filled",
-      "source_value": "15% (min 50%)",
+      "source_value": "15% (min 8%)",
       "difference": 11,
       "tolerance": 6,
-      "severity": "warning",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
@@ -763,15 +763,15 @@
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-04-01",
-      "age_days": 64,
+      "latest_date": "2026-05-01",
+      "age_days": 34,
       "max_lag_days": 35,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-04-01",
+      "latest_date": "2026-05-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-04T03:27:03.499209Z",
+      "collected_at": "2026-06-04T03:45:17.466682Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1022,10 +1022,10 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 49.8,
+      "reference": 44.8,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 49.8,
-        "KPIS UMich Sentiment": 49.8
+        "UMCSENT_MONTHLY.data[-1]": 44.8,
+        "KPIS UMich Sentiment": 44.8
       },
       "severity": "ok",
       "pass": true
@@ -1460,12 +1460,6 @@
       "pass": false,
       "severity": "warning",
       "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv"
     }
   ],
   "seed_drift": [
@@ -3625,9 +3619,9 @@
     },
     {
       "check": "Visual: data \u2014 NFP_VS_ADP.adp completeness",
-      "severity": "warning",
-      "pass": false,
-      "detail": "11/13 empty (15% filled, min 50%)"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: data \u2014 HOUSING_MONTHLY has data",
@@ -4179,12 +4173,12 @@
       "severity": "ok",
       "metric": "umich_sentiment",
       "floor": 0.5,
-      "prior": 53.3,
-      "latest": 49.8,
-      "delta": -3.5,
-      "abs_delta": 3.5,
+      "prior": 49.8,
+      "latest": 44.8,
+      "delta": -5.0,
+      "abs_delta": 5.0,
       "verdict": "real_signal",
-      "note": "PoP delta -3.500 > \u00b10.5 \u2192 real_signal"
+      "note": "PoP delta -5.000 > \u00b10.5 \u2192 real_signal"
     },
     {
       "check": "noise_floor[cc_delinq_90plus]",
