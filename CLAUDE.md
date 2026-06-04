@@ -177,7 +177,7 @@ Rules:
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 10 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g — reads `FC_MACRO.actNN` from `data/state.json` first, falls back to inline HTML scrape for pre-migration / cold-start runs), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), earnings commentary (verbatim), visual QA, vision review
+- Validator runs 11 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g — reads `FC_MACRO.actNN` from `data/state.json` first, falls back to inline HTML scrape for pre-migration / cold-start runs), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), earnings commentary (verbatim), visual QA, vision review, **KPI date drift** (3l — compares KPI embedded month labels to raw_data latest dates; catches stale state.json from rebase conflicts)
 - CEO-grade gate (`python scripts/ceo_grade_gate.py`) aggregates the verdicts into a single PASS/WARN/FAIL/SKIP decision and writes `data/ceo_grade_verdict.json` — this is the publish-readiness contract
 
 ## Commit Conventions
