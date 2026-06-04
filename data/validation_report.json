@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-06-04T03:48:46.265473Z",
+  "validated_at": "2026-06-04T04:35:19.095014Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 647,
-    "passed": 644,
+    "total_checks": 650,
+    "passed": 647,
     "failed": 3,
     "skipped": 1,
     "critical_divergences": 1
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-04T03:45:17.466682Z",
+      "collected_at": "2026-06-04T04:32:03.680827Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1453,13 +1453,13 @@
       "check": "EIA fetch: RWTC",
       "pass": false,
       "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+      "note": "504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60"
     },
     {
       "check": "EIA fetch: RBRTE",
       "pass": false,
       "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+      "note": "504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RBRTE&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60"
     }
   ],
   "seed_drift": [

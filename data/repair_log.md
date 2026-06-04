@@ -1,3 +1,25 @@
+## Repair Agent — 2026-06-04T04:35:19.095014Z
+
+- **Status**: WARN
+- **Total checks**: 650
+- **Passed**: 647
+- **Failed**: 3
+- **Critical divergences**: 1
+
+### Collector errors
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **EIA fetch: RWTC** — 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60
+- ⚠️ **EIA fetch: RBRTE** — 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RBRTE&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60
+
+### Panel data
+_1 critical · 0 warning · 0 stale_
+
+- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-06-04T03:48:46.265473Z
 
 - **Status**: WARN
@@ -1097,28 +1119,6 @@ _0 critical · 3 warning · 0 stale_
 _0 critical · 2 warning · 0 stale_
 
 - ⚠️ **Collector error** — BLS: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
-- ⚠️ **Collector error** — BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)
-
-### Panel data
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-
-
----
-
-## Repair Agent — 2026-05-23T19:53:17.829098Z
-
-- **Status**: WARN
-- **Total checks**: 206
-- **Passed**: 203
-- **Failed**: 3
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 1 warning · 0 stale_
-
 - ⚠️ **Collector error** — BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)
 
 ### Panel data
