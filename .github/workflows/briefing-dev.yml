@@ -40,6 +40,15 @@ on:
         required: false
         default: 'true'
 
+# Concurrency: cancel any in-progress dev pipeline when a new push arrives.
+# Prevents queued runs from fighting over state.json (each run collects fresh
+# data, then tries to push back — the last writer wins and earlier runs produce
+# stale commits that trigger yet more runs). Scheduled and workflow_dispatch
+# runs get their own concurrency slot so they always run to completion.
+concurrency:
+  group: dev-pipeline-${{ github.event_name == 'push' && 'push' || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'push' }}
+
 jobs:
   update:
     runs-on: ubuntu-latest
