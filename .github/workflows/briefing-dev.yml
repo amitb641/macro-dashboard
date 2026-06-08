@@ -74,6 +74,25 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Drift check — briefing-dev.yml on main matches dev
+        # GitHub Actions schedules cron triggers off the workflow file
+        # on the DEFAULT branch (main). Push triggers run from dev. If
+        # the two copies drift, the Saturday cron silently uses main's
+        # stale logic. Warn loudly here (don't fail) so any divergence
+        # surfaces in the run log; sync via:
+        #   git checkout main && \
+        #   git checkout dev/multi-expert-improvements -- .github/workflows/briefing-dev.yml && \
+        #   git commit -m "Sync briefing-dev.yml from dev to main" && git push origin main
+        run: |
+          git fetch origin main --depth=1 2>/dev/null || true
+          if git show origin/main:.github/workflows/briefing-dev.yml >/tmp/main_brief.yml 2>/dev/null \
+             && ! diff -q /tmp/main_brief.yml .github/workflows/briefing-dev.yml >/dev/null; then
+            echo "::warning::briefing-dev.yml differs between main and dev — Saturday cron uses main's stale copy. Sync per step description."
+          else
+            echo "✓ briefing-dev.yml in sync between main and dev"
+          fi
+        continue-on-error: true
+
       - name: Set up Python 3.11
         uses: actions/setup-python@v6
         with:
