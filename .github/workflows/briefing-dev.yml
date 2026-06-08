@@ -1,0 +1,436 @@
+name: Weekly Macro Update (DEV — parallel)
+
+# ───────────────────────────────────────────────────────────────────────────
+# Parallel dev pipeline.
+# Mirrors briefing.yml exactly, with three surgical differences:
+#
+#   1. Target branch: dev/multi-expert-improvements (not main)
+#   2. Email: skipped unless EMAIL_TO_DEV secret is set (so subscribers
+#      to the production list never receive a duplicate dev email)
+#   3. Deploy: GitHub Pages step is skipped. Pages environment is
+#      repo-restricted to `main` and a repo can serve only one Pages
+#      site. The Pages artifact is still uploaded to the run for
+#      manual download. If a Vercel project is connected, Vercel
+#      auto-deploys a preview URL on every push to the dev branch
+#      with no additional workflow change.
+#
+# Comparison report between prod and dev is produced by a separate
+# workflow (parallel-compare.yml) that listens for completion of both
+# briefings — this file stays independent and parallel.
+# ───────────────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    - cron: '0 12 * * 6'        # Weekly: Sat 08:00 EDT / 07:00 EST (mirrors prod)
+    # Removed second cron (`0 14 8-14 * 6`) on 2026-05-14. Cron OR-
+    # semantics on DoM+DoW caused it to fire DAILY during days 8-14
+    # of each month, not just the 2nd Saturday as the comment claimed.
+    # Weekly Saturday cron above is sufficient; if a different deep-
+    # refresh behaviour is needed later, gate it inside the job with
+    # `[ $(date -u +%d) -le 14 ]` rather than re-adding a second cron.
+  push:
+    branches: ['dev/multi-expert-improvements']
+  workflow_dispatch:
+    inputs:
+      force_ai:
+        description: 'Force Agent 3 (Claude AI) to run'
+        required: false
+        default: 'true'
+      strict_gate:
+        description: 'Treat ceo_grade_gate WARN as blocking. Scheduled cron runs always use --strict; this input only affects workflow_dispatch.'
+        required: false
+        default: 'true'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # Belt-and-suspenders gate: only run for the dev branch or explicit
+    # manual / scheduled trigger. The schedule trigger defaults to the
+    # repository's default branch (main) for `github.ref`; we override
+    # via explicit ref in the checkout step below.
+    if: github.ref == 'refs/heads/dev/multi-expert-improvements' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout dev branch
+        uses: actions/checkout@v4
+        with:
+          ref: dev/multi-expert-improvements
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Check setup
+        run: |
+          echo "Running parallel DEV pipeline on branch: dev/multi-expert-improvements"
+          echo "FRED key set:    ${{ secrets.FRED_API_KEY != '' }}"
+          echo "BLS key set:     ${{ secrets.BLS_API_KEY != '' }}"
+          echo "EIA key set:     ${{ secrets.EIA_API_KEY != '' }}"
+          echo "Claude key set:  ${{ secrets.ANTHROPIC_API_KEY != '' }}"
+          echo "Resend key set:  ${{ secrets.RESEND_API_KEY != '' }}"
+          echo "Dev email set:   ${{ secrets.EMAIL_TO_DEV != '' }}"
+          ls scripts/
+          ls data/ || echo "data/ missing"
+
+      - name: Agent 0 — Pre-flight (FRED + Anthropic model validation)
+        env:
+          FRED_API_KEY:      ${{ secrets.FRED_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/preflight.py
+
+      - name: Agent 1 — Collector
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+          EIA_API_KEY:  ${{ secrets.EIA_API_KEY }}
+        run: python scripts/collector.py
+
+      - name: Agent 2 — Analyzer
+        run: python scripts/analyzer.py
+
+      - name: Phase 2 Explainer — per-signal rationales (read-only)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # DEV-only: emit a sourced "why this matters" rationale per
+          # flagged signal to data/signal_rationales.json. Read-only
+          # (never mutates signals.json); capped at 10 signals/run and
+          # bounded by AGENT_MAX_LLM_CALLS + kill switch. The 10a
+          # diagnostician can consume these to enrich its reasoning.
+          AGENT_EXPLAINER_ENABLED: '1'
+        run: python -m scripts._signal_rationales
+        continue-on-error: true
+
+      - name: Agent 3 — Analyst (claude-sonnet-4-6)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_AI: ${{ github.event.inputs.force_ai || 'false' }}
+        run: |
+          echo "Running Agent 3 — AI commentary refresh"
+          python scripts/briefing_agent.py
+
+      - name: Agent 4 — Renderer
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python scripts/renderer.py
+
+      - name: Agent 6 — Validator
+        id: validator
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          BLS_API_KEY:  ${{ secrets.BLS_API_KEY }}
+        run: python scripts/validator.py
+        continue-on-error: true
+
+      - name: Agent 10 — Repair Agent (Stage 10a diagnostician)
+        if: always()
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # DEV-only: enable the read-only LLM diagnostician so it produces
+          # incident reports + the recurrence record that Stages 10b/10c
+          # need (≥3 weeks of shadow data per CLAUDE.md). Still writes no
+          # code/data/layout — bounded by AGENT_MAX_LLM_CALLS (≤15
+          # findings/run) and the kill switch. Prod (briefing.yml) stays
+          # in plain observer mode until the shadow data justifies promotion.
+          AGENT_DIAGNOSTICIAN_ENABLED: '1'
+        run: python scripts/repair_agent.py
+        continue-on-error: true
+
+      - name: Agent 4b — Re-render (inject validation report, strict — observation mode)
+        # Tier-A landed --strict on the cron path. On dev, the renderer's
+        # legacy patch_kpi() calls reference KPI tile labels that B7 either
+        # renamed or removed (the modern inject_kpi() path already owns those
+        # tiles). Until renderer.py retires the obsolete patch_kpi calls,
+        # run --strict as observation only: verdict stays in the log,
+        # pipeline keeps moving so parallel-run can produce signal. Prod's
+        # --strict gate is unaffected.
+        id: strict_render
+        run: python scripts/renderer.py --strict
+        continue-on-error: true
+
+      - name: Gate — Block on critical validation failures
+        if: steps.validator.outcome == 'failure'
+        run: |
+          echo "❌ Validator detected critical data divergences."
+          echo "   Review data/validation_report.json for details."
+          echo "   Pipeline halted — fix data quality issues before publishing."
+          exit 1
+
+      # ───────────────────────────────────────────────────────────────
+      # CEO-grade gate stack (mirrors prod, all continue-on-error so
+      # ceo_grade_gate aggregates a partial verdict rather than burying
+      # the verdict on one auxiliary failure)
+      # ───────────────────────────────────────────────────────────────
+      - name: Agent 7 — Visual QA (DOM checks)
+        id: visual_qa
+        run: python scripts/visual_qa.py
+        continue-on-error: true
+
+      - name: Agent 8 — Visual Review (Claude vision)
+        id: visual_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "ANTHROPIC_API_KEY not set — skipping visual_review."
+            exit 0
+          fi
+          python scripts/visual_review.py
+        continue-on-error: true
+
+      - name: Editorial Review (deterministic linters, LLM tone optional)
+        id: editorial_review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_EDITORIAL_REVIEW_ENABLED: '1'
+        run: python -m scripts._editorial_review
+        continue-on-error: true
+
+      - name: CEO-Grade Gate — aggregated PASS/WARN/FAIL/SKIP verdict
+        id: ceo_grade_gate
+        run: |
+          STRICT_FLAG=""
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            STRICT_FLAG="--strict"
+            echo "🔒 Scheduled DEV run — --strict on by default"
+          elif [ "${{ github.event.inputs.strict_gate }}" != "false" ]; then
+            STRICT_FLAG="--strict"
+            echo "🔒 Strict gate enabled — WARN will block publish"
+          else
+            echo "⚠ Strict gate off — WARN will not block (workflow_dispatch override)"
+          fi
+          python scripts/ceo_grade_gate.py $STRICT_FLAG
+        continue-on-error: true
+
+      - name: Gate — CEO-grade FAIL/SKIP (observation mode on dev)
+        # On prod this is a hard block. On dev, we want the full pipeline
+        # to run end-to-end so the parallel-run trial can observe behaviour
+        # past the gate (snapshot, commit-back, Vercel deploy, health-check).
+        # The verdict JSON is still committed to dev — every finding is
+        # preserved for the comparison report and weekly review.
+        if: steps.ceo_grade_gate.outcome == 'failure'
+        continue-on-error: true
+        run: |
+          echo "⚠ CEO-grade gate would have blocked publish on prod."
+          echo "   Recording verdict for parallel-run observation; continuing pipeline."
+          cat data/ceo_grade_verdict.json || true
+
+      - name: LLM cost summary (observability)
+        # Per-run USD cost + failure-rate rollup across all agents this
+        # window (from data/agent_memory.jsonl). Surfaces the optimization
+        # levers: which agent/purpose spends most, and the wasted-call
+        # signal (a high fail % means broken requests burning budget for
+        # nothing — fix that before tuning token spend). Never blocks.
+        if: always()
+        continue-on-error: true
+        run: |
+          python scripts/inspect_agent_memory.py --cost --since "$(date -u +%Y-%m-%d)" || true
+          echo "── rolling window (last 2000 calls) ──"
+          python scripts/inspect_agent_memory.py --cost || true
+
+      - name: Snapshot — Rolling data backup
+        run: python scripts/snapshot.py
+
+      - name: Version Tracker — Record pipeline run
+        run: python scripts/version_tracker.py
+
+      - name: Commit and push to dev branch
+        run: |
+          git config user.name  "briefing-bot-dev"
+          git config user.email "briefing-bot-dev@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add index.html data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🌑 Shadow update (dev): $(date -u +'%Y-%m-%d')"
+            # Retry-with-rebase up to 3 times to handle the race where an
+            # interactive commit lands while this job is running. Without
+            # this, parallel pushes during active development always show
+            # the CI as failed even though the pipeline itself ran clean.
+            for attempt in 1 2 3; do
+              if git push origin HEAD:dev/multi-expert-improvements; then
+                echo "Shadow push succeeded on attempt $attempt"
+                exit 0
+              fi
+              echo "Push rejected (attempt $attempt) — rebasing onto latest dev"
+              git fetch origin dev/multi-expert-improvements
+              # Stash any post-commit working-tree drift (e.g. version.json
+              # re-touched by a downstream step) so the rebase has a clean
+              # tree. Untracked artifacts included; pop is best-effort.
+              git stash push --include-untracked --message "ci-rebase-shadow" || true
+              if ! git rebase origin/dev/multi-expert-improvements; then
+                # Content conflict during rebase. Common cases:
+                #   (a) human pushed an index.html edit (Barclays removal,
+                #       nav hide, etc.) that conflicts with this run's
+                #       shadow-rendered index.html; or
+                #   (b) Tier 1 anti-clone migration: another push regenerated
+                #       data/state.json with a different key set / write
+                #       timestamp while this run was rendering its own.
+                # Resolution policy:
+                #   - If every conflicted file is a renderer output
+                #     (currently index.html and data/state.json), prefer
+                #     the upstream side (--ours during rebase = the commit
+                #     on remote we're rebasing onto) and re-run the
+                #     renderer to refresh data-side regions on top.
+                #   - If any non-renderer-output file conflicts, bail —
+                #     a human edit overlaps a CI-managed file, needs
+                #     review.
+                conflicted=$(git diff --name-only --diff-filter=U)
+                echo "Conflicted files: $conflicted"
+                # Whitelist: anything the pipeline itself writes. The
+                # shadow-bot push (`🌑 Shadow update`) regenerates all
+                # of these every run, so any conflict in this set is
+                # the parallel-write race, not a human edit overlap.
+                #   - index.html                  (renderer)
+                #   - data/*.json                 (collector, analyzer,
+                #                                  briefing, validator,
+                #                                  visual_qa, vision,
+                #                                  editorial, ceo_grade,
+                #                                  state bundle, version)
+                #   - data/screenshots/*.png      (visual_qa)
+                #   - data/repair_log.md          (repair_agent)
+                #   - data/agent_memory.jsonl    (audit log)
+                #   - data/incident_reports/*.md (diagnostician)
+                #   - data/transcripts/**         (earnings agent)
+                #   - data/snapshots/**           (snapshot.py rolling backups)
+                #   - data/parallel_compare_*.*  (parallel-run trial)
+                #   - data/run_report_*.md        (parallel-run trial)
+                #   - version.json                (build stamp)
+                non_generated=$(echo "$conflicted" | grep -Ev '^(index\.html|version\.json|data/[^/]+\.json|data/[^/]+\.jsonl|data/[^/]+\.md|data/screenshots/.+\.png|data/incident_reports/.+\.md|data/transcripts/.+|data/snapshots/.+|data/parallel_compare_.+|data/run_report_.+)$' || true)
+                if [ -z "$non_generated" ] && [ -n "$conflicted" ]; then
+                  echo "Conflict scoped to pipeline outputs ($conflicted) — preferring upstream, re-rendering on top"
+                  for f in $conflicted; do
+                    git checkout --ours -- "$f"
+                    git add "$f"
+                  done
+                  GIT_EDITOR=true git -c core.editor=true rebase --continue || {
+                    echo "::error::rebase --continue failed even after resolving $conflicted"
+                    git rebase --abort || true
+                    git stash pop || true
+                    exit 1
+                  }
+                  # Refresh renderer-managed regions on top of the
+                  # preserved upstream state (both inline-JS in
+                  # index.html and the state.json bundle). Other
+                  # pipeline-output files (analyzer outputs, validation
+                  # report, screenshots, etc.) are NOT regenerated here
+                  # — we keep upstream's copy. That's intentional: this
+                  # job's analyzer/validator already ran earlier in the
+                  # pipeline and those artifacts are downstream of the
+                  # same raw_data; keeping upstream avoids spawning a
+                  # fresh full-pipeline sub-run during conflict cleanup.
+                  python scripts/renderer.py || echo "::warning::renderer failed during conflict resolution; proceeding with upstream files as-is"
+                  if ! git diff --quiet -- index.html data/state.json; then
+                    git add index.html data/state.json
+                    git commit \
+                      -m "Re-render after rebase conflict resolution" \
+                      -m "Upstream pushed pipeline-output edits while this CI run was generating its own. Rebase preferred upstream across all generated files (data/*.json, screenshots, repair_log, etc.); this commit re-runs the renderer to refresh data-side regions (BANK_COMMENTARY, BUILD_V, chart consts, state.json bundle) on top of the preserved structural state."
+                  fi
+                else
+                  echo "::error::Rebase conflict in non-pipeline-output files: $non_generated"
+                  git rebase --abort || true
+                  git stash pop || true
+                  exit 1
+                fi
+              fi
+              git stash pop || true
+            done
+            echo "::error::Shadow push failed after 3 rebase retries"
+            exit 1
+          fi
+
+      # ───────────────────────────────────────────────────────────────
+      # Deploy step skipped on dev — GitHub Pages is repo-restricted to
+      # `main` and one Pages site per repo. Upload artifact for manual
+      # review. If Vercel is connected, it auto-deploys preview URLs on
+      # push to dev with no workflow involvement.
+      # ───────────────────────────────────────────────────────────────
+      - name: Upload Pages artifact (for manual download)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-pages-${{ github.run_id }}
+          path: |
+            index.html
+            data/validation_report.json
+            data/ceo_grade_verdict.json
+            data/editorial_report.json
+            data/visual_review_report.json
+          retention-days: 14
+
+      # ───────────────────────────────────────────────────────────────
+      # Vercel health-check — confirms the dev preview URL serves the
+      # latest commit. Vercel auto-deploys on push to dev within ~30s,
+      # so we sleep briefly before pinging to give it time to roll out.
+      # No-op if DEV_URL secret is unset (Vercel may not yet be wired).
+      # ───────────────────────────────────────────────────────────────
+      - name: Vercel health-check (dev preview URL)
+        id: vercel_healthcheck
+        env:
+          DEV_URL: ${{ secrets.DEV_URL }}
+        run: |
+          if [ -z "$DEV_URL" ]; then
+            echo "DEV_URL secret not set — skipping Vercel health-check."
+            exit 0
+          fi
+          echo "Waiting 45s for Vercel auto-deploy to roll out..."
+          sleep 45
+          python scripts/healthcheck.py "$DEV_URL"
+        continue-on-error: true
+
+      # ───────────────────────────────────────────────────────────────
+      # Email on dev only if EMAIL_TO_DEV secret is set. Subscribers
+      # to the production list never receive a duplicate.
+      # ───────────────────────────────────────────────────────────────
+      - name: Agent 5 — Publisher (email to dev list only)
+        if: steps.ceo_grade_gate.outcome == 'success'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM:     ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:       ${{ secrets.EMAIL_TO_DEV }}
+        run: |
+          if [ -z "$EMAIL_TO" ]; then
+            echo "EMAIL_TO_DEV not set — skipping dev email send (subscriber-safe)."
+            exit 0
+          fi
+          python scripts/publisher.py
+
+  # ── Pipeline failure notification (dev) ────────────────────────────
+  notify-failure:
+    runs-on: ubuntu-latest
+    needs: update
+    if: failure() && (github.ref == 'refs/heads/dev/multi-expert-improvements' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+    permissions:
+      issues: write
+    steps:
+      - name: Notify dev pipeline failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `[dev] Pipeline failure: ${new Date().toISOString().slice(0,10)}`;
+            const body = [
+              '## DEV Pipeline Failure Alert',
+              '',
+              `**Run:** [${context.runId}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              `**Trigger:** ${context.eventName}`,
+              `**Branch:** dev/multi-expert-improvements`,
+              `**Time:** ${new Date().toISOString()}`,
+              '',
+              'This is a parallel-dev run — prod is unaffected. Review the failed',
+              'run and fix on dev before the next scheduled execution.',
+            ].join('\n');
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['pipeline-failure', 'parallel-dev'],
+            });
