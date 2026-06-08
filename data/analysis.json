@@ -1,5 +1,5 @@
 {
-  "generated_at": "June 04, 2026",
+  "generated_at": "June 08, 2026",
   "risk_level": "MODERATE",
   "risk_rationale": "",
   "outlook_headline": "",
@@ -7,9 +7,9 @@
   "tabs": {
     "gdp": "",
     "jobs": "",
-    "unemp": "U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% \u2014 a 190bp spread over U-3 \u2014 signals significant slack in hours and involuntary part-time work that the headline number obscures. This breadth of labor market weakness is inconsistent with a soft-landing narrative and points to genuine demand destruction in the jobs market.",
+    "unemp": "",
     "wages": "",
-    "cpi": "Headline CPI at 3.8% YoY is running nearly 90bp above Core CPI at 2.7%, a gap almost entirely attributable to energy \u2014 WTI at $109.8 is the dominant driver and it is not yet fully reflected in downstream prices. Core CPI at 2.7% has not broken to target and risks re-acceleration as oil costs transmit through transportation, manufacturing, and services over the next 60-90 days. The Fed cannot cut rates with headline at 3.8% and an oil shock still propagating; rate relief is not imminent.",
+    "cpi": "",
     "pce": "",
     "yield": "",
     "credit": "",
@@ -23,20 +23,19 @@
     "fed_bias": "On Hold"
   },
   "signal_flags": [],
-  "agent3_ran_at": "2026-06-04T06:07:44.681229Z",
+  "agent3_ran_at": "2026-06-08T03:29:37.583744Z",
   "refreshed_tabs": [
-    "yield",
-    "oil",
-    "credit",
-    "jobs",
-    "wages",
-    "pce",
-    "housing",
     "gdp",
+    "jobs",
+    "unemp",
+    "wages",
+    "cpi",
+    "pce",
+    "yield",
+    "credit",
+    "housing",
+    "oil",
     "banks"
   ],
-  "carried_forward": [
-    "unemp",
-    "cpi"
-  ]
+  "carried_forward": []
 }

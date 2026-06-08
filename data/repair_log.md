@@ -1,3 +1,19 @@
+## Repair Agent — 2026-06-08T03:30:34.447432Z
+
+- **Status**: WARN
+- **Total checks**: 649
+- **Passed**: 648
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: umcsent** — 38d old (limit 35d)
+
+
+---
+
 ## Repair Agent — 2026-06-04T06:08:39.272645Z
 
 - **Status**: PASS
@@ -1101,24 +1117,6 @@ _0 critical · 3 warning · 0 stale_
 ---
 
 ## Repair Agent — 2026-05-24T00:43:41.162180Z
-
-- **Status**: WARN
-- **Total checks**: 202
-- **Passed**: 199
-- **Failed**: 3
-- **Critical divergences**: 0
-
-### Panel data
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
-
-
----
-
-## Repair Agent — 2026-05-24T00:21:42.755128Z
 
 - **Status**: WARN
 - **Total checks**: 202
