@@ -1,3 +1,15 @@
+## Repair Agent — 2026-06-13T13:21:13.791988Z
+
+- **Status**: PASS
+- **Total checks**: 649
+- **Passed**: 649
+- **Failed**: 0
+- **Critical divergences**: 0
+
+No findings to surface — pipeline is clean. ✅
+
+---
+
 ## Repair Agent — 2026-06-08T03:35:28.722048Z
 
 - **Status**: WARN
@@ -1097,30 +1109,6 @@ _0 critical · 3 warning · 0 stale_
 - **Passed**: 199
 - **Failed**: 3
 - **Critical divergences**: 0
-
-### Panel data
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
-
-
----
-
-## Repair Agent — 2026-05-24T04:11:31.511730Z
-
-- **Status**: WARN
-- **Total checks**: 203
-- **Passed**: 198
-- **Failed**: 5
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **Collector error** — ALFRED AHETPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=AHETPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=2
-- ⚠️ **Collector error** — ALFRED PCEPI@2026-03-31: 429 Client Error: Too Many Requests for url: https://api.stlouisfed.org/fred/series/observations?series_id=PCEPI&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=480&realtime_start=2026-03-31&realtime_end=202
 
 ### Panel data
 _0 critical · 3 warning · 0 stale_
