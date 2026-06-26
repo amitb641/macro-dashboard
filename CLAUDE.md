@@ -129,6 +129,7 @@ Supporting scripts:
 - **FRED NPPTTL discontinued 2022-05-01** — the `NFP_VS_ADP.adp` array will always have only 1-3 filled values out of 13 (from `adp_latest` + `_ADP_VERIFIED`). The `SPARSE_OK['NFP_VS_ADP.adp'] = 8` override in both `visual_qa.py` and `validator.py` reflects this permanent data contract. Do not raise this threshold — the data is correct.
 - **`buildJobsTab()` null guard** — if `NFP_VS_ADP` is missing from `state.json`, the jobs tab returns early and all 4 charts blank silently. The cold-start bootstrap in `renderer.py` (initializing `adp_arr = [None] * len(lbl_12)` when all ADP fallbacks fail) prevents this. If jobs charts are blank, check `data/state.json` for the `NFP_VS_ADP` key first.
 - **Panel subtitle gate string contract** — `render_inflation()` and `render_labor()` gate PCE/CPI/SECTOR_MOM/U_SECTOR_MOM panel-sub month updates on `any(s.startswith('XXX registered') for s in applied)`. If a rebuild function changes its success message (e.g. Tier 1 migration changed `'XXX rebuilt'` → `'XXX registered to state.json...'`), the gate silently stays False and the subtitle freezes — Pass 3d fires as critical every run. Smoke test `test_panel_subtitle_gates` guards this contract. Rule: when editing any `rebuild_*` success message, update all downstream `startswith()` gates in `render_inflation` and `render_labor` to match.
+- **Commentary auto-patch silent failure** — `render_inflation()` and `render_labor()` maintain "stale commentary" patches that update KPI numbers (Core PCE, U-3, NFP) in the HTML when Agent 3 doesn't refresh them. These use `re.subn` + `_record_subn_result` and only call `applied.append(...)` when `n > 0`. If a format mismatch occurs, a `warnings.append` fires instead — check the renderer summary for `Commentary Core PCE: no matching sentence format` warnings. Core PCE uses a two-tier regex: tier-1 matches Agent 3's structured `<strong>+X.X% YoY</strong>` format; tier-2 matches plain-text `"Core PCE at X.X%"` variants. Smoke test `test_commentary_patch_regexes` guards both tiers. The KPI tile (live data) and commentary text (LLM prose) can still diverge if Agent 3 fails AND neither tier matches — this surfaces as a warning, not a silent pass.
 
 ## Runtime Observability (dev — `index.html`)
 Four layers added 2026-05-30 to catch blank charts before users see them:
@@ -163,7 +164,7 @@ Rules:
 - After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 46/46 pass. The
+- Run `python tests/test_smoke.py` before pushing — must be 54/54 pass. The
   smoke suite includes a **Tier 1 hydration wiring** regression guard
   (`test_hydration_wiring`) that asserts every `let X = null;` placeholder
   (a) has a matching `s.X !== undefined` hydration assignment, (b) lives
@@ -182,6 +183,10 @@ Rules:
   `'XXX rebuilt'` to `'XXX registered to state.json...'`; the 4 gates were not
   updated, silently freezing panel subtitles (Pass 3d critical every run for
   6+ weeks until discovered 2026-06-04).
+  Also includes `test_commentary_patch_regexes` (2026-06-26) — guards the
+  two-tier Core PCE commentary patch regexes (tier-1 `<strong>` format, tier-2
+  plain-text "Core PCE at X.X%") and the U-3 commentary patch format. Prevents
+  silent stale-number failure when Agent 3 writes prose not matching tier-1.
 - Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
@@ -231,7 +236,7 @@ Custom development lifecycle commands are available in `.claude/commands/`:
 - `/spec` — Define what to build (spec before code)
 - `/plan` — Plan implementation as small, atomic tasks
 - `/build` — Implement one slice at a time with verification
-- `/test` — Run all test layers: smoke (46/46), renderer, visual QA (224)
+- `/test` — Run all test layers: smoke (54/54), renderer, visual QA (224)
 - `/review` — Code review checklist (correctness, safety, scope, pipeline integrity)
 - `/code-simplify` — Simplify code without changing behavior
 - `/ship` — Pre-flight checks, push, and post-ship verification

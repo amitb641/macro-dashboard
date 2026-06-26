@@ -2140,17 +2140,23 @@ def render_labor(html, data, vals, tabs):
             u_prv_full = datetime.datetime.strptime(u_prv_d, '%Y-%m-%d').strftime('%b %Y')  # "Feb 2026"
             if u_cur_val is not None and u_prv_val is not None:
                 # Update "U-3 at <strong>X.X%</strong> (Mon YYYY)" in commentary
-                html = re.sub(
-                    r'(U-3 at <strong>)\d+\.\d+%</strong> \([A-Z][a-z]+ \d{4}\)',
-                    rf'\g<1>{u_cur_val}%</strong> ({u_cur_full})',
-                    html, count=1)
-                # Update "up from X.X% in Mon" / "down from X.X% in Mon"
-                direction = 'up' if u_cur_val > u_prv_val else 'down'
-                html = re.sub(
-                    r'(up|down) from \d+\.\d+% in [A-Z][a-z]+',
-                    f'{direction} from {u_prv_val}% in {u_prv_full.split()[0]}',
-                    html, count=1)
-                applied.append(f'Commentary U-3 updated to {u_cur_val}% ({u_cur_full})')
+                u3_pat = r'(U-3 at <strong>)\d+\.\d+%</strong> \([A-Z][a-z]+ \d{4}\)'
+                new_html, n = re.subn(u3_pat,
+                    rf'\g<1>{u_cur_val}%</strong> ({u_cur_full})', html, count=1)
+                _record_subn_result('Commentary U-3', u3_pat, n)
+                if n:
+                    html = new_html
+                    # Update "up from X.X% in Mon" / "down from X.X% in Mon"
+                    direction = 'up' if u_cur_val > u_prv_val else 'down'
+                    html = re.sub(
+                        r'(up|down) from \d+\.\d+% in [A-Z][a-z]+',
+                        f'{direction} from {u_prv_val}% in {u_prv_full.split()[0]}',
+                        html, count=1)
+                    applied.append(f'Commentary U-3 updated to {u_cur_val}% ({u_cur_full})')
+                else:
+                    warnings.append(
+                        f'Commentary U-3: "U-3 at <strong>" format not found — '
+                        f'number may be stale. Current: {u_cur_val}%')
 
             # Update NFP in commentary (e.g. "Feb payrolls printed <strong>-92K</strong>")
             if payems_s and len(payems_s) >= 2:
@@ -2159,11 +2165,18 @@ def render_labor(html, data, vals, tabs):
                 nfp_lbl = month_label(payems_s[0]['date']).split("'")[0]  # "Mar"
                 # Replace "Mon payrolls printed <strong>XK</strong> — stale narrative."
                 # Truncate up to next sentence boundary to remove stale context
-                html = re.sub(
-                    r'[A-Z][a-z]+ payrolls printed <strong>[^<]+</strong>[^<]*?(?=<strong>)',
+                nfp_pat = r'[A-Z][a-z]+ payrolls printed <strong>[^<]+</strong>[^<]*?(?=<strong>)'
+                new_html, n = re.subn(nfp_pat,
                     f'{nfp_lbl} payrolls printed <strong>{nfp_sign}{nfp_change}K</strong>. ',
                     html, count=1)
-                applied.append(f'Commentary NFP updated to {nfp_sign}{nfp_change}K ({nfp_lbl})')
+                _record_subn_result('Commentary NFP', nfp_pat, n)
+                if n:
+                    html = new_html
+                    applied.append(f'Commentary NFP updated to {nfp_sign}{nfp_change}K ({nfp_lbl})')
+                else:
+                    warnings.append(
+                        f'Commentary NFP: payrolls sentence not found — '
+                        f'number may be stale. Current: {nfp_sign}{nfp_change}K ({nfp_lbl})')
 
             # Update weekly claims in commentary (e.g. "205K (Mar'26)")
             if icsa_s:
@@ -2350,12 +2363,38 @@ def render_inflation(html, data, vals, tabs):
         prv_full = datetime.datetime.strptime(pce_core_s[1]['date'], '%Y-%m-%d').strftime("%b'%y")
         if yoy_cur is not None and yoy_prev is not None:
             direction = 'up' if yoy_cur > yoy_prev else 'down'
-            # "Core PCE re-accelerated to <strong>+X.X% YoY</strong> (Mon'YY), up from +X.X% in Mon'YY"
-            html = re.sub(
-                r"(Core PCE [a-z\-]+ to <strong>)\+\d+\.\d+% YoY</strong> \([A-Z][a-z]+'\d+\), (?:up|down) from \+\d+\.\d+% in [A-Z][a-z]+'\d+",
+            # Tier 1: structured LLM output with <strong> tag
+            # "Core PCE re-accelerated to <strong>+X.X% YoY</strong> (Mon'YY), up/down from +X.X% in Mon'YY"
+            t1_pat = (r"(Core PCE [a-z\-]+ to <strong>)\+\d+\.\d+% YoY</strong> \([A-Z][a-z]+'\d+\)"
+                      r", (?:up|down) from \+\d+\.\d+% in [A-Z][a-z]+'\d+")
+            new_html, n1 = re.subn(
+                t1_pat,
                 rf"\g<1>+{yoy_cur:.1f}% YoY</strong> ({cur_full}), {direction} from +{yoy_prev:.1f}% in {prv_full}",
                 html, count=1)
-            applied.append(f'Commentary Core PCE updated to +{yoy_cur:.1f}% ({cur_full})')
+            _record_subn_result('Commentary Core PCE (tier-1)', t1_pat, n1)
+            if n1:
+                html = new_html
+                applied.append(f'Commentary Core PCE updated to +{yoy_cur:.1f}% ({cur_full})')
+            else:
+                # Tier 2: plain-text variants written by Agent 3 without <strong> markup
+                # e.g. "Core PCE at 3.2%" / "Core PCE of 3.4%" / "Core PCE is 3.1%"
+                t2_pat = (r'(Core PCE\s+'
+                          r'(?:at|of|is|near|came in at|eased to|rose to|fell to|'
+                          r'held at|printed at|stands at|running at)\s+)'
+                          r'\+?(\d+\.\d+)(%)')
+                new_html, n2 = re.subn(
+                    t2_pat,
+                    lambda m: m.group(1) + f'{yoy_cur:.1f}' + m.group(3),
+                    html, count=1, flags=re.IGNORECASE)
+                _record_subn_result('Commentary Core PCE (tier-2)', t2_pat, n2)
+                if n2:
+                    html = new_html
+                    applied.append(f'Commentary Core PCE updated to +{yoy_cur:.1f}% ({cur_full}) [plain-text]')
+                else:
+                    warnings.append(
+                        f'Commentary Core PCE: no matching sentence format — '
+                        f'number may be stale. Current: {yoy_cur:.1f}% ({cur_full}). '
+                        f'Expected "<strong>" form or "Core PCE at X.X%".')
 
     psv = data.get('psavert', [])
     if psv and len(psv) >= 2:

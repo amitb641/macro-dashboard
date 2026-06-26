@@ -609,6 +609,80 @@ def test_panel_subtitle_gates(tmp_dir):
         )
 
 
+def test_commentary_patch_regexes(tmp_dir):
+    """Regression guard: commentary auto-patch regexes must match both
+    structured (<strong> tag) and plain-text (Agent 3 prose) formats.
+
+    Root cause (2026-06-26): render_inflation() Core PCE patch used a single
+    narrow regex requiring '<strong>+X.X% YoY</strong>' format. When Agent 3
+    writes 'Core PCE at 3.2%' (plain text, common fallback), the regex silently
+    fails and applied.append fires unconditionally — the number freezes while the
+    KPI tile updates. Two-tier regex + re.subn detection fixes both issues.
+    """
+    print('\n── Test: Commentary Patch Regex Coverage ──')
+    import re
+
+    yoy_cur = 3.4
+
+    # Tier-1 pattern (structured LLM output)
+    t1_pat = (r"(Core PCE [a-z\-]+ to <strong>)\+\d+\.\d+% YoY</strong> \([A-Z][a-z]+'\d+\)"
+              r", (?:up|down) from \+\d+\.\d+% in [A-Z][a-z]+'\d+")
+    t1_html = "Core PCE re-accelerated to <strong>+3.2% YoY</strong> (Apr'26), up from +3.0% in Mar'26"
+    _, n1 = re.subn(t1_pat, 'REPLACED', t1_html, count=1)
+    _test(
+        'Core PCE tier-1 regex matches structured <strong> format',
+        n1 == 1,
+        'Tier-1 regex did not match structured LLM output — check pattern in render_inflation()',
+    )
+    _, n1_miss = re.subn(t1_pat, 'REPLACED', 'Core PCE at 3.2%', count=1)
+    _test(
+        'Core PCE tier-1 regex does NOT match plain-text format (tier-2 handles it)',
+        n1_miss == 0,
+        'Tier-1 regex is too broad — it must NOT match plain-text prose',
+    )
+
+    # Tier-2 pattern (plain-text prose from Agent 3 fallback)
+    t2_pat = (r'(Core PCE\s+'
+              r'(?:at|of|is|near|came in at|eased to|rose to|fell to|'
+              r'held at|printed at|stands at|running at)\s+)'
+              r'\+?(\d+\.\d+)(%)')
+    t2_cases = [
+        'Core PCE at 3.2% is the Fed primary target',
+        'Core PCE of 3.2% remains above target',
+        'Core PCE eased to 3.2% in the latest reading',
+        'Core PCE rose to 3.2% from prior month',
+    ]
+    for case in t2_cases:
+        _, n2 = re.subn(t2_pat, r'\g<1>REPLACED\g<3>', case, count=1, flags=re.IGNORECASE)
+        _test(
+            f'Core PCE tier-2 regex matches: "{case[:50]}"',
+            n2 == 1,
+            f'Tier-2 regex did not match this plain-text format — add verb to tier-2 pattern',
+        )
+
+    # Verify tier-2 replacement preserves surrounding text and updates number
+    sample = 'With Core PCE at 3.2% still above the 2% target, the Fed remains vigilant.'
+    result, n = re.subn(
+        t2_pat,
+        lambda m: m.group(1) + f'{yoy_cur:.1f}' + m.group(3),
+        sample, count=1, flags=re.IGNORECASE)
+    _test(
+        'Core PCE tier-2 replacement updates number and preserves surrounding text',
+        n == 1 and '3.4%' in result and 'above the 2% target' in result,
+        f'Tier-2 replacement produced unexpected result: {result!r}',
+    )
+
+    # Verify U-3 pattern (separate from PCE)
+    u3_pat = r'(U-3 at <strong>)\d+\.\d+%</strong> \([A-Z][a-z]+ \d{4}\)'
+    u3_html = "U-3 at <strong>4.1%</strong> (Mar 2026)"
+    _, nu3 = re.subn(u3_pat, r'\g<1>4.0%</strong> (Apr 2026)', u3_html, count=1)
+    _test(
+        'U-3 commentary patch regex matches expected format',
+        nu3 == 1,
+        'U-3 commentary patch regex broken — check render_labor()',
+    )
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════
@@ -649,6 +723,7 @@ def main():
         test_snapshot(tmp_dir)
         test_healthcheck_module()
         test_panel_subtitle_gates(tmp_dir)
+        test_commentary_patch_regexes(tmp_dir)
 
     finally:
         # Cleanup
