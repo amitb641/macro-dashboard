@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-var BUILD_V = "2026-06-26T13:17:10Z";
+var BUILD_V = "2026-06-26T13:59:48Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -2922,7 +2922,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <a href="#main-content" class="sr-only-focusable">Skip to dashboard content</a>
 
-<div class="sm-wordmark" id="sm-wordmark"><span>Macro/26</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 35</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 26</span></div>
+<div class="sm-wordmark" id="sm-wordmark"><span>Macro/26</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 36</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 26</span></div>
 
 <div class="sm-readbar" id="sm-readbar" role="region" aria-label="Reading progress">
   <span class="sm-rb-meta"><span id="sm-rb-time">~12-min read</span><span class="sm-rb-dot">·</span><span id="sm-rb-sections">8 sections</span></span>
@@ -2997,7 +2997,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-gdp">
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">GDP Commentary — 2025 Growth &amp; 2026 Outlook</div>
-    <div class="fc-note" id="commentary-gdp">Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The combination of slowing NFP, a 3.6% savings rate, and WTI at $109.8 creates a credible path to sub-1% growth within two quarters. Inventory and net export dynamics could provide temporary offsets, but domestic demand is the linchpin and it is weakening.</div>
+    <div class="fc-note" id="commentary-gdp">Real GDP growth of 2.1% annualized remains above stall speed but masks deteriorating demand quality — consumer spending increasingly debt-financed against a 3.0% savings rate. With the Fed on hold and mortgage rates at 6.49% suppressing residential investment, the path to sustained above-trend growth is narrow. Downside risk to Q3 GDP is rising as credit conditions tighten and real disposable income is compressed by the inflation re-acceleration.</div>
   </div>
   <div class="metric-row" id="gdp-metrics"></div>
   <p class="src vintage-note" id="gdp-vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
@@ -3028,7 +3028,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Unemployment Commentary — Trends &amp; Risk Factors</div>
-    <div class="fc-note" id="commentary-unemp">U-3 at 4.3% represents a meaningful rise from cycle lows and confirms the labor market is no longer a source of macro resilience. The U-6 underemployment rate at 8.2% — a 190bp spread over U-3 — signals significant slack in hours and involuntary part-time work that the headline number obscures. This breadth of labor market weakness is inconsistent with a soft-landing narrative and points to genuine demand destruction in the jobs market.</div>
+    <div class="fc-note" id="commentary-unemp">U-3 unemployment at 4.3% has moved above the Fed's longer-run neutral estimate, a threshold that historically precedes more rapid deterioration. The U-6 underemployment rate at 8.1% is the more alarming signal — the 380bp gap between U-6 and U-3 indicates significant hidden slack in hours worked and involuntary part-time employment. This breadth of labor market weakness is inconsistent with the tight-market narrative and raises recession risk if NFP momentum fades further.</div>
   </div>
 
   <div class="metric-row" id="unemp-metrics"></div>
@@ -3120,7 +3120,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">CPI Commentary — Inflation Trajectory &amp; Fed Implications</div>
-    <div class="fc-note" id="commentary-cpi">Headline CPI at 3.8% YoY is running nearly 90bp above Core CPI at 2.7%, a gap almost entirely attributable to energy — WTI at $109.8 is the dominant driver and it is not yet fully reflected in downstream prices. Core CPI at 2.7% has not broken to target and risks re-acceleration as oil costs transmit through transportation, manufacturing, and services over the next 60-90 days. The Fed cannot cut rates with headline at 3.8% and an oil shock still propagating; rate relief is not imminent.</div>
+    <div class="fc-note" id="commentary-cpi">Headline CPI surged to 4.2% YoY, a 39bp acceleration from the prior snapshot and a clear re-acceleration signal that invalidates any near-term Fed pivot narrative. Core CPI at 2.8% remains elevated but the 140bp gap between headline and core points to energy and food as partial contributors — however, with WTI down sharply, the headline re-acceleration is not oil-driven and implies broad price pressure. The Fed's 2% target is now more than 200bp away on headline; expect the June dot plot to shift hawkish on hold duration.</div>
   </div>
   <div class="metric-row" id="cpi-metrics"></div>
   <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
@@ -3201,7 +3201,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Wage Growth Commentary — Nominal vs Real
 </div>
-    <div class="fc-note" id="commentary-wages">Wage growth decelerated 30bp to 3.6% YoY, a directionally positive signal for the Fed but insufficient to declare victory — real wages remain barely positive against CPI at 3.8%, meaning consumer purchasing power is still being eroded. The deceleration reduces the risk of a wage-price spiral but also confirms that labor demand is cooling, consistent with the weak NFP print. With Core PCE at 3.4%, nominal wage growth at 3.6% provides only a 40bp real buffer, leaving workers and consumer spending vulnerable to any renewed inflation impulse.</div>
+    <div class="fc-note" id="commentary-wages">Wages decelerated to 3.5% YoY (-40bp vs prior), but with CPI at 4.2%, real wage growth is negative at approximately -70bp — a direct headwind to consumer spending power. The deceleration in nominal wages removes one of the Fed's key justifications for holding rates elevated, yet inflation is simultaneously re-accelerating, creating a genuine policy dilemma. Negative real wages combined with a 3.0% savings rate and rising delinquencies is a stress sequence that historically precedes consumer-led slowdowns.</div>
   </div>
 
   <div class="metric-row" id="wage-metrics"></div>
@@ -3256,7 +3256,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Jobs Market Commentary — 2025 &amp; 2026 Outlook</div>
-    <div class="fc-note" id="commentary-jobs">NFP at 115K is a meaningful deceleration — below the ~150K threshold typically associated with labor market stability — and U-6 at 8.2% against U-3 at 4.3% signals a widening gap in underemployment that headline figures obscure. The labor market is a lagging indicator, and this softness likely reflects demand weakness that began accumulating 2-3 quarters ago. A continued trend below 100K NFP would shift the Fed's calculus materially, but acting on one print in a high-inflation environment would be premature.</div>
+    <div class="fc-note" id="commentary-jobs">NFP at 172K MoM is a serviceable print but not strong enough to dismiss softening signals elsewhere in the labor complex. The leading/lagging divergence is widening: U-6 at 8.1% and decelerating wages suggest the headline U-3 is a lagging indicator masking genuine slack accumulation. Watch for downward NFP revisions and a further rise in part-time-for-economic-reasons as the primary leading risk.</div>
   </div>
   <div class="metric-row" id="jobs-metrics"></div>
   <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
@@ -3342,7 +3342,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Consumer &amp; PCE Commentary — Spending Health &amp; Household Stress</div>
-    <div class="fc-note" id="commentary-pce">Core PCE at 3.2% — the Fed's preferred measure — remains 120bp above target and is the single most important number blocking any dovish pivot. Headline PCE at 3.5% reflects the same energy-driven wedge seen in CPI, and the savings rate at 3.6% confirms consumers are drawing down buffers rather than reducing spending voluntarily. The combination of elevated PCE, depleted savings, and surging energy costs represents a serious deterioration in the consumer's real income trajectory.</div>
+    <div class="fc-note" id="commentary-pce">PCE YoY jumped to 4.1% (+57bp vs prior), the largest single-snapshot acceleration in this cycle, and core PCE at 3.4% confirms the inflation impulse is not confined to volatile components. The 3.0% personal savings rate means consumers have minimal buffer to absorb further price increases without cutting real spending volumes. This combination — rising PCE inflation, falling savings, 2.9% CC delinquency — is a deteriorating consumer health profile that warrants immediate attention from credit and equity PMs.</div>
   </div>
   <div class="metric-row" id="pce-metrics"></div>
   <p class="src vintage-note" style="margin-top:-4px;margin-bottom:14px"></p>
@@ -3464,7 +3464,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-banks">
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Banks Commentary — Earnings, NII &amp; Credit Quality</div>
-    <div class="fc-note" id="commentary-banks">Credit card delinquency at 2.9% is a direct stress indicator for consumer lending books and is trending in the wrong direction given the 4.3% unemployment rate and near-zero real wage growth. Net interest income should remain supported by the 10Y-2Y spread at 47bp, but rising loss provisions for consumer credit will increasingly offset NII tailwinds in bank earnings. Banks with high consumer credit card and auto loan exposure face a deteriorating credit quality outlook that the current spread environment is not compensating for.</div>
+    <div class="fc-note" id="commentary-banks">Rising CC delinquencies at 2.9% and a 3.0% savings rate signal that consumer credit quality is deteriorating, which will pressure bank provision builds and compress net interest income guidance in upcoming earnings. The flat-to-modestly-positive yield curve (10Y-2Y at 30bp) limits NII expansion from asset repricing, while funding costs remain sticky near the 3.63% Fed Funds rate. Banks with heavy unsecured consumer exposure — credit cards, personal loans — face the most acute near-term earnings risk as charge-off normalization accelerates.</div>
   </div>
   <div class="metric-row" id="bank-metrics"></div>
   <div class="panel">
@@ -3570,7 +3570,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Oil Commentary — Supply Shock &amp; Macro Transmission</div>
-    <div class="fc-note" id="commentary-oil">WTI dropped $3.98 to $105.78 and Brent sits at $111.4, a spread of $5.62 that reflects ongoing logistical and geopolitical differentials. The sharp WTI decline is an alert-level move — at this price level, a demand-driven drop is more concerning than a supply release, as it would confirm global growth deceleration rather than provide clean inflation relief. Sustained WTI above $100 continues to feed headline CPI and freight costs; any rebound from current levels would directly pressure the Fed's ability to declare disinflation progress.</div>
+    <div class="fc-note" id="commentary-oil">WTI at $78.94 represents a dramatic $30.82/bbl decline from the prior snapshot, a deflationary impulse that should mechanically reduce headline CPI and PCE in coming months — but has clearly not prevented the current re-acceleration. Brent at $76.5 trading below WTI is an unusual inversion that warrants monitoring for supply-side distortions or demand destruction signals in international markets. The oil drop provides the Fed with modest cover but does not resolve the core inflation problem at 2.8% CPI / 3.4% PCE.</div>
   </div>
 
   <div class="metric-row" id="oil-metrics"></div>
@@ -3658,7 +3658,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-credit">
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Credit Commentary — Spread Complacency &amp; Tail Risk</div>
-    <div class="fc-note" id="commentary-credit">IG OAS at 78bp remains historically tight and reflects a market that has not yet priced the deteriorating macro backdrop — this is a complacency risk, not a green light. HY OAS at 279bp is wider but still well below levels consistent with recession conditions (typically 500bp+), suggesting high yield is also mispriced relative to the unemployment and growth trajectory. A repricing of credit risk, particularly in energy-cost-sensitive sectors and highly leveraged consumer-facing businesses, remains the key tail risk.</div>
+    <div class="fc-note" id="commentary-credit">IG OAS at 75bp and HY OAS at 276bp reflect credit markets that have not yet fully priced the stagflationary macro signal — both spreads remain historically tight relative to the current inflation and unemployment configuration. HY at 276bp is particularly complacent given rising CC delinquencies (2.9%), negative real wages, and a consumer savings rate of 3.0%; spread widening toward 350bp+ would be consistent with the macro deterioration underway. Credit investors should treat current spread levels as an entry point for protection, not a signal of fundamental strength.</div>
   </div>
   <div class="metric-row" id="credit-metrics"></div>
 
@@ -3755,7 +3755,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Housing Commentary — Affordability Crisis &amp; Lock-In Effect</div>
-    <div class="fc-note" id="commentary-housing">The 30-year mortgage at 6.37% continues to lock existing homeowners in place and suppress transaction volume, while Housing Starts at 1,502K suggest builders are still active but are running ahead of effective demand at current affordability levels. With real wages flat, savings rates thin, and no near-term prospect of meaningful mortgage rate relief, the demand side of housing remains structurally impaired. A downside break in starts and permits over coming months would be a significant recessionary signal.</div>
+    <div class="fc-note" id="commentary-housing">The 30Y mortgage at 6.49% continues to lock existing homeowners in place and price out marginal buyers, keeping transaction volumes suppressed. Housing starts at 1,177K are holding up relative to cycle lows but remain well below replacement demand levels, and affordability metrics are near multi-decade lows given the combination of elevated rates and sticky home prices. Any further upward repricing in the 10Y yield — a real risk given the CPI re-acceleration — would push mortgage rates above 6.75% and deliver another leg down in starts.</div>
   </div>
   <div class="metric-row" id="housing-metrics"></div>
 
@@ -3827,7 +3827,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <div class="tab-panel" id="tab-yield">
   <div class="panel" style="margin-bottom:16px">
     <div class="panel-title">Fed Rates Commentary — Policy Stance &amp; Term Structure</div>
-    <div class="fc-note" id="commentary-yield">The 10Y-2Y spread at 48bp reflects a curve that has re-steepened from inversion but has not normalized to levels consistent with a healthy expansion. With Fed Funds at 3.64% and the 2Y at 3.98%, markets are pricing modest cuts but the 10Y at 4.46% signals term premium re-emergence and persistent inflation risk. The Fed remains on hold — Core PCE at 3.2% gives no cover for easing, and any cut before inflation sustainably approaches 2.5% risks a credibility-damaging re-acceleration.</div>
+    <div class="fc-note" id="commentary-yield">The 10Y-2Y spread at +30bp represents a modestly positive curve, but the absolute level of rates — 10Y at 4.41%, 2Y at 4.11% — remains restrictive against a 3.63% Fed Funds rate. With inflation re-accelerating, the market must now price out remaining cut expectations; the 2Y at 4.11% likely needs to reprice higher if the Fed signals an extended hold. The term premium on the 10Y is thin given the inflation resurgence, and a move toward 4.60-4.75% on the 10Y is a credible near-term risk.</div>
   </div>
   <div class="metric-row" id="yield-metrics"></div>
 
@@ -5551,7 +5551,7 @@ const PCE_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1
 const PCE_MONTHLY = {"labels":["May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26"], "headline":[2.5, 2.6, 2.6, 2.7, 2.8, 2.7, 2.8, 2.9, 2.9, 2.9, 3.5, 3.8, 4.1], "core":[2.8, 2.8, 2.9, 2.9, 2.8, 2.8, 2.8, 3.0, 3.1, 3.0, 3.3, 3.3, 3.4]};
 const SAVING_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[8.4, 8.9, 9.4, 7.8, 6.8, 6.9, 6.3, 6.0, 6.5, 4.6, 4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
 const SAVING_MONTHLY = {"labels":["May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26"], "data":[4.9, 4.6, 4.5, 4.4, 4.3, 3.9, 3.8, 3.6, 4.4, 3.8, 3.5, 3.0, 3.0]};
-const UMCSENT_MONTHLY = {"labels":["Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26", "Jun'26"], "data":[60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6, 53.3, 49.8, 44.8, 48.9], "statuses":["final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "preliminary"]};
+const UMCSENT_MONTHLY = {"labels":["Apr'25", "May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26"], "data":[52.2, 52.2, 60.7, 61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6, 53.3, 49.8], "statuses":["final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final"]};
 const PCE_CATS = [
   {cat:"Housing & Utilities",  y23:5.8,  y24:4.2,  y25:3.2},
   {cat:"Healthcare Services",  y23:3.8,  y24:3.4,  y25:3.1},
@@ -6228,7 +6228,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 13","Apr 14","Apr 15","Apr 16","Apr 17","Apr 20","Apr 21","Apr 22","Apr 23","Apr 24","Apr 27","Apr 28","Apr 29","Apr 30","May 1","May 4","May 5","May 6","May 7","May 8","May 11","May 12","May 13","May 14","May 15","May 18","May 19","May 20","May 21","May 22","May 26","May 27","May 28","May 29","Jun 1","Jun 2","Jun 3","Jun 4","Jun 5","Jun 8","Jun 9","Jun 10","Jun 11","Jun 12","Jun 15","Jun 16","Jun 17","Jun 18","Jun 19","Jun 22"],"wti":[null,96.18,101.26,104.69,102.86,101.9,113.23,114.01,114.58,96.17,99.62,98.34,100.72,93.07,93.04,96.46,85.91,91.06,93.64,94.76,99.27,98.42,99.89,103.45,110.47,108.64,105.38,109.76,105.66,98.75,98.38,98.87,101.56,105.78,104.52,104.66,108.99,112.25,112.09,101.69,100.2,100.35,97.63,92.35,92.65,91.16,95.96,97.47,99.76,96.83,94.32,95.0,91.9,93.68,91.58,88.62,84.65,79.8,80.65,80.35,80.35,78.94],"brent":[109.14,113.39,121.47,121.88,126.69,119.56,127.61,127.61,138.21,122.11,119.03,119.07,123.28,118.69,114.93,116.63,98.63,103.4,106.14,113.44,113.25,111.86,113.89,117.62,124.16,124.24,118.26,118.26,114.51,103.7,101.82,103.48,106.11,111.37,110.28,110.91,113.96,116.73,114.64,108.93,105.84,106.9,102.75,97.11,95.47,92.88,98.29,98.49,101.69,98.98,97.29,97.46,94.15,95.73,92.84,88.64,84.36,80.5,80.33,79.35,80.46,76.49],"notes":[null,null,"WTI surge $5.1 (5.3%) \u2014 pipeline updates this field with market headlines","WTI surge $3.4 (3.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $11.3 (11.1%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $7.7 (7.6%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $3.4 (3.7%) \u2014 pipeline updates this field with market headlines","WTI drop $10.5 (10.9%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines","WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $4.5 (4.8%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $3.6 (3.6%) \u2014 pipeline updates this field with market headlines","WTI surge $7.0 (6.8%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $3.3 (3.0%) \u2014 pipeline updates this field with market headlines","WTI surge $4.4 (4.2%) \u2014 pipeline updates this field with market headlines","WTI drop $4.1 (3.7%) \u2014 pipeline updates this field with market headlines","WTI drop $6.9 (6.5%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $2.7 (2.7%) \u2014 pipeline updates this field with market headlines","WTI surge $4.2 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.3 (4.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.3 (3.0%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $10.4 (9.3%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $2.7 (2.7%) \u2014 pipeline updates this field with market headlines","WTI drop $5.3 (5.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.8 (5.3%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $2.9 (2.9%) \u2014 pipeline updates this field with market headlines","WTI drop $2.5 (2.6%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $3.1 (3.3%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $3.0 (3.2%) \u2014 pipeline updates this field with market headlines","WTI drop $4.0 (4.5%) \u2014 pipeline updates this field with market headlines","WTI drop $4.9 (5.7%) \u2014 pipeline updates this field with market headlines",null,null,null,null],"month":"Mar\u2013Jun 2026","updated":"Jun 26 13:16 UTC","sessions":61};
+const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Apr 10","Apr 13","Apr 14","Apr 15","Apr 16","Apr 17","Apr 20","Apr 21","Apr 22","Apr 23","Apr 24","Apr 27","Apr 28","Apr 29","Apr 30","May 1","May 4","May 5","May 6","May 7","May 8","May 11","May 12","May 13","May 14","May 15","May 18","May 19","May 20","May 21","May 22","May 26","May 27","May 28","May 29","Jun 1","Jun 2","Jun 3","Jun 4","Jun 5","Jun 8","Jun 9","Jun 10","Jun 11","Jun 12","Jun 15","Jun 16","Jun 17","Jun 18","Jun 19","Jun 22"],"wti":[null,96.18,101.26,104.69,102.86,101.9,113.23,114.01,114.58,96.17,99.62,98.34,100.72,93.07,93.04,96.46,85.91,91.06,93.64,94.76,99.27,98.42,99.89,103.45,110.47,108.64,105.38,109.76,105.66,98.75,98.38,98.87,101.56,105.78,104.52,104.66,108.99,112.25,112.09,101.69,100.2,100.35,97.63,92.35,92.65,91.16,95.96,97.47,99.76,96.83,94.32,95.0,91.9,93.68,91.58,88.62,84.65,79.8,80.65,80.35,80.35,78.94],"brent":[109.14,113.39,121.47,121.88,126.69,119.56,127.61,127.61,138.21,122.11,119.03,119.07,123.28,118.69,114.93,116.63,98.63,103.4,106.14,113.44,113.25,111.86,113.89,117.62,124.16,124.24,118.26,118.26,114.51,103.7,101.82,103.48,106.11,111.37,110.28,110.91,113.96,116.73,114.64,108.93,105.84,106.9,102.75,97.11,95.47,92.88,98.29,98.49,101.69,98.98,97.29,97.46,94.15,95.73,92.84,88.64,84.36,80.5,80.33,79.35,80.46,76.49],"notes":[null,null,"WTI surge $5.1 (5.3%) \u2014 pipeline updates this field with market headlines","WTI surge $3.4 (3.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $11.3 (11.1%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $7.7 (7.6%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $3.4 (3.7%) \u2014 pipeline updates this field with market headlines","WTI drop $10.5 (10.9%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines","WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",null,"WTI surge $4.5 (4.8%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $3.6 (3.6%) \u2014 pipeline updates this field with market headlines","WTI surge $7.0 (6.8%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $3.3 (3.0%) \u2014 pipeline updates this field with market headlines","WTI surge $4.4 (4.2%) \u2014 pipeline updates this field with market headlines","WTI drop $4.1 (3.7%) \u2014 pipeline updates this field with market headlines","WTI drop $6.9 (6.5%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $2.7 (2.7%) \u2014 pipeline updates this field with market headlines","WTI surge $4.2 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.3 (4.1%) \u2014 pipeline updates this field with market headlines","WTI surge $3.3 (3.0%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $10.4 (9.3%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $2.7 (2.7%) \u2014 pipeline updates this field with market headlines","WTI drop $5.3 (5.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.8 (5.3%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $2.9 (2.9%) \u2014 pipeline updates this field with market headlines","WTI drop $2.5 (2.6%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $3.1 (3.3%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $3.0 (3.2%) \u2014 pipeline updates this field with market headlines","WTI drop $4.0 (4.5%) \u2014 pipeline updates this field with market headlines","WTI drop $4.9 (5.7%) \u2014 pipeline updates this field with market headlines",null,null,null,null],"month":"Mar\u2013Jun 2026","updated":"Jun 26 13:57 UTC","sessions":61};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -9353,8 +9353,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-06-26T13:17:10Z">
-<script src="theme-overlay.js?v=2026-06-26T13:17:10Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-06-26T13:59:48Z">
+<script src="theme-overlay.js?v=2026-06-26T13:59:48Z"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

@@ -222,5 +222,19 @@
     "html_size": 683073,
     "collector_errors": 0,
     "risk_level": "ELEVATED"
+  },
+  {
+    "run_at": "2026-06-26T14:13:09.058916Z",
+    "git_sha": "faf8244",
+    "validation_status": "WARN",
+    "validation_critical": 0,
+    "validation_warnings": 0,
+    "visual_qa_passed": 433,
+    "visual_qa_failed": 0,
+    "visual_qa_critical": 0,
+    "ceo_grade": "FAIL",
+    "html_size": 683102,
+    "collector_errors": 1,
+    "risk_level": "ELEVATED"
   }
 ]

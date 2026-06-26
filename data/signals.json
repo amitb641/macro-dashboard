@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-06-26T13:17:09.109331Z",
+  "analyzed_at": "2026-06-26T13:58:11.062969Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 1,
@@ -27,7 +27,7 @@
     "mortgage30": 6.49,
     "housing_starts": 1177.0,
     "cs_hpi_yoy": 0.66,
-    "umcsent": 48.9,
+    "umcsent": 49.8,
     "atl_wage_3m": null,
     "tdsp": 11.164138,
     "wti": 78.94,
@@ -129,8 +129,8 @@
       "alert": null
     },
     "umcsent": {
-      "value": 48.9,
-      "delta": 0.7,
+      "value": 49.8,
+      "delta": 1.6,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -263,5 +263,7 @@
       "alert": null
     }
   ],
-  "raw_errors": []
+  "raw_errors": [
+    "UMich direct: 404 Client Error: Not Found for url: https://www.sca.isr.umich.edu/files/tbcics.csv"
+  ]
 }

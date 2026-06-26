@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-06-26T13:18:22Z",
-  "overall": "PASS",
+  "generated_at": "2026-06-26T14:13:08Z",
+  "overall": "FAIL",
   "strict": true,
-  "headline": "✅ CEO-grade gate PASSED — clear to publish.",
+  "headline": "❌ CEO-grade gate FAILED — 0 critical finding(s) block publish.",
   "totals": {
     "critical": 0,
-    "warning": 0
+    "warning": 3
   },
   "missing": [],
   "layers": {
     "validator": {
       "layer": "validator",
-      "status": "PASS",
+      "status": "WARN",
       "critical": 0,
-      "warning": 0,
+      "warning": 2,
       "skipped": 1,
       "total": 649,
-      "validator_status": "PASS"
+      "validator_status": "WARN"
     },
     "visual_qa": {
       "critical": 0,
@@ -48,12 +48,12 @@
     },
     "repair_incident": {
       "layer": "repair_incident",
-      "status": "PASS",
+      "status": "WARN",
       "critical": 0,
-      "warning": 0,
+      "warning": 1,
       "skipped": 0,
-      "total": 0,
-      "note": "no incident report for today"
+      "total": 1,
+      "note": "today's incident report: data/incident_reports/2026-06-26.md"
     }
   }
 }
