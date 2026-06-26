@@ -2186,10 +2186,16 @@ def render_labor(html, data, vals, tabs):
                 icsa_d = icsa_s[0].get('date', '')
                 if icsa_d:
                     icsa_ml = month_label(icsa_d)
-                    html = re.sub(
-                        r'at \d+K \([A-Z][a-z]+\'\d+\)',
-                        f'at {icsa_k}K ({icsa_ml})',
-                        html, count=1)
+                    icsa_pat = r'at \d+K \([A-Z][a-z]+\'\d+\)'
+                    new_html, n = re.subn(icsa_pat, f'at {icsa_k}K ({icsa_ml})', html, count=1)
+                    _record_subn_result('Commentary ICSA claims', icsa_pat, n)
+                    if n:
+                        html = new_html
+                        applied.append(f'Commentary ICSA updated to {icsa_k}K ({icsa_ml})')
+                    else:
+                        warnings.append(
+                            f'Commentary ICSA: "at XK (Mon\'YY)" format not found — '
+                            f'number may be stale. Current: {icsa_k}K ({icsa_ml})')
 
     # ── Auto-update Jobs tab month references ────────────────────────
     # The Jobs tab has hardcoded month names in titles, legends, and tiles.

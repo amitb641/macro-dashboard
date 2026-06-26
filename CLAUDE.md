@@ -164,7 +164,7 @@ Rules:
 - After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 54/54 pass. The
+- Run `python tests/test_smoke.py` before pushing — must be 55/55 pass. The
   smoke suite includes a **Tier 1 hydration wiring** regression guard
   (`test_hydration_wiring`) that asserts every `let X = null;` placeholder
   (a) has a matching `s.X !== undefined` hydration assignment, (b) lives

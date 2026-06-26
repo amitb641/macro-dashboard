@@ -682,6 +682,16 @@ def test_commentary_patch_regexes(tmp_dir):
         'U-3 commentary patch regex broken — check render_labor()',
     )
 
+    # Verify ICSA pattern
+    icsa_pat = r"at \d+K \([A-Z][a-z]+'\d+\)"
+    icsa_html = "Initial claims at 215K (Mar'26) — labor market cooling"
+    _, nicsa = re.subn(icsa_pat, "at 210K (Apr'26)", icsa_html, count=1)
+    _test(
+        "ICSA commentary patch regex matches 'at XK (Mon'YY)' format",
+        nicsa == 1,
+        'ICSA commentary patch regex broken — check render_labor()',
+    )
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # MAIN
