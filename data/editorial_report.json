@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T14:13:08Z",
+  "generated_at": "2026-06-27T13:18:34Z",
   "pieces_audited": 13,
   "llm_enabled": true,
   "llm_calls_used": 13,
@@ -18,7 +18,7 @@
   "pieces": [
     {
       "label": "html:commentary-gdp",
-      "text_preview": "Real GDP growth of 2.1% annualized remains above stall speed but masks deteriorating demand quality — consumer spending increasingly debt-financed against a 3.0% savings rate. With the Fed on hold and",
+      "text_preview": "Real GDP at 2.1% annualized is holding above stall speed, but this reading predates the full transmission of the inflation re-acceleration and wage deceleration visible in today's snapshot. The primar",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -34,7 +34,7 @@
     },
     {
       "label": "html:commentary-cpi",
-      "text_preview": "Headline CPI surged to 4.2% YoY, a 39bp acceleration from the prior snapshot and a clear re-acceleration signal that invalidates any near-term Fed pivot narrative. Core CPI at 2.8% remains elevated bu",
+      "text_preview": "CPI YoY surged 39bp to 4.2%, a significant re-acceleration that moves inflation further above the Fed's 2% target and well above the prior trajectory. Core CPI at 2.8% is more contained but still elev",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -42,7 +42,7 @@
     },
     {
       "label": "html:commentary-wages",
-      "text_preview": "Wages decelerated to 3.5% YoY (-40bp vs prior), but with CPI at 4.2%, real wage growth is negative at approximately -70bp — a direct headwind to consumer spending power. The deceleration in nominal wa",
+      "text_preview": "Wages YoY decelerated 40bp to 3.5%, falling below both CPI at 4.2% and PCE at 4.1%, meaning real wages are now negative across both deflators. This is a direct hit to consumer purchasing power and, co",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -50,7 +50,7 @@
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "NFP at 172K MoM is a serviceable print but not strong enough to dismiss softening signals elsewhere in the labor complex. The leading/lagging divergence is widening: U-6 at 8.1% and decelerating wages",
+      "text_preview": "NFP at 172K MoM is solid but not strong, and U-3 unemployment at 4.3% with U-6 at 8.1% indicates meaningful underemployment that the headline rate obscures. The 190bp gap between U-3 and U-6 is a lead",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -58,7 +58,7 @@
     },
     {
       "label": "html:commentary-pce",
-      "text_preview": "PCE YoY jumped to 4.1% (+57bp vs prior), the largest single-snapshot acceleration in this cycle, and core PCE at 3.4% confirms the inflation impulse is not confined to volatile components. The 3.0% pe",
+      "text_preview": "PCE YoY jumped 57bp to 4.1% — the largest single-snapshot move in this dataset — and Core PCE at 3.4% confirms that underlying consumer price pressure is broad-based and not transitory. With the savin",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -66,7 +66,7 @@
     },
     {
       "label": "html:commentary-banks",
-      "text_preview": "Rising CC delinquencies at 2.9% and a 3.0% savings rate signal that consumer credit quality is deteriorating, which will pressure bank provision builds and compress net interest income guidance in upc",
+      "text_preview": "Credit card delinquencies at 2.9% are a direct earnings risk for consumer-facing banks, signaling that charge-off provisions will need to increase in H2 2026 reporting. Net interest income (NII) dynam",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,7 +82,7 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI at $78.94 represents a dramatic $30.82/bbl decline from the prior snapshot, a deflationary impulse that should mechanically reduce headline CPI and PCE in coming months — but has clearly not preve",
+      "text_preview": "WTI collapsed $30.82 to $78.94 and Brent fell to $76.5, a dramatic supply-side or demand-destruction signal that stands in sharp contrast to the simultaneous CPI re-acceleration. The oil drop provides",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -90,7 +90,7 @@
     },
     {
       "label": "html:commentary-credit",
-      "text_preview": "IG OAS at 75bp and HY OAS at 276bp reflect credit markets that have not yet fully priced the stagflationary macro signal — both spreads remain historically tight relative to the current inflation and ",
+      "text_preview": "IG OAS at 76bp and HY OAS at 278bp remain historically tight, suggesting credit markets have not yet priced the stagflationary risk visible in the macro data. HY at 278bp is particularly complacent gi",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -98,7 +98,7 @@
     },
     {
       "label": "html:commentary-housing",
-      "text_preview": "The 30Y mortgage at 6.49% continues to lock existing homeowners in place and price out marginal buyers, keeping transaction volumes suppressed. Housing starts at 1,177K are holding up relative to cycl",
+      "text_preview": "The 30Y mortgage at 6.49% continues to lock existing homeowners into their properties, suppressing resale inventory and keeping housing starts at a depressed 1,177K annualized. Affordability remains s",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -106,7 +106,7 @@
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y-2Y spread at +30bp represents a modestly positive curve, but the absolute level of rates — 10Y at 4.41%, 2Y at 4.11% — remains restrictive against a 3.63% Fed Funds rate. With inflation re-acc",
+      "text_preview": "The 10Y-2Y spread has re-steepened to 31bp as the 10Y holds at 4.40% and the 2Y sits at 4.09%, reflecting markets pricing out near-term Fed cuts in response to the CPI and PCE re-acceleration. With Fe",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
