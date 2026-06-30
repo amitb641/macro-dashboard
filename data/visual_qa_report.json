@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-06-30T14:50:25.261725Z",
+  "checked_at": "2026-06-30T15:13:56.134822Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 433,
-    "passed": 433,
+    "total_checks": 443,
+    "passed": 443,
     "failed": 0,
     "js_errors": 0,
     "console_errors": 0
@@ -32,6 +32,36 @@
     {
       "category": "contract",
       "check": "serif_scope",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark --text WCAG contrast (#EEF4FF on #080E1A)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark --text2 WCAG contrast (#7A9AB5 on #080E1A)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark --muted WCAG contrast (#5F7E9A on #080E1A)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark --dim WCAG contrast (#49688A on #080E1A)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "No themed-sm structural orphans (no card styles lost in dark mode)",
       "pass": true,
       "severity": "ok"
     },
@@ -2606,6 +2636,36 @@
     {
       "category": "annotations",
       "check": "lexicon: legacy string \"\"Oil shock\"\" not present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "Dark mode toggle activates data-theme=dark",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: \"What Changed\" block retains card structure (padding + border)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: \"Macro State\" card retains card structure (padding + border)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: STALE badge is red-toned (not muted blue)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: WATCH badge has semantic color (not neutral grey)",
       "pass": true,
       "severity": "ok"
     }

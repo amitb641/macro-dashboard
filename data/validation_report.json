@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-06-30T14:50:10.770415Z",
+  "validated_at": "2026-06-30T15:13:40.807255Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 649,
-    "passed": 648,
+    "total_checks": 659,
+    "passed": 658,
     "failed": 1,
     "skipped": 1,
     "critical_divergences": 0
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-30T14:48:48.699125Z",
+      "collected_at": "2026-06-30T15:12:21.475641Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1518,6 +1518,36 @@
     },
     {
       "check": "Visual: contract \u2014 serif_scope",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark --text WCAG contrast (#EEF4FF on #080E1A)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark --text2 WCAG contrast (#7A9AB5 on #080E1A)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark --muted WCAG contrast (#5F7E9A on #080E1A)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark --dim WCAG contrast (#49688A on #080E1A)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 No themed-sm structural orphans (no card styles lost in dark mode)",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -4092,6 +4122,36 @@
     },
     {
       "check": "Visual: annotations \u2014 lexicon: legacy string \"\"Oil shock\"\" not present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 Dark mode toggle activates data-theme=dark",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: \"What Changed\" block retains card structure (padding + border)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: \"Macro State\" card retains card structure (padding + border)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: STALE badge is red-toned (not muted blue)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: WATCH badge has semantic color (not neutral grey)",
       "severity": "ok",
       "pass": true,
       "detail": ""
