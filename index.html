@@ -775,6 +775,25 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
   // only render when their options key is provided per chart.
   if (window.Chart && Chart.register){
     try{ Chart.register(MD.mdFramePlugin, MD.mdRegimePlugin, MD.mdThresholdPlugin); }catch(e){ /* already registered */ }
+    // Dark-theme plugin — overrides tick/grid/legend colors on every chart render
+    try{
+      Chart.register({
+        id:'md_dark_theme',
+        afterUpdate:function(chart){
+          if(document.documentElement.getAttribute('data-theme')!=='dark') return;
+          var tC='rgba(170,195,218,.62)', gC='rgba(238,244,255,.055)';
+          Object.values(chart.scales||{}).forEach(function(s){
+            if(!s.options) return;
+            if(s.options.ticks) s.options.ticks.color=tC;
+            if(s.options.grid){s.options.grid.color=gC;s.options.grid.borderColor=gC;}
+            if(s.options.border) s.options.border.color=gC;
+            if(s.options.title&&s.options.title.display) s.options.title.color=tC;
+          });
+          var leg=chart.options&&chart.options.plugins&&chart.options.plugins.legend;
+          if(leg&&leg.labels) leg.labels.color=tC;
+        }
+      });
+    }catch(e){ /* already registered */ }
   }
 
   // ── §25.4 — Inject "vs prior" YoY chip under each KPI value. We
@@ -978,6 +997,11 @@ function _getTip(){
 class MC{
   constructor(ctx,cfg){this.ctx=ctx;this.cfg=cfg;this._hits=[];this._render();this._initTip();}
   destroy(){const c=this.ctx.canvas;c.width=c.width;c.removeEventListener("mousemove",this._onMM);c.removeEventListener("mouseleave",this._onML);}
+  _isDk(){return document.documentElement.getAttribute('data-theme')==='dark';}
+  _tk(){return this._isDk()?'rgba(170,195,218,.62)':'#94A3B8';}
+  _gr(){return this._isDk()?'rgba(238,244,255,.055)':'#EEF1F7';}
+  _lb(){return this._isDk()?'rgba(170,195,218,.80)':'#334E68';}
+  _dl(){return this._isDk()?'rgba(14,23,38,.88)':'rgba(255,255,255,0.92)';}
   _isMini(){// mini chart = small height wrapper
     const c=this.ctx.canvas;
     const p=c.parentElement;return p&&(p.offsetHeight||p.clientHeight||0)<100;}
@@ -1034,13 +1058,13 @@ class MC{
     tks.forEach(v=>{
       const yp=d.y0+d.ih*(1-(v-r.min)/(r.max-r.min));
       if(yp<d.y0-1||yp>d.y0+d.ih+1)return;
-      ctx.strokeStyle="#EEF1F7";ctx.beginPath();ctx.moveTo(d.x0,yp);ctx.lineTo(d.x0+d.iw,yp);ctx.stroke();
-      ctx.fillStyle=isY2?"#8878B8":"#94A3B8";ctx.font="10px 'DM Mono',monospace";
+      ctx.strokeStyle=this._gr();ctx.beginPath();ctx.moveTo(d.x0,yp);ctx.lineTo(d.x0+d.iw,yp);ctx.stroke();
+      ctx.fillStyle=isY2?"#8878B8":this._tk();ctx.font="10px 'DM Mono',monospace";
       ctx.textAlign=isY2?"left":"right";
       ctx.fillText(this._fmt(v,cb),isY2?d.x0+d.iw+4:d.x0-3,yp+3.5);
     });
     if(labels&&labels.length){
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
+      ctx.fillStyle=this._tk();ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
       const maxShow=Math.floor(d.iw/28);
       const step=Math.max(1,Math.ceil(labels.length/maxShow));
       labels.forEach((lb,i)=>{
@@ -1058,7 +1082,7 @@ class MC{
       let c=ds.borderColor||ds.backgroundColor||"#336BCC";
       if(Array.isArray(c))c=c[0];
       ctx.fillStyle=pC(c);ctx.fillRect(lx,ly,10,7);
-      ctx.fillStyle="#334E68";ctx.fillText(ds.label,lx+13,ly+7);
+      ctx.fillStyle=this._lb();ctx.fillText(ds.label,lx+13,ly+7);
       lx+=ctx.measureText(ds.label).width+18;
     });
   }
@@ -1082,7 +1106,7 @@ class MC{
     ctx.clearRect(0,0,d.W,d.H);
     if(!mini){this._grid(ctx,d,r,data.labels,sc,false);if(r2)this._grid(ctx,d,r2,[],sc,true);}
     else{// mini: just draw x labels
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
+      ctx.fillStyle=this._tk();ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
       data.labels.forEach((lb,i)=>{ctx.fillText((lb+'').replace(/\\n.*/,''),d.x0+d.iw*(data.labels.length===1?0.5:i/(data.labels.length-1)),d.y0+d.ih+14);});
     }
     // overlays: bands paint below series so series read cleanly on top
@@ -1136,7 +1160,7 @@ class MC{
           const lx=Math.max(d.x0+2,Math.min(p.x-tw/2,d.x0+d.iw-tw-2));
           const ly=p.y>d.y0+12?p.y-7:p.y+14;
           // pill bg
-          ctx.fillStyle="rgba(255,255,255,0.92)";
+          ctx.fillStyle=this._dl();
           ctx.beginPath();ctx.roundRect(lx-3,ly-10,tw+6,14,3);ctx.fill();
           ctx.fillStyle=pC(col);
           ctx.textAlign="left";
@@ -1164,7 +1188,7 @@ class MC{
     ctx.clearRect(0,0,d.W,d.H);
     if(!mini){this._grid(ctx,d,r,data.labels,sc,false);if(r2)this._grid(ctx,d,r2,[],sc,true);}
     else{// mini bar: just x-axis labels, no y axis
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
+      ctx.fillStyle=this._tk();ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
       const nG2=data.labels.length,gW2=d.iw/nG2;
       data.labels.forEach((lb,i)=>{ctx.fillText(lb,d.x0+gW2*i+gW2/2,d.y0+d.ih+14);});
     }
@@ -1237,7 +1261,7 @@ class MC{
             const labelY = v>=0 ? Math.min(barY, zY_dl)-5 : Math.max(barY+barH, zY_dl)+12;
             {
               const tw=ctx.measureText(lbl).width;
-              ctx.fillStyle="rgba(255,255,255,0.92)";
+              ctx.fillStyle=this._dl();
               ctx.beginPath();ctx.roundRect(cx_dl-tw/2-2,labelY-10,tw+4,14,2);ctx.fill();
               const col=Array.isArray(ds.backgroundColor)?ds.backgroundColor[gi]:(ds.backgroundColor||aC(di));
               ctx.fillStyle=pC(col);
@@ -1261,13 +1285,13 @@ class MC{
     tks.forEach(v=>{
       const xp=pL+iw*((v-r.min)/(r.max-r.min));
       if(!isFinite(xp))return;
-      ctx.strokeStyle="#E2E8F0";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xp,pT);ctx.lineTo(xp,pT+ih);ctx.stroke();
-      ctx.fillStyle="#94A3B8";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
+      ctx.strokeStyle=this._gr();ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xp,pT);ctx.lineTo(xp,pT+ih);ctx.stroke();
+      ctx.fillStyle=this._tk();ctx.font="10px 'DM Mono',monospace";ctx.textAlign="center";
       ctx.fillText(this._fmt(v,sc.x?.ticks?.callback||null),xp,pT+ih+14);
     });
     const nG=data.labels.length,nB=data.datasets.length,gH=ih/Math.max(nG,1),gap=gH*0.1,bH=(gH-gap*2)/Math.max(nB,1),toX=v=>pL+iw*((v-r.min)/(r.max-r.min)),zX=toX(0);
     data.labels.forEach((lb,gi)=>{
-      const cy=pT+gH*gi+gH/2;ctx.fillStyle="#334E68";ctx.font="10px 'DM Mono',monospace";ctx.textAlign="right";
+      const cy=pT+gH*gi+gH/2;ctx.fillStyle=this._lb();ctx.font="10px 'DM Mono',monospace";ctx.textAlign="right";
       ctx.fillText(lb.length>24?lb.substring(0,22)+"…":lb,pL-4,cy+(bH*(nB-1)/2)+(nB===1?4:0));
       data.datasets.forEach((ds,di)=>{
         const v=ds.data[gi];if(v==null||!isFinite(v))return;
@@ -1749,30 +1773,36 @@ body.sidebar-active .nav-two-tier{display:none!important}
    <html> swaps every token; no per-element overrides except where
    contrast or semantic colour demands it. */
 :root[data-theme="dark"]{
-  --bg:#0F1419;--bg2:#161B25;--card:#161B25;--card2:#1B2230;
-  --border:#243042;--bord2:#2A3648;
-  --text:#E5E9F0;--text2:#A8B2C1;--muted:#7A8696;--dim:#5A6476;
-  --accent:#5B8CE6;--acc2:#4A7AD4;
-  --green:#62D49F;--red:#FF6B6B;--amber:#F0B429;--blue:#5B8CE6;--purple:#A897D8;
-  --accent-soft:rgba(91,140,230,.14);--grid:rgba(229,233,240,.08);
+  /* Canvas — deep blue-black, slight warmth prevents clinical grey feel */
+  --bg:#080E1A;--bg2:#0E1726;--card:#0E1726;--card2:#131F31;
+  --border:#1A2B3F;--bord2:#223551;
+  /* Text — near-white primary, cool blue-grey secondaries for hierarchy */
+  --text:#EEF4FF;--text2:#7A9AB5;--muted:#445E77;--dim:#253546;
+  /* Accent — cobalt blue, vivid enough to direct attention */
+  --accent:#4E9EFF;--acc2:#3B8AEE;
+  /* Semantic — high-saturation for dark backgrounds (need more pop than light mode) */
+  --green:#1FC87A;--red:#FF4F4F;--amber:#F0A000;--blue:#4E9EFF;--purple:#9B80F0;
+  --accent-soft:rgba(78,158,255,.11);--grid:rgba(238,244,255,.055);
 }
 :root[data-theme="dark"] body{background:var(--bg);color:var(--text)}
-:root[data-theme="dark"] .nav-grouped{background:#1B2230;border-color:var(--border)}
+:root[data-theme="dark"] .nav-grouped{background:var(--card2);border-color:var(--border)}
 :root[data-theme="dark"] .nav-btn{color:var(--text2)}
-:root[data-theme="dark"] .nav-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04);border-color:var(--border)}
+:root[data-theme="dark"] .nav-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04);border-color:var(--bord2)}
 :root[data-theme="dark"] .nav-btn.active{color:var(--accent);background:var(--accent-soft)}
-:root[data-theme="dark"] .up{color:#FF6B6B}
-:root[data-theme="dark"] .dn{color:#62D49F}
+:root[data-theme="dark"] .up{color:var(--red)}
+:root[data-theme="dark"] .dn{color:var(--green)}
 :root[data-theme="dark"] .so-what{color:var(--text2);border-left-color:var(--accent)}
 :root[data-theme="dark"] .so-what::before{color:var(--accent)}
-:root[data-theme="dark"] .chart-now-pill{background:rgba(22,27,37,.92);color:var(--text);border-color:var(--border)}
-:root[data-theme="dark"] .md-pulse-dot{box-shadow:0 0 0 2px rgba(22,27,37,.85)}
+:root[data-theme="dark"] .chart-now-pill{background:rgba(14,23,38,.95);color:var(--text);border-color:var(--bord2)}
+:root[data-theme="dark"] .md-pulse-dot{box-shadow:0 0 0 2px rgba(8,14,26,.9)}
 :root[data-theme="dark"] .panel-meta{color:var(--muted)}
-:root[data-theme="dark"] .dtable th{background:#1B2230;color:var(--text2)}
+:root[data-theme="dark"] .dtable th{background:var(--card2);color:var(--text2);border-bottom-color:var(--border)}
 :root[data-theme="dark"] .dtable td{border-color:var(--border)}
-:root[data-theme="dark"] .skeleton{background:linear-gradient(90deg,#1B2230 0%,#243042 50%,#1B2230 100%)}
+:root[data-theme="dark"] .dtable tbody tr:hover{background:rgba(78,158,255,.05)}
+:root[data-theme="dark"] .dtable tbody tr:nth-child(even){background:rgba(255,255,255,.018)}
+:root[data-theme="dark"] .skeleton{background:linear-gradient(90deg,var(--card2) 0%,var(--border) 50%,var(--card2) 100%)}
 /* §24.5 — Sidebar full dark treatment */
-:root[data-theme="dark"] .nav-sidebar{background:#0D1218;border-right-color:var(--border)}
+:root[data-theme="dark"] .nav-sidebar{background:#060C16;border-right-color:var(--border)}
 :root[data-theme="dark"] .nsb-hdr{border-bottom-color:var(--border)}
 :root[data-theme="dark"] .nsb-brand{color:var(--text2)}
 :root[data-theme="dark"] .nsb-collapse-btn{color:var(--muted)}
@@ -1800,6 +1830,89 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .kpi-delta.flat{background:rgba(240,180,41,.12)!important;color:#F0B429!important}
 /* §24.9 — sloos-narrative has inline bg style — fight with !important */
 :root[data-theme="dark"] .sloos-narrative{background:var(--bg2)!important;border-color:var(--border)!important;color:var(--text2)!important}
+/* §24.10 — Card elevation in dark mode: subtle border glow + depth shadow */
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .sector-card,
+:root[data-theme="dark"] .panel{
+  border-color:var(--border);
+  box-shadow:0 2px 10px rgba(0,0,0,.35),0 0 0 1px var(--border);
+}
+:root[data-theme="dark"] .card:hover,
+:root[data-theme="dark"] .sector-card:hover{
+  border-color:var(--bord2);
+  box-shadow:0 4px 16px rgba(0,0,0,.45),0 0 0 1px var(--bord2);
+}
+/* §24.11 — Numbers: max contrast on dark — primary metrics in near-white */
+:root[data-theme="dark"] .kpi-num,
+:root[data-theme="dark"] .kpi-big,
+:root[data-theme="dark"] .big-num,
+:root[data-theme="dark"] .kpi-val-num{color:var(--text)!important}
+/* §24.12 — EX badge, panel title, section header contrast */
+:root[data-theme="dark"] .panel-title{color:var(--text)}
+:root[data-theme="dark"] .ex-num{color:var(--accent)}
+:root[data-theme="dark"] .src{color:var(--dim)!important}
+:root[data-theme="dark"] .exhibit-label{color:var(--muted)}
+:root[data-theme="dark"] .panel-sub{color:var(--text2)}
+/* §24.13 — Inline-styled light boxes: amber warning, blue info, red alert.
+   !important beats the inline attribute. Attribute selector specificity (0,1,0,0)
+   beats element selectors but not our :root[...] prefix which adds (0,2,0,0). */
+:root[data-theme="dark"] [style*="background:#FFFBEB"],
+:root[data-theme="dark"] [style*="background:#fffbeb"],
+:root[data-theme="dark"] [style*="background:#fff8e6"],
+:root[data-theme="dark"] [style*="background:#FFF7ED"],
+:root[data-theme="dark"] [style*="background:#fff7ed"]{
+  background:rgba(240,160,0,.07)!important;
+  border-color:rgba(240,160,0,.2)!important;
+  color:var(--text2)!important;
+}
+:root[data-theme="dark"] [style*="background:#FFFBEB"] strong,
+:root[data-theme="dark"] [style*="background:#fffbeb"] strong,
+:root[data-theme="dark"] [style*="background:#FFF7ED"] strong{color:var(--amber)!important}
+:root[data-theme="dark"] [style*="background:#EBF2FF"],
+:root[data-theme="dark"] [style*="background:#EAF1FB"],
+:root[data-theme="dark"] [style*="background:#eef2ff"],
+:root[data-theme="dark"] [style*="background:#DBEAFE"],
+:root[data-theme="dark"] [style*="background:#dbeafe"]{
+  background:rgba(78,158,255,.07)!important;
+  border-color:rgba(78,158,255,.2)!important;
+  color:var(--text2)!important;
+}
+:root[data-theme="dark"] [style*="background:#FCEEEE"],
+:root[data-theme="dark"] [style*="background:#FEF2F2"],
+:root[data-theme="dark"] [style*="background:#fef2f2"],
+:root[data-theme="dark"] [style*="background:#FEE2E2"]{
+  background:rgba(255,79,79,.07)!important;
+  border-color:rgba(255,79,79,.2)!important;
+  color:var(--text2)!important;
+}
+:root[data-theme="dark"] [style*="background:#DCFCE7"],
+:root[data-theme="dark"] [style*="background:#f0fdf4"]{
+  background:rgba(31,200,122,.07)!important;
+  border-color:rgba(31,200,122,.2)!important;
+  color:var(--text2)!important;
+}
+/* Dark text in inline boxes — make readable on dark canvas */
+:root[data-theme="dark"] [style*="color:#334E68"],
+:root[data-theme="dark"] [style*="color:#334e68"],
+:root[data-theme="dark"] [style*="color:#334E68;"],
+:root[data-theme="dark"] [style*="color:#1E293B"],
+:root[data-theme="dark"] [style*="color:#0F172A"]{color:var(--text2)!important}
+/* §24.14 — Sort/filter buttons in dark mode */
+:root[data-theme="dark"] .sort-btn{background:var(--card2);border-color:var(--border);color:var(--text2)}
+:root[data-theme="dark"] .sort-btn:hover:not(.active){background:rgba(78,158,255,.07);border-color:var(--bord2);color:var(--text)}
+:root[data-theme="dark"] .sort-btn.active{background:rgba(78,158,255,.12);border-color:var(--accent);color:var(--accent)}
+/* §24.15 — 2026F forecast badge in GDP sector cards */
+:root[data-theme="dark"] [style*="background:#eef2ff"]{
+  background:rgba(78,158,255,.1)!important;border-color:rgba(78,158,255,.25)!important;color:var(--accent)!important
+}
+/* §24.16 — Spark ribbon and KPI strip in dark */
+:root[data-theme="dark"] .spark-ribbon{background:var(--card2);border-color:var(--border)}
+:root[data-theme="dark"] .spark-tile{border-right-color:var(--border)}
+:root[data-theme="dark"] .spark-tile-val{color:var(--text)}
+/* §24.17 — Commentary blockquote / so-what block */
+:root[data-theme="dark"] blockquote{border-left-color:var(--accent);color:var(--text2)}
+/* §24.18 — Indicator label uppercase chips (STALE, OK etc) —
+   JS-generated but CSS can't override inline styles without !important on attribute selectors */
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
@@ -4383,7 +4496,38 @@ const FC_SECTORS = [
 // CHART GLOBALS
 // ════════════════════════════════════════════════════
 // Chart.defaults set in _initDashboard after CDN loads
-const TT = {backgroundColor:"#ffffff",borderColor:"#E2E8F0",borderWidth:1,padding:10,titleColor:"#1a2035",bodyColor:"#334E68"};
+// TT is a function so each chart build reads the current theme at call time
+function TT(){
+  var dk=document.documentElement.getAttribute('data-theme')==='dark';
+  return dk
+    ? {backgroundColor:'#0E1726',borderColor:'#223551',borderWidth:1,padding:10,titleColor:'#EEF4FF',bodyColor:'#7A9AB5'}
+    : {backgroundColor:'#ffffff',borderColor:'#E2E8F0',borderWidth:1,padding:10,titleColor:'#1a2035',bodyColor:'#334E68'};
+}
+// Dark-theme Chart.js plugin — intercepts every chart draw.
+// Overrides tick labels and grid line colors without touching chart configs.
+// Runs AFTER chart update so theme changes immediately apply to live charts.
+(function(){
+  if(typeof Chart==='undefined'||!Chart.register) return;
+  Chart.register({
+    id:'md_dark_theme',
+    afterUpdate:function(chart){
+      var dk=document.documentElement.getAttribute('data-theme')==='dark';
+      var tColor=dk?'rgba(170,195,218,.62)':'';
+      var gColor=dk?'rgba(238,244,255,.055)':'';
+      if(!dk) return;
+      Object.values(chart.scales||{}).forEach(function(scale){
+        if(!scale.options) return;
+        if(scale.options.ticks) scale.options.ticks.color=tColor;
+        if(scale.options.grid){scale.options.grid.color=gColor;scale.options.grid.borderColor=gColor;}
+        if(scale.options.border) scale.options.border.color=gColor;
+        if(scale.options.title&&scale.options.title.display) scale.options.title.color=tColor;
+      });
+      if(chart.options.plugins&&chart.options.plugins.legend&&chart.options.plugins.legend.labels){
+        chart.options.plugins.legend.labels.color=tColor;
+      }
+    }
+  });
+})();
 function pct(v){ return (v >= 0 ? "+" : "") + v + "%" }
 function colorVal(v, hi="#1A9E5A", lo="#D64045"){ return v < 0 ? lo : hi }
 let miniCharts = {};
@@ -4663,19 +4807,20 @@ function _releaseBadge(tag){
   //   FRESH    — blue, "released this week"
   //   STALE    — red, "publish lag exceeded — value may be out of date"
   //   default  — neutral gray (used for source acronyms: BLS/BEA/etc)
+  var dk = document.documentElement.getAttribute('data-theme') === 'dark';
   let color, bg, bd, label = up;
   if (up === 'PRELIM' || up === 'PRELIMINARY') {
-    color = '#CC8A00'; bg = '#fffbeb'; bd = 'rgba(204,138,0,.22)'; label = 'PRELIM';
+    color = dk?'#F0A000':'#CC8A00'; bg = dk?'rgba(240,160,0,.12)':'#fffbeb'; bd = dk?'rgba(240,160,0,.25)':'rgba(204,138,0,.22)'; label = 'PRELIM';
   } else if (up === 'FINAL') {
-    color = '#1A9E5A'; bg = '#f0fdf4'; bd = 'rgba(13,122,74,.22)';
+    color = dk?'#1FC87A':'#1A9E5A'; bg = dk?'rgba(31,200,122,.12)':'#f0fdf4'; bd = dk?'rgba(31,200,122,.25)':'rgba(13,122,74,.22)';
   } else if (up === 'REVISED') {
-    color = '#CC8A00'; bg = '#fffbeb'; bd = 'rgba(204,138,0,.22)';
+    color = dk?'#F0A000':'#CC8A00'; bg = dk?'rgba(240,160,0,.12)':'#fffbeb'; bd = dk?'rgba(240,160,0,.25)':'rgba(204,138,0,.22)';
   } else if (up === 'FRESH') {
-    color = '#336BCC'; bg = '#EAF1FB'; bd = 'rgba(51,107,204,.22)';
+    color = dk?'#4E9EFF':'#336BCC'; bg = dk?'rgba(78,158,255,.12)':'#EAF1FB'; bd = dk?'rgba(78,158,255,.25)':'rgba(51,107,204,.22)';
   } else if (up === 'STALE') {
-    color = '#B91C1C'; bg = '#FCEEEE'; bd = 'rgba(185,28,28,.22)';
+    color = dk?'#FF4F4F':'#B91C1C'; bg = dk?'rgba(255,79,79,.12)':'#FCEEEE'; bd = dk?'rgba(255,79,79,.25)':'rgba(185,28,28,.22)';
   } else {
-    color = '#5A6B7D'; bg = '#F1F5F9'; bd = 'rgba(90,107,125,.22)';
+    color = dk?'#7A9AB5':'#5A6B7D'; bg = dk?'rgba(122,154,181,.10)':'#F1F5F9'; bd = dk?'rgba(122,154,181,.20)':'rgba(90,107,125,.22)';
   }
   return `<span style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:10px;
     font-size:8.5px;font-weight:700;letter-spacing:.06em;vertical-align:1px;
@@ -4887,7 +5032,8 @@ function buildSectorCards(){
     }).join("");
     const cid="mc_"+s.short.replace(/\W/g,"_");
     const groupBadge=`<span style="font-size:8px;background:${s.color}22;color:${s.color};border:1px solid ${s.color}44;border-radius:3px;padding:1px 5px;margin-top:2px;display:inline-block">${s.group}</span>`;
-    const f26badge=s.f26?`<span style="font-size:9px;background:#eef2ff;color:#336BCC;border:1px solid #c7d2f8;border-radius:3px;padding:1px 6px;margin-top:4px;display:inline-block">2026F: ${s.f26}</span>`:"";
+    const _dk26=document.documentElement.getAttribute('data-theme')==='dark';
+    const f26badge=s.f26?`<span style="font-size:9px;background:${_dk26?'rgba(78,158,255,.1)':'#eef2ff'};color:${_dk26?'#4E9EFF':'#336BCC'};border:1px solid ${_dk26?'rgba(78,158,255,.25)':'#c7d2f8'};border-radius:3px;padding:1px 6px;margin-top:4px;display:inline-block">2026F: ${s.f26}</span>`:"";
     grid.insertAdjacentHTML("beforeend",`
       <div class="sector-card" style="border-left:3px solid ${s.color}">
         <div class="card-header">
@@ -4910,7 +5056,7 @@ function buildSectorCards(){
     miniCharts[cid]=new Chart(ctx,{type:"bar",data:{
       labels:["'22","'23","'24","'25"],
       datasets:[{data:vals,backgroundColor:vals.map((v,i)=>i===hiIdx?s.color+"ff":v>=0?s.color+"55":"#D64045aa"),borderRadius:3,borderSkipped:false}]
-    },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${pct(c.raw)} real growth`}}},
+    },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`${pct(c.raw)} real growth`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9}},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",font:{size:9},callback:v=>v+"%"},border:{display:false}}}}});
     });
@@ -5072,7 +5218,7 @@ function buildUnempTab(){
       pointRadius:5,pointHoverRadius:7,tension:0.35,fill:true
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw}% unemployment`}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`${c.raw}% unemployment`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{color:"#E2E8F0"}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
   });
@@ -5086,7 +5232,7 @@ function buildUnempTab(){
       {label:"2024 Rate",data:usorted.map(s=>s.u24),backgroundColor:"#8878B8bb",borderRadius:4},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -5124,7 +5270,7 @@ function buildUnempTab(){
       ]},
       options:{responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
         plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
-          tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
+          tooltip:{...TT(),callbacks:{label:c=>c.dataset.label+": "+Math.round(c.raw).toLocaleString()+"K"}}},
         scales:{
           x:{grid:{display:false},ticks:{color:"#334E68",maxRotation:45,autoSkip:true,maxTicksLimit:24,
             includeBounds:true},border:{display:false},afterBuildTicks:function(axis){
@@ -5214,7 +5360,7 @@ function buildCPITab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},
-        tooltip:{...TT,callbacks:{label:c=>`CPI: ${c.raw}%`}},
+        tooltip:{...TT(),callbacks:{label:c=>`CPI: ${c.raw}%`}},
         nberBands:{enabled:true}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:11,border:{display:false}}}}
@@ -5228,7 +5374,7 @@ function buildCPITab(){
       {label:"2025",       data:CPI_CATS.map(c=>c.c25),backgroundColor:"#336BCCcc",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -5337,7 +5483,7 @@ function buildWagesTab(){
       {label:"Real (inflation-adj)",data:WAGE_ANNUAL.real,borderColor:"#336BCC",backgroundColor:"#4DABF718",borderWidth:2,pointRadius:5,tension:0.3,fill:false,borderDash:[5,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${pct(c.raw)}`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${pct(c.raw)}`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{color:"#E2E8F0"}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
@@ -5352,7 +5498,7 @@ function buildWagesTab(){
        backgroundColor:"#8878B8bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: +${v}%`}}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: +${v}%`}}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -5439,7 +5585,7 @@ function buildJobsTab(){
       borderDash:[4,3],borderRadius:4
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw>=0?"+":""}${c.raw.toLocaleString()}K jobs`}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`${c.raw>=0?"+":""}${c.raw.toLocaleString()}K jobs`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
   });
@@ -5454,7 +5600,7 @@ function buildJobsTab(){
        backgroundColor:"#8878B8bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -5471,7 +5617,7 @@ function buildJobsTab(){
       ]},
       options:{responsive:true,maintainAspectRatio:false,
         plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
-          tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
+          tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}K`}}},
         scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
                 y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}}}}
     });
@@ -5497,7 +5643,7 @@ function buildJobsTab(){
       ]},
       options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
         plugins:{legend:{display:false},
-          tooltip:{...TT,callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
+          tooltip:{...TT(),callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v>=0?"+":""}${v}K`}}}},
         scales:{x:{min:Math.min(..._smCurD,..._smPrvD)-5,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>(v>=0?"+":"")+v+"K"},border:{display:false}},
                 y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
     });
@@ -5592,7 +5738,7 @@ function buildFCTab(){
         borderRadius:5
       }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`${c.raw>=0?"+":""}${c.raw}% annualized`}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`${c.raw>=0?"+":""}${c.raw}% annualized`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
@@ -5606,7 +5752,7 @@ function buildFCTab(){
       {label:"2026 Forecast",data:FC_MACRO.f26, backgroundColor:"#CC8A00cc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
@@ -5818,7 +5964,7 @@ function buildPCETab(){
       {label:"Fed 2% target",data:PCE_ANNUAL.labels.map(()=>2),borderColor:"#1A9E5A",borderWidth:1.5,pointRadius:0,tension:0,fill:false,borderDash:[4,4]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
@@ -5836,7 +5982,7 @@ function buildPCETab(){
       type:"line",borderColor:"#1A9E5A",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:10,border:{display:false}}}}
   });
@@ -5853,7 +5999,7 @@ function buildPCETab(){
       borderColor:"#1A9E5A",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:20,border:{display:false}}}}
   });
@@ -5867,7 +6013,7 @@ function buildPCETab(){
       {label:"2025",data:PCE_CATS.map(c=>c.y25),backgroundColor:"#1A9E5Acc",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
   });
@@ -5881,7 +6027,7 @@ function buildPCETab(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},
-               tooltip:{...TT,callbacks:{label:ctx=>ctx.dataset.yAxisID==="y2"?`${ctx.dataset.label}: ${ctx.raw}%`:`${ctx.dataset.label}: $${ctx.raw}T`}},
+               tooltip:{...TT(),callbacks:{label:ctx=>ctx.dataset.yAxisID==="y2"?`${ctx.dataset.label}: ${ctx.raw}%`:`${ctx.dataset.label}: $${ctx.raw}T`}},
                nberBands:{enabled:true}},
       scales:{
         x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
@@ -5900,7 +6046,7 @@ function buildPCETab(){
         borderRadius:3
       }]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`DSR: ${c.raw}%`}}},
+        plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`DSR: ${c.raw}%`}}},
         scales:{x:{grid:{display:false},ticks:{color:"#334E68",maxTicksLimit:15,font:{size:9}},border:{display:false}},
                 y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:8,border:{display:false}}}}
     });
@@ -5934,7 +6080,7 @@ function buildPCETab(){
       type:"line",borderColor:"#1A9E5A",borderWidth:1.5,pointRadius:0,borderDash:[4,4]
     }]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},min:40,max:100,border:{display:false}}}}
   });
@@ -5949,7 +6095,7 @@ function buildPCETab(){
         borderRadius:3
       }]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`Sentiment: ${c.raw}`}}},
+        plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`Sentiment: ${c.raw}`}}},
         scales:{x:{grid:{display:false},ticks:{color:"#334E68",maxTicksLimit:15},border:{display:false}},
                 y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},min:40,border:{display:false}}}}
     });
@@ -6028,7 +6174,7 @@ function buildBanksTab(){
       }]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: $${c.raw}B`}}},
       // 6 long bank labels (JPM Total, JPM ex-Mkts, BofA, Wells Fargo,
       // USB, Citi (NII)) collide horizontally at 295px. Rotate to 35°
       // so they read cleanly without overlapping.
@@ -6048,7 +6194,7 @@ function buildBanksTab(){
       }]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>`NCO Rate: ${c.raw}%`}}},
+      plugins:{legend:{display:false},tooltip:{...TT(),callbacks:{label:c=>`NCO Rate: ${c.raw}%`}}},
       // 11 multi-word labels at 35° still collide on 295px mobile;
       // push to 50° so they read cleanly. Pair with autoSkip:false
       // because every bank issuer matters — don't drop labels.
@@ -6305,7 +6451,7 @@ function buildOilTab(){
       {label:"Brent", data:OIL_ANNUAL.brent,borderColor:"#336BCC",backgroundColor:"rgba(51,107,204,.04)",borderWidth:2,pointRadius:2,tension:0.35,fill:false,datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}}},
       scales:{
         x:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",font:{size:9},maxRotation:45,minRotation:0},border:{display:false}},
         y:{grid:{color:"#EEF1F7"},ticks:{color:"#94A3B8",callback:v=>"$"+v},min:0,border:{display:false}}
@@ -6320,7 +6466,7 @@ function buildOilTab(){
       {label:"Brent", data:OIL_MONTHLY.brent,borderColor:"#336BCC",borderWidth:2,pointRadius:2,tension:0.35,fill:false,datalabels:false},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: $${c.raw}/bbl`}},
         // Vertical marker at the Mar 2026 oil-shock onset.
         vEvents:{events:[{x:"2026-03-01",color:"#CC8A00",dash:[4,3],label:"Hormuz shock, Mar 2026"}]}},
       scales:{
@@ -6459,7 +6605,7 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
             labels: { color: '#334E68', font: { size: 11 }, boxWidth: 12, boxHeight: 2 },
           },
           tooltip: {
-            ...TT,
+            ...TT(),
             callbacks: {
               title: items  => items[0].label,
               label: c      => ` ${c.dataset.label}: $${c.raw.toFixed(1)}/bbl`,
@@ -6869,7 +7015,7 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8,filter:i=>i.datasetIndex===0}},
-        tooltip:{...TT,callbacks:{label:c=>c.datasetIndex===0?`WTI: $${c.raw}/bbl`:`Recession year`}}
+        tooltip:{...TT(),callbacks:{label:c=>c.datasetIndex===0?`WTI: $${c.raw}/bbl`:`Recession year`}}
       },
       scales:{
         x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9},maxRotation:45},border:{display:false}},
@@ -6939,7 +7085,7 @@ function buildCreditTab(){
       {label:"Student Loans", data:CREDIT_DELINQ.student,borderColor:"#FF9F43",borderWidth:2,pointRadius:3,tension:0.3,borderDash:[5,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,border:{display:false}}}}
   });
@@ -6951,7 +7097,7 @@ function buildCreditTab(){
       {label:"2026F NCO %",data:NCO_CARDS.nco26f, backgroundColor:"#CC8A0066",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:8,border:{display:false}}}}
   });
@@ -6962,7 +7108,7 @@ function buildCreditTab(){
       {label:"2026F NCO %",data:NCO_BANKS.nco26f, backgroundColor:"#1A9E5A66",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,max:5,border:{display:false}}}}
   });
@@ -7094,7 +7240,7 @@ function buildCreditTab(){
       {label:"Non-Revolving (Auto/Student)",data:CREDIT_GROWTH.nonrevolving,backgroundColor:"#336BCCcc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw>=0?"+":""}${c.raw}%`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},border:{display:false}}}}
   });
@@ -7271,7 +7417,7 @@ function buildHousingTab(){
       {label:"FHFA HPI",          data:HPI_DATA.fhfa,borderColor:"#1A9E5A",borderWidth:2,pointRadius:5,tension:0.3},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT()}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},min:100,border:{display:false}}}}
   });
@@ -7283,7 +7429,7 @@ function buildHousingTab(){
       {label:"Fed Funds Rate",    data:MORTGAGE_DATA.ffr,  borderColor:"#336BCC",borderWidth:2,pointRadius:5,tension:0.3,borderDash:[5,3]},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}%`}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68"},border:{display:false}},
               y:{grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"%"},min:0,border:{display:false}}}}
   });
@@ -7295,7 +7441,7 @@ function buildHousingTab(){
       {label:"Multi-Family", data:STARTS_DATA.mf,backgroundColor:"#8878B8cc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT,callbacks:{label:c=>`${c.dataset.label}: ${c.raw}K units`}}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:11},boxWidth:12,boxHeight:8}},tooltip:{...TT(),callbacks:{label:c=>`${c.dataset.label}: ${c.raw}K units`}}},
       scales:{x:{grid:{display:false},ticks:{color:"#334E68"},border:{display:false}},
               y:{stacked:true,grid:{color:"#E2E8F0"},ticks:{color:"#334E68",callback:v=>v+"K"},border:{display:false}}}}
   });
@@ -7307,7 +7453,7 @@ function buildHousingTab(){
       {label:"Affordability Index (100=qualifying income)",data:AFFORD_DATA.index, backgroundColor:"#336BCCcc",borderRadius:4},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:"#334E68",font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+      plugins:{legend:{labels:{color:"#334E68",font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT()}},
       scales:{
         x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9},display:false},border:{display:false}},
         y:{grid:{color:"#E2E8F0"},ticks:{color:"#336BCC",font:{size:10}},min:0,title:{display:true,text:"Affordability Index",color:"#336BCC",font:{size:9}},border:{display:false}}
@@ -7323,7 +7469,7 @@ function buildHousingTab(){
         {label:"Balanced market (6.0 mo)",data:balLine,borderColor:"#7A8FA8",borderWidth:1.5,borderDash:[5,4],pointRadius:0,fill:false},
       ]},
       options:{responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{labels:{color:"#334E68",font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT}},
+        plugins:{legend:{labels:{color:"#334E68",font:{size:10},boxWidth:12,boxHeight:8}},tooltip:{...TT()}},
         scales:{
           x:{grid:{display:false},ticks:{color:"#334E68",font:{size:9}},border:{display:false}},
           y:{grid:{color:"#E2E8F0"},ticks:{color:"#CC8A00",callback:v=>v+" mo",font:{size:10}},min:0,max:12,title:{display:true,text:"Months Supply",color:"#CC8A00",font:{size:9}},border:{display:false}}
