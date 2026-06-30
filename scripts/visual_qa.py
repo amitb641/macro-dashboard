@@ -337,42 +337,60 @@ def check_dark_token_contrast():
 
 
 def check_themed_sm_orphans():
-    """Detect body.themed-sm classes that set card structure but have no dark equivalent.
+    """Detect body.themed-sm classes that set layout or card structure but have no dark equiv.
 
     When setTheme('dark') strips body.themed-sm, any element whose ONLY
-    padding/border/background rules live under body.themed-sm will silently
-    collapse — no padding, no border, no background, unstyled text on a dark
-    canvas. This check finds those orphans statically, before any browser.
+    layout (display:grid/flex) or card structure (padding/border/background)
+    rules live under body.themed-sm silently collapses in dark mode —
+    grid becomes block, cards lose all visual grouping, text is unstyled.
 
-    A 'structural' rule is one that sets padding, background, border, or
-    border-radius. We ignore color/font-only rules since those just affect
-    text appearance, not card grouping.
+    Scans BOTH index.html (inline <style>) AND theme-overlay.css (where
+    components like sm-delta-chip / rcal-strip define their layout). Without
+    scanning theme-overlay.css this check would silently miss the majority
+    of orphans — the bug that caused §24.20 and §24.21 to be needed.
+
+    Structural = sets any of: display, padding, background, border, border-radius,
+    margin, grid-template-columns, flex, gap. Color/font-only rules excluded.
     """
     import re
-    html = HTML_FILE.read_text(encoding='utf-8')
 
-    # Strip JS blocks so string literals inside scripts don't produce false matches
+    # ── Gather body.themed-sm rules from ALL CSS sources ──────────────
+    # Source 1: index.html inline <style> blocks (strip JS first)
+    html = HTML_FILE.read_text(encoding='utf-8')
     html_css = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
 
-    # All class names targeted by body.themed-sm rules
+    # Source 2: theme-overlay.css (component-level themed rules live here)
+    overlay_css = ''
+    overlay_file = ROOT / 'theme-overlay.css'
+    if overlay_file.exists():
+        overlay_css = overlay_file.read_text(encoding='utf-8')
+    elif (ROOT / 'styles' / 'theme-overlay.css').exists():
+        overlay_css = (ROOT / 'styles' / 'theme-overlay.css').read_text(encoding='utf-8')
+
+    themed_source = html_css + '\n' + overlay_css
+
+    # All class names targeted by body.themed-sm rules (either source)
     themed_classes: set[str] = set(re.findall(
-        r'body\.themed-sm\s+\.([a-zA-Z][\w-]*)', html_css
+        r'body\.themed-sm\s+\.([a-zA-Z][\w-]*)', themed_source
     ))
 
-    # All class names targeted by any :root[data-theme="dark"] rule
+    # Dark-mode equivalents live only in index.html (inline :root[data-theme="dark"] block)
     dark_classes: set[str] = set(re.findall(
         r':root\[data-theme=["\']dark["\']\]\s+\.([a-zA-Z][\w-]*)', html_css
     ))
 
-    # Orphans: have themed-sm rules, no dark rule at all
     orphans = sorted(themed_classes - dark_classes)
 
-    # Filter to only structural orphans (themed-sm rule sets card-forming properties)
-    _STRUCT_PROPS = ('padding', 'background', 'border', 'border-radius', 'margin')
+    # Structural = sets layout or card-forming properties.
+    # Include 'display' because display:grid/flex on a container IS structure —
+    # losing it turns a 3-column card grid into a linear block stacking, which
+    # is exactly the sm-delta-row / rcal-strip bug.
+    _STRUCT_PROPS = ('display', 'padding', 'background', 'border', 'border-radius',
+                     'margin', 'grid-template', 'flex', 'gap', 'min-height')
     structural_orphans = []
     for cls in orphans:
         pat = rf'body\.themed-sm\s+\.{re.escape(cls)}\b[^{{]*\{{([^}}]+)\}}'
-        for m in re.finditer(pat, html_css, re.DOTALL):
+        for m in re.finditer(pat, themed_source, re.DOTALL):
             rule_body = m.group(1)
             if any(prop in rule_body for prop in _STRUCT_PROPS):
                 structural_orphans.append(cls)
@@ -380,10 +398,10 @@ def check_themed_sm_orphans():
 
     _check(
         'theme',
-        'No themed-sm structural orphans (no card styles lost in dark mode)',
+        'No themed-sm structural orphans (no layout/card styles lost in dark mode)',
         len(structural_orphans) == 0,
-        f'{len(structural_orphans)} class(es) with themed-sm card rules but no dark equiv: '
-        f'{structural_orphans[:10]} — these lose padding/border/background in dark',
+        f'{len(structural_orphans)} class(es) with themed-sm structural rules but no dark equiv: '
+        f'{structural_orphans[:12]} — these lose display/padding/border in dark mode',
         severity='critical' if structural_orphans else 'ok',
     )
 
@@ -1205,11 +1223,11 @@ def run_visual_qa(take_screenshots=False):
             page.evaluate("() => { var b = document.querySelector('[data-tab=\"fc\"]'); if (b) b.click(); }")
             page.wait_for_timeout(400)
 
-            # Card structural integrity: elements that have body.themed-sm card rules
-            # must retain padding + border in dark mode (fixed via §24.19 dark rules).
+            # ── Dark mode: outer card structure ──────────────────────
+            # Outer wrappers must have padding + border (§24.19).
             DARK_CARD_CHECKS = [
-                ('.sm-delta-block', '"What Changed" block'),
-                ('.macro-state',    '"Macro State" card'),
+                ('.sm-delta-block', '"What Changed" outer card'),
+                ('.macro-state',    '"Macro State" outer card'),
             ]
             for selector, label in DARK_CARD_CHECKS:
                 styles = page.evaluate(f"""() => {{
@@ -1230,6 +1248,41 @@ def run_visual_qa(take_screenshots=False):
                     has_padding and has_border,
                     f'padding={styles["padding"]!r} border={styles["border"]!r} — '
                     f'collapsed: body.themed-sm stripped with no dark equivalent',
+                    severity='critical',
+                )
+
+            # ── Dark mode: inner layout properties ───────────────────
+            # Checks that key grid/flex containers still have the correct
+            # display value in dark mode. The bug pattern: all layout for
+            # sm-delta-row (grid) and rcal-strip (grid) lived only under
+            # body.themed-sm — in dark mode both collapsed to display:block,
+            # turning the 3-column card layout and 7-day calendar into a
+            # vertical stack of unstyled text.
+            #
+            # display:grid / display:flex are NOT inherited — if no CSS rule
+            # sets them, they default to 'block'. A 'block' result here means
+            # the dark-mode equivalent rule is missing.
+            DARK_LAYOUT_CHECKS = [
+                # (selector, expected_display, human label)
+                ('.sm-delta-row',  'grid',  'sm-delta 3-col metric grid (§24.20)'),
+                ('.rcal-strip',    'grid',  'release calendar 7-col day grid (§24.21)'),
+                ('.sm-delta-chip', 'flex',  'sm-delta metric chip (§24.20)'),
+            ]
+            for selector, expected, label in DARK_LAYOUT_CHECKS:
+                actual = page.evaluate(f"""() => {{
+                    var el = document.querySelector('{selector}');
+                    return el ? getComputedStyle(el).display : null;
+                }}""")
+                if actual is None:
+                    _check('theme', f'dark: {label} — element found', False,
+                           f'{selector} missing from DOM', 'warning')
+                    continue
+                _check(
+                    'theme',
+                    f'dark: {label} has display:{expected}',
+                    actual == expected,
+                    f'{selector} display={actual!r} (expected {expected!r}) — '
+                    f'layout rule absent in dark mode, body.themed-sm provides it in light',
                     severity='critical',
                 )
 
