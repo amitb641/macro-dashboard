@@ -4,6 +4,8 @@ A single-page macro-economic dashboard covering 12 topics across the U.S. econom
 
 **Live:** [amitb641.github.io/macro-dashboard](https://amitb641.github.io/macro-dashboard/)
 
+**Dev preview:** [macro-dashboard-dev.vercel.app](https://macro-dashboard-dev.vercel.app)
+
 ---
 
 ## Dashboard Tabs
