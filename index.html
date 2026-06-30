@@ -1776,9 +1776,10 @@ body.sidebar-active .nav-two-tier{display:none!important}
    <html> swaps every token; no per-element overrides except where
    contrast or semantic colour demands it. */
 :root[data-theme="dark"]{
-  /* Canvas — deep blue-black, slight warmth prevents clinical grey feel */
-  --bg:#080E1A;--bg2:#0E1726;--card:#0E1726;--card2:#131F31;
-  --border:#1A2B3F;--bord2:#223551;
+  /* Canvas — lifted from near-black to dark slate: reduces halation on bright text */
+  /* §24.34 bg lift: card #0E1726→#152233 raises text-to-surface contrast from extreme (>16:1) to comfortable (~12:1) — perceived sharpness improves */
+  --bg:#0B1220;--bg2:#152233;--card:#152233;--card2:#1A2A3E;
+  --border:#1E3047;--bord2:#263B55;
   /* Text — near-white primary, cool blue-grey secondaries for hierarchy */
   /* §24.33 brightness lift: --text2 7A9AB5→A8C4D8 (6.1→10.6:1 on card), --muted 5F7E9A→8AAFC8 (4.2→8.3:1), --dim 49688A→6B90AA (2.6→5.6:1) */
   --text:#F5F7FF;--text2:#A8C4D8;--muted:#8AAFC8;--dim:#6B90AA;
@@ -1795,8 +1796,12 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .nav-btn.active{color:var(--accent);background:var(--accent-soft)}
 :root[data-theme="dark"] .up{color:var(--red)}
 :root[data-theme="dark"] .dn{color:var(--green)}
-:root[data-theme="dark"] .so-what{color:var(--text2);border-left-color:var(--accent)}
+:root[data-theme="dark"] .so-what{color:var(--text2);border-left-color:var(--accent);font-weight:500!important}
 :root[data-theme="dark"] .so-what::before{color:var(--accent)}
+/* §24.34 — text-rendering + weight sharpness for body text on dark canvas */
+:root[data-theme="dark"] body{text-rendering:geometricPrecision}
+:root[data-theme="dark"] p,:root[data-theme="dark"] .subtitle{font-weight:450}
+:root[data-theme="dark"] .src,:root[data-theme="dark"] .fc-note{font-weight:450;color:var(--text2)!important}
 :root[data-theme="dark"] .chart-now-pill{background:rgba(14,23,38,.95);color:var(--text);border-color:var(--bord2)}
 :root[data-theme="dark"] .md-pulse-dot{box-shadow:0 0 0 2px rgba(8,14,26,.9)}
 :root[data-theme="dark"] .panel-meta{color:var(--muted)}
