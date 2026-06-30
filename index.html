@@ -1925,6 +1925,18 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] blockquote{border-left-color:var(--accent);color:var(--text2)}
 /* §24.18 — Indicator label uppercase chips (STALE, OK etc) —
    JS-generated but CSS can't override inline styles without !important on attribute selectors */
+/* §24.19 — sm-delta-block / macro-state lose body.themed-sm card structure in dark.
+   body.themed-sm provides margin/padding/border/radius via !important rules; when
+   setTheme('dark') strips that class, both sections collapse to unstyled text. */
+:root[data-theme="dark"] .sm-delta-block{
+  margin:16px 0 20px!important;padding:16px!important;
+  background:var(--card)!important;border:1px solid var(--border)!important;border-radius:12px!important;
+}
+:root[data-theme="dark"] .macro-state{
+  background:var(--card)!important;border:1px solid var(--border)!important;border-radius:12px!important;
+  padding:24px 28px!important;margin:0 0 28px!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.3)!important;
+}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
