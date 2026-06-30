@@ -1878,7 +1878,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] [style*="background:#dbeafe"]{
   background:rgba(78,158,255,.07)!important;
   border-color:rgba(78,158,255,.2)!important;
-  color:var(--text2)!important;
+  color:var(--accent)!important;
 }
 :root[data-theme="dark"] [style*="background:#FCEEEE"],
 :root[data-theme="dark"] [style*="background:#FEF2F2"],
@@ -1886,13 +1886,13 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] [style*="background:#FEE2E2"]{
   background:rgba(255,79,79,.07)!important;
   border-color:rgba(255,79,79,.2)!important;
-  color:var(--text2)!important;
+  color:var(--red)!important;
 }
 :root[data-theme="dark"] [style*="background:#DCFCE7"],
 :root[data-theme="dark"] [style*="background:#f0fdf4"]{
   background:rgba(31,200,122,.07)!important;
   border-color:rgba(31,200,122,.2)!important;
-  color:var(--text2)!important;
+  color:var(--green)!important;
 }
 /* Dark text in inline boxes — make readable on dark canvas */
 :root[data-theme="dark"] [style*="color:#334E68"],
@@ -4829,7 +4829,7 @@ function _releaseBadge(tag){
     color = dk?'#7A9AB5':'#5A6B7D'; bg = dk?'rgba(122,154,181,.10)':'#F1F5F9'; bd = dk?'rgba(122,154,181,.20)':'rgba(90,107,125,.22)';
   }
   return `<span style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:10px;
-    font-size:8.5px;font-weight:700;letter-spacing:.06em;vertical-align:1px;
+    font-size:10px;font-weight:700;letter-spacing:.06em;vertical-align:1px;
     color:${color};background:${bg};border:1px solid ${bd}">${label}</span>`;
 }
 // §1 Sparkline — small inline SVG polyline (~72×18) that visualises
