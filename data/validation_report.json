@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-06-30T15:13:40.807255Z",
+  "validated_at": "2026-06-30T15:23:40.506652Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 659,
-    "passed": 658,
-    "failed": 1,
+    "total_checks": 662,
+    "passed": 660,
+    "failed": 2,
     "skipped": 1,
-    "critical_divergences": 0
+    "critical_divergences": 1
   },
   "internal_consistency": [
     {
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-30T15:12:21.475641Z",
+      "collected_at": "2026-06-30T15:22:12.489126Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1547,10 +1547,10 @@
       "detail": ""
     },
     {
-      "check": "Visual: theme \u2014 No themed-sm structural orphans (no card styles lost in dark mode)",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "check": "Visual: theme \u2014 No themed-sm structural orphans (no layout/card styles lost in dark mode)",
+      "severity": "critical",
+      "pass": false,
+      "detail": "30 class(es) with themed-sm structural rules but no dark equiv: ['ch-hero', 'ch-mini', 'ch-std', 'download-btn', 'eyebrow', 'fn-anchor', 'fn-current-read', 'fn-ladder-title', 'kpi', 'kpi-lbl', 'kpi-spark', 'kpi-spark-wrap'] \u2014 these lose display/padding/border in dark mode"
     },
     {
       "check": "Visual: global \u2014 Page has title",
@@ -4133,13 +4133,31 @@
       "detail": ""
     },
     {
-      "check": "Visual: theme \u2014 dark: \"What Changed\" block retains card structure (padding + border)",
+      "check": "Visual: theme \u2014 dark: \"What Changed\" outer card retains card structure (padding + border)",
       "severity": "ok",
       "pass": true,
       "detail": ""
     },
     {
-      "check": "Visual: theme \u2014 dark: \"Macro State\" card retains card structure (padding + border)",
+      "check": "Visual: theme \u2014 dark: \"Macro State\" outer card retains card structure (padding + border)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: sm-delta 3-col metric grid (\u00a724.20) has display:grid",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: release calendar 7-col day grid (\u00a724.21) has display:grid",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: theme \u2014 dark: sm-delta metric chip (\u00a724.20) has display:flex",
       "severity": "ok",
       "pass": true,
       "detail": ""

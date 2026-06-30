@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-06-30T15:13:56.134822Z",
-  "status": "PASS",
+  "checked_at": "2026-06-30T15:23:55.759463Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 443,
-    "passed": 443,
-    "failed": 0,
+    "total_checks": 446,
+    "passed": 445,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -61,9 +61,10 @@
     },
     {
       "category": "theme",
-      "check": "No themed-sm structural orphans (no card styles lost in dark mode)",
-      "pass": true,
-      "severity": "ok"
+      "check": "No themed-sm structural orphans (no layout/card styles lost in dark mode)",
+      "pass": false,
+      "severity": "critical",
+      "detail": "30 class(es) with themed-sm structural rules but no dark equiv: ['ch-hero', 'ch-mini', 'ch-std', 'download-btn', 'eyebrow', 'fn-anchor', 'fn-current-read', 'fn-ladder-title', 'kpi', 'kpi-lbl', 'kpi-spark', 'kpi-spark-wrap'] \u2014 these lose display/padding/border in dark mode"
     },
     {
       "category": "global",
@@ -2647,13 +2648,31 @@
     },
     {
       "category": "theme",
-      "check": "dark: \"What Changed\" block retains card structure (padding + border)",
+      "check": "dark: \"What Changed\" outer card retains card structure (padding + border)",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "theme",
-      "check": "dark: \"Macro State\" card retains card structure (padding + border)",
+      "check": "dark: \"Macro State\" outer card retains card structure (padding + border)",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: sm-delta 3-col metric grid (\u00a724.20) has display:grid",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: release calendar 7-col day grid (\u00a724.21) has display:grid",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "theme",
+      "check": "dark: sm-delta metric chip (\u00a724.20) has display:flex",
       "pass": true,
       "severity": "ok"
     },
