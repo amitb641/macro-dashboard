@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-06-30T14:09:27.543373Z",
+  "validated_at": "2026-06-30T14:15:45.949719Z",
   "status": "WARN",
   "summary": {
     "total_checks": 649,
     "passed": 648,
     "failed": 1,
-    "skipped": 1,
+    "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-30T14:08:09.693079Z",
+      "collected_at": "2026-06-30T14:14:26.664765Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4124,13 +4124,8 @@
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "core_cpi",
-      "fred": 336.121,
-      "bls": 336.121,
-      "diff": 0.0,
-      "tol": 0.3361,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     }
   ],
   "noise_floor": [
