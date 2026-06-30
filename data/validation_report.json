@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-06-30T15:23:40.506652Z",
+  "validated_at": "2026-06-30T15:28:24.472766Z",
   "status": "WARN",
   "summary": {
     "total_checks": 662,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-30T15:22:12.489126Z",
+      "collected_at": "2026-06-30T15:27:08.316444Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1550,7 +1550,7 @@
       "check": "Visual: theme \u2014 No themed-sm structural orphans (no layout/card styles lost in dark mode)",
       "severity": "critical",
       "pass": false,
-      "detail": "30 class(es) with themed-sm structural rules but no dark equiv: ['ch-hero', 'ch-mini', 'ch-std', 'download-btn', 'eyebrow', 'fn-anchor', 'fn-current-read', 'fn-ladder-title', 'kpi', 'kpi-lbl', 'kpi-spark', 'kpi-spark-wrap'] \u2014 these lose display/padding/border in dark mode"
+      "detail": "27 class(es) with themed-sm structural rules but no dark equiv: ['ch-hero', 'ch-mini', 'ch-std', 'download-btn', 'eyebrow', 'fn-anchor', 'fn-current-read', 'fn-ladder-title', 'kpi', 'kpi-lbl', 'kpi-spark', 'kpi-spark-wrap'] \u2014 these lose display/padding/border in dark mode"
     },
     {
       "check": "Visual: global \u2014 Page has title",
