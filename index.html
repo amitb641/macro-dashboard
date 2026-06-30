@@ -1982,6 +1982,34 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .rcal-item-title{color:var(--text2);font-weight:600;grid-column:2;grid-row:1}
 :root[data-theme="dark"] .rcal-item.imp-high .rcal-item-title{color:var(--text)}
 :root[data-theme="dark"] .rcal-item-meta{color:var(--muted);font-size:8.5px;letter-spacing:.02em;grid-column:2;grid-row:2;font-variant-numeric:tabular-nums lining-nums}
+/* §24.22 — Header status bar (sm-meta / sm-wordmark / sm-readbar). */
+:root[data-theme="dark"] .sm-meta{display:flex;align-items:center;gap:16px;padding:0 0 16px 0;margin:0 0 16px 0;border-bottom:1px solid var(--border);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+:root[data-theme="dark"] .sm-meta .sm-meta-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(31,200,122,.18)}
+:root[data-theme="dark"] .sm-meta .sm-meta-sep{color:var(--dim)}
+:root[data-theme="dark"] .sm-meta .sm-meta-bold{color:var(--text);font-weight:700}
+:root[data-theme="dark"] .sm-wordmark{color:var(--muted)}
+:root[data-theme="dark"] .sm-wordmark .sm-wm-sep{color:var(--dim)}
+:root[data-theme="dark"] .sm-wordmark .sm-wm-issue{color:var(--text2)}
+:root[data-theme="dark"] .sm-readbar{display:flex;align-items:center;gap:16px;margin:4px 0 20px 0;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums lining-nums;letter-spacing:.04em}
+:root[data-theme="dark"] .sm-readbar .sm-rb-meta{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--text2);white-space:nowrap}
+:root[data-theme="dark"] .sm-readbar .sm-rb-dot{color:var(--dim);font-weight:400}
+:root[data-theme="dark"] .sm-readbar .sm-rb-track{flex:1 1 auto;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;min-width:80px;max-width:360px}
+:root[data-theme="dark"] .sm-readbar .sm-rb-fill{width:0%;height:100%;background:linear-gradient(90deg,var(--accent) 0%,var(--green) 100%);transition:width 120ms linear;border-radius:2px}
+/* §24.23 — Macro State inner: eyebrow, verdict, risk chip, pillar grid, progress bars. */
+:root[data-theme="dark"] .macro-state .ms-eyebrow{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+:root[data-theme="dark"] .macro-state .ms-verdict{font-size:20px;font-weight:600;line-height:1.35;letter-spacing:-.01em;color:var(--text);margin:0 0 16px 0}
+:root[data-theme="dark"] .macro-state .ms-chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-right:8px;vertical-align:middle}
+:root[data-theme="dark"] .macro-state .ms-chip.high{background:rgba(255,79,79,.15);color:var(--red)}
+:root[data-theme="dark"] .macro-state .ms-chip.medium{background:rgba(240,160,0,.15);color:var(--amber)}
+:root[data-theme="dark"] .macro-state .ms-chip.low{background:rgba(31,200,122,.15);color:var(--green)}
+:root[data-theme="dark"] .macro-state .ms-bars{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:16px;border-top:1px solid var(--border)}
+:root[data-theme="dark"] .macro-state .ms-bar-lbl{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+:root[data-theme="dark"] .macro-state .ms-bar-track{position:relative;background:rgba(255,255,255,.08);border-radius:999px;height:6px;overflow:hidden}
+:root[data-theme="dark"] .macro-state .ms-bar-fill{position:absolute;top:0;left:0;bottom:0;border-radius:999px;transition:width .35s ease}
+:root[data-theme="dark"] .macro-state .ms-bar-fill.good{background-color:var(--green)}
+:root[data-theme="dark"] .macro-state .ms-bar-fill.watch{background-color:var(--amber);background-image:repeating-linear-gradient(45deg,transparent 0 4px,rgba(255,255,255,.2) 4px 6px)}
+:root[data-theme="dark"] .macro-state .ms-bar-fill.stress{background-color:var(--red);background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.25) 3px 5px)}
+:root[data-theme="dark"] .macro-state .ms-bar-val{font-size:13px;font-weight:600;color:var(--text2);margin-top:8px}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
