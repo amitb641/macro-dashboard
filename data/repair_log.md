@@ -1,3 +1,19 @@
+## Repair Agent — 2026-06-30T13:40:34.129753Z
+
+- **Status**: WARN
+- **Total checks**: 649
+- **Passed**: 648
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 121d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-06-30T13:21:14.894478Z
 
 - **Status**: WARN
@@ -1058,39 +1074,6 @@ _0 critical · 3 warning · 0 stale_
 - ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
 - ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
 - ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
-
-
----
-
-## Repair Agent — 2026-05-24T19:49:59.178392Z
-
-- **Status**: WARN
-- **Total checks**: 390
-- **Passed**: 375
-- **Failed**: 15
-- **Critical divergences**: 0
-
-### Panel data
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
-
-### Visual QA
-_0 critical · 12 warning · 0 stale_
-
-- ⚠️ **Visual: global — Nav buttons present** — 
-- ⚠️ **Visual: Jobs — Nav button exists** — 
-- ⚠️ **Visual: Unemployment — Nav button exists** — 
-- ⚠️ **Visual: Wages — Nav button exists** — 
-- ⚠️ **Visual: CPI — Nav button exists** — 
-- ⚠️ **Visual: Consumer & PCE — Nav button exists** — 
-- ⚠️ **Visual: Rates & Yields — Nav button exists** — 
-- ⚠️ **Visual: Credit — Nav button exists** — 
-- ⚠️ **Visual: Banking — Nav button exists** — 
-- ⚠️ **Visual: Housing — Nav button exists** — 
-- _… and 2 more_
 
 
 ---

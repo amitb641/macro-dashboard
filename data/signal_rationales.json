@@ -1,51 +1,51 @@
 {
-  "generated_at": "2026-06-30T13:19:23Z",
-  "based_on_signals_at": "2026-06-30T13:18:41.887154Z",
+  "generated_at": "2026-06-30T13:39:38Z",
+  "based_on_signals_at": "2026-06-30T13:39:37.881101Z",
   "model": "claude-sonnet-4-6",
   "budget_hit": false,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 6,
+    "calls_used": 1,
     "anthropic_key_set": true
   },
   "rationales": {
     "cpi_yoy": {
       "value": 4.17,
       "direction": "rising",
-      "rationale": "The shock tracker flags `cpi_yoy` as rising with a delta of 0.39 percentage points, which exceeds the ±0.3 pp month-over-month noise floor established in §2.3 for Core CPI YoY, placing this move outside the \"tracking baseline\" range and warranting the alert status. However, the raw-data slice provided contains no underlying series for `cpi_yoy`, so it is not possible to verify whether the `pre` and `now` values reflect live collected data or a hardcoded baseline fallthrough — the latter would match the §4.2 pattern where `update_shock_tracker` produces equal or spurious readings due to insufficient observations. Because the source data cannot be confirmed from the provided context, confidence in the direction and magnitude of this signal is reduced, and the finding should be treated as a candidate for Pass 3d (shock tracker raw-key verification) before any action is taken. No playbook section fully resolves this without the underlying series — flagged for human review.",
-      "playbook_cite": "§2.3"
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cpi_yoy) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CcZYA6aJPAcMukd1DspB6\"}'))",
+      "playbook_cite": ""
     },
     "tdsp": {
       "value": 11.164138,
       "direction": "stable",
-      "rationale": "The flagged signal shows a TDSP (total debt service payments, presumably as a percent of income) reading of approximately 11.16 with a month-over-month delta of −0.159, classified as directionally \"stable\" with a \"watch\" alert. No raw-data series for `tdsp` was provided in the data slice, so the underlying source, vintage, and comparison baseline cannot be verified against the playbook's §2.2 publish-lag table or §2.3 noise floors — notably, no noise floor for TDSP is defined in the known-normal baselines. The delta of −0.159 may be within a plausible noise range for a debt-service ratio series, but without a documented noise floor or source mapping, this cannot be confirmed as \"tracking baseline.\" No playbook coverage for TDSP — flagged for human review.",
-      "playbook_cite": "§2.2"
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:tdsp) skipped — insufficient API credits (Anthropic billing)'))",
+      "playbook_cite": ""
     },
     "core_pce_yoy": {
       "value": 3.41,
       "direction": "stable",
-      "rationale": "The data shows `core_pce_yoy` at 3.41 with a month-over-month delta of 0.21 percentage points, which is directionally labeled \"stable\" — however, no raw-data series for `core_pce_yoy` is present in the provided data slice, so the underlying observation cannot be independently verified against a source value. The delta of 0.21pp falls within the ±0.3pp noise floor established for core CPI YoY in §2.3 (the closest analogue in the playbook; no explicit noise floor for core PCE YoY is defined in the known-normal baselines), meaning this move would ordinarily track baseline rather than warrant an alert designation. The absence of a backing raw-data key also raises a concern consistent with §4.2, where a shock-tracker phase can silently fall through to a hardcoded baseline when the underlying series has insufficient observations — the `alert` flag here despite a within-noise delta and a `flagged: false` status is an internal inconsistency that cannot be resolved without the raw series. No playbook section explicitly covers `core_pce_yoy` noise floors or this alert/flagged mismatch — flagged for human review.",
-      "playbook_cite": "§2.3"
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:core_pce_yoy) skipped — insufficient API credits (Anthropic billing)'))",
+      "playbook_cite": ""
     },
     "pce_yoy": {
       "value": 4.07,
       "direction": "rising",
-      "rationale": "The shock tracker reports PCE YoY at 4.07%, a delta of 0.57 percentage points in the rising direction, which exceeds the Core CPI noise floor of ±0.3pp cited in §2.3 — however, PCE YoY is not itself listed in the noise-floor table, so a direct noise-floor comparison cannot be made from the playbook alone. More critically, no raw-data series for `pce_yoy` was provided in the data slice, meaning the reported value cannot be verified against an underlying source observation, which raises the possibility that the renderer fell through to a hardcoded baseline (§4.2). Because the raw key is absent and no playbook section establishes a noise floor or expected regime direction specifically for PCE YoY, this signal cannot be fully adjudicated here — flagged for human review.",
-      "playbook_cite": "§2.3"
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:pce_yoy) skipped — insufficient API credits (Anthropic billing)'))",
+      "playbook_cite": ""
     },
     "wti": {
       "value": 78.94,
       "direction": "falling",
-      "rationale": "The WTI signal shows a delta of −30.82 with a current value of 78.94, which would represent an extraordinarily large move if interpreted as a single-period change; however, no raw-data series for WTI is present in the provided data slice, making it impossible to verify the underlying observations or confirm the period over which this delta was computed. Because the raw data cannot be inspected, the delta cannot be compared against the noise floor defined in §2.3 (gasoline at ±$0.10/gal is the closest proxy for energy price volatility, though WTI is a distinct series), and the source of the figure cannot be cross-checked against the EIA weekly publish-lag window of 0–7 days (§2.2). The absence of backing data for a flagged metric of this magnitude is itself a data-integrity concern that warrants escalation — no playbook coverage for a missing raw-data series behind a flagged KPI — flagged for human review.",
-      "playbook_cite": "§2.3"
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wti) skipped — insufficient API credits (Anthropic billing)'))",
+      "playbook_cite": ""
     },
     "wages_yoy": {
       "value": 3.5,
       "direction": "falling",
-      "rationale": "The shock tracker shows `wages_yoy` at 3.5% YoY, a month-over-month delta of −0.4 percentage points in the falling direction. However, the known-normal baselines do not include a noise floor entry for `wages_yoy`, and no raw-data series for this metric was provided in the current data slice, making it impossible to confirm whether the underlying collector value matches what the shock tracker is reading or to compare the move against a playbook-defined threshold (§2.3 lists Core CPI YoY at ±0.3pp but does not enumerate wages). Because neither a noise-floor benchmark nor a source-verification anchor is available here, this signal cannot be confidently classified as significant drift versus routine variation — no playbook coverage — flagged for human review.",
-      "playbook_cite": "§2.3"
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wages_yoy) skipped — insufficient API credits (Anthropic billing)'))",
+      "playbook_cite": ""
     }
   }
 }
