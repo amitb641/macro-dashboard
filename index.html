@@ -1771,6 +1771,35 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .dtable th{background:#1B2230;color:var(--text2)}
 :root[data-theme="dark"] .dtable td{border-color:var(--border)}
 :root[data-theme="dark"] .skeleton{background:linear-gradient(90deg,#1B2230 0%,#243042 50%,#1B2230 100%)}
+/* §24.5 — Sidebar full dark treatment */
+:root[data-theme="dark"] .nav-sidebar{background:#0D1218;border-right-color:var(--border)}
+:root[data-theme="dark"] .nsb-hdr{border-bottom-color:var(--border)}
+:root[data-theme="dark"] .nsb-brand{color:var(--text2)}
+:root[data-theme="dark"] .nsb-collapse-btn{color:var(--muted)}
+:root[data-theme="dark"] .nsb-collapse-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
+:root[data-theme="dark"] .nsb-grp-label{color:var(--dim)}
+:root[data-theme="dark"] .nsb-tab-btn{color:var(--text2)}
+:root[data-theme="dark"] .nsb-tab-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+:root[data-theme="dark"] .nsb-tab-btn.active{border-left-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+:root[data-theme="dark"] .nsb-footer{border-top-color:var(--border)}
+:root[data-theme="dark"] .nsb-footer-btn{color:var(--dim)}
+:root[data-theme="dark"] .nsb-footer-btn:hover{color:var(--text2);background:rgba(255,255,255,.04)}
+:root[data-theme="dark"] .nsb-footer-btn.active{border-left-color:var(--accent);color:var(--text);background:var(--accent-soft)}
+/* §24.6 — Top horizontal nav dark treatment */
+:root[data-theme="dark"] .nav-two-tier{background:rgba(15,20,25,.96)!important;border-bottom-color:var(--border)!important}
+/* §24.7 — fc-note has !important in base — must override */
+:root[data-theme="dark"] .fc-note{background:rgba(91,140,230,.06)!important;border-color:rgba(91,140,230,.2)!important;border-left-color:var(--accent)!important}
+:root[data-theme="dark"] .fc-note strong{color:var(--text)!important}
+/* §24.8 — up/dn chip backgrounds and kpi-delta color chips.
+   Base .up/.dn rules at line ~2204 use !important, so dark overrides must too.
+   Higher specificity (0,3,0,0 vs 0,1,0,0) + !important = dark rule wins. */
+:root[data-theme="dark"] .up{background:rgba(98,212,159,.12)!important;border-color:rgba(98,212,159,.25)!important;color:#62D49F!important}
+:root[data-theme="dark"] .dn{background:rgba(255,107,107,.12)!important;border-color:rgba(255,107,107,.25)!important;color:#FF6B6B!important}
+:root[data-theme="dark"] .kpi-delta.up{background:rgba(98,212,159,.12)!important;color:#62D49F!important}
+:root[data-theme="dark"] .kpi-delta.down{background:rgba(255,107,107,.12)!important;color:#FF6B6B!important}
+:root[data-theme="dark"] .kpi-delta.flat{background:rgba(240,180,41,.12)!important;color:#F0B429!important}
+/* §24.9 — sloos-narrative has inline bg style — fight with !important */
+:root[data-theme="dark"] .sloos-narrative{background:var(--bg2)!important;border-color:var(--border)!important;color:var(--text2)!important}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
@@ -6556,7 +6585,15 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
     if (!SHOCK_TRACKER || !Array.isArray(SHOCK_TRACKER.phases)) return;
     var t = SHOCK_TRACKER;
     var wChg = t.wti_now - t.wti_pre;
-    var statusCfg = {
+    var _isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var statusCfg = _isDark ? {
+      confirmed:    {bg:"rgba(98,212,159,.15)",border:"#62D49F",text:"#62D49F",label:"Confirmed",icon:"✅"},
+      emerging:     {bg:"rgba(240,180,41,.15)",border:"#F0B429",text:"#F0B429",label:"Emerging",icon:"⚡"},
+      on_schedule:  {bg:"rgba(91,140,230,.15)",border:"#5B8CE6",text:"#5B8CE6",label:"On Track",icon:"🕐"},
+      not_yet:      {bg:"rgba(90,100,118,.20)",border:"#5A6476",text:"#7A8696",label:"Not Yet",icon:"⏳"},
+      ahead:        {bg:"rgba(255,107,107,.15)",border:"#FF6B6B",text:"#FF6B6B",label:"Ahead!",icon:"🔴"},
+      awaiting_data:{bg:"rgba(168,151,216,.15)",border:"#A897D8",text:"#A897D8",label:"No Data",icon:"📊"},
+    } : {
       confirmed:    {bg:"#DCFCE7",border:"#16A34A",text:"#15803D",label:"Confirmed",icon:"✅"},
       emerging:     {bg:"#FEF9C3",border:"#CA8A04",text:"#A16207",label:"Emerging",icon:"⚡"},
       on_schedule:  {bg:"#DBEAFE",border:"#2563EB",text:"#1D4ED8",label:"On Track",icon:"🕐"},
