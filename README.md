@@ -2,9 +2,10 @@
 
 A single-page macro-economic dashboard covering 12 topics across the U.S. economy, updated daily via GitHub Actions and served on GitHub Pages.
 
-**Live:** [amitb641.github.io/macro-dashboard](https://amitb641.github.io/macro-dashboard/)
-
-**Dev preview:** [macro-dashboard-dev.vercel.app](https://macro-dashboard-dev.vercel.app)
+| | URL | Notes |
+|---|---|---|
+| **Live** | [amitb641.github.io/macro-dashboard](https://amitb641.github.io/macro-dashboard/) | Production — weekly pipeline, stable |
+| **Dev** | [macro-dashboard-dev.vercel.app](https://macro-dashboard-dev.vercel.app) | Development branch — experimental features, may be unstable |
 
 ---
 
