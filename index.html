@@ -1810,6 +1810,17 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .dtable tbody tr:hover{background:rgba(78,158,255,.05)}
 :root[data-theme="dark"] .dtable tbody tr:nth-child(even){background:rgba(255,255,255,.018)}
 :root[data-theme="dark"] .skeleton{background:linear-gradient(90deg,var(--card2) 0%,var(--border) 50%,var(--card2) 100%)}
+/* §24.35 — dtable narrative column fixes in dark mode.
+   Without body.themed-sm, cells lose padding+vertical-align and the "Key View"
+   column collapses to word-wrap width (~83px), causing 14+ line wraps and row
+   heights ~200px. Mirrors theme-overlay.css lines 564-592. */
+:root[data-theme="dark"] .dtable td{vertical-align:top!important;padding:12px!important}
+@media(min-width:601px){
+:root[data-theme="dark"] #fc-scenarios-tbl td[data-label="Key View"]{min-width:300px!important;max-width:340px!important}
+:root[data-theme="dark"] #credit-debt-tbl td[data-label="Banking Context"]{min-width:280px!important;max-width:320px!important}
+:root[data-theme="dark"] #housing-metro-tbl td[data-label="Market Note"]{min-width:240px!important;max-width:300px!important}
+:root[data-theme="dark"] #oil-episodes-tbl td[data-label="Economic Consequence"]{min-width:280px!important;max-width:340px!important}
+}
 /* §24.5 — Sidebar full dark treatment */
 :root[data-theme="dark"] .nav-sidebar{background:#060C16;border-right-color:var(--border)}
 :root[data-theme="dark"] .nsb-hdr{border-bottom-color:var(--border)}
