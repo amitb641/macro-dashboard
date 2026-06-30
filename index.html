@@ -2010,6 +2010,42 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .macro-state .ms-bar-fill.watch{background-color:var(--amber);background-image:repeating-linear-gradient(45deg,transparent 0 4px,rgba(255,255,255,.2) 4px 6px)}
 :root[data-theme="dark"] .macro-state .ms-bar-fill.stress{background-color:var(--red);background-image:repeating-linear-gradient(90deg,transparent 0 3px,rgba(255,255,255,.25) 3px 5px)}
 :root[data-theme="dark"] .macro-state .ms-bar-val{font-size:13px;font-weight:600;color:var(--text2);margin-top:8px}
+/* §24.24 — Chart container layout in dark (ch-hero / ch-mini / ch-std). */
+:root[data-theme="dark"] .ch-hero{position:relative;height:480px;margin-bottom:8px}
+:root[data-theme="dark"] .ch-mini{position:relative;height:180px;margin-bottom:8px}
+:root[data-theme="dark"] .ch-std{position:relative;height:300px;margin-bottom:8px}
+/* §24.25 — KPI tile, label, sparkline, strip, sub-value in dark. */
+:root[data-theme="dark"] .kpi{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:12px!important;padding:20px 24px 16px!important;box-shadow:0 0 0 1px rgba(78,158,255,.06)!important;position:relative!important;overflow:hidden!important;transition:transform .15s ease,box-shadow .15s ease!important}
+:root[data-theme="dark"] .kpi-lbl{font-family:'DM Mono',monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.18em!important;text-transform:uppercase!important;color:var(--muted)!important;margin-bottom:8px!important}
+:root[data-theme="dark"] .kpi-spark{display:block;width:72px;height:18px;overflow:visible;opacity:.55}
+:root[data-theme="dark"] .kpi-spark-wrap{display:block;margin:4px 0 0;line-height:0;height:18px}
+:root[data-theme="dark"] .kpi-strip{gap:16px!important;margin-bottom:20px!important}
+:root[data-theme="dark"] .kpi-sub{font-family:'DM Mono',monospace!important;font-size:10px!important;color:var(--muted)!important;letter-spacing:.04em!important;margin-top:8px!important}
+/* §24.26 — metric card in dark. */
+:root[data-theme="dark"] .metric{background:var(--card)!important;border:1px solid var(--border)!important;border-left:1px solid var(--border)!important;border-radius:12px!important;padding:20px 20px 16px!important;position:relative!important;overflow:hidden!important}
+/* §24.27 — Layout helpers (split-stack, two-up, nav-group, tab-panel) in dark. */
+:root[data-theme="dark"] .split-stack{display:flex;flex-direction:column;gap:8px;width:100%;height:300px}
+:root[data-theme="dark"] .split-stack-row{position:relative;flex:1 1 0;min-height:0;width:100%}
+:root[data-theme="dark"] .two-up{gap:20px!important}
+:root[data-theme="dark"] .nav-group{display:flex!important;align-items:center!important;gap:12px!important}
+:root[data-theme="dark"] .tab-panel>.panel{margin-bottom:28px!important}
+:root[data-theme="dark"] .tab-panel>.two-up{margin-top:4px!important;margin-bottom:28px!important}
+:root[data-theme="dark"] .tab-panel>.fc-note{background:var(--card)!important;border:1px solid var(--border)!important;border-left:3px solid var(--accent)!important;border-radius:12px!important;padding:24px!important;margin-top:0!important;margin-bottom:28px!important;font-size:14px!important;color:var(--text)!important;line-height:1.65!important}
+/* §24.28 — Typography tokens (eyebrow, subtitle, stk-section-title, vintage-note) in dark. */
+:root[data-theme="dark"] .eyebrow{font-family:'DM Mono',monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:var(--muted)!important;margin-bottom:16px!important;background:none!important;border:none!important;padding:0!important}
+:root[data-theme="dark"] .subtitle{font-family:'DM Sans',sans-serif!important;font-size:16px!important;color:var(--text2)!important;line-height:1.6!important;max-width:820px!important;font-weight:400!important;margin-bottom:40px!important}
+:root[data-theme="dark"] .stk-section-title{color:var(--text);font-weight:700}
+:root[data-theme="dark"] .vintage-note{font-family:'DM Mono',monospace!important;font-size:9.5px!important;color:var(--muted)!important;letter-spacing:.06em!important;text-transform:uppercase!important;border-top:1px solid var(--border);padding-top:12px!important;margin-top:16px!important}
+/* §24.29 — Footnote components (fn-anchor, fn-current-read, fn-ladder-title) in dark. */
+:root[data-theme="dark"] .fn-anchor{font-size:.72em;line-height:0;vertical-align:super;margin-left:1px;white-space:nowrap}
+:root[data-theme="dark"] .fn-current-read{margin:8px 0 0;padding-top:8px;border-top:1px dashed var(--border);font-size:10px;color:var(--muted);line-height:1.6}
+:root[data-theme="dark"] .fn-ladder-title{font-size:9px;font-weight:700;color:var(--text2);letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
+/* §24.30 — Misc (download-btn, sm-empty-state, standalone sm-rb-* readbar parts) in dark. */
+:root[data-theme="dark"] .download-btn{font-family:'DM Mono',monospace!important;font-size:10px!important;letter-spacing:.15em!important;text-transform:uppercase!important;background:var(--card2)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:8px 16px!important;border-radius:6px!important;box-shadow:none!important}
+:root[data-theme="dark"] .sm-empty-state{background:rgba(8,14,26,.85);backdrop-filter:blur(1px);border-radius:8px;z-index:2}
+:root[data-theme="dark"] .sm-rb-fill{width:0%;height:100%!important;background:linear-gradient(90deg,var(--accent) 0%,var(--green) 100%)!important;transition:width 120ms linear!important;border-radius:2px!important}
+:root[data-theme="dark"] .sm-rb-meta{display:inline-flex!important;align-items:center!important;gap:8px!important;font-weight:600!important;color:var(--text2)!important;white-space:nowrap!important}
+:root[data-theme="dark"] .sm-rb-track{flex:1 1 auto!important;height:4px!important;background:rgba(255,255,255,.08)!important;border-radius:2px!important;overflow:hidden!important;min-width:80px!important;max-width:360px!important}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
