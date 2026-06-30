@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-06-30T15:28:24.472766Z",
+  "validated_at": "2026-06-30T16:20:46.539444Z",
   "status": "WARN",
   "summary": {
     "total_checks": 662,
-    "passed": 660,
-    "failed": 2,
-    "skipped": 1,
-    "critical_divergences": 1
+    "passed": 661,
+    "failed": 1,
+    "skipped": 3,
+    "critical_divergences": 0
   },
   "internal_consistency": [
     {
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-30T15:27:08.316444Z",
+      "collected_at": "2026-06-30T16:19:27.407029Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1548,9 +1548,9 @@
     },
     {
       "check": "Visual: theme \u2014 No themed-sm structural orphans (no layout/card styles lost in dark mode)",
-      "severity": "critical",
-      "pass": false,
-      "detail": "27 class(es) with themed-sm structural rules but no dark equiv: ['ch-hero', 'ch-mini', 'ch-std', 'download-btn', 'eyebrow', 'fn-anchor', 'fn-current-read', 'fn-ladder-title', 'kpi', 'kpi-lbl', 'kpi-spark', 'kpi-spark-wrap'] \u2014 these lose display/padding/border in dark mode"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: global \u2014 Page has title",
@@ -4191,24 +4191,14 @@
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "cpi_all",
-      "fred": 333.979,
-      "bls": 333.979,
-      "diff": 0.0,
-      "tol": 0.334,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "core_cpi",
-      "fred": 336.121,
-      "bls": 336.121,
-      "diff": 0.0,
-      "tol": 0.3361,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     }
   ],
   "noise_floor": [

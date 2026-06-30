@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-06-30T15:28:38.821024Z",
-  "status": "WARN",
+  "checked_at": "2026-06-30T16:21:01.810341Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 446,
-    "passed": 445,
-    "failed": 1,
+    "passed": 446,
+    "failed": 0,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -62,9 +62,8 @@
     {
       "category": "theme",
       "check": "No themed-sm structural orphans (no layout/card styles lost in dark mode)",
-      "pass": false,
-      "severity": "critical",
-      "detail": "27 class(es) with themed-sm structural rules but no dark equiv: ['ch-hero', 'ch-mini', 'ch-std', 'download-btn', 'eyebrow', 'fn-anchor', 'fn-current-read', 'fn-ladder-title', 'kpi', 'kpi-lbl', 'kpi-spark', 'kpi-spark-wrap'] \u2014 these lose display/padding/border in dark mode"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "global",

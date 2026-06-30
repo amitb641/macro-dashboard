@@ -1,30 +1,30 @@
 {
-  "generated_at": "2026-06-30T15:28:50Z",
+  "generated_at": "2026-06-30T16:21:13Z",
   "overall": "FAIL",
   "strict": true,
-  "headline": "❌ CEO-grade gate FAILED — 2 critical finding(s) block publish.",
+  "headline": "❌ CEO-grade gate FAILED — 0 critical finding(s) block publish.",
   "totals": {
-    "critical": 2,
+    "critical": 0,
     "warning": 1
   },
   "missing": [],
   "layers": {
     "validator": {
       "layer": "validator",
-      "status": "FAIL",
-      "critical": 1,
+      "status": "WARN",
+      "critical": 0,
       "warning": 1,
-      "skipped": 1,
+      "skipped": 3,
       "total": 662,
       "validator_status": "WARN"
     },
     "visual_qa": {
-      "critical": 1,
+      "critical": 0,
       "warning": 0,
       "skipped": 0,
-      "ok": 445,
+      "ok": 446,
       "total": 446,
-      "status": "FAIL",
+      "status": "PASS",
       "layer": "visual_qa"
     },
     "vision_review": {
