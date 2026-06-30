@@ -1937,6 +1937,51 @@ body.sidebar-active .nav-two-tier{display:none!important}
   padding:24px 28px!important;margin:0 0 28px!important;
   box-shadow:0 2px 8px rgba(0,0,0,.3)!important;
 }
+/* §24.20 — sm-delta-block inner components.
+   Layout rules (flex/grid) AND color rules for all children live only under
+   body.themed-sm in theme-overlay.css — zero dark equivalents. Without these,
+   sm-delta-row is not a grid, sm-delta-chip is not a card, text is unstyled. */
+:root[data-theme="dark"] .sm-delta-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+:root[data-theme="dark"] .sm-delta-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+:root[data-theme="dark"] .sm-delta-asof{font-size:10px;font-weight:500;color:var(--muted);letter-spacing:.04em;font-variant-numeric:tabular-nums lining-nums}
+:root[data-theme="dark"] .sm-delta-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+:root[data-theme="dark"] .sm-delta-chip{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--card2);border:1px solid var(--border);border-left-width:3px;border-radius:8px}
+:root[data-theme="dark"] .sm-delta-chip.tone-alert{border-left-color:var(--red)!important}
+:root[data-theme="dark"] .sm-delta-chip.tone-watch{border-left-color:var(--amber)!important}
+:root[data-theme="dark"] .sm-delta-chip.tone-ok{border-left-color:var(--green)!important}
+:root[data-theme="dark"] .sm-dc-arrow{flex:0 0 16px;font-size:14px;line-height:1.4;font-weight:700}
+:root[data-theme="dark"] .sm-delta-chip.tone-alert .sm-dc-arrow{color:var(--red)}
+:root[data-theme="dark"] .sm-delta-chip.tone-watch .sm-dc-arrow{color:var(--amber)}
+:root[data-theme="dark"] .sm-delta-chip.tone-ok .sm-dc-arrow{color:var(--green)}
+:root[data-theme="dark"] .sm-dc-body{display:flex;flex-direction:column;gap:4px;min-width:0}
+:root[data-theme="dark"] .sm-dc-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+:root[data-theme="dark"] .sm-dc-val{font-size:16px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums lining-nums}
+:root[data-theme="dark"] .sm-dc-unit{font-size:11px;font-weight:500;color:var(--text2)}
+:root[data-theme="dark"] .sm-dc-note{font-size:11px;color:var(--muted);line-height:1.4}
+/* §24.21 — Release calendar (rcal-strip-wrap) inner components.
+   Same problem as §24.20 — all layout + color exclusively under body.themed-sm.
+   Without these, rcal-strip is not a 7-col grid, rcal-day has no card, text unstyled. */
+:root[data-theme="dark"] .rcal-strip-wrap{margin:12px 0 16px}
+:root[data-theme="dark"] .rcal-hdr{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+:root[data-theme="dark"] .rcal-eyebrow{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+:root[data-theme="dark"] .rcal-asof{font-size:9px;color:var(--muted);letter-spacing:.02em}
+:root[data-theme="dark"] .rcal-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);padding:4px}
+:root[data-theme="dark"] .rcal-day{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px;min-height:76px;display:flex;flex-direction:column;position:relative}
+:root[data-theme="dark"] .rcal-day.is-today{border-color:var(--accent);box-shadow:inset 4px 0 0 0 var(--accent);padding-left:12px}
+:root[data-theme="dark"] .rcal-day.is-empty{background:rgba(255,255,255,.02);border-style:dashed}
+:root[data-theme="dark"] .rcal-day.is-holiday{background:rgba(255,255,255,.03)}
+:root[data-theme="dark"] .rcal-day-hdr{display:flex;align-items:baseline;justify-content:space-between;gap:4px;margin-bottom:4px;font-variant-numeric:tabular-nums lining-nums}
+:root[data-theme="dark"] .rcal-dow{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+:root[data-theme="dark"] .rcal-day.is-today .rcal-dow{color:var(--accent)}
+:root[data-theme="dark"] .rcal-dom{font-size:14px;font-weight:700;color:var(--text);line-height:1}
+:root[data-theme="dark"] .rcal-empty{font-size:14px;color:var(--dim);margin:auto}
+:root[data-theme="dark"] ul.rcal-items{list-style:none;margin:0;padding:0}
+:root[data-theme="dark"] .rcal-item{display:grid;grid-template-columns:8px 1fr;grid-template-rows:auto auto;column-gap:4px;align-items:start;padding:2px 0;font-size:9.5px;line-height:1.35}
+:root[data-theme="dark"] .rcal-item+.rcal-item{border-top:1px dashed var(--border);padding-top:4px;margin-top:2px}
+:root[data-theme="dark"] .rcal-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;grid-row:1}
+:root[data-theme="dark"] .rcal-item-title{color:var(--text2);font-weight:600;grid-column:2;grid-row:1}
+:root[data-theme="dark"] .rcal-item.imp-high .rcal-item-title{color:var(--text)}
+:root[data-theme="dark"] .rcal-item-meta{color:var(--muted);font-size:8.5px;letter-spacing:.02em;grid-column:2;grid-row:2;font-variant-numeric:tabular-nums lining-nums}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
