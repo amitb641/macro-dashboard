@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-06-30T13:44:19.245258Z",
-  "status": "WARN",
+  "checked_at": "2026-06-30T13:57:49.266266Z",
+  "status": "PASS",
   "summary": {
     "total_checks": 433,
-    "passed": 430,
-    "failed": 3,
+    "passed": 433,
+    "failed": 0,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -2036,9 +2036,8 @@
     {
       "category": "global",
       "check": "Hydration: all Tier-1 keys present",
-      "pass": false,
-      "severity": "warning",
-      "detail": "missing keys: ['PRIOR_KPIS', 'PCE_CAT_MOM', 'FISCAL_DATA', 'CPI_BREADTH', 'JOLTS_DATA', 'FED_LIQUIDITY_DATA', 'WHAT_CHANGED', 'RELEASE_CAL', 'SECTOR_MOM', 'U_SECTOR_MOM']"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "global",
@@ -2127,9 +2126,8 @@
     {
       "category": "data",
       "check": "NFP_VS_ADP.adp completeness",
-      "pass": false,
-      "severity": "warning",
-      "detail": "13/13 empty (0% filled, min 8%)"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "data",
@@ -2416,9 +2414,8 @@
     {
       "category": "data",
       "check": "TREASURY_DATA.card90 completeness",
-      "pass": false,
-      "severity": "warning",
-      "detail": "10/11 empty (9% filled, min 50%)"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "data",
