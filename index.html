@@ -783,7 +783,7 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
         id:'md_dark_theme',
         afterUpdate:function(chart){
           if(document.documentElement.getAttribute('data-theme')!=='dark') return;
-          var tC='rgba(170,195,218,.62)', gC='rgba(238,244,255,.055)';
+          var tC='rgba(168,196,216,.90)', gC='rgba(238,244,255,.07)';
           Object.values(chart.scales||{}).forEach(function(s){
             if(!s.options) return;
             if(s.options.ticks) s.options.ticks.color=tC;
@@ -1780,7 +1780,8 @@ body.sidebar-active .nav-two-tier{display:none!important}
   --bg:#080E1A;--bg2:#0E1726;--card:#0E1726;--card2:#131F31;
   --border:#1A2B3F;--bord2:#223551;
   /* Text — near-white primary, cool blue-grey secondaries for hierarchy */
-  --text:#EEF4FF;--text2:#7A9AB5;--muted:#5F7E9A;--dim:#49688A;
+  /* §24.33 brightness lift: --text2 7A9AB5→A8C4D8 (6.1→10.6:1 on card), --muted 5F7E9A→8AAFC8 (4.2→8.3:1), --dim 49688A→6B90AA (2.6→5.6:1) */
+  --text:#F5F7FF;--text2:#A8C4D8;--muted:#8AAFC8;--dim:#6B90AA;
   /* Accent — cobalt blue, vivid enough to direct attention */
   --accent:#4E9EFF;--acc2:#3B8AEE;
   /* Semantic — high-saturation for dark backgrounds (need more pop than light mode) */
@@ -2082,6 +2083,20 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .nav-btn{color:var(--text2)!important}
 :root[data-theme="dark"] .nav-btn.active{color:var(--text)!important;font-weight:700!important}
 :root[data-theme="dark"] .nav-btn:hover{color:var(--text)!important}
+/* §24.33 — Font-weight sharpness for small labels in dark mode.
+   Halation effect: bright text on dark canvas appears visually thinner.
+   Bump secondary/caption text from 400→500 and micro-labels from 500→600. */
+:root[data-theme="dark"] .m-lbl{font-weight:500!important}
+:root[data-theme="dark"] .m-sub{font-weight:500!important}
+:root[data-theme="dark"] .panel-meta{font-weight:500!important}
+:root[data-theme="dark"] .sm-dc-label{font-weight:600!important}
+:root[data-theme="dark"] .sm-dc-unit{font-weight:500!important}
+:root[data-theme="dark"] .sm-dc-note{font-weight:500!important}
+:root[data-theme="dark"] .sparkgrid .spark-label{font-weight:600!important;color:var(--muted)!important}
+:root[data-theme="dark"] .spark-tile-label{font-weight:600!important;color:var(--muted)!important}
+:root[data-theme="dark"] .panel-sub{font-weight:500!important;color:var(--text2)!important}
+:root[data-theme="dark"] .dtable td{color:var(--text2)!important}
+:root[data-theme="dark"] td{color:var(--text2)!important}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
