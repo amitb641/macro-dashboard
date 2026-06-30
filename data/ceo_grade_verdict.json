@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-06-30T13:10:04Z",
+  "generated_at": "2026-06-30T13:30:17Z",
   "overall": "FAIL",
   "strict": true,
   "headline": "❌ CEO-grade gate FAILED — 0 critical finding(s) block publish.",
   "totals": {
     "critical": 0,
-    "warning": 2
+    "warning": 1
   },
   "missing": [],
   "layers": {
@@ -38,12 +38,12 @@
     },
     "editorial": {
       "critical": 0,
-      "warning": 1,
+      "warning": 0,
       "skipped": 0,
       "ok": 0,
-      "total": 1,
+      "total": 0,
       "pieces_audited": 13,
-      "status": "WARN",
+      "status": "PASS",
       "layer": "editorial"
     },
     "repair_incident": {
