@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T13:18:34Z",
+  "generated_at": "2026-06-30T13:10:04Z",
   "pieces_audited": 13,
   "llm_enabled": true,
   "llm_calls_used": 13,
@@ -12,15 +12,22 @@
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 0,
+    "warning": 1,
     "minor": 0
   },
   "pieces": [
     {
       "label": "html:commentary-gdp",
-      "text_preview": "Real GDP at 2.1% annualized is holding above stall speed, but this reading predates the full transmission of the inflation re-acceleration and wage deceleration visible in today's snapshot. The primar",
-      "sentence_count": 3,
-      "findings": [],
+      "text_preview": "Real GDP growth of 2.1% annualized is resilient on the surface but is increasingly dependent on a consumer sector that is showing structural cracks — negative real wages, a 3.0% savings rate, and risi",
+      "sentence_count": 5,
+      "findings": [
+        {
+          "rule": "style_guide §2 — commentary 2–4 sentences",
+          "severity": "warning",
+          "detail": "sentence_count=5 (band [2,4])",
+          "fixable": "rewrite to 2-4 declarative sentences"
+        }
+      ],
       "llm_confidence": null,
       "critique_confirms_critical": null
     },
@@ -34,7 +41,7 @@
     },
     {
       "label": "html:commentary-cpi",
-      "text_preview": "CPI YoY surged 39bp to 4.2%, a significant re-acceleration that moves inflation further above the Fed's 2% target and well above the prior trajectory. Core CPI at 2.8% is more contained but still elev",
+      "text_preview": "Headline CPI accelerated 39bp to 4.2% YoY — an ALERT-level move that represents a clear re-ignition, not a blip, particularly given the $30+ collapse in WTI that should have provided meaningful disinf",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -42,7 +49,7 @@
     },
     {
       "label": "html:commentary-wages",
-      "text_preview": "Wages YoY decelerated 40bp to 3.5%, falling below both CPI at 4.2% and PCE at 4.1%, meaning real wages are now negative across both deflators. This is a direct hit to consumer purchasing power and, co",
+      "text_preview": "Wage growth decelerated 40bp to 3.5% YoY, a meaningful move that, set against 4.2% CPI, puts real wage growth at approximately -0.7% — the first negative real wage reading in this cycle snapshot. This",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -50,7 +57,7 @@
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "NFP at 172K MoM is solid but not strong, and U-3 unemployment at 4.3% with U-6 at 8.1% indicates meaningful underemployment that the headline rate obscures. The 190bp gap between U-3 and U-6 is a lead",
+      "text_preview": "NFP at 172K is a solid but decelerating print, consistent with a labor market that is cooling gradually rather than collapsing. U-3 at 4.3% and U-6 at 8.1% confirm that slack is building at the margin",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -58,7 +65,7 @@
     },
     {
       "label": "html:commentary-pce",
-      "text_preview": "PCE YoY jumped 57bp to 4.1% — the largest single-snapshot move in this dataset — and Core PCE at 3.4% confirms that underlying consumer price pressure is broad-based and not transitory. With the savin",
+      "text_preview": "PCE YoY surged 57bp to 4.1% and Core PCE stands at 3.4% — the Fed's preferred inflation gauge is running 170bp above target and accelerating, which is the most alarming single data point in this snaps",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -66,7 +73,7 @@
     },
     {
       "label": "html:commentary-banks",
-      "text_preview": "Credit card delinquencies at 2.9% are a direct earnings risk for consumer-facing banks, signaling that charge-off provisions will need to increase in H2 2026 reporting. Net interest income (NII) dynam",
+      "text_preview": "Bank NII faces a complex environment: the Fed on hold at 3.63% stabilizes funding costs, but a flat 31bp curve limits the ability to expand net interest margins through duration extension. Credit card",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,7 +89,7 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI collapsed $30.82 to $78.94 and Brent fell to $76.5, a dramatic supply-side or demand-destruction signal that stands in sharp contrast to the simultaneous CPI re-acceleration. The oil drop provides",
+      "text_preview": "WTI dropped $30.82 to $78.94 and Brent fell to $76.5, a dramatic supply-side or demand-destruction move that is the single largest disinflationary force in the current data set. This collapse in energ",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -90,7 +97,7 @@
     },
     {
       "label": "html:commentary-credit",
-      "text_preview": "IG OAS at 76bp and HY OAS at 278bp remain historically tight, suggesting credit markets have not yet priced the stagflationary risk visible in the macro data. HY at 278bp is particularly complacent gi",
+      "text_preview": "IG OAS at 77bp and HY OAS at 283bp remain historically tight, suggesting credit markets have not yet priced the inflation re-acceleration or the risk of prolonged Fed restriction. HY at 283bp is parti",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -98,7 +105,7 @@
     },
     {
       "label": "html:commentary-housing",
-      "text_preview": "The 30Y mortgage at 6.49% continues to lock existing homeowners into their properties, suppressing resale inventory and keeping housing starts at a depressed 1,177K annualized. Affordability remains s",
+      "text_preview": "The 30Y mortgage at 6.49% continues to lock existing homeowners into their low-rate mortgages, suppressing existing home supply and keeping housing starts at a depressed 1,177K annualized. Affordabili",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -106,7 +113,7 @@
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y-2Y spread has re-steepened to 31bp as the 10Y holds at 4.40% and the 2Y sits at 4.09%, reflecting markets pricing out near-term Fed cuts in response to the CPI and PCE re-acceleration. With Fe",
+      "text_preview": "The 10Y-2Y spread of 31bp reflects a curve that has steepened modestly but remains historically compressed, consistent with a market pricing in eventual Fed easing while acknowledging persistent infla",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
