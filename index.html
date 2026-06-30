@@ -1800,7 +1800,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .md-pulse-dot{box-shadow:0 0 0 2px rgba(8,14,26,.9)}
 :root[data-theme="dark"] .panel-meta{color:var(--muted)}
 :root[data-theme="dark"] .dtable th{background:var(--card2);color:var(--text2);border-bottom-color:var(--border)}
-:root[data-theme="dark"] .dtable td{border-color:var(--border)}
+:root[data-theme="dark"] .dtable td{border-color:var(--border);color:var(--text2)}
 :root[data-theme="dark"] .dtable tbody tr:hover{background:rgba(78,158,255,.05)}
 :root[data-theme="dark"] .dtable tbody tr:nth-child(even){background:rgba(255,255,255,.018)}
 :root[data-theme="dark"] .skeleton{background:linear-gradient(90deg,var(--card2) 0%,var(--border) 50%,var(--card2) 100%)}
@@ -1810,16 +1810,25 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .nsb-brand{color:var(--text2)}
 :root[data-theme="dark"] .nsb-collapse-btn{color:var(--muted)}
 :root[data-theme="dark"] .nsb-collapse-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
-:root[data-theme="dark"] .nsb-grp-label{color:var(--dim)}
+:root[data-theme="dark"] .nsb-grp-label{color:var(--muted)}
 :root[data-theme="dark"] .nsb-tab-btn{color:var(--text2)}
 :root[data-theme="dark"] .nsb-tab-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
 :root[data-theme="dark"] .nsb-tab-btn.active{border-left-color:var(--accent);background:var(--accent-soft);color:var(--text)}
 :root[data-theme="dark"] .nsb-footer{border-top-color:var(--border)}
-:root[data-theme="dark"] .nsb-footer-btn{color:var(--dim)}
+:root[data-theme="dark"] .nsb-footer-btn{color:var(--muted)}
 :root[data-theme="dark"] .nsb-footer-btn:hover{color:var(--text2);background:rgba(255,255,255,.04)}
 :root[data-theme="dark"] .nsb-footer-btn.active{border-left-color:var(--accent);color:var(--text);background:var(--accent-soft)}
 /* §24.6 — Top horizontal nav dark treatment */
 :root[data-theme="dark"] .nav-two-tier{background:rgba(15,20,25,.96)!important;border-bottom-color:var(--border)!important}
+/* §24.6b — Horizontal tab-group pills (Growth · Labor · Inflation …) */
+:root[data-theme="dark"] .nav-grp-btn{color:var(--text2)}
+:root[data-theme="dark"] .nav-grp-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04)}
+/* §24.6c — KPI "vs last month" toggle */
+:root[data-theme="dark"] .kpi-prior-btn{color:var(--text2);border-color:var(--border)}
+:root[data-theme="dark"] .kpi-prior-btn:hover{color:var(--text);border-color:var(--bord2);background:rgba(255,255,255,.04)}
+:root[data-theme="dark"] .kpi-prior-btn.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+/* §24.6d — Links default to accent in dark (browser default #0000EE fails on #080E1A) */
+:root[data-theme="dark"] a{color:var(--accent)}
 /* §24.7 — fc-note has !important in base — must override */
 :root[data-theme="dark"] .fc-note{background:rgba(91,140,230,.06)!important;border-color:rgba(91,140,230,.2)!important;border-left-color:var(--accent)!important}
 :root[data-theme="dark"] .fc-note strong{color:var(--text)!important}
@@ -2386,7 +2395,7 @@ h1 span { color: var(--accent) !important; }
   font-weight: 400 !important;
   letter-spacing: -.02em !important;
 }
-.m-sub { font-size: 10.5px !important; color: var(--dim) !important; }
+.m-sub { font-size: 10.5px !important; color: var(--muted) !important; }
 
 /* ── TABLES ── */
 .dtable { font-size: 12px !important; }
@@ -2537,6 +2546,7 @@ div[style*="background:#fff8e6;border:1px solid #CC8A0040"] {
 [style*="color:#6B7280"] { color: var(--muted) !important; }
 [style*="color:#111827"] { color: var(--text) !important; }
 [style*="color:#1f2937"] { color: var(--text) !important; }
+[style*="color:#1F2937"] { color: var(--text) !important; }
 [style*="color:#9CA3AF"] { color: var(--muted) !important; }
 [style*="background:#eef2ff"] {
   background: #EBF2FF !important;
