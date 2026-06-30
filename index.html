@@ -355,6 +355,8 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
       if (glyph) glyph.textContent = (t === "dark") ? "☼" : "☾";
       if (label) label.textContent = (t === "dark") ? "Light" : "Dark";
     }
+    // Re-render all MC chart canvases so tick/grid/label colors update immediately
+    try{(window._MC_ALL||[]).forEach(function(c){c.update();});}catch(e){}
   };
   MD.toggleTheme = function(){
     var cur = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
@@ -995,8 +997,9 @@ function _getTip(){
   return _mcTip;
 }
 class MC{
-  constructor(ctx,cfg){this.ctx=ctx;this.cfg=cfg;this._hits=[];this._render();this._initTip();}
-  destroy(){const c=this.ctx.canvas;c.width=c.width;c.removeEventListener("mousemove",this._onMM);c.removeEventListener("mouseleave",this._onML);}
+  constructor(ctx,cfg){this.ctx=ctx;this.cfg=cfg;this._hits=[];this._render();this._initTip();(window._MC_ALL=window._MC_ALL||[]).push(this);}
+  destroy(){const c=this.ctx.canvas;c.width=c.width;c.removeEventListener("mousemove",this._onMM);c.removeEventListener("mouseleave",this._onML);const _i=(window._MC_ALL||[]).indexOf(this);if(_i>=0)(window._MC_ALL||[]).splice(_i,1);}
+  update(){this._render();}
   _isDk(){return document.documentElement.getAttribute('data-theme')==='dark';}
   _tk(){return this._isDk()?'rgba(170,195,218,.62)':'#94A3B8';}
   _gr(){return this._isDk()?'rgba(238,244,255,.055)':'#EEF1F7';}
@@ -2524,14 +2527,17 @@ div[style*="background:#fff8e6;border:1px solid #CC8A0040"] {
 [style*="color:#1A9E5A"] { color: var(--green) !important; }
 [style*="color:#D64045"] { color: var(--red) !important; }
 [style*="color:#CC8A00"] { color: var(--amber) !important; }
-[style*="color:#1A9E5A"] { color: var(--green) !important; }
-[style*="color:#D64045"] { color: var(--red) !important; }
-[style*="color:#CC8A00"] { color: var(--amber) !important; }
 [style*="color:#336BCC"] { color: var(--accent) !important; }
 [style*="color:#334E68"] { color: var(--text2) !important; }
 [style*="color:#0D1B2A"] { color: var(--text) !important; }
 [style*="color:#7A8FA8"] { color: var(--muted) !important; }
-[style*="color:#7A8FA8"] { color: var(--muted) !important; }
+/* Tailwind gray palette used in SLOOS/heatmap static HTML */
+[style*="color:#374151"] { color: var(--text2) !important; }
+[style*="color:#4B5563"] { color: var(--text2) !important; }
+[style*="color:#6B7280"] { color: var(--muted) !important; }
+[style*="color:#111827"] { color: var(--text) !important; }
+[style*="color:#1f2937"] { color: var(--text) !important; }
+[style*="color:#9CA3AF"] { color: var(--muted) !important; }
 [style*="background:#eef2ff"] {
   background: #EBF2FF !important;
   border-color: rgba(51,107,204,.15) !important;
