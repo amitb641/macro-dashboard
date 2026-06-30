@@ -2016,11 +2016,11 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .ch-std{position:relative;height:300px;margin-bottom:8px}
 /* §24.25 — KPI tile, label, sparkline, strip, sub-value in dark. */
 :root[data-theme="dark"] .kpi{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:12px!important;padding:20px 24px 16px!important;box-shadow:0 0 0 1px rgba(78,158,255,.06)!important;position:relative!important;overflow:hidden!important;transition:transform .15s ease,box-shadow .15s ease!important}
-:root[data-theme="dark"] .kpi-lbl{font-family:'DM Mono',monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.18em!important;text-transform:uppercase!important;color:var(--muted)!important;margin-bottom:8px!important}
+:root[data-theme="dark"] .kpi-lbl{font-family:'DM Mono',monospace!important;font-size:10px!important;font-weight:700!important;letter-spacing:.18em!important;text-transform:uppercase!important;color:var(--text2)!important;margin-bottom:8px!important}
 :root[data-theme="dark"] .kpi-spark{display:block;width:72px;height:18px;overflow:visible;opacity:.55}
 :root[data-theme="dark"] .kpi-spark-wrap{display:block;margin:4px 0 0;line-height:0;height:18px}
 :root[data-theme="dark"] .kpi-strip{gap:16px!important;margin-bottom:20px!important}
-:root[data-theme="dark"] .kpi-sub{font-family:'DM Mono',monospace!important;font-size:10px!important;color:var(--muted)!important;letter-spacing:.04em!important;margin-top:8px!important}
+:root[data-theme="dark"] .kpi-sub{font-family:'DM Mono',monospace!important;font-size:10px!important;color:var(--text2)!important;letter-spacing:.04em!important;margin-top:8px!important}
 /* §24.26 — metric card in dark. */
 :root[data-theme="dark"] .metric{background:var(--card)!important;border:1px solid var(--border)!important;border-left:1px solid var(--border)!important;border-radius:12px!important;padding:20px 20px 16px!important;position:relative!important;overflow:hidden!important}
 /* §24.27 — Layout helpers (split-stack, two-up, nav-group, tab-panel) in dark. */
@@ -2046,6 +2046,42 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .sm-rb-fill{width:0%;height:100%!important;background:linear-gradient(90deg,var(--accent) 0%,var(--green) 100%)!important;transition:width 120ms linear!important;border-radius:2px!important}
 :root[data-theme="dark"] .sm-rb-meta{display:inline-flex!important;align-items:center!important;gap:8px!important;font-weight:600!important;color:var(--text2)!important;white-space:nowrap!important}
 :root[data-theme="dark"] .sm-rb-track{flex:1 1 auto!important;height:4px!important;background:rgba(255,255,255,.08)!important;border-radius:2px!important;overflow:hidden!important;min-width:80px!important;max-width:360px!important}
+/* §24.31 — Typography scale recovery: font-size + font-weight parity with light mode.
+   body.themed-sm sets display sizes and bold weights for h1, kpi-val, m-val, sector-card;
+   stripping that class in dark mode silently falls back to smaller/lighter base values —
+   the kpi primary number drops 22px→30px and h1 drops weight-400 instead of 700. */
+:root[data-theme="dark"] h1{font-size:44px!important;font-weight:700!important;color:var(--text)!important}
+:root[data-theme="dark"] h1>span{font-weight:700!important;color:var(--accent)!important}
+@media(max-width:1080px){:root[data-theme="dark"] h1{font-size:38px!important}}
+@media(max-width:900px){:root[data-theme="dark"] h1{font-size:34px!important}}
+@media(max-width:720px){:root[data-theme="dark"] h1{font-size:26px!important}}
+:root[data-theme="dark"] .kpi-val{font-size:30px!important;font-weight:600!important}
+:root[data-theme="dark"] .m-val{font-size:24px!important;font-weight:600!important;color:var(--text)!important}
+:root[data-theme="dark"] .sector-card .card-name{font-size:13px;font-weight:600;color:var(--text)}
+:root[data-theme="dark"] .sector-card .card-growth{font-size:22px;font-weight:600}
+/* §24.32 — Label contrast on card surfaces.
+   --muted (#5F7E9A) is 4.2:1 on --card (#0E1726) — below the 4.5:1 WCAG threshold
+   for 10 px text. Upgrade all in-card label / caption / header roles to --text2 (5.5:1). */
+:root[data-theme="dark"] .m-lbl{color:var(--text2)!important}
+:root[data-theme="dark"] .m-sub{color:var(--text2)!important}
+:root[data-theme="dark"] .dtable th{color:var(--text2)!important}
+:root[data-theme="dark"] th{color:var(--text2)!important}
+:root[data-theme="dark"] .panel-meta{color:var(--text2)!important}
+:root[data-theme="dark"] .sm-dc-label{color:var(--text2)!important}
+:root[data-theme="dark"] .sm-dc-unit{color:var(--text2)!important}
+:root[data-theme="dark"] .sm-dc-note{color:var(--text2)!important}
+:root[data-theme="dark"] .rcal-dom{font-weight:700;color:var(--text)}
+:root[data-theme="dark"] .rcal-dow{color:var(--text2)}
+:root[data-theme="dark"] .rcal-item-title{color:var(--text2);font-weight:600}
+:root[data-theme="dark"] .rcal-item.imp-high .rcal-item-title{color:var(--text)}
+:root[data-theme="dark"] .fn-anchor a{color:var(--accent);font-weight:600}
+:root[data-theme="dark"] ol.fn-ladder li::marker{color:var(--accent)}
+:root[data-theme="dark"] ol.fn-ladder li strong{color:var(--text)}
+:root[data-theme="dark"] .fn-ladder-wrap{color:var(--text2)}
+:root[data-theme="dark"] .nav-group-lbl{color:var(--text2)!important}
+:root[data-theme="dark"] .nav-btn{color:var(--text2)!important}
+:root[data-theme="dark"] .nav-btn.active{color:var(--text)!important;font-weight:700!important}
+:root[data-theme="dark"] .nav-btn:hover{color:var(--text)!important}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
 .theme-toggle{position:fixed;top:14px;right:14px;z-index:60;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.04em;text-transform:uppercase;background:var(--card);color:var(--text2);border:1px solid var(--border);border-radius:999px;padding:6px 10px 6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color 180ms,background 180ms,border-color 180ms}
 .theme-toggle:hover{color:var(--text);border-color:var(--text2)}
