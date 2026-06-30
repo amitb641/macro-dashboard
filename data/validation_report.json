@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-06-30T13:57:34.879968Z",
+  "validated_at": "2026-06-30T14:09:27.543373Z",
   "status": "WARN",
   "summary": {
     "total_checks": 649,
-    "passed": 646,
-    "failed": 3,
+    "passed": 648,
+    "failed": 1,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -763,15 +763,15 @@
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-05-01",
-      "age_days": 60,
+      "latest_date": "2026-06-01",
+      "age_days": 29,
       "max_lag_days": 35,
-      "severity": "stale",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-05-01",
+      "latest_date": "2026-06-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-06-30T13:56:17.236238Z",
+      "collected_at": "2026-06-30T14:08:09.693079Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1022,10 +1022,10 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 44.8,
+      "reference": 49.5,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 44.8,
-        "KPIS UMich Sentiment": 44.8
+        "UMCSENT_MONTHLY.data[-1]": 49.5,
+        "KPIS UMich Sentiment": 49.5
       },
       "severity": "ok",
       "pass": true
@@ -1450,10 +1450,9 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector error",
-      "pass": false,
-      "severity": "warning",
-      "note": "UMich direct: 404 Client Error: Not Found for url: https://www.sca.isr.umich.edu/files/tbcics.csv"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -4167,12 +4166,12 @@
       "severity": "ok",
       "metric": "umich_sentiment",
       "floor": 0.5,
-      "prior": 49.8,
-      "latest": 44.8,
-      "delta": -5.0,
-      "abs_delta": 5.0,
+      "prior": 44.8,
+      "latest": 49.5,
+      "delta": 4.7,
+      "abs_delta": 4.7,
       "verdict": "real_signal",
-      "note": "PoP delta -5.000 > \u00b10.5 \u2192 real_signal"
+      "note": "PoP delta +4.700 > \u00b10.5 \u2192 real_signal"
     },
     {
       "check": "noise_floor[cc_delinq_90plus]",
@@ -4193,12 +4192,12 @@
       "severity": "ok",
       "metric": "gasoline_usd_gal",
       "floor": 0.1,
-      "prior": 4.052,
-      "latest": 3.914,
-      "delta": -0.138,
-      "abs_delta": 0.138,
-      "verdict": "real_signal",
-      "note": "PoP delta -0.138 > \u00b10.1 \u2192 real_signal"
+      "prior": 3.914,
+      "latest": 3.831,
+      "delta": -0.083,
+      "abs_delta": 0.083,
+      "verdict": "within_noise",
+      "note": "PoP delta -0.083 \u2264 \u00b10.1 \u2192 within_noise"
     },
     {
       "check": "noise_floor[jolts_openings]",
