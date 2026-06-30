@@ -261,6 +261,133 @@ def check_serif_scope():
         _check('contract', 'serif_scope', True)
 
 
+def _wcag_contrast(hex_fg: str, hex_bg: str) -> float:
+    """Return WCAG 2.1 contrast ratio between two hex colors."""
+    def luminance(h: str) -> float:
+        h = h.lstrip('#')
+        if len(h) == 3:
+            h = ''.join(c * 2 for c in h)
+        r, g, b = int(h[0:2], 16) / 255, int(h[2:4], 16) / 255, int(h[4:6], 16) / 255
+        def lin(c: float) -> float:
+            return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+        return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+    L1, L2 = luminance(hex_fg), luminance(hex_bg)
+    hi, lo = max(L1, L2), min(L1, L2)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def check_dark_token_contrast():
+    """WCAG contrast math on dark-mode CSS text tokens vs the canvas.
+
+    Parses the first :root[data-theme="dark"]{ ... } block in index.html,
+    extracts hex values for text-hierarchy tokens, and verifies each meets
+    WCAG AA (4.5:1 for body text, 3:1 for decorative/large text).
+
+    Catches the class of bug where --muted / --dim are set to near-black
+    values that look readable to the eye but fail the ratio on a dark canvas.
+    """
+    import re
+    html = HTML_FILE.read_text(encoding='utf-8')
+
+    # Locate the primary dark-mode token block (first :root[data-theme="dark"]{})
+    dark_block_m = re.search(
+        r':root\[data-theme=["\']dark["\']\]\s*\{([^}]+)\}', html
+    )
+    if not dark_block_m:
+        _check('theme', 'dark_token_contrast_parseable', False,
+               'Could not find :root[data-theme="dark"]{} block in index.html', 'warning')
+        return
+
+    dark_block = dark_block_m.group(1)
+
+    def extract_hex(token_name: str) -> str | None:
+        m = re.search(rf'--{re.escape(token_name)}\s*:\s*(#[0-9a-fA-F]{{3,6}})', dark_block)
+        return m.group(1) if m else None
+
+    bg = extract_hex('bg') or '#080E1A'
+
+    # (token, min_contrast_ratio, severity)
+    # text/text2/muted are used for body/label copy → WCAG AA 4.5:1
+    # dim is used for hints/decorative → 3:1 acceptable
+    TOKEN_THRESHOLDS = [
+        ('text',  7.0, 'critical'),
+        ('text2', 4.5, 'critical'),
+        ('muted', 4.5, 'critical'),
+        ('dim',   3.0, 'warning'),
+    ]
+
+    any_checked = False
+    for token, min_ratio, sev in TOKEN_THRESHOLDS:
+        value = extract_hex(token)
+        if not value:
+            continue
+        any_checked = True
+        ratio = _wcag_contrast(value, bg)
+        _check(
+            'theme',
+            f'dark --{token} WCAG contrast ({value} on {bg})',
+            ratio >= min_ratio,
+            f'{ratio:.2f}:1 (need >={min_ratio}:1) — WCAG AA fail for body text',
+            severity=sev,
+        )
+
+    if not any_checked:
+        _check('theme', 'dark_token_contrast_tokens_found', False,
+               f'No hex color tokens found in dark block: {dark_block[:120]!r}', 'warning')
+
+
+def check_themed_sm_orphans():
+    """Detect body.themed-sm classes that set card structure but have no dark equivalent.
+
+    When setTheme('dark') strips body.themed-sm, any element whose ONLY
+    padding/border/background rules live under body.themed-sm will silently
+    collapse — no padding, no border, no background, unstyled text on a dark
+    canvas. This check finds those orphans statically, before any browser.
+
+    A 'structural' rule is one that sets padding, background, border, or
+    border-radius. We ignore color/font-only rules since those just affect
+    text appearance, not card grouping.
+    """
+    import re
+    html = HTML_FILE.read_text(encoding='utf-8')
+
+    # Strip JS blocks so string literals inside scripts don't produce false matches
+    html_css = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
+
+    # All class names targeted by body.themed-sm rules
+    themed_classes: set[str] = set(re.findall(
+        r'body\.themed-sm\s+\.([a-zA-Z][\w-]*)', html_css
+    ))
+
+    # All class names targeted by any :root[data-theme="dark"] rule
+    dark_classes: set[str] = set(re.findall(
+        r':root\[data-theme=["\']dark["\']\]\s+\.([a-zA-Z][\w-]*)', html_css
+    ))
+
+    # Orphans: have themed-sm rules, no dark rule at all
+    orphans = sorted(themed_classes - dark_classes)
+
+    # Filter to only structural orphans (themed-sm rule sets card-forming properties)
+    _STRUCT_PROPS = ('padding', 'background', 'border', 'border-radius', 'margin')
+    structural_orphans = []
+    for cls in orphans:
+        pat = rf'body\.themed-sm\s+\.{re.escape(cls)}\b[^{{]*\{{([^}}]+)\}}'
+        for m in re.finditer(pat, html_css, re.DOTALL):
+            rule_body = m.group(1)
+            if any(prop in rule_body for prop in _STRUCT_PROPS):
+                structural_orphans.append(cls)
+                break
+
+    _check(
+        'theme',
+        'No themed-sm structural orphans (no card styles lost in dark mode)',
+        len(structural_orphans) == 0,
+        f'{len(structural_orphans)} class(es) with themed-sm card rules but no dark equiv: '
+        f'{structural_orphans[:10]} — these lose padding/border/background in dark',
+        severity='critical' if structural_orphans else 'ok',
+    )
+
+
 def run_visual_qa(take_screenshots=False):
     global PASS, FAIL, findings
     PASS = 0
@@ -285,6 +412,8 @@ def run_visual_qa(take_screenshots=False):
     check_palette_compliance()
     check_panel_meta()
     check_serif_scope()
+    check_dark_token_contrast()
+    check_themed_sm_orphans()
 
     with _serve_root() as base_url, sync_playwright() as p:
         # Use PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH env var if set, otherwise auto-detect
@@ -1057,6 +1186,91 @@ def run_visual_qa(take_screenshots=False):
                 f'found {n} occurrences — replace per style_guide.md §4.5',
                 severity='warning',
             )
+
+        # ── Dark-mode structural + semantic badge checks ────────────
+        # Switch the page to dark mode and verify elements that rely on
+        # body.themed-sm in light mode retain card structure, and that
+        # status badges show the correct semantic color (not generic muted).
+        print('\n  ── Dark Mode Checks ──')
+
+        page.evaluate("() => { var b = document.querySelector('.theme-toggle'); if (b) b.click(); }")
+        page.wait_for_timeout(400)
+
+        dm_attr = page.evaluate("document.documentElement.getAttribute('data-theme')")
+        _check('theme', 'Dark mode toggle activates data-theme=dark', dm_attr == 'dark',
+               f'data-theme={dm_attr!r}', severity='critical')
+
+        if dm_attr == 'dark':
+            # Navigate to Outlook tab (sm-delta-block + macro-state + badges live here)
+            page.evaluate("() => { var b = document.querySelector('[data-tab=\"fc\"]'); if (b) b.click(); }")
+            page.wait_for_timeout(400)
+
+            # Card structural integrity: elements that have body.themed-sm card rules
+            # must retain padding + border in dark mode (fixed via §24.19 dark rules).
+            DARK_CARD_CHECKS = [
+                ('.sm-delta-block', '"What Changed" block'),
+                ('.macro-state',    '"Macro State" card'),
+            ]
+            for selector, label in DARK_CARD_CHECKS:
+                styles = page.evaluate(f"""() => {{
+                    var el = document.querySelector('{selector}');
+                    if (!el) return null;
+                    var s = getComputedStyle(el);
+                    return {{ padding: s.padding, border: s.border, borderRadius: s.borderRadius }};
+                }}""")
+                if styles is None:
+                    _check('theme', f'dark: {label} exists in DOM', False,
+                           f'{selector} not found — element may have been renamed', 'warning')
+                    continue
+                has_padding = styles['padding'] not in ('0px', '0px 0px 0px 0px')
+                has_border  = 'solid' in (styles['border'] or '')
+                _check(
+                    'theme',
+                    f'dark: {label} retains card structure (padding + border)',
+                    has_padding and has_border,
+                    f'padding={styles["padding"]!r} border={styles["border"]!r} — '
+                    f'collapsed: body.themed-sm stripped with no dark equivalent',
+                    severity='critical',
+                )
+
+            # Semantic badge color: STALE must be red-ish, OK green-ish, WATCH amber/blue.
+            # Catches the bug where all three resolve to --text2 (muted blue) because
+            # the semantic override mapped all colored backgrounds to the same text token.
+            badge_data = page.evaluate("""() => {
+                var out = [];
+                document.querySelectorAll('span, div').forEach(function(el) {
+                    var t = (el.textContent || '').trim();
+                    if (t !== 'STALE' && t !== 'OK' && t !== 'WATCH') return;
+                    var rgb = getComputedStyle(el).color;
+                    var m = rgb.match(/rgb\\((\\d+),\\s*(\\d+),\\s*(\\d+)\\)/);
+                    if (!m) return;
+                    out.push({ label: t, r: +m[1], g: +m[2], b: +m[3] });
+                });
+                return out;
+            }""")
+
+            seen_labels: set[str] = set()
+            for b in badge_data:
+                lbl, r, g, bl = b['label'], b['r'], b['g'], b['b']
+                if lbl in seen_labels:
+                    continue
+                seen_labels.add(lbl)
+                if lbl == 'STALE':
+                    ok = r > 150 and g < 120
+                    _check('theme', f'dark: STALE badge is red-toned (not muted blue)',
+                           ok, f'got rgb({r},{g},{bl}) — should be reddish', 'warning')
+                elif lbl == 'OK':
+                    ok = g > r and g > bl and g > 100
+                    _check('theme', f'dark: OK badge is green-toned',
+                           ok, f'got rgb({r},{g},{bl}) — should be greenish', 'warning')
+                elif lbl == 'WATCH':
+                    # WATCH is amber or accent blue — either is fine; just not muted blue
+                    # muted blue would have g≈b≈r (all mid-range). Flag when all three
+                    # are within 40 of each other (indicates a grey/muted neutral).
+                    spread = max(r, g, bl) - min(r, g, bl)
+                    ok = spread > 40
+                    _check('theme', f'dark: WATCH badge has semantic color (not neutral grey)',
+                           ok, f'got rgb({r},{g},{bl}) spread={spread} — expected amber or accent', 'warning')
 
         browser.close()
 
