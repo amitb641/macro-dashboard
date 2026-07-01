@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-01T16:54:20.525692Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T14:07:54.210140Z
 
 - **Status**: WARN
@@ -873,29 +889,6 @@ _0 critical · 0 warning · 2 stale_
 _1 critical · 0 warning · 0 stale_
 
 - 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-05-28T05:45:53.352154Z
-
-- **Status**: WARN
-- **Total checks**: 644
-- **Passed**: 640
-- **Failed**: 4
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-
-### Staleness
-_0 critical · 0 warning · 2 stale_
-
-- ⏰ **Staleness: unrate** — 57d old (limit 55d)
-- ⏰ **Staleness: payems** — 57d old (limit 55d)
 
 
 ---
