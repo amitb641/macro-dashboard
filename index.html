@@ -3387,44 +3387,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 <h1>U.S. <span>Macro</span> Dashboard</h1>
 <p class="subtitle">Growth · Labor · Inflation · Financial Conditions · Credit · Housing · Energy — 2025 actuals · 2026 outlook</p>
 
-
-
-
-<section class="sm-delta-block" id="sm-delta-block" aria-label="Top changes this week">
-  <div class="sm-delta-hdr">
-    <span class="sm-delta-eyebrow">What changed this week</span>
-    <span class="sm-delta-asof" id="sm-delta-asof">vs prior weekly</span>
-  </div>
-  <div class="sm-delta-row" id="sm-delta-row"></div>
-</section>
-
-<section class="rcal-strip-wrap" id="rcal-strip-wrap" aria-label="Next 7 days of economic releases">
-  <div class="rcal-hdr">
-    <span class="rcal-eyebrow">Next 7 days</span>
-    <span class="rcal-asof" id="rcal-asof">Major US releases</span>
-  </div>
-  <div class="rcal-strip" id="rcal-strip" role="list"></div>
-</section>
-
-<div class="kpi-strip-hdr">
-  <button id="kpi-prior-toggle" class="kpi-prior-btn" aria-pressed="false"
-    style="display:none" onclick="(function(){
-      var b=document.getElementById('kpi-prior-toggle');
-      window._kpiPriorMode=!window._kpiPriorMode;
-      b.setAttribute('aria-pressed',String(window._kpiPriorMode));
-      b.classList.toggle('active',window._kpiPriorMode);
-      if(typeof _renderKpiStrip==='function') _renderKpiStrip();
-    })()" title="Toggle month-ago comparison">◷ vs last month</button>
-</div>
-<div class="kpi-strip" id="kpi-strip" role="region" aria-label="Headline KPI strip"></div>
 <div id="main-content" tabindex="-1"></div>
-<div style="display:flex;gap:14px;align-items:center;margin:-14px 0 18px 0;flex-wrap:wrap">
-  <span style="font-size:9px;color:#94A3B8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Signal:</span>
-  <span style="font-size:9px;color:#1A9E5A;font-weight:600">● Healthy</span>
-  <span style="font-size:9px;color:#CC8A00;font-weight:600">● Watch</span>
-  <span style="font-size:9px;color:#D64045;font-weight:600">● Stress</span>
-  <span style="font-size:9px;color:#8878B8;font-weight:600">● Policy Rate</span>
-</div>
 
 <div class="nav-two-tier" id="nav-two-tier" role="navigation" aria-label="Dashboard navigation">
   <div class="nav-t1">
@@ -3957,6 +3920,41 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <!-- ══ FORECAST ══ -->
 <div class="tab-panel active" id="tab-fc">
+  <section class="sm-delta-block" id="sm-delta-block" aria-label="Top changes this week">
+    <div class="sm-delta-hdr">
+      <span class="sm-delta-eyebrow">What changed this week</span>
+      <span class="sm-delta-asof" id="sm-delta-asof">vs prior weekly</span>
+    </div>
+    <div class="sm-delta-row" id="sm-delta-row"></div>
+  </section>
+
+  <section class="rcal-strip-wrap" id="rcal-strip-wrap" aria-label="Next 7 days of economic releases">
+    <div class="rcal-hdr">
+      <span class="rcal-eyebrow">Next 7 days</span>
+      <span class="rcal-asof" id="rcal-asof">Major US releases</span>
+    </div>
+    <div class="rcal-strip" id="rcal-strip" role="list"></div>
+  </section>
+
+  <div class="kpi-strip-hdr">
+    <button id="kpi-prior-toggle" class="kpi-prior-btn" aria-pressed="false"
+      style="display:none" onclick="(function(){
+        var b=document.getElementById('kpi-prior-toggle');
+        window._kpiPriorMode=!window._kpiPriorMode;
+        b.setAttribute('aria-pressed',String(window._kpiPriorMode));
+        b.classList.toggle('active',window._kpiPriorMode);
+        if(typeof _renderKpiStrip==='function') _renderKpiStrip();
+      })()" title="Toggle month-ago comparison">◷ vs last month</button>
+  </div>
+  <div class="kpi-strip" id="kpi-strip" role="region" aria-label="Headline KPI strip"></div>
+  <div style="display:flex;gap:14px;align-items:center;margin:-14px 0 18px 0;flex-wrap:wrap">
+    <span style="font-size:9px;color:#94A3B8;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Signal:</span>
+    <span style="font-size:9px;color:#1A9E5A;font-weight:600">● Healthy</span>
+    <span style="font-size:9px;color:#CC8A00;font-weight:600">● Watch</span>
+    <span style="font-size:9px;color:#D64045;font-weight:600">● Stress</span>
+    <span style="font-size:9px;color:#8878B8;font-weight:600">● Policy Rate</span>
+  </div>
+
   <div class="macro-state" id="macro-state-card">
     <div class="ms-eyebrow">Macro State · As of <span id="ms-asof">May 2026</span></div>
     <div class="ms-verdict"><span class="ms-chip" id="ms-chip">HIGH RISK</span><span id="ms-verdict-text">Late-cycle: soft-landing path intact, but inflation re-accelerated to 3.78% and credit stress is building beneath the surface.</span></div>
