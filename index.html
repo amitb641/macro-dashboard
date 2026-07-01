@@ -1827,6 +1827,26 @@ body.sidebar-active .nav-two-tier{display:none!important}
   --accent-soft:rgba(78,158,255,.11);--grid:rgba(238,244,255,.055);
 }
 :root[data-theme="dark"] body{background:var(--bg);color:var(--text)}
+/* body.themed-sm sets padding:56px 48px 80px + padding-top:32px (net
+   32/48/80) plus wide-screen breakpoints at 1920px/2400px — dark mode
+   never had an equivalent, so it fell through to the unscoped base
+   body rule (28px/20px/60px), making dark's content area ~28px wider
+   than light's at the same viewport ("wider canvas" symptom). Mirrors
+   theme-overlay.css lines 19-57 exactly, including the sidebar-offset
+   and wide-screen rules — sidebar-active padding-left (240px/72px
+   collapsed) is set by a theme-agnostic rule elsewhere and already
+   matches both themes, not touched here. */
+:root[data-theme="dark"] body{padding:32px 48px 80px!important}
+@media(min-width:1920px){
+  :root[data-theme="dark"] body{padding-left:80px!important;padding-right:80px!important}
+  :root[data-theme="dark"] body.sidebar-active{padding-left:240px!important}
+  :root[data-theme="dark"] body.sidebar-active.sidebar-collapsed{padding-left:72px!important}
+}
+@media(min-width:2400px){
+  :root[data-theme="dark"] body{max-width:2200px!important;margin:0 auto!important}
+}
+@media(max-width:900px){:root[data-theme="dark"] body{padding:32px 32px 60px!important}}
+@media(max-width:720px){:root[data-theme="dark"] body{padding:28px 20px 56px!important}}
 :root[data-theme="dark"] .nav-grouped{background:var(--card2);border-color:var(--border)}
 :root[data-theme="dark"] .nav-btn{color:var(--text2)}
 :root[data-theme="dark"] .nav-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04);border-color:var(--bord2)}
@@ -1971,7 +1991,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] [style*="color:#1E293B"],
 :root[data-theme="dark"] [style*="color:#0F172A"]{color:var(--text2)!important}
 /* §24.14 — Sort/filter buttons in dark mode */
-:root[data-theme="dark"] .sort-btn{background:var(--card2);border-color:var(--border);color:var(--text2)}
+:root[data-theme="dark"] .sort-btn{background:var(--card2);border-color:var(--border);color:var(--text2);padding:8px 12px!important}
 :root[data-theme="dark"] .sort-btn:hover:not(.active){background:rgba(78,158,255,.07);border-color:var(--bord2);color:var(--text)}
 :root[data-theme="dark"] .sort-btn.active{background:rgba(78,158,255,.12);border-color:var(--accent);color:var(--accent)}
 /* §24.15 — 2026F forecast badge in GDP sector cards */
@@ -2111,12 +2131,12 @@ body.sidebar-active .nav-two-tier{display:none!important}
    body.themed-sm sets display sizes and bold weights for h1, kpi-val, m-val, sector-card;
    stripping that class in dark mode silently falls back to smaller/lighter base values —
    the kpi primary number drops 22px→30px and h1 drops weight-400 instead of 700. */
-:root[data-theme="dark"] h1{font-size:44px!important;font-weight:700!important;color:var(--text)!important}
+:root[data-theme="dark"] h1{font-family:'DM Sans',system-ui,sans-serif!important;font-size:44px!important;font-weight:700!important;color:var(--text)!important}
 :root[data-theme="dark"] h1>span{font-weight:700!important;color:var(--accent)!important}
 @media(max-width:1080px){:root[data-theme="dark"] h1{font-size:38px!important}}
 @media(max-width:900px){:root[data-theme="dark"] h1{font-size:34px!important}}
 @media(max-width:720px){:root[data-theme="dark"] h1{font-size:26px!important}}
-:root[data-theme="dark"] .kpi-val{font-size:30px!important;font-weight:600!important}
+:root[data-theme="dark"] .kpi-val{font-size:30px!important;font-weight:400!important}
 :root[data-theme="dark"] .kpi.hero .kpi-val{font-size:36px!important}
 :root[data-theme="dark"] .kpi-cluster-hdr{color:var(--text2)!important}
 :root[data-theme="dark"] .m-val{font-size:24px!important;font-weight:600!important;color:var(--text)!important}
@@ -2147,8 +2167,12 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .nav-btn:hover{color:var(--text)!important}
 /* §24.33 — Font-weight sharpness for small labels in dark mode.
    Halation effect: bright text on dark canvas appears visually thinner.
-   Bump secondary/caption text from 400→500 and micro-labels from 500→600. */
-:root[data-theme="dark"] .m-lbl{font-weight:500!important}
+   Bump secondary/caption text from 400→500 and micro-labels from 500→600.
+   .m-lbl and .panel-sub (below) are exceptions: their light-mode weight
+   is actually 700 (heavier than this rule assumed when written), so the
+   500 "boost" undershot and rendered LIGHTER than light mode — the
+   opposite of the halation-compensation intent. Bumped to 700 to match. */
+:root[data-theme="dark"] .m-lbl{font-weight:700!important}
 :root[data-theme="dark"] .m-sub{font-weight:500!important}
 :root[data-theme="dark"] .panel-meta{font-weight:500!important}
 :root[data-theme="dark"] .sm-dc-label{font-weight:600!important}
@@ -2156,7 +2180,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .sm-dc-note{font-weight:500!important}
 :root[data-theme="dark"] .sparkgrid .spark-label{font-weight:600!important;color:var(--muted)!important}
 :root[data-theme="dark"] .spark-tile-label{font-weight:600!important;color:var(--muted)!important}
-:root[data-theme="dark"] .panel-sub{font-weight:500!important;color:var(--text2)!important}
+:root[data-theme="dark"] .panel-sub{font-family:'DM Mono',monospace!important;font-size:10px!important;font-weight:700!important;color:var(--text2)!important}
 :root[data-theme="dark"] .dtable td{color:var(--text2)!important}
 :root[data-theme="dark"] td{color:var(--text2)!important}
 /* §24.4 — Theme-toggle pill — fixed top-right, DM Mono instrument label. */
