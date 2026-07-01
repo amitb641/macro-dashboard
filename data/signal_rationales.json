@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-01T17:40:15Z",
-  "based_on_signals_at": "2026-07-01T17:40:15.259132Z",
+  "generated_at": "2026-07-01T17:58:45Z",
+  "based_on_signals_at": "2026-07-01T17:58:44.901057Z",
   "model": "claude-sonnet-4-6",
   "budget_hit": false,
   "guardrails": {
@@ -14,7 +14,7 @@
     "cpi_yoy": {
       "value": 4.17,
       "direction": "rising",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cpi_yoy) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CcbkKFm6y5YP4UeHWe9sg\"}'))",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cpi_yoy) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011Ccbmj3n4kRxb1VXgshKJE\"}'))",
       "playbook_cite": ""
     },
     "tdsp": {

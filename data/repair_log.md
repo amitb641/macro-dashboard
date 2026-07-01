@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-01T17:59:30.830428Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T17:41:11.513827Z
 
 - **Status**: WARN
@@ -847,37 +863,6 @@ _1 critical · 0 warning · 0 stale_
 - **Passed**: 642
 - **Failed**: 1
 - **Critical divergences**: 1
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-05-29T01:47:20.762887Z
-
-- **Status**: WARN
-- **Total checks**: 720
-- **Passed**: 641
-- **Failed**: 79
-- **Critical divergences**: 1
-
-### Collector errors
-_0 critical · 78 warning · 0 stale_
-
-- ⚠️ **FRED fetch: DFF** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: DGS2** — 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS2&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=14
-- ⚠️ **FRED fetch: DGS5** — 504 Server Error: Gateway Time-out for url: https://api.stlouisfed.org/fred/series/observations?series_id=DGS5&api_key=[REDACTED]&file_type=json&sort_order=desc&limit=14
-- ⚠️ **FRED fetch: DGS10** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: DGS30** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: DGS10** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: DGS2** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: BAMLC0A0CM** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: BAMLH0A0HYM2** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- ⚠️ **FRED fetch: BAMLC0A0CM** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
-- _… and 68 more_
 
 ### Panel data
 _1 critical · 0 warning · 0 stale_
