@@ -7097,6 +7097,32 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
     var t = SHOCK_TRACKER;
     var wChg = t.wti_now - t.wti_pre;
     var _isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    // This function's text colors were hardcoded (#94A3B8/#64748B/#334E68)
+    // with no _isDark branching, even though _isDark was already computed
+    // here for statusCfg below. Confirmed via WCAG contrast math: #94A3B8
+    // is 6.26:1 on the dark card (fine) but 2.56:1 on the light card
+    // (fails 4.5:1 badly); #64748B is 4.76:1 on light (fine) but 3.37:1 on
+    // dark (fails). Each hex only ever worked in the theme it happened to
+    // be tuned against. _mutedTxt/_valTxt/_boldTxt below keep whichever
+    // half of each pair already passed and fix the half that didn't.
+    var _mutedTxt = _isDark ? '#94A3B8' : '#64748B';
+    var _valTxt   = _isDark ? '#A8C4D8' : '#334E68';
+    var _boldTxt  = _isDark ? '#F5F7FF' : '#0D1B2A';
+    // Header strip cards (Shock/Elapsed/Phases Active) had the same gap —
+    // hardcoded light pastel backgrounds (#FFFBEB/#F8FAFC/#F0FDF4) with no
+    // dark counterpart. Fixing _boldTxt above without this would put
+    // near-white text on a still-light card in dark mode — worse than the
+    // original. Translucent tints here match the same pattern statusCfg
+    // already uses for dark-mode badges a few lines up.
+    var _hdr = _isDark ? {
+      shockBg:'rgba(240,180,41,.10)', shockBd:'rgba(240,180,41,.25)', shockLbl:'#F0B429', shockVal:'#F0B429',
+      elapsedBg:'rgba(255,255,255,.04)', elapsedBd:'var(--border)',
+      phasesBg:'rgba(98,212,159,.10)', phasesBd:'rgba(98,212,159,.25)', phasesLbl:'#62D49F', phasesVal:'#62D49F'
+    } : {
+      shockBg:'#FFFBEB', shockBd:'rgba(204,138,0,.2)', shockLbl:'#92400E', shockVal:'#CC8A00',
+      elapsedBg:'#F8FAFC', elapsedBd:'var(--border)',
+      phasesBg:'#F0FDF4', phasesBd:'rgba(22,163,74,.2)', phasesLbl:'#15803D', phasesVal:'#16A34A'
+    };
     var statusCfg = _isDark ? {
       confirmed:    {bg:"rgba(98,212,159,.15)",border:"#62D49F",text:"#62D49F",label:"Confirmed",icon:"✅"},
       emerging:     {bg:"rgba(240,180,41,.15)",border:"#F0B429",text:"#F0B429",label:"Emerging",icon:"⚡"},
@@ -7127,17 +7153,17 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
 
     // Header strip: shock magnitude + elapsed time
     var headerHtml = `<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      <div style="flex:1;min-width:120px;padding:8px 12px;background:#FFFBEB;border:1px solid rgba(204,138,0,.2);border-radius:6px">
-        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:#92400E;letter-spacing:.08em">Shock</div>
-        <div style="font-family:'DM Mono',monospace;font-size:16px;color:#CC8A00">+$${wChg.toFixed(0)}/bbl <span style="font-size:10px;color:#94A3B8">(+${t.wti_chg_pct}%)</span></div>
+      <div style="flex:1;min-width:120px;padding:8px 12px;background:${_hdr.shockBg};border:1px solid ${_hdr.shockBd};border-radius:6px">
+        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:${_hdr.shockLbl};letter-spacing:.08em">Shock</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;color:${_hdr.shockVal}">+$${wChg.toFixed(0)}/bbl <span style="font-size:10px;color:${_mutedTxt}">(+${t.wti_chg_pct}%)</span></div>
       </div>
-      <div style="flex:1;min-width:120px;padding:8px 12px;background:#F8FAFC;border:1px solid var(--border);border-radius:6px">
-        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:#94A3B8;letter-spacing:.08em">Elapsed</div>
-        <div style="font-family:'DM Mono',monospace;font-size:16px;color:#334E68">${t.weeks_elapsed} weeks <span style="font-size:10px;color:#94A3B8">since Mar 1</span></div>
+      <div style="flex:1;min-width:120px;padding:8px 12px;background:${_hdr.elapsedBg};border:1px solid ${_hdr.elapsedBd};border-radius:6px">
+        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:${_mutedTxt};letter-spacing:.08em">Elapsed</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;color:${_boldTxt}">${t.weeks_elapsed} weeks <span style="font-size:10px;color:${_mutedTxt}">since Mar 1</span></div>
       </div>
-      <div style="flex:1;min-width:120px;padding:8px 12px;background:#F0FDF4;border:1px solid rgba(22,163,74,.2);border-radius:6px">
-        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:#15803D;letter-spacing:.08em">Phases Active</div>
-        <div style="font-family:'DM Mono',monospace;font-size:16px;color:#16A34A">${t.phases.filter(function(p){return p.status==='confirmed'||p.status==='emerging'}).length} of ${t.phases.length} <span style="font-size:10px;color:#94A3B8">transmitting</span></div>
+      <div style="flex:1;min-width:120px;padding:8px 12px;background:${_hdr.phasesBg};border:1px solid ${_hdr.phasesBd};border-radius:6px">
+        <div style="font-size:8px;font-weight:700;text-transform:uppercase;color:${_hdr.phasesLbl};letter-spacing:.08em">Phases Active</div>
+        <div style="font-family:'DM Mono',monospace;font-size:16px;color:${_hdr.phasesVal}">${t.phases.filter(function(p){return p.status==='confirmed'||p.status==='emerging'}).length} of ${t.phases.length} <span style="font-size:10px;color:${_mutedTxt}">transmitting</span></div>
       </div>
     </div>`;
 
@@ -7167,21 +7193,21 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
       // Build data line
       var dataLine = '';
       if (now !== null && now !== undefined) {
-        var chgColor = chg > 0 ? '#D64045' : chg < 0 ? '#1A9E5A' : '#64748B';
-        dataLine = '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:#94A3B8">' + metric + ': </span>'
-          + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:#64748B">' + pre + '</span>'
-          + '<span style="font-size:9px;color:#94A3B8"> → </span>'
+        var chgColor = chg > 0 ? '#D64045' : chg < 0 ? '#1A9E5A' : _valTxt;
+        dataLine = '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:' + _mutedTxt + '">' + metric + ': </span>'
+          + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;color:' + _valTxt + '">' + pre + '</span>'
+          + '<span style="font-size:9px;color:' + _mutedTxt + '"> → </span>'
           + '<span style="font-family:\'DM Mono\',monospace;font-size:9px;font-weight:600;color:' + chgColor + '">' + now + '</span>'
-          + '<span style="font-size:8px;color:#94A3B8"> (' + chgStr + ')</span>';
+          + '<span style="font-size:8px;color:' + _mutedTxt + '"> (' + chgStr + ')</span>';
       } else if (tr.note) {
-        dataLine = '<span style="font-size:9px;color:#94A3B8;font-style:italic">' + tr.note + '</span>';
+        dataLine = '<span style="font-size:9px;color:' + _mutedTxt + ';font-style:italic">' + tr.note + '</span>';
       }
 
       // Click handler opens rich popover with full reasoning. Each clickable
       // element shares the same onclick → showShockDetail(phase_index).
       var infoBtn = (tr.detail || tr.commentary || tr.status_reason) ? (
         ' <span data-shock-idx="' + s.tracker + '" class="shock-open" '
-        + 'style="display:inline-block;cursor:pointer;font-size:9px;color:#94A3B8;'
+        + 'style="display:inline-block;cursor:pointer;font-size:9px;color:' + _mutedTxt + ';'
         + 'border:1px solid #CBD5E1;border-radius:50%;width:13px;height:13px;'
         + 'line-height:11px;text-align:center;vertical-align:middle;margin-left:3px;'
         + 'transition:all .15s" title="Click for details">ⓘ</span>'
@@ -7224,7 +7250,7 @@ const OIL_DAILY = {"labels":["Mar 25","Mar 26","Mar 27","Mar 30","Mar 31","Apr 1
     html += '<div style="font-size:9px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-style:italic;line-height:1.5">'
       + 'Status auto-updated weekly \u00b7 pre-shock baselines locked to Feb\'26 \u00b7 '
       + 'Sources: EIA \u00b7 BLS CPI \u00b7 NY Fed \u00b7 Fed Z.1 \u00b7 SLOOS \u00b7 '
-      + '<span title="' + methodTooltip + '" style="cursor:help;border-bottom:1px dotted #94A3B8;font-style:normal">How confirmation works ⓘ</span>'
+      + '<span title="' + methodTooltip + '" style="cursor:help;border-bottom:1px dotted ' + _mutedTxt + ';font-style:normal">How confirmation works ⓘ</span>'
       + '</div>';
 
     el.innerHTML = html;
