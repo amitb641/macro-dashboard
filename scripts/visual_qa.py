@@ -73,14 +73,14 @@ def _serve_root():
             httpd.shutdown()
 
 TAB_IDS = [
-    'fc', 'gdp', 'jobs', 'unemp', 'wages', 'cpi',
+    'pulse', 'fc', 'gdp', 'jobs', 'unemp', 'wages', 'cpi',
     'pce', 'yield', 'credit', 'banks', 'housing', 'oil',
     'dict', 'stack', 'validator',
 ]
 
 # Tab display names for reporting
 TAB_NAMES = {
-    'fc': 'Outlook', 'gdp': 'GDP', 'jobs': 'Jobs', 'unemp': 'Unemployment',
+    'pulse': 'Pulse', 'fc': 'Outlook', 'gdp': 'GDP', 'jobs': 'Jobs', 'unemp': 'Unemployment',
     'wages': 'Wages', 'cpi': 'CPI', 'pce': 'Consumer & PCE', 'yield': 'Rates & Yields',
     'credit': 'Credit', 'banks': 'Banking', 'housing': 'Housing', 'oil': 'Oil',
     'dict': 'Sources', 'stack': 'Dashboard', 'validator': 'Validator',

@@ -3919,7 +3919,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 </div>
 
 <!-- ══ FORECAST ══ -->
-<div class="tab-panel active" id="tab-fc">
+<div class="tab-panel active" id="tab-pulse">
   <section class="sm-delta-block" id="sm-delta-block" aria-label="Top changes this week">
     <div class="sm-delta-hdr">
       <span class="sm-delta-eyebrow">What changed this week</span>
@@ -3961,6 +3961,9 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     <div class="ms-bars" id="ms-bars"></div>
     <p class="src" style="border-top:none;padding-top:8px;margin-top:12px">Risk level reflects 3 alerts (CPI, oil, core PCE), 2 watches (10Y yield, debt service), 1 flagged (wages cooling).</p>
   </div>
+</div>
+
+<div class="tab-panel" id="tab-fc">
 
   <div class="fc-note" id="commentary-gdp">Real GDP growth of 2.0% annualized is holding above stall speed but the underlying composition is increasingly fragile against the backdrop of an oil shock and tightening consumer balance sheets. The combination of slowing NFP, a 3.6% savings rate, and WTI at $109.8 creates a credible path to sub-1% growth within two quarters. Inventory and net export dynamics could provide temporary offsets, but domestic demand is the linchpin and it is weakening.</div>
 
@@ -4162,7 +4165,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <span>Next refresh: <strong style="color:#4B5563">May 2026</strong> (Q1'26 SLOOS + NY Fed HH Debt)</span>
     </div>
 
-    <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Pulse tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
+    <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
     <div class="fn-ladder-wrap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3">
       <div class="fn-ladder-title">Footnotes</div>
       <ol class="fn-ladder">
@@ -8176,6 +8179,7 @@ document.addEventListener('keydown', function(e){
 // ═══════════════════════════════════════════════════════
 (function(){
   var _IC = {
+    pulse: '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#FEE2E2"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#DC2626" stroke-width="1.5"/><path d="M4 10h2.5l1.2-3.5 2 7 1.5-5 1 1.5h3.8" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     fc:    '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EAF1FB"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#336BCC" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#336BCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     gdp:   '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="4" fill="#ECFDF5"/><path d="M4 14l3.5-3.5 2.5 2.5L16 7" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     jobs:  '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="10" rx="2" fill="#DBEAFE"/><rect x="3" y="7" width="14" height="10" rx="2" fill="none" stroke="#2563EB" stroke-width="1.4"/><path d="M7 7V5.5a3 3 0 016 0V7" fill="none" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round"/><rect x="8.5" y="10" width="3" height="2" rx=".5" fill="#2563EB"/></svg>',
@@ -8191,7 +8195,7 @@ document.addEventListener('keydown', function(e){
     housing:'<svg class="nav-icon" viewBox="0 0 20 20"><path d="M3.5 10L10 4l6.5 6" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5v6.5a1.5 1.5 0 001.5 1.5h7A1.5 1.5 0 0015 16V9.5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.3" stroke-linejoin="round"/><rect x="8.5" y="13" width="3" height="4.5" rx=".5" fill="#BBF7D0" stroke="#16A34A" stroke-width="1"/></svg>'
   };
   var _GRP = [
-    {k:'overview', tabs:[{t:'fc',l:'Pulse'},{t:'gdp',l:'GDP'}]},
+    {k:'overview', tabs:[{t:'pulse',l:'Pulse'},{t:'fc',l:'Outlook'},{t:'gdp',l:'GDP'}]},
     {k:'labor',    tabs:[{t:'jobs',l:'Jobs'},{t:'unemp',l:'Unemployment'},{t:'wages',l:'Wages'}]},
     {k:'inflation',tabs:[{t:'oil',l:'Oil'},{t:'cpi',l:'CPI'},{t:'pce',l:'Consumer &amp; PCE'}]},
     {k:'rates',    tabs:[{t:'yield',l:'Fed Rates'},{t:'credit',l:'Credit'},{t:'banks',l:'Banks'},{t:'fiscal',l:'Fiscal'}]},
@@ -8267,7 +8271,7 @@ document.addEventListener('keydown', function(e){
 
   // Init: render overview sub-tabs and activate Pulse
   _renderT2('overview');
-  if(typeof _b52_activateTab==='function') _b52_activateTab('fc');
+  if(typeof _b52_activateTab==='function') _b52_activateTab('pulse');
 })();
 
 // ═══════════════════════════════════════════════════════
@@ -8279,6 +8283,7 @@ document.addEventListener('keydown', function(e){
 (function(){
   // Reuse same icon SVGs as two-tier nav
   var _IC = {
+    pulse: '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#FEE2E2"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#DC2626" stroke-width="1.5"/><path d="M4 10h2.5l1.2-3.5 2 7 1.5-5 1 1.5h3.8" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     fc:    '<svg class="nav-icon" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="#EAF1FB"/><circle cx="10" cy="10" r="7.5" fill="none" stroke="#336BCC" stroke-width="1.5"/><path d="M10 6v4.5l3 2" fill="none" stroke="#336BCC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     gdp:   '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="1" y="1" width="18" height="18" rx="4" fill="#ECFDF5"/><path d="M4 14l3.5-3.5 2.5 2.5L16 7" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7h4v4" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     jobs:  '<svg class="nav-icon" viewBox="0 0 20 20"><rect x="3" y="7" width="14" height="10" rx="2" fill="#DBEAFE"/><rect x="3" y="7" width="14" height="10" rx="2" fill="none" stroke="#2563EB" stroke-width="1.4"/><path d="M7 7V5.5a3 3 0 016 0V7" fill="none" stroke="#2563EB" stroke-width="1.4" stroke-linecap="round"/><rect x="8.5" y="10" width="3" height="2" rx=".5" fill="#2563EB"/></svg>',
@@ -8295,7 +8300,7 @@ document.addEventListener('keydown', function(e){
   };
 
   var _GRPS = [
-    {k:'Overview',      tabs:[{t:'fc',l:'Pulse'},{t:'gdp',l:'GDP'}]},
+    {k:'Overview',      tabs:[{t:'pulse',l:'Pulse'},{t:'fc',l:'Outlook'},{t:'gdp',l:'GDP'}]},
     {k:'Labor',         tabs:[{t:'jobs',l:'Jobs'},{t:'unemp',l:'Unemployment'},{t:'wages',l:'Wages'}]},
     {k:'Inflation',     tabs:[{t:'oil',l:'Oil'},{t:'cpi',l:'CPI'},{t:'pce',l:'Consumer \u0026 PCE'}]},
     {k:'Rates \u0026 Credit', tabs:[{t:'yield',l:'Fed Rates'},{t:'credit',l:'Credit'},{t:'banks',l:'Banks'},{t:'fiscal',l:'Fiscal'}]},
@@ -8368,7 +8373,7 @@ document.addEventListener('keydown', function(e){
   };
 
   // Init active state
-  _nsb_sync('fc');
+  _nsb_sync('pulse');
 })();
 
 // ═══════════════════════════════════════════════════════
@@ -9536,7 +9541,7 @@ const SIGNAL_THRESHOLDS = [
 // DOWNLOAD — Dropdown, PDF & HTML
 // ════════════════════════════════════════════════════
 var TAB_NAMES = {
-  fc:"Pulse", gdp:"GDP", jobs:"Jobs", unemp:"Unemployment",
+  pulse:"Pulse", fc:"Outlook", gdp:"GDP", jobs:"Jobs", unemp:"Unemployment",
   wages:"Wages", cpi:"CPI", pce:"Consumer & PCE", yield:"Fed Rates",
   credit:"Credit", banks:"Banks", fiscal:"Fiscal", housing:"Housing", oil:"Oil",
   dict:"Sources", stack:"Dashboard"
@@ -9631,7 +9636,7 @@ function downloadFullHTML(){
   _setDLBtnState(true);
 
   // All data tabs + meta tabs
-  var TAB_IDS = ["fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","fiscal","housing","oil","dict","stack","validator"];
+  var TAB_IDS = ["pulse","fc","gdp","jobs","unemp","wages","cpi","pce","yield","credit","banks","fiscal","housing","oil","dict","stack","validator"];
   var builders = {
     fc:buildFCTab, gdp:buildGDPTab, jobs:buildJobsTab, unemp:buildUnempTab,
     wages:buildWagesTab, cpi:buildCPITab, pce:buildPCETab, yield:buildYieldTab,
