@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-01T18:11:17.561911Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T17:59:30.830428Z
 
 - **Status**: WARN
@@ -841,22 +857,6 @@ _1 critical · 0 warning · 0 stale_
 ---
 
 ## Repair Agent — 2026-05-30T17:22:34.288402Z
-
-- **Status**: WARN
-- **Total checks**: 643
-- **Passed**: 642
-- **Failed**: 1
-- **Critical divergences**: 1
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-05-29T05:01:44.126282Z
 
 - **Status**: WARN
 - **Total checks**: 643
