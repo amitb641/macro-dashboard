@@ -4162,7 +4162,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
       <span>Next refresh: <strong style="color:#4B5563">May 2026</strong> (Q1'26 SLOOS + NY Fed HH Debt)</span>
     </div>
 
-    <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Outlook tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
+    <p style="margin-top:10px;font-size:10px;color:#7a90aa;line-height:1.5"><strong>Recession Prob. (solid purple):</strong> NY Fed model — 12-month-ahead probability based on Treasury 10Y–3M yield spread. The yield curve typically inverts before banks tighten (SLOOS), making recession prob. a leading indicator of tightening. This differs from the Pulse tab, which shows forward-looking consensus estimates from Wall Street firms for 2026.</p>
     <div class="fn-ladder-wrap" style="margin-top:8px;padding-top:8px;border-top:1px solid #F0F1F3">
       <div class="fn-ladder-title">Footnotes</div>
       <ol class="fn-ladder">
@@ -8191,7 +8191,7 @@ document.addEventListener('keydown', function(e){
     housing:'<svg class="nav-icon" viewBox="0 0 20 20"><path d="M3.5 10L10 4l6.5 6" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5v6.5a1.5 1.5 0 001.5 1.5h7A1.5 1.5 0 0015 16V9.5" fill="#DCFCE7" stroke="#16A34A" stroke-width="1.3" stroke-linejoin="round"/><rect x="8.5" y="13" width="3" height="4.5" rx=".5" fill="#BBF7D0" stroke="#16A34A" stroke-width="1"/></svg>'
   };
   var _GRP = [
-    {k:'overview', tabs:[{t:'fc',l:'Outlook'},{t:'gdp',l:'GDP'}]},
+    {k:'overview', tabs:[{t:'fc',l:'Pulse'},{t:'gdp',l:'GDP'}]},
     {k:'labor',    tabs:[{t:'jobs',l:'Jobs'},{t:'unemp',l:'Unemployment'},{t:'wages',l:'Wages'}]},
     {k:'inflation',tabs:[{t:'oil',l:'Oil'},{t:'cpi',l:'CPI'},{t:'pce',l:'Consumer &amp; PCE'}]},
     {k:'rates',    tabs:[{t:'yield',l:'Fed Rates'},{t:'credit',l:'Credit'},{t:'banks',l:'Banks'},{t:'fiscal',l:'Fiscal'}]},
@@ -8265,7 +8265,7 @@ document.addEventListener('keydown', function(e){
     if(typeof _b52_activateTab==='function') _b52_activateTab(b.dataset.tab);
   });
 
-  // Init: render overview sub-tabs and activate Outlook
+  // Init: render overview sub-tabs and activate Pulse
   _renderT2('overview');
   if(typeof _b52_activateTab==='function') _b52_activateTab('fc');
 })();
@@ -8295,7 +8295,7 @@ document.addEventListener('keydown', function(e){
   };
 
   var _GRPS = [
-    {k:'Overview',      tabs:[{t:'fc',l:'Outlook'},{t:'gdp',l:'GDP'}]},
+    {k:'Overview',      tabs:[{t:'fc',l:'Pulse'},{t:'gdp',l:'GDP'}]},
     {k:'Labor',         tabs:[{t:'jobs',l:'Jobs'},{t:'unemp',l:'Unemployment'},{t:'wages',l:'Wages'}]},
     {k:'Inflation',     tabs:[{t:'oil',l:'Oil'},{t:'cpi',l:'CPI'},{t:'pce',l:'Consumer \u0026 PCE'}]},
     {k:'Rates \u0026 Credit', tabs:[{t:'yield',l:'Fed Rates'},{t:'credit',l:'Credit'},{t:'banks',l:'Banks'},{t:'fiscal',l:'Fiscal'}]},
@@ -9373,7 +9373,7 @@ function buildMacroState(){
     }).join('');
   }
 }
-// Outlook tab is the default visible tab, so MACRO_STATE renders
+// Pulse tab is the default visible tab, so MACRO_STATE renders
 // above the fold on first paint. Wire into the hydration chain
 // instead of DOMContentLoaded — buildMacroState() needs MACRO_STATE
 // populated, which only happens after /api/state.json resolves.
@@ -9536,7 +9536,7 @@ const SIGNAL_THRESHOLDS = [
 // DOWNLOAD — Dropdown, PDF & HTML
 // ════════════════════════════════════════════════════
 var TAB_NAMES = {
-  fc:"Outlook", gdp:"GDP", jobs:"Jobs", unemp:"Unemployment",
+  fc:"Pulse", gdp:"GDP", jobs:"Jobs", unemp:"Unemployment",
   wages:"Wages", cpi:"CPI", pce:"Consumer & PCE", yield:"Fed Rates",
   credit:"Credit", banks:"Banks", fiscal:"Fiscal", housing:"Housing", oil:"Oil",
   dict:"Sources", stack:"Dashboard"
