@@ -5208,7 +5208,7 @@ function _renderKpiStrip(){
       .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
     const tileCls = isHero ? 'kpi hero' : 'kpi';
     return `<div class="${tileCls}" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
-    <div class="kpi-val" style="color:${col}">${k.val}${d}</div>${sWrap}
+    <div class="kpi-val" style="color:${col}!important">${k.val}${d}</div>${sWrap}
     <div class="kpi-sub">${k.sub}</div>${priorRow}</div>`;
   }
   let html = '';
