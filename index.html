@@ -1832,11 +1832,19 @@ body.sidebar-active .nav-two-tier{display:none!important}
    never had an equivalent, so it fell through to the unscoped base
    body rule (28px/20px/60px), making dark's content area ~28px wider
    than light's at the same viewport ("wider canvas" symptom). Mirrors
-   theme-overlay.css lines 19-57 exactly, including the sidebar-offset
-   and wide-screen rules — sidebar-active padding-left (240px/72px
-   collapsed) is set by a theme-agnostic rule elsewhere and already
-   matches both themes, not touched here. */
+   theme-overlay.css lines 19-57 exactly, including wide-screen rules.
+   REGRESSION FIX: the first version of this rule assumed the 901px+
+   sidebar-active 240px offset was set by a theme-agnostic rule and
+   didn't need mirroring here — wrong. Without an equal-or-higher
+   specificity dark-scoped override, this rule's own padding-left:48px
+   wins over whatever lower-specificity theme-agnostic rule exists,
+   sliding all content left and under the fixed 220px sidebar (visible
+   as "sidebar and canvas overlapping" from ~901px up to 1920px). */
 :root[data-theme="dark"] body{padding:32px 48px 80px!important}
+@media(min-width:901px){
+  :root[data-theme="dark"] body.sidebar-active{padding-left:240px!important}
+  :root[data-theme="dark"] body.sidebar-active.sidebar-collapsed{padding-left:72px!important}
+}
 @media(min-width:1920px){
   :root[data-theme="dark"] body{padding-left:80px!important;padding-right:80px!important}
   :root[data-theme="dark"] body.sidebar-active{padding-left:240px!important}
