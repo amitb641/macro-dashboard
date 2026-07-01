@@ -1531,9 +1531,23 @@ h1 span{color:var(--accent)}
 .kpi-cluster:last-child{margin-bottom:0}
 .kpi-cluster .kpi-strip{margin-bottom:0}
 .kpi-cluster-hdr{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+/* --muted computes to 3.32:1 against a white themed-sm card — fails WCAG
+   1.4.3 (10px is normal-size text, needs 4.5:1, not the 3:1 large-text
+   exception). Dark mode already mirrors to --text2 (line ~2100); this
+   is the missing themed-sm counterpart, same fix. */
+body.themed-sm .kpi-cluster-hdr{color:var(--text2)!important}
 .kpi-cluster-icon{font-size:12px;line-height:1}
 .kpi.hero{flex-grow:1.8}
 .kpi.hero .kpi-val{font-size:28px}
+/* Hero differentiation beyond font-size — an accent-color left border,
+   per expert review, since size alone is the weakest pre-attentive cue.
+   .kpi's own padding/border are set with !important in both theme
+   systems (body.themed-sm here is external/read-only, dark-theme is
+   inline), so these need matching specificity to reliably win rather
+   than depend on cascade order. padding-left drops 24→21px so the
+   3px border doesn't shift where the label/value text starts. */
+body.themed-sm .kpi.hero{border-left:3px solid var(--accent)!important;padding-left:21px!important}
+:root[data-theme="dark"] .kpi.hero{border-left:3px solid var(--accent)!important;padding-left:21px!important}
 /* Prevents a lone wrapped tile from stretching to the full row width
    (flex:1 on .kpi otherwise fills all remaining space when a cluster's
    tiles don't divide evenly into the row — e.g. Labor's 5 tiles wrap
@@ -1901,6 +1915,13 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .kpi-val-num{color:var(--text)!important}
 /* §24.12 — EX badge, panel title, section header contrast */
 :root[data-theme="dark"] .panel-title{color:var(--text)}
+/* theme-overlay.css bumped body.themed-sm .panel-title to 17px/DM Sans
+   as a deliberate fix (its own comment: a prior 22px serif treatment
+   was competing with hero numbers for hierarchy weight; §3.2 calls for
+   quiet section dividers). Dark mode still falls through to the base
+   13px rule, never received the same fix — same size divergence class
+   as the kpi-val font-family issue, same resolution direction. */
+:root[data-theme="dark"] .panel-title{font-size:17px!important}
 :root[data-theme="dark"] .ex-num{color:var(--accent)}
 :root[data-theme="dark"] .src{color:var(--dim)!important}
 :root[data-theme="dark"] .exhibit-label{color:var(--muted)}
@@ -2451,7 +2472,12 @@ h1 span { color: var(--accent) !important; }
   margin-bottom: 6px !important;
 }
 .kpi-val {
-  font-family: 'Instrument Serif', serif !important;
+  /* Matches theme-overlay.css's body.themed-sm .kpi-val (which wins in
+     light mode via higher specificity) — this rule is what dark mode
+     actually falls through to, since dark-mode overrides only set
+     size/weight, never font-family. Kept identical to theme-overlay.css's
+     value so both themes render the same serif on the same element. */
+  font-family: 'DM Serif Display', Georgia, serif !important;
   /* B4.3: 26 → 22 brings KPI weight in line with section titles so the
      strip reads as overview, not as the page's primary heading.
      tabular-nums keeps digit columns aligned across same-width tiles —
@@ -5052,9 +5078,16 @@ function _releaseBadge(tag){
   } else {
     color = dk?'#7A9AB5':'#5A6B7D'; bg = dk?'rgba(122,154,181,.10)':'#F1F5F9'; bd = dk?'rgba(122,154,181,.20)':'rgba(90,107,125,.22)';
   }
+  // STALE carries real risk of misreading a delayed value as current, so
+  // it gets a redundant non-color cue (dashed border) on top of the text
+  // label — per accessibility review, color+text alone is the weakest
+  // link in the badge system for the one badge where misreading matters
+  // most. Other badge types are purely informational quality tags and
+  // keep the solid border.
+  var borderStyle = up === 'STALE' ? 'dashed' : 'solid';
   return `<span style="display:inline-block;margin-left:6px;padding:1px 6px;border-radius:10px;
     font-size:10px;font-weight:700;letter-spacing:.06em;vertical-align:1px;
-    color:${color};background:${bg};border:1px solid ${bd}">${label}</span>`;
+    color:${color};background:${bg};border:1px ${borderStyle} ${bd}">${label}</span>`;
 }
 // §1 Sparkline — small inline SVG polyline (~72×18) that visualises
 // the trailing trend for each KPI. Uses currentColor so it picks up

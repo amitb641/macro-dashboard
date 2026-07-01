@@ -180,10 +180,11 @@ chart` (per tab), plus the cross-tab archetype audit when added.
 |---|---|---|
 | Body, panels, commentary, charts | **`'DM Sans', system-ui, sans-serif`** | Modern geometric sans, broad Latin support, good at 11-14px |
 | Code, data labels, mono surfaces | **`'DM Mono', 'Courier New', monospace`** | Numerical tabular feel, matches data theme |
-| Hero numbers, large stat values, page title | **`'Instrument Serif', serif`** | Editorial weight for headline figures, contrast against geometric sans |
-| `<h1>` page title only | **`system-ui, -apple-system, 'Segoe UI', sans-serif`** with `font-weight:800` | Standout heading; the only place a 4th family appears |
+| KPI tile value (`.kpi-val`) | **`'DM Serif Display', Georgia, serif`** | Tabular-numeral-friendly display serif, paired with the print-grade numeric typography pass (tnum/lnum/ss01). Same family both themes — enforced by `visual_qa.py::check_serif_scope`. |
+| Other hero/stat numbers (`.card-growth`, oil/Brent price displays, sources infographic) | **`'Instrument Serif', serif`** | Editorial weight for headline figures, contrast against geometric sans |
+| `<h1>` page title only | **`system-ui, -apple-system, 'Segoe UI', sans-serif`** with `font-weight:800` | Standout heading; the only place a 5th family appears |
 
-No 5th family. Do not import additional Google Fonts. Do not switch a
+No 6th family. Do not import additional Google Fonts. Do not switch a
 body element to monospace as a visual treatment — monospace is reserved
 for *data labels*, code, and technical identifiers.
 
@@ -192,9 +193,10 @@ for *data labels*, code, and technical identifiers.
 | Class / role | Family | Size | Weight | Line-height | Tracking | Colour |
 |---|---|---|---|---|---|---|
 | Page `<h1>` | system sans | clamp(22, 5vw, 34)px | 800 | 1.1 | -.02em | --text |
-| Hero stat number (`.card-growth`, KPI value) | Instrument Serif | 18-22px | 400 | 1.0 | -.01em | --text |
+| Hero stat number (`.card-growth`) | Instrument Serif | 18-22px | 400 | 1.0 | -.01em | --text |
+| KPI tile value (`.kpi-val`) | DM Serif Display | 22-36px (hero variant larger) | 400 | 1.0-1.05 | -.01em to -.02em | --text |
 | Section title (architecture page) | DM Mono | 11px | 700 | 1.2 | .12em UPPER | --muted |
-| Panel title (`.panel-title`) | DM Sans | 13px | 500 | 1.3 | 0 | --text |
+| Panel title (`.panel-title`) | DM Sans | 17px | 600 | 1.25 | -.01em | --text |
 | Panel subtitle (`.panel-sub`) | DM Sans | 10px | 400 | 1.4 | 0 | --muted |
 | Eyebrow (`.eyebrow`) | DM Sans | 10px | 400 | 1.0 | .20em UPPER | --muted |
 | Subtitle (`.subtitle`) | DM Sans | 11px | 400 | 1.45 | 0 | --muted |
@@ -489,7 +491,7 @@ render an empty or near-empty canvas.
 ```
 ┌────────────────────────────────────────────┐
 │ LABEL (DM Mono 9px UPPER, --muted)         │
-│ VALUE (Instrument Serif 22px, --text)      │
+│ VALUE (DM Serif Display 22px, --text)      │
 │ Δ delta · direction · period (DM Sans 11px)│
 └────────────────────────────────────────────┘
 ```
@@ -529,7 +531,7 @@ For metrics with a status (KPIs that are "alert" / "watch" / "ok"):
 
 ```
 ┌──────────────────────────────────────────────┐
-│ .panel-title    (DM Sans 13px, --text)       │
+│ .panel-title    (DM Sans 17px, --text)       │
 │ .panel-sub      (DM Sans 10px, --muted)      │
 │ [content — chart canvas, table, list, etc.]  │
 │ <p class="src"> attribution (9-10px --muted) │
@@ -1317,7 +1319,7 @@ code paths.
 - No neon, no glow, no animated grid lines.
 - No chart-type changes (charts remain Chart.js line/bar; no radial
   or 3D).
-- No font swap — DM Sans + DM Mono + Instrument Serif remain.
+- No font swap — DM Sans + DM Mono + Instrument Serif + DM Serif Display (KPI values only) remain.
 - No haptic / sound feedback.
 - No "live ticker" running banner — would conflict with §4
   (data-ink). The breathing dot is the only "live" affordance.
