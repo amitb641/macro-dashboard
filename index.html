@@ -1524,6 +1524,21 @@ h1 span{color:var(--accent)}
 .kpi-val{font-family:'Instrument Serif',serif;font-size:22px;font-weight:400;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"lnum" 1}
 .kpi-sub{font-size:9px;color:var(--muted);margin-top:4px}
 
+/* KPI clusters — economic transmission grouping (Policy → Labor → Consumer → Inflation).
+   Each cluster reuses .kpi-strip for its row so all existing responsive/dark-mode/hover
+   rules for .kpi apply unchanged; only .kpi-cluster-hdr and .kpi.hero are new. */
+.kpi-cluster{margin-bottom:14px}
+.kpi-cluster:last-child{margin-bottom:0}
+.kpi-cluster .kpi-strip{margin-bottom:0}
+.kpi-cluster-hdr{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.kpi-cluster-icon{font-size:12px;line-height:1}
+.kpi.hero{flex-grow:1.8}
+.kpi.hero .kpi-val{font-size:28px}
+/* theme-overlay.css (read-only) sets body.themed-sm .kpi-val to 30px!important
+   as the default skin's base size — this mirror overrides it for hero tiles
+   at higher specificity, matching the 1.2x ratio used for the dark-mode hero. */
+body.themed-sm .kpi.hero .kpi-val{font-size:36px!important}
+
 /* NAV — Stripe Dashboard style: white bar, bordered pills, single accent */
 .nav-grouped{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:12px 24px;margin-bottom:22px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 .nav-group{display:flex;align-items:center;gap:6px}
@@ -2073,6 +2088,8 @@ body.sidebar-active .nav-two-tier{display:none!important}
 @media(max-width:900px){:root[data-theme="dark"] h1{font-size:34px!important}}
 @media(max-width:720px){:root[data-theme="dark"] h1{font-size:26px!important}}
 :root[data-theme="dark"] .kpi-val{font-size:30px!important;font-weight:600!important}
+:root[data-theme="dark"] .kpi.hero .kpi-val{font-size:36px!important}
+:root[data-theme="dark"] .kpi-cluster-hdr{color:var(--text2)!important}
 :root[data-theme="dark"] .m-val{font-size:24px!important;font-weight:600!important;color:var(--text)!important}
 :root[data-theme="dark"] .sector-card .card-name{font-size:13px;font-weight:600;color:var(--text)}
 :root[data-theme="dark"] .sector-card .card-growth{font-size:22px;font-weight:600}
@@ -5083,7 +5100,24 @@ function _renderKpiStrip(){
   if (priorMode) {
     PRIOR_KPIS.forEach(function(p){ if(p.metric) priorByMetric[p.metric] = p; });
   }
-  strip.innerHTML = KPIS.map(k=>{
+  // Economic-transmission clustering: Policy → Labor → Consumer → Inflation.
+  // Matched on stable label prefixes (the trailing "May'26" date changes
+  // weekly, the prefix does not) rather than k.metric, since several KPIs
+  // share the same metric key (e.g. Unemployment and Sahm Rule are both
+  // 'unemp') and prefix-matching is what stays unique per card.
+  const KPI_CLUSTERS = [
+    { icon:'🏦', label:'Policy & rates',       match:l=>/^(Fed Funds|10Y Treasury)/.test(l), hero:l=>/^Fed Funds/.test(l) },
+    { icon:'💼', label:'Labor market',          match:l=>/^(Jobs|Unemployment|Sahm Rule|Initial Claims|Wage Growth)/.test(l), hero:l=>/^Sahm Rule/.test(l) },
+    { icon:'🛒', label:'Consumer & sentiment',  match:l=>/^(UMich Sentiment|Debt Service Ratio)/.test(l), hero:l=>/^UMich Sentiment/.test(l) },
+    { icon:'📊', label:'Inflation',             match:l=>/^(Headline CPI|Core PCE|Headline PCE)/.test(l), hero:l=>/^Core PCE/.test(l) }
+  ];
+  const buckets = KPI_CLUSTERS.map(()=>[]);
+  const other = [];
+  KPIS.forEach(k=>{
+    const idx = KPI_CLUSTERS.findIndex(c=>c.match(k.lbl||''));
+    if (idx >= 0) buckets[idx].push(k); else other.push(k);
+  });
+  function tileHtml(k, isHero){
     const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
     const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
     const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
@@ -5106,10 +5140,21 @@ function _renderKpiStrip(){
     // captured in the delta + sub text.
     const _aria = `${k.lbl}: ${k.val}${k.chg ? ', change ' + k.chg : ''}. ${k.sub || ''}`
       .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
-    return `<div class="kpi" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
+    const tileCls = isHero ? 'kpi hero' : 'kpi';
+    return `<div class="${tileCls}" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
     <div class="kpi-val" style="color:${col}">${k.val}${d}</div>${sWrap}
     <div class="kpi-sub">${k.sub}</div>${priorRow}</div>`;
-  }).join("");
+  }
+  let html = '';
+  KPI_CLUSTERS.forEach((c, i)=>{
+    if (!buckets[i].length) return;
+    const tiles = buckets[i].map(k=>tileHtml(k, c.hero(k.lbl||''))).join('');
+    html += `<section class="kpi-cluster"><div class="kpi-cluster-hdr"><span class="kpi-cluster-icon" aria-hidden="true">${c.icon}</span>${c.label}</div><div class="kpi-strip">${tiles}</div></section>`;
+  });
+  if (other.length) {
+    html += `<section class="kpi-cluster"><div class="kpi-cluster-hdr"><span class="kpi-cluster-icon" aria-hidden="true">📌</span>Other</div><div class="kpi-strip">${other.map(k=>tileHtml(k,false)).join('')}</div></section>`;
+  }
+  strip.innerHTML = html;
 }
 // Register _renderKpiStrip() with the hydration chain.
 // MD.onHydrate is defined in the boot loader; if hydration has
