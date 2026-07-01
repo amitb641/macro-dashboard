@@ -1534,6 +1534,14 @@ h1 span{color:var(--accent)}
 .kpi-cluster-icon{font-size:12px;line-height:1}
 .kpi.hero{flex-grow:1.8}
 .kpi.hero .kpi-val{font-size:28px}
+/* Prevents a lone wrapped tile from stretching to the full row width
+   (flex:1 on .kpi otherwise fills all remaining space when a cluster's
+   tiles don't divide evenly into the row — e.g. Labor's 5 tiles wrap
+   4+1 around ~960px viewport width, and the orphaned 5th tile would
+   otherwise stretch across the entire row). Cap applies only to
+   cluster-scoped tiles, not the base .kpi class. */
+.kpi-cluster .kpi{max-width:280px}
+.kpi-cluster .kpi.hero{max-width:380px}
 /* theme-overlay.css (read-only) sets body.themed-sm .kpi-val to 30px!important
    as the default skin's base size — this mirror overrides it for hero tiles
    at higher specificity, matching the 1.2x ratio used for the dark-mode hero. */
