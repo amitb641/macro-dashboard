@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-01T17:41:11.513827Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T17:15:05.921222Z
 
 - **Status**: WARN
@@ -862,22 +878,6 @@ _0 critical · 78 warning · 0 stale_
 - ⚠️ **FRED fetch: BAMLH0A0HYM2** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
 - ⚠️ **FRED fetch: BAMLC0A0CM** — HTTPSConnectionPool(host='api.stlouisfed.org', port=443): Read timed out. (read timeout=15)
 - _… and 68 more_
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-05-28T17:56:28.426908Z
-
-- **Status**: WARN
-- **Total checks**: 643
-- **Passed**: 642
-- **Failed**: 1
-- **Critical divergences**: 1
 
 ### Panel data
 _1 critical · 0 warning · 0 stale_

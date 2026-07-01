@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-07-01T17:15:05.921222Z",
+  "validated_at": "2026-07-01T17:41:11.513827Z",
   "status": "WARN",
   "summary": {
     "total_checks": 665,
@@ -191,19 +191,19 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "437/437 filled",
+      "html_value": "438/438 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 218,
+      "tolerance": 219,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "437/437 filled",
+      "html_value": "438/438 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 218,
+      "tolerance": 219,
       "severity": "ok",
       "pass": true
     },
@@ -344,9 +344,9 @@
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "31/62 filled",
-      "source_value": "50% (min 0%)",
-      "difference": 31,
+      "html_value": "30/62 filled",
+      "source_value": "48% (min 0%)",
+      "difference": 32,
       "tolerance": 31,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-01T17:13:34.856925Z",
+      "collected_at": "2026-07-01T17:39:42.298300Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
