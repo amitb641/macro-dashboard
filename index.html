@@ -786,7 +786,13 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
           var tC='rgba(168,196,216,.90)', gC='rgba(238,244,255,.07)';
           Object.values(chart.scales||{}).forEach(function(s){
             if(!s.options) return;
-            if(s.options.ticks) s.options.ticks.color=tC;
+            if(s.options.ticks){
+              s.options.ticks.color=tC;
+              // Chart.js default tick weight (400) reads thin against a
+              // dark canvas — bump to 500 without disturbing whatever
+              // per-chart font size is already set inline.
+              s.options.ticks.font=Object.assign({},s.options.ticks.font,{weight:'500'});
+            }
             if(s.options.grid){s.options.grid.color=gC;s.options.grid.borderColor=gC;}
             if(s.options.border) s.options.border.color=gC;
             if(s.options.title&&s.options.title.display) s.options.title.color=tC;
@@ -1560,6 +1566,11 @@ body.themed-sm .kpi.hero{border-left:3px solid var(--accent)!important;padding-l
    as the default skin's base size — this mirror overrides it for hero tiles
    at higher specificity, matching the 1.2x ratio used for the dark-mode hero. */
 body.themed-sm .kpi.hero .kpi-val{font-size:36px!important}
+/* Same hairline stroke as the dark-mode base rule (~line 2521) — DM
+   Serif Display has no bold weight, this adds perceived sharpness
+   without font synthesis. body.themed-sm .kpi-val doesn't set this
+   (read-only theme-overlay.css), so it needs the explicit mirror. */
+body.themed-sm .kpi-val{-webkit-text-stroke:0.3px currentColor!important}
 
 /* NAV — Stripe Dashboard style: white bar, bordered pills, single accent */
 .nav-grouped{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:12px 24px;margin-bottom:22px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
@@ -2521,6 +2532,11 @@ h1 span { color: var(--accent) !important; }
   letter-spacing: -.02em !important;
   font-variant-numeric: tabular-nums !important;
   font-feature-settings: "tnum" 1, "lnum" 1 !important;
+  /* DM Serif Display ships one weight (400) — no bold variant exists to
+     switch to for a "sharper" look. A hairline same-color stroke adds
+     perceived mass/sharpness to the thin serif strokes without font
+     synthesis (browser fake-bolding distorts serif letterforms). */
+  -webkit-text-stroke: 0.3px currentColor !important;
   animation: countUp .5s .1s ease both !important;
 }
 .kpi-sub {
@@ -3212,8 +3228,10 @@ table{border-collapse:collapse}
 ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 /* Prevent iOS tap highlight */
 * { -webkit-tap-highlight-color: transparent; }
-/* Smooth font rendering */
-body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+/* Smooth font rendering — geometricPrecision was dark-mode-only before
+   (line ~1867); applying it globally here since it improves large serif
+   numeral rendering in light mode too, not just dark. */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: geometricPrecision; }
 </style>
 
 <style>
