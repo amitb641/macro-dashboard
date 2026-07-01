@@ -1,15 +1,15 @@
 {
-  "analyzed_at": "2026-07-01T18:10:22.342777Z",
+  "analyzed_at": "2026-07-01T20:35:53.435917Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 1,
   "flagged_count": 4,
   "values": {
     "ffr": 3.63,
-    "dgs2": 4.1,
-    "dgs5": 4.14,
-    "dgs10": 4.38,
-    "dgs30": 4.86,
+    "dgs2": 4.14,
+    "dgs5": 4.19,
+    "dgs10": 4.44,
+    "dgs30": 4.91,
     "ig_oas": 76,
     "hy_oas": 275,
     "unrate": 4.3,
@@ -34,7 +34,7 @@
     "brent": 71.59,
     "gdp_growth_q": 2.1,
     "cc_delinq": 2.92,
-    "spread_10_2_bp": 28
+    "spread_10_2_bp": 30
   },
   "signals": {
     "ffr": {
@@ -45,8 +45,8 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.38,
-      "delta": -0.04,
+      "value": 4.44,
+      "delta": 0.02,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 4.1,
-      "delta": 0.15,
+      "value": 4.14,
+      "delta": 0.19,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.14,
-      "delta": 0.07,
+      "value": 4.19,
+      "delta": 0.12,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 4.86,
-      "delta": -0.12,
+      "value": 4.91,
+      "delta": -0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 28,
-      "delta": -19,
+      "value": 30,
+      "delta": -17,
       "direction": "stable",
       "flagged": false,
       "alert": null
