@@ -1554,6 +1554,17 @@ body.themed-sm .kpi-cluster-hdr{color:var(--text2)!important}
    3px border doesn't shift where the label/value text starts. */
 body.themed-sm .kpi.hero{border-left:3px solid var(--accent)!important;padding-left:21px!important}
 :root[data-theme="dark"] .kpi.hero{border-left:3px solid var(--accent)!important;padding-left:21px!important}
+/* Rare red-zone alert cue (expert review, 2026-07-01) — replaces the
+   always-on threshold color that used to fill the main value text.
+   Placed after .kpi.hero above so alert red wins the border color if a
+   tile is ever both hero and alert (same specificity, source order
+   decides ties) — an active alert should read as more urgent than
+   "this is the headline metric". Amber/green tiles get no cue at all;
+   this only fires for genuine red-zone status, on purpose. */
+body.themed-sm .kpi.kpi-alert{border-left:2px solid #D64045!important;padding-left:22px!important}
+:root[data-theme="dark"] .kpi.kpi-alert{border-left:2px solid #FF6B6B!important;padding-left:22px!important}
+.kpi-alert-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#D64045;margin-left:4px;vertical-align:middle}
+:root[data-theme="dark"] .kpi-alert-dot{background:#FF6B6B}
 /* Prevents a lone wrapped tile from stretching to the full row width
    (flex:1 on .kpi otherwise fills all remaining space when a cluster's
    tiles don't divide evenly into the row — e.g. Labor's 5 tiles wrap
@@ -5087,19 +5098,27 @@ const _KPI_THRESHOLDS = {
   rate:    {parse:v=>parseFloat(v), purple:true, green:()=>false, red:()=>false} // always purple — policy rate
 };
 function _kpiColor(metric, val){
-  // Policy-rate purple (#8878B8) is reserved for the "neutral / policy
-  // rate" semantic role. Unknown-metric and NaN-value fallbacks return
-  // the brand accent (#336BCC) instead — these are not policy rates and
-  // shouldn't borrow the purple semantic, just render in the dashboard's
-  // default accent.
+  // Expert review (2026-07-01, terminal-veteran + accessibility panel):
+  // threshold-coloring the main value created two independent color
+  // channels on one tile — this function's red/green/amber status color
+  // and the adjacent delta badge's own direction color — that could
+  // visually disagree (e.g. an amber "still in watch zone" value next to
+  // a green "just improved" badge). Both experts converged: reserve
+  // red/green/amber for the badge (which already has a redundant arrow
+  // glyph), keep the main value neutral. Policy-rate purple is a
+  // different, non-alert semantic role and is unaffected.
   var t = _KPI_THRESHOLDS[metric];
-  if(!t) return '#336BCC';
-  if(t.purple) return '#8878B8'; // policy rates — always purple
+  if(t && t.purple) return '#8878B8';
+  return null; // neutral — caller omits the inline color, class default (--text) applies
+}
+function _kpiIsAlert(metric, val){
+  // True red-zone status only (not amber/green) — the rare, meaningful
+  // cue the expert panel recommended in place of always-on status color.
+  var t = _KPI_THRESHOLDS[metric];
+  if(!t || t.purple) return false;
   var n = t.parse(val);
-  if(isNaN(n)) return '#336BCC';
-  if(t.red(n)) return '#D64045';
-  if(t.green(n)) return '#1A9E5A';
-  return '#CC8A00';
+  if(isNaN(n)) return false;
+  return t.red(n);
 }
 let KPIS = null;
 let PRIOR_KPIS = null;  // prior-run snapshot — hydrated from state.json for cross-cycle overlay
@@ -5210,14 +5229,17 @@ function _renderKpiStrip(){
     if (idx >= 0) buckets[idx].push(k); else other.push(k);
   });
   function tileHtml(k, isHero){
-    const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || '#336BCC');
+    const col = k.metric ? _kpiColor(k.metric, k.val) : (k.col || null);
+    const isAlert = k.metric ? _kpiIsAlert(k.metric, k.val) : false;
+    const valStyle = col ? ` style="color:${col}!important"` : '';
+    const sparkColor = col || 'var(--muted)';
     const arrow = k.delta > 0 ? '▲' : k.delta < 0 ? '▼' : '→';
     const dir = k.delta > 0 ? 'up' : k.delta < 0 ? 'down' : 'flat';
     const cls = dir === 'flat' ? 'flat' : k.inv ? (dir === 'up' ? 'down' : 'up') : dir;
     const d = k.delta ? `<span class="kpi-delta ${cls}">${arrow} ${k.chg||''}</span>` : '';
     const b = _releaseBadge(k.badge);
     const s = _kpiSpark(k.spark);
-    const sWrap = s ? `<div class="kpi-spark-wrap" style="color:${col}">${s}</div>` : '';
+    const sWrap = s ? `<div class="kpi-spark-wrap" style="color:${sparkColor}">${s}</div>` : '';
     // Prior-week comparison row (only in overlay mode).
     let priorRow = '';
     if (priorMode) {
@@ -5229,12 +5251,14 @@ function _renderKpiStrip(){
     // a11y: roll label + value + delta into one aria-label so screen
     // readers announce the tile as a single unit instead of three.
     // Sparkline is aria-hidden — its trend information is already
-    // captured in the delta + sub text.
-    const _aria = `${k.lbl}: ${k.val}${k.chg ? ', change ' + k.chg : ''}. ${k.sub || ''}`
+    // captured in the delta + sub text. Alert state is spoken too,
+    // since the visual cue (dot + border) is otherwise color/shape only.
+    const _aria = `${k.lbl}: ${k.val}${k.chg ? ', change ' + k.chg : ''}.${isAlert ? ' Alert.' : ''} ${k.sub || ''}`
       .replace(/\s+/g, ' ').trim().replace(/"/g, '&quot;');
-    const tileCls = isHero ? 'kpi hero' : 'kpi';
-    return `<div class="${tileCls}" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${b}</div>
-    <div class="kpi-val" style="color:${col}!important">${k.val}${d}</div>${sWrap}
+    const tileCls = (isHero ? 'kpi hero' : 'kpi') + (isAlert ? ' kpi-alert' : '');
+    const alertDot = isAlert ? '<span class="kpi-alert-dot" aria-hidden="true"></span>' : '';
+    return `<div class="${tileCls}" role="group" aria-label="${_aria}"><div class="kpi-lbl">${k.lbl}${alertDot}${b}</div>
+    <div class="kpi-val"${valStyle}>${k.val}${d}</div>${sWrap}
     <div class="kpi-sub">${k.sub}</div>${priorRow}</div>`;
   }
   let html = '';
