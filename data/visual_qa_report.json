@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-07-01T05:01:39.563791Z",
+  "checked_at": "2026-07-01T05:09:31.583905Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 446,
-    "passed": 446,
+    "total_checks": 449,
+    "passed": 449,
     "failed": 0,
     "js_errors": 0,
     "console_errors": 0
@@ -98,6 +98,24 @@
     {
       "category": "global",
       "check": "Nav buttons present",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Pulse",
+      "check": "Tab panel visible",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Pulse",
+      "check": "Tab has content",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "Pulse",
+      "check": "No undefined/NaN/null values",
       "pass": true,
       "severity": "ok"
     },

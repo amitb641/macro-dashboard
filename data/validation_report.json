@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-07-01T05:01:24.336407Z",
+  "validated_at": "2026-07-01T05:09:15.845326Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 662,
-    "passed": 661,
+    "total_checks": 665,
+    "passed": 664,
     "failed": 1,
     "skipped": 1,
     "critical_divergences": 0
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-01T04:59:29.218368Z",
+      "collected_at": "2026-07-01T05:07:44.371575Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1584,6 +1584,24 @@
     },
     {
       "check": "Visual: global \u2014 Nav buttons present",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Pulse \u2014 Tab panel visible",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Pulse \u2014 Tab has content",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "check": "Visual: Pulse \u2014 No undefined/NaN/null values",
       "severity": "ok",
       "pass": true,
       "detail": ""
