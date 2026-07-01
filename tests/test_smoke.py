@@ -33,6 +33,44 @@ def _test(name, condition, detail=''):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# REAL-FILE ISOLATION GUARD — every phase below must operate on tmp_dir
+# copies only. This fingerprints the live project files most at risk
+# (state.json/screenshots corrupted a smoke-test run via unredirected
+# module globals in snapshot.py / renderer.py's _api_writer / validator.py's
+# embedded visual_qa call) so a future isolation regression fails loudly
+# instead of silently dirtying the working tree.
+# ═══════════════════════════════════════════════════════════════════════
+
+GUARDED_REAL_FILES = [
+    ROOT / 'data' / 'state.json',
+    ROOT / 'data' / 'signals.json',
+    ROOT / 'data' / 'validation_report.json',
+    ROOT / 'data' / 'visual_qa_report.json',
+    ROOT / 'data' / 'visual_review_report.json',
+    ROOT / 'index.html',
+]
+
+
+def _hash_real_files():
+    import hashlib
+    files = list(GUARDED_REAL_FILES)
+    screenshots_dir = ROOT / 'data' / 'screenshots'
+    if screenshots_dir.exists():
+        files += sorted(screenshots_dir.glob('*.png'))
+    return {str(f): hashlib.sha256(f.read_bytes()).hexdigest()
+            for f in files if f.exists()}
+
+
+def test_no_real_file_mutation(before):
+    """Regression guard: smoke tests must never modify real project data."""
+    print('\n── Test: Real Project Data Untouched ──')
+    after = _hash_real_files()
+    changed = sorted(p for p, h in before.items() if after.get(p) != h)
+    _test('No real project files modified by smoke tests', not changed,
+          f'{len(changed)} file(s) changed: {changed[:5]}')
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # FIXTURE GENERATION — build minimal realistic data for offline testing
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -470,6 +508,12 @@ def test_snapshot(tmp_dir):
     snapshot.DATA_DIR = tmp_dir / 'data'
     snapshot.SNAP_DIR = tmp_dir / 'data' / 'snapshots'
     snapshot.RAW_FILE = tmp_dir / 'data' / 'raw_data.json'
+    # STATE_FILE/SIGNALS_FILE are computed at import time from the *real*
+    # DATA_DIR and don't move when DATA_DIR is reassigned above — without
+    # redirecting them explicitly, rollback() below writes straight onto
+    # the live data/state.json and data/signals.json.
+    snapshot.STATE_FILE = tmp_dir / 'data' / 'state.json'
+    snapshot.SIGNALS_FILE = tmp_dir / 'data' / 'signals.json'
     snapshot.VAL_FILE = tmp_dir / 'data' / 'validation_report.json'
     snapshot.HTML_FILE = tmp_dir / 'index.html'
 
@@ -515,6 +559,7 @@ def test_renderer_idempotent(tmp_dir):
     """Test that running renderer twice produces identical output."""
     print('\n── Test: Renderer Idempotency ──')
     import renderer
+    import _api_writer
 
     html_file = tmp_dir / 'index.html'
     if not html_file.exists():
@@ -536,10 +581,21 @@ def test_renderer_idempotent(tmp_dir):
     renderer.errors = []
     renderer.warnings = []
 
+    # Same _api_writer redirect as test_renderer — every render() call
+    # writes data/state.json, not just the first. Without this the second
+    # (idempotency) render call falls through to the real live state.json.
+    _real_state_file = _api_writer._STATE_FILE
+    _real_state = _api_writer._STATE.copy()
+    _api_writer._STATE_FILE = tmp_dir / 'data' / 'state.json'
+    _api_writer._STATE = {}
+
     try:
         renderer.render()
     except SystemExit:
         pass
+    finally:
+        _api_writer._STATE_FILE = _real_state_file
+        _api_writer._STATE = _real_state
 
     second_html = html_file.read_text()
     second_size = len(second_html)
@@ -702,6 +758,10 @@ def main():
     print('SMOKE TESTS — Offline Pipeline Validation')
     print('=' * 60)
 
+    # Fingerprint real project files before touching anything, so we can
+    # prove at the end that no phase leaked a write onto the live repo.
+    before_hashes = _hash_real_files()
+
     # Create temp directory with project structure
     tmp_dir = Path(tempfile.mkdtemp(prefix='macro_smoke_'))
     print(f'Working dir: {tmp_dir}')
@@ -724,6 +784,12 @@ def main():
         os.environ.pop('BLS_API_KEY', None)
         os.environ.pop('EIA_API_KEY', None)
 
+        # Offline smoke tests must never spin up a real browser against the
+        # live index.html — validator.validate() embeds a Playwright visual
+        # QA pass that (unlike this suite's other phases) resolves its file
+        # paths from repo ROOT, not from a redirectable module global.
+        os.environ['MACRO_SKIP_VISUAL_QA'] = '1'
+
         # Run tests sequentially (each depends on prior output)
         test_analyzer(tmp_dir)
         test_renderer(tmp_dir)
@@ -734,6 +800,7 @@ def main():
         test_healthcheck_module()
         test_panel_subtitle_gates(tmp_dir)
         test_commentary_patch_regexes(tmp_dir)
+        test_no_real_file_mutation(before_hashes)
 
     finally:
         # Cleanup

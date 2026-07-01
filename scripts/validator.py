@@ -29,6 +29,15 @@ KNOWN_NORMAL_FILE = ROOT / 'data' / 'known_normal.json'
 FRED_KEY  = os.environ.get('FRED_API_KEY', '')
 BLS_KEY   = os.environ.get('BLS_API_KEY', '')
 
+# Offline smoke tests set this so validate() doesn't spin up a real
+# Playwright/Chromium session against the live index.html and repo-root
+# data/screenshots + data/visual_qa_report.json (visual_qa.py and
+# visual_review.py resolve their own paths from repo ROOT, independent
+# of this module's ROOT/HTML_FILE, so redirecting those isn't enough —
+# skip the passes entirely instead). Full visual coverage still runs via
+# the dedicated visual_qa.py / visual_review.py CI steps.
+SKIP_VISUAL_CHECKS = os.environ.get('MACRO_SKIP_VISUAL_QA', '') == '1'
+
 # ── Tolerance thresholds ──────────────────────────────────────────────
 # How much divergence to allow before flagging (accounts for rounding)
 TOLERANCES = {
@@ -1057,6 +1066,13 @@ def check_visual():
     """Run DOM-based visual QA checks if Playwright is available.
     Also captures screenshots for Agent 8 visual review.
     Returns list of findings from the visual QA agent."""
+    if SKIP_VISUAL_CHECKS:
+        return [{
+            'check': 'Visual QA',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': 'MACRO_SKIP_VISUAL_QA=1 (offline smoke test)',
+        }]
     try:
         # Add scripts dir to path for visual_qa import
         scripts_dir = str(Path(__file__).parent)
@@ -1113,6 +1129,13 @@ def check_visual_review():
     """Run vision-based review using Claude's multimodal capability (Agent 8).
     Analyzes screenshots for pixel-level visual defects.
     Returns list of findings."""
+    if SKIP_VISUAL_CHECKS:
+        return [{
+            'check': 'Visual Review (Agent 8)',
+            'severity': 'skipped',
+            'pass': True,
+            'reason': 'MACRO_SKIP_VISUAL_QA=1 (offline smoke test)',
+        }]
     try:
         scripts_dir = str(Path(__file__).parent)
         if scripts_dir not in sys.path:
