@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-01T14:07:54.210140Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T13:40:04.849540Z
 
 - **Status**: WARN
@@ -862,29 +878,6 @@ _1 critical · 0 warning · 0 stale_
 ---
 
 ## Repair Agent — 2026-05-28T05:45:53.352154Z
-
-- **Status**: WARN
-- **Total checks**: 644
-- **Passed**: 640
-- **Failed**: 4
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-
-### Staleness
-_0 critical · 0 warning · 2 stale_
-
-- ⏰ **Staleness: unrate** — 57d old (limit 55d)
-- ⏰ **Staleness: payems** — 57d old (limit 55d)
-
-
----
-
-## Repair Agent — 2026-05-28T05:32:58.663940Z
 
 - **Status**: WARN
 - **Total checks**: 644
