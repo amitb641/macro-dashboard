@@ -7999,9 +7999,32 @@ function buildYieldTab(){
   }catch(e){console.error("Treasury chart error:",e);}
 
   // ── Treasury Yield Macro & Credit Risk Explainer ─────────────────────
+  // Backgrounds/borders were hardcoded light pastels (#F5F0FF/#FFF7ED)
+  // with no dark-mode branch, while the body text already used the
+  // theme-aware var(--text2) token -- in dark mode that resolves to a
+  // LIGHT blue-gray, landing on a background that never left light mode:
+  // light-on-light, unreadable. Confirmed via a user screenshot. Fix:
+  // branch backgrounds/borders on _isDark, same translucent-tint pattern
+  // already used for the Oil tab shock tracker's header cards. Title/
+  // border-left accent colors (#8878B8/#CC8A00) and the body's
+  // var(--text2) are unchanged -- both already theme-safe.
+  (function(){
+    var _isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    var _te = _isDark ? {
+      // .10 measured 4.35:1 for the #8878B8 title text against the
+      // composited background -- just under WCAG 4.5:1 (11px bold
+      // doesn't qualify for the large-text 3:1 exception). .06 darkens
+      // the composite slightly, clearing the threshold for the same
+      // unchanged title color.
+      purpleBg:'rgba(136,120,184,.06)', purpleBd:'rgba(136,120,184,.25)',
+      amberBg:'rgba(204,138,0,.10)', amberBd:'rgba(204,138,0,.30)'
+    } : {
+      purpleBg:'#F5F0FF', purpleBd:'rgba(136,120,184,.15)',
+      amberBg:'#FFF7ED', amberBd:'rgba(204,138,0,.15)'
+    };
   document.getElementById("treasury-explainer").innerHTML = `
   <div style="margin-top:8px;display:flex;flex-direction:column;gap:10px">
-    <div style="display:flex;align-items:flex-start;gap:14px;background:#F5F0FF;border:1px solid rgba(136,120,184,.15);border-left:4px solid #8878B8;border-radius:10px;padding:14px 18px">
+    <div style="display:flex;align-items:flex-start;gap:14px;background:${_te.purpleBg};border:1px solid ${_te.purpleBd};border-left:4px solid #8878B8;border-radius:10px;padding:14px 18px">
       <div style="font-size:26px;flex-shrink:0">📐</div>
       <div style="flex:1">
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8878B8;margin-bottom:3px">HOW TREASURY YIELDS IMPACT THE MACRO ECONOMY</div>
@@ -8015,7 +8038,7 @@ function buildYieldTab(){
         </div>
       </div>
     </div>
-    <div style="display:flex;align-items:flex-start;gap:14px;background:#FFF7ED;border:1px solid rgba(204,138,0,.15);border-left:4px solid #CC8A00;border-radius:10px;padding:14px 18px">
+    <div style="display:flex;align-items:flex-start;gap:14px;background:${_te.amberBg};border:1px solid ${_te.amberBd};border-left:4px solid #CC8A00;border-radius:10px;padding:14px 18px">
       <div style="font-size:26px;flex-shrink:0">⚠️</div>
       <div style="flex:1">
         <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#CC8A00;margin-bottom:3px">YIELD CURVE & CREDIT RISK SIGNALS</div>
@@ -8030,6 +8053,7 @@ function buildYieldTab(){
     </div>
   </div>
   `;
+  })();
 
   // ── Rate history table ─────────────────────────────────────────────
   try{
