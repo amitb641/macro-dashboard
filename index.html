@@ -1500,7 +1500,7 @@ window.Chart.defaults={color:"#94A3B8",borderColor:"#E2E8F0"};
 :root{
   --bg:#F7F8FA;--bg2:#EEF1F7;--card:#FFFFFF;--card2:#F1F4F9;
   --border:#E2E8F0;--bord2:#CBD5E1;
-  --text:#0D1B2A;--text2:#334E68;--muted:#7A8FA8;--dim:#94A3B8;
+  --text:#0D1B2A;--text2:#334E68;--muted:#5B6B80;--dim:#5F6F84;
   --accent:#336BCC;--acc2:#2B5AB3;
   --green:#1A9E5A;--red:#D64045;--amber:#CC8A00;--blue:#336BCC;--purple:#8878B8;
 }
@@ -1537,10 +1537,12 @@ h1 span{color:var(--accent)}
 .kpi-cluster:last-child{margin-bottom:0}
 .kpi-cluster .kpi-strip{margin-bottom:0}
 .kpi-cluster-hdr{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
-/* --muted computes to 3.32:1 against a white themed-sm card — fails WCAG
-   1.4.3 (10px is normal-size text, needs 4.5:1, not the 3:1 large-text
-   exception). Dark mode already mirrors to --text2 (line ~2100); this
-   is the missing themed-sm counterpart, same fix. */
+/* 2026-07-01: --muted (light) was raised from #7A8FA8 (3.32:1, WCAG fail)
+   to #5B6B80 (5.12:1+, pass) at the :root token level, so this override
+   is no longer accessibility-load-bearing. Kept anyway as a deliberate
+   emphasis choice — cluster section headers (LABOR MARKET, POLICY &
+   RATES, etc.) read at --text2 in both themes so they stay visually
+   heavier than ordinary --muted captions (kpi-lbl, m-lbl, panel-sub). */
 body.themed-sm .kpi-cluster-hdr{color:var(--text2)!important}
 .kpi-cluster-icon{font-size:12px;line-height:1}
 .kpi.hero{flex-grow:1.8}
@@ -1878,7 +1880,14 @@ body.sidebar-active .nav-two-tier{display:none!important}
 @media(max-width:900px){:root[data-theme="dark"] body{padding:32px 32px 60px!important}}
 @media(max-width:720px){:root[data-theme="dark"] body{padding:28px 20px 56px!important}}
 :root[data-theme="dark"] .nav-grouped{background:var(--card2);border-color:var(--border)}
-:root[data-theme="dark"] .nav-btn{color:var(--text2)}
+/* §24.36b — .nav-btn base state was missing background/border-color in
+   dark mode entirely (only :hover and .active had their own); the plain
+   inactive state fell through to the light-mode base rule's solid white
+   background:#fff;border:1px solid #D1D5DB, rendering as a bright white
+   pill next to its dark-navy .active sibling. Found while fixing §24.36's
+   icon fills — the icon fix was masked by this larger, separately-broken
+   button background. */
+:root[data-theme="dark"] .nav-btn{color:var(--text2);background:var(--card2);border-color:var(--border)}
 :root[data-theme="dark"] .nav-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04);border-color:var(--bord2)}
 :root[data-theme="dark"] .nav-btn.active{color:var(--accent);background:var(--accent-soft)}
 :root[data-theme="dark"] .up{color:var(--red)}
@@ -1908,6 +1917,28 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] #housing-metro-tbl td[data-label="Market Note"]{min-width:240px!important;max-width:300px!important}
 :root[data-theme="dark"] #oil-episodes-tbl td[data-label="Economic Consequence"]{min-width:280px!important;max-width:340px!important}
 }
+/* §24.36 — Nav icon (_IC map, both sidebar + mobile pill copies) pastel
+   backdrop fills are hardcoded for a white card and have zero dark-mode
+   branch — e.g. cpi's fill="#FEF2F2" renders as a near-white house shape
+   floating on the dark nav pill. Icon strokes (DC2626, 336BCC, etc.) are
+   already mid-saturation brand colors that read fine on dark and are left
+   alone; only the near-white/pastel backdrop + inner-accent fills are
+   dimmed to a translucent wash. Enumerates every distinct pastel fill
+   used across all 14 icons in both _IC copies (~8357, ~8461). */
+:root[data-theme="dark"] .nav-icon [fill="#FEE2E2"],
+:root[data-theme="dark"] .nav-icon [fill="#EAF1FB"],
+:root[data-theme="dark"] .nav-icon [fill="#ECFDF5"],
+:root[data-theme="dark"] .nav-icon [fill="#DBEAFE"],
+:root[data-theme="dark"] .nav-icon [fill="#FEF3C7"],
+:root[data-theme="dark"] .nav-icon [fill="#FEF9C3"],
+:root[data-theme="dark"] .nav-icon [fill="#FEF2F2"],
+:root[data-theme="dark"] .nav-icon [fill="#FECACA"],
+:root[data-theme="dark"] .nav-icon [fill="#FFF7ED"],
+:root[data-theme="dark"] .nav-icon [fill="#EDE9FE"],
+:root[data-theme="dark"] .nav-icon [fill="#E0E7FF"],
+:root[data-theme="dark"] .nav-icon [fill="#CFFAFE"],
+:root[data-theme="dark"] .nav-icon [fill="#DCFCE7"],
+:root[data-theme="dark"] .nav-icon [fill="#BBF7D0"]{fill-opacity:.16}
 /* §24.5 — Sidebar full dark treatment */
 :root[data-theme="dark"] .nav-sidebar{background:#060C16;border-right-color:var(--border)}
 :root[data-theme="dark"] .nsb-hdr{border-bottom-color:var(--border)}
