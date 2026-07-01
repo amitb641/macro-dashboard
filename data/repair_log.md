@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-01T13:40:04.849540Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T13:29:22.023862Z
 
 - **Status**: WARN
@@ -887,36 +903,6 @@ _0 critical · 0 warning · 2 stale_
 
 - ⏰ **Staleness: unrate** — 57d old (limit 55d)
 - ⏰ **Staleness: payems** — 57d old (limit 55d)
-
-
----
-
-## Repair Agent — 2026-05-28T05:01:57.380373Z
-
-- **Status**: WARN
-- **Total checks**: 635
-- **Passed**: 628
-- **Failed**: 7
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-
-### Staleness
-_0 critical · 0 warning · 2 stale_
-
-- ⏰ **Staleness: unrate** — 57d old (limit 55d)
-- ⏰ **Staleness: payems** — 57d old (limit 55d)
-
-### Panel data
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse const CPI_CAT_MOM from HTML
-- ⚠️ **Energy and housing components are pulling the PCE basket higher: data const PCE_CAT_MOM extractable** — Could not parse const PCE_CAT_MOM from HTML
-- ⚠️ **Hiring is now concentrated in healthcare and leisure: data const SECTOR_MOM extractable** — Could not parse const SECTOR_MOM from HTML
 
 
 ---
