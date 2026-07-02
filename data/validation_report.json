@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-07-02T13:16:32.052003Z",
+  "validated_at": "2026-07-02T13:52:29.049546Z",
   "status": "WARN",
   "summary": {
     "total_checks": 665,
-    "passed": 662,
-    "failed": 3,
+    "passed": 664,
+    "failed": 1,
     "skipped": 1,
-    "critical_divergences": 2
+    "critical_divergences": 0
   },
   "internal_consistency": [
     {
@@ -47,8 +47,8 @@
     },
     {
       "check": "Unemployment rate (latest)",
-      "html_value": 4.3,
-      "source_value": 4.3,
+      "html_value": 4.2,
+      "source_value": 4.2,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -56,8 +56,8 @@
     },
     {
       "check": "NFP BLS MoM (latest)",
-      "html_value": 172,
-      "source_value": 172,
+      "html_value": 57,
+      "source_value": 57,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -65,8 +65,8 @@
     },
     {
       "check": "KPI Unemployment",
-      "html_value": 4.3,
-      "source_value": 4.3,
+      "html_value": 4.2,
+      "source_value": 4.2,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -164,9 +164,9 @@
     },
     {
       "check": "NFP_VS_ADP.adp completeness",
-      "html_value": "3/13 filled",
-      "source_value": "23% (min 8%)",
-      "difference": 10,
+      "html_value": "4/13 filled",
+      "source_value": "31% (min 8%)",
+      "difference": 9,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
@@ -607,8 +607,8 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
+      "raw_data_value": 4.2,
+      "fresh_api_value": 4.2,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -670,8 +670,8 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 159001.0,
-      "fresh_api_value": 159001.0,
+      "raw_data_value": 158984.0,
+      "fresh_api_value": 158984.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -699,8 +699,8 @@
   "staleness": [
     {
       "check": "Staleness: unrate",
-      "latest_date": "2026-05-01",
-      "age_days": 62,
+      "latest_date": "2026-06-01",
+      "age_days": 31,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -739,8 +739,8 @@
     },
     {
       "check": "Staleness: payems",
-      "latest_date": "2026-05-01",
-      "age_days": 62,
+      "latest_date": "2026-06-01",
+      "age_days": 31,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-02T13:15:03.534066Z",
+      "collected_at": "2026-07-02T13:51:07.347475Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -926,26 +926,26 @@
     {
       "check": "Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys",
       "title_months": [
-        "apr",
+        "jun",
         "may"
       ],
       "data_keys": [
         "jun",
         "may"
       ],
-      "severity": "divergence",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Hiring is now concentrated in healthcare and leisure: prior-month chip matches title",
-      "expected_prior": "Apr'26",
+      "expected_prior": "May'26",
       "chips_found": [
-        "Apr'26",
         "May'26",
-        "May'26",
-        "May'26",
-        "May'26",
-        "Apr'26"
+        "Jun'26",
+        "Jun'26",
+        "Jun'26",
+        "Jun'26",
+        "May'26"
       ],
       "severity": "ok",
       "pass": true
@@ -953,25 +953,25 @@
     {
       "check": "Unemployment is rising broadly across sectors: title months match U_SECTOR_MOM keys",
       "title_months": [
-        "apr",
+        "jun",
         "may"
       ],
       "data_keys": [
         "jun",
         "may"
       ],
-      "severity": "divergence",
-      "pass": false
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Unemployment is rising broadly across sectors: prior-month chip matches title",
-      "expected_prior": "Apr'26",
+      "expected_prior": "May'26",
       "chips_found": [
+        "Jun'26",
         "May'26",
-        "Apr'26",
-        "May'26",
-        "May'26",
-        "Apr'26"
+        "Jun'26",
+        "Jun'26",
+        "May'26"
       ],
       "severity": "ok",
       "pass": true
@@ -980,10 +980,10 @@
   "metric_consistency": [
     {
       "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
-      "reference": 172.0,
+      "reference": 57.0,
       "surfaces": {
-        "NFP_BLS_MOM.bls[-1]": 172.0,
-        "KPIS Jobs tile": 172.0,
+        "NFP_BLS_MOM.bls[-1]": 57.0,
+        "KPIS Jobs tile": 57.0,
         "Commentary payrolls": "MISSING"
       },
       "severity": "ok",
@@ -991,10 +991,10 @@
     },
     {
       "check": "Unemployment rate (%): surfaces agree within \u00b10.1 (ref: U_MONTHLY.data[-1])",
-      "reference": 4.3,
+      "reference": 4.2,
       "surfaces": {
-        "U_MONTHLY.data[-1]": 4.3,
-        "KPIS Unemployment": 4.3,
+        "U_MONTHLY.data[-1]": 4.2,
+        "KPIS Unemployment": 4.2,
         "Commentary U-3": "MISSING"
       },
       "severity": "ok",
@@ -4200,9 +4200,9 @@
       "pass": true,
       "severity": "ok",
       "metric": "unrate",
-      "fred": 4.3,
+      "fred": 4.2,
       "bls": 4.2,
-      "diff": 0.1,
+      "diff": 0.0,
       "tol": 0.21,
       "note": null
     },

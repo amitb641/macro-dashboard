@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-02T13:52:29.049546Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 123d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-02T13:16:32.052003Z
 
 - **Status**: WARN
@@ -813,28 +829,6 @@ _0 critical · 3 warning · 0 stale_
 _0 critical · 0 warning · 1 stale_
 
 - ⏰ **Staleness: umcsent** — 64d old (limit 35d)
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-06-04T04:35:19.095014Z
-
-- **Status**: WARN
-- **Total checks**: 650
-- **Passed**: 647
-- **Failed**: 3
-- **Critical divergences**: 1
-
-### Collector errors
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60
-- ⚠️ **EIA fetch: RBRTE** — 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RBRTE&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60
 
 ### Panel data
 _1 critical · 0 warning · 0 stale_

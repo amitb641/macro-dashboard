@@ -1,5 +1,5 @@
 {
-  "analyzed_at": "2026-07-02T13:15:34.931812Z",
+  "analyzed_at": "2026-07-02T13:51:29.586088Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 1,
@@ -12,10 +12,10 @@
     "dgs30": 4.91,
     "ig_oas": 76,
     "hy_oas": 275,
-    "unrate": 4.3,
-    "u6rate": 8.1,
-    "nfp_level": 159001.0,
-    "nfp_mom": 172,
+    "unrate": 4.2,
+    "u6rate": 7.9,
+    "nfp_level": 158984.0,
+    "nfp_mom": 57,
     "icsa": 215000.0,
     "ccsa": 1814000.0,
     "wages_yoy": 3.5,
@@ -66,8 +66,8 @@
       "alert": null
     },
     "unrate": {
-      "value": 4.3,
-      "delta": 0.0,
+      "value": 4.2,
+      "delta": -0.1,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -87,8 +87,8 @@
       "alert": null
     },
     "nfp_mom": {
-      "value": 172,
-      "delta": 57,
+      "value": 57,
+      "delta": -58,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -185,8 +185,8 @@
       "alert": "alert"
     },
     "u6rate": {
-      "value": 8.1,
-      "delta": -0.1,
+      "value": 7.9,
+      "delta": -0.3,
       "direction": "stable",
       "flagged": false,
       "alert": null
