@@ -233,19 +233,24 @@ align. Without this rule, `1,234` and `9,999` shift columns visually.
 Defined on `:root` in `index.html` near line 406. **Agents must read
 this section, not invent colours.**
 
+2026-07-01: repainted "ink on paper" — chrome (bg/card/border/text/muted)
+moves from cool blue-white to warm ivory/paper. Every semantic/data
+colour (accent, green, red, amber, purple) is deliberately untouched —
+same principle as the dark-theme "OLED noir" repaint below.
+
 ```
---bg      #F7F8FA    page background
---bg2     #EEF1F7    secondary background (table header, hover)
---card    #FFFFFF    panel / card background
---card2   #F1F4F9    nested card background
+--bg      #FAF9F6    page background
+--bg2     #F3F1EA    secondary background (table header, hover)
+--card    #FFFEFB    panel / card background
+--card2   #F5F3EC    nested card background
 
---border  #E2E8F0    default 1px border
---bord2   #CBD5E1    emphasised border (focus, separators)
+--border  #D8D4C8    default 1px border
+--bord2   #C9C4B4    emphasised border (focus, separators)
 
---text    #0D1B2A    primary text   (rgb 13, 27, 42)
---text2   #334E68    body / commentary (rgb 51, 78, 104)
---muted   #7A8FA8    labels, sources, metadata (rgb 122, 144, 168)
---dim     #94A3B8    de-emphasised metadata, placeholders
+--text    #1A1613    primary text   (rgb 26, 22, 19)
+--text2   #4A4438    body / commentary (rgb 74, 68, 56)
+--muted   #6E6656    labels, sources, metadata (rgb 110, 102, 86)
+--dim     #746E60    de-emphasised metadata, placeholders
 
 --accent  #336BCC    primary brand blue (link, focus, primary chart series)
 --acc2    #2B5AB3    accent-darker (hover, pressed)
@@ -290,9 +295,9 @@ Restricted; do not deviate.
 | Tertiary / overlay | `--amber` #CC8A00 | Forecast band, threshold marker |
 | Up bars (in MoM views) | `--red` #D64045 at 60-80% | Direction up |
 | Down bars (in MoM views) | `--green` #1A9E5A at 60-80% | Direction down |
-| Reference baseline | `--dim` #94A3B8 | Annual average dashed line |
-| Recession band | `rgba(13,27,42,.06)` | Tufte-grade subtle grey |
-| Grid lines | `--border` #E2E8F0 at 60% | Y-axis grid |
+| Reference baseline | `--dim` #746E60 | Annual average dashed line |
+| Recession band | `rgba(26,22,19,.06)` | Tufte-grade subtle grey |
+| Grid lines | `--border` #D8D4C8 at 60% | Y-axis grid |
 
 Charts with >3 series should re-design (split into two charts) before
 adding a 4th colour.
@@ -1277,19 +1282,26 @@ fails, panels never get `.pre-reveal` and stay fully visible.
 Single toggle, persisted in `localStorage.md_theme`. `<html
 data-theme="dark">` swaps every palette variable from §3:
 
+This table had drifted out of sync with actual shipped values across
+several prior sessions (not just the 2026-07-01 repaints) — corrected
+below to match the real `:root` blocks in `index.html` as of
+2026-07-01. Light is "ink on paper", dark is "OLED noir" — both are
+chrome-only repaints; every semantic/data colour is shared and
+unchanged across themes (see §4.1 for the full palette).
+
 | Var | Light | Dark |
 |---|---|---|
-| `--bg` | `#FAFAF7` | `#0F1419` |
-| `--card` | `#FFFFFF` | `#161B25` |
-| `--text` | `#0D1B2A` | `#E5E9F0` |
-| `--text2` | `#3F4A5C` | `#A8B2C1` |
-| `--muted` | `#6B7280` | `#7A8696` |
-| `--border` | `#E2E8F0` | `#243042` |
-| `--accent` | `#336BCC` | `#5B8CE6` |
-| `--grid` | `rgba(13,27,42,.06)` | `rgba(229,233,240,.08)` |
+| `--bg` | `#FAF9F6` | `#0A0A0A` |
+| `--card` | `#FFFEFB` | `#161616` |
+| `--text` | `#1A1613` | `#F5F5F5` |
+| `--text2` | `#4A4438` | `#B8B8B8` |
+| `--muted` | `#6E6656` | `#8A8A8A` |
+| `--border` | `#D8D4C8` | `#2A2A2A` |
+| `--accent` | `#336BCC` | `#4E9EFF` |
+| `--grid` | `rgba(26,22,19,.06)` | `rgba(245,245,245,.055)` |
 
 Bloomberg up-in-red is preserved across both themes (light `#D64045`
-+ dark `#FF6B6B`). No new accent colours added — dark mode is a
++ dark `#FF4F4F`). No new accent colours added — dark mode is a
 re-tone of the existing palette, not a new identity.
 
 ### 24.4 — Theme-toggle pill

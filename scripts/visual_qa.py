@@ -842,17 +842,26 @@ def run_visual_qa(take_screenshots=False):
                 # Keep this set in sync with the --text2 / --text variants
                 # declared on `:root` in index.html. The check fires when a
                 # hand-edit drifts the commentary to an off-palette color.
+                # 2026-07-01: superseded by the "ink on paper" light-theme
+                # repaint (--text 0D1B2A→1A1613, --text2 334E68→4A4438,
+                # --muted 5B6B80→6E6656, .fc-note ink 1E293B→1F1A13) — old
+                # values kept commented for history, not matched anymore.
                 allowed_colors = {
-                    'rgb(51, 78, 104)',   # #334E68 — current --text2
-                    'rgb(13, 27, 42)',    # #0D1B2A — --text (when commentary
+                    'rgb(74, 68, 56)',    # #4A4438 — current --text2
+                    'rgb(26, 22, 19)',    # #1A1613 — --text (when commentary
                                           #                 escapes its var)
-                    'rgb(122, 144, 168)', # #7A8FA8 — --muted (panel-level
+                    'rgb(110, 102, 86)',  # #6E6656 — --muted (panel-level
                                           #                 commentary tints)
-                    'rgb(30, 41, 59)',    # #1E293B — Slate-800, applied by
-                                          # theme-overlay.css on body.themed-sm
-                                          # .fc-note (sanctioned themed variant
-                                          # per 8pt-grid visual audit). Uniform
-                                          # across all 12 swept tabs; not drift.
+                    'rgb(31, 26, 19)',    # #1F1A13 — ink, applied by
+                                          # theme-overlay.css-mirrored rule on
+                                          # body.themed-sm .fc-note (sanctioned
+                                          # themed variant per 8pt-grid visual
+                                          # audit). Uniform across all 12 swept
+                                          # tabs; not drift.
+                    # 'rgb(51, 78, 104)',   # #334E68 — pre-2026-07-01 --text2
+                    # 'rgb(13, 27, 42)',    # #0D1B2A — pre-2026-07-01 --text
+                    # 'rgb(122, 144, 168)', # #7A8FA8 — pre-2026-07-01 --muted
+                    # 'rgb(30, 41, 59)',    # #1E293B — pre-2026-07-01 .fc-note
                 }
                 _check(
                     tab_name, 'Commentary color matches palette',

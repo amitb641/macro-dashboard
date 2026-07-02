@@ -783,7 +783,7 @@ if(!_ChartJS) console.error("chart.umd.min.js failed to load — SLOOS chart wil
         id:'md_dark_theme',
         afterUpdate:function(chart){
           if(document.documentElement.getAttribute('data-theme')!=='dark') return;
-          var tC='rgba(168,196,216,.90)', gC='rgba(238,244,255,.07)';
+          var tC='rgba(184,184,184,.90)', gC='rgba(245,245,245,.055)';
           Object.values(chart.scales||{}).forEach(function(s){
             if(!s.options) return;
             if(s.options.ticks){
@@ -1007,10 +1007,10 @@ class MC{
   destroy(){const c=this.ctx.canvas;c.width=c.width;c.removeEventListener("mousemove",this._onMM);c.removeEventListener("mouseleave",this._onML);const _i=(window._MC_ALL||[]).indexOf(this);if(_i>=0)(window._MC_ALL||[]).splice(_i,1);}
   update(){this._render();}
   _isDk(){return document.documentElement.getAttribute('data-theme')==='dark';}
-  _tk(){return this._isDk()?'rgba(170,195,218,.62)':'#94A3B8';}
-  _gr(){return this._isDk()?'rgba(238,244,255,.055)':'#EEF1F7';}
-  _lb(){return this._isDk()?'rgba(170,195,218,.80)':'#334E68';}
-  _dl(){return this._isDk()?'rgba(14,23,38,.88)':'rgba(255,255,255,0.92)';}
+  _tk(){return this._isDk()?'rgba(184,184,184,.62)':'#746E60';}
+  _gr(){return this._isDk()?'rgba(245,245,245,.055)':'#F3F1EA';}
+  _lb(){return this._isDk()?'rgba(184,184,184,.80)':'#4A4438';}
+  _dl(){return this._isDk()?'rgba(10,10,10,.88)':'rgba(255,254,251,0.92)';}
   _isMini(){// mini chart = small height wrapper
     const c=this.ctx.canvas;
     const p=c.parentElement;return p&&(p.offsetHeight||p.clientHeight||0)<100;}
@@ -1498,9 +1498,13 @@ window.Chart.defaults={color:"#94A3B8",borderColor:"#E2E8F0"};
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F7F8FA;--bg2:#EEF1F7;--card:#FFFFFF;--card2:#F1F4F9;
-  --border:#E2E8F0;--bord2:#CBD5E1;
-  --text:#0D1B2A;--text2:#334E68;--muted:#5B6B80;--dim:#5F6F84;
+  /* 2026-07-01 — "ink on paper" repaint (mirrors the theme-overlay.css
+     override block above). Chrome only; every data color below is
+     untouched on purpose, same principle as the dark-mode OLED-noir
+     repaint. */
+  --bg:#FAF9F6;--bg2:#F3F1EA;--card:#FFFEFB;--card2:#F5F3EC;
+  --border:#D8D4C8;--bord2:#C9C4B4;
+  --text:#1A1613;--text2:#4A4438;--muted:#6E6656;--dim:#746E60;
   --accent:#336BCC;--acc2:#2B5AB3;
   --green:#1A9E5A;--red:#D64045;--amber:#CC8A00;--blue:#336BCC;--purple:#8878B8;
 }
@@ -1585,8 +1589,125 @@ body.themed-sm .kpi.hero .kpi-val{font-size:36px!important}
    (read-only theme-overlay.css), so it needs the explicit mirror. */
 body.themed-sm .kpi-val{-webkit-text-stroke:0.3px currentColor!important}
 
+/* ══════════════════════════════════════════════════════════════════
+   2026-07-01 — LIGHT THEME REPAINT: "ink on paper"
+   theme-overlay.css (read-only, the actual body.themed-sm default skin)
+   hardcodes every chrome color as a literal hex with !important, and it
+   loads via <link> near the end of <body> (after this <style> block),
+   so an equal-specificity body.themed-sm override here would LOSE the
+   cascade tie-break by source order. Every selector below adds one
+   extra `html` type-selector of specificity (proven working pattern —
+   see the `.kpi.hero .kpi-val` mirror above) to reliably win instead.
+   Chrome (bg/card/border/ink/muted-label text) moves from cool
+   blue-white to warm ivory/paper; every semantic/data color (accent
+   blue, green, red, amber, purple, and their tinted chip backgrounds)
+   is deliberately left untouched — same "chrome only" principle as the
+   dark-mode OLED-noir repaint. Mirrors theme-overlay.css section by
+   section so a future diff of that file is easy to re-mirror here.
+   ══════════════════════════════════════════════════════════════════ */
+/* core page chrome */
+html body.themed-sm{
+  background:#FAF9F6!important;color:#1A1613!important;
+  background-color:#FAF9F6!important;
+  background-image:
+    radial-gradient(ellipse 1600px 600px at 50% -200px, rgba(51,107,204,.035), transparent 70%),
+    linear-gradient(180deg, #FBFAF7 0%, #FAF9F6 400px)!important;
+}
+/* wordmark */
+html body.themed-sm .sm-wordmark{color:#6E6656}
+html body.themed-sm .sm-wordmark .sm-wm-sep{color:#C9C4B4}
+html body.themed-sm .sm-wordmark .sm-wm-issue{color:#1A1613}
+/* hero */
+html body.themed-sm .eyebrow{color:#6E6656!important}
+html body.themed-sm>h1{color:#1A1613!important}
+html body.themed-sm .subtitle{color:#55503F!important}
+/* meta strip */
+html body.themed-sm .sm-meta{border-bottom:1px solid #D8D4C8;color:#6E6656}
+html body.themed-sm .sm-meta .sm-meta-sep{color:#C9C4B4}
+html body.themed-sm .sm-meta .sm-meta-bold{color:#1A1613}
+/* macro-state hero card */
+html body.themed-sm .macro-state{background:#FFFEFB!important;border:1px solid #D8D4C8!important}
+html body.themed-sm .macro-state .ms-eyebrow{color:#6E6656!important}
+html body.themed-sm .macro-state .ms-verdict{color:#1A1613!important}
+html body.themed-sm .macro-state .ms-bars{border-top:1px solid #F0EDE3}
+html body.themed-sm .macro-state .ms-bar-lbl{color:#6E6656!important}
+html body.themed-sm .macro-state .ms-bar-track{background:#F0EDE3}
+html body.themed-sm .macro-state .ms-bar-val{color:#1A1613!important}
+/* signal legend row */
+html body.themed-sm .kpi-strip+div{border-top:1px solid #D8D4C8!important;border-bottom:1px solid #D8D4C8!important}
+/* KPI tiles */
+html body.themed-sm .kpi{border-color:#D8D4C8!important}
+html body.themed-sm .kpi-lbl{color:#6E6656!important}
+html body.themed-sm .kpi-val{color:#1A1613!important}
+html body.themed-sm .kpi-sub{color:#6E6656!important}
+/* nav */
+html body.themed-sm .nav-grouped{border-top:1px solid #D8D4C8!important;border-bottom:1px solid #D8D4C8!important}
+html body.themed-sm .nav-group-lbl{color:#6E6656!important}
+html body.themed-sm .nav-btn{color:#4A4438!important}
+html body.themed-sm .nav-btn:hover{background:#F0EDE3!important;border-color:#D8D4C8!important;color:#1A1613!important}
+html body.themed-sm .nav-btn.active{background:#FFFEFB!important;border-color:#D8D4C8!important;color:#1A1613!important}
+html body.themed-sm .download-btn{background:#1A1613!important;color:#FFFEFB!important}
+/* panels */
+html body.themed-sm .panel{background:#FFFEFB!important;border:1px solid #D8D4C8!important}
+html body.themed-sm .panel-title{color:#1A1613!important}
+html body.themed-sm .panel-sub{color:#6E6656!important}
+html body.themed-sm .panel .fc-note{color:#1F1A13!important}
+html body.themed-sm .tab-panel>.fc-note{background:#FFFEFB!important;border:1px solid #D8D4C8!important;color:#1F1A13!important}
+/* source / vintage note */
+html body.themed-sm .src,html body.themed-sm .vintage-note{color:#6E6656!important;border-top:1px solid #F0EDE3}
+/* metric tiles */
+html body.themed-sm .metric{background:#FFFEFB!important;border-color:#D8D4C8!important}
+html body.themed-sm .m-lbl{color:#6E6656!important}
+html body.themed-sm .m-val{color:#1A1613!important}
+html body.themed-sm .m-sub{color:#6E6656!important}
+/* sector cards */
+html body.themed-sm .sector-card{background:#FFFEFB!important;border-color:#D8D4C8!important}
+html body.themed-sm .sector-card .card-name{color:#1A1613!important}
+/* tables */
+html body.themed-sm .dtable th{color:#6E6656!important;background:#FAF9F6!important;border-bottom:1px solid #D8D4C8!important}
+html body.themed-sm .dtable td{border-bottom-color:#F0EDE3!important}
+html body.themed-sm .dtable tbody tr:hover{background:#FBFAF7!important}
+/* sort buttons */
+html body.themed-sm .sort-lbl{color:#6E6656!important}
+html body.themed-sm .sort-btn{border-color:#D8D4C8!important;background:#FFFEFB!important;color:#4A4438!important}
+html body.themed-sm .sort-btn.active{background:#1A1613!important;border-color:#1A1613!important;color:#FFFEFB!important}
+/* empty-state overlay */
+html body.themed-sm .sm-empty-state{background:rgba(250,249,246,0.72)}
+/* §28 what-changed-this-week delta block */
+html body.themed-sm .sm-delta-block{background:linear-gradient(180deg,#FBFAF7 0%,#FFFEFB 100%)!important;border:1px solid #D8D4C8!important}
+html body.themed-sm .sm-delta-asof{color:#746E60!important}
+html body.themed-sm .sm-delta-chip{background:#FFFEFB!important;border-color:#D8D4C8!important}
+html body.themed-sm .sm-dc-label{color:#6E6656!important}
+html body.themed-sm .sm-dc-val{color:#1F1A13!important}
+html body.themed-sm .sm-dc-unit{color:#6E6656!important}
+html body.themed-sm .sm-dc-note{color:#6E6656!important}
+/* §27 readbar */
+html body.themed-sm .sm-readbar{color:#6E6656!important}
+html body.themed-sm .sm-rb-meta{color:#55503F!important}
+html body.themed-sm .sm-rb-dot{color:#C9C4B4!important}
+html body.themed-sm .sm-rb-track{background:#D8D4C8!important}
+/* §30 footnote ladder */
+html body.themed-sm .fn-ladder-wrap{color:#55503F}
+html body.themed-sm .fn-ladder-title{color:#4A4438}
+html body.themed-sm ol.fn-ladder li strong{color:#1F1A13}
+html body.themed-sm .fn-current-read{border-top:1px dashed #D8D4C8;color:#6E6656}
+/* §32 release calendar */
+html body.themed-sm .rcal-eyebrow{color:#4A4438}
+html body.themed-sm .rcal-asof{color:#6E6656}
+html body.themed-sm .rcal-strip{border-color:#D8D4C8;background:#FBFAF7}
+html body.themed-sm .rcal-day{background:#FFFEFB;border-color:#D8D4C8}
+html body.themed-sm .rcal-day.is-empty{background:#FAF9F6}
+html body.themed-sm .rcal-day.is-holiday{background:#F0EDE3}
+html body.themed-sm .rcal-dow{color:#6E6656}
+html body.themed-sm .rcal-dom{color:#1F1A13}
+html body.themed-sm .rcal-empty{color:#C9C4B4}
+html body.themed-sm .rcal-item-title{color:#1F1A13}
+html body.themed-sm .rcal-item.imp-high .rcal-item-title{color:#1A1613}
+html body.themed-sm .rcal-item-meta{color:#6E6656}
+html body.themed-sm .rcal-item+.rcal-item{border-top:1px dashed #D8D4C8}
+
 /* NAV — Stripe Dashboard style: white bar, bordered pills, single accent */
-.nav-grouped{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:12px 24px;margin-bottom:22px;background:#fff;border:1px solid #E5E7EB;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.nav-grouped{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;padding:12px 24px;margin-bottom:22px;background:#FFFEFB;border:1px solid #D8D4C8;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
 .nav-group{display:flex;align-items:center;gap:6px}
 .nav-group-lbl{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6B7280;font-weight:600;padding-right:3px;white-space:nowrap}
 .nav-group-pills{display:flex;gap:5px}
@@ -1598,7 +1719,7 @@ body.themed-sm .kpi-val{-webkit-text-stroke:0.3px currentColor!important}
 .nav-btn.active{background:#1E3A5F;border-color:#1E3A5F;color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(30,58,95,.22)}
 .nav-btn .nav-icon{width:16px;height:16px;flex-shrink:0;display:inline-block;vertical-align:middle}
 .nav-btn.active .nav-icon{filter:brightness(0) invert(1);opacity:.92}
-.nav-btn-meta{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid transparent;color:#9CA3AF;font-size:12px;padding:8px 14px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;border-radius:9px;transition:all .15s;opacity:1}
+.nav-btn-meta{display:inline-flex;align-items:center;gap:5px;background:transparent;border:1px solid transparent;color:#746E60;font-size:12px;padding:8px 14px;cursor:pointer;font-family:'DM Sans',system-ui,sans-serif;border-radius:9px;transition:all .15s;opacity:1}
 .nav-btn-meta:hover:not(.active){color:#6B7280;border-color:#E5E7EB}
 .nav-btn-meta.active{background:transparent;border-color:var(--accent);color:var(--accent);box-shadow:none}
 /* ── TWO-TIER NAV ── */
@@ -1611,13 +1732,13 @@ body.themed-sm .kpi-val{-webkit-text-stroke:0.3px currentColor!important}
 .nav-grp-btn:hover:not(.active){background:#F9FAFB;color:#374151}
 .nav-grp-btn.active{background:#1E3A5F;color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(30,58,95,.2)}
 /* Sticky nav — sticks to viewport top on scroll */
-.nav-grouped{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.nav-grouped{position:sticky;top:0;z-index:200;background:rgba(255,254,251,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* Group separators — thin vertical rule between nav groups */
 .nav-group+.nav-group:not(.nav-group-meta){padding-left:14px;border-left:1px solid #E5E7EB;margin-left:4px}
 .nav-btn-meta.active .nav-icon{filter:none}
 
 /* ── Option 3: Left Sidebar (NSB) ── */
-.nav-sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:#edf0f8;color:#334e68;border-right:1px solid #d8dfed;z-index:300;display:flex;flex-direction:column;transition:width .22s cubic-bezier(.4,0,.2,1);overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;display:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision}
+.nav-sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:#F3F1EA;color:#4A4438;border-right:1px solid #D8D4C8;z-index:300;display:flex;flex-direction:column;transition:width .22s cubic-bezier(.4,0,.2,1);overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;display:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision}
 .nav-sidebar::after{content:'';position:absolute;top:0;right:-14px;bottom:0;width:14px;background:linear-gradient(to right,rgba(190,203,220,.18),transparent);pointer-events:none;z-index:1}
 .nav-sidebar.nsb-active{display:flex}
 .nav-sidebar.nsb-collapsed{width:52px}
@@ -4854,8 +4975,8 @@ const FC_SECTORS = [
 function TT(){
   var dk=document.documentElement.getAttribute('data-theme')==='dark';
   return dk
-    ? {backgroundColor:'#0E1726',borderColor:'#223551',borderWidth:1,padding:10,titleColor:'#EEF4FF',bodyColor:'#7A9AB5'}
-    : {backgroundColor:'#ffffff',borderColor:'#E2E8F0',borderWidth:1,padding:10,titleColor:'#1a2035',bodyColor:'#334E68'};
+    ? {backgroundColor:'#161616',borderColor:'#2A2A2A',borderWidth:1,padding:10,titleColor:'#F5F5F5',bodyColor:'#B8B8B8'}
+    : {backgroundColor:'#FFFEFB',borderColor:'#D8D4C8',borderWidth:1,padding:10,titleColor:'#1A1613',bodyColor:'#4A4438'};
 }
 // Dark-theme Chart.js plugin — intercepts every chart draw.
 // Overrides tick labels and grid line colors without touching chart configs.
@@ -4866,8 +4987,8 @@ function TT(){
     id:'md_dark_theme',
     afterUpdate:function(chart){
       var dk=document.documentElement.getAttribute('data-theme')==='dark';
-      var tColor=dk?'rgba(170,195,218,.62)':'';
-      var gColor=dk?'rgba(238,244,255,.055)':'';
+      var tColor=dk?'rgba(184,184,184,.62)':'';
+      var gColor=dk?'rgba(245,245,245,.055)':'';
       if(!dk) return;
       Object.values(chart.scales||{}).forEach(function(scale){
         if(!scale.options) return;
@@ -6939,8 +7060,8 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
     // dark canvas. Same _mutedTxt/_valTxt mapping as the shock tracker
     // fix (Oil tab, same session) for consistency across the file.
     const _isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const _mutedTxt = _isDark ? '#8A8A8A' : '#64748B';
-    const _valTxt   = _isDark ? '#B8B8B8' : '#334E68';
+    const _mutedTxt = _isDark ? '#8A8A8A' : '#6E6656';
+    const _valTxt   = _isDark ? '#B8B8B8' : '#4A4438';
     const _amberBg  = _isDark ? 'rgba(204,138,0,.10)' : '#FFFBEB';
     const _amberBd  = _isDark ? 'rgba(204,138,0,.28)' : 'rgba(204,138,0,.15)';
     const _amberLbl = _isDark ? '#F0B429' : '#92400E';
@@ -6949,7 +7070,7 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
     // failure, not introduced by this fix, but adjacent enough to fix
     // now rather than leave half-broken on a tile I'm already touching).
     const _amberVal = _isDark ? '#CC8A00' : '#A15C00';
-    const _greyBg   = _isDark ? 'rgba(255,255,255,.04)' : '#F8FAFC';
+    const _greyBg   = _isDark ? 'rgba(255,255,255,.04)' : '#F5F3EC';
 
     // Header strip
     container.innerHTML = `
@@ -7023,7 +7144,7 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
         interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: {
-            labels: { color: '#334E68', font: { size: 11 }, boxWidth: 12, boxHeight: 2 },
+            labels: { color: '#4A4438', font: { size: 11 }, boxWidth: 12, boxHeight: 2 },
           },
           tooltip: {
             ...TT(),
@@ -7039,19 +7160,19 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
         },
         scales: {
           x: {
-            grid: { color: '#EEF1F7', drawTicks: false },
+            grid: { color: '#F3F1EA', drawTicks: false },
             border: { display: false },
             // Original config used maxRotation:0 + 55 daily labels and
             // they collided solid on a 295px mobile canvas. Cap to 4
             // ticks with extra autoSkip padding so labels read cleanly
             // without needing rotation (which the 300px canvas height
             // is too short to comfortably absorb).
-            ticks: { color: '#94A3B8', font: { size: 9 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 4, autoSkipPadding: 24 },
+            ticks: { color: '#746E60', font: { size: 9 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 4, autoSkipPadding: 24 },
           },
           y: {
-            grid: { color: '#EEF1F7' },
+            grid: { color: '#F3F1EA' },
             border: { display: false },
-            ticks: { color: '#94A3B8', font: { size: 10 }, callback: v => '$' + v },
+            ticks: { color: '#746E60', font: { size: 10 }, callback: v => '$' + v },
           },
         },
       },
@@ -7161,9 +7282,9 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
     // dark (fails). Each hex only ever worked in the theme it happened to
     // be tuned against. _mutedTxt/_valTxt/_boldTxt below keep whichever
     // half of each pair already passed and fix the half that didn't.
-    var _mutedTxt = _isDark ? '#8A8A8A' : '#64748B';
-    var _valTxt   = _isDark ? '#B8B8B8' : '#334E68';
-    var _boldTxt  = _isDark ? '#F5F5F5' : '#0D1B2A';
+    var _mutedTxt = _isDark ? '#8A8A8A' : '#6E6656';
+    var _valTxt   = _isDark ? '#B8B8B8' : '#4A4438';
+    var _boldTxt  = _isDark ? '#F5F5F5' : '#1A1613';
     // Header strip cards (Shock/Elapsed/Phases Active) had the same gap —
     // hardcoded light pastel backgrounds (#FFFBEB/#F8FAFC/#F0FDF4) with no
     // dark counterpart. Fixing _boldTxt above without this would put
@@ -7176,7 +7297,7 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
       phasesBg:'rgba(98,212,159,.10)', phasesBd:'rgba(98,212,159,.25)', phasesLbl:'#62D49F', phasesVal:'#62D49F'
     } : {
       shockBg:'#FFFBEB', shockBd:'rgba(204,138,0,.2)', shockLbl:'#92400E', shockVal:'#CC8A00',
-      elapsedBg:'#F8FAFC', elapsedBd:'var(--border)',
+      elapsedBg:'#F5F3EC', elapsedBd:'var(--border)',
       phasesBg:'#F0FDF4', phasesBd:'rgba(22,163,74,.2)', phasesLbl:'#15803D', phasesVal:'#16A34A'
     };
     var statusCfg = _isDark ? {
