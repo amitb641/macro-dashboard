@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-07-01T20:45:30.146973Z",
+  "checked_at": "2026-07-02T04:24:55.068563Z",
   "status": "PASS",
   "summary": {
     "total_checks": 449,
@@ -37,25 +37,25 @@
     },
     {
       "category": "theme",
-      "check": "dark --text WCAG contrast (#F5F7FF on #0B1220)",
+      "check": "dark --text WCAG contrast (#F5F5F5 on #0A0A0A)",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "theme",
-      "check": "dark --text2 WCAG contrast (#A8C4D8 on #0B1220)",
+      "check": "dark --text2 WCAG contrast (#B8B8B8 on #0A0A0A)",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "theme",
-      "check": "dark --muted WCAG contrast (#8AAFC8 on #0B1220)",
+      "check": "dark --muted WCAG contrast (#8A8A8A on #0A0A0A)",
       "pass": true,
       "severity": "ok"
     },
     {
       "category": "theme",
-      "check": "dark --dim WCAG contrast (#6B90AA on #0B1220)",
+      "check": "dark --dim WCAG contrast (#828282 on #0A0A0A)",
       "pass": true,
       "severity": "ok"
     },

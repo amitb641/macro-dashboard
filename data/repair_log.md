@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-02T04:24:39.230013Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 123d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-01T20:45:14.197757Z
 
 - **Status**: WARN
@@ -846,28 +862,6 @@ _1 critical · 0 warning · 0 stale_
 _0 critical · 1 warning · 0 stale_
 
 - ⚠️ **Visual: data — NFP_VS_ADP.adp completeness** — 
-
-
----
-
-## Repair Agent — 2026-05-30T19:34:50.869536Z
-
-- **Status**: WARN
-- **Total checks**: 641
-- **Passed**: 638
-- **Failed**: 3
-- **Critical divergences**: 1
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-### Visual QA
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **Visual: global — Hydration: all Tier-1 keys present** — 
-- ⚠️ **Visual: data — NFP_VS_ADP defined** — 
 
 
 ---
