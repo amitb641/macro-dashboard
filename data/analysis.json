@@ -7,7 +7,7 @@
   "tabs": {
     "gdp": "",
     "jobs": "",
-    "unemp": "U-3 unemployment at 4.3% has moved above the Fed's longer-run neutral estimate, a threshold that historically precedes more rapid deterioration. The U-6 underemployment rate at 8.1% is the more alarming signal \u2014 the 380bp gap between U-6 and U-3 indicates significant hidden slack in hours worked and involuntary part-time employment. This breadth of labor market weakness is inconsistent with the tight-market narrative and raises recession risk if NFP momentum fades further.",
+    "unemp": "",
     "wages": "",
     "cpi": "",
     "pce": "",
@@ -23,20 +23,19 @@
     "fed_bias": "On Hold"
   },
   "signal_flags": [],
-  "agent3_ran_at": "2026-07-02T04:45:20.733508Z",
+  "agent3_ran_at": "2026-07-02T13:15:35.887651Z",
   "refreshed_tabs": [
-    "yield",
-    "oil",
-    "credit",
+    "gdp",
     "jobs",
+    "unemp",
     "wages",
     "cpi",
     "pce",
+    "yield",
+    "credit",
     "housing",
-    "gdp",
+    "oil",
     "banks"
   ],
-  "carried_forward": [
-    "unemp"
-  ]
+  "carried_forward": []
 }

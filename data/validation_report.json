@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-07-02T04:46:19.174863Z",
+  "validated_at": "2026-07-02T13:16:32.052003Z",
   "status": "WARN",
   "summary": {
     "total_checks": 665,
-    "passed": 664,
-    "failed": 1,
+    "passed": 662,
+    "failed": 3,
     "skipped": 1,
-    "critical_divergences": 0
+    "critical_divergences": 2
   },
   "internal_consistency": [
     {
@@ -688,8 +688,8 @@
     },
     {
       "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 159001,
-      "fresh_api_value": 159001.0,
+      "raw_data_value": 158984,
+      "fresh_api_value": 158984.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-02T04:44:48.464848Z",
+      "collected_at": "2026-07-02T13:15:03.534066Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -930,11 +930,11 @@
         "may"
       ],
       "data_keys": [
-        "apr",
+        "jun",
         "may"
       ],
-      "severity": "ok",
-      "pass": true
+      "severity": "divergence",
+      "pass": false
     },
     {
       "check": "Hiring is now concentrated in healthcare and leisure: prior-month chip matches title",
@@ -957,11 +957,11 @@
         "may"
       ],
       "data_keys": [
-        "apr",
+        "jun",
         "may"
       ],
-      "severity": "ok",
-      "pass": true
+      "severity": "divergence",
+      "pass": false
     },
     {
       "check": "Unemployment is rising broadly across sectors: prior-month chip matches title",
@@ -4201,9 +4201,9 @@
       "severity": "ok",
       "metric": "unrate",
       "fred": 4.3,
-      "bls": 4.3,
-      "diff": 0.0,
-      "tol": 0.215,
+      "bls": 4.2,
+      "diff": 0.1,
+      "tol": 0.21,
       "note": null
     },
     {

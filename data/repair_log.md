@@ -1,3 +1,25 @@
+## Repair Agent — 2026-07-02T13:16:32.052003Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 662
+- **Failed**: 3
+- **Critical divergences**: 2
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 123d old (limit 120d)
+
+### Panel data
+_2 critical · 0 warning · 0 stale_
+
+- 🔴 **Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys** — 
+- 🔴 **Unemployment is rising broadly across sectors: title months match U_SECTOR_MOM keys** — 
+
+
+---
+
 ## Repair Agent — 2026-07-02T04:46:19.174863Z
 
 - **Status**: WARN
@@ -813,28 +835,6 @@ _0 critical · 2 warning · 0 stale_
 
 - ⚠️ **EIA fetch: RWTC** — 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RWTC&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60
 - ⚠️ **EIA fetch: RBRTE** — 504 Server Error: Gateway Timeout for url: https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=[REDACTED]&frequency=daily&data%5B0%5D=value&facets%5Bseries%5D%5B%5D=RBRTE&sort%5B0%5D%5Bcolumn%5D=period&sort%5B0%5D%5Bdirection%5D=desc&length=60
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-06-04T03:48:46.265473Z
-
-- **Status**: WARN
-- **Total checks**: 647
-- **Passed**: 644
-- **Failed**: 3
-- **Critical divergences**: 1
-
-### Collector errors
-_0 critical · 2 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
 
 ### Panel data
 _1 critical · 0 warning · 0 stale_
