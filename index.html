@@ -1837,18 +1837,24 @@ body.sidebar-active .nav-two-tier{display:none!important}
    <html> swaps every token; no per-element overrides except where
    contrast or semantic colour demands it. */
 :root[data-theme="dark"]{
-  /* Canvas — lifted from near-black to dark slate: reduces halation on bright text */
+  /* 2026-07-01 — "OLED noir" repaint. Chrome (bg/card/border/text/muted/dim)
+     desaturates from navy-tinted to true neutral black/gray; every data
+     color (accent/green/red/amber/purple) is left untouched on purpose —
+     they're semantic, not chrome, and they read punchier against neutral
+     black than they did against navy. Supersedes the §24.33/§24.34 navy
+     tuning below (kept in history for the reasoning, not the values). */
+  /* Canvas — true near-black, not navy-tinted */
   /* §24.34 bg lift: card #0E1726→#152233 raises text-to-surface contrast from extreme (>16:1) to comfortable (~12:1) — perceived sharpness improves */
-  --bg:#0B1220;--bg2:#152233;--card:#152233;--card2:#1A2A3E;
-  --border:#1E3047;--bord2:#263B55;
-  /* Text — near-white primary, cool blue-grey secondaries for hierarchy */
+  --bg:#0A0A0A;--bg2:#141414;--card:#161616;--card2:#1D1D1D;
+  --border:#2A2A2A;--bord2:#383838;
+  /* Text — near-white primary, neutral-grey secondaries (no blue tint) */
   /* §24.33 brightness lift: --text2 7A9AB5→A8C4D8 (6.1→10.6:1 on card), --muted 5F7E9A→8AAFC8 (4.2→8.3:1), --dim 49688A→6B90AA (2.6→5.6:1) */
-  --text:#F5F7FF;--text2:#A8C4D8;--muted:#8AAFC8;--dim:#6B90AA;
+  --text:#F5F5F5;--text2:#B8B8B8;--muted:#8A8A8A;--dim:#828282;
   /* Accent — cobalt blue, vivid enough to direct attention */
   --accent:#4E9EFF;--acc2:#3B8AEE;
   /* Semantic — high-saturation for dark backgrounds (need more pop than light mode) */
   --green:#1FC87A;--red:#FF4F4F;--amber:#F0A000;--blue:#4E9EFF;--purple:#9B80F0;
-  --accent-soft:rgba(78,158,255,.11);--grid:rgba(238,244,255,.055);
+  --accent-soft:rgba(78,158,255,.11);--grid:rgba(245,245,245,.055);
 }
 :root[data-theme="dark"] body{background:var(--bg);color:var(--text)}
 /* body.themed-sm sets padding:56px 48px 80px + padding-top:32px (net
@@ -1940,7 +1946,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .nav-icon [fill="#DCFCE7"],
 :root[data-theme="dark"] .nav-icon [fill="#BBF7D0"]{fill-opacity:.16}
 /* §24.5 — Sidebar full dark treatment */
-:root[data-theme="dark"] .nav-sidebar{background:#060C16;border-right-color:var(--border)}
+:root[data-theme="dark"] .nav-sidebar{background:#050505;border-right-color:var(--border)}
 :root[data-theme="dark"] .nsb-hdr{border-bottom-color:var(--border)}
 :root[data-theme="dark"] .nsb-brand{color:var(--text2)}
 :root[data-theme="dark"] .nsb-collapse-btn{color:var(--muted)}
@@ -1954,7 +1960,7 @@ body.sidebar-active .nav-two-tier{display:none!important}
 :root[data-theme="dark"] .nsb-footer-btn:hover{color:var(--text2);background:rgba(255,255,255,.04)}
 :root[data-theme="dark"] .nsb-footer-btn.active{border-left-color:var(--accent);color:var(--text);background:var(--accent-soft)}
 /* §24.6 — Top horizontal nav dark treatment */
-:root[data-theme="dark"] .nav-two-tier{background:rgba(15,20,25,.96)!important;border-bottom-color:var(--border)!important}
+:root[data-theme="dark"] .nav-two-tier{background:rgba(10,10,10,.96)!important;border-bottom-color:var(--border)!important}
 /* §24.6b — Horizontal tab-group pills (Growth · Labor · Inflation …) */
 :root[data-theme="dark"] .nav-grp-btn{color:var(--text2)}
 :root[data-theme="dark"] .nav-grp-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,.04)}
@@ -6933,8 +6939,8 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
     // dark canvas. Same _mutedTxt/_valTxt mapping as the shock tracker
     // fix (Oil tab, same session) for consistency across the file.
     const _isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const _mutedTxt = _isDark ? '#94A3B8' : '#64748B';
-    const _valTxt   = _isDark ? '#A8C4D8' : '#334E68';
+    const _mutedTxt = _isDark ? '#8A8A8A' : '#64748B';
+    const _valTxt   = _isDark ? '#B8B8B8' : '#334E68';
     const _amberBg  = _isDark ? 'rgba(204,138,0,.10)' : '#FFFBEB';
     const _amberBd  = _isDark ? 'rgba(204,138,0,.28)' : 'rgba(204,138,0,.15)';
     const _amberLbl = _isDark ? '#F0B429' : '#92400E';
@@ -7155,9 +7161,9 @@ const OIL_DAILY = {"labels":["Apr 1","Apr 2","Apr 6","Apr 7","Apr 8","Apr 9","Ap
     // dark (fails). Each hex only ever worked in the theme it happened to
     // be tuned against. _mutedTxt/_valTxt/_boldTxt below keep whichever
     // half of each pair already passed and fix the half that didn't.
-    var _mutedTxt = _isDark ? '#94A3B8' : '#64748B';
-    var _valTxt   = _isDark ? '#A8C4D8' : '#334E68';
-    var _boldTxt  = _isDark ? '#F5F7FF' : '#0D1B2A';
+    var _mutedTxt = _isDark ? '#8A8A8A' : '#64748B';
+    var _valTxt   = _isDark ? '#B8B8B8' : '#334E68';
+    var _boldTxt  = _isDark ? '#F5F5F5' : '#0D1B2A';
     // Header strip cards (Shock/Elapsed/Phases Active) had the same gap —
     // hardcoded light pastel backgrounds (#FFFBEB/#F8FAFC/#F0FDF4) with no
     // dark counterpart. Fixing _boldTxt above without this would put
