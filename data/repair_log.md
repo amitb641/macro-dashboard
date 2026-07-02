@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-02T04:46:19.174863Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: cs_hpi** — 123d old (limit 120d)
+
+
+---
+
 ## Repair Agent — 2026-07-02T04:24:39.230013Z
 
 - **Status**: WARN
@@ -824,44 +840,6 @@ _0 critical · 2 warning · 0 stale_
 _1 critical · 0 warning · 0 stale_
 
 - 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-06-04T03:30:27.043994Z
-
-- **Status**: WARN
-- **Total checks**: 648
-- **Passed**: 641
-- **Failed**: 7
-- **Critical divergences**: 1
-
-### Collector errors
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **Collector error** — UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv
-
-### Internal consistency
-_0 critical · 1 warning · 0 stale_
-
-- ⚠️ **NFP_VS_ADP.adp completeness** — 
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: umcsent** — 64d old (limit 35d)
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-### Visual QA
-_0 critical · 1 warning · 0 stale_
-
-- ⚠️ **Visual: data — NFP_VS_ADP.adp completeness** — 
 
 
 ---
