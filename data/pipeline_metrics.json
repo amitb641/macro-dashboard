@@ -1,19 +1,5 @@
 [
   {
-    "run_at": "2026-06-04T04:35:45.901484Z",
-    "git_sha": "d4c5884",
-    "validation_status": "WARN",
-    "validation_critical": 0,
-    "validation_warnings": 0,
-    "visual_qa_passed": 433,
-    "visual_qa_failed": 0,
-    "visual_qa_critical": 0,
-    "ceo_grade": "FAIL",
-    "html_size": 683213,
-    "collector_errors": 2,
-    "risk_level": "HIGH"
-  },
-  {
     "run_at": "2026-06-04T04:49:56.834395Z",
     "git_sha": "b1ede55",
     "validation_status": "WARN",
@@ -724,6 +710,20 @@
     "visual_qa_critical": 0,
     "ceo_grade": "PASS",
     "html_size": 748968,
+    "collector_errors": 0,
+    "risk_level": "ELEVATED"
+  },
+  {
+    "run_at": "2026-07-11T12:48:14.305110Z",
+    "git_sha": "e9db8c6",
+    "validation_status": "WARN",
+    "validation_critical": 0,
+    "validation_warnings": 0,
+    "visual_qa_passed": 449,
+    "visual_qa_failed": 0,
+    "visual_qa_critical": 0,
+    "ceo_grade": "FAIL",
+    "html_size": 748807,
     "collector_errors": 0,
     "risk_level": "ELEVATED"
   }

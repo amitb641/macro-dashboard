@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-11T12:47:45.076935Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: umcsent** — 40d old (limit 35d)
+
+
+---
+
 ## Repair Agent — 2026-07-04T12:56:34.100257Z
 
 - **Status**: PASS
@@ -767,34 +783,6 @@ No findings to surface — pipeline is clean. ✅
 ---
 
 ## Repair Agent — 2026-06-04T05:30:18.880918Z
-
-- **Status**: WARN
-- **Total checks**: 651
-- **Passed**: 646
-- **Failed**: 5
-- **Critical divergences**: 1
-
-### Collector errors
-_0 critical · 3 warning · 0 stale_
-
-- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
-- ⚠️ **Collector error** — UMich direct: 403 Client Error: Forbidden for url: https://www.sca.isr.umich.edu/files/tbcics.csv
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: umcsent** — 64d old (limit 35d)
-
-### Panel data
-_1 critical · 0 warning · 0 stale_
-
-- 🔴 **Energy and housing components are pulling the PCE basket higher: title months match PCE_CAT_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-06-04T05:02:23.074788Z
 
 - **Status**: WARN
 - **Total checks**: 651
