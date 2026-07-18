@@ -1,59 +1,8 @@
 {
   "schema_version": 2,
-  "last_updated": "2026-07-11T12:48:14.305110Z",
+  "last_updated": "2026-07-18T12:46:06.922548Z",
   "total_runs": 52,
   "runs": [
-    {
-      "run_at": "2026-06-04T04:49:56.834395Z",
-      "git_sha": "b1ede55",
-      "git_branch": "dev/multi-expert-improvements",
-      "collected_at": "2026-06-04T04:46:06.603567Z",
-      "series_count": 92,
-      "collector_errors": 3,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-04-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-04-01",
-          "value": 332.407
-        },
-        "payrolls": {
-          "date": "2026-04-01",
-          "value": 158736.0
-        },
-        "treasury_10y": {
-          "date": "2026-06-02",
-          "value": 4.46,
-          "source": "FRED:DGS10",
-          "fetched_at": "2026-06-04T04:46:07.608505Z"
-        },
-        "fed_funds": {
-          "date": "2026-05-01",
-          "value": 3.63,
-          "source": "FRED:FEDFUNDS",
-          "fetched_at": "2026-06-04T04:46:06.818796Z"
-        }
-      },
-      "risk_level": "HIGH",
-      "alert_count": 3,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 651,
-        "passed": 646,
-        "failed": 5,
-        "skipped": 1,
-        "critical_divergences": 1
-      },
-      "validation_critical": 0,
-      "validation_warnings": 0,
-      "visual_qa_passed": 433,
-      "visual_qa_failed": 0,
-      "visual_qa_critical": 0,
-      "ceo_grade": "FAIL",
-      "html_size": 683213
-    },
     {
       "run_at": "2026-06-04T05:02:49.732346Z",
       "git_sha": "67d9af4",
@@ -2750,6 +2699,71 @@
           "old": 4.48,
           "new": 4.54,
           "delta": 0.06
+        }
+      ]
+    },
+    {
+      "run_at": "2026-07-18T12:46:06.922548Z",
+      "git_sha": "f7331cf",
+      "git_branch": "dev/multi-expert-improvements",
+      "collected_at": "2026-07-18T12:44:18.983759Z",
+      "series_count": 92,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-06-01",
+          "value": 4.2
+        },
+        "cpi_index": {
+          "date": "2026-06-01",
+          "value": 332.568
+        },
+        "payrolls": {
+          "date": "2026-06-01",
+          "value": 158984.0
+        },
+        "treasury_10y": {
+          "date": "2026-07-16",
+          "value": 4.57,
+          "source": "FRED:DGS10",
+          "fetched_at": "2026-07-18T12:44:19.820062Z"
+        },
+        "fed_funds": {
+          "date": "2026-06-01",
+          "value": 3.63,
+          "source": "FRED:FEDFUNDS",
+          "fetched_at": "2026-07-18T12:44:19.148385Z"
+        }
+      },
+      "risk_level": "ELEVATED",
+      "alert_count": 2,
+      "validation_status": "PASS",
+      "validation_summary": {
+        "total_checks": 665,
+        "passed": 665,
+        "failed": 0,
+        "skipped": 1,
+        "critical_divergences": 0
+      },
+      "validation_critical": 0,
+      "validation_warnings": 0,
+      "visual_qa_passed": 449,
+      "visual_qa_failed": 0,
+      "visual_qa_critical": 0,
+      "ceo_grade": "PASS",
+      "html_size": 748803,
+      "data_changes": [
+        {
+          "indicator": "cpi_index",
+          "old": 333.979,
+          "new": 332.568,
+          "delta": -1.411
+        },
+        {
+          "indicator": "treasury_10y",
+          "old": 4.54,
+          "new": 4.57,
+          "delta": 0.03
         }
       ]
     }
