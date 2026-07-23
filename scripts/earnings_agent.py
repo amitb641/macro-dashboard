@@ -142,6 +142,41 @@ def fetch_transcript(urls):
     return None, None
 
 
+_FOOL_URL_RE = re.compile(
+    r'^(https://www\.fool\.com/earnings/call-transcripts/)(\d{4})/(\d{2})/(\d{2})(/.+)$'
+)
+
+
+def expand_fool_date_variants(urls, window_days=10):
+    """Motley Fool's actual transcript-publish date reliably lags the real
+    earnings-call date -- confirmed directly 2026-07-23: 5 banks with a
+    2026-07-14 call date had their fool.com transcript published
+    2026-07-21 or 2026-07-22, not same-day as a naive URL template
+    assumes. A single guessed date in a fool.com URL is close to a coin
+    flip. For every fool.com call-transcripts URL already in the
+    candidate list, generate sibling URLs shifting only the date forward
+    across a window, appended AFTER the given candidates so a human-
+    verified guess is always tried first. Non-fool.com URLs and URLs
+    that don't match the pattern pass through untouched -- this is a
+    pure additive safety net, never a replacement for the maintained
+    candidate list."""
+    expanded = list(urls)
+    seen = set(urls)
+    for url in urls:
+        m = _FOOL_URL_RE.match(url)
+        if not m:
+            continue
+        prefix, y, mo, d, suffix = m.groups()
+        base_date = datetime.date(int(y), int(mo), int(d))
+        for offset in range(1, window_days + 1):
+            variant_date = base_date + datetime.timedelta(days=offset)
+            variant = f'{prefix}{variant_date.year:04d}/{variant_date.month:02d}/{variant_date.day:02d}{suffix}'
+            if variant not in seen:
+                seen.add(variant)
+                expanded.append(variant)
+    return expanded
+
+
 def save_transcript(quarter, ticker, text):
     """Archive transcript for future verbatim checks. Quarter is like 'Q2 2026'."""
     qdir = TRANSCRIPTS / quarter.replace(' ', '_')
@@ -360,6 +395,44 @@ def git_commit_push(message, paths):
 
 # ── MAIN ──────────────────────────────────────────────────────────────
 
+STALE_DAYS_THRESHOLD = 5
+
+
+def report_stale_banks(calendar, reported_status, today):
+    """Print (and, in CI, write to $GITHUB_STEP_SUMMARY) a clearly-flagged
+    list of banks whose expected_report_date is more than
+    STALE_DAYS_THRESHOLD days in the past and still aren't 'reported'.
+    Pure observability -- never affects control flow. A bank sitting here
+    for several consecutive runs means its transcript_url_candidates
+    almost certainly need a manual check, the same failure mode that hid
+    behind 13+ green CI runs before this function existed."""
+    stale = []
+    for b in calendar.get('banks', []):
+        exp = b.get('expected_report_date', '')
+        if not exp or exp > today:
+            continue
+        if reported_status.get(b['ticker']) == 'reported':
+            continue
+        days_overdue = (datetime.date.fromisoformat(today) - datetime.date.fromisoformat(exp)).days
+        if days_overdue >= STALE_DAYS_THRESHOLD:
+            stale.append((b['ticker'], days_overdue))
+    if not stale:
+        return stale
+    print(f'\n  ⚠️  STALE: {len(stale)} bank(s) overdue ≥{STALE_DAYS_THRESHOLD}d and still not reported:')
+    for ticker, days in stale:
+        print(f'      {ticker}: {days}d overdue -- transcript_url_candidates likely need a manual check')
+    summary_path = os.environ.get('GITHUB_STEP_SUMMARY')
+    if summary_path:
+        try:
+            with open(summary_path, 'a', encoding='utf-8') as f:
+                f.write(f'\n### ⚠️ Stale earnings ({len(stale)})\n')
+                for ticker, days in stale:
+                    f.write(f'- **{ticker}**: {days}d overdue, still not reported\n')
+        except Exception:
+            pass
+    return stale
+
+
 def process_bank(client, calendar, earnings, bank_meta, dry_run=False):
     """Fetch, extract, verify, and stage-write one bank. Returns True on success."""
     ticker = bank_meta['ticker']
@@ -371,6 +444,7 @@ def process_bank(client, calendar, earnings, bank_meta, dry_run=False):
     if not urls:
         print('  no transcript URLs configured; skipping')
         return False
+    urls = expand_fool_date_variants(urls)
     transcript, src_url = fetch_transcript(urls)
     if not transcript:
         print('  all transcript URLs failed; will retry on next run')
@@ -454,6 +528,17 @@ def main():
 
     # Snapshot status map for idempotency check
     reported_status = {b['ticker']: b.get('status') for b in earnings.get('banks', [])}
+
+    # Staleness visibility: the quarter-rollover bug this fixes (see comment
+    # above) went undetected for 2+ weeks because "no banks pending
+    # extraction; exiting cleanly" reads identically whether the pipeline is
+    # genuinely caught up or silently stuck -- 13+ consecutive green CI runs
+    # gave zero signal either way. Even with that bug fixed, a bank can still
+    # get stuck for a DIFFERENT reason (transcript_url_candidates wrong or
+    # 404ing, as happened the same day this rollover fix first ran for
+    # real -- all 8 candidate banks failed every URL). Surface that
+    # distinctly rather than relying on someone reading full run logs.
+    report_stale_banks(calendar, reported_status, today)
 
     # Build candidate work list
     queue = []
