@@ -5,7 +5,7 @@
     "end": "2026-08-05"
   },
   "maintained_by": "human-in-the-loop",
-  "notes": "Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it.",
+  "notes": "Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it. 2026-07-23: URLs below for GS/JPM/WFC/C/BAC/USB/COF/SYF were verified live (WebFetch-confirmed free, matching real reported figures) after discovering the prior quarter's templated guesses all 404'd -- Motley Fool's actual publish date lags the call by ~1 week, not same-day as a naive template assumes, and two banks (C, BAC) use non-obvious URL slugs ('citi' not 'citigroup', 'bank-of-america' not 'bofa'). AXP and BCS hadn't reported yet as of this edit -- expected_report_date corrected against each company's real IR calendar, transcript_url_candidates left as best-guess fallbacks (flagged below) since no real URL exists to verify yet. scripts/earnings_agent.py's fetch_transcript() now also auto-generates fool.com date-window variants (call date .. +10 days) as an additional safety net, so a wrong guess here is no longer fatal the way it was this quarter.",
   "banks": [
     {
       "ticker": "GS",
@@ -14,9 +14,8 @@
       "color": "#1d4ed8",
       "expected_report_date": "2026-07-13",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/13/goldman-sachs-gs-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-gs-earnings-call-transcript",
-        "https://www.goldmansachs.com/pressroom/press-releases/2026/2026-07-13-q2-results"
+        "https://www.fool.com/earnings/call-transcripts/2026/07/21/goldman-sachs-gs-q2-2026-earnings-call-transcript/",
+        "https://www.benzinga.com/news/26/07/60449209/goldman-sachs-group-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -26,8 +25,8 @@
       "color": "#1e3a8a",
       "expected_report_date": "2026-07-14",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/14/jpmorgan-jpm-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-jpm-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/07/22/jpmorgan-chase-jpm-q2-2026-earnings-call-transcript/",
+        "https://www.investing.com/news/transcripts/earnings-call-transcript-jpmorgan-chase-tops-q2-2026-forecasts-as-stock-rises-93CH-4791119"
       ]
     },
     {
@@ -37,8 +36,8 @@
       "color": "#d97706",
       "expected_report_date": "2026-07-14",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/14/wells-fargo-wfc-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-wfc-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/07/21/wells-fargo-wfc-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/4921990-wells-fargo-and-company-wfc-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -48,8 +47,8 @@
       "color": "#0284c7",
       "expected_report_date": "2026-07-14",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/14/citigroup-c-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-c-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/07/21/citi-c-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/4922024-citigroup-inc-c-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -59,8 +58,8 @@
       "color": "#D64045",
       "expected_report_date": "2026-07-15",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/15/bofa-bac-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-bac-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/07/21/bank-of-america-bac-q2-2026-earnings-call-transcript/",
+        "https://seekingalpha.com/article/4921951-bank-of-america-corporation-bac-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -70,8 +69,8 @@
       "color": "#0f766e",
       "expected_report_date": "2026-07-16",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/16/us-bancorp-usb-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-usb-earnings-call-transcript"
+        "https://www.benzinga.com/news/26/07/60505128/u-s-bancorp-q2-2026-earnings-call-transcript",
+        "https://seekingalpha.com/article/4922657-u-s-bancorp-usb-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -81,8 +80,8 @@
       "color": "#8878B8",
       "expected_report_date": "2026-07-21",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/21/capital-one-cof-q2-2026-earnings-transcript/",
-        "https://seekingalpha.com/article/q2-2026-cof-earnings-call-transcript"
+        "https://www.benzinga.com/news/26/07/60597512/transcript-capital-one-finl-q2-2026-earnings-conference-call",
+        "https://seekingalpha.com/article/4923982-capital-one-financial-corporation-cof-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -92,8 +91,8 @@
       "color": "#ea580c",
       "expected_report_date": "2026-07-21",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/21/synchrony-syf-q2-2026-earnings-transcript/",
-        "https://seekingalpha.com/article/q2-2026-syf-earnings-call-transcript"
+        "https://uk.investing.com/news/transcripts/earnings-call-transcript-synchrony-beats-q2-2026-eps-forecast-as-sales-hit-record-93CH-4780603",
+        "https://seekingalpha.com/article/4923770-synchrony-financial-syf-q2-2026-earnings-call-transcript"
       ]
     },
     {
@@ -101,10 +100,21 @@
       "bank": "American Express",
       "ceo": "Stephen Squeri, Chairman & CEO",
       "color": "#059669",
-      "expected_report_date": "2026-07-23",
+      "expected_report_date": "2026-07-24",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/23/amex-axp-q2-2026-earnings-call-transcript/",
+        "https://www.fool.com/earnings/call-transcripts/2026/07/24/amex-axp-q2-2026-earnings-call-transcript/",
         "https://seekingalpha.com/article/q2-2026-axp-earnings-call-transcript"
+      ]
+    },
+    {
+      "ticker": "BCS",
+      "bank": "Barclays US (BCUS)",
+      "ceo": "C.S. Venkatakrishnan, Barclays Group CEO",
+      "color": "#1E4FA3",
+      "expected_report_date": "2026-07-28",
+      "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/28/barclays-bcs-q2-2026-earnings-call-transcript/",
+        "https://home.barclays/investor-relations/results-and-reports/"
       ]
     }
   ]
