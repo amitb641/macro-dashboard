@@ -1,3 +1,19 @@
+## Repair Agent — 2026-07-23T03:51:21.156476Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Collector error** — BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)
+
+
+---
+
 ## Repair Agent — 2026-07-18T12:45:38.508766Z
 
 - **Status**: PASS
@@ -779,18 +795,6 @@ _0 critical · 0 warning · 1 stale_
 
 - ⏰ **Staleness: umcsent** — 64d old (limit 35d)
 
-
----
-
-## Repair Agent — 2026-06-04T05:44:14.346070Z
-
-- **Status**: PASS
-- **Total checks**: 649
-- **Passed**: 649
-- **Failed**: 0
-- **Critical divergences**: 0
-
-No findings to surface — pipeline is clean. ✅
 
 ---
 
