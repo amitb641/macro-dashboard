@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-07-23T04:40:00.896785Z",
-  "status": "PASS",
+  "validated_at": "2026-07-23T04:51:18.748102Z",
+  "status": "WARN",
   "summary": {
     "total_checks": 665,
-    "passed": 665,
-    "failed": 0,
+    "passed": 664,
+    "failed": 1,
     "skipped": 1,
     "critical_divergences": 0
   },
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-23T04:38:37.176328Z",
+      "collected_at": "2026-07-23T04:49:37.032194Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1450,9 +1450,10 @@
   ],
   "collector_errors": [
     {
-      "check": "Collector errors: none recorded",
-      "pass": true,
-      "severity": "ok"
+      "check": "Collector error",
+      "pass": false,
+      "severity": "warning",
+      "note": "BLS: HTTPSConnectionPool(host='api.bls.gov', port=443): Read timed out. (read timeout=20)"
     }
   ],
   "seed_drift": [
