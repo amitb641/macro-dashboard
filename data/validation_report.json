@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-07-23T04:06:53.281910Z",
+  "validated_at": "2026-07-23T04:20:56.830047Z",
   "status": "PASS",
   "summary": {
     "total_checks": 665,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-23T04:05:27.626360Z",
+      "collected_at": "2026-07-23T04:19:17.594355Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4221,7 +4221,7 @@
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
       "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "note": "one side unavailable (fred=True, bls=False)"
     }
   ],
   "noise_floor": [
