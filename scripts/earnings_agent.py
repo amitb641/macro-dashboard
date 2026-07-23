@@ -485,6 +485,30 @@ def main():
     if not earnings:
         print(f'ERROR: {BANK_FILE} missing'); sys.exit(2)
 
+    # New-quarter rollover: the idempotency check below trusts each bank's
+    # per-ticker `status` field, but that status is only meaningful within
+    # the quarter it was recorded for. If data/earnings_calendar.json has
+    # moved on to a new quarter (human-updated each quarter per its own
+    # header) while data/bank_earnings.json still shows every ticker
+    # 'reported' from the PRIOR quarter, the naive check below would skip
+    # every bank forever -- this happened in production: Q1 2026 finished
+    # reporting in April, Q2 2026's calendar went live in July with
+    # expected_report_date entries already in the past, and the agent
+    # ran successfully every day for 2 weeks logging "no banks pending
+    # extraction" because it never noticed the quarter itself had changed.
+    # Reset every bank to 'pending' (the value renderer.py's pending-gate
+    # already understands) so the queue-building loop below re-evaluates
+    # each ticker against the new quarter's expected_report_date instead
+    # of short-circuiting on stale status.
+    prior_quarter = earnings.get('quarter')
+    cal_quarter = calendar.get('quarter')
+    if cal_quarter and prior_quarter != cal_quarter:
+        print(f'  new quarter detected: {prior_quarter!r} -> {cal_quarter!r}; resetting bank status to pending for reprocessing')
+        earnings['quarter'] = cal_quarter
+        earnings['season'] = calendar.get('season')
+        for b in earnings.get('banks', []):
+            b['status'] = 'pending'
+
     # Snapshot status map for idempotency check
     reported_status = {b['ticker']: b.get('status') for b in earnings.get('banks', [])}
 
@@ -519,6 +543,19 @@ def main():
     if args.dry_run:
         print('[Agent 9] --dry-run: skipping renderer/validator/git')
         sys.exit(0)
+
+    # Top-level quarter/season were already synced onto the in-memory
+    # `earnings` dict during the rollover check above (if this was a new
+    # quarter); updated_at was never touched anywhere in this file until
+    # now, so it silently carried the date of whichever run last had a
+    # successful extraction. Refresh both and persist -- real writes did
+    # happen this run (process_bank's own per-bank save above already
+    # wrote the per-ticker fields; this catches the top-level ones it
+    # doesn't touch).
+    earnings['quarter'] = calendar.get('quarter')
+    earnings['season'] = calendar.get('season')
+    earnings['updated_at'] = datetime.date.today().isoformat()
+    save_json(BANK_FILE, earnings)
 
     # Renderer — patches BANK_COMMENTARY into index.html
     print('\n[Agent 9] Running renderer...')
