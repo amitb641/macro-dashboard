@@ -247,7 +247,7 @@ def test_renderer(tmp_dir):
     _test('index.html exists after render', html_file.exists())
 
     if html_file.exists():
-        html = html_file.read_text()
+        html = html_file.read_text(encoding='utf-8')
         size = len(html.encode('utf-8'))
         _test('HTML size > 100KB', size > 100_000, f'only {size:,} bytes')
 
@@ -360,7 +360,7 @@ def test_renderer_idempotent(tmp_dir):
         _test('Skipped (no HTML)', False, 'index.html missing from prior test')
         return
 
-    first_html = html_file.read_text()
+    first_html = html_file.read_text(encoding='utf-8')
     first_size = len(first_html)
 
     # Reset and re-run
@@ -380,7 +380,7 @@ def test_renderer_idempotent(tmp_dir):
     except SystemExit:
         pass
 
-    second_html = html_file.read_text()
+    second_html = html_file.read_text(encoding='utf-8')
     second_size = len(second_html)
 
     # Size should be very close (timestamps may differ slightly)

@@ -118,7 +118,7 @@ was a local trough.
 | | |
 |---|---|
 | **Metric** | CPI Transportation Services YoY % |
-| **Source** | FRED `CUSR0000SETG` (BLS CPI, seasonally adjusted) |
+| **Source** | FRED `CUSR0000SAS4` (BLS CPI, seasonally adjusted) — corrected 2026-07-25 from `CUSR0000SETG` ("Public Transportation", a narrower airfare/transit-heavy basket that had been mislabeled as this broader category since the phase was built; the coverage description below was already written for the correct broader concept, only the series ID was wrong) |
 | **Cadence** | Monthly, 2nd week of following month |
 | **Collector fetch** | 24 observations (`collector.py:336`) |
 | **Coverage** | Airline fares, intracity transit, vehicle insurance, vehicle maintenance, vehicle leasing. Does **not** cover freight trucking rates (see limitations). |

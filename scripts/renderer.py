@@ -404,7 +404,10 @@ def rebuild_charts(html, data):
         # Ensure last data point always has a visible label showing the latest week's date
         if labels:
             d = datetime.datetime.strptime(icsa_sorted[-1]['date'], '%Y-%m-%d')
-            labels[-1] = d.strftime("%-d %b'%y")  # e.g. "8 Mar'26"
+            # `%-d` (no zero-pad) is Linux/macOS-only — Windows raises
+            # ValueError("Invalid format string"). Build the day manually so
+            # both platforms produce e.g. "8 Mar'26" identically.
+            labels[-1] = f'{d.day} ' + d.strftime("%b'%y")
         if labels:
             html = _inject_const(html, 'CLAIMS_WEEKLY', {
                 'labels': labels, 'initial': initial, 'continued': continued})
@@ -1342,16 +1345,16 @@ def rebuild_u_sector_mom(html, data):
 def rebuild_cpi_cat_mom(html, data):
     """Rebuild CPI_CAT_MOM from FRED CPI category index series."""
     CPI_CATS = [
-        ('Shelter / Housing',   'cpi_shelter',   '#8878B8'),
-        ('Food Away from Home', 'cpi_food_away', '#1A9E5A'),
-        ('Transportation Svcs', 'cpi_transport', '#CC5DE8'),
-        ('Medical Care Svcs',   'cpi_medical',   '#FF6B9D'),
-        ('Core CPI (ex F&E)',   'cpi_core',      '#F76707'),
-        ('Food at Home',        'cpi_food_home', '#51CF66'),
-        ('New Vehicles',        'cpi_new_veh',   '#4DABF7'),
-        ('Apparel',             'cpi_apparel',   '#FCC419'),
-        ('Energy (all)',        'cpiengsl',      '#FFB84C'),
-        ('Used Cars & Trucks',  'cpi_used_cars', '#00C9A7'),
+        ('Shelter',              'cpi_shelter',   '#8878B8'),
+        ('Food Away from Home',  'cpi_food_away', '#1A9E5A'),
+        ('Transportation Services', 'cpi_transport', '#CC5DE8'),
+        ('Medical Care Services', 'cpi_medical',   '#FF6B9D'),
+        ('Core CPI (ex F&E)',    'cpi_core',      '#F76707'),
+        ('Food at Home',         'cpi_food_home', '#51CF66'),
+        ('New Vehicles',         'cpi_new_veh',   '#4DABF7'),
+        ('Apparel',              'cpi_apparel',   '#FCC419'),
+        ('Energy',                'cpiengsl',      '#FFB84C'),
+        ('Used Cars and Trucks', 'cpi_used_cars', '#00C9A7'),
     ]
 
     entries = []
@@ -2125,10 +2128,10 @@ def update_shock_tracker(html, data, vals):
          ),
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
-         "metric": "CPI Transport Svcs YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
+         "metric": "CPI Transportation Services YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
          "chg": round(cpi_trans_yoy - cpi_trans_pre, 1) if cpi_trans_yoy is not None else None,
          "status": trans_status, "status_reason": trans_reason,
-         "source": "FRED CUSR0000SETG \u00b7 BLS CPI Transportation Services (monthly)",
+         "source": "FRED CUSR0000SAS4 \u00b7 BLS CPI Transportation Services (monthly)",
          "base_effect_note": _base_effect_note(
              data.get('cpi_transport', []), cpi_trans_pre, cpi_trans_yoy,
              trans_pre_mma, trans_mom_ann
@@ -2137,7 +2140,7 @@ def update_shock_tracker(html, data, vals):
          "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_prev_val} prior \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
                     if trans_mom_ann is not None and trans_pre_mma is not None else
                     "Awaiting CPI Transport Services history"),
-         "note": (f"CPI Transport Svcs at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
+         "note": (f"CPI Transportation Services at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
                   if cpi_trans_yoy is not None else "Awaiting CPI Transport Services data"),
          "commentary": (
              ("Airfare + auto insurance renewals + shipping passing through. "
@@ -2145,7 +2148,7 @@ def update_shock_tracker(html, data, vals):
              ) if trans_mom_ann is not None and trans_pre_mma is not None and trans_mom_ann > trans_pre_mma + 0.5 else
              ("Transport Services running at pre-shock pace \u2014 oil shock not yet visible in the monthly cadence."
               if trans_mom_ann is not None else
-              "Needs 24 obs of CUSR0000SETG to compute post-shock vs pre-shock MMA."))
+              "Needs 24 obs of CUSR0000SAS4 to compute post-shock vs pre-shock MMA."))
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201314", "expected_weeks": [6, 14],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
@@ -2747,12 +2750,25 @@ def render():
             if abs(in_html - computed) > 0.15:
                 revisions.append(f'{label}: HTML={in_html}, Source={computed} (Δ={computed-in_html:+.1f})')
 
-    # Check key indicators for revision drift
-    for series_key, label in [('unrate', 'Unemployment'), ('cpi_all', 'CPI')]:
-        s = data.get(series_key, [])
-        if s:
-            _check_revision(f'{label} latest', s[0]['value'],
-                           rf'"val":"([\d.]+)%".*?"metric":"{label.lower()[:4]}"')
+    # Check key indicators for revision drift.
+    # Unemployment's raw series value IS the KPI-displayed percent, so it
+    # compares directly. CPI's raw series (cpi_all) is the index level
+    # (~332), not a percent — comparing it to a "X%" KPI tile always fires
+    # a false positive regardless of real data (Δ is always ~328pp). Use
+    # the already-computed YoY percent (vals['cpi_yoy']) instead, which is
+    # the same unit the KPI tile actually displays.
+    # [^{}]*? (not .*?) keeps the match inside one KPI tile object — the
+    # lazy .*? previously crossed object boundaries and paired a "val" from
+    # an unrelated tile with the next "metric":"cpi"/"unem" it found anywhere
+    # later in the HTML, regardless of which tile that metric actually
+    # belonged to (root cause of the 328pp-off false positive above).
+    s = data.get('unrate', [])
+    if s:
+        _check_revision('Unemployment latest', s[0]['value'],
+                       r'"val":"([\d.]+)%"[^{}]*?"metric":"unem"')
+    if vals.get('cpi_yoy') is not None:
+        _check_revision('CPI latest', vals['cpi_yoy'],
+                       r'"val":"([\d.]+)%"[^{}]*?"metric":"cpi"')
     prev_yr = datetime.date.today().year - 1
     wti_a = data.get('wti_annual', [])
     for obs in (wti_a if isinstance(wti_a, list) else []):
