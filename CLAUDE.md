@@ -174,7 +174,7 @@ The Oil Impact Chain (`update_shock_tracker` in `renderer.py`) rebuilds `SHOCK_T
 | Phase | Metric | Raw-data key | YoY needs |
 |---|---|---|---|
 | Pump Prices Spike | Gasoline $/gal | `gasoline` (GASREGW weekly) | 2 obs — pre-shock + latest |
-| Transport & Freight | CPI Transport Svcs YoY | `cpi_transport` (CUSR0000SETG) | **24 obs** (13 for YoY + pre-shock) |
+| Transport & Freight | CPI Transport Svcs YoY | `cpi_transport` (CUSR0000SAS4) | **24 obs** (13 for YoY + pre-shock) |
 | CPI Energy Prints | CPI Energy YoY | `cpiengsl` (CPIENGSL) | 13+ obs |
 | Food & Services | CPI Food Away YoY | `cpi_food_away` (CUSR0000SEFV) | **24 obs** (13 for YoY + pre-shock) |
 | Core Goods | Core CPI YoY | `vals['core_cpi_yoy']` scalar | — |

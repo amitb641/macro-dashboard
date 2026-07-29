@@ -534,7 +534,13 @@ def collect():
     # 30 obs leaves margin above the 24 that the shock-tracker YoY+pre-shock
     # math requires (13 YoY + ~11 buffer); avoids borderline n=23 from FRED lag.
     data['cpi_food_away'] = fred_obs('CUSR0000SEFV', 30)  # Food Away from Home
-    data['cpi_transport'] = fred_obs('CUSR0000SETG', 30)  # Transportation Services
+    # 2026-07-23: was CUSR0000SETG ("Public Transportation" -- a narrow,
+    # airfare-heavy basket) mislabeled as "Transportation Services" -- found
+    # via a user question about a 16.9% YoY reading that turned out to be
+    # real but for the wrong series (BLS's actual "Transportation services"
+    # line was 3.4% YoY the same month). SAS4 is BLS/FRED's real
+    # "Transportation Services" series, verified against BLS CPI Table 1.
+    data['cpi_transport'] = fred_obs('CUSR0000SAS4', 30)  # Transportation Services
     data['cpi_medical']   = fred_obs('CUSR0000SAM2', 24)  # Medical Care Services
     data['cpi_food_home'] = fred_obs('CUSR0000SAF11',24)  # Food at Home
     data['cpi_new_veh']   = fred_obs('CUSR0000SETA01',24) # New Vehicles

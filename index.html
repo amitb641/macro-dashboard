@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-var BUILD_V = "2026-07-25T12:56:21Z";
+var BUILD_V = "2026-07-29T03:41:06Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -3619,7 +3619,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 
 <button type="button" class="theme-toggle" aria-label="Toggle dark theme" onclick="window.MD&&window.MD.toggleTheme&&window.MD.toggleTheme()"><span class="tt-glyph" aria-hidden="true">&#9790;</span><span class="tt-label">Dark</span></button>
 
-<div class="sm-wordmark" id="sm-wordmark"><span>Macro/26</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 52</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 30</span></div>
+<div class="sm-wordmark" id="sm-wordmark"><span>Macro/26</span><span class="sm-wm-sep">·</span><span class="sm-wm-issue" id="sm-wm-issue">ISSUE 52</span><span class="sm-wm-sep">·</span><span id="sm-wm-week">WEEK 31</span></div>
 
 <div class="sm-readbar" id="sm-readbar" role="region" aria-label="Reading progress">
   <span class="sm-rb-meta"><span id="sm-rb-time">~12-min read</span><span class="sm-rb-dot">·</span><span id="sm-rb-sections">8 sections</span></span>
@@ -4802,7 +4802,7 @@ const GDP_BROAD = [
 ];
 
 // ── UNEMPLOYMENT ─────────────────────────────────────
-const U_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[5.6, 6.9, 7.5, 6.9, 6.1, 5.6, 5.4, 4.9, 4.5, 4.2, 4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.7, 3.6, 4.0, 4.3]};
+const U_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[5.6, 6.9, 7.5, 6.9, 6.1, 5.6, 5.4, 4.9, 4.5, 4.2, 4.0, 4.7, 5.8, 6.0, 5.5, 5.1, 4.6, 4.6, 5.8, 9.3, 9.6, 8.9, 8.1, 7.4, 6.2, 5.3, 4.9, 4.4, 3.9, 3.7, 8.1, 5.4, 3.6, 3.6, 4.0, 4.3]};
 const U_MONTHLY = {"labels":["May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26", "Jun'26"], "data":[4.3, 4.1, 4.3, 4.3, 4.4, 4.5, 4.4, 4.3, 4.4, 4.3, 4.3, 4.3, 4.2]};
 let U_SECTOR_MOM = null;
 const U_SECTORS = [
@@ -5702,15 +5702,44 @@ function buildUnempTab(){
   var _uCurL = _uCurK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
   var _uPrvL = _uPrvK.replace(/^([a-z]{3})(\d{2})$/,(_,m,y)=>m.charAt(0).toUpperCase()+m.slice(1)+"'"+y);
   var uMom = U_SECTOR_MOM.sectors.map((s,i)=>({s:s,change:+(U_SECTOR_MOM[_uCurK][i]-U_SECTOR_MOM[_uPrvK][i]).toFixed(2),cur:U_SECTOR_MOM[_uCurK][i],prv:U_SECTOR_MOM[_uPrvK][i]}));
-  uMom.sort((a,b)=>b.change-a.change);
+  // Sorted by latest-month level (not by change) per user request 2026-07-23 --
+  // sorting by change looked "unsorted" to the eye because bar LENGTH shows
+  // level while the old sort key was the gap between bars, a mismatch between
+  // what's sorted and what's visually scanned. The delta label below (inline
+  // Chart.js plugin, same pattern as MD.mdFramePlugin/md_dark_theme elsewhere
+  // in this file rather than pulling in chartjs-plugin-datalabels) keeps the
+  // MoM change visible without using it as the sort key.
+  uMom.sort((a,b)=>b.cur-a.cur);
+  var _uMomDeltaPlugin = {
+    id: 'uMomDeltaLabels',
+    afterDatasetsDraw: function(chart){
+      var meta = chart.getDatasetMeta(0);
+      var ctx = chart.ctx;
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      ctx.save();
+      ctx.font = "600 10px 'DM Mono', monospace";
+      ctx.textBaseline = 'middle';
+      meta.data.forEach(function(bar, i){
+        var r = uMom[i];
+        if(!r) return;
+        var txt = (r.change>=0?'+':'') + r.change.toFixed(1) + 'pp';
+        ctx.fillStyle = r.change>0 ? '#D64045' : (r.change<0 ? '#1A9E5A' : (isDark?'#8A8A8A':'#6E6656'));
+        ctx.textAlign = 'left';
+        ctx.fillText(txt, bar.x + 6, bar.y);
+      });
+      ctx.restore();
+    }
+  };
   new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
     type:"bar",
+    plugins:[_uMomDeltaPlugin],
     data:{labels:uMom.map(r=>r.s),datasets:[
       {label:_uCurL+" Rate %",data:uMom.map(r=>r.cur),backgroundColor:uMom.map(r=>r.change>0?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
       {label:_uPrvL+" Rate %",data:uMom.map(r=>r.prv),
        backgroundColor:"#8878B8bb",borderRadius:3},
     ]},
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+      layout:{padding:{right:36}},
       plugins:{legend:{display:false},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"");}}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
@@ -6328,7 +6357,7 @@ function buildFCTab(){
 // ════════════════════════════════════════════════════
 const PCE_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "headline":[4.9, 2.6, 2.6, 2.2, 2.1, 2.0, 2.4, 1.1, 0.8, 2.1, 2.5, 1.1, 2.1, 2.1, 2.8, 2.9, 2.3, 3.5, 0.1, 2.1, 1.5, 2.5, 1.6, 1.4, 0.7, 0.3, 1.7, 1.8, 1.9, 1.6, 1.3, 6.1, 5.5, 2.8, 2.7, 2.9], "core":[4.0, 3.5, 2.8, 2.5, 2.2, 2.1, 1.9, 1.5, 1.4, 1.4, 1.9, 1.7, 1.8, 1.6, 2.1, 2.3, 2.3, 2.4, 1.1, 1.5, 1.1, 2.0, 1.7, 1.5, 1.4, 1.2, 1.8, 1.6, 2.0, 1.5, 1.5, 5.2, 5.0, 3.1, 3.0, 3.0]};
 const PCE_MONTHLY = {"labels":["May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26"], "headline":[2.5, 2.6, 2.6, 2.7, 2.8, 2.7, 2.8, 2.9, 2.9, 2.9, 3.5, 3.8, 4.1], "core":[2.8, 2.8, 2.9, 2.9, 2.8, 2.8, 2.8, 3.0, 3.1, 3.0, 3.3, 3.3, 3.4]};
-const SAVING_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[8.4, 8.9, 9.4, 7.8, 6.8, 6.9, 6.3, 6.0, 6.5, 4.6, 4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.6, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
+const SAVING_ANNUAL = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"], "data":[8.4, 8.9, 9.4, 7.8, 6.8, 6.9, 6.3, 6.0, 6.5, 4.6, 4.3, 4.7, 5.6, 5.2, 4.6, 2.2, 2.8, 2.5, 4.1, 5.7, 5.9, 6.5, 7.9, 5.0, 5.5, 5.9, 5.4, 5.8, 6.4, 7.3, 15.1, 11.3, 3.4, 5.6, 5.4, 4.6]};
 const SAVING_MONTHLY = {"labels":["May'25", "Jun'25", "Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26"], "data":[4.9, 4.6, 4.5, 4.4, 4.3, 3.9, 3.8, 3.6, 4.4, 3.8, 3.5, 3.0, 3.0]};
 const UMCSENT_MONTHLY = {"labels":["Jul'25", "Aug'25", "Sep'25", "Oct'25", "Nov'25", "Dec'25", "Jan'26", "Feb'26", "Mar'26", "Apr'26", "May'26", "Jun'26", "Jul'26"], "data":[61.7, 58.2, 55.1, 53.6, 51.0, 52.9, 56.4, 56.6, 53.3, 49.8, 44.8, 49.5, 54.4], "statuses":["final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "final", "preliminary"]};
 const PCE_CATS = [
@@ -10224,8 +10253,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-07-25T12:56:21Z">
-<script src="theme-overlay.js?v=2026-07-25T12:56:21Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-07-29T03:41:06Z">
+<script src="theme-overlay.js?v=2026-07-29T03:41:06Z"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

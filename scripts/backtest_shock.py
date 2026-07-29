@@ -96,7 +96,7 @@ def fred_fetch(series_id, start_date=None, end_date=None, freq=None):
 
 PHASES = [
     {'phase': 'Pump Prices Spike',        'kind': 'level',    'series': 'GASREGW',       'expected_weeks': [0, 2],  'baseline_threshold': 0.50},
-    {'phase': 'Transport & Freight',      'kind': 'mma',      'series': 'CUSR0000SETG',  'expected_weeks': [4, 6]},
+    {'phase': 'Transport & Freight',      'kind': 'mma',      'series': 'CUSR0000SAS4',  'expected_weeks': [4, 6]},
     {'phase': 'CPI Energy Prints',        'kind': 'mma',      'series': 'CPIENGSL',      'expected_weeks': [6, 14]},
     {'phase': 'Food & Services',          'kind': 'mma',      'series': 'CUSR0000SEFV',  'expected_weeks': [12, 20]},
     {'phase': 'Core Goods Inflation',     'kind': 'yoy',      'series': 'CPILFESL',      'expected_weeks': [20, 32], 'baseline_threshold': 0.5},

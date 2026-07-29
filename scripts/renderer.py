@@ -1535,17 +1535,26 @@ def rebuild_u_sector_mom(html, data):
 
 def rebuild_cpi_cat_mom(html, data):
     """Rebuild CPI_CAT_MOM from FRED CPI category index series."""
+    # Labels aligned to BLS CPI Table 1's actual category names 2026-07-23
+    # (was 'Shelter / Housing', 'Transportation Svcs', 'Medical Care Svcs',
+    # 'Energy (all)' -- none of those qualifiers/abbreviations are part of
+    # BLS's real category names, found while fixing the Transportation Svcs
+    # series-ID mismatch below). 'Core CPI (ex F&E)' is left as-is -- it's
+    # a universally recognized alternate name for BLS's official "All items
+    # less food and energy", not a mismatch, and renaming it to the official
+    # wording would read as less clear to readers than the industry-standard
+    # shorthand.
     CPI_CATS = [
-        ('Shelter / Housing',   'cpi_shelter',   '#8878B8'),
-        ('Food Away from Home', 'cpi_food_away', '#1A9E5A'),
-        ('Transportation Svcs', 'cpi_transport', '#CC5DE8'),
-        ('Medical Care Svcs',   'cpi_medical',   '#FF6B9D'),
-        ('Core CPI (ex F&E)',   'cpi_core',      '#F76707'),
-        ('Food at Home',        'cpi_food_home', '#51CF66'),
-        ('New Vehicles',        'cpi_new_veh',   '#4DABF7'),
-        ('Apparel',             'cpi_apparel',   '#FCC419'),
-        ('Energy (all)',        'cpiengsl',      '#FFB84C'),
-        ('Used Cars & Trucks',  'cpi_used_cars', '#00C9A7'),
+        ('Shelter',              'cpi_shelter',   '#8878B8'),
+        ('Food Away from Home',  'cpi_food_away', '#1A9E5A'),
+        ('Transportation Services', 'cpi_transport', '#CC5DE8'),
+        ('Medical Care Services', 'cpi_medical',   '#FF6B9D'),
+        ('Core CPI (ex F&E)',    'cpi_core',      '#F76707'),
+        ('Food at Home',         'cpi_food_home', '#51CF66'),
+        ('New Vehicles',         'cpi_new_veh',   '#4DABF7'),
+        ('Apparel',              'cpi_apparel',   '#FCC419'),
+        ('Energy',                'cpiengsl',      '#FFB84C'),
+        ('Used Cars and Trucks', 'cpi_used_cars', '#00C9A7'),
     ]
 
     entries = []
@@ -2702,10 +2711,10 @@ def update_shock_tracker(html, data, vals):
          ),
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
-         "metric": "CPI Transport Svcs YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
+         "metric": "CPI Transportation Services YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
          "chg": round(cpi_trans_yoy - cpi_trans_pre, 1) if cpi_trans_yoy is not None else None,
          "status": trans_status, "status_reason": trans_reason,
-         "source": "FRED CUSR0000SETG \u00b7 BLS CPI Transportation Services (monthly)",
+         "source": "FRED CUSR0000SAS4 \u00b7 BLS CPI Transportation Services (monthly)",
          "base_effect_note": _base_effect_note(
              data.get('cpi_transport', []), cpi_trans_pre, cpi_trans_yoy,
              trans_pre_mma, trans_mom_ann
@@ -2714,7 +2723,7 @@ def update_shock_tracker(html, data, vals):
          "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_prev_val} prior \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
                     if trans_mom_ann is not None and trans_pre_mma is not None else
                     "Awaiting CPI Transport Services history"),
-         "note": (f"CPI Transport Svcs at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
+         "note": (f"CPI Transportation Services at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
                   if cpi_trans_yoy is not None else "Awaiting CPI Transport Services data"),
          "commentary": (
              ("Airfare + auto insurance renewals + shipping passing through. "
@@ -2722,7 +2731,7 @@ def update_shock_tracker(html, data, vals):
              ) if trans_mom_ann is not None and trans_pre_mma is not None and trans_mom_ann > trans_pre_mma + 0.5 else
              ("Transport Services running at pre-shock pace \u2014 oil shock not yet visible in the monthly cadence."
               if trans_mom_ann is not None else
-              "Needs 24 obs of CUSR0000SETG to compute post-shock vs pre-shock MMA."))
+              "Needs 24 obs of CUSR0000SAS4 to compute post-shock vs pre-shock MMA."))
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201314", "expected_weeks": [6, 14],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
