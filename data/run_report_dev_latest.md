@@ -1,10 +1,10 @@
 # Pipeline run report: `dev`
 
-_Generated 2026-07-29 04:34 UTC._
+_Generated 2026-07-29 04:52 UTC._
 
 - **Branch:** `dev`
 - **Ref:** `dev/multi-expert-improvements`
-- **Commit:** `82aa88117778` — Fix parallel-compare.yml: comparison report was silently failing to commit on every run
+- **Commit:** `825a5c5516bf` — Fix parallel-compare.yml: run-report push had no retry, failed outright on race
 - **Deploy surface:** Vercel
 
 Single-branch snapshot — emitted on every briefing completion so
