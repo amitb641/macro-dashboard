@@ -1975,22 +1975,29 @@ def update_shock_tracker(html, data, vals):
     # base-effect contamination (e.g. Mar'25 Transport trough inflated YoY).
     def _latest_mom_ann(series):
         """Latest single-month MoM change, annualized as compound rate.
-        Returns (yoy_ann_pct, latest_date, prior_value)."""
-        if not series or len(series) < 2: return None, None, None
+        Returns (yoy_ann_pct, latest_date, latest_value, prior_value) —
+        the extra raw values let the UI show the exact formula, not just
+        the final percentage."""
+        if not series or len(series) < 2: return None, None, None, None
         cur, prev = series[0], series[1]
-        if not prev['value']: return None, None, None
+        if not prev['value']: return None, None, None, None
         ann = ((cur['value'] / prev['value']) ** 12 - 1) * 100
-        return round(ann, 1), cur['date'], prev['value']
+        return round(ann, 1), cur['date'], cur['value'], prev['value']
 
     def _pre_shock_6mom_ann(series, shock_iso='2026-03-01'):
         """6-month trailing compound MoM, annualized, ending in last pre-shock
-        observation. Formula: (V[pre] / V[pre+6]) ** 2 − 1."""
-        if not series: return None
+        observation. Formula: (V[pre] / V[pre+6]) ** 2 − 1.
+        Returns (pct, pre_date, pre_value, prior_date, prior_value) or
+        (None, None, None, None, None) — raw endpoints included so the UI
+        can show the exact formula, not just the final percentage."""
+        if not series: return None, None, None, None, None
         pre_idx = next((i for i, o in enumerate(series) if o['date'] < shock_iso), None)
-        if pre_idx is None or len(series) < pre_idx + 7: return None
-        cur, prior = series[pre_idx]['value'], series[pre_idx + 6]['value']
-        if not prior: return None
-        return round(((cur / prior) ** 2 - 1) * 100, 1)
+        if pre_idx is None or len(series) < pre_idx + 7: return None, None, None, None, None
+        pre_obs, prior_obs = series[pre_idx], series[pre_idx + 6]
+        cur, prior = pre_obs['value'], prior_obs['value']
+        if not prior: return None, None, None, None, None
+        pct = round(((cur / prior) ** 2 - 1) * 100, 1)
+        return pct, pre_obs['date'], cur, prior_obs['date'], prior
 
     def _mma_status(post_mma, pre_mma, expected_weeks, data_is_post_shock):
         """Returns (status, reason). Confirmation rule: latest post-shock MoM
@@ -2024,12 +2031,12 @@ def update_shock_tracker(html, data, vals):
             return 'not_yet', f'Too early — expected window starts {win.split()[1]}.'
         return 'not_yet', f'Monthly pace matches pre-shock baseline. Window: {win}.'
 
-    trans_mom_ann, trans_latest, trans_prev_val = _latest_mom_ann(data.get('cpi_transport', []))
-    trans_pre_mma = _pre_shock_6mom_ann(data.get('cpi_transport', []))
-    food_mom_ann,  food_latest,  food_prev_val  = _latest_mom_ann(data.get('cpi_food_away', []))
-    food_pre_mma  = _pre_shock_6mom_ann(data.get('cpi_food_away', []))
-    energy_mom_ann, energy_latest, energy_prev_val = _latest_mom_ann(data.get('cpiengsl', []))
-    energy_pre_mma = _pre_shock_6mom_ann(data.get('cpiengsl', []))
+    trans_mom_ann, trans_latest, trans_cur_val, trans_prev_val = _latest_mom_ann(data.get('cpi_transport', []))
+    trans_pre_mma, trans_mma_date, trans_mma_val, trans_mma_prior_date, trans_mma_prior_val = _pre_shock_6mom_ann(data.get('cpi_transport', []))
+    food_mom_ann,  food_latest,  food_cur_val,  food_prev_val  = _latest_mom_ann(data.get('cpi_food_away', []))
+    food_pre_mma,  food_mma_date,  food_mma_val,  food_mma_prior_date,  food_mma_prior_val  = _pre_shock_6mom_ann(data.get('cpi_food_away', []))
+    energy_mom_ann, energy_latest, energy_cur_val, energy_prev_val = _latest_mom_ann(data.get('cpiengsl', []))
+    energy_pre_mma, energy_mma_date, energy_mma_val, energy_mma_prior_date, energy_mma_prior_val = _pre_shock_6mom_ann(data.get('cpiengsl', []))
 
     def _mo_lbl(d):
         return datetime.datetime.strptime(d, '%Y-%m-%d').strftime("%b'%y") if d else ''
@@ -2110,6 +2117,35 @@ def update_shock_tracker(html, data, vals):
                                            data_is_post_shock=(food_latest or '') >= shock)
     cc_post      = _latest_date('cc_delinq') >= shock
 
+    def _threshold_math(pre_val, now_val, move_threshold, unit, inverted=False, confirm_threshold=0.5):
+        """'math' block for _status()-style threshold phases, so the click-
+        to-expand UI can render the exact formula (chg = now - pre vs
+        threshold) with the real numbers that drove the status, not just
+        the final status label."""
+        if pre_val is None or now_val is None:
+            return None
+        return {
+            "type": "threshold",
+            "pre_val": pre_val, "now_val": now_val, "chg": round(now_val - pre_val, 4),
+            "move_threshold": move_threshold, "confirm_threshold": confirm_threshold,
+            "unit": unit, "inverted": inverted,
+        }
+
+    def _mma_math(cur_date, cur_val, prev_val, post_ann, mma_date, mma_val, mma_prior_date, mma_prior_val, pre_ann):
+        """'math' block for _mma_status()-style phases — exposes both raw
+        index values behind each compounding formula (latest MoM annualized,
+        pre-shock 6-month annualized) so the UI can show real numbers, not
+        just the two final percentages."""
+        if post_ann is None or pre_ann is None:
+            return None
+        return {
+            "type": "mma",
+            "cur_date": _mo_lbl(cur_date), "cur_val": cur_val, "prev_val": prev_val, "post_ann": post_ann,
+            "mma_date": _mo_lbl(mma_date), "mma_val": mma_val,
+            "mma_prior_date": _mo_lbl(mma_prior_date), "mma_prior_val": mma_prior_val, "pre_ann": pre_ann,
+            "diff": round(post_ann - pre_ann, 1), "confirm_threshold": 1.5,
+        }
+
     phases = [
         {"phase": "Pump Prices Spike", "expected": "Days 1\u201314", "expected_weeks": [0, 2],
          "metric": "Gasoline $/gal", "pre": gas_pre, "now": gas_now,
@@ -2126,6 +2162,7 @@ def update_shock_tracker(html, data, vals):
              (f"Retail pumps moved within ~2 weeks of the WTI spike; +${round(gas_now-gas_pre,2)}/gal pass-through is roughly in line with the $0.24/gal-per-$10/bbl rule-of-thumb."
               ) if gas_now and gas_post and gas_pre else "Awaiting weekly GASREGW release."
          ),
+         "math": _threshold_math(gas_pre, gas_now, 0.15, "$/gal"),
         },
         {"phase": "Transport & Freight Costs", "expected": "Weeks 4\u20136", "expected_weeks": [4, 6],
          "metric": "CPI Transportation Services YoY", "pre": cpi_trans_pre, "now": cpi_trans_yoy,
@@ -2148,7 +2185,9 @@ def update_shock_tracker(html, data, vals):
              ) if trans_mom_ann is not None and trans_pre_mma is not None and trans_mom_ann > trans_pre_mma + 0.5 else
              ("Transport Services running at pre-shock pace \u2014 oil shock not yet visible in the monthly cadence."
               if trans_mom_ann is not None else
-              "Needs 24 obs of CUSR0000SAS4 to compute post-shock vs pre-shock MMA."))
+              "Needs 24 obs of CUSR0000SAS4 to compute post-shock vs pre-shock MMA.")),
+         "math": _mma_math(trans_latest, trans_cur_val, trans_prev_val, trans_mom_ann,
+                            trans_mma_date, trans_mma_val, trans_mma_prior_date, trans_mma_prior_val, trans_pre_mma),
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201314", "expected_weeks": [6, 14],
          "metric": "CPI Energy YoY", "pre": 0.4, "now": cpi_energy_yoy,
@@ -2170,7 +2209,9 @@ def update_shock_tracker(html, data, vals):
              ) if energy_mom_ann is not None and energy_pre_mma is not None and energy_mom_ann > energy_pre_mma + 5 else
              ("CPI Energy tracking oil gently \u2014 passthrough slower than expected."
               if energy_mom_ann is not None else
-              "No post-shock CPI Energy release yet."))
+              "No post-shock CPI Energy release yet.")),
+         "math": _mma_math(energy_latest, energy_cur_val, energy_prev_val, energy_mom_ann,
+                            energy_mma_date, energy_mma_val, energy_mma_prior_date, energy_mma_prior_val, energy_pre_mma),
         },
         {"phase": "Food & Services Inflation", "expected": "Months 3\u20135", "expected_weeks": [12, 20],
          "metric": "CPI Food Away YoY", "pre": food_away_pre, "now": food_away_yoy,
@@ -2193,7 +2234,9 @@ def update_shock_tracker(html, data, vals):
              ) if food_mom_ann is not None and food_pre_mma is not None and food_mom_ann < food_pre_mma + 0.5 else
              ("Food Away accelerating above pre-shock pace \u2014 menu pass-through arriving earlier than expected."
               if food_mom_ann is not None else
-              "Needs CPI Food Away history for the MMA comparison."))
+              "Needs CPI Food Away history for the MMA comparison.")),
+         "math": _mma_math(food_latest, food_cur_val, food_prev_val, food_mom_ann,
+                            food_mma_date, food_mma_val, food_mma_prior_date, food_mma_prior_val, food_pre_mma),
         },
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
@@ -2208,7 +2251,8 @@ def update_shock_tracker(html, data, vals):
               f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 beyond \u00b10.5pp noise floor. Expected window: weeks 20\u201332 (months 5\u20138), currently at week {weeks}.')
          ),
          "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}",
-         "commentary": "Manufacturing/chemicals absorb input costs over 5\u20138 months. Too early for this phase \u2014 energy input costs only began passing through in Mar'26 PPI."
+         "commentary": "Manufacturing/chemicals absorb input costs over 5\u20138 months. Too early for this phase \u2014 energy input costs only began passing through in Mar'26 PPI.",
+         "math": _threshold_math(2.5, core_cpi, 0.5, "pp"),
         },
         {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
          "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),
@@ -2227,7 +2271,8 @@ def update_shock_tracker(html, data, vals):
              ) if umcsent_post and umcsent is not None and umcsent < 55 else
              ("Sentiment holding relative to pre-shock \u2014 consumer psychology not yet reflecting the spike."
               if umcsent_post else
-              "Awaiting first post-shock sentiment reading."))
+              "Awaiting first post-shock sentiment reading.")),
+         "math": _threshold_math(56.6, umcsent, 0.5, "pt", inverted=True),
         },
         {"phase": "Savings Drawdown", "expected": "Months 2\u20134", "expected_weeks": [8, 16],
          "metric": "Personal Saving Rate", "pre": 4.5, "now": saving, "chg": round(saving - 4.5, 1),
@@ -2244,7 +2289,8 @@ def update_shock_tracker(html, data, vals):
              "PSAVERT lags ~1 month so current data is still pre-shock. The fuel-cost bite on take-home pay won't show until May\u2013Jun prints."
              if not saving_post else
              ("Saving rate compressing as expected \u2014 liquid buffer erosion underway."
-              if saving < 4.2 else "Saving rate stable despite the pump hit; either absorbed via discretionary spending or income strong."))
+              if saving < 4.2 else "Saving rate stable despite the pump hit; either absorbed via discretionary spending or income strong.")),
+         "math": _threshold_math(4.5, saving, 0.3, "pp", inverted=True),
         },
         {"phase": "Delinquencies Climb", "expected": "Months 5\u201310", "expected_weeks": [20, 40],
          "metric": "CC 90+ DPD Rate", "pre": 2.94, "now": cc_del, "chg": round(cc_del - 2.94, 2),
@@ -2260,7 +2306,8 @@ def update_shock_tracker(html, data, vals):
          "commentary": (
              "90+ DPD is quarterly (NY Fed HHDC) and lags 2\u20133 quarters. Current reading is pre-shock; first real look is Q3'26 release (Nov'26)."
              if not cc_post else
-             "Credit stress surfacing earlier than typical; watch subprime segments first.")
+             "Credit stress surfacing earlier than typical; watch subprime segments first."),
+         "math": _threshold_math(2.94, cc_del, 0.15, "pp"),
         },
     ]
 

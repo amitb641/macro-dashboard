@@ -4516,27 +4516,55 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
           + '<div style="font-size:12.5px;color:#1E293B;line-height:1.5">' + tr.status_reason + '</div></div>';
       }
 
-      // MMA comparison (two-column) — only when data available
-      if (tr.post_mom_ann !== undefined && tr.post_mom_ann !== null && tr.pre_6mma !== undefined && tr.pre_6mma !== null) {
-        var diff = tr.post_mom_ann - tr.pre_6mma;
-        var diffColor = diff > 1.5 ? '#16A34A' : diff > 0.5 ? '#CA8A04' : diff < -0.5 ? '#DC2626' : '#64748B';
+      // EXACT MATH — real numbers plugged into the actual formula that
+      // produced this phase's status, not just the summary percentages.
+      // renderer.py's update_shock_tracker() emits tr.math (type: "mma" or
+      // "threshold") specifically so this section can show real work, not
+      // rounded conclusions. Uses this function's existing hardcoded
+      // light-only palette (no _isDark tokens in scope here, unlike dev).
+      if (tr.math) {
+        var m = tr.math;
+        var fmtSigned = function(v, digits){ var s = v.toFixed(digits); return (v >= 0 ? '+' : '') + s; };
+        var rowStyle = 'font-family:\'DM Mono\',monospace;font-size:11px;line-height:1.7;white-space:pre-wrap;word-break:break-word';
         html += '<div style="' + sectionStyle + '">'
-          + '<div style="' + labelStyle + '">MMA comparison</div>'
-          + '<div style="display:flex;align-items:center;gap:10px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:10px">'
-          +   '<div style="flex:1;text-align:center">'
-          +     '<div style="font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:.05em">Pre-shock 6-MMA</div>'
-          +     '<div style="font-family:\'DM Mono\',monospace;font-size:15px;font-weight:700;color:#334E68;margin-top:2px">' + (tr.pre_6mma >= 0 ? '+' : '') + tr.pre_6mma + '%</div>'
-          +     '<div style="font-size:9px;color:#94A3B8">annualized</div>'
-          +   '</div>'
-          +   '<div style="font-size:18px;color:#CBD5E1">→</div>'
-          +   '<div style="flex:1;text-align:center">'
-          +     '<div style="font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:.05em">Post-shock pace</div>'
-          +     '<div style="font-family:\'DM Mono\',monospace;font-size:15px;font-weight:700;color:' + diffColor + ';margin-top:2px">' + (tr.post_mom_ann >= 0 ? '+' : '') + tr.post_mom_ann + '%</div>'
-          +     '<div style="font-size:9px;color:#94A3B8">annualized</div>'
-          +   '</div>'
-          + '</div>'
-          + '<div style="text-align:center;margin-top:6px;font-family:\'DM Mono\',monospace;font-size:10px;color:' + diffColor + '">Δ ' + (diff >= 0 ? '+' : '') + diff.toFixed(1) + 'pp · threshold >1.5pp = Confirmed</div>'
-          + '</div>';
+          + '<div style="' + labelStyle + '">Exact math</div>'
+          + '<div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:8px;padding:11px 12px">';
+
+        if (m.type === 'mma') {
+          var diff = m.diff;
+          var diffColor = diff > 1.5 ? '#16A34A' : diff > 0.5 ? '#CA8A04' : diff < -0.5 ? '#DC2626' : '#64748B';
+          html += '<div style="' + rowStyle + ';color:#1E293B">'
+            + '<span style="color:#64748B">Post-shock pace (' + m.cur_date + ' vs prior month), annualized:</span>\n'
+            + '((cur ÷ prev)^12 − 1) × 100\n'
+            + '= ((' + m.cur_val + ' ÷ ' + m.prev_val + ')^12 − 1) × 100\n'
+            + '= ' + fmtSigned(m.post_ann, 1) + '%'
+            + '</div>'
+            + '<div style="height:8px"></div>'
+            + '<div style="' + rowStyle + ';color:#1E293B">'
+            + '<span style="color:#64748B">Pre-shock 6-month pace (' + m.mma_date + ' vs ' + m.mma_prior_date + '), annualized:</span>\n'
+            + '((V[pre] ÷ V[pre−6mo])^2 − 1) × 100\n'
+            + '= ((' + m.mma_val + ' ÷ ' + m.mma_prior_val + ')^2 − 1) × 100\n'
+            + '= ' + fmtSigned(m.pre_ann, 1) + '%'
+            + '</div>'
+            + '<div style="height:8px;border-top:1px dashed #E2E8F0;margin-top:4px"></div>'
+            + '<div style="' + rowStyle + ';color:' + diffColor + ';margin-top:8px">'
+            + 'Δ = ' + fmtSigned(m.post_ann,1) + '% − (' + fmtSigned(m.pre_ann,1) + '%) = ' + fmtSigned(diff,1) + 'pp\n'
+            + 'Confirm rule: Δ > +1.5pp → ' + (diff > 1.5 ? 'MET' : 'not met') + '</div>';
+        } else if (m.type === 'threshold') {
+          var effChg = m.inverted ? -m.chg : m.chg;
+          var effColor = effChg > m.confirm_threshold ? '#16A34A' : effChg > m.move_threshold ? '#CA8A04' : '#64748B';
+          html += '<div style="' + rowStyle + ';color:#1E293B">'
+            + 'chg = now − pre\n'
+            + '= ' + m.now_val + ' − ' + m.pre_val + ' ' + m.unit + '\n'
+            + '= ' + fmtSigned(m.chg, 2) + ' ' + m.unit
+            + (m.inverted ? '\n\nShock-consistent direction: decrease.\nEffective move = −chg = ' + fmtSigned(effChg, 2) + ' ' + m.unit : '')
+            + '</div>'
+            + '<div style="height:8px;border-top:1px dashed #E2E8F0;margin-top:4px"></div>'
+            + '<div style="' + rowStyle + ';color:' + effColor + ';margin-top:8px">'
+            + 'Moved? |move| > ' + m.move_threshold + ' ' + m.unit + ' → ' + (Math.abs(effChg) > m.move_threshold ? 'yes' : 'no') + '\n'
+            + 'Confirm rule: move > ' + m.confirm_threshold + ' ' + m.unit + ' → ' + (effChg > m.confirm_threshold ? 'MET' : 'not met') + '</div>';
+        }
+        html += '</div></div>';
       }
 
       // Base-effect callout (amber warning) — only when present
