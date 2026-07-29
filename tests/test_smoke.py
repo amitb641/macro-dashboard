@@ -33,6 +33,42 @@ def _test(name, condition, detail=''):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# REAL-FILE ISOLATION GUARD — every phase below must operate on tmp_dir
+# copies only. This fingerprints the live project files most at risk
+# (validator.py's embedded visual_qa call resolves paths from repo ROOT
+# regardless of module-level overrides) so a future isolation regression
+# fails loudly instead of silently dirtying the working tree.
+# ═══════════════════════════════════════════════════════════════════════
+
+GUARDED_REAL_FILES = [
+    ROOT / 'data' / 'signals.json',
+    ROOT / 'data' / 'validation_report.json',
+    ROOT / 'data' / 'visual_qa_report.json',
+    ROOT / 'data' / 'visual_review_report.json',
+    ROOT / 'index.html',
+]
+
+
+def _hash_real_files():
+    import hashlib
+    files = list(GUARDED_REAL_FILES)
+    screenshots_dir = ROOT / 'data' / 'screenshots'
+    if screenshots_dir.exists():
+        files += sorted(screenshots_dir.glob('*.png'))
+    return {str(f): hashlib.sha256(f.read_bytes()).hexdigest()
+            for f in files if f.exists()}
+
+
+def test_no_real_file_mutation(before):
+    """Regression guard: smoke tests must never modify real project data."""
+    print('\n── Test: Real Project Data Untouched ──')
+    after = _hash_real_files()
+    changed = sorted(p for p, h in before.items() if after.get(p) != h)
+    _test('No real project files modified by smoke tests', not changed,
+          f'{len(changed)} file(s) changed: {changed[:5]}')
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # FIXTURE GENERATION — build minimal realistic data for offline testing
 # ═══════════════════════════════════════════════════════════════════════
 
@@ -398,6 +434,10 @@ def main():
     print('SMOKE TESTS — Offline Pipeline Validation')
     print('=' * 60)
 
+    # Fingerprint real project files before touching anything, so we can
+    # prove at the end that no phase leaked a write onto the live repo.
+    before_hashes = _hash_real_files()
+
     # Create temp directory with project structure
     tmp_dir = Path(tempfile.mkdtemp(prefix='macro_smoke_'))
     print(f'Working dir: {tmp_dir}')
@@ -420,6 +460,12 @@ def main():
         os.environ.pop('BLS_API_KEY', None)
         os.environ.pop('EIA_API_KEY', None)
 
+        # Offline smoke tests must never spin up a real browser against the
+        # live index.html — validator.validate() embeds a Playwright visual
+        # QA pass that (unlike this suite's other phases) resolves its file
+        # paths from repo ROOT, not from a redirectable module global.
+        os.environ['MACRO_SKIP_VISUAL_QA'] = '1'
+
         # Run tests sequentially (each depends on prior output)
         test_analyzer(tmp_dir)
         test_renderer(tmp_dir)
@@ -427,6 +473,7 @@ def main():
         test_validator_offline(tmp_dir)
         test_snapshot(tmp_dir)
         test_healthcheck_module()
+        test_no_real_file_mutation(before_hashes)
 
     finally:
         # Cleanup
