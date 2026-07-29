@@ -100,7 +100,16 @@ jobs:
             echo "No run-report changes"
           else
             git commit -m "📋 Run report (dev): $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push origin HEAD:dev/multi-expert-improvements
+            # Same retry pattern as "Commit paired comparison to dev" below —
+            # this step previously did a single unguarded push and failed
+            # outright (exit 1, no retry) whenever a shadow-update or other
+            # commit landed on dev between checkout and push. Confirmed live
+            # 2026-07-29 (run 30422945731): "! [rejected] ... (fetch first)".
+            for attempt in 1 2 3; do
+              git pull --rebase origin dev/multi-expert-improvements && git push origin HEAD:dev/multi-expert-improvements && break
+              echo "Push attempt $attempt failed, retrying in 5s..."
+              sleep 5
+            done
           fi
 
       - name: Upload per-run report artifact
