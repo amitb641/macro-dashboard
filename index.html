@@ -4458,7 +4458,8 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
     var methodTooltip = [
       'MMA = Moving Monthly-rate Annualized (compound MoM change, annualized).',
       '',
-      'Post-shock pace = latest MoM annualized: (V_latest / V_prior)^12 − 1',
+      'Post-shock pace = 3-month compound run-rate, annualized (same convention',
+      '  as "3-month annualized core CPI"): (V_latest / V_3mo_ago)^4 − 1',
       'Pre-shock 6-MMA = 6-month compound MoM ending in last pre-shock obs,',
       '  annualized: (V_Feb26 / V_Aug25)^2 − 1',
       '',
@@ -4534,9 +4535,9 @@ const OIL_DAILY = {"labels":["Mar 2","Mar 3","Mar 4","Mar 5","Mar 6","Mar 9","Ma
           var diff = m.diff;
           var diffColor = diff > 1.5 ? '#16A34A' : diff > 0.5 ? '#CA8A04' : diff < -0.5 ? '#DC2626' : '#64748B';
           html += '<div style="' + rowStyle + ';color:#1E293B">'
-            + '<span style="color:#64748B">Post-shock pace (' + m.cur_date + ' vs prior month), annualized:</span>\n'
-            + '((cur ÷ prev)^12 − 1) × 100\n'
-            + '= ((' + m.cur_val + ' ÷ ' + m.prev_val + ')^12 − 1) × 100\n'
+            + '<span style="color:#64748B">Post-shock pace (' + m.cur_date + ' vs 3 months ago), annualized:</span>\n'
+            + '((cur ÷ V[3mo ago])^4 − 1) × 100\n'
+            + '= ((' + m.cur_val + ' ÷ ' + m.val_3mo_ago + ')^4 − 1) × 100\n'
             + '= ' + fmtSigned(m.post_ann, 1) + '%'
             + '</div>'
             + '<div style="height:8px"></div>'
