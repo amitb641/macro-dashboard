@@ -1,13 +1,13 @@
 # Parallel-run findings ledger
 
-_Generated 2026-07-29 04:34 UTC._
+_Generated 2026-07-29 04:53 UTC._
 
 Every detected critical or warning during the parallel-run trial
 is recorded here with a recommended fix. Status transitions are
 manual — when a fix lands, edit the JSON or this file to set
 `status: resolved` and fill `resolution_notes` + `resolution_commit`.
 
-**Summary:** 9 open · 0 monitoring · 0 resolved
+**Summary:** 12 open · 0 monitoring · 0 resolved
 
 ---
 
@@ -17,7 +17,7 @@ manual — when a fix lands, edit the JSON or this file to set
 
 - **validator_failed_count_divergence** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-05-15T04:02:45Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 3
+- First seen: 2026-05-15T04:02:45Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 3
 - **Detail:** prod_failed=15 dev_failed=30
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
@@ -25,7 +25,7 @@ manual — when a fix lands, edit the JSON or this file to set
 
 - **signal_flagged_count_divergence** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-05-15T04:02:45Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 3
+- First seen: 2026-05-15T04:02:45Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 3
 - **Detail:** prod=0 dev=2
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
@@ -33,7 +33,7 @@ manual — when a fix lands, edit the JSON or this file to set
 
 - **signal_alert_count_divergence** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-07-29T04:34:03Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 1
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
 - **Detail:** prod=3 dev=2
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
@@ -41,23 +41,47 @@ manual — when a fix lands, edit the JSON or this file to set
 
 - **signal_watch_count_divergence** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-07-29T04:34:03Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 1
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
 - **Detail:** prod=2 dev=3
+- **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+
+### `parallel_compare:anchor_divergence:core_cpi_yoy:38591c741134`
+
+- **anchor_divergence:core_cpi_yoy** (WARNING, source: `parallel_compare`)
+- Branches: dev
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
+- **Detail:** prod=2.74 dev=2.57
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
 ### `parallel_compare:anchor_divergence:umich_sentiment:f8aff802d1bc`
 
 - **anchor_divergence:umich_sentiment** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-07-29T04:34:03Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 1
-- **Detail:** prod=61.3 dev=69.7
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
+- **Detail:** prod=44.8 dev=54.4
+- **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+
+### `parallel_compare:anchor_divergence:personal_saving_rate:87ef992dd5e2`
+
+- **anchor_divergence:personal_saving_rate** (WARNING, source: `parallel_compare`)
+- Branches: dev
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
+- **Detail:** prod=2.6 dev=3.0
+- **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+
+### `parallel_compare:anchor_divergence:wti_crude:9cca8df435e3`
+
+- **anchor_divergence:wti_crude** (WARNING, source: `parallel_compare`)
+- Branches: dev
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
+- **Detail:** prod=112.25 dev=84.38
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
 ### `parallel_compare:anchor_divergence:10y_treasury:4ba751b5d744`
 
 - **anchor_divergence:10y_treasury** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-07-29T04:34:03Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 1
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
 - **Detail:** prod=4.5 dev=4.65
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
@@ -65,8 +89,8 @@ manual — when a fix lands, edit the JSON or this file to set
 
 - **anchor_divergence:unemployment_rate** (WARNING, source: `parallel_compare`)
 - Branches: dev
-- First seen: 2026-07-29T04:34:03Z · Last seen: 2026-07-29T04:34:03Z · Occurrences: 1
-- **Detail:** prod=7.2 dev=7.0
+- First seen: 2026-07-29T04:53:02Z · Last seen: 2026-07-29T04:53:02Z · Occurrences: 1
+- **Detail:** prod=4.3 dev=4.2
 - **Recommended fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 
 ### `parallel_compare:validator_critical_count_divergence:cfa5fd800344`

@@ -1,6 +1,6 @@
 # Parallel-run comparison: prod (main) vs dev
 
-_Generated 2026-07-29 04:34 UTC._
+_Generated 2026-07-29 04:53 UTC._
 
 - **Prod ref:** `main`
 - **Dev ref:** `dev/multi-expert-improvements`
@@ -55,13 +55,13 @@ are producing a meaningfully different pipeline verdict than prod.
 
 | Metric | Prod (main) | Dev (parallel) | Delta |
 |---|---|---|---|
-| Core CPI YoY | — | — | — |
-| UMich Sentiment | 61.3 | 69.7 | +8.4 |
-| Personal Saving Rate | — | — | — |
+| Core CPI YoY | 2.74 | 2.57 | -0.17 |
+| UMich Sentiment | 44.8 | 54.4 | +9.6 |
+| Personal Saving Rate | 2.6 | 3.0 | +0.4 |
 | Fed Funds Rate | 3.64 | 3.63 | -0.01 |
-| WTI Crude | — | — | — |
+| WTI Crude | 112.25 | 84.38 | -27.9 |
 | 10Y Treasury | 4.5 | 4.65 | +0.15 |
-| Unemployment Rate | 7.2 | 7.0 | -0.2 |
+| Unemployment Rate | 4.3 | 4.2 | -0.1 |
 
 ## Divergences detected
 
@@ -69,9 +69,12 @@ are producing a meaningfully different pipeline verdict than prod.
 - **[WARNING]** signal_alert_count_divergence — prod=3 dev=2
 - **[WARNING]** signal_watch_count_divergence — prod=2 dev=3
 - **[WARNING]** signal_flagged_count_divergence — prod=1 dev=7
-- **[WARNING]** anchor_divergence:umich_sentiment — prod=61.3 dev=69.7
+- **[WARNING]** anchor_divergence:core_cpi_yoy — prod=2.74 dev=2.57
+- **[WARNING]** anchor_divergence:umich_sentiment — prod=44.8 dev=54.4
+- **[WARNING]** anchor_divergence:personal_saving_rate — prod=2.6 dev=3.0
+- **[WARNING]** anchor_divergence:wti_crude — prod=112.25 dev=84.38
 - **[WARNING]** anchor_divergence:10y_treasury — prod=4.5 dev=4.65
-- **[WARNING]** anchor_divergence:unemployment_rate — prod=7.2 dev=7.0
+- **[WARNING]** anchor_divergence:unemployment_rate — prod=4.3 dev=4.2
 
 ## Recommended fixes
 
@@ -101,11 +104,29 @@ Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Full status trac
 - **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 - **Fingerprint:** `parallel_compare:signal_flagged_count_divergence:01dbd0e3130d`
 
+### anchor_divergence:core_cpi_yoy  _(seen 1× · status: open)_
+
+- **Detail:** prod=2.74 dev=2.57
+- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+- **Fingerprint:** `parallel_compare:anchor_divergence:core_cpi_yoy:38591c741134`
+
 ### anchor_divergence:umich_sentiment  _(seen 1× · status: open)_
 
-- **Detail:** prod=61.3 dev=69.7
+- **Detail:** prod=44.8 dev=54.4
 - **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 - **Fingerprint:** `parallel_compare:anchor_divergence:umich_sentiment:f8aff802d1bc`
+
+### anchor_divergence:personal_saving_rate  _(seen 1× · status: open)_
+
+- **Detail:** prod=2.6 dev=3.0
+- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+- **Fingerprint:** `parallel_compare:anchor_divergence:personal_saving_rate:87ef992dd5e2`
+
+### anchor_divergence:wti_crude  _(seen 1× · status: open)_
+
+- **Detail:** prod=112.25 dev=84.38
+- **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
+- **Fingerprint:** `parallel_compare:anchor_divergence:wti_crude:9cca8df435e3`
 
 ### anchor_divergence:10y_treasury  _(seen 1× · status: open)_
 
@@ -115,7 +136,7 @@ Looked up from `scripts/_findings_ledger.py` → `KNOWN_FIXES`. Full status trac
 
 ### anchor_divergence:unemployment_rate  _(seen 1× · status: open)_
 
-- **Detail:** prod=7.2 dev=7.0
+- **Detail:** prod=4.3 dev=4.2
 - **Fix:** Dev and prod produced materially different outputs on the same upstream data. Capture the specific anchor metric or signal that diverged, screenshot both rendered pages, and decide: is dev's behaviour the desired one (then plan promotion to main) or a regression (then revert/fix on dev).
 - **Fingerprint:** `parallel_compare:anchor_divergence:unemployment_rate:4f6315f71595`
 
