@@ -326,7 +326,7 @@ def build_oil_daily(wti_series, brent_series):
     brent_vals = []
 
     for d in all_dates:
-        labels.append(d.strftime('%b %-d'))
+        labels.append(f"{d.strftime('%b')} {d.day}")  # portable (no %-d, glibc-only on Windows)
         wti_vals.append(wti_by_date.get(d) or (wti_vals[-1] if wti_vals else None))
         brent_vals.append(brent_by_date.get(d) or (brent_vals[-1] if brent_vals else None))
 
