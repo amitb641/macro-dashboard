@@ -142,7 +142,18 @@ jobs:
           git config user.name  "parallel-compare-bot"
           git config user.email "parallel-compare-bot@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add data/parallel_compare_*.md data/parallel_compare_latest.md
+          # data/parallel_findings_ledger.md is written by BOTH run_report.py
+          # (Step A, above) and parallel_compare.py (this step) but was staged
+          # by neither commit step — leaving it modified-but-uncommitted after
+          # every run. That leftover dirty file then made git pull --rebase
+          # below fail with "You have unstaged changes" on every single run
+          # where Step B actually executes (100% reproducible, confirmed via
+          # runs 29980661506 and 30422227500), silently discarding the
+          # generated report every time. Also stage run_report_*.md here as a
+          # backstop: when the triggering branch is 'main', "Commit per-run
+          # report to dev" above is skipped (dev-only gate), so those files
+          # would otherwise hit the same unstaged-changes failure too.
+          git add data/parallel_compare_*.md data/parallel_findings_ledger.md data/run_report_*.md
           if git diff --staged --quiet; then
             echo "No comparison report changes"
           else
