@@ -34,6 +34,14 @@ cross-tab consistency checks pass.
 - Never create new branches without asking
 - Clean up stale remote branches after merging
 
+## Deployment — `git push` to `main` does NOT update the live site (found 2026-07-29)
+- **Live production URL**: https://amitb641.github.io/macro-dashboard/ (GitHub Pages, `build_type: "workflow"`, source branch `main`).
+- GitHub Pages is redeployed **only** as the last step of `.github/workflows/briefing.yml`, and that workflow triggers **only** on the Saturday 08:00 EDT cron or a manual `workflow_dispatch` — there is no `on: push` trigger. A direct commit+push to `main` (the normal small-fix flow above) updates the git history and the *next* scheduled/manual pipeline run, but the deployed page itself stays exactly as stale as it was until one of those actually runs.
+- **Confirmed regression case**: 4 commits landed on `main` fixing a real CPI mislabeling bug; `git push` succeeded each time; the live GitHub Pages site kept serving the pre-fix HTML (verified via `BUILD_V` in the deployed page, ~4 days stale) until `briefing.yml` was manually triggered.
+- **Rule: after any `main` push that changes rendered output** (renderer.py, index.html, or anything that changes a chart/label/value a user would see), either tell the user the live site won't reflect it until the next Saturday run, or ask before running `gh workflow run briefing.yml --ref main` to catch it up now.
+- **That trigger is not a free action** — `briefing.yml` runs the full pipeline: fetches live FRED/BLS/EIA data, re-renders, validates, and — critically — **Agent 5 (`scripts/publisher.py`) sends the real weekly email newsletter to actual subscribers via Resend**, ahead of the normal Saturday schedule. Treat an out-of-schedule trigger the same as any other "send a message on the user's behalf" action — confirm with the user first, every time, don't assume a prior "yes" carries forward.
+- **`dev/multi-expert-improvements` does not have this gap** — Vercel's git integration deploys that branch directly on every push (see `.github/workflows/briefing-dev.yml`'s header comment), independent of any GitHub Actions workflow. This asymmetry is real and by design (GitHub Pages is repo-restricted to one site off `main`; `briefing-dev.yml` explicitly skips the Pages deploy step) — it is not something to silently "fix" by adding an `on: push` trigger to `briefing.yml`, since that would fire the real subscriber email on every commit to `main`, including doc-only pushes. If the user asks for `main`/`dev` to "stay in sync," that means proactively triggering (with confirmation) after a rendering-relevant `main` push — not automating the trigger itself.
+
 ## Local Dev Workflow
 - Dev worktree: `/home/user/macro-dashboard-dev` on branch `dev` (shares `.git` with main checkout via `git worktree`)
 - Preview server: `scripts/dev-preview.sh [port] [tab]` — defaults to `:8765`, optional tab hash (e.g. `banks`, `gdp`)
