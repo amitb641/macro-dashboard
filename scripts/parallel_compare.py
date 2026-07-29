@@ -58,23 +58,36 @@ ARTIFACTS = [
 def _latest_value(obj: Any) -> Any:
     """Extract latest observation value from FRED-shaped list or scalar."""
     if isinstance(obj, list) and obj:
-        last = obj[-1]
-        if isinstance(last, dict):
-            return last.get("value", last)
-        return last
+        # raw_data.json series are stored newest-first (index 0 = most
+        # recent fetch), matching the convention used throughout
+        # collector.py/renderer.py (e.g. `s[0]['value']`). obj[-1] was
+        # picking the OLDEST observation instead — confirmed via
+        # data/raw_data.json's own unrate series, where index -1 is a
+        # 1986-07-01 reading (value 7.0), not anything current. That's
+        # exactly the fabricated "current" unemployment/UMich/Treasury
+        # figures this bug was producing in every anchor-comparison table.
+        latest = obj[0]
+        if isinstance(latest, dict):
+            return latest.get("value", latest)
+        return latest
     if isinstance(obj, dict):
         return obj.get("value", obj)
     return obj
 
 
+# Anchor keys are split across two source files: raw_data.json holds
+# genuine FRED time series (newest-first lists); signals.json's `values`
+# dict holds scalars the analyzer already derived (e.g. YoY %, not a raw
+# index level). core_cpi_yoy/saving_rate/wti don't exist in raw_data.json
+# at all — they were silently returning "—" every run before this split.
 RAW_ANCHORS = [
-    ("core_cpi_yoy", "Core CPI YoY"),
-    ("umcsent", "UMich Sentiment"),
-    ("saving_rate", "Personal Saving Rate"),
-    ("ffr", "Fed Funds Rate"),
-    ("oil_wti", "WTI Crude"),
-    ("dgs10", "10Y Treasury"),
-    ("unrate", "Unemployment Rate"),
+    ("core_cpi_yoy", "Core CPI YoY", "signals"),
+    ("umcsent", "UMich Sentiment", "raw"),
+    ("saving_rate", "Personal Saving Rate", "signals"),
+    ("ffr", "Fed Funds Rate", "raw"),
+    ("wti", "WTI Crude", "signals"),
+    ("dgs10", "10Y Treasury", "raw"),
+    ("unrate", "Unemployment Rate", "raw"),
 ]
 
 
@@ -178,24 +191,29 @@ def summarize_signals(payload: dict | None) -> dict:
     }
 
 
-def summarize_raw_anchors(payload: dict | None) -> dict:
+def summarize_raw_anchors(raw_payload: dict | None, signals_payload: dict | None) -> dict:
     """Pull latest value of each anchor metric for cross-branch comparison.
 
     raw_data.json structure is:
-        {"collected_at": ..., "data": {"core_cpi_yoy": [...], ...}}
-    so we descend into `data` before looking up keys.
+        {"collected_at": ..., "data": {"umcsent": [...], ...}}
+    signals.json structure is:
+        {"values": {"core_cpi_yoy": 2.57, ...}, ...}
+    Each RAW_ANCHORS entry says which of the two to read from — some
+    metrics (core_cpi_yoy, saving_rate, wti) only exist as analyzer-derived
+    scalars in signals.json, not as their own raw_data.json series.
     """
-    if not payload or not isinstance(payload, dict):
-        return {a[1]: "—" for a in RAW_ANCHORS}
-    series = payload.get("data", payload)  # tolerate either nested or flat
+    series = raw_payload.get("data", raw_payload) if isinstance(raw_payload, dict) else {}
     if not isinstance(series, dict):
-        return {a[1]: "—" for a in RAW_ANCHORS}
+        series = {}
+    values = signals_payload.get("values", {}) if isinstance(signals_payload, dict) else {}
+    if not isinstance(values, dict):
+        values = {}
     out: dict[str, Any] = {}
-    for key, label in RAW_ANCHORS:
-        if key in series:
-            out[label] = _latest_value(series[key])
+    for key, label, source in RAW_ANCHORS:
+        if source == "signals":
+            out[label] = values[key] if key in values else "—"
         else:
-            out[label] = "—"
+            out[label] = _latest_value(series[key]) if key in series else "—"
     return out
 
 
@@ -382,13 +400,16 @@ def build_report(main_ref: str, dev_ref: str,
     sections.append(render_kv_table(ed_p, ed_d, "Editorial review"))
 
     # Signals
-    sig_p = summarize_signals(load_json_ref(main_ref, "data/signals.json"))
-    sig_d = summarize_signals(load_json_ref(dev_ref,  "data/signals.json"))
+    sig_p_raw = load_json_ref(main_ref, "data/signals.json")
+    sig_d_raw = load_json_ref(dev_ref,  "data/signals.json")
+    sig_p = summarize_signals(sig_p_raw)
+    sig_d = summarize_signals(sig_d_raw)
     sections.append(render_kv_table(sig_p, sig_d, "Analyzer signals"))
 
-    # Raw anchors
-    anc_p = summarize_raw_anchors(load_json_ref(main_ref, "data/raw_data.json"))
-    anc_d = summarize_raw_anchors(load_json_ref(dev_ref,  "data/raw_data.json"))
+    # Raw anchors — reuses the signals.json payloads already loaded above
+    # for the analyzer-derived scalars (core_cpi_yoy, saving_rate, wti).
+    anc_p = summarize_raw_anchors(load_json_ref(main_ref, "data/raw_data.json"), sig_p_raw)
+    anc_d = summarize_raw_anchors(load_json_ref(dev_ref,  "data/raw_data.json"), sig_d_raw)
     sections.append(render_kv_table(anc_p, anc_d, "Raw data anchors (latest values)"))
 
     # ── Divergences + recommended fixes ────────────────────────────
