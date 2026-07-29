@@ -2553,19 +2553,25 @@ def update_shock_tracker(html, data, vals):
     cpi_trans_pre = _pre_shock_yoy(data.get('cpi_transport', [])) or 5.8
     food_away_pre = _pre_shock_yoy(data.get('cpi_food_away', [])) or 3.4
 
-    # ── MMA-based confirmation (post-shock MoM annualized vs pre-shock 6-MMA) ──
+    # ── MMA-based confirmation (post-shock 3mo annualized vs pre-shock 6-MMA) ──
     # Macro-standard methodology for shock pass-through. Immune to the YoY
     # base-effect contamination (e.g. Mar'25 Transport trough inflated YoY).
-    def _latest_mom_ann(series):
-        """Latest single-month MoM change, annualized as compound rate.
-        Returns (yoy_ann_pct, latest_date, latest_value, prior_value) —
-        the extra raw values let the UI show the exact formula, not just
-        the final percentage."""
-        if not series or len(series) < 2: return None, None, None, None
-        cur, prev = series[0], series[1]
-        if not prev['value']: return None, None, None, None
-        ann = ((cur['value'] / prev['value']) ** 12 - 1) * 100
-        return round(ann, 1), cur['date'], cur['value'], prev['value']
+    def _latest_mom_ann(series, months=3):
+        """N-month (default 3) compound run-rate, annualized — the same
+        convention as the "3-month annualized core CPI/PCE" figure the Fed
+        and most sell-side economists cite. Deliberately NOT a single
+        month's MoM annualized: that was tried first and proved too noisy
+        — one volatile print (CPI Energy's Jun'26 decline) flipped a
+        phase's status even though the multi-month trend hadn't reversed.
+        Formula: (V[t] / V[t-months]) ** (12/months) - 1.
+        Returns (ann_pct, latest_date, latest_value, value_N_months_ago) —
+        the raw values let the UI show the exact formula, not just the
+        final percentage."""
+        if not series or len(series) < months + 1: return None, None, None, None
+        cur, prior = series[0], series[months]
+        if not prior['value']: return None, None, None, None
+        ann = ((cur['value'] / prior['value']) ** (12 / months) - 1) * 100
+        return round(ann, 1), cur['date'], cur['value'], prior['value']
 
     def _pre_shock_6mom_ann(series, shock_iso='2026-03-01'):
         """6-month trailing compound MoM, annualized, ending in last pre-shock
@@ -2614,11 +2620,11 @@ def update_shock_tracker(html, data, vals):
             return 'not_yet', f'Too early — expected window starts {win.split()[1]}.'
         return 'not_yet', f'Monthly pace matches pre-shock baseline. Window: {win}.'
 
-    trans_mom_ann, trans_latest, trans_cur_val, trans_prev_val = _latest_mom_ann(data.get('cpi_transport', []))
+    trans_mom_ann, trans_latest, trans_cur_val, trans_3mo_val = _latest_mom_ann(data.get('cpi_transport', []))
     trans_pre_mma, trans_mma_date, trans_mma_val, trans_mma_prior_date, trans_mma_prior_val = _pre_shock_6mom_ann(data.get('cpi_transport', []))
-    food_mom_ann,  food_latest,  food_cur_val,  food_prev_val  = _latest_mom_ann(data.get('cpi_food_away', []))
+    food_mom_ann,  food_latest,  food_cur_val,  food_3mo_val  = _latest_mom_ann(data.get('cpi_food_away', []))
     food_pre_mma,  food_mma_date,  food_mma_val,  food_mma_prior_date,  food_mma_prior_val  = _pre_shock_6mom_ann(data.get('cpi_food_away', []))
-    energy_mom_ann, energy_latest, energy_cur_val, energy_prev_val = _latest_mom_ann(data.get('cpiengsl', []))
+    energy_mom_ann, energy_latest, energy_cur_val, energy_3mo_val = _latest_mom_ann(data.get('cpiengsl', []))
     energy_pre_mma, energy_mma_date, energy_mma_val, energy_mma_prior_date, energy_mma_prior_val = _pre_shock_6mom_ann(data.get('cpiengsl', []))
 
     def _mo_lbl(d):
@@ -2714,16 +2720,16 @@ def update_shock_tracker(html, data, vals):
             "unit": unit, "inverted": inverted,
         }
 
-    def _mma_math(cur_date, cur_val, prev_val, post_ann, mma_date, mma_val, mma_prior_date, mma_prior_val, pre_ann):
+    def _mma_math(cur_date, cur_val, val_3mo_ago, post_ann, mma_date, mma_val, mma_prior_date, mma_prior_val, pre_ann):
         """'math' block for _mma_status()-style phases — exposes both raw
-        index values behind each compounding formula (latest MoM annualized,
-        pre-shock 6-month annualized) so the UI can show real numbers, not
-        just the two final percentages."""
+        index values behind each compounding formula (post-shock 3-month
+        annualized, pre-shock 6-month annualized) so the UI can show real
+        numbers, not just the two final percentages."""
         if post_ann is None or pre_ann is None:
             return None
         return {
             "type": "mma",
-            "cur_date": _mo_lbl(cur_date), "cur_val": cur_val, "prev_val": prev_val, "post_ann": post_ann,
+            "cur_date": _mo_lbl(cur_date), "cur_val": cur_val, "val_3mo_ago": val_3mo_ago, "post_ann": post_ann,
             "mma_date": _mo_lbl(mma_date), "mma_val": mma_val,
             "mma_prior_date": _mo_lbl(mma_prior_date), "mma_prior_val": mma_prior_val, "pre_ann": pre_ann,
             "diff": round(post_ann - pre_ann, 1), "confirm_threshold": 1.5,
@@ -2757,7 +2763,7 @@ def update_shock_tracker(html, data, vals):
              trans_pre_mma, trans_mom_ann
          ),
          "post_mom_ann": trans_mom_ann, "pre_6mma": trans_pre_mma,
-         "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_prev_val} prior \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
+         "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_3mo_val} 3mo ago \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
                     if trans_mom_ann is not None and trans_pre_mma is not None else
                     "Awaiting CPI Transport Services history"),
          "note": (f"CPI Transportation Services at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
@@ -2769,7 +2775,7 @@ def update_shock_tracker(html, data, vals):
              ("Transport Services running at pre-shock pace \u2014 oil shock not yet visible in the monthly cadence."
               if trans_mom_ann is not None else
               "Needs 24 obs of CUSR0000SAS4 to compute post-shock vs pre-shock MMA.")),
-         "math": _mma_math(trans_latest, trans_cur_val, trans_prev_val, trans_mom_ann,
+         "math": _mma_math(trans_latest, trans_cur_val, trans_3mo_val, trans_mom_ann,
                             trans_mma_date, trans_mma_val, trans_mma_prior_date, trans_mma_prior_val, trans_pre_mma),
         },
         {"phase": "CPI Energy Prints", "expected": "Weeks 6\u201314", "expected_weeks": [6, 14],
@@ -2782,7 +2788,7 @@ def update_shock_tracker(html, data, vals):
              energy_pre_mma, energy_mom_ann
          ),
          "post_mom_ann": energy_mom_ann, "pre_6mma": energy_pre_mma,
-         "detail": (f"{_mo_lbl(energy_latest)} vs prior month \u00b7 post-shock +{energy_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{energy_pre_mma}%"
+         "detail": (f"{_mo_lbl(energy_latest)} vs 3mo ago \u00b7 post-shock +{energy_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{energy_pre_mma}%"
                     if energy_mom_ann is not None and energy_pre_mma is not None else
                     "Awaiting CPI Energy history"),
          "note": f"CPI Energy at +{cpi_energy_yoy}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release",
@@ -2793,7 +2799,7 @@ def update_shock_tracker(html, data, vals):
              ("CPI Energy tracking oil gently \u2014 passthrough slower than expected."
               if energy_mom_ann is not None else
               "No post-shock CPI Energy release yet.")),
-         "math": _mma_math(energy_latest, energy_cur_val, energy_prev_val, energy_mom_ann,
+         "math": _mma_math(energy_latest, energy_cur_val, energy_3mo_val, energy_mom_ann,
                             energy_mma_date, energy_mma_val, energy_mma_prior_date, energy_mma_prior_val, energy_pre_mma),
         },
         {"phase": "Food & Services Inflation", "expected": "Months 3\u20135", "expected_weeks": [12, 20],
@@ -2806,7 +2812,7 @@ def update_shock_tracker(html, data, vals):
              food_pre_mma, food_mom_ann
          ),
          "post_mom_ann": food_mom_ann, "pre_6mma": food_pre_mma,
-         "detail": (f"{_mo_lbl(food_latest)} vs prior month \u00b7 post-shock +{food_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{food_pre_mma}%"
+         "detail": (f"{_mo_lbl(food_latest)} vs 3mo ago \u00b7 post-shock +{food_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{food_pre_mma}%"
                     if food_mom_ann is not None and food_pre_mma is not None else
                     "Awaiting CPI Food Away history"),
          "note": (f"CPI Food Away at {food_away_yoy}% YoY ({_mo_lbl(food_away_date)})"
@@ -2818,7 +2824,7 @@ def update_shock_tracker(html, data, vals):
              ("Food Away accelerating above pre-shock pace \u2014 menu pass-through arriving earlier than expected."
               if food_mom_ann is not None else
               "Needs CPI Food Away history for the MMA comparison.")),
-         "math": _mma_math(food_latest, food_cur_val, food_prev_val, food_mom_ann,
+         "math": _mma_math(food_latest, food_cur_val, food_3mo_val, food_mom_ann,
                             food_mma_date, food_mma_val, food_mma_prior_date, food_mma_prior_val, food_pre_mma),
         },
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
