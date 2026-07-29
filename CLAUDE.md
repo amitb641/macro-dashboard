@@ -133,6 +133,7 @@ Rules:
 - Any series feeding a YoY phase in the tracker must be collected with `limit>=24` (covers latest + year-ago + pre-shock baseline + buffer)
 - Post-shock gate: a phase only moves beyond `not_yet` when the series' latest date is `>= 2026-03-01`. The shock date is hardcoded in `update_shock_tracker`; update it if the scenario changes
 - After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
+- **Every phase carries a `math` object** (added 2026-07-29, ported from dev commit `fd93fb9`) — `_threshold_math()`/`_mma_math()` in `update_shock_tracker` capture the raw intermediate values (index values + dates, not just the final rounded %) behind each phase's status. The click-to-expand popover (`renderShockPopover` in `index.html`) renders these as a real, substituted formula ("Exact math" section). Note this popover has no `_isDark`-aware color tokens in scope on `main` (unlike dev) — it uses hardcoded light-only hex colors matching the rest of the function; don't introduce dev's `_pText2`/`_pMuted`-style variable names here, they don't exist in this scope.
 
 ## Testing
 - Run `python tests/test_smoke.py` before pushing — must be 30/30 pass
