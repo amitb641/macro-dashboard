@@ -187,9 +187,26 @@ Rules:
 - Any series feeding a YoY phase in the tracker must be collected with `limit>=24` (covers latest + year-ago + pre-shock baseline + buffer)
 - Post-shock gate: a phase only moves beyond `not_yet` when the series' latest date is `>= 2026-03-01`. The shock date is hardcoded in `update_shock_tracker`; update it if the scenario changes
 - After editing the tracker, spot-check the rendered HTML — `SHOCK_TRACKER` should contain real `pre`/`now` numbers, not equal hardcoded defaults (a silent fall-through symptom)
+- **Every phase carries a `math` object** (added 2026-07-29) — `_threshold_math()`/`_mma_math()` in `update_shock_tracker` capture the raw intermediate values (index values + dates, not just the final rounded %) behind each phase's status. The click-to-expand popover (`renderShockPopover` in `index.html`) renders these as a real, substituted formula ("Exact math" section) so a user can verify the status against actual FRED/BLS numbers instead of trusting a summary percentage. If you change `_latest_mom_ann()`/`_pre_shock_6mom_ann()`'s return signature again, update both `_mma_math()`'s call sites (3× in the phase list) and confirm `tr.math` still populates — a silent `None` there just makes the "Exact math" section disappear (`if (tr.math)` guard), not crash, so it's easy to miss in a quick check.
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 55/55 pass. The
+- Run `python tests/test_smoke.py` before pushing — should be 56/56, but is
+  currently **55/56** (found 2026-07-29, not yet root-caused): `Pass 3f`
+  (validator.py, run against this suite's synthetic fixture data) reports 6
+  critical divergences — `panel_data_consistency`, `metric_consistency` ×3
+  (unemployment/Core PCE/UMich), `seed_drift` ×2 (`FC_MACRO.act24`/`act25`).
+  Confirmed via isolation testing (stashing unrelated same-day changes and
+  re-running) that this is pre-existing and NOT caused by any change made
+  2026-07-29 — it reproduces identically on a clean checkout. Root cause is
+  presumably a fixture-data/validator-check mismatch (the synthetic data
+  `generate_fixture_data()` builds doesn't satisfy some check that real
+  collector output does), not a validator logic bug, but this hasn't been
+  confirmed. Treat this failure as known/expected until someone actually
+  investigates it — don't let it block an unrelated push, but don't assume
+  a NEW critical-divergence count is this same issue without checking the
+  finding IDs match (`panel_data_consistency[0]`, `metric_consistency[1]`,
+  `seed_drift[0]`, `seed_drift[1]`) — a genuinely new divergence would add
+  to this baseline, not replace it. The
   smoke suite includes a **Tier 1 hydration wiring** regression guard
   (`test_hydration_wiring`) that asserts every `let X = null;` placeholder
   (a) has a matching `s.X !== undefined` hydration assignment, (b) lives
