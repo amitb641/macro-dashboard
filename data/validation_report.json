@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-07-29T05:34:25.346261Z",
+  "validated_at": "2026-07-29T13:11:10.745412Z",
   "status": "PASS",
   "summary": {
     "total_checks": 665,
@@ -779,7 +779,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-07-29T05:33:04.568633Z",
+      "collected_at": "2026-07-29T13:09:43.784093Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -813,7 +813,7 @@
     {
       "check": "SHOCK_TRACKER[1] Transport & Freight Costs status consistent with MMA delta",
       "status": "not_yet",
-      "post_minus_pre_pp": -9.4,
+      "post_minus_pre_pp": -7.7,
       "severity": "ok",
       "pass": true
     },
@@ -825,8 +825,8 @@
     },
     {
       "check": "SHOCK_TRACKER[2] CPI Energy Prints status consistent with MMA delta",
-      "status": "not_yet",
-      "post_minus_pre_pp": -56.8,
+      "status": "emerging",
+      "post_minus_pre_pp": 0.7,
       "severity": "ok",
       "pass": true
     },
@@ -839,7 +839,7 @@
     {
       "check": "SHOCK_TRACKER[3] Food & Services Inflation status consistent with MMA delta",
       "status": "not_yet",
-      "post_minus_pre_pp": -1.4,
+      "post_minus_pre_pp": -1.1,
       "severity": "ok",
       "pass": true
     },
