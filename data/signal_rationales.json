@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-30T04:05:06Z",
-  "based_on_signals_at": "2026-07-30T04:05:06.373682Z",
+  "generated_at": "2026-07-30T04:31:59Z",
+  "based_on_signals_at": "2026-07-30T04:31:59.158270Z",
   "model": "claude-sonnet-4-6",
   "budget_hit": false,
   "guardrails": {
@@ -14,7 +14,7 @@
     "dgs10": {
       "value": 4.61,
       "direction": "stable",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:dgs10) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CdXacXKzgXzMrWSEWcJPp\"}'))",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:dgs10) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CdXcfQhhiZpcqeMxXz2pm\"}'))",
       "playbook_cite": ""
     },
     "cpi_yoy": {
