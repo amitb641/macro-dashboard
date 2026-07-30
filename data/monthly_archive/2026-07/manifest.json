@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "month": "2026-07",
+  "source_run_date": "2026-07-30",
+  "archived_at": "2026-07-30T04:33:09.647422Z",
+  "git_sha": "5832c9e",
+  "branch": "main",
+  "files": [
+    "raw_data.json",
+    "index.html",
+    "metrics.json"
+  ],
+  "sizes": {
+    "raw_data.json": 973655,
+    "index.html": 532914,
+    "metrics.json": 3732
+  },
+  "sha256": {
+    "raw_data.json": "514ecf4b5d77ba432cec7d3da65b05a20e1716e39f5e5d7ee899c64187f7ef54",
+    "index.html": "9873100eee2b62e8abebb0e37e719fe3a7dc8222e50d586ffdcf9066500eec48",
+    "metrics.json": "b3e200a2b74e90806fed54e015b31b2764396db2212856c050de3d2bf5ea910a"
+  },
+  "validation_status": "WARN",
+  "validation_summary": {
+    "total_checks": 520,
+    "passed": 505,
+    "failed": 15,
+    "skipped": 2,
+    "critical_divergences": 0
+  }
+}

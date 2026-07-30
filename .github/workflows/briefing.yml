@@ -113,6 +113,14 @@ jobs:
       - name: Snapshot — Rolling data backup (keep last 3)
         run: python scripts/snapshot.py
 
+      - name: Monthly Archive — durable historical record (never pruned)
+        # Distinct from the Snapshot step above: that one is capped/rolling
+        # (operational rollback only). This upserts a permanent per-month
+        # record. Never allowed to fail the run — see the script's own
+        # internal try/except, backstopped here by continue-on-error.
+        continue-on-error: true
+        run: python scripts/monthly_archive.py
+
       - name: Version Tracker — Record pipeline run
         run: python scripts/version_tracker.py
 

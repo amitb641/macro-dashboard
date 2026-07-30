@@ -74,11 +74,13 @@ Supporting modules (read by agentic components):
 - `data/known_normal.json` — Machine-readable mirror of playbook baselines (publish lag, noise floors, shock-tracker min obs counts, model routing).
 
 Supporting scripts:
-- `scripts/snapshot.py` — Rolling data backups (keep last 3)
+- `scripts/snapshot.py` — Rolling data backups (keep last 3). Capped/rolling — for the separate, never-pruned historical archive see `scripts/monthly_archive.py` and `data/MONTHLY_ARCHIVE.md`.
+- `scripts/monthly_archive.py` / `scripts/build_archive_index.py` — Durable monthly historical archive + its derived SQLite query index. See `data/MONTHLY_ARCHIVE.md` for full schema and operating recommendations. Never prunes; runs every pipeline execution, upserting the current calendar month's `data/monthly_archive/<YYYY-MM>/` directory in place.
 - `scripts/healthcheck.py` — Post-deploy page verification
 - `scripts/version_tracker.py` — Pipeline run audit trail
 
 ## Key Files
+- `data/MONTHLY_ARCHIVE.md` — **Full schema + operating recommendations for the durable monthly historical archive** (added 2026-07-30). Read this before touching `data/monthly_archive/`, `scripts/monthly_archive.py`, or `scripts/build_archive_index.py`. One-line summary: `data/monthly_archive/<YYYY-MM>/` is a permanent, never-pruned per-month record (manifest + metrics + raw_data.json + index.html), upserted every pipeline run; `data/monthly_archive.db` (SQLite) is a derived, non-committed query index rebuilt on demand — do not confuse this with `scripts/snapshot.py`'s rolling/capped rollback backups, which serve a completely different purpose and are unaffected by this system.
 - `METHODOLOGY.md` — Source of truth for indicator definitions, formulas, thresholds, and confirmation logic. Update whenever a threshold or rule changes.
 - `index.html` — Single-page dashboard (~460KB), JS constants embedded inline
 - `data/raw_data.json` — All collected API data
@@ -138,7 +140,7 @@ Rules:
 - **`_latest_mom_ann()`'s "post-shock pace" is a 3-month annualized run-rate, not a single month's** (changed 2026-07-29, ported from dev commit `e5f4b13`). A single-month annualized figure is much noisier than the 6-month baseline it's compared against — CPI Energy Prints flipped `confirmed` → `not_yet` on one soft print despite YoY staying at +15.5% and the multi-month trend not reversing. Now follows the standard "3-month annualized core CPI" convention: `(V[t]/V[t-3])^4 - 1`. Pre-shock side stays a 6-month baseline.
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 30/30 pass
+- Run `python tests/test_smoke.py` before pushing — must be 43/43 pass
 - Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
