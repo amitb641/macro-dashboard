@@ -1,3 +1,15 @@
+## Repair Agent — 2026-07-30T03:58:19.397974Z
+
+- **Status**: PASS
+- **Total checks**: 665
+- **Passed**: 665
+- **Failed**: 0
+- **Critical divergences**: 0
+
+No findings to surface — pipeline is clean. ✅
+
+---
+
 ## Repair Agent — 2026-07-29T13:11:10.745412Z
 
 - **Status**: PASS
@@ -743,28 +755,6 @@ _0 critical · 0 warning · 1 stale_
 _0 critical · 0 warning · 1 stale_
 
 - ⏰ **Staleness: cs_hpi** — 121d old (limit 120d)
-
-
----
-
-## Repair Agent — 2026-06-30T13:57:34.879968Z
-
-- **Status**: WARN
-- **Total checks**: 649
-- **Passed**: 646
-- **Failed**: 3
-- **Critical divergences**: 0
-
-### Collector errors
-_0 critical · 1 warning · 0 stale_
-
-- ⚠️ **Collector error** — UMich direct: 404 Client Error: Not Found for url: https://www.sca.isr.umich.edu/files/tbcics.csv
-
-### Staleness
-_0 critical · 0 warning · 2 stale_
-
-- ⏰ **Staleness: cs_hpi** — 121d old (limit 120d)
-- ⏰ **Staleness: umcsent** — 60d old (limit 35d)
 
 
 ---
