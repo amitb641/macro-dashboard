@@ -1308,6 +1308,23 @@ class MC{
         const y=pT+gH*gi+gap+bH*di,x=v>=0?zX:toX(v),w=Math.abs(toX(v)-zX);
         this._rr(ctx,x,y,w,bH,ds.borderRadius||0,col);
         this._addHit(gi,di,x,y,Math.max(w,4),bH);
+        // Optional per-bar value label — same "config under cfg.options.plugins.*,
+        // MC paints it directly" convention as _overlayBands/_overlayLines above,
+        // since window.Chart is shadowed by MC and the real Chart.js plugin
+        // system (plugins:[...], afterDatasetsDraw) never fires. Confirmed via
+        // live DOM/canvas inspection 2026-07-29: a plugins:[...] config on a
+        // horizontal bar chart silently no-ops — no error, just never runs.
+        const bl=opts.plugins?.barLabels;
+        if(bl&&bl.labels&&di===(bl.datasetIndex??0)&&bl.labels[gi]!=null){
+          const endX=toX(v);
+          ctx.save();
+          ctx.font=bl.font||"600 10px 'DM Mono',monospace";
+          ctx.textAlign=v>=0?"left":"right";
+          ctx.textBaseline="middle";
+          ctx.fillStyle=Array.isArray(bl.colors)?(bl.colors[gi]||"#334E68"):(bl.colors||"#334E68");
+          ctx.fillText(bl.labels[gi],endX+(v>=0?6:-6),y+bH/2);
+          ctx.restore();
+        }
       });
     });
     this._leg(ctx,{x0:pL,y0:pT,iw,ih},data.datasets);
@@ -3705,7 +3722,7 @@ body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
     </div>
     <div class="panel">
       <div class="panel-title">Unemployment is rising broadly across sectors — the rate climb is not concentrated</div>
-      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Jun'26 vs May'26 · sorted by change</div>
+      <div class="panel-sub">Change in unemployment rate vs prior month · BLS CPS · Jun'26 vs May'26 · sorted by latest level, delta labeled</div>
       <div class="panel-meta"><span class="pm-exhibit">Exhibit 02</span><span class="pm-sep">|</span><span class="pm-source">BLS CPS</span><span class="pm-sep">|</span><span class="pm-asof">As of Mar 2026</span><span class="pm-sep">|</span><span class="pm-cadence">Refreshed monthly</span></div>
       <div style="display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
         <span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#334E68;font-weight:600"><span style="width:14px;height:10px;border-radius:2px;background:#D64045bb;display:inline-block"></span>Jun'26 rate rose</span>
@@ -5710,29 +5727,9 @@ function buildUnempTab(){
   // in this file rather than pulling in chartjs-plugin-datalabels) keeps the
   // MoM change visible without using it as the sort key.
   uMom.sort((a,b)=>b.cur-a.cur);
-  var _uMomDeltaPlugin = {
-    id: 'uMomDeltaLabels',
-    afterDatasetsDraw: function(chart){
-      var meta = chart.getDatasetMeta(0);
-      var ctx = chart.ctx;
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      ctx.save();
-      ctx.font = "600 10px 'DM Mono', monospace";
-      ctx.textBaseline = 'middle';
-      meta.data.forEach(function(bar, i){
-        var r = uMom[i];
-        if(!r) return;
-        var txt = (r.change>=0?'+':'') + r.change.toFixed(1) + 'pp';
-        ctx.fillStyle = r.change>0 ? '#D64045' : (r.change<0 ? '#1A9E5A' : (isDark?'#8A8A8A':'#6E6656'));
-        ctx.textAlign = 'left';
-        ctx.fillText(txt, bar.x + 6, bar.y);
-      });
-      ctx.restore();
-    }
-  };
+  var _uIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
   new Chart(document.getElementById("c-unemp-mom").getContext("2d"),{
     type:"bar",
-    plugins:[_uMomDeltaPlugin],
     data:{labels:uMom.map(r=>r.s),datasets:[
       {label:_uCurL+" Rate %",data:uMom.map(r=>r.cur),backgroundColor:uMom.map(r=>r.change>0?"#D64045bb":"#1A9E5Acc"),borderRadius:3},
       {label:_uPrvL+" Rate %",data:uMom.map(r=>r.prv),
@@ -5741,6 +5738,15 @@ function buildUnempTab(){
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
       layout:{padding:{right:36}},
       plugins:{legend:{display:false},
+        // window.Chart is shadowed by the custom MC render engine (no real
+        // Chart.js, no plugin system — see _barH()'s barLabels support,
+        // added 2026-07-29 for exactly this). barLabels is read natively by
+        // MC._barH(), unlike the old plugins:[...] config which silently
+        // never ran (confirmed via live canvas inspection: no error, the
+        // afterDatasetsDraw hook just never fired).
+        barLabels:{datasetIndex:0,
+          labels:uMom.map(r=>(r.change>=0?'+':'')+r.change.toFixed(1)+'pp'),
+          colors:uMom.map(r=>r.change>0?'#D64045':(r.change<0?'#1A9E5A':(_uIsDark?'#8A8A8A':'#6E6656')))},
         tooltip:{callbacks:{label:c=>{const v=c.raw?.x??c.raw;return `${c.dataset.label}: ${v}%`+((c.datasetIndex===0)?" (MoM: "+(uMom[c.dataIndex].change>=0?"+":"")+uMom[c.dataIndex].change+"pp)":"");}}}},
       scales:{x:{grid:{color:"#E2E8F0"},ticks:{callback:v=>v+"%",font:{size:10}},border:{display:false}},
               y:{grid:{display:false},ticks:{color:"#334E68",font:{size:10}},border:{display:false}}}}
