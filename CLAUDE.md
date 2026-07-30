@@ -89,11 +89,13 @@ Supporting modules (read by agentic components):
 - `data/known_normal.json` — Machine-readable mirror of playbook baselines (publish lag, noise floors, shock-tracker min obs counts, model routing).
 
 Supporting scripts:
-- `scripts/snapshot.py` — Rolling data backups (keep last 13, ≈ one quarter of weekly runs). Each snapshot includes `raw_data.json`, `validation_report.json`, and `index.html` so a rollback can restore the live page directly when the renderer itself is the regression. Override retention via `SNAPSHOT_MAX` env var; rollback with `--rollback YYYY-MM-DD [--include-html]`.
+- `scripts/snapshot.py` — Rolling data backups (keep last 52, ≈ one year of weekly runs — corrected 2026-07-30, this doc previously said "13/one quarter" which no longer matched `_DEFAULT_MAX` in the code). Each snapshot includes `raw_data.json`, `validation_report.json`, and `index.html` so a rollback can restore the live page directly when the renderer itself is the regression. Override retention via `SNAPSHOT_MAX` env var; rollback with `--rollback YYYY-MM-DD [--include-html]`. **Rolling/capped — for the separate, never-pruned historical archive see `scripts/monthly_archive.py` and `data/MONTHLY_ARCHIVE.md`.**
+- `scripts/monthly_archive.py` / `scripts/build_archive_index.py` — Durable monthly historical archive + its derived SQLite query index. See `data/MONTHLY_ARCHIVE.md` for full schema and operating recommendations. Never prunes; runs every pipeline execution, upserting the current calendar month's `data/monthly_archive/<YYYY-MM>/` directory in place.
 - `scripts/healthcheck.py` — Post-deploy page verification
 - `scripts/version_tracker.py` — Pipeline run audit trail
 
 ## Key Files
+- `data/MONTHLY_ARCHIVE.md` — **Full schema + operating recommendations for the durable monthly historical archive** (added 2026-07-30). Read this before touching `data/monthly_archive/`, `scripts/monthly_archive.py`, or `scripts/build_archive_index.py`. One-line summary: `data/monthly_archive/<YYYY-MM>/` is a permanent, never-pruned per-month record (manifest + metrics + raw_data.json + index.html), upserted every pipeline run; `data/monthly_archive.db` (SQLite) is a derived, non-committed query index rebuilt on demand — do not confuse this with `scripts/snapshot.py`'s rolling/capped rollback backups, which serve a completely different purpose and are unaffected by this system.
 - `METHODOLOGY.md` — Source of truth for indicator definitions, formulas, thresholds, and confirmation logic. Update whenever a threshold or rule changes.
 - `index.html` — Single-page dashboard (~460KB). Most JS chart-data constants are now hydrated at runtime from `/api/state.json` (Tier 1 anti-clone migration) — the inline declarations are `let X = null;` placeholders that the boot loader fills before any `buildXTab()` reader fires. Renderer outputs both `index.html` (placeholders + structural HTML) and `data/state.json` (the data payload) every run; both are treated equivalently in CI conflict resolution.
 - `data/raw_data.json` — All collected API data
@@ -192,8 +194,8 @@ Rules:
 - **`_latest_mom_ann()`'s "post-shock pace" is a 3-month annualized run-rate, not a single month's** (changed 2026-07-29 from 1-month to 3-month). A single-month annualized MoM figure is much noisier than the 6-month baseline it's compared against in `_mma_status()` — CPI Energy Prints flipped `confirmed` → `not_yet` on one soft print (Jun'26 index dipped MoM) even though the multi-month trend hadn't reversed and YoY stayed at +15.5%. The fix follows the standard "3-month annualized core CPI" convention the Fed/economists actually cite: `(V[t]/V[t-3])^4 - 1`, not `(V[t]/V[t-1])^12 - 1`. The pre-shock side stays a 6-month baseline — only the noisy current-side pace needed smoothing. If you add a 4th MMA-based phase, use `_latest_mom_ann(series)` (3-month default) rather than reintroducing a raw 1-month lookback.
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — should be 56/56, but is
-  currently **55/56** (found 2026-07-29, not yet root-caused): `Pass 3f`
+- Run `python tests/test_smoke.py` before pushing — should be 69/69, but is
+  currently **68/69** (found 2026-07-29, not yet root-caused): `Pass 3f`
   (validator.py, run against this suite's synthetic fixture data) reports 6
   critical divergences — `panel_data_consistency`, `metric_consistency` ×3
   (unemployment/Core PCE/UMich), `seed_drift` ×2 (`FC_MACRO.act24`/`act25`).

@@ -57,6 +57,13 @@ def _hash_real_files():
     screenshots_dir = ROOT / 'data' / 'screenshots'
     if screenshots_dir.exists():
         files += sorted(screenshots_dir.glob('*.png'))
+    # test_monthly_archive redirects monthly_archive.ARCHIVE_DIR to tmp_dir,
+    # but guard the real archive anyway — it's a permanent, never-pruned
+    # historical record, so a test accidentally writing into it would be
+    # worse than the usual "smoke test dirtied a regenerable file" case.
+    archive_dir = ROOT / 'data' / 'monthly_archive'
+    if archive_dir.exists():
+        files += sorted(archive_dir.rglob('*.*'))
     return {str(f): hashlib.sha256(f.read_bytes()).hexdigest()
             for f in files if f.exists()}
 
@@ -546,6 +553,73 @@ def test_snapshot(tmp_dir):
               'restored file missing collected_at')
 
 
+def test_monthly_archive(tmp_dir):
+    """Test the durable monthly archive + its derived SQLite index."""
+    print('\n── Test: Monthly Archive ──')
+    import monthly_archive
+    import build_archive_index
+
+    monthly_archive.ROOT = tmp_dir
+    monthly_archive.DATA_DIR = tmp_dir / 'data'
+    monthly_archive.ARCHIVE_DIR = tmp_dir / 'data' / 'monthly_archive'
+    monthly_archive.RAW_FILE = tmp_dir / 'data' / 'raw_data.json'
+    monthly_archive.STATE_FILE = tmp_dir / 'data' / 'state.json'
+    monthly_archive.SIG_FILE = tmp_dir / 'data' / 'signals.json'
+    monthly_archive.VAL_FILE = tmp_dir / 'data' / 'validation_report.json'
+    monthly_archive.CEO_FILE = tmp_dir / 'data' / 'ceo_grade_verdict.json'
+    monthly_archive.HTML_FILE = tmp_dir / 'index.html'
+
+    monthly_archive.archive_month()
+
+    archive_dir = tmp_dir / 'data' / 'monthly_archive'
+    _test('Archive dir created', archive_dir.exists())
+
+    months = list(archive_dir.iterdir()) if archive_dir.exists() else []
+    _test('Exactly 1 month archived', len(months) == 1,
+          f'found {len(months)}')
+
+    if months:
+        month_dir = months[0]
+        manifest_path = month_dir / 'manifest.json'
+        metrics_path = month_dir / 'metrics.json'
+        _test('manifest.json exists', manifest_path.exists())
+        _test('metrics.json exists', metrics_path.exists())
+
+        if manifest_path.exists():
+            manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+            _test('Manifest has schema_version', manifest.get('schema_version') == 1)
+            _test('Manifest has git_sha', bool(manifest.get('git_sha')))
+            _test('Manifest has sha256 checksums', bool(manifest.get('sha256')))
+
+        if metrics_path.exists():
+            metrics = json.loads(metrics_path.read_text(encoding='utf-8'))
+            _test('Metrics has entries', len(metrics.get('metrics', [])) > 0,
+                  'signals.json values should populate metrics.json')
+
+        # Idempotency: running again for the same month must upsert in
+        # place, never create a second directory for the same YYYY-MM.
+        monthly_archive.archive_month()
+        months_after = list(archive_dir.iterdir())
+        _test('Re-run is idempotent (still 1 month dir)', len(months_after) == 1,
+              f'found {len(months_after)}')
+
+    # Derived SQLite index — build against the same tmp archive dir.
+    build_archive_index.ARCHIVE_DIR = archive_dir
+    db_path = tmp_dir / 'data' / 'monthly_archive.db'
+    n_indexed = build_archive_index.build(db_path)
+    _test('Archive index built', db_path.exists())
+    _test('Archive index indexed 1 month', n_indexed == 1, f'indexed {n_indexed}')
+
+    if db_path.exists():
+        import sqlite3
+        conn = sqlite3.connect(str(db_path))
+        snap_rows = conn.execute('SELECT month FROM monthly_snapshots').fetchall()
+        _test('monthly_snapshots has 1 row', len(snap_rows) == 1)
+        metric_rows = conn.execute('SELECT DISTINCT series_id FROM monthly_metrics').fetchall()
+        _test('monthly_metrics has series rows', len(metric_rows) > 0)
+        conn.close()
+
+
 def test_healthcheck_module():
     """Test healthcheck module loads without errors."""
     print('\n── Test: Healthcheck module ──')
@@ -797,6 +871,7 @@ def main():
         test_hydration_wiring(tmp_dir)
         test_validator_offline(tmp_dir)
         test_snapshot(tmp_dir)
+        test_monthly_archive(tmp_dir)
         test_healthcheck_module()
         test_panel_subtitle_gates(tmp_dir)
         test_commentary_patch_regexes(tmp_dir)

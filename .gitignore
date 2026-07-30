@@ -11,3 +11,9 @@ mockups/*.preview.png
 tests/_scratch/
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+
+# Derived query index for data/monthly_archive/ — rebuildable in <1s via
+# scripts/build_archive_index.py, deliberately not committed (binary
+# SQLite diffs bloat git history for zero benefit; the plain JSON/HTML
+# files under data/monthly_archive/ are the actual source of truth).
+data/monthly_archive.db
