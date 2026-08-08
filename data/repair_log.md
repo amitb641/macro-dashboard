@@ -1,3 +1,19 @@
+## Repair Agent — 2026-08-08T12:07:57.094223Z
+
+- **Status**: WARN
+- **Total checks**: 665
+- **Passed**: 664
+- **Failed**: 1
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 1 stale_
+
+- ⏰ **Staleness: umcsent** — 38d old (limit 35d)
+
+
+---
+
 ## Repair Agent — 2026-08-01T12:19:47.799830Z
 
 - **Status**: PASS
@@ -720,22 +736,6 @@ _1 critical · 0 warning · 0 stale_
 - **Status**: WARN
 - **Total checks**: 659
 - **Passed**: 658
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 121d old (limit 120d)
-
-
----
-
-## Repair Agent — 2026-06-30T14:50:10.770415Z
-
-- **Status**: WARN
-- **Total checks**: 649
-- **Passed**: 648
 - **Failed**: 1
 - **Critical divergences**: 0
 
