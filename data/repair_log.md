@@ -1,3 +1,20 @@
+## Repair Agent — 2026-08-15T12:05:32.483131Z
+
+- **Status**: WARN
+- **Total checks**: 666
+- **Passed**: 664
+- **Failed**: 2
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+
+
+---
+
 ## Repair Agent — 2026-08-08T12:07:57.094223Z
 
 - **Status**: WARN
@@ -727,22 +744,6 @@ _0 critical · 0 warning · 1 stale_
 _1 critical · 0 warning · 0 stale_
 
 - 🔴 **Visual: theme — No themed-sm structural orphans (no layout/card styles lost in dark mode)** — 
-
-
----
-
-## Repair Agent — 2026-06-30T15:13:40.807255Z
-
-- **Status**: WARN
-- **Total checks**: 659
-- **Passed**: 658
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 121d old (limit 120d)
 
 
 ---
