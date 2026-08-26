@@ -3,13 +3,15 @@
     "purpose": "Per-series baselines used by the Repair Diagnostician (Agent 10) to decide whether a finding is genuine drift or normal source behaviour. Mirrors data/playbook.md §2.2-2.3 in machine-readable form.",
     "schema_version": 1,
     "owner": "human-curated",
-    "last_reviewed": "2026-05-12",
+    "last_reviewed": "2026-08-26",
     "rules": [
       "Agents read this file. Agents do NOT modify it without human review.",
       "When a finding contradicts a baseline here, raise an incident rather than silently disagreeing.",
       "When this file and the LLM disagree, this file wins."
     ]
   },
+
+  "_staleness_measurement_warning": "publish_lag_days below measures LAG FROM PERIOD-END (when does the source typically publish, relative to the period it describes) — it is NOT the same quantity as validation_report.json's staleness findings, which report `age_days` = days since the series' own reference DATE (FRED dates a monthly obs to the 1st of its reference month, a quarterly obs to the 1st of its reference quarter). Those two bases differ by up to a full period length. A GDP finding with age_days=147 is NOT '147 days late by this table's 60-day bea_quarterly ceiling' — quarter-start-dated series legitimately reach ~120-220 age_days across a healthy quarter. Use staleness_age_ceiling_days below (mirrors scripts/validator.py's EXPECTED_LAGS exactly, same units as age_days) when reasoning about a Staleness finding; use publish_lag_days only for the separate question of 'how many days after the period ended did the source actually publish.' Confusing the two produced real false-positive risk — see staleness_age_ceiling_days' own note.",
 
   "publish_lag_days": {
     "fred_weekly":   {"typical_max": 7,  "investigate_if_over": 14, "examples": ["GASREGW", "ICSA", "WTI"]},
@@ -20,6 +22,25 @@
     "eia_weekly":    {"typical_max": 7,  "investigate_if_over": 14},
     "umich":         {"typical_max": 14, "investigate_if_over": 25, "note": "Prelim mid-month, final end-of-month"},
     "nyfed_hhdc":    {"typical_max": 60, "investigate_if_over": 120, "note": "Quarterly; 2-3 quarter lag is structural"}
+  },
+
+  "staleness_age_ceiling_days": {
+    "_note": "Mirrors scripts/validator.py check_staleness()'s EXPECTED_LAGS dict exactly — same keys (raw_data.json series names), same units (age_days from the series' own reference date, not from period-end). Added 2026-08 after finding icsa/ccsa had ZERO staleness coverage (missing entry entirely) for a month-long live-site freeze, and that ~20 more series were silently unchecked due to a shape-handling bug in check_staleness() (fixed same pass — see CLAUDE.md). Live-verified against FRED directly (not just reasoned about) for the four highest-risk entries below before setting their ceilings; keep this list in sync if validator.py's dict changes, or an LLM reasoning from this file alone will reproduce the exact false-positive/false-negative mistakes already made and fixed once.",
+    "unrate": 65, "cpi_all": 75, "cpi_core": 75, "pce": 95, "pce_core": 95,
+    "payems": 65, "cs_hpi": 120, "mortgage30": 10, "umcsent": 35,
+    "u6rate": 65, "bls_sectors": 65, "bls_unemp_sectors": 65, "ahetpi": 65,
+    "icsa": 14, "ccsa": 21, "gasoline": 14, "mortgage15": 14,
+    "dff": 12, "dgs2": 12, "dgs5": 12, "dgs10": 12, "dgs30": 12,
+    "ig_oas": 12, "hy_oas": 12, "wti_daily": 12, "brent_daily": 12,
+    "ffr": 65, "jolts": 95, "adp_latest": 60, "wage_growth_atl": 60, "psavert": 95,
+    "cpiengsl": 75, "cpi_shelter": 75, "cpi_food_away": 75, "cpi_transport": 75,
+    "cpi_medical": 75, "cpi_food_home": 75, "cpi_new_veh": 75, "cpi_apparel": 75, "cpi_used_cars": 75,
+    "pce_goods": 95, "pce_services": 95, "pce_food": 95, "pce_energy": 95,
+    "houst": 60, "houst1f": 60, "permit": 60,
+    "gdpc1": 220, "gdp_growth": 220,
+    "cc_delinq": 150, "mtg_delinq": 150, "tdsp": 270,
+    "ig_oas_monthly": 65, "hy_oas_monthly": 65,
+    "_tdsp_note": "tdsp is a Federal Reserve Board series, NOT NY Fed like cc_delinq/mtg_delinq — live-verified 2026-08-26 that FRED itself shows 'Next Release Date: Not Available' for this series (genuinely irregular cadence, not comparable to the NY Fed HHDC series despite the shared 'household debt' category)."
   },
 
   "noise_floor_pp": {

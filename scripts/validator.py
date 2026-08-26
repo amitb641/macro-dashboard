@@ -509,6 +509,65 @@ def check_sources(data):
 #   Flag data that hasn't been updated within expected windows
 # ═══════════════════════════════════════════════════════════════════════
 
+_MONTH_NAME_TO_NUM = {
+    'January': 1, 'February': 2, 'March': 3, 'April': 4, 'May': 5, 'June': 6,
+    'July': 7, 'August': 8, 'September': 9, 'October': 10, 'November': 11, 'December': 12,
+}
+
+def _staleness_latest_date(series):
+    """Extract an ISO date string for the most recent observation in `series`,
+    or None if the shape isn't recognized.
+
+    The collector produces (at least) four distinct shapes depending on which
+    helper wrote the value, and this function existed for a long time only
+    handling the first one — meaning every series fetched via fv()/bls_fetch()/
+    the custom ADP shape was SILENTLY skipped by an `isinstance(series, list)`
+    guard regardless of whether it had an EXPECTED_LAGS entry: no finding, no
+    warning, just permanently unmonitored. Found 2026-08 auditing why
+    icsa/ccsa staleness went undetected for a month (a related but separate
+    bug from this one — icsa/ccsa simply had no EXPECTED_LAGS entry at all;
+    this function's shape-blindness would have hidden ~20 *other* series'
+    staleness the same way even if they'd had one). Handles:
+      - list of {date, value} newest-first          — fred_obs()
+      - single {date, value} dict                    — fv()
+      - {'month': 'April', 'year': '2026', ...} dict  — adp_latest
+      - {series_id: [{'year','period','value'}, ...]} — bls_fetch() composite
+    """
+    if isinstance(series, list) and series and isinstance(series[0], dict):
+        d = series[0].get('date')
+        if d:
+            return d
+    elif isinstance(series, dict):
+        if 'date' in series:
+            return series['date']
+        if 'month' in series and 'year' in series and series.get('month') in _MONTH_NAME_TO_NUM:
+            try:
+                return f"{int(series['year']):04d}-{_MONTH_NAME_TO_NUM[series['month']]:02d}-01"
+            except (TypeError, ValueError):
+                return None
+        # BLS composite dict: take the newest monthly (M01-M12, skip the
+        # M13 annual-average pseudo-period) observation across every
+        # series ID in the payload.
+        best = None
+        for obs_list in series.values():
+            if not isinstance(obs_list, list) or not obs_list:
+                continue
+            first = obs_list[0]
+            if not isinstance(first, dict):
+                continue
+            period, year = first.get('period', ''), first.get('year')
+            if not (period.startswith('M') and period != 'M13' and year):
+                continue
+            try:
+                d = f"{int(year):04d}-{int(period[1:]):02d}-01"
+            except (TypeError, ValueError):
+                continue
+            if best is None or d > best:
+                best = d
+        return best
+    return None
+
+
 def check_staleness(data, collected_at):
     """Check if any data series are stale beyond expected lag."""
     findings = []
@@ -520,6 +579,21 @@ def check_staleness(data, collected_at):
     # month (so ~35-40d after ref-month start is typical, with reporting
     # slippage adding ~2 weeks). Case-Shiller has a ~70d HPI lag + release
     # around the last Tuesday of the following month.
+    #
+    # Audited 2026-08 (the icsa/ccsa freeze that started this): of ~80 raw
+    # series the collector fetches, only 9 had ANY staleness coverage before
+    # this pass — every other live (non-`_annual`/`_pinned`/`_hist`) series
+    # could go stale forever with zero signal. Expanded to cover every
+    # regularly-refreshed series; see data/playbook.md §2.2 for the
+    # per-source lag table these thresholds are derived from. Deliberately
+    # excluded: `*_annual`/`*_pinned`/`*_hist` (long-run/ALFRED-vintage
+    # backing arrays, refreshed quarterly by design — see `vintages` dict),
+    # `oil_daily_chart` (derived from wti_daily/brent_daily, not a raw
+    # fetch), `brent_monthly`/`wti_monthly` (multi-year chart-history
+    # arrays, not "latest price" — wti_daily/brent_daily cover that), and
+    # `adp_nppttl` (FRED series discontinued 2022-05 — per playbook.md
+    # principle, a check that fires on a permanently-known condition is
+    # noise, not signal; see the NPPTTL gotcha in CLAUDE.md).
     EXPECTED_LAGS = {
         # BLS Employment Situation: published 1st Fri of following month.
         # FRED reference date = 1st of reference month, so age at Saturday
@@ -536,10 +610,129 @@ def check_staleness(data, collected_at):
         # Collector pulls UMich direct (tbcics.csv) which exposes the prelim
         # before FRED's 1-month embargo. 35d covers both release windows.
         'umcsent':   35,
+
+        # ── Same-release BLS Employment Situation family as unrate/payems ──
+        'u6rate':            65,
+        'bls_sectors':       65,
+        'bls_unemp_sectors': 65,
+        'ahetpi':            65,   # Average Hourly Earnings — same NFP release
+
+        # ── Weekly DOL/EIA/FHFA — FRED publish lag 0-3d per playbook §2.2 ──
+        # (the bug that started this audit: icsa/ccsa had NO entry here at
+        # all, so a months-long freeze produced zero validator signal)
+        'icsa':       14,
+        # CCSA's reference week is structurally ~1wk behind ICSA's (DOL
+        # tabulates continued claims for the week ending one week prior to
+        # the initial-claims reference week) — live-verified against FRED
+        # 2026-08-26: actual latest observation was 18 days old and was
+        # genuinely the current release (next release the following day).
+        # 14d would false-positive on every healthy run.
+        'ccsa':       21,
+        'gasoline':   14,
+        'mortgage15': 14,   # mirrors mortgage30's existing 10d, +buffer
+
+        # ── Daily Treasury / Fed funds / credit-spread series — FRED ──
+        # updates every business day; 12d covers weekends + a holiday.
+        'dff':      12,
+        'dgs2':     12,
+        'dgs5':     12,
+        'dgs10':    12,
+        'dgs30':    12,
+        'ig_oas':   12,
+        'hy_oas':   12,
+        'wti_daily':   12,
+        'brent_daily': 12,
+
+        # FEDFUNDS is the monthly-average rate (distinct from the daily DFF
+        # series above), dated to the 1st of its reference month like every
+        # other FRED monthly series — age legitimately reaches ~55-60d right
+        # before the next month's average posts, not just "5-10d after
+        # month end" (that's the lag at *publication*, not the age ceiling
+        # right before the *next* publication). Live-verified against FRED
+        # 2026-08-26: this pattern (a naive lag-at-publication number used
+        # as the threshold, rather than the age-at-next-publication
+        # ceiling) was the root cause of every monthly/quarterly
+        # false-positive found in this audit — see jolts/adp_latest/
+        # wage_growth_atl/gdpc1/gdp_growth/ig_oas_monthly/hy_oas_monthly
+        # below, all corrected the same way after live FRED verification.
+        'ffr': 65,
+
+        # JOLTS — live-verified against FRED 2026-08-26: actual latest was
+        # 86 days old and was genuinely current (next release Sep 1, which
+        # would make the *ceiling* ~92-95d). 70d would false-positive on
+        # every healthy run in the back half of each JOLTS cycle.
+        'jolts': 95,
+
+        # ADP National Employment Report — released the Wednesday before
+        # NFP; reference-month-start dating means the same "age ceiling
+        # right before next release" reasoning as ffr applies.
+        'adp_latest': 60,
+
+        # Atlanta Fed Wage Growth Tracker — monthly, 3-month moving average.
+        'wage_growth_atl': 60,
+
+        # Personal saving rate — same BEA release as PCE.
+        'psavert': 95,
+
+        # CPI sub-components — released simultaneously with headline CPI.
+        'cpiengsl':     75,
+        'cpi_shelter':  75,
+        'cpi_food_away':75,
+        'cpi_transport':75,
+        'cpi_medical':  75,
+        'cpi_food_home':75,
+        'cpi_new_veh':  75,
+        'cpi_apparel':  75,
+        'cpi_used_cars':75,
+
+        # PCE sub-components — released simultaneously with headline PCE.
+        'pce_goods':    95,
+        'pce_services': 95,
+        'pce_food':     95,
+        'pce_energy':   95,
+
+        # Census Bureau housing starts/permits — released ~mid-month for
+        # the prior month, faster cadence than Employment Situation.
+        'houst':   60,
+        'houst1f': 60,
+        'permit':  60,
+
+        # BEA GDP — quarterly, dated to quarter-*start* (e.g. a Q2 2026
+        # observation is dated 2026-04-01). ~30d lag after quarter end gets
+        # the advance estimate published, but the value then holds — aging
+        # from that reference date — for the full next quarter (~92 more
+        # days) until the *following* quarter's advance estimate arrives.
+        # Live-verified against FRED 2026-08-26: actual latest was Q2 2026
+        # (2026-04-01), 147 days old, and was exactly current — "Next
+        # Release Date" shown as today. Worst-case ceiling is ~120+92=212d;
+        # 120d would false-positive for most of every quarter.
+        'gdpc1':      220,
+        'gdp_growth': 220,
+
+        # NY Fed Household Debt & Credit Report — quarterly, ~45d lag
+        # after quarter end per playbook §2.2. Live-verified cc_delinq
+        # (DRCCLACBS) against FRED 2026-08-26: 150d held with real margin.
+        'cc_delinq':  150,
+        'mtg_delinq': 150,
+        # TDSP is a *different* source than cc_delinq/mtg_delinq (Federal
+        # Reserve Board, not NY Fed) with a genuinely irregular release
+        # cadence — live-verified 2026-08-26: FRED itself shows "Next
+        # Release Date: Not Available" for this series (i.e. even the
+        # source doesn't commit to a schedule), and the actual latest
+        # observation was 237 days old and still the current value. Not
+        # comparable to the NY Fed series above despite being in the same
+        # "household debt" category — don't merge its threshold with theirs.
+        'tdsp': 270,
+
+        # Monthly-aggregated OAS spreads — separate fetch from the daily
+        # ig_oas/hy_oas above, feeds a different (trend) chart. Same
+        # reference-month-start aging pattern as ffr/jolts/adp_latest.
+        'ig_oas_monthly': 65,
+        'hy_oas_monthly': 65,
     }
 
     for key, max_lag in EXPECTED_LAGS.items():
-        series = data.get(key, [])
+        series = data.get(key)
         if not series:
             findings.append({
                 'check': f'Staleness: {key}',
@@ -549,20 +742,29 @@ def check_staleness(data, collected_at):
             })
             continue
 
-        if isinstance(series, list) and series:
-            latest_date = datetime.date.fromisoformat(series[0]['date'])
-            age_days = (today - latest_date).days
-            is_stale = age_days > max_lag
+        latest_str = _staleness_latest_date(series)
+        if latest_str is None:
             findings.append({
                 'check': f'Staleness: {key}',
-                'latest_date': series[0]['date'],
-                'age_days': age_days,
-                'max_lag_days': max_lag,
-                'severity': 'stale' if is_stale else 'ok',
-                'pass': not is_stale,
+                'severity': 'warning',
+                'reason': f'Could not determine latest date from series shape ({type(series).__name__})',
+                'pass': False,
             })
-            if is_stale:
-                print(f'  ⏰ STALE: {key} — last update {series[0]["date"]} ({age_days}d ago, max {max_lag}d)')
+            continue
+
+        latest_date = datetime.date.fromisoformat(latest_str)
+        age_days = (today - latest_date).days
+        is_stale = age_days > max_lag
+        findings.append({
+            'check': f'Staleness: {key}',
+            'latest_date': latest_str,
+            'age_days': age_days,
+            'max_lag_days': max_lag,
+            'severity': 'stale' if is_stale else 'ok',
+            'pass': not is_stale,
+        })
+        if is_stale:
+            print(f'  ⏰ STALE: {key} — last update {latest_str} ({age_days}d ago, max {max_lag}d)')
 
     # UMich release-status notice: prelim prints are subject to revision in
     # the end-of-month final. Informational finding so consumers of the
