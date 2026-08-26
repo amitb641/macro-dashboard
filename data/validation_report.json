@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-08-26T05:01:46.277293Z",
+  "validated_at": "2026-08-26T05:22:20.482924Z",
   "status": "PASS",
   "summary": {
-    "total_checks": 665,
-    "passed": 665,
+    "total_checks": 703,
+    "passed": 703,
     "failed": 0,
     "skipped": 1,
     "critical_divergences": 0
@@ -770,6 +770,366 @@
       "pass": true
     },
     {
+      "check": "Staleness: u6rate",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: bls_sectors",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: bls_unemp_sectors",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ahetpi",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: icsa",
+      "latest_date": "2026-08-15",
+      "age_days": 11,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ccsa",
+      "latest_date": "2026-08-08",
+      "age_days": 18,
+      "max_lag_days": 21,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gasoline",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: mortgage15",
+      "latest_date": "2026-08-20",
+      "age_days": 6,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dff",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs2",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs5",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs10",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs30",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ig_oas",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: hy_oas",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: wti_daily",
+      "latest_date": "2026-08-18",
+      "age_days": 8,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: brent_daily",
+      "latest_date": "2026-08-18",
+      "age_days": 8,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ffr",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: jolts",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: adp_latest",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: wage_growth_atl",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: psavert",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpiengsl",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_shelter",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_food_away",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_transport",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_medical",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_food_home",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_new_veh",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_apparel",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_used_cars",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_goods",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_services",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_food",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_energy",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: houst",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: houst1f",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: permit",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gdpc1",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 220,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gdp_growth",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 220,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cc_delinq",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 150,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: mtg_delinq",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 150,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: tdsp",
+      "latest_date": "2026-01-01",
+      "age_days": 237,
+      "max_lag_days": 270,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ig_oas_monthly",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: hy_oas_monthly",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
       "check": "UMich Sentiment release status",
       "latest_date": "2026-08-01",
       "release_status": "preliminary",
@@ -779,7 +1139,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-08-26T04:58:03.883655Z",
+      "collected_at": "2026-08-26T05:20:55.734957Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4294,102 +4654,11 @@
       "abs_delta": 0.036,
       "verdict": "within_noise",
       "note": "PoP delta +0.036 \u2264 \u00b10.1 \u2192 within_noise"
-    },
-    {
-      "check": "noise_floor[jolts_openings]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "jolts_openings",
-      "floor": 200.0,
-      "prior": 7537.0,
-      "latest": 7359.0,
-      "delta": -178.0,
-      "abs_delta": 178.0,
-      "verdict": "within_noise",
-      "note": "PoP delta -178.000 \u2264 \u00b1200.0 \u2192 within_noise"
-    },
-    {
-      "check": "noise_floor[trimmed_mean_cpi_yoy]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "trimmed_mean_cpi_yoy",
-      "floor": 0.2,
-      "prior": 0.010632335018057,
-      "latest": 0.222773113441055,
-      "delta": 0.2121,
-      "abs_delta": 0.2121,
-      "verdict": "real_signal",
-      "note": "PoP delta +0.212 > \u00b10.2 \u2192 real_signal"
-    },
-    {
-      "check": "noise_floor[median_cpi_yoy]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "median_cpi_yoy",
-      "floor": 0.2,
-      "prior": 0.174123999368447,
-      "latest": 0.25592482739043,
-      "delta": 0.0818,
-      "abs_delta": 0.0818,
-      "verdict": "within_noise",
-      "note": "PoP delta +0.082 \u2264 \u00b10.2 \u2192 within_noise"
-    },
-    {
-      "check": "noise_floor[walcl_bn]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "walcl_bn",
-      "floor": 50.0,
-      "prior": 6759955.0,
-      "latest": 6745699.0,
-      "delta": -14256.0,
-      "abs_delta": 14256.0,
-      "verdict": "real_signal",
-      "note": "PoP delta -14256.000 > \u00b150.0 \u2192 real_signal"
-    },
-    {
-      "check": "noise_floor[wresbal_bn]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "wresbal_bn",
-      "floor": 50.0,
-      "prior": 2944059.0,
-      "latest": 2935287.0,
-      "delta": -8772.0,
-      "abs_delta": 8772.0,
-      "verdict": "real_signal",
-      "note": "PoP delta -8772.000 > \u00b150.0 \u2192 real_signal"
-    },
-    {
-      "check": "noise_floor[rrpontsyd_bn]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "rrpontsyd_bn",
-      "floor": 100.0,
-      "prior": 0.38,
-      "latest": 0.405,
-      "delta": 0.025,
-      "abs_delta": 0.025,
-      "verdict": "within_noise",
-      "note": "PoP delta +0.025 \u2264 \u00b1100.0 \u2192 within_noise"
-    },
-    {
-      "check": "noise_floor[deficit_pct_gdp]",
-      "pass": true,
-      "severity": "ok",
-      "metric": "deficit_pct_gdp",
-      "floor": 0.5,
-      "prior": -6.19625,
-      "latest": -5.76906,
-      "delta": 0.4272,
-      "abs_delta": 0.4272,
-      "verdict": "within_noise",
-      "note": "PoP delta +0.427 \u2264 \u00b10.5 \u2192 within_noise"
     }
   ],
   "secret_leaks": [
     {
-      "check": "Secret leak scan (32 JSON files)",
+      "check": "Secret leak scan (36 JSON files)",
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"
@@ -4398,7 +4667,7 @@
   "coverage": [
     {
       "check": "validator coverage (migration-sensitive passes)",
-      "checks": 94,
+      "checks": 87,
       "skipped": 1,
       "skip_rate": 0.011,
       "threshold": 0.15,

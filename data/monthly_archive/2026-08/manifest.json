@@ -2,8 +2,8 @@
   "schema_version": 1,
   "month": "2026-08",
   "source_run_date": "2026-08-26",
-  "archived_at": "2026-08-26T05:02:14.255738Z",
-  "git_sha": "ac14bca",
+  "archived_at": "2026-08-26T05:22:48.243667Z",
+  "git_sha": "d59a438",
   "branch": "dev/multi-expert-improvements",
   "files": [
     "raw_data.json",
@@ -18,15 +18,15 @@
     "metrics.json": 3549
   },
   "sha256": {
-    "raw_data.json": "853535d6f33a321f557065c1e648928e4d93bc29471b136fc7443fde2d80bb5e",
-    "state.json": "18546fe2d10e5ced6d26d505aeb6d9dea2b1330ecbfa43931c211772aaabbf4d",
-    "index.html": "11be7c9192ebafe54a60b18d4c1861e62e3dcbe93fc4c5cea4234e261fd60a15",
+    "raw_data.json": "a06a3a5b4b320689e9d5d318015e4509253936300b10d7ae40baa11564b3c047",
+    "state.json": "7a508b5b5064c2394740302083ce2ec459cfd40449f24d1dd0e12d333faf3215",
+    "index.html": "19ba3f9d3e3967650ced926b9ef3265605457e32d8020b825719275822d6075a",
     "metrics.json": "45794787081d1381edc7876719befba1350bf525cfe18613b51a581e6cc2a431"
   },
   "validation_status": "PASS",
   "validation_summary": {
-    "total_checks": 665,
-    "passed": 665,
+    "total_checks": 703,
+    "passed": 703,
     "failed": 0,
     "skipped": 1,
     "critical_divergences": 0
