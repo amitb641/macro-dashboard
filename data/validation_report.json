@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-08-26T04:59:11.919708Z",
+  "validated_at": "2026-08-26T05:23:22.459599Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 521,
-    "passed": 509,
-    "failed": 12,
-    "skipped": 14,
+    "total_checks": 565,
+    "passed": 554,
+    "failed": 11,
+    "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -308,28 +308,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "60/60 filled",
+      "html_value": "62/62 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 30,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "60/60 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 30,
+      "html_value": "60/62 filled",
+      "source_value": "97% (min 50%)",
+      "difference": 2,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "19/60 filled",
-      "source_value": "32% (min 0%)",
+      "html_value": "21/62 filled",
+      "source_value": "34% (min 0%)",
       "difference": 41,
-      "tolerance": 30,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
@@ -589,56 +589,83 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.1,
+      "fresh_api_value": 4.1,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 332.813,
+      "fresh_api_value": 332.813,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 336.789,
+      "fresh_api_value": 336.789,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 131.392,
+      "fresh_api_value": 131.392,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 130.266,
+      "fresh_api_value": 130.266,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.7,
+      "fresh_api_value": 4.7,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED FEDFUNDS",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.63,
+      "fresh_api_value": 3.63,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 158858.0,
+      "fresh_api_value": 158858.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 6.65,
+      "fresh_api_value": 6.65,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -725,6 +752,366 @@
       "pass": true
     },
     {
+      "check": "Staleness: u6rate",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: bls_sectors",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: bls_unemp_sectors",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ahetpi",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: icsa",
+      "latest_date": "2026-08-15",
+      "age_days": 11,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ccsa",
+      "latest_date": "2026-08-08",
+      "age_days": 18,
+      "max_lag_days": 21,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gasoline",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: mortgage15",
+      "latest_date": "2026-08-20",
+      "age_days": 6,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dff",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs2",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs5",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs10",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs30",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ig_oas",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: hy_oas",
+      "latest_date": "2026-08-24",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: wti_daily",
+      "latest_date": "2026-08-18",
+      "age_days": 8,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: brent_daily",
+      "latest_date": "2026-08-18",
+      "age_days": 8,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ffr",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: jolts",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: adp_latest",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: wage_growth_atl",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: psavert",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpiengsl",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_shelter",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_food_away",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_transport",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_medical",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_food_home",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_new_veh",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_apparel",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_used_cars",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_goods",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_services",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_food",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_energy",
+      "latest_date": "2026-06-01",
+      "age_days": 86,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: houst",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: houst1f",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: permit",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gdpc1",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 220,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gdp_growth",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 220,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cc_delinq",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 150,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: mtg_delinq",
+      "latest_date": "2026-04-01",
+      "age_days": 147,
+      "max_lag_days": 150,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: tdsp",
+      "latest_date": "2026-01-01",
+      "age_days": 237,
+      "max_lag_days": 270,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ig_oas_monthly",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: hy_oas_monthly",
+      "latest_date": "2026-07-01",
+      "age_days": 56,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
       "check": "UMich Sentiment release status",
       "latest_date": "2026-08-01",
       "release_status": "preliminary",
@@ -734,7 +1121,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-08-26T04:57:31.541078Z",
+      "collected_at": "2026-08-26T05:21:37.792220Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1360,16 +1747,9 @@
   ],
   "collector_errors": [
     {
-      "check": "EIA fetch: RWTC",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-    },
-    {
-      "check": "EIA fetch: RBRTE",
-      "pass": false,
-      "severity": "warning",
-      "note": "HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+      "check": "Collector errors: none recorded",
+      "pass": true,
+      "severity": "ok"
     }
   ],
   "seed_drift": [
@@ -3423,20 +3803,35 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.1,
+      "bls": 4,
+      "diff": 0.1,
+      "tol": 0.2,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
-      "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "pass": false,
+      "severity": "warning",
+      "metric": "cpi_all",
+      "fred": 332.813,
+      "bls": 334,
+      "diff": 1.187,
+      "tol": 0.334,
+      "note": "FRED 332.813 vs BLS 334 (\u0394=1.1870, tol=0.3340). One side may be stale or revised."
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 336.789,
+      "bls": 337,
+      "diff": 0.211,
+      "tol": 0.337,
+      "note": null
     }
   ]
 }

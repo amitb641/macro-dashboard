@@ -1,49 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-08-26T04:59:12.484790Z",
+  "last_updated": "2026-08-26T05:23:23.008492Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-05-10T14:58:57.368598Z",
-      "git_sha": "29f947f",
-      "git_branch": "main",
-      "collected_at": "2026-05-10T14:57:54.856682Z",
-      "series_count": 79,
-      "collector_errors": 0,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-04-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-03-01",
-          "value": 330.293
-        },
-        "payrolls": {
-          "date": "2026-04-01",
-          "value": 158736.0
-        },
-        "treasury_10y": {
-          "date": "2026-05-07",
-          "value": 4.41
-        },
-        "fed_funds": {
-          "date": "2026-04-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "ELEVATED",
-      "alert_count": 2,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 481,
-        "passed": 470,
-        "failed": 11,
-        "skipped": 1,
-        "critical_divergences": 0
-      },
-      "html_size": 533679
-    },
     {
       "run_at": "2026-05-11T16:36:45.194149Z",
       "git_sha": "c30d448",
@@ -916,6 +875,47 @@
           "delta": -0.01
         }
       ]
+    },
+    {
+      "run_at": "2026-08-26T05:23:23.008492Z",
+      "git_sha": "e8938ca",
+      "git_branch": "main",
+      "collected_at": "2026-08-26T05:21:37.792220Z",
+      "series_count": 81,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-07-01",
+          "value": 4.1
+        },
+        "cpi_index": {
+          "date": "2026-07-01",
+          "value": 332.813
+        },
+        "payrolls": {
+          "date": "2026-07-01",
+          "value": 158858.0
+        },
+        "treasury_10y": {
+          "date": "2026-08-24",
+          "value": 4.7
+        },
+        "fed_funds": {
+          "date": "2026-07-01",
+          "value": 3.63
+        }
+      },
+      "risk_level": "ELEVATED",
+      "alert_count": 2,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 565,
+        "passed": 554,
+        "failed": 11,
+        "skipped": 2,
+        "critical_divergences": 0
+      },
+      "html_size": 526714
     }
   ]
 }

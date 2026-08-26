@@ -1,11 +1,8 @@
 {
-  "collected_at": "2026-08-26T04:57:31.541078Z",
+  "collected_at": "2026-08-26T05:21:37.792220Z",
   "series_count": 81,
-  "error_count": 2,
-  "errors": [
-    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
-    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
-  ],
+  "error_count": 0,
+  "errors": [],
   "data": {
     "ffr": {
       "date": "2026-07-01",
@@ -1223,6 +1220,14 @@
       {
         "date": "2026-05-27",
         "value": 92.35
+      },
+      {
+        "date": "2026-05-26",
+        "value": 97.63
+      },
+      {
+        "date": "2026-05-22",
+        "value": 100.35
       }
     ],
     "brent_daily": [
@@ -1469,6 +1474,8 @@
     ],
     "oil_daily_chart": {
       "labels": [
+        "May 22",
+        "May 26",
         "May 27",
         "May 28",
         "May 29",
@@ -1531,6 +1538,8 @@
         "Aug 18"
       ],
       "wti": [
+        100.35,
+        97.63,
         92.35,
         92.65,
         91.16,
@@ -1593,6 +1602,8 @@
         86.48
       ],
       "brent": [
+        null,
+        null,
         97.11,
         95.47,
         92.88,
@@ -1656,6 +1667,8 @@
       ],
       "notes": [
         null,
+        "WTI drop $2.7 (2.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $5.3 (5.4%) \u2014 pipeline updates this field with market headlines",
         null,
         null,
         "WTI surge $4.8 (5.3%) \u2014 pipeline updates this field with market headlines",
@@ -1717,8 +1730,8 @@
         null
       ],
       "month": "Mar\u2013Aug 2026",
-      "updated": "Aug 26 04:58 UTC",
-      "sessions": 60
+      "updated": "Aug 26 05:22 UTC",
+      "sessions": 62
     },
     "gasoline": [
       {
