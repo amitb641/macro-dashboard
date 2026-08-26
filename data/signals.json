@@ -1,234 +1,234 @@
 {
-  "analyzed_at": "2026-05-28T13:42:36.665468Z",
-  "risk_level": "HIGH",
-  "alert_count": 3,
-  "watch_count": 2,
-  "flagged_count": 1,
+  "analyzed_at": "2026-08-26T04:58:20.373472Z",
+  "risk_level": "ELEVATED",
+  "alert_count": 2,
+  "watch_count": 4,
+  "flagged_count": 6,
   "values": {
-    "ffr": 3.64,
-    "dgs2": 4.01,
-    "dgs5": 4.19,
-    "dgs10": 4.5,
-    "dgs30": 5.03,
-    "ig_oas": 74,
-    "hy_oas": 272,
-    "unrate": 4.3,
-    "u6rate": 8.2,
-    "nfp_level": 158736.0,
-    "nfp_mom": 115,
-    "icsa": 215000.0,
-    "ccsa": 1786000.0,
-    "wages_yoy": 3.6,
-    "cpi_yoy": 3.78,
-    "core_cpi_yoy": 2.74,
-    "pce_yoy": 3.77,
+    "ffr": 3.63,
+    "dgs2": 4.24,
+    "dgs5": 4.41,
+    "dgs10": 4.7,
+    "dgs30": 5.23,
+    "ig_oas": 81,
+    "hy_oas": 269,
+    "unrate": 4.1,
+    "u6rate": 7.9,
+    "nfp_level": 158858.0,
+    "nfp_mom": -23,
+    "icsa": 206000.0,
+    "ccsa": 1799000.0,
+    "wages_yoy": 3.8,
+    "cpi_yoy": 3.3,
+    "core_cpi_yoy": 2.47,
+    "pce_yoy": 3.67,
     "core_pce_yoy": 3.29,
-    "saving_rate": 2.6,
-    "mortgage30": 6.51,
-    "housing_starts": 1465.0,
-    "cs_hpi_yoy": 0.66,
-    "umcsent": 44.8,
+    "saving_rate": 2.7,
+    "mortgage30": 6.65,
+    "housing_starts": 1239.0,
+    "cs_hpi_yoy": 1.1,
+    "umcsent": 51.0,
     "atl_wage_3m": null,
-    "tdsp": 11.323096,
-    "wti": 112.25,
-    "brent": 116.73,
-    "gdp_growth_q": 1.6,
-    "cc_delinq": 2.92,
-    "spread_10_2_bp": 49
+    "tdsp": 11.164138,
+    "wti": 86.48,
+    "brent": 95.29,
+    "gdp_growth_q": 1.5,
+    "cc_delinq": 2.85,
+    "spread_10_2_bp": 46
   },
   "signals": {
     "ffr": {
-      "value": 3.64,
-      "delta": 0.0,
+      "value": 3.63,
+      "delta": -0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs10": {
-      "value": 4.5,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 4.7,
+      "delta": 0.2,
+      "direction": "rising",
+      "flagged": true,
       "alert": "watch"
     },
     "ig_oas": {
-      "value": 74,
-      "delta": 0,
+      "value": 81,
+      "delta": 7,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 272,
-      "delta": 0,
+      "value": 269,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "unrate": {
-      "value": 4.3,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": null
-    },
-    "cpi_yoy": {
-      "value": 3.78,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": "alert"
-    },
-    "pce_yoy": {
-      "value": 3.77,
-      "delta": 0.27,
-      "direction": "rising",
+      "value": 4.1,
+      "delta": -0.2,
+      "direction": "falling",
       "flagged": true,
       "alert": null
     },
-    "nfp_mom": {
-      "value": 115,
-      "delta": 0,
+    "cpi_yoy": {
+      "value": 3.3,
+      "delta": -0.48,
+      "direction": "falling",
+      "flagged": true,
+      "alert": "watch"
+    },
+    "pce_yoy": {
+      "value": 3.67,
+      "delta": -0.1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
+    "nfp_mom": {
+      "value": -23,
+      "delta": -138,
+      "direction": "falling",
+      "flagged": true,
+      "alert": null
+    },
     "wti": {
-      "value": 112.25,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": "alert"
+      "value": 86.48,
+      "delta": -25.77,
+      "direction": "falling",
+      "flagged": true,
+      "alert": "watch"
     },
     "mortgage30": {
-      "value": 6.51,
-      "delta": 0.0,
+      "value": 6.65,
+      "delta": 0.14,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "wages_yoy": {
-      "value": 3.6,
-      "delta": 0.0,
+      "value": 3.8,
+      "delta": 0.2,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "cs_hpi_yoy": {
-      "value": 0.66,
-      "delta": 0.0,
+      "value": 1.1,
+      "delta": 0.44,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "icsa": {
-      "value": 215000.0,
-      "delta": 4000.0,
+      "value": 206000.0,
+      "delta": -9000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "umcsent": {
-      "value": 44.8,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
-      "alert": null
+      "value": 51.0,
+      "delta": 6.2,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "alert"
     },
     "tdsp": {
-      "value": 11.323096,
-      "delta": 0.0,
+      "value": 11.164138,
+      "delta": -0.159,
       "direction": "stable",
       "flagged": false,
       "alert": "watch"
     },
     "dgs2": {
-      "value": 4.01,
-      "delta": 0.0,
+      "value": 4.24,
+      "delta": 0.23,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.19,
-      "delta": 0.0,
+      "value": 4.41,
+      "delta": 0.22,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 5.03,
-      "delta": 0.0,
+      "value": 5.23,
+      "delta": 0.2,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 49,
-      "delta": 0,
+      "value": 46,
+      "delta": -3,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "core_cpi_yoy": {
-      "value": 2.74,
-      "delta": 0.0,
+      "value": 2.47,
+      "delta": -0.27,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "core_pce_yoy": {
       "value": 3.29,
-      "delta": 0.09,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": "alert"
     },
     "u6rate": {
-      "value": 8.2,
-      "delta": 0.0,
+      "value": 7.9,
+      "delta": -0.3,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "saving_rate": {
-      "value": 2.6,
-      "delta": -1.0,
+      "value": 2.7,
+      "delta": 0.1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "housing_starts": {
-      "value": 1465.0,
-      "delta": 0.0,
+      "value": 1239.0,
+      "delta": -226.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "brent": {
-      "value": 116.73,
-      "delta": 0.0,
+      "value": 95.29,
+      "delta": -21.44,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "gdp_growth_q": {
-      "value": 1.6,
-      "delta": -0.4,
+      "value": 1.5,
+      "delta": -0.1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "cc_delinq": {
-      "value": 2.92,
-      "delta": 0.0,
+      "value": 2.85,
+      "delta": -0.07,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "ccsa": {
-      "value": 1786000.0,
-      "delta": 4000.0,
+      "value": 1799000.0,
+      "delta": 13000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -243,10 +243,38 @@
   },
   "headlines": [
     {
-      "key": "pce_yoy",
-      "line": "pce_yoy: 3.77 (\u25b20.27 vs prior)",
+      "key": "dgs10",
+      "line": "dgs10: 4.70 (\u25b20.20 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "unrate",
+      "line": "unrate: 4.10 (\u25bc0.20 vs prior)",
       "alert": null
+    },
+    {
+      "key": "cpi_yoy",
+      "line": "cpi_yoy: 3.30 (\u25bc0.48 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "nfp_mom",
+      "line": "nfp_mom: -23.00 (\u25bc138.00 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "wti",
+      "line": "wti: 86.48 (\u25bc25.77 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "umcsent",
+      "line": "umcsent: 51.00 (\u25b26.20 vs prior) [ALERT]",
+      "alert": "alert"
     }
   ],
-  "raw_errors": []
+  "raw_errors": [
+    "EIA RWTC: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)",
+    "EIA RBRTE: HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)"
+  ]
 }

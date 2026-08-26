@@ -1,3 +1,38 @@
+## Repair Agent — 2026-08-26T04:59:11.919708Z
+
+- **Status**: WARN
+- **Total checks**: 521
+- **Passed**: 509
+- **Failed**: 12
+- **Critical divergences**: 0
+
+### Collector errors
+_0 critical · 2 warning · 0 stale_
+
+- ⚠️ **EIA fetch: RWTC** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+- ⚠️ **EIA fetch: RBRTE** — HTTPSConnectionPool(host='api.eia.gov', port=443): Read timed out. (read timeout=15)
+
+### Earnings verbatim
+_0 critical · 9 warning · 0 stale_
+
+- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
+- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
+- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
+- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
+- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
+- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
+- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
+- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
+- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: Dashboard — Commentary sentence count in [2,4]** — 
+
+
+---
+
 ## Repair Agent — 2026-05-28T13:43:33.211462Z
 
 - **Status**: WARN
