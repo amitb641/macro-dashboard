@@ -297,26 +297,23 @@ def collect():
     # ── Monthly: labor, inflation, housing, GDP ───────────────────────
     # Pull 320 observations (~26 years) to build charts from 2000
     # ── Weekly: jobless claims (DOL releases Thursdays) ───────────────
-    # Try carry-forward on non-Thursdays; always fetch fresh if no prior data
-    prior_icsa, prior_ccsa = [], []
-    if datetime.date.today().weekday() != 3:  # Not Thursday — try carry forward
-        try:
-            prior = json.loads(OUT_FILE.read_text()).get('data', {}) if OUT_FILE.exists() else {}
-        except (json.JSONDecodeError, OSError):
-            prior = {}
-        prior_icsa = prior.get('icsa', [])
-        prior_ccsa = prior.get('ccsa', [])
-
-    if datetime.date.today().weekday() == 3 or not prior_icsa:
-        # Thursday refresh OR no prior data — fetch fresh from FRED
-        reason = 'Thursday refresh' if datetime.date.today().weekday() == 3 else 'no prior data'
-        print(f'  [Weekly] Jobless Claims (fresh fetch — {reason})...')
-        data['icsa']    = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
-        data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
-    else:
-        print('  [Weekly] Jobless Claims (carry forward — not Thursday)')
-        data['icsa']    = prior_icsa
-        data['ccsa']    = prior_ccsa
+    # Always fetch fresh. Previously gated on `date.today().weekday()==3`
+    # (Thursday) with a "carry forward" fallback otherwise — but this
+    # pipeline's only schedule is Saturday (`0 12 * * 6` in briefing.yml /
+    # briefing-dev.yml), so weekday() was never 3 on any real scheduled
+    # run and the carry-forward branch fired unconditionally, every run,
+    # forever freezing ICSA/CCSA at whatever value happened to exist from
+    # the last manual run that landed on an actual calendar Thursday.
+    # Found 2026-08 via a live-site staleness report ("Initial Claims
+    # May'26" months after the fact) despite preflight independently
+    # confirming FRED had current data ("ICSA: 200 OK, latest 2026-08-15")
+    # every single one of those runs — the data was available, this gate
+    # just never let the collector ask for it. Given the pipeline runs
+    # weekly (not daily), there's no meaningful API-call cost this gate
+    # was saving; removed outright rather than re-tuned to a different day.
+    print('  [Weekly] Jobless Claims...')
+    data['icsa']    = fred_obs('ICSA',       260)   # weekly initial claims ~5 years
+    data['ccsa']    = fred_obs('CCSA',       260)   # weekly continued claims ~5 years
 
     print('  [Monthly] Labor...')
     data['unrate']      = fred_obs('UNRATE',     480)

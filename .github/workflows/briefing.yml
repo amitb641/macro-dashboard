@@ -136,16 +136,24 @@ jobs:
           git config user.name  "briefing-bot"
           git config user.email "briefing-bot@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add index.html data/
+          git add index.html data/ version.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
             git commit -m "📊 Weekly update: $(date -u +'%Y-%m-%d')"
+            pushed=false
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push origin HEAD:main && break
+              if git pull --rebase origin main && git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
               echo "Push attempt $attempt failed, retrying in 5s..."
               sleep 5
             done
+            if [ "$pushed" != "true" ]; then
+              echo "::error::Weekly update commit could not be pushed after 3 attempts — check for uncommitted files outside the 'index.html data/ version.json' git-add scope (a leftover unstaged file will make every rebase fail like this, silently, forever)."
+              exit 1
+            fi
           fi
 
       - name: Setup Pages
@@ -171,14 +179,22 @@ jobs:
           echo "⚠️ Health check failed — attempting auto-rollback"
           python scripts/snapshot.py --rollback "$(ls -1 data/snapshots/ 2>/dev/null | sort -r | head -1)" || echo "No snapshot available for rollback"
           python scripts/renderer.py
-          git add index.html data/
+          git add index.html data/ version.json
           if ! git diff --staged --quiet; then
             git commit -m "🔄 Auto-rollback: health check failed $(date -u +'%Y-%m-%d')"
+            pushed=false
             for attempt in 1 2 3; do
-              git pull --rebase origin main && git push origin HEAD:main && break
+              if git pull --rebase origin main && git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
               echo "Push attempt $attempt failed, retrying in 5s..."
               sleep 5
             done
+            if [ "$pushed" != "true" ]; then
+              echo "::error::Auto-rollback commit could not be pushed after 3 attempts — check for uncommitted files outside the 'index.html data/ version.json' git-add scope."
+              exit 1
+            fi
           fi
 
   # ── Pipeline failure notification ──────────────────────────────────
