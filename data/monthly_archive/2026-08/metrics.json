@@ -1,11 +1,11 @@
 {
   "month": "2026-08",
-  "obs_date": "2026-08-26",
+  "obs_date": "2026-08-29",
   "metrics": [
     {
       "series_id": "brent",
       "label": "Brent Crude",
-      "value": 95.29,
+      "value": 88.24,
       "unit": "$/bbl"
     },
     {
@@ -17,7 +17,7 @@
     {
       "series_id": "ccsa",
       "label": "Continued Jobless Claims",
-      "value": 1799000.0,
+      "value": 1778000.0,
       "unit": ""
     },
     {
@@ -29,7 +29,7 @@
     {
       "series_id": "core_pce_yoy",
       "label": "Core PCE YoY",
-      "value": 3.29,
+      "value": 3.34,
       "unit": "%"
     },
     {
@@ -41,31 +41,31 @@
     {
       "series_id": "cs_hpi_yoy",
       "label": "Case-Shiller Home Price YoY",
-      "value": 1.1,
+      "value": 1.52,
       "unit": "%"
     },
     {
       "series_id": "dgs10",
       "label": "10Y Treasury",
-      "value": 4.7,
+      "value": 4.67,
       "unit": "%"
     },
     {
       "series_id": "dgs2",
       "label": "2Y Treasury",
-      "value": 4.24,
+      "value": 4.2,
       "unit": "%"
     },
     {
       "series_id": "dgs30",
       "label": "30Y Treasury",
-      "value": 5.23,
+      "value": 5.19,
       "unit": "%"
     },
     {
       "series_id": "dgs5",
       "label": "5Y Treasury",
-      "value": 4.41,
+      "value": 4.38,
       "unit": "%"
     },
     {
@@ -89,25 +89,25 @@
     {
       "series_id": "hy_oas",
       "label": "HY Credit Spread (OAS)",
-      "value": 269,
+      "value": 263,
       "unit": "bp"
     },
     {
       "series_id": "icsa",
       "label": "Initial Jobless Claims",
-      "value": 206000.0,
+      "value": 203000.0,
       "unit": ""
     },
     {
       "series_id": "ig_oas",
       "label": "IG Credit Spread (OAS)",
-      "value": 81,
+      "value": 79,
       "unit": "bp"
     },
     {
       "series_id": "mortgage30",
       "label": "30yr Mortgage Rate",
-      "value": 6.65,
+      "value": 6.66,
       "unit": "%"
     },
     {
@@ -125,19 +125,19 @@
     {
       "series_id": "pce_yoy",
       "label": "Headline PCE YoY",
-      "value": 3.67,
+      "value": 3.7,
       "unit": "%"
     },
     {
       "series_id": "saving_rate",
       "label": "Personal Saving Rate",
-      "value": 2.7,
+      "value": 3.0,
       "unit": "%"
     },
     {
       "series_id": "spread_10_2_bp",
       "label": "10Y-2Y Spread",
-      "value": 46,
+      "value": 47,
       "unit": "bp"
     },
     {
@@ -155,7 +155,7 @@
     {
       "series_id": "umcsent",
       "label": "UMich Consumer Sentiment",
-      "value": 51.0,
+      "value": 51.7,
       "unit": "index"
     },
     {
@@ -173,7 +173,7 @@
     {
       "series_id": "wti",
       "label": "WTI Crude",
-      "value": 86.48,
+      "value": 83.9,
       "unit": "$/bbl"
     }
   ]
