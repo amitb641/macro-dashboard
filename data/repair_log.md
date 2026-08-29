@@ -1,3 +1,15 @@
+## Repair Agent — 2026-08-29T12:04:36.218564Z
+
+- **Status**: PASS
+- **Total checks**: 703
+- **Passed**: 703
+- **Failed**: 0
+- **Critical divergences**: 0
+
+No findings to surface — pipeline is clean. ✅
+
+---
+
 ## Repair Agent — 2026-08-26T05:22:20.482924Z
 
 - **Status**: PASS
@@ -695,22 +707,6 @@ _0 critical · 0 warning · 1 stale_
 ---
 
 ## Repair Agent — 2026-06-30T17:09:26.769173Z
-
-- **Status**: WARN
-- **Total checks**: 662
-- **Passed**: 661
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 121d old (limit 120d)
-
-
----
-
-## Repair Agent — 2026-06-30T16:52:04.797817Z
 
 - **Status**: WARN
 - **Total checks**: 662
