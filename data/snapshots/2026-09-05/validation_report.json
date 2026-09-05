@@ -1,18 +1,18 @@
 {
-  "validated_at": "2026-05-28T13:43:33.211462Z",
+  "validated_at": "2026-09-05T12:09:48.676437Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 520,
-    "passed": 505,
-    "failed": 15,
+    "total_checks": 565,
+    "passed": 548,
+    "failed": 17,
     "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
     {
       "check": "CPI headline YoY (latest)",
-      "html_value": 3.8,
-      "source_value": 3.8,
+      "html_value": 3.3,
+      "source_value": 3.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -20,8 +20,8 @@
     },
     {
       "check": "CPI core YoY (latest)",
-      "html_value": 2.7,
-      "source_value": 2.7,
+      "html_value": 2.5,
+      "source_value": 2.5,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -29,8 +29,8 @@
     },
     {
       "check": "PCE headline YoY (latest)",
-      "html_value": 3.8,
-      "source_value": 3.8,
+      "html_value": 3.7,
+      "source_value": 3.7,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -47,8 +47,8 @@
     },
     {
       "check": "Unemployment rate (latest)",
-      "html_value": 4.3,
-      "source_value": 4.3,
+      "html_value": 4.1,
+      "source_value": 4.1,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -56,8 +56,8 @@
     },
     {
       "check": "NFP BLS MoM (latest)",
-      "html_value": 115,
-      "source_value": 115,
+      "html_value": 162,
+      "source_value": 162,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -74,8 +74,8 @@
     },
     {
       "check": "Case-Shiller YoY (latest)",
-      "html_value": 0.7,
-      "source_value": 0.7,
+      "html_value": 1.5,
+      "source_value": 1.5,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -173,19 +173,19 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "436/436 filled",
+      "html_value": "440/440 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 218,
+      "tolerance": 220,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "436/436 filled",
+      "html_value": "440/440 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 218,
+      "tolerance": 220,
       "severity": "ok",
       "pass": true
     },
@@ -308,28 +308,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "55/55 filled",
+      "html_value": "62/62 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 27,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "55/55 filled",
-      "source_value": "100% (min 50%)",
-      "difference": 0,
-      "tolerance": 27,
+      "html_value": "61/62 filled",
+      "source_value": "98% (min 50%)",
+      "difference": 1,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "35/55 filled",
-      "source_value": "64% (min 0%)",
-      "difference": 20,
-      "tolerance": 27,
+      "html_value": "18/62 filled",
+      "source_value": "29% (min 0%)",
+      "difference": 44,
+      "tolerance": 31,
       "severity": "ok",
       "pass": true
     },
@@ -589,8 +589,8 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "raw_data_value": 4.3,
-      "fresh_api_value": 4.3,
+      "raw_data_value": 4.1,
+      "fresh_api_value": 4.1,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -598,8 +598,8 @@
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "raw_data_value": 332.407,
-      "fresh_api_value": 332.407,
+      "raw_data_value": 332.813,
+      "fresh_api_value": 332.813,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -607,8 +607,8 @@
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "raw_data_value": 335.423,
-      "fresh_api_value": 335.423,
+      "raw_data_value": 336.789,
+      "fresh_api_value": 336.789,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -616,8 +616,8 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 130.902,
-      "fresh_api_value": 130.902,
+      "raw_data_value": 131.659,
+      "fresh_api_value": 131.659,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -625,8 +625,8 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 129.63,
-      "fresh_api_value": 129.63,
+      "raw_data_value": 130.658,
+      "fresh_api_value": 130.658,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -634,8 +634,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 4.5,
-      "fresh_api_value": 4.5,
+      "raw_data_value": 4.77,
+      "fresh_api_value": 4.77,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -643,8 +643,8 @@
     },
     {
       "check": "FRED FEDFUNDS",
-      "raw_data_value": 3.64,
-      "fresh_api_value": 3.64,
+      "raw_data_value": 3.63,
+      "fresh_api_value": 3.63,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -652,8 +652,8 @@
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "raw_data_value": 158736.0,
-      "fresh_api_value": 158736.0,
+      "raw_data_value": 159075.0,
+      "fresh_api_value": 159075.0,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -661,8 +661,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 6.51,
-      "fresh_api_value": 6.51,
+      "raw_data_value": 6.71,
+      "fresh_api_value": 6.71,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -670,8 +670,8 @@
     },
     {
       "check": "BLS Total Nonfarm (latest)",
-      "raw_data_value": 158736,
-      "fresh_api_value": 158736,
+      "raw_data_value": 159075,
+      "fresh_api_value": 159075,
       "difference": 0.0,
       "tolerance": 5,
       "severity": "ok",
@@ -681,79 +681,439 @@
   "staleness": [
     {
       "check": "Staleness: unrate",
-      "latest_date": "2026-04-01",
-      "age_days": 57,
-      "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cpi_all",
-      "latest_date": "2026-04-01",
-      "age_days": 57,
+      "latest_date": "2026-07-01",
+      "age_days": 66,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: cpi_core",
-      "latest_date": "2026-04-01",
-      "age_days": 57,
+      "latest_date": "2026-07-01",
+      "age_days": 66,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce",
-      "latest_date": "2026-04-01",
-      "age_days": 57,
+      "latest_date": "2026-07-01",
+      "age_days": 66,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_core",
-      "latest_date": "2026-04-01",
-      "age_days": 57,
+      "latest_date": "2026-07-01",
+      "age_days": 66,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: payems",
-      "latest_date": "2026-04-01",
-      "age_days": 57,
-      "max_lag_days": 55,
-      "severity": "stale",
-      "pass": false
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
-      "latest_date": "2026-03-01",
-      "age_days": 88,
+      "latest_date": "2026-06-01",
+      "age_days": 96,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-05-21",
-      "age_days": 7,
+      "latest_date": "2026-09-03",
+      "age_days": 2,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: umcsent",
-      "latest_date": "2026-05-01",
-      "age_days": 27,
+      "latest_date": "2026-08-01",
+      "age_days": 35,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
     },
     {
+      "check": "Staleness: u6rate",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: bls_sectors",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: bls_unemp_sectors",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ahetpi",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: icsa",
+      "latest_date": "2026-08-29",
+      "age_days": 7,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ccsa",
+      "latest_date": "2026-08-22",
+      "age_days": 14,
+      "max_lag_days": 21,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gasoline",
+      "latest_date": "2026-08-31",
+      "age_days": 5,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: mortgage15",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 14,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dff",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs2",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs5",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs10",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: dgs30",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ig_oas",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: hy_oas",
+      "latest_date": "2026-09-03",
+      "age_days": 2,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: wti_daily",
+      "latest_date": "2026-09-01",
+      "age_days": 4,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: brent_daily",
+      "latest_date": "2026-09-01",
+      "age_days": 4,
+      "max_lag_days": 12,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ffr",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: jolts",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: adp_latest",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 60,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: wage_growth_atl",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 60,
+      "severity": "stale",
+      "pass": false
+    },
+    {
+      "check": "Staleness: psavert",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpiengsl",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_shelter",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_food_away",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_transport",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_medical",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_food_home",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_new_veh",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_apparel",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cpi_used_cars",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 75,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_goods",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_services",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_food",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: pce_energy",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 95,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: houst",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 60,
+      "severity": "stale",
+      "pass": false
+    },
+    {
+      "check": "Staleness: houst1f",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 60,
+      "severity": "stale",
+      "pass": false
+    },
+    {
+      "check": "Staleness: permit",
+      "latest_date": "2026-07-01",
+      "age_days": 66,
+      "max_lag_days": 60,
+      "severity": "stale",
+      "pass": false
+    },
+    {
+      "check": "Staleness: gdpc1",
+      "latest_date": "2026-04-01",
+      "age_days": 157,
+      "max_lag_days": 220,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: gdp_growth",
+      "latest_date": "2026-04-01",
+      "age_days": 157,
+      "max_lag_days": 220,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: cc_delinq",
+      "latest_date": "2026-04-01",
+      "age_days": 157,
+      "max_lag_days": 150,
+      "severity": "stale",
+      "pass": false
+    },
+    {
+      "check": "Staleness: mtg_delinq",
+      "latest_date": "2026-04-01",
+      "age_days": 157,
+      "max_lag_days": 150,
+      "severity": "stale",
+      "pass": false
+    },
+    {
+      "check": "Staleness: tdsp",
+      "latest_date": "2026-01-01",
+      "age_days": 247,
+      "max_lag_days": 270,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: ig_oas_monthly",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Staleness: hy_oas_monthly",
+      "latest_date": "2026-08-01",
+      "age_days": 35,
+      "max_lag_days": 65,
+      "severity": "ok",
+      "pass": true
+    },
+    {
       "check": "UMich Sentiment release status",
-      "latest_date": "2026-05-01",
+      "latest_date": "2026-08-01",
       "release_status": "final",
       "severity": "ok",
       "pass": true,
@@ -761,7 +1121,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-05-28T13:42:14.067443Z",
+      "collected_at": "2026-09-05T12:08:19.365311Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -794,8 +1154,8 @@
     },
     {
       "check": "SHOCK_TRACKER[1] Transport & Freight Costs status consistent with MMA delta",
-      "status": "confirmed",
-      "post_minus_pre_pp": 1.7,
+      "status": "not_yet",
+      "post_minus_pre_pp": -7.9,
       "severity": "ok",
       "pass": true
     },
@@ -807,8 +1167,8 @@
     },
     {
       "check": "SHOCK_TRACKER[2] CPI Energy Prints status consistent with MMA delta",
-      "status": "confirmed",
-      "post_minus_pre_pp": 50.4,
+      "status": "not_yet",
+      "post_minus_pre_pp": -19.5,
       "severity": "ok",
       "pass": true
     },
@@ -821,7 +1181,7 @@
     {
       "check": "SHOCK_TRACKER[3] Food & Services Inflation status consistent with MMA delta",
       "status": "not_yet",
-      "post_minus_pre_pp": -1.4,
+      "post_minus_pre_pp": -0.8,
       "severity": "ok",
       "pass": true
     },
@@ -854,30 +1214,30 @@
     {
       "check": "CPI by Category \u2014 MoM Change: title months match CPI_CAT_MOM keys",
       "title_months": [
-        "apr",
-        "mar"
+        "jul",
+        "jun"
       ],
       "data_keys": [
-        "apr",
-        "mar"
+        "jul",
+        "jun"
       ],
       "severity": "ok",
       "pass": true
     },
     {
       "check": "CPI by Category \u2014 MoM Change: prior-month chip matches title",
-      "expected_prior": "Mar'26",
+      "expected_prior": "Jun'26",
       "chips_found": [
-        "Apr'26",
-        "Mar'26",
-        "Apr'26",
-        "Mar'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Mar'26",
-        "Apr'26",
-        "Mar'26"
+        "Jul'26",
+        "Jun'26",
+        "Jul'26",
+        "Jun'26",
+        "Jul'26",
+        "Jul'26",
+        "Jul'26",
+        "Jun'26",
+        "Jul'26",
+        "Jun'26"
       ],
       "severity": "ok",
       "pass": true
@@ -885,26 +1245,26 @@
     {
       "check": "PCE by Component \u2014 YoY %: title months match PCE_CAT_MOM keys",
       "title_months": [
-        "apr",
-        "mar"
+        "jul",
+        "jun"
       ],
       "data_keys": [
-        "apr",
-        "mar"
+        "jul",
+        "jun"
       ],
       "severity": "ok",
       "pass": true
     },
     {
       "check": "PCE by Component \u2014 YoY %: prior-month chip matches title",
-      "expected_prior": "Mar'26",
+      "expected_prior": "Jun'26",
       "chips_found": [
-        "Apr'26",
-        "Mar'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Mar'26"
+        "Jul'26",
+        "Jun'26",
+        "Jul'26",
+        "Jul'26",
+        "Jul'26",
+        "Jun'26"
       ],
       "severity": "ok",
       "pass": true
@@ -912,26 +1272,26 @@
     {
       "check": "Monthly Job Change by Sector: title months match SECTOR_MOM keys",
       "title_months": [
-        "apr",
-        "mar"
+        "aug",
+        "jul"
       ],
       "data_keys": [
-        "apr",
-        "mar"
+        "aug",
+        "jul"
       ],
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Monthly Job Change by Sector: prior-month chip matches title",
-      "expected_prior": "Mar'26",
+      "expected_prior": "Jul'26",
       "chips_found": [
-        "Mar'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Apr'26",
-        "Mar'26"
+        "Jul'26",
+        "Aug'26",
+        "Aug'26",
+        "Aug'26",
+        "Aug'26",
+        "Jul'26"
       ],
       "severity": "ok",
       "pass": true
@@ -939,25 +1299,25 @@
     {
       "check": "Unemployment by Sector \u2014 Monthly MoM Change (pp): title months match U_SECTOR_MOM keys",
       "title_months": [
-        "feb",
-        "mar"
+        "aug",
+        "jul"
       ],
       "data_keys": [
-        "feb",
-        "mar"
+        "aug",
+        "jul"
       ],
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Unemployment by Sector \u2014 Monthly MoM Change (pp): prior-month chip matches title",
-      "expected_prior": "Feb'26",
+      "expected_prior": "Jul'26",
       "chips_found": [
-        "Mar'26",
-        "Feb'26",
-        "Mar'26",
-        "Mar'26",
-        "Feb'26"
+        "Aug'26",
+        "Jul'26",
+        "Aug'26",
+        "Aug'26",
+        "Jul'26"
       ],
       "severity": "ok",
       "pass": true
@@ -966,10 +1326,10 @@
   "metric_consistency": [
     {
       "check": "NFP MoM latest (K): surfaces agree within \u00b15 (ref: NFP_BLS_MOM.bls[-1])",
-      "reference": 115.0,
+      "reference": 162.0,
       "surfaces": {
-        "NFP_BLS_MOM.bls[-1]": 115.0,
-        "KPIS Jobs tile": 115.0,
+        "NFP_BLS_MOM.bls[-1]": 162.0,
+        "KPIS Jobs tile": 162.0,
         "Commentary payrolls": "MISSING"
       },
       "severity": "ok",
@@ -977,10 +1337,10 @@
     },
     {
       "check": "Unemployment rate (%): surfaces agree within \u00b10.1 (ref: U_MONTHLY.data[-1])",
-      "reference": 4.3,
+      "reference": 4.1,
       "surfaces": {
-        "U_MONTHLY.data[-1]": 4.3,
-        "KPIS Unemployment": 4.3,
+        "U_MONTHLY.data[-1]": 4.1,
+        "KPIS Unemployment": 4.1,
         "Commentary U-3": "MISSING"
       },
       "severity": "ok",
@@ -989,7 +1349,7 @@
     {
       "check": "CPI YoY latest (%): \u22652 surfaces extractable",
       "surfaces": {
-        "CPI_MONTHLY.headline[-1]": 3.8,
+        "CPI_MONTHLY.headline[-1]": 3.3,
         "KPIS CPI YoY": "MISSING"
       },
       "severity": "skipped",
@@ -1008,30 +1368,30 @@
     },
     {
       "check": "UMich sentiment latest: surfaces agree within \u00b10.5 (ref: UMCSENT_MONTHLY.data[-1])",
-      "reference": 44.8,
+      "reference": 51.7,
       "surfaces": {
-        "UMCSENT_MONTHLY.data[-1]": 44.8,
-        "KPIS UMich Sentiment": 44.8
+        "UMCSENT_MONTHLY.data[-1]": 51.7,
+        "KPIS UMich Sentiment": 51.7
       },
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Fed Funds latest (%): surfaces agree within \u00b10.05 (ref: KPIS Fed Funds)",
-      "reference": 3.64,
+      "reference": 3.63,
       "surfaces": {
-        "KPIS Fed Funds": 3.64,
-        "data[\"ffr\"]": 3.64
+        "KPIS Fed Funds": 3.63,
+        "data[\"ffr\"]": 3.63
       },
       "severity": "ok",
       "pass": true
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 4.5,
+      "reference": 4.77,
       "surfaces": {
-        "KPIS 10Y Treasury": 4.5,
-        "data[\"dgs10\"]": 4.5
+        "KPIS 10Y Treasury": 4.77,
+        "data[\"dgs10\"]": 4.77
       },
       "severity": "ok",
       "pass": true
@@ -1836,7 +2196,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Jobs \u2014 Panel \"Monthly Job Change by Sector \u2014 Mar'26 vs\" has title",
+      "check": "Visual: Jobs \u2014 Panel \"Monthly Job Change by Sector \u2014 Jul'26 vs\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2124,7 +2484,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: CPI \u2014 Panel \"CPI by Category \u2014 MoM Change (Apr'26 vs \" has title",
+      "check": "Visual: CPI \u2014 Panel \"CPI by Category \u2014 MoM Change (Jul'26 vs \" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -2298,7 +2658,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Apr'26 vs Mar'\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Jul'26 vs Jun'\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -3442,36 +3802,36 @@
   "cross_source": [
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
-      "pass": false,
-      "severity": "warning",
+      "pass": true,
+      "severity": "ok",
       "metric": "unrate",
-      "fred": 4.3,
+      "fred": 4.1,
       "bls": 4,
-      "diff": 0.3,
+      "diff": 0.1,
       "tol": 0.2,
-      "note": "FRED 4.3 vs BLS 4 (\u0394=0.3000, tol=0.2000). One side may be stale or revised."
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": false,
       "severity": "warning",
       "metric": "cpi_all",
-      "fred": 332.407,
-      "bls": 333,
-      "diff": 0.593,
-      "tol": 0.333,
-      "note": "FRED 332.407 vs BLS 333 (\u0394=0.5930, tol=0.3330). One side may be stale or revised."
+      "fred": 332.813,
+      "bls": 334,
+      "diff": 1.187,
+      "tol": 0.334,
+      "note": "FRED 332.813 vs BLS 334 (\u0394=1.1870, tol=0.3340). One side may be stale or revised."
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
-      "pass": false,
-      "severity": "warning",
+      "pass": true,
+      "severity": "ok",
       "metric": "core_cpi",
-      "fred": 335.423,
-      "bls": 336,
-      "diff": 0.577,
-      "tol": 0.336,
-      "note": "FRED 335.423 vs BLS 336 (\u0394=0.5770, tol=0.3360). One side may be stale or revised."
+      "fred": 336.789,
+      "bls": 337,
+      "diff": 0.211,
+      "tol": 0.337,
+      "note": null
     }
   ]
 }
