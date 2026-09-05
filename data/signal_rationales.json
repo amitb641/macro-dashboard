@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-29T12:03:43Z",
-  "based_on_signals_at": "2026-08-29T12:03:43.233664Z",
+  "generated_at": "2026-09-05T12:04:22Z",
+  "based_on_signals_at": "2026-09-05T12:04:22.084204Z",
   "model": "claude-sonnet-4-6",
   "budget_hit": false,
   "guardrails": {
@@ -12,15 +12,21 @@
   },
   "rationales": {
     "dgs10": {
-      "value": 4.67,
+      "value": 4.77,
       "direction": "rising",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:dgs10) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CeX1Nqb64Rjk9cuV6PLKy\"}'))",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:dgs10) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CekG67S9uqXiLtb576bXf\"}'))",
       "playbook_cite": ""
     },
     "cpi_yoy": {
       "value": 3.3,
       "direction": "falling",
       "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cpi_yoy) skipped — insufficient API credits (Anthropic billing)'))",
+      "playbook_cite": ""
+    },
+    "wti": {
+      "value": 91.48,
+      "direction": "falling",
+      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wti) skipped — insufficient API credits (Anthropic billing)'))",
       "playbook_cite": ""
     },
     "umcsent": {
@@ -53,20 +59,8 @@
       "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:pce_yoy) skipped — insufficient API credits (Anthropic billing)'))",
       "playbook_cite": ""
     },
-    "nfp_mom": {
-      "value": -23,
-      "direction": "falling",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:nfp_mom) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
-    },
-    "wti": {
-      "value": 83.9,
-      "direction": "falling",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wti) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
-    },
     "mortgage30": {
-      "value": 6.66,
+      "value": 6.71,
       "direction": "rising",
       "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:mortgage30) skipped — insufficient API credits (Anthropic billing)'))",
       "playbook_cite": ""
