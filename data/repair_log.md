@@ -1,3 +1,46 @@
+## Repair Agent — 2026-09-12T12:10:05.206209Z
+
+- **Status**: WARN
+- **Total checks**: 565
+- **Passed**: 548
+- **Failed**: 17
+- **Critical divergences**: 0
+
+### Internal consistency
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **CPI core YoY (latest)** — 
+
+### Staleness
+_0 critical · 0 warning · 5 stale_
+
+- ⏰ **Staleness: houst** — 73d old (limit 60d)
+- ⏰ **Staleness: houst1f** — 73d old (limit 60d)
+- ⏰ **Staleness: permit** — 73d old (limit 60d)
+- ⏰ **Staleness: cc_delinq** — 164d old (limit 150d)
+- ⏰ **Staleness: mtg_delinq** — 164d old (limit 150d)
+
+### Earnings verbatim
+_0 critical · 9 warning · 0 stale_
+
+- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
+- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
+- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
+- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
+- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
+- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
+- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
+- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
+- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: Dashboard — Commentary sentence count in [2,4]** — 
+
+
+---
+
 ## Repair Agent — 2026-09-05T12:09:48.676437Z
 
 - **Status**: WARN
