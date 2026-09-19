@@ -1,11 +1,11 @@
 {
   "month": "2026-09",
-  "obs_date": "2026-09-12",
+  "obs_date": "2026-09-19",
   "metrics": [
     {
       "series_id": "brent",
       "label": "Brent Crude",
-      "value": 109.51,
+      "value": 130.8,
       "unit": "$/bbl"
     },
     {
@@ -17,7 +17,7 @@
     {
       "series_id": "ccsa",
       "label": "Continued Jobless Claims",
-      "value": 1774000.0,
+      "value": 1730000.0,
       "unit": ""
     },
     {
@@ -47,25 +47,25 @@
     {
       "series_id": "dgs10",
       "label": "10Y Treasury",
-      "value": 4.95,
+      "value": 4.94,
       "unit": "%"
     },
     {
       "series_id": "dgs2",
       "label": "2Y Treasury",
-      "value": 4.56,
+      "value": 4.67,
       "unit": "%"
     },
     {
       "series_id": "dgs30",
       "label": "30Y Treasury",
-      "value": 5.37,
+      "value": 5.29,
       "unit": "%"
     },
     {
       "series_id": "dgs5",
       "label": "5Y Treasury",
-      "value": 4.75,
+      "value": 4.78,
       "unit": "%"
     },
     {
@@ -83,7 +83,7 @@
     {
       "series_id": "housing_starts",
       "label": "Housing Starts",
-      "value": 1239.0,
+      "value": 1275.0,
       "unit": "K SAAR"
     },
     {
@@ -95,19 +95,19 @@
     {
       "series_id": "icsa",
       "label": "Initial Jobless Claims",
-      "value": 206000.0,
+      "value": 196000.0,
       "unit": ""
     },
     {
       "series_id": "ig_oas",
       "label": "IG Credit Spread (OAS)",
-      "value": 80,
+      "value": 78,
       "unit": "bp"
     },
     {
       "series_id": "mortgage30",
       "label": "30yr Mortgage Rate",
-      "value": 6.76,
+      "value": 6.95,
       "unit": "%"
     },
     {
@@ -137,7 +137,7 @@
     {
       "series_id": "spread_10_2_bp",
       "label": "10Y-2Y Spread",
-      "value": 39,
+      "value": 27,
       "unit": "bp"
     },
     {
@@ -173,7 +173,7 @@
     {
       "series_id": "wti",
       "label": "WTI Crude",
-      "value": 97.26,
+      "value": 107.02,
       "unit": "$/bbl"
     }
   ]
