@@ -1,3 +1,25 @@
+## Repair Agent — 2026-09-26T12:04:47.382350Z
+
+- **Status**: WARN
+- **Total checks**: 703
+- **Passed**: 700
+- **Failed**: 3
+- **Critical divergences**: 0
+
+### Internal consistency
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **CPI core YoY (latest)** — 
+
+### Staleness
+_0 critical · 0 warning · 2 stale_
+
+- ⏰ **Staleness: cc_delinq** — 178d old (limit 150d)
+- ⏰ **Staleness: mtg_delinq** — 178d old (limit 150d)
+
+
+---
+
 ## Repair Agent — 2026-09-19T12:05:52.174630Z
 
 - **Status**: WARN
@@ -711,22 +733,6 @@ _0 critical · 0 warning · 1 stale_
 ---
 
 ## Repair Agent — 2026-07-01T04:43:40.976064Z
-
-- **Status**: WARN
-- **Total checks**: 662
-- **Passed**: 661
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
-
-
----
-
-## Repair Agent — 2026-07-01T04:35:41.330196Z
 
 - **Status**: WARN
 - **Total checks**: 662
