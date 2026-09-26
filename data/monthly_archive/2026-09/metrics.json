@@ -1,11 +1,11 @@
 {
   "month": "2026-09",
-  "obs_date": "2026-09-19",
+  "obs_date": "2026-09-26",
   "metrics": [
     {
       "series_id": "brent",
       "label": "Brent Crude",
-      "value": 130.8,
+      "value": 114.89,
       "unit": "$/bbl"
     },
     {
@@ -17,7 +17,7 @@
     {
       "series_id": "ccsa",
       "label": "Continued Jobless Claims",
-      "value": 1730000.0,
+      "value": 1719000.0,
       "unit": ""
     },
     {
@@ -47,25 +47,25 @@
     {
       "series_id": "dgs10",
       "label": "10Y Treasury",
-      "value": 4.94,
+      "value": 5.18,
       "unit": "%"
     },
     {
       "series_id": "dgs2",
       "label": "2Y Treasury",
-      "value": 4.67,
+      "value": 4.87,
       "unit": "%"
     },
     {
       "series_id": "dgs30",
       "label": "30Y Treasury",
-      "value": 5.29,
+      "value": 5.47,
       "unit": "%"
     },
     {
       "series_id": "dgs5",
       "label": "5Y Treasury",
-      "value": 4.78,
+      "value": 5.03,
       "unit": "%"
     },
     {
@@ -89,25 +89,25 @@
     {
       "series_id": "hy_oas",
       "label": "HY Credit Spread (OAS)",
-      "value": 270,
+      "value": 280,
       "unit": "bp"
     },
     {
       "series_id": "icsa",
       "label": "Initial Jobless Claims",
-      "value": 196000.0,
+      "value": 197000.0,
       "unit": ""
     },
     {
       "series_id": "ig_oas",
       "label": "IG Credit Spread (OAS)",
-      "value": 78,
+      "value": 79,
       "unit": "bp"
     },
     {
       "series_id": "mortgage30",
       "label": "30yr Mortgage Rate",
-      "value": 6.95,
+      "value": 7.03,
       "unit": "%"
     },
     {
@@ -137,13 +137,13 @@
     {
       "series_id": "spread_10_2_bp",
       "label": "10Y-2Y Spread",
-      "value": 27,
+      "value": 31,
       "unit": "bp"
     },
     {
       "series_id": "tdsp",
       "label": "Debt Service Ratio",
-      "value": 11.164138,
+      "value": 11.111439,
       "unit": "%"
     },
     {
@@ -155,7 +155,7 @@
     {
       "series_id": "umcsent",
       "label": "UMich Consumer Sentiment",
-      "value": 47.8,
+      "value": 48.1,
       "unit": "index"
     },
     {
@@ -173,7 +173,7 @@
     {
       "series_id": "wti",
       "label": "WTI Crude",
-      "value": 107.02,
+      "value": 96.41,
       "unit": "$/bbl"
     }
   ]
