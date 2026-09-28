@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-09-28T18:18:22.056659Z",
+  "validated_at": "2026-09-28T18:40:39.315273Z",
   "status": "WARN",
   "summary": {
     "total_checks": 565,
-    "passed": 552,
-    "failed": 13,
-    "skipped": 14,
+    "passed": 551,
+    "failed": 14,
+    "skipped": 2,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -389,19 +389,19 @@
     },
     {
       "check": "MORTGAGE_DATA.rate30 completeness",
-      "html_value": "37/37 filled",
+      "html_value": "38/38 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 18,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "MORTGAGE_DATA.ffr completeness",
-      "html_value": "37/37 filled",
+      "html_value": "38/38 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 18,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
@@ -470,7 +470,7 @@
     },
     {
       "check": "STARTS_DATA.sf completeness",
-      "html_value": "36/36 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 18,
@@ -479,7 +479,7 @@
     },
     {
       "check": "STARTS_DATA.mf completeness",
-      "html_value": "36/36 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 18,
@@ -589,56 +589,83 @@
   "source_verification": [
     {
       "check": "FRED UNRATE (latest)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 4.1,
+      "fresh_api_value": 4.1,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPIAUCSL (latest index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 334.131,
+      "fresh_api_value": 334.131,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED CPILFESL (core CPI index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 337.765,
+      "fresh_api_value": 337.765,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 131.659,
+      "fresh_api_value": 131.659,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 130.658,
+      "fresh_api_value": 130.658,
+      "difference": 0.0,
+      "tolerance": 0.5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 5.18,
+      "fresh_api_value": 5.18,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED DFF",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 3.88,
+      "fresh_api_value": 3.88,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED PAYEMS (latest level, 000s)",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 159075.0,
+      "fresh_api_value": 159075.0,
+      "difference": 0.0,
+      "tolerance": 5,
+      "severity": "ok",
       "pass": true
     },
     {
       "check": "FRED MORTGAGE30US",
-      "severity": "skipped",
-      "reason": "API unavailable (key missing or timeout)",
+      "raw_data_value": 7.03,
+      "fresh_api_value": 7.03,
+      "difference": 0.0,
+      "tolerance": 0.05,
+      "severity": "ok",
       "pass": true
     },
     {
@@ -1094,7 +1121,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-09-28T18:16:56.724174Z",
+      "collected_at": "2026-09-28T18:38:46.030889Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3776,20 +3803,35 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.1,
+      "bls": 4,
+      "diff": 0.1,
+      "tol": 0.2,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
-      "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "pass": false,
+      "severity": "warning",
+      "metric": "cpi_all",
+      "fred": 334.131,
+      "bls": 335,
+      "diff": 0.869,
+      "tol": 0.335,
+      "note": "FRED 334.131 vs BLS 335 (\u0394=0.8690, tol=0.3350). One side may be stale or revised."
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "core_cpi",
+      "fred": 337.765,
+      "bls": 338,
+      "diff": 0.235,
+      "tol": 0.338,
+      "note": null
     }
   ]
 }

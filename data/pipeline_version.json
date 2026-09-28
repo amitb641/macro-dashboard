@@ -1,49 +1,8 @@
 {
   "schema_version": 1,
-  "last_updated": "2026-09-28T18:18:22.676919Z",
+  "last_updated": "2026-09-28T18:40:39.885576Z",
   "total_runs": 20,
   "runs": [
-    {
-      "run_at": "2026-05-13T16:27:38.774587Z",
-      "git_sha": "54ca15b",
-      "git_branch": "main",
-      "collected_at": "2026-05-13T16:26:31.124481Z",
-      "series_count": 79,
-      "collector_errors": 0,
-      "key_values": {
-        "unemployment": {
-          "date": "2026-04-01",
-          "value": 4.3
-        },
-        "cpi_index": {
-          "date": "2026-04-01",
-          "value": 332.407
-        },
-        "payrolls": {
-          "date": "2026-04-01",
-          "value": 158736.0
-        },
-        "treasury_10y": {
-          "date": "2026-05-11",
-          "value": 4.42
-        },
-        "fed_funds": {
-          "date": "2026-04-01",
-          "value": 3.64
-        }
-      },
-      "risk_level": "HIGH",
-      "alert_count": 3,
-      "validation_status": "WARN",
-      "validation_summary": {
-        "total_checks": 512,
-        "passed": 499,
-        "failed": 13,
-        "skipped": 3,
-        "critical_divergences": 0
-      },
-      "html_size": 539140
-    },
     {
       "run_at": "2026-05-13T20:50:34.294854Z",
       "git_sha": "d1bb202",
@@ -954,6 +913,47 @@
         "critical_divergences": 0
       },
       "html_size": 527692
+    },
+    {
+      "run_at": "2026-09-28T18:40:39.885576Z",
+      "git_sha": "b5180d0",
+      "git_branch": "main",
+      "collected_at": "2026-09-28T18:38:46.030889Z",
+      "series_count": 81,
+      "collector_errors": 0,
+      "key_values": {
+        "unemployment": {
+          "date": "2026-08-01",
+          "value": 4.1
+        },
+        "cpi_index": {
+          "date": "2026-08-01",
+          "value": 334.131
+        },
+        "payrolls": {
+          "date": "2026-08-01",
+          "value": 159075.0
+        },
+        "treasury_10y": {
+          "date": "2026-09-24",
+          "value": 5.18
+        },
+        "fed_funds": {
+          "date": "2026-09-24",
+          "value": 3.88
+        }
+      },
+      "risk_level": "HIGH",
+      "alert_count": 3,
+      "validation_status": "WARN",
+      "validation_summary": {
+        "total_checks": 565,
+        "passed": 551,
+        "failed": 14,
+        "skipped": 2,
+        "critical_divergences": 0
+      },
+      "html_size": 527728
     }
   ]
 }
