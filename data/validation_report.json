@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-09-28T18:19:58.923099Z",
+  "validated_at": "2026-09-28T18:41:39.709998Z",
   "status": "WARN",
   "summary": {
     "total_checks": 703,
@@ -407,19 +407,19 @@
     },
     {
       "check": "MORTGAGE_DATA.rate30 completeness",
-      "html_value": "37/37 filled",
+      "html_value": "38/38 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 18,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "MORTGAGE_DATA.ffr completeness",
-      "html_value": "37/37 filled",
+      "html_value": "38/38 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 18,
+      "tolerance": 19,
       "severity": "ok",
       "pass": true
     },
@@ -488,7 +488,7 @@
     },
     {
       "check": "STARTS_DATA.sf completeness",
-      "html_value": "36/36 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 18,
@@ -497,7 +497,7 @@
     },
     {
       "check": "STARTS_DATA.mf completeness",
-      "html_value": "36/36 filled",
+      "html_value": "37/37 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 18,
@@ -1139,7 +1139,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-09-28T18:17:05.856126Z",
+      "collected_at": "2026-09-28T18:40:08.912081Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
