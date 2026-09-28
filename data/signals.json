@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-09-28T17:33:28.686886Z",
+  "analyzed_at": "2026-09-28T18:17:28.352093Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 3,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.88,
     "dgs2": 4.87,
@@ -39,9 +39,9 @@
   "signals": {
     "ffr": {
       "value": 3.88,
-      "delta": 0.25,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": null
     },
     "dgs10": {
@@ -53,14 +53,14 @@
     },
     "ig_oas": {
       "value": 81,
-      "delta": 2,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 293,
-      "delta": 13,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,12 +241,6 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "ffr",
-      "line": "ffr: 3.88 (\u25b20.25 vs prior)",
-      "alert": null
-    }
-  ],
+  "headlines": [],
   "raw_errors": []
 }
