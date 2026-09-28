@@ -1,5 +1,5 @@
 {
-  "validated_at": "2026-09-28T17:35:22.892454Z",
+  "validated_at": "2026-09-28T18:19:58.923099Z",
   "status": "WARN",
   "summary": {
     "total_checks": 703,
@@ -389,19 +389,19 @@
     },
     {
       "check": "FFR_DATA.actual completeness",
-      "html_value": "36/39 filled",
+      "html_value": "37/40 filled",
       "source_value": "92% (min 50%)",
       "difference": 3,
-      "tolerance": 19,
+      "tolerance": 20,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "FFR_DATA.dots completeness",
-      "html_value": "4/39 filled",
+      "html_value": "4/40 filled",
       "source_value": "10% (min 10%)",
-      "difference": 35,
-      "tolerance": 19,
+      "difference": 36,
+      "tolerance": 20,
       "severity": "ok",
       "pass": true
     },
@@ -1139,7 +1139,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-09-28T17:32:45.993835Z",
+      "collected_at": "2026-09-28T18:17:05.856126Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4658,7 +4658,7 @@
   ],
   "secret_leaks": [
     {
-      "check": "Secret leak scan (36 JSON files)",
+      "check": "Secret leak scan (40 JSON files)",
       "pass": true,
       "severity": "ok",
       "note": "no api_key/token/key= patterns detected"

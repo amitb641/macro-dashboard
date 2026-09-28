@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-var BUILD_V = "2026-09-28T17:34:25Z";
+var BUILD_V = "2026-09-28T18:19:17Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -7035,7 +7035,7 @@ const HOUSING_METROS = [
 // Treasury yield history (annual avg from FRED DGS10, DGS2) + latest
 // Card 90+ DPD aligned to same annual labels (NY Fed HHDC, annual or latest quarterly)
 let TREASURY_DATA = null;
-const FFR_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "GS 26F", "JPM 26F", "MS 26F"], "actual":[8.1, 5.69, 3.52, 3.02, 4.2, 5.84, 5.3, 5.46, 5.35, 4.97, 6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 3.88, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.21, 3.25, 3.75, 3.25]};
+const FFR_DATA = {"labels":["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "GS 26F", "JPM 26F", "MS 26F"], "actual":[8.1, 5.69, 3.52, 3.02, 4.2, 5.84, 5.3, 5.46, 5.35, 4.97, 6.24, 3.89, 1.67, 1.13, 1.35, 3.21, 4.96, 5.02, 1.93, 0.16, 0.18, 0.1, 0.14, 0.11, 0.09, 0.13, 0.4, 1.0, 1.83, 2.16, 0.38, 0.08, 1.68, 5.02, 5.14, 4.21, 3.88, null, null, null], "dots":[null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 3.88, 3.25, 3.75, 3.25]};
 // Fed hiking cycles: 2015-18 (+225bp), 2022-23 (+525bp fastest since 1980)
 // Cutting cycles: 2019 (−75bp), 2020 (−150bp COVID), 2024 (−100bp)
 const SPREADS_DATA = {"labels":["2023", "2024", "2025", "Sep'26"], "ig":[119, 92, 86, 81], "hy":[397, 315, 305, 293]};
@@ -7153,7 +7153,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":["Jun 29","Jun 30","Jul 1","Jul 2","Jul 3","Jul 6","Jul 7","Jul 8","Jul 9","Jul 10","Jul 13","Jul 14","Jul 15","Jul 16","Jul 17","Jul 20","Jul 21","Jul 22","Jul 23","Jul 24","Jul 27","Jul 28","Jul 29","Jul 30","Jul 31","Aug 3","Aug 4","Aug 5","Aug 6","Aug 7","Aug 10","Aug 11","Aug 12","Aug 13","Aug 14","Aug 17","Aug 18","Aug 19","Aug 20","Aug 21","Aug 24","Aug 25","Aug 26","Aug 27","Aug 28","Aug 31","Sep 1","Sep 2","Sep 3","Sep 4","Sep 7","Sep 8","Sep 9","Sep 10","Sep 11","Sep 14","Sep 15","Sep 16","Sep 17","Sep 18","Sep 21","Sep 22"],"wti":[71.87,70.56,69.74,69.73,69.73,69.6,71.53,74.56,73.15,72.45,79.2,80.44,80.73,80.03,83.43,84.38,86.04,87.66,93.08,91.74,84.25,80.91,86.08,85.15,86.16,81.96,77.33,76.78,78.88,79.77,83.76,84.77,84.97,82.77,83.99,86.04,86.48,87.28,89.75,87.21,86.34,83.9,83.46,84.81,84.57,87.03,91.48,92.15,92.55,92.69,92.69,94.21,97.26,103.57,101.27,102.42,107.02,103.62,103.21,101.44,96.97,96.41],"brent":[null,70.46,69.24,68.53,68.68,69.56,71.78,76.5,74.46,74.34,81.62,83.69,83.08,81.23,85.01,86.99,93.85,94.12,105.32,100.31,91.82,85.51,91.95,91.91,96.95,88.9,86.47,86.65,89.65,87.62,92.74,93.26,92.52,92.03,92.02,92.43,95.29,92.37,94.0,96.92,92.71,88.24,87.77,90.18,89.75,89.75,96.02,97.59,100.52,102.24,104.47,106.12,109.51,120.98,118.06,121.25,130.8,127.84,121.18,119.66,116.15,114.89],"notes":[null,null,null,null,null,null,null,"WTI surge $3.0 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $6.8 (9.3%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $3.4 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $5.4 (6.2%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $7.5 (8.2%) \u2014 pipeline updates this field with market headlines","WTI drop $3.3 (4.0%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.2 (4.9%) \u2014 pipeline updates this field with market headlines","WTI drop $4.6 (5.6%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $4.0 (5.0%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,null,null,"WTI drop $2.5 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,"WTI surge $4.5 (5.1%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,"WTI surge $3.1 (3.2%) \u2014 pipeline updates this field with market headlines","WTI surge $6.3 (6.5%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.6 (4.5%) \u2014 pipeline updates this field with market headlines","WTI drop $3.4 (3.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.5 (4.4%) \u2014 pipeline updates this field with market headlines",null],"month":"Mar\u2013Sep 2026","updated":"Sep 28 17:33 UTC","sessions":62};
+const OIL_DAILY = {"labels":["Jun 29","Jun 30","Jul 1","Jul 2","Jul 3","Jul 6","Jul 7","Jul 8","Jul 9","Jul 10","Jul 13","Jul 14","Jul 15","Jul 16","Jul 17","Jul 20","Jul 21","Jul 22","Jul 23","Jul 24","Jul 27","Jul 28","Jul 29","Jul 30","Jul 31","Aug 3","Aug 4","Aug 5","Aug 6","Aug 7","Aug 10","Aug 11","Aug 12","Aug 13","Aug 14","Aug 17","Aug 18","Aug 19","Aug 20","Aug 21","Aug 24","Aug 25","Aug 26","Aug 27","Aug 28","Aug 31","Sep 1","Sep 2","Sep 3","Sep 4","Sep 7","Sep 8","Sep 9","Sep 10","Sep 11","Sep 14","Sep 15","Sep 16","Sep 17","Sep 18","Sep 21","Sep 22"],"wti":[71.87,70.56,69.74,69.73,69.73,69.6,71.53,74.56,73.15,72.45,79.2,80.44,80.73,80.03,83.43,84.38,86.04,87.66,93.08,91.74,84.25,80.91,86.08,85.15,86.16,81.96,77.33,76.78,78.88,79.77,83.76,84.77,84.97,82.77,83.99,86.04,86.48,87.28,89.75,87.21,86.34,83.9,83.46,84.81,84.57,87.03,91.48,92.15,92.55,92.69,92.69,94.21,97.26,103.57,101.27,102.42,107.02,103.62,103.21,101.44,96.97,96.41],"brent":[null,70.46,69.24,68.53,68.68,69.56,71.78,76.5,74.46,74.34,81.62,83.69,83.08,81.23,85.01,86.99,93.85,94.12,105.32,100.31,91.82,85.51,91.95,91.91,96.95,88.9,86.47,86.65,89.65,87.62,92.74,93.26,92.52,92.03,92.02,92.43,95.29,92.37,94.0,96.92,92.71,88.24,87.77,90.18,89.75,89.75,96.02,97.59,100.52,102.24,104.47,106.12,109.51,120.98,118.06,121.25,130.8,127.84,121.18,119.66,116.15,114.89],"notes":[null,null,null,null,null,null,null,"WTI surge $3.0 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $6.8 (9.3%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $3.4 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $5.4 (6.2%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $7.5 (8.2%) \u2014 pipeline updates this field with market headlines","WTI drop $3.3 (4.0%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.2 (4.9%) \u2014 pipeline updates this field with market headlines","WTI drop $4.6 (5.6%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $4.0 (5.0%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,null,null,"WTI drop $2.5 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,"WTI surge $4.5 (5.1%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,"WTI surge $3.1 (3.2%) \u2014 pipeline updates this field with market headlines","WTI surge $6.3 (6.5%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.6 (4.5%) \u2014 pipeline updates this field with market headlines","WTI drop $3.4 (3.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.5 (4.4%) \u2014 pipeline updates this field with market headlines",null],"month":"Mar\u2013Sep 2026","updated":"Sep 28 18:17 UTC","sessions":62};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -8282,10 +8282,47 @@ function buildYieldTab(){
   var _t10Lbl = _t10Kpi.lbl || "10Y Treasury";
   var _t10Sub = _t10Kpi.sub || "";
 
+  // GS/JPM forecast values + the Fed Funds sub-line used to be separate
+  // hardcoded strings here (independent of FFR_DATA, the array the chart
+  // just below actually renders) — found 2026-09-28 stale and internally
+  // contradictory (an "On hold" sub-line sitting under a rate that had
+  // just moved 25bp, a "2024" cutting-cycle reference with no path to
+  // ever update). Derive both the forecast values and their sub-text
+  // from FFR_DATA + the live KPI value instead, so they can't drift from
+  // the chart or from each other again, and drop the parts that can't be
+  // derived (specific FOMC meeting months, "base case"/"tariff risk"
+  // framing) rather than leave them silently unverifiable — same
+  // standard this project already holds bank-earnings commentary to.
+  var _ffrCurNum = parseFloat(_ffrVal);
+  function _ffrDotAt(label){
+    var i = (FFR_DATA.labels || []).indexOf(label);
+    return i >= 0 ? FFR_DATA.dots[i] : null;
+  }
+  var _ffrActualIdx = [];
+  (FFR_DATA.actual || []).forEach(function(v, i){ if (v !== null) _ffrActualIdx.push(i); });
+  var _ffrPriorNum = _ffrActualIdx.length >= 2 ? FFR_DATA.actual[_ffrActualIdx[_ffrActualIdx.length - 2]] : null;
+  var _ffrPriorLbl = _ffrActualIdx.length >= 2 ? FFR_DATA.labels[_ffrActualIdx[_ffrActualIdx.length - 2]] : null;
+  var _ffrSub = (_ffrPriorNum != null && !isNaN(_ffrCurNum))
+    ? ((_ffrCurNum - _ffrPriorNum >= 0 ? "+" : "") + (_ffrCurNum - _ffrPriorNum).toFixed(2) + "pp vs " + _ffrPriorLbl + " · FOMC effective rate")
+    : "FOMC effective rate";
+  function _fcTile(label){
+    var target = _ffrDotAt(label);
+    if (target == null || isNaN(_ffrCurNum)) return { val: "—", sub: "Year-end target" };
+    var d = _ffrCurNum - target;
+    if (Math.abs(d) < 0.05) return { val: target.toFixed(2) + "%", sub: "At target" };
+    var cuts = Math.round(Math.abs(d) / 0.25);
+    return {
+      val: target.toFixed(2) + "%",
+      sub: (d > 0 ? "−" : "+") + Math.abs(d).toFixed(2) + "pp to target · ~" + cuts + (cuts === 1 ? " cut" : " cuts") + " implied"
+    };
+  }
+  var _gsTile = _fcTile("GS 26F");
+  var _jpmTile = _fcTile("JPM 26F");
+
   document.getElementById("yield-metrics").innerHTML = [
-    {lbl:_ffrLbl,                    val:_ffrVal,   sub:"On hold · 100bp cuts Sep–Dec 2024 · FOMC",     col:"#336BCC"},
-    {lbl:"GS Rate Forecast 2026F",   val:"3.25%",   sub:"2 cuts Jun + Sep · base case consensus",        col:"#1A9E5A"},
-    {lbl:"JPM Rate Forecast 2026F",  val:"3.75%",   sub:"Cautious — 1 cut only · tariff inflation risk", col:"#CC8A00"},
+    {lbl:_ffrLbl,                    val:_ffrVal,     sub:_ffrSub,     col:"#336BCC"},
+    {lbl:"GS Rate Forecast 2026F",   val:_gsTile.val,  sub:_gsTile.sub, col:"#1A9E5A"},
+    {lbl:"JPM Rate Forecast 2026F",  val:_jpmTile.val, sub:_jpmTile.sub,col:"#CC8A00"},
     {lbl:_t10Lbl,                    val:_t10Val,   sub:_t10Sub.replace(/^Daily(?: · )?/, "") || "Daily yield · live",col:"#8878B8"},
 
   ].map(m=>_mTile(m)).join("");
@@ -10398,8 +10435,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-09-28T17:34:25Z">
-<script src="theme-overlay.js?v=2026-09-28T17:34:25Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-09-28T18:19:17Z">
+<script src="theme-overlay.js?v=2026-09-28T18:19:17Z"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
