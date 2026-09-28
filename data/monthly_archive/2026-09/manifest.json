@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "month": "2026-09",
+  "source_run_date": "2026-09-28",
+  "archived_at": "2026-09-28T17:35:51.285770Z",
+  "git_sha": "29ece15",
+  "branch": "dev/multi-expert-improvements",
+  "files": [
+    "raw_data.json",
+    "state.json",
+    "index.html",
+    "metrics.json"
+  ],
+  "sizes": {
+    "raw_data.json": 2166096,
+    "state.json": 40498,
+    "index.html": 759103,
+    "metrics.json": 3552
+  },
+  "sha256": {
+    "raw_data.json": "cd247d6d416c579943abd591988957bb72be5e59fc07f988ad7d1b54b689cef2",
+    "state.json": "c8c686918775db56c213236355469255f46c47903c8a6c589afb6ef9b401b959",
+    "index.html": "206c7b7534f6eb48159feb759dfac1f31be518c4e64ef65975aa55e50cd68c47",
+    "metrics.json": "994ac1c9a8597414eba414ebd7e57a22e5e8775e6fc90723976ae15dcd95ba71"
+  },
+  "validation_status": "WARN",
+  "validation_summary": {
+    "total_checks": 703,
+    "passed": 700,
+    "failed": 3,
+    "skipped": 1,
+    "critical_divergences": 0
+  },
+  "ceo_grade_verdict": "FAIL"
+}
