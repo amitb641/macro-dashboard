@@ -265,8 +265,20 @@ def collect():
 
     # ── Daily: rates, spreads, oil ────────────────────────────────────
     print('  [Daily] Rates + Yields...')
-    data['ffr']         = fv('FEDFUNDS')
     data['dff']         = fv('DFF')
+    # 'ffr' (the "Fed Funds Rate" headline KPI, read by renderer/analyzer/
+    # briefing_agent/publisher/validator/monthly_archive/etc. -- see the
+    # CLAUDE.md gotcha for the full list) aliases the daily DFF value
+    # rather than fetching FEDFUNDS (the monthly average). Found 2026-09-28
+    # via a user report ("fed rate not updated"): FEDFUNDS's reference date
+    # is always the 1st of the month and can legitimately lag up to ~58
+    # days behind the same-day DGS2/DGS10/etc. tiles it's displayed next
+    # to on the Fed Rates tab -- the headline tile was showing August's
+    # 3.63% average while the real, current daily rate (DFF) had already
+    # moved to 3.88% (a genuine 25bp FOMC move the monthly average hadn't
+    # caught up to yet), not a fetch failure. No duplicate API call: reuse
+    # the DFF fetch immediately above instead of a second fv('FEDFUNDS').
+    data['ffr']         = data['dff']
     data['dgs2']        = fv('DGS2')
     data['dgs5']        = fv('DGS5')
     data['dgs10']       = fv('DGS10')

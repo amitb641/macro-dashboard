@@ -472,8 +472,13 @@ def check_sources(data):
     # Fed Funds Rate
     ffr = data.get('ffr')
     if ffr and isinstance(ffr, dict):
-        result = _fred_latest('FEDFUNDS')
-        _verify('FRED FEDFUNDS', ffr['value'], result, 'rate')
+        # 'ffr' aliases the daily DFF series (not the monthly FEDFUNDS
+        # average) since 2026-09-28 -- see collector.py's comment at the
+        # data['ffr'] assignment. Verify against the same series it's
+        # actually sourced from; checking against FEDFUNDS here would
+        # permanently fail every run (different series, different values).
+        result = _fred_latest('DFF')
+        _verify('FRED DFF', ffr['value'], result, 'rate')
 
     # Payrolls (PAYEMS)
     payems = data.get('payems', [])
@@ -643,19 +648,16 @@ def check_staleness(data, collected_at):
         'wti_daily':   12,
         'brent_daily': 12,
 
-        # FEDFUNDS is the monthly-average rate (distinct from the daily DFF
-        # series above), dated to the 1st of its reference month like every
-        # other FRED monthly series — age legitimately reaches ~55-60d right
-        # before the next month's average posts, not just "5-10d after
-        # month end" (that's the lag at *publication*, not the age ceiling
-        # right before the *next* publication). Live-verified against FRED
-        # 2026-08-26: this pattern (a naive lag-at-publication number used
-        # as the threshold, rather than the age-at-next-publication
-        # ceiling) was the root cause of every monthly/quarterly
-        # false-positive found in this audit — see jolts/adp_latest/
-        # wage_growth_atl/gdpc1/gdp_growth/ig_oas_monthly/hy_oas_monthly
-        # below, all corrected the same way after live FRED verification.
-        'ffr': 65,
+        # 'ffr' now aliases the daily DFF series (fixed 2026-09-28 — a
+        # user report that the Fed Funds tile "wasn't updating" traced to
+        # data['ffr'] sourcing FEDFUNDS, the *monthly* average, which can
+        # legitimately lag ~55-60d behind the same-day DGS2/DGS10 tiles it
+        # sits next to; the headline showed a stale pre-hike rate while
+        # the real daily rate had already moved 25bp). Threshold matches
+        # dff's own 12d daily-cadence ceiling now, not the old
+        # monthly-average reasoning (kept below on jolts/adp_latest/etc.
+        # for the series that are genuinely still monthly/quarterly).
+        'ffr': 12,
 
         # JOLTS — live-verified against FRED 2026-08-26: actual latest was
         # 86 days old and was genuinely current (next release Sep 1, which
