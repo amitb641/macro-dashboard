@@ -468,6 +468,30 @@ def rebuild_charts(html, data):
     ffr_a = data.get('fedfunds_annual', [])
     if ffr_a:
         labels, values = _annual_from_freq(ffr_a, precision=2)
+        # FEDFUNDS' frequency='a' aggregation only ever produces a
+        # *complete* calendar year (found 2026-09-28) -- it never emits a
+        # partial in-progress-year bucket, so `labels[-1]` stays the last
+        # FINISHED year (e.g. "2025") for the entire following year. The
+        # separate weekly render_rates() patch (patch_array_last('actual',
+        # ffr)) blindly overwrites whatever the array's last slot is with
+        # THIS WEEK's live current rate -- meaning every week since the
+        # calendar rolled into the new year, it was silently clobbering
+        # the prior, real, complete year's true annual average with a
+        # live in-year snapshot, all while the label stayed frozen on the
+        # old year. Confirmed via an early-2026 archive: the "2025" slot
+        # read 3.64 in July 2026 and had drifted to 3.88 by September --
+        # tracking that week's current rate, not a fixed historical
+        # average. Fix: explicitly append a genuine current-year bucket
+        # here whenever FRED's own annual data hasn't caught up yet, so
+        # the prior complete year is preserved untouched and the weekly
+        # patch's "last slot" naturally becomes this new, correctly
+        # labeled bucket instead of the old one.
+        cur_year = str(datetime.date.today().year)
+        if labels and labels[-1] != cur_year:
+            cur_ffr = data.get('ffr')
+            if cur_ffr and isinstance(cur_ffr, dict):
+                labels.append(cur_year)
+                values.append(round(cur_ffr['value'], 2))
         # Add forecast dots (null for historical, values for forecasts)
         dots = [None] * len(labels)
         # Append last actual year's dot
