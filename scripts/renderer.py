@@ -557,6 +557,27 @@ def rebuild_charts(html, data):
         common = [l for l in m_labels if l in f_labels]
         rate30 = [m_values[m_labels.index(l)] for l in common]
         ffr = [f_values[f_labels.index(l)] for l in common]
+        # Same fix as FFR_DATA above: mortgage30_annual/fedfunds_annual only
+        # emit a *complete* calendar year, so `common[-1]` stayed frozen on
+        # the last finished year through the following year -- and the
+        # weekly patch_array_last(html, 'rate30', mtg, 2) call in
+        # render_housing() (unscoped, so it targets whatever the array's
+        # literal LAST element currently is) landed on the `_fc_yr` forecast
+        # placeholder appended below, not a real year -- meaning that
+        # placeholder's hardcoded 6.0 never survived a single render; it
+        # silently mirrored that week's live rate instead (confirmed via a
+        # July 2026 archive: 6.51 then, drifted to 7.03 by September, never
+        # the intended 6.0). Explicitly add a genuine current-year bucket
+        # here so the weekly patch targets *that* instead, leaving the
+        # forecast placeholder's value alone.
+        cur_year = str(datetime.date.today().year)
+        if common and common[-1] != cur_year:
+            cur_mtg = data.get('mortgage30')
+            cur_ffr_v = data.get('ffr')
+            if cur_mtg and isinstance(cur_mtg, list) and isinstance(cur_ffr_v, dict):
+                common.append(cur_year)
+                rate30.append(round(cur_mtg[0]['value'], 2))
+                ffr.append(round(cur_ffr_v['value'], 2))
         # Add forecast (dynamic year)
         _fc_yr = str(datetime.date.today().year + 1) + 'F'
         if common and common[-1] != _fc_yr:
@@ -576,6 +597,27 @@ def rebuild_charts(html, data):
         common = [l for l in t_labels if l in s_labels]
         sf = [round(s_values[s_labels.index(l)]) for l in common]
         mf = [round(t_values[t_labels.index(l)] - s_values[s_labels.index(l)]) for l in common]
+        # Same corruption class as FFR_DATA/MORTGAGE_DATA above, different
+        # shape: _annual_avg() deliberately SKIPS the current year (see its
+        # own "Skip current year (partial)" comment) -- so `common[-1]`
+        # stays on the last complete year ("2025") through all of the
+        # following year. render_housing()'s weekly
+        # patch_array_last(html, 'sf', round(starts), 0) call then blindly
+        # overwrote that "2025" slot with the live current *TOTAL* starts
+        # figure (vals['housing_starts'], sourced from 'houst' -- not
+        # single-family-specific 'houst1f' at all) every week -- a second,
+        # compounding bug (wrong year AND wrong metric). Confirmed via a
+        # July 2026 archive: sf's last value read 1465 then, drifted to
+        # 1275 by September, while mf (never separately patched) stayed
+        # exactly stable at 415 both times. Fix: append a genuine
+        # current-year bucket here using the correct single/multi-family
+        # split, so the (also-fixed, see render_housing()) weekly patch
+        # targets the right slot with the right metric.
+        cur_year = str(datetime.date.today().year)
+        if common and common[-1] != cur_year and houst and houst1f:
+            common.append(cur_year)
+            sf.append(round(houst1f[0]['value']))
+            mf.append(round(houst[0]['value'] - houst1f[0]['value']))
         if common:
             html = _inject_const(html, 'STARTS_DATA', {
                 'labels': common, 'sf': sf, 'mf': mf})
@@ -2064,7 +2106,14 @@ def render_rates(html, data, vals, tabs):
     ffr_s   = data.get('ffr')
     dgs10_s = data.get('dgs10')
     if ffr is not None and ffr_s:
-        html = patch_array_last(html, 'actual', ffr, 2)
+        # No patch_array_last('actual', ...) here anymore -- rebuild_charts()
+        # (runs earlier, every render) already sets FFR_DATA's current-year
+        # bucket correctly and fresh from the same data['ffr']. This weekly
+        # patch was fully redundant with that, and relied on a "last
+        # numeric value" heuristic that broke for the sibling MORTGAGE_DATA
+        # fix below (its forecast slot holds a real number, not null) --
+        # removed here too for the same reason, before it could ever cause
+        # the identical failure if FFR_DATA's forecast convention changes.
         ffr_lbl = f"Fed Funds Rate ({month_label(ffr_s['date'])})"
         html = patch_kpi_full(html, "Fed Funds Rate (Jan '26)", ffr_lbl, f'{ffr:.2f}%')
 
@@ -2478,10 +2527,24 @@ def render_housing(html, data, vals, tabs):
         mtg_date = mtg_s[0].get('date','') if mtg_s else ''
         mtg_lbl = f"30yr Mortgage {month_label(mtg_date)}" if mtg_date else '30yr Mortgage'
         html = patch_kpi_full(html, '30yr Mortgage 2025', mtg_lbl, f'{mtg:.2f}%')
-        html = patch_array_last(html, 'rate30', mtg, 2)
+        # No patch_array_last('rate30', ...) here anymore -- rebuild_charts()
+        # already sets MORTGAGE_DATA's current-year bucket correctly and
+        # fresh every render. This weekly patch used to be actively
+        # HARMFUL, not just redundant: MORTGAGE_DATA's forecast slot
+        # ("2027F") holds a real hardcoded number (6.0), not null, so
+        # patch_array_last's "last numeric value in the array" heuristic
+        # kept landing on the forecast placeholder instead of any real
+        # year -- silently overwriting the intended 6.0 forecast with
+        # that week's live current rate, every single run (found 2026-09,
+        # confirmed via a July archive showing that slot drift from 6.51
+        # to 7.03 over two months -- never once the intended 6.0).
 
-    if starts is not None:
-        html = patch_array_last(html, 'sf', round(starts), 0)
+    # No patch_array_last('sf', ...) here anymore either -- rebuild_charts()
+    # now sets STARTS_DATA's current-year bucket correctly (single-family
+    # value from 'houst1f'). This call used to patch the WRONG metric in
+    # (vals['housing_starts'] is TOTAL starts from 'houst', not
+    # single-family) on top of landing on the wrong ("2025") year -- see
+    # the STARTS_DATA construction above for the full writeup.
 
     txt = tabs.get('housing', '')
     if txt: html = patch_commentary(html, 'housing', txt)
