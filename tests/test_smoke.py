@@ -499,6 +499,63 @@ def test_renderer_idempotent(tmp_dir):
           f'size changed by {size_diff} bytes ({first_size} → {second_size})')
 
 
+def test_oil_window_coverage(tmp_dir):
+    """Regression guard for the OIL_DAILY fetch-window bug (fixed 2026-09-28):
+    collector.py used to fetch a fixed 60 most-recent daily oil observations,
+    commented '~2 months to cover from Mar 1' -- true only when run close to
+    March. By Sep 28 2026, 60 trading days back landed on Jun 29, silently
+    truncating build_oil_daily()'s own Mar-1 filter input and losing ~4
+    months of the shock tracker's claimed history (the chart's own date
+    range drifted off its "Since Mar 2026" banner). Fixed by sizing the
+    fetch window from the actual calendar gap; this test guards the
+    self-check (check_oil_window_coverage) that now catches a regression
+    of the same shape offline, without live API keys.
+    """
+    print('\n── Test: Oil Daily Window Coverage Guard ──')
+    import collector
+    import datetime as _dt
+
+    today = _dt.date(2026, 9, 28)
+
+    # Simulate the bug: a fixed-count fetch that only reaches back 60
+    # trading days (~Jun 29), same shape as the original defect.
+    truncated = [{'date': (today - _dt.timedelta(days=i)).isoformat(), 'value': 90.0}
+                 for i in range(0, 62, 1) if (today - _dt.timedelta(days=i)).weekday() < 5][:60]
+    errs = collector.check_oil_window_coverage(truncated, [], today=today)
+    _test(
+        'check_oil_window_coverage flags a window that does not reach Mar 1',
+        len(errs) == 1 and 'OIL_DAILY window too short' in errs[0],
+        f'Expected exactly one "window too short" finding, got: {errs!r}',
+    )
+
+    # Healthy case: window genuinely reaches back to (near) March 1.
+    healthy = truncated + [{'date': '2026-03-02', 'value': 71.0},
+                            {'date': '2026-03-03', 'value': 71.5}]
+    errs2 = collector.check_oil_window_coverage(healthy, [], today=today)
+    _test(
+        'check_oil_window_coverage stays silent when the window reaches Mar 1',
+        errs2 == [],
+        f'Expected no findings for a healthy window, got: {errs2!r}',
+    )
+
+    # Boundary: a 5-day-late start is within tolerance (weekends/holidays).
+    boundary = [{'date': '2026-03-05', 'value': 71.2}]
+    errs3 = collector.check_oil_window_coverage(boundary, [], today=today)
+    _test(
+        'check_oil_window_coverage tolerates a <=5-day gap from Mar 1',
+        errs3 == [],
+        f'Expected no findings within the 5-day tolerance, got: {errs3!r}',
+    )
+
+    # Malformed/missing-date observations must not crash the check.
+    errs4 = collector.check_oil_window_coverage([{'value': 1.0}, {'date': None, 'value': 2.0}], [], today=today)
+    _test(
+        'check_oil_window_coverage tolerates malformed observations without crashing',
+        errs4 == [],
+        f'Expected no findings (no valid dates to check), got: {errs4!r}',
+    )
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════
@@ -548,6 +605,7 @@ def main():
         test_snapshot(tmp_dir)
         test_monthly_archive(tmp_dir)
         test_healthcheck_module()
+        test_oil_window_coverage(tmp_dir)
         test_no_real_file_mutation(before_hashes)
 
     finally:

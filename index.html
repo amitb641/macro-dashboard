@@ -4458,7 +4458,13 @@ const OIL_DAILY = {"labels":["Jun 29","Jun 30","Jul 1","Jul 2","Jul 3","Jul 6","
       var st = statusCfg[tr.status] || statusCfg.not_yet;
       var metric = tr.metric || '';
       var pre = tr.pre, now = tr.now, chg = tr.chg;
-      var chgStr = chg !== null && chg !== undefined ? (chg >= 0 ? '+' : '') + (typeof chg === 'number' ? chg.toFixed(1) : chg) : '—';
+      // chg >= 0 mis-signs negative-zero: Python's round(2.45-2.5, 1) emits
+      // -0.0 for a genuinely negative-but-rounds-to-0 delta, JS reads it as
+      // -0, and -0 >= 0 is true in JS -- so a metric that actually ticked
+      // DOWN (e.g. Core CPI 2.5%->2.45%) displayed "+0.0", asserting the
+      // opposite direction. chg>0/chg<0 both correctly return false for
+      // -0, matching chgColor's already-correct 3-way branch just below.
+      var chgStr = chg !== null && chg !== undefined ? (typeof chg === 'number' ? (chg > 0 ? '+' : chg < 0 ? '-' : '') + Math.abs(chg).toFixed(1) : chg) : '—';
       var step = tr.expected || '';
 
       // Build data line
