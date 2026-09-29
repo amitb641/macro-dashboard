@@ -7128,29 +7128,50 @@ function buildOilTab(){
   // $96.41, a >6-month-old, ~$3-wrong number sitting on the live site.
   // Derive both from OIL_DAILY (the same real, pipeline-updated daily
   // series the chart below renders) instead.
-  var _odN = OIL_DAILY.wti.length;
-  var _wtiLatest = OIL_DAILY.wti[_odN - 1];
-  var _wtiLatestLbl = OIL_DAILY.labels[_odN - 1];
-  var _curMonAbbr = _wtiLatestLbl.split(' ')[0];
-  var _mtdVals = [];
-  OIL_DAILY.labels.forEach(function(l, i){
-    if (l.indexOf(_curMonAbbr + ' ') === 0 && OIL_DAILY.wti[i] != null) _mtdVals.push(OIL_DAILY.wti[i]);
-  });
-  var _mtdOpen = _mtdVals.length ? _mtdVals[0] : _wtiLatest;
-  var _mtdChg = _wtiLatest - _mtdOpen;
-  var _mtdPct = _mtdOpen ? (_mtdChg / _mtdOpen * 100) : 0;
-  var _wtiAll = OIL_DAILY.wti.filter(function(v){ return v != null; });
-  var _wtiRangeLo = Math.min.apply(null, _wtiAll);
-  var _wtiRangeHi = Math.max.apply(null, _wtiAll);
-  var _wtiPeakVal = -Infinity, _wtiPeakIdx = 0;
-  OIL_DAILY.wti.forEach(function(v, i){ if (v != null && v > _wtiPeakVal) { _wtiPeakVal = v; _wtiPeakIdx = i; } });
-  var _wtiPeakLbl = OIL_DAILY.labels[_wtiPeakIdx];
+  //
+  // Wrapped in try/catch -- found 2026-09-29: this derivation threw
+  // "Cannot access 'OIL_DAILY' before initialization" on the FIRST call
+  // to buildOilTab() in a fresh session (confirmed via a real nav-button
+  // click, not just a direct call), aborting the rest of the function --
+  // every chart below (annual/monthly/shock-tracker) went blank because
+  // nothing after the throw ever ran. Root cause not fully pinned down
+  // (OIL_DAILY's const is ~70 lines below in the same classic script
+  // tag, which shouldn't normally still be in its TDZ by click time --
+  // but it reproducibly was). Regardless of cause, the tile derivation
+  // must never be able to block the charts that follow it -- same
+  // defensive shape as buildYieldTab()'s `Array.isArray(KPIS) ? KPIS : []`
+  // and the shock-tracker's `if (!SHOCK_TRACKER...) return;` guards.
+  var _wtiLatestLbl = "Mar'26", _wtiLatest = 93.4, _mtdChg = 0, _mtdPct = 0,
+      _wtiRangeLo = 0, _wtiRangeHi = 0, _wtiPeakLbl = "Mar'26", _wtiPeakVal = 98.5,
+      _oilMonthLbl = "";
+  try {
+    var _odN = OIL_DAILY.wti.length;
+    _wtiLatest = OIL_DAILY.wti[_odN - 1];
+    _wtiLatestLbl = OIL_DAILY.labels[_odN - 1];
+    var _curMonAbbr = _wtiLatestLbl.split(' ')[0];
+    var _mtdVals = [];
+    OIL_DAILY.labels.forEach(function(l, i){
+      if (l.indexOf(_curMonAbbr + ' ') === 0 && OIL_DAILY.wti[i] != null) _mtdVals.push(OIL_DAILY.wti[i]);
+    });
+    var _mtdOpen = _mtdVals.length ? _mtdVals[0] : _wtiLatest;
+    _mtdChg = _wtiLatest - _mtdOpen;
+    _mtdPct = _mtdOpen ? (_mtdChg / _mtdOpen * 100) : 0;
+    var _wtiAll = OIL_DAILY.wti.filter(function(v){ return v != null; });
+    _wtiRangeLo = Math.min.apply(null, _wtiAll);
+    _wtiRangeHi = Math.max.apply(null, _wtiAll);
+    var _wtiPeakIdx = 0; _wtiPeakVal = -Infinity;
+    OIL_DAILY.wti.forEach(function(v, i){ if (v != null && v > _wtiPeakVal) { _wtiPeakVal = v; _wtiPeakIdx = i; } });
+    _wtiPeakLbl = OIL_DAILY.labels[_wtiPeakIdx];
+    _oilMonthLbl = OIL_DAILY.month;
+  } catch(e) {
+    console.error("buildOilTab: WTI Latest/Peak derivation failed, using fallback tile values", e);
+  }
 
   document.getElementById("oil-metrics").innerHTML = [
-    {lbl:"WTI Latest "+_wtiLatestLbl,     val:"$"+_wtiLatest.toFixed(1),  sub:"MoM: "+(_mtdChg>=0?"+":"")+_mtdChg.toFixed(1)+" ("+(_mtdPct>=0?"+":"")+_mtdPct.toFixed(0)+"%) MTD · range $"+_wtiRangeLo.toFixed(0)+"–"+_wtiRangeHi.toFixed(0)+" · "+OIL_DAILY.month, col:_mtdChg>=0?"#D64045":"#1A9E5A"},
+    {lbl:"WTI Latest "+_wtiLatestLbl,     val:"$"+_wtiLatest.toFixed(1),  sub:"MoM: "+(_mtdChg>=0?"+":"")+_mtdChg.toFixed(1)+" ("+(_mtdPct>=0?"+":"")+_mtdPct.toFixed(0)+"%) MTD · range $"+_wtiRangeLo.toFixed(0)+"–"+_wtiRangeHi.toFixed(0)+" · "+_oilMonthLbl, col:_mtdChg>=0?"#D64045":"#1A9E5A"},
     {lbl:"Full Year 2025 Avg",    val:"$65.4",  sub:"YoY: −14.6% vs $76.6 in 2024 · FRED annual avg",   col:"#1A9E5A"},
     {lbl:"Brent 2025 Avg",        val:"$69.1",  sub:"YoY: −14.2% vs $80.5 in 2024 · spread ~$3.7",     col:"#CC8A00"},
-    {lbl:"WTI Peak "+_wtiPeakLbl,       val:"$"+_wtiPeakVal.toFixed(1),  sub:_wtiPeakLbl+" peak · trailing "+OIL_DAILY.month,              col:"#D64045"},
+    {lbl:"WTI Peak "+_wtiPeakLbl,       val:"$"+_wtiPeakVal.toFixed(1),  sub:_wtiPeakLbl+" peak · trailing "+_oilMonthLbl,              col:"#D64045"},
     {lbl:"Gas Burden Current",    val:"~3.2%",  sub:"% of disposable income at $90+ WTI · BLS/EIA",     col:"#CC8A00"},
     {lbl:"Peak → Now",            val:"2022: $123",sub:"Gas burden peaked 3.8% vs 1.8% avg 2015–20",    col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
@@ -8311,8 +8332,18 @@ const YIELD_TABLE = [
   {yr:"2023", ffr:"5.50%", action:"Peak",      nim_trend:"Peak NIM",    gs:"—",     jpm:"—",     ms:"—",     note:"5.5% peak — highest since 2001 · held Jul'23–Sep'24"},
   {yr:"2024", ffr:"4.25%", action:"Cutting",   nim_trend:"Easing",      gs:"—",     jpm:"—",     ms:"—",     note:"3 cuts Sep–Dec 2024 (−100bp) · data-dependent pivot"},
   {yr:"2025", ffr:"4.25%", action:"On hold",   nim_trend:"Stable",      gs:"—",     jpm:"—",     ms:"—",     note:"No cuts in 2025 · inflation stickiness · tariff uncertainty"},
-  {yr:"2026F",ffr:"3.50%", action:"Cutting",   nim_trend:"Expanding",   gs:"3.25%", jpm:"3.75%", ms:"3.25%", note:"GS/MS: 2 cuts · JPM: cautious pause · tariff wildcard"},
+  {yr:"2026F",ffr:"3.50%", action:"Cutting",   nim_trend:"Expanding",   gs:"3.25%", jpm:"3.75%", ms:"3.25%", note:"GS/MS: 2 cuts · JPM: cautious pause · tariff wildcard — ⚠ forecast vintage Jan 2026, not reverified against current Wall St views"},
 ];
+// GS/JPM/MS 2026F targets above are the last figures this dashboard had a
+// real source for (Jan 2026) -- there is no live analyst-forecast feed in
+// this pipeline (see CLAUDE.md). Flagged stale 2026-09-29 after a user
+// asked whether these still hold given signs the Fed may hike rather than
+// cut; an attempt to re-verify against GS's/JPM's own pages was
+// inconclusive (403 / an internally inconsistent fetch summary), so the
+// numbers were left as-is and flagged rather than silently replaced with
+// an unverified guess. Update this row (and FFR_DATA's matching dots in
+// renderer.py) once real current targets are confirmed.
+var YIELD_TABLE_FORECAST_STALE = true;
 
 function buildYieldTab(){
   if(builtTabs.yield) return; builtTabs.yield=1;
@@ -8505,7 +8536,17 @@ function buildYieldTab(){
 
   // ── Rate history table ─────────────────────────────────────────────
   try{
-  var yHd=["Year","Fed Funds","Action","NIM Cycle","GS","JPM","MS","Note"];
+  // GS/JPM/MS columns get a "⚠ stale" header flag when
+  // YIELD_TABLE_FORECAST_STALE is set — the last real source for these
+  // forecast figures was Jan 2026 (see comment above YIELD_TABLE); this
+  // makes the staleness visible at the column level, not just buried in
+  // one row's note text.
+  var _fcStaleTip='Forecast vintage Jan 2026 — not reverified against current Wall St views';
+  var yHd=["Year","Fed Funds","Action","NIM Cycle",
+    (typeof YIELD_TABLE_FORECAST_STALE!=="undefined"&&YIELD_TABLE_FORECAST_STALE)?'GS <span title="'+_fcStaleTip+'" style="color:#CC8A00;cursor:help">⚠</span>':"GS",
+    (typeof YIELD_TABLE_FORECAST_STALE!=="undefined"&&YIELD_TABLE_FORECAST_STALE)?'JPM <span title="'+_fcStaleTip+'" style="color:#CC8A00;cursor:help">⚠</span>':"JPM",
+    (typeof YIELD_TABLE_FORECAST_STALE!=="undefined"&&YIELD_TABLE_FORECAST_STALE)?'MS <span title="'+_fcStaleTip+'" style="color:#CC8A00;cursor:help">⚠</span>':"MS",
+    "Note"];
   var yH='<thead><tr>'+yHd.map(function(x){return '<th style="text-align:left">'+x+'</th>';}).join("")+'</tr></thead><tbody>';
   var acMap={Hiking:"#D64045",Peak:"#D64045",Emergency:"#D64045",Cutting:"#1A9E5A","On hold":"#CC8A00",Liftoff:"#CC8A00"};
   YIELD_TABLE.forEach(function(r){
