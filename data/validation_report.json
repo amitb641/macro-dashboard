@@ -1,12 +1,12 @@
 {
-  "validated_at": "2026-09-29T05:05:24.533659Z",
+  "validated_at": "2026-09-29T05:18:44.182238Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 702,
-    "passed": 696,
-    "failed": 6,
-    "skipped": 1,
-    "critical_divergences": 2
+    "total_checks": 703,
+    "passed": 700,
+    "failed": 3,
+    "skipped": 4,
+    "critical_divergences": 0
   },
   "internal_consistency": [
     {
@@ -1139,7 +1139,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-09-29T05:03:04.906974Z",
+      "collected_at": "2026-09-29T05:17:29.613098Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3695,6 +3695,12 @@
       "detail": ""
     },
     {
+      "check": "Visual: Oil \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Oil \u2014 Panel \"EXHIBIT 01\" painted body content",
       "severity": "ok",
       "pass": true,
@@ -3708,9 +3714,9 @@
     },
     {
       "check": "Visual: Oil \u2014 Panel \"EXHIBIT 03\" painted body content",
-      "severity": "critical",
-      "pass": false,
-      "detail": "EXHIBIT 03: no canvas/svg/table/text/container in body \u2014 possible hydration shadow or empty placeholder"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: Oil \u2014 Panel \"EXHIBIT 04\" painted body content",
@@ -3929,10 +3935,10 @@
       "detail": ""
     },
     {
-      "check": "Visual: global \u2014 Tab \"oil\" built without JS crash",
-      "severity": "critical",
-      "pass": false,
-      "detail": "Cannot access 'OIL_DAILY' before initialization"
+      "check": "Visual: global \u2014 No tab build crashes (window.MD._errors tab_crash)",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: data \u2014 KPIS defined",
@@ -4452,9 +4458,9 @@
     },
     {
       "check": "Visual: data \u2014 SHOCK_TRACKER all 8 phase titles rendered",
-      "severity": "warning",
-      "pass": false,
-      "detail": "0/8 titles found"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     },
     {
       "check": "Visual: annotations \u2014 lexicon: \"Fed 2% target\" present \u22652\u00d7 (c-cpi-mom, c-pce-mom (+ PCE annual series legend))",
@@ -4552,35 +4558,20 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "unrate",
-      "fred": 4.1,
-      "bls": 4.1,
-      "diff": 0.0,
-      "tol": 0.205,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "cpi_all",
-      "fred": 334.131,
-      "bls": 334.131,
-      "diff": 0.0,
-      "tol": 0.3341,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     },
     {
       "check": "Cross-source: core_cpi (FRED vs BLS)",
       "pass": true,
-      "severity": "ok",
-      "metric": "core_cpi",
-      "fred": 337.765,
-      "bls": 337.765,
-      "diff": 0.0,
-      "tol": 0.3378,
-      "note": null
+      "severity": "skipped",
+      "note": "one side unavailable (fred=False, bls=True)"
     }
   ],
   "noise_floor": [
