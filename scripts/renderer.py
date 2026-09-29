@@ -2917,18 +2917,28 @@ def update_shock_tracker(html, data, vals):
         {"phase": "Core Goods Inflation", "expected": "Months 5\u20138", "expected_weeks": [20, 32],
          "metric": "Core CPI YoY", "pre": 2.5, "now": core_cpi, "chg": round(core_cpi - 2.5, 1),
          "status": _status(core_cpi, 2.5, [20, 32], data_is_post_shock=cpi_post,
-                           move_threshold=0.5),  # pp YoY \u2014 Core CPI wiggles \u00b10.2-0.3pp month-to-month
+                           # Was 0.5 -- silently equal to _status()'s own hardcoded
+                           # 0.5 "confirmed" floor a few lines up, which made
+                           # 'emerging' mathematically unreachable for this phase
+                           # (moved implies chg>0.5, so the chg<=0.5 emerging
+                           # branch could never be true). 0.3 matches BOTH this
+                           # comment's own stated noise floor AND the project's
+                           # canonical data/known_normal.json noise_floor_pp.
+                           # core_cpi_yoy value -- found 2026-09-28 via a
+                           # statistician review, confirmed by tracing the exact
+                           # arithmetic, not just code smell.
+                           move_threshold=0.3),  # pp YoY \u2014 Core CPI wiggles \u00b10.2-0.3pp month-to-month
          "source": "FRED CPILFESL \u00b7 BLS CPI ex-Food & Energy (monthly)",
          "status_reason": (
              f'Latest Core CPI reading predates the shock. First post-shock print will land within ~1 month of release.'
              if not cpi_post else
-             (f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 within the \u00b10.5pp noise floor for Core CPI YoY. Expected window: weeks 20\u201332 (months 5\u20138 post-shock), currently at week {weeks}.'
-              if abs(core_cpi - 2.5) < 0.5 else
-              f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 beyond \u00b10.5pp noise floor. Expected window: weeks 20\u201332 (months 5\u20138), currently at week {weeks}.')
+             (f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 within the \u00b10.3pp noise floor for Core CPI YoY. Expected window: weeks 20\u201332 (months 5\u20138 post-shock), currently at week {weeks}.'
+              if abs(core_cpi - 2.5) < 0.3 else
+              f'Core CPI {core_cpi}% vs 2.5% pre-shock ({round(core_cpi-2.5,1):+.1f}pp) \u2014 beyond \u00b10.3pp noise floor{" but below the 0.5pp confirmation floor (emerging)" if abs(core_cpi - 2.5) < 0.5 else ""}. Expected window: weeks 20\u201332 (months 5\u20138), currently at week {weeks}.')
          ),
          "note": f"Core CPI at {core_cpi}% \u2014 {'data predates shock' if not cpi_post else 'energy input costs tracking'}",
          "commentary": "Manufacturing/chemicals absorb input costs over 5\u20138 months. Too early for this phase \u2014 energy input costs only began passing through in Mar'26 PPI.",
-         "math": _threshold_math(2.5, core_cpi, 0.5, "pp"),
+         "math": _threshold_math(2.5, core_cpi, 0.3, "pp"),
         },
         {"phase": "Consumer Sentiment Falls", "expected": "Weeks 2\u20136", "expected_weeks": [2, 6],
          "metric": "UMich Sentiment", "pre": 56.6, "now": umcsent, "chg": round(umcsent - 56.6, 1),

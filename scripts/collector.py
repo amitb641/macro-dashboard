@@ -359,6 +359,35 @@ def build_oil_daily(wti_series, brent_series):
     }
 
 
+def check_oil_window_coverage(wti_raw, brent_raw, today=None):
+    """Regression guard for the OIL_DAILY fetch-window bug (fixed 2026-09-28):
+    a fixed observation-count fetch silently drifted away from covering
+    "since March 1" as the calendar moved further from March. Returns a
+    list of error strings (empty when the window genuinely reaches back to
+    Mar 1 of `today`'s year, within a 5-day tolerance for weekends/holidays
+    at the boundary). Standalone/pure so it's unit-testable without live
+    API keys — see tests/test_smoke.py::test_oil_window_coverage.
+    """
+    today = today or datetime.date.today()
+    start = datetime.date(today.year, 3, 1)
+    earliest = None
+    for obs in (wti_raw or []) + (brent_raw or []):
+        try:
+            d = datetime.date.fromisoformat(obs['date'])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if earliest is None or d < earliest:
+            earliest = d
+    if earliest is not None and earliest > start + datetime.timedelta(days=5):
+        return [
+            f'OIL_DAILY window too short: earliest fetched oil observation is '
+            f'{earliest.isoformat()}, expected to reach back to {start.isoformat()} '
+            f'(Mar 1) -- the chart\'s "Since Mar 2026" claim is no longer true. '
+            f'Check _oil_fetch_days in collect().'
+        ]
+    return []
+
+
 # ══════════════════════════════════════════════════════════════════════
 
 def collect():
@@ -396,13 +425,30 @@ def collect():
     data['hy_hist']     = fred_obs('BAMLH0A0HYM2', 60)
 
     print('  [Daily] Oil (EIA + FRED fallback)...')
-    wti_raw   = eia_spot('RWTC',  60)    # ~2 months to cover from Mar 1
-    brent_raw = eia_spot('RBRTE', 60)
-    if not wti_raw:   wti_raw   = fred_obs('DCOILWTICO',   60)
-    if not brent_raw: brent_raw = fred_obs('DCOILBRENTEU', 60)
+    # Fixed 60-day fetch used to "cover from Mar 1" only because this was
+    # written close to March -- by Sep 28 2026, 60 trading days back only
+    # reaches late June, silently truncating build_oil_daily()'s Mar 1
+    # filter input and losing ~4 months of the shock-tracker's own claimed
+    # history (found via a user report that the chart's own date range had
+    # quietly drifted off its "Since Mar 2026" banner). Compute the window
+    # from the actual calendar gap instead of a static guess, so it keeps
+    # covering Mar 1 onward no matter how long the shock window runs.
+    _oil_fetch_days = (datetime.date.today() - datetime.date(datetime.date.today().year, 3, 1)).days + 10
+    wti_raw   = eia_spot('RWTC',  _oil_fetch_days)
+    brent_raw = eia_spot('RBRTE', _oil_fetch_days)
+    if not wti_raw:   wti_raw   = fred_obs('DCOILWTICO',   _oil_fetch_days)
+    if not brent_raw: brent_raw = fred_obs('DCOILBRENTEU', _oil_fetch_days)
     data['wti_daily']    = wti_raw
     data['brent_daily']  = brent_raw
     data['oil_daily_chart'] = build_oil_daily(wti_raw, brent_raw)  # Mar 1 onward
+    # Self-check: confirm the fetch actually reached back to Mar 1 instead of
+    # trusting the fixed-window bug above to never recur silently the same
+    # way. Surfaced as a collector error so Pass 3h (validator) catches a
+    # regression in CI instead of waiting for a user to notice a chart.
+    # (Looping .append() rather than .extend() — _ErrList only overrides
+    # append() to scrub secrets; list.extend() is inherited unscrubbed.)
+    for _err in check_oil_window_coverage(wti_raw, brent_raw):
+        errors.append(_err)
 
     print('  [Weekly] Gasoline + Mortgage...')
     data['gasoline']    = fred_obs('GASREGW', 30)     # Weekly retail gasoline $/gal (EIA via FRED)
