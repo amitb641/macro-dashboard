@@ -1,14 +1,16 @@
 {
-  "checked_at": "2026-09-28T18:40:39.308766Z",
+  "checked_at": "2026-09-29T05:05:35.554442Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 334,
-    "passed": 333,
-    "failed": 1,
-    "js_errors": 0,
+    "total_checks": 333,
+    "passed": 331,
+    "failed": 2,
+    "js_errors": 1,
     "console_errors": 0
   },
-  "js_errors": [],
+  "js_errors": [
+    "Cannot access 'OIL_DAILY' before initialization"
+  ],
   "console_errors": [],
   "findings": [
     {
@@ -1291,12 +1293,6 @@
     },
     {
       "category": "Oil",
-      "check": "Chart canvas 3 has size",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Oil",
       "check": "Commentary positioned above first chart",
       "pass": true,
       "severity": "ok"
@@ -2013,8 +2009,9 @@
     {
       "category": "data",
       "check": "SHOCK_TRACKER all 8 phase titles rendered",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "0/8 titles found"
     }
   ]
 }

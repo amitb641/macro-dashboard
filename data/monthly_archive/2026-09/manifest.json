@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "month": "2026-09",
-  "source_run_date": "2026-09-28",
-  "archived_at": "2026-09-28T18:40:39.827929Z",
-  "git_sha": "b5180d0",
+  "source_run_date": "2026-09-29",
+  "archived_at": "2026-09-29T05:05:36.025561Z",
+  "git_sha": "e046a79",
   "branch": "main",
   "files": [
     "raw_data.json",
@@ -11,20 +11,20 @@
     "metrics.json"
   ],
   "sizes": {
-    "raw_data.json": 1008393,
-    "index.html": 527728,
+    "raw_data.json": 1039996,
+    "index.html": 536909,
     "metrics.json": 3552
   },
   "sha256": {
-    "raw_data.json": "b35c5487aa027644ea44d59139d2cb63b21930ca0bca94bc719040a7b172f1c8",
-    "index.html": "437114d1af52903b6122708ea517b5c3a135d9ad1492901f8692084601615937",
-    "metrics.json": "994ac1c9a8597414eba414ebd7e57a22e5e8775e6fc90723976ae15dcd95ba71"
+    "raw_data.json": "0c976e683767b09346978f3e2b667a8346e98796caceaf1564fba04a855eda2a",
+    "index.html": "0f3d690f8ee36282d297efb127b44a23b5aa03d7eaf60f3c50ea0b2d70dd8999",
+    "metrics.json": "607a414189d66edc9b6f8dbe55a8f670fbd42d50781f7749d988fe9b709840c2"
   },
   "validation_status": "WARN",
   "validation_summary": {
-    "total_checks": 565,
-    "passed": 551,
-    "failed": 14,
+    "total_checks": 564,
+    "passed": 549,
+    "failed": 15,
     "skipped": 2,
     "critical_divergences": 0
   }

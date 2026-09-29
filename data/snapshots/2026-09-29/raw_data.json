@@ -1,34 +1,58 @@
 {
-  "collected_at": "2026-09-19T12:08:28.634771Z",
+  "collected_at": "2026-09-29T05:03:50.375275Z",
   "series_count": 81,
   "error_count": 0,
   "errors": [],
   "data": {
-    "ffr": {
-      "date": "2026-08-01",
-      "value": 3.63
-    },
     "dff": {
-      "date": "2026-09-17",
+      "date": "2026-09-25",
+      "value": 3.88
+    },
+    "ffr": {
+      "date": "2026-09-25",
       "value": 3.88
     },
     "dgs2": {
-      "date": "2026-09-17",
-      "value": 4.67
+      "date": "2026-09-25",
+      "value": 4.81
     },
     "dgs5": {
-      "date": "2026-09-17",
-      "value": 4.78
+      "date": "2026-09-25",
+      "value": 4.98
     },
     "dgs10": {
-      "date": "2026-09-17",
-      "value": 4.94
+      "date": "2026-09-25",
+      "value": 5.17
     },
     "dgs30": {
-      "date": "2026-09-17",
-      "value": 5.29
+      "date": "2026-09-25",
+      "value": 5.49
     },
     "dgs10_hist": [
+      {
+        "date": "2026-09-25",
+        "value": 5.17
+      },
+      {
+        "date": "2026-09-24",
+        "value": 5.18
+      },
+      {
+        "date": "2026-09-23",
+        "value": 5.11
+      },
+      {
+        "date": "2026-09-22",
+        "value": 4.96
+      },
+      {
+        "date": "2026-09-21",
+        "value": 4.96
+      },
+      {
+        "date": "2026-09-18",
+        "value": 5.01
+      },
       {
         "date": "2026-09-17",
         "value": 4.94
@@ -240,29 +264,33 @@
       {
         "date": "2026-07-06",
         "value": 4.48
-      },
-      {
-        "date": "2026-07-02",
-        "value": 4.49
-      },
-      {
-        "date": "2026-07-01",
-        "value": 4.48
-      },
-      {
-        "date": "2026-06-30",
-        "value": 4.44
-      },
-      {
-        "date": "2026-06-29",
-        "value": 4.38
-      },
-      {
-        "date": "2026-06-26",
-        "value": 4.38
       }
     ],
     "dgs2_hist": [
+      {
+        "date": "2026-09-25",
+        "value": 4.81
+      },
+      {
+        "date": "2026-09-24",
+        "value": 4.87
+      },
+      {
+        "date": "2026-09-23",
+        "value": 4.85
+      },
+      {
+        "date": "2026-09-22",
+        "value": 4.71
+      },
+      {
+        "date": "2026-09-21",
+        "value": 4.76
+      },
+      {
+        "date": "2026-09-18",
+        "value": 4.76
+      },
       {
         "date": "2026-09-17",
         "value": 4.67
@@ -474,37 +502,41 @@
       {
         "date": "2026-07-06",
         "value": 4.13
-      },
-      {
-        "date": "2026-07-02",
-        "value": 4.14
-      },
-      {
-        "date": "2026-07-01",
-        "value": 4.17
-      },
-      {
-        "date": "2026-06-30",
-        "value": 4.14
-      },
-      {
-        "date": "2026-06-29",
-        "value": 4.1
-      },
-      {
-        "date": "2026-06-26",
-        "value": 4.07
       }
     ],
     "ig_oas": {
-      "date": "2026-09-17",
-      "value": 0.78
+      "date": "2026-09-25",
+      "value": 0.81
     },
     "hy_oas": {
-      "date": "2026-09-17",
-      "value": 2.7
+      "date": "2026-09-25",
+      "value": 2.93
     },
     "ig_hist": [
+      {
+        "date": "2026-09-25",
+        "value": 0.81
+      },
+      {
+        "date": "2026-09-24",
+        "value": 0.79
+      },
+      {
+        "date": "2026-09-23",
+        "value": 0.77
+      },
+      {
+        "date": "2026-09-22",
+        "value": 0.77
+      },
+      {
+        "date": "2026-09-21",
+        "value": 0.77
+      },
+      {
+        "date": "2026-09-18",
+        "value": 0.77
+      },
       {
         "date": "2026-09-17",
         "value": 0.78
@@ -720,33 +752,33 @@
       {
         "date": "2026-07-06",
         "value": 0.75
-      },
-      {
-        "date": "2026-07-03",
-        "value": 0.75
-      },
-      {
-        "date": "2026-07-02",
-        "value": 0.75
-      },
-      {
-        "date": "2026-07-01",
-        "value": 0.76
-      },
-      {
-        "date": "2026-06-30",
-        "value": 0.76
-      },
-      {
-        "date": "2026-06-29",
-        "value": 0.76
-      },
-      {
-        "date": "2026-06-26",
-        "value": 0.77
       }
     ],
     "hy_hist": [
+      {
+        "date": "2026-09-25",
+        "value": 2.93
+      },
+      {
+        "date": "2026-09-24",
+        "value": 2.8
+      },
+      {
+        "date": "2026-09-23",
+        "value": 2.73
+      },
+      {
+        "date": "2026-09-22",
+        "value": 2.68
+      },
+      {
+        "date": "2026-09-21",
+        "value": 2.66
+      },
+      {
+        "date": "2026-09-18",
+        "value": 2.68
+      },
       {
         "date": "2026-09-17",
         "value": 2.7
@@ -962,33 +994,29 @@
       {
         "date": "2026-07-06",
         "value": 2.72
-      },
-      {
-        "date": "2026-07-03",
-        "value": 2.74
-      },
-      {
-        "date": "2026-07-02",
-        "value": 2.75
-      },
-      {
-        "date": "2026-07-01",
-        "value": 2.74
-      },
-      {
-        "date": "2026-06-30",
-        "value": 2.75
-      },
-      {
-        "date": "2026-06-29",
-        "value": 2.8
-      },
-      {
-        "date": "2026-06-26",
-        "value": 2.83
       }
     ],
     "wti_daily": [
+      {
+        "date": "2026-09-22",
+        "value": 96.41
+      },
+      {
+        "date": "2026-09-21",
+        "value": 96.97
+      },
+      {
+        "date": "2026-09-18",
+        "value": 101.44
+      },
+      {
+        "date": "2026-09-17",
+        "value": 103.21
+      },
+      {
+        "date": "2026-09-16",
+        "value": 103.62
+      },
       {
         "date": "2026-09-15",
         "value": 107.02
@@ -1228,9 +1256,657 @@
       {
         "date": "2026-06-22",
         "value": 78.94
+      },
+      {
+        "date": "2026-06-18",
+        "value": 80.35
+      },
+      {
+        "date": "2026-06-17",
+        "value": 80.65
+      },
+      {
+        "date": "2026-06-16",
+        "value": 79.8
+      },
+      {
+        "date": "2026-06-15",
+        "value": 84.65
+      },
+      {
+        "date": "2026-06-12",
+        "value": 88.62
+      },
+      {
+        "date": "2026-06-11",
+        "value": 91.58
+      },
+      {
+        "date": "2026-06-10",
+        "value": 93.68
+      },
+      {
+        "date": "2026-06-09",
+        "value": 91.9
+      },
+      {
+        "date": "2026-06-08",
+        "value": 95.0
+      },
+      {
+        "date": "2026-06-05",
+        "value": 94.32
+      },
+      {
+        "date": "2026-06-04",
+        "value": 96.83
+      },
+      {
+        "date": "2026-06-03",
+        "value": 99.76
+      },
+      {
+        "date": "2026-06-02",
+        "value": 97.47
+      },
+      {
+        "date": "2026-06-01",
+        "value": 95.96
+      },
+      {
+        "date": "2026-05-29",
+        "value": 91.16
+      },
+      {
+        "date": "2026-05-28",
+        "value": 92.65
+      },
+      {
+        "date": "2026-05-27",
+        "value": 92.35
+      },
+      {
+        "date": "2026-05-26",
+        "value": 97.63
+      },
+      {
+        "date": "2026-05-22",
+        "value": 100.35
+      },
+      {
+        "date": "2026-05-21",
+        "value": 100.2
+      },
+      {
+        "date": "2026-05-20",
+        "value": 101.69
+      },
+      {
+        "date": "2026-05-19",
+        "value": 112.09
+      },
+      {
+        "date": "2026-05-18",
+        "value": 112.25
+      },
+      {
+        "date": "2026-05-15",
+        "value": 108.99
+      },
+      {
+        "date": "2026-05-14",
+        "value": 104.66
+      },
+      {
+        "date": "2026-05-13",
+        "value": 104.52
+      },
+      {
+        "date": "2026-05-12",
+        "value": 105.78
+      },
+      {
+        "date": "2026-05-11",
+        "value": 101.56
+      },
+      {
+        "date": "2026-05-08",
+        "value": 98.87
+      },
+      {
+        "date": "2026-05-07",
+        "value": 98.38
+      },
+      {
+        "date": "2026-05-06",
+        "value": 98.75
+      },
+      {
+        "date": "2026-05-05",
+        "value": 105.66
+      },
+      {
+        "date": "2026-05-04",
+        "value": 109.76
+      },
+      {
+        "date": "2026-05-01",
+        "value": 105.38
+      },
+      {
+        "date": "2026-04-30",
+        "value": 108.64
+      },
+      {
+        "date": "2026-04-29",
+        "value": 110.47
+      },
+      {
+        "date": "2026-04-28",
+        "value": 103.45
+      },
+      {
+        "date": "2026-04-27",
+        "value": 99.89
+      },
+      {
+        "date": "2026-04-24",
+        "value": 98.42
+      },
+      {
+        "date": "2026-04-23",
+        "value": 99.27
+      },
+      {
+        "date": "2026-04-22",
+        "value": 94.76
+      },
+      {
+        "date": "2026-04-21",
+        "value": 93.64
+      },
+      {
+        "date": "2026-04-20",
+        "value": 91.06
+      },
+      {
+        "date": "2026-04-17",
+        "value": 85.91
+      },
+      {
+        "date": "2026-04-16",
+        "value": 96.46
+      },
+      {
+        "date": "2026-04-15",
+        "value": 93.04
+      },
+      {
+        "date": "2026-04-14",
+        "value": 93.07
+      },
+      {
+        "date": "2026-04-13",
+        "value": 100.72
+      },
+      {
+        "date": "2026-04-10",
+        "value": 98.34
+      },
+      {
+        "date": "2026-04-09",
+        "value": 99.62
+      },
+      {
+        "date": "2026-04-08",
+        "value": 96.17
+      },
+      {
+        "date": "2026-04-07",
+        "value": 114.58
+      },
+      {
+        "date": "2026-04-06",
+        "value": 114.01
+      },
+      {
+        "date": "2026-04-02",
+        "value": 113.23
+      },
+      {
+        "date": "2026-04-01",
+        "value": 101.9
+      },
+      {
+        "date": "2026-03-31",
+        "value": 102.86
+      },
+      {
+        "date": "2026-03-30",
+        "value": 104.69
+      },
+      {
+        "date": "2026-03-27",
+        "value": 101.26
+      },
+      {
+        "date": "2026-03-26",
+        "value": 96.18
+      },
+      {
+        "date": "2026-03-25",
+        "value": 91.51
+      },
+      {
+        "date": "2026-03-24",
+        "value": 93.18
+      },
+      {
+        "date": "2026-03-23",
+        "value": 89.33
+      },
+      {
+        "date": "2026-03-20",
+        "value": 98.71
+      },
+      {
+        "date": "2026-03-19",
+        "value": 96.11
+      },
+      {
+        "date": "2026-03-18",
+        "value": 96.12
+      },
+      {
+        "date": "2026-03-17",
+        "value": 96.01
+      },
+      {
+        "date": "2026-03-16",
+        "value": 93.39
+      },
+      {
+        "date": "2026-03-13",
+        "value": 98.48
+      },
+      {
+        "date": "2026-03-12",
+        "value": 95.61
+      },
+      {
+        "date": "2026-03-11",
+        "value": 86.8
+      },
+      {
+        "date": "2026-03-10",
+        "value": 83.71
+      },
+      {
+        "date": "2026-03-09",
+        "value": 94.65
+      },
+      {
+        "date": "2026-03-06",
+        "value": 90.77
+      },
+      {
+        "date": "2026-03-05",
+        "value": 80.88
+      },
+      {
+        "date": "2026-03-04",
+        "value": 74.58
+      },
+      {
+        "date": "2026-03-03",
+        "value": 74.48
+      },
+      {
+        "date": "2026-03-02",
+        "value": 71.13
+      },
+      {
+        "date": "2026-02-27",
+        "value": 66.96
+      },
+      {
+        "date": "2026-02-26",
+        "value": 65.1
+      },
+      {
+        "date": "2026-02-25",
+        "value": 65.3
+      },
+      {
+        "date": "2026-02-24",
+        "value": 65.62
+      },
+      {
+        "date": "2026-02-23",
+        "value": 66.36
+      },
+      {
+        "date": "2026-02-20",
+        "value": 66.69
+      },
+      {
+        "date": "2026-02-19",
+        "value": 66.66
+      },
+      {
+        "date": "2026-02-18",
+        "value": 65.33
+      },
+      {
+        "date": "2026-02-17",
+        "value": 62.53
+      },
+      {
+        "date": "2026-02-13",
+        "value": 63.05
+      },
+      {
+        "date": "2026-02-12",
+        "value": 63.08
+      },
+      {
+        "date": "2026-02-11",
+        "value": 64.8
+      },
+      {
+        "date": "2026-02-10",
+        "value": 64.2
+      },
+      {
+        "date": "2026-02-09",
+        "value": 64.53
+      },
+      {
+        "date": "2026-02-06",
+        "value": 63.77
+      },
+      {
+        "date": "2026-02-05",
+        "value": 62.9
+      },
+      {
+        "date": "2026-02-04",
+        "value": 64.56
+      },
+      {
+        "date": "2026-02-03",
+        "value": 62.62
+      },
+      {
+        "date": "2026-02-02",
+        "value": 61.6
+      },
+      {
+        "date": "2026-01-30",
+        "value": 64.5
+      },
+      {
+        "date": "2026-01-29",
+        "value": 64.77
+      },
+      {
+        "date": "2026-01-28",
+        "value": 62.75
+      },
+      {
+        "date": "2026-01-27",
+        "value": 62.04
+      },
+      {
+        "date": "2026-01-26",
+        "value": 60.46
+      },
+      {
+        "date": "2026-01-23",
+        "value": 60.7
+      },
+      {
+        "date": "2026-01-22",
+        "value": 59.24
+      },
+      {
+        "date": "2026-01-21",
+        "value": 60.38
+      },
+      {
+        "date": "2026-01-20",
+        "value": 60.3
+      },
+      {
+        "date": "2026-01-16",
+        "value": 59.4
+      },
+      {
+        "date": "2026-01-15",
+        "value": 59.13
+      },
+      {
+        "date": "2026-01-14",
+        "value": 61.84
+      },
+      {
+        "date": "2026-01-13",
+        "value": 60.85
+      },
+      {
+        "date": "2026-01-12",
+        "value": 59.39
+      },
+      {
+        "date": "2026-01-09",
+        "value": 58.96
+      },
+      {
+        "date": "2026-01-08",
+        "value": 57.74
+      },
+      {
+        "date": "2026-01-07",
+        "value": 56.01
+      },
+      {
+        "date": "2026-01-06",
+        "value": 56.97
+      },
+      {
+        "date": "2026-01-05",
+        "value": 58.1
+      },
+      {
+        "date": "2026-01-02",
+        "value": 57.21
+      },
+      {
+        "date": "2025-12-31",
+        "value": 57.26
+      },
+      {
+        "date": "2025-12-30",
+        "value": 57.79
+      },
+      {
+        "date": "2025-12-29",
+        "value": 57.89
+      },
+      {
+        "date": "2025-12-26",
+        "value": 56.6
+      },
+      {
+        "date": "2025-12-24",
+        "value": 58.72
+      },
+      {
+        "date": "2025-12-23",
+        "value": 58.55
+      },
+      {
+        "date": "2025-12-22",
+        "value": 58.18
+      },
+      {
+        "date": "2025-12-19",
+        "value": 56.8
+      },
+      {
+        "date": "2025-12-18",
+        "value": 56.22
+      },
+      {
+        "date": "2025-12-17",
+        "value": 56.07
+      },
+      {
+        "date": "2025-12-16",
+        "value": 55.44
+      },
+      {
+        "date": "2025-12-15",
+        "value": 56.97
+      },
+      {
+        "date": "2025-12-12",
+        "value": 57.61
+      },
+      {
+        "date": "2025-12-11",
+        "value": 57.76
+      },
+      {
+        "date": "2025-12-10",
+        "value": 58.67
+      },
+      {
+        "date": "2025-12-09",
+        "value": 58.4
+      },
+      {
+        "date": "2025-12-08",
+        "value": 59.04
+      },
+      {
+        "date": "2025-12-05",
+        "value": 60.23
+      },
+      {
+        "date": "2025-12-04",
+        "value": 59.82
+      },
+      {
+        "date": "2025-12-03",
+        "value": 59.09
+      },
+      {
+        "date": "2025-12-02",
+        "value": 58.81
+      },
+      {
+        "date": "2025-12-01",
+        "value": 59.47
+      },
+      {
+        "date": "2025-11-28",
+        "value": 58.58
+      },
+      {
+        "date": "2025-11-26",
+        "value": 58.81
+      },
+      {
+        "date": "2025-11-25",
+        "value": 58.25
+      },
+      {
+        "date": "2025-11-24",
+        "value": 59.11
+      },
+      {
+        "date": "2025-11-21",
+        "value": 58.86
+      },
+      {
+        "date": "2025-11-20",
+        "value": 60.07
+      },
+      {
+        "date": "2025-11-19",
+        "value": 60.27
+      },
+      {
+        "date": "2025-11-18",
+        "value": 61.51
+      },
+      {
+        "date": "2025-11-17",
+        "value": 60.66
+      },
+      {
+        "date": "2025-11-14",
+        "value": 60.87
+      },
+      {
+        "date": "2025-11-13",
+        "value": 59.54
+      },
+      {
+        "date": "2025-11-12",
+        "value": 59.3
+      },
+      {
+        "date": "2025-11-10",
+        "value": 60.94
+      },
+      {
+        "date": "2025-11-07",
+        "value": 60.54
+      },
+      {
+        "date": "2025-11-06",
+        "value": 60.24
+      },
+      {
+        "date": "2025-11-05",
+        "value": 60.4
+      },
+      {
+        "date": "2025-11-04",
+        "value": 61.38
+      },
+      {
+        "date": "2025-11-03",
+        "value": 61.79
+      },
+      {
+        "date": "2025-10-31",
+        "value": 61.75
       }
     ],
     "brent_daily": [
+      {
+        "date": "2026-09-22",
+        "value": 114.89
+      },
+      {
+        "date": "2026-09-21",
+        "value": 116.15
+      },
+      {
+        "date": "2026-09-18",
+        "value": 119.66
+      },
+      {
+        "date": "2026-09-17",
+        "value": 121.18
+      },
+      {
+        "date": "2026-09-16",
+        "value": 127.84
+      },
       {
         "date": "2026-09-15",
         "value": 130.8
@@ -1470,10 +2146,716 @@
       {
         "date": "2026-06-23",
         "value": 75.69
+      },
+      {
+        "date": "2026-06-22",
+        "value": 76.49
+      },
+      {
+        "date": "2026-06-19",
+        "value": 80.46
+      },
+      {
+        "date": "2026-06-18",
+        "value": 79.35
+      },
+      {
+        "date": "2026-06-17",
+        "value": 80.33
+      },
+      {
+        "date": "2026-06-16",
+        "value": 80.5
+      },
+      {
+        "date": "2026-06-15",
+        "value": 84.36
+      },
+      {
+        "date": "2026-06-12",
+        "value": 88.64
+      },
+      {
+        "date": "2026-06-11",
+        "value": 92.84
+      },
+      {
+        "date": "2026-06-10",
+        "value": 95.73
+      },
+      {
+        "date": "2026-06-09",
+        "value": 94.15
+      },
+      {
+        "date": "2026-06-08",
+        "value": 97.46
+      },
+      {
+        "date": "2026-06-05",
+        "value": 97.29
+      },
+      {
+        "date": "2026-06-04",
+        "value": 98.98
+      },
+      {
+        "date": "2026-06-03",
+        "value": 101.69
+      },
+      {
+        "date": "2026-06-02",
+        "value": 98.49
+      },
+      {
+        "date": "2026-06-01",
+        "value": 98.29
+      },
+      {
+        "date": "2026-05-29",
+        "value": 92.88
+      },
+      {
+        "date": "2026-05-28",
+        "value": 95.47
+      },
+      {
+        "date": "2026-05-27",
+        "value": 97.11
+      },
+      {
+        "date": "2026-05-26",
+        "value": 102.75
+      },
+      {
+        "date": "2026-05-22",
+        "value": 106.9
+      },
+      {
+        "date": "2026-05-21",
+        "value": 105.84
+      },
+      {
+        "date": "2026-05-20",
+        "value": 108.93
+      },
+      {
+        "date": "2026-05-19",
+        "value": 114.64
+      },
+      {
+        "date": "2026-05-18",
+        "value": 116.73
+      },
+      {
+        "date": "2026-05-15",
+        "value": 113.96
+      },
+      {
+        "date": "2026-05-14",
+        "value": 110.91
+      },
+      {
+        "date": "2026-05-13",
+        "value": 110.28
+      },
+      {
+        "date": "2026-05-12",
+        "value": 111.37
+      },
+      {
+        "date": "2026-05-11",
+        "value": 106.11
+      },
+      {
+        "date": "2026-05-08",
+        "value": 103.48
+      },
+      {
+        "date": "2026-05-07",
+        "value": 101.82
+      },
+      {
+        "date": "2026-05-06",
+        "value": 103.7
+      },
+      {
+        "date": "2026-05-05",
+        "value": 114.51
+      },
+      {
+        "date": "2026-05-01",
+        "value": 118.26
+      },
+      {
+        "date": "2026-04-30",
+        "value": 124.24
+      },
+      {
+        "date": "2026-04-29",
+        "value": 124.16
+      },
+      {
+        "date": "2026-04-28",
+        "value": 117.62
+      },
+      {
+        "date": "2026-04-27",
+        "value": 113.89
+      },
+      {
+        "date": "2026-04-24",
+        "value": 111.86
+      },
+      {
+        "date": "2026-04-23",
+        "value": 113.25
+      },
+      {
+        "date": "2026-04-22",
+        "value": 113.44
+      },
+      {
+        "date": "2026-04-21",
+        "value": 106.14
+      },
+      {
+        "date": "2026-04-20",
+        "value": 103.4
+      },
+      {
+        "date": "2026-04-17",
+        "value": 98.63
+      },
+      {
+        "date": "2026-04-16",
+        "value": 116.63
+      },
+      {
+        "date": "2026-04-15",
+        "value": 114.93
+      },
+      {
+        "date": "2026-04-14",
+        "value": 118.69
+      },
+      {
+        "date": "2026-04-13",
+        "value": 123.28
+      },
+      {
+        "date": "2026-04-10",
+        "value": 119.07
+      },
+      {
+        "date": "2026-04-09",
+        "value": 119.03
+      },
+      {
+        "date": "2026-04-08",
+        "value": 122.11
+      },
+      {
+        "date": "2026-04-07",
+        "value": 138.21
+      },
+      {
+        "date": "2026-04-02",
+        "value": 127.61
+      },
+      {
+        "date": "2026-04-01",
+        "value": 119.56
+      },
+      {
+        "date": "2026-03-31",
+        "value": 126.69
+      },
+      {
+        "date": "2026-03-30",
+        "value": 121.88
+      },
+      {
+        "date": "2026-03-27",
+        "value": 121.47
+      },
+      {
+        "date": "2026-03-26",
+        "value": 113.39
+      },
+      {
+        "date": "2026-03-25",
+        "value": 109.14
+      },
+      {
+        "date": "2026-03-24",
+        "value": 108.42
+      },
+      {
+        "date": "2026-03-23",
+        "value": 103.79
+      },
+      {
+        "date": "2026-03-20",
+        "value": 118.42
+      },
+      {
+        "date": "2026-03-19",
+        "value": 111.05
+      },
+      {
+        "date": "2026-03-18",
+        "value": 118.09
+      },
+      {
+        "date": "2026-03-17",
+        "value": 108.39
+      },
+      {
+        "date": "2026-03-16",
+        "value": 101.04
+      },
+      {
+        "date": "2026-03-13",
+        "value": 103.23
+      },
+      {
+        "date": "2026-03-12",
+        "value": 102.38
+      },
+      {
+        "date": "2026-03-11",
+        "value": 90.98
+      },
+      {
+        "date": "2026-03-10",
+        "value": 89.84
+      },
+      {
+        "date": "2026-03-09",
+        "value": 94.35
+      },
+      {
+        "date": "2026-03-06",
+        "value": 95.74
+      },
+      {
+        "date": "2026-03-05",
+        "value": 88.59
+      },
+      {
+        "date": "2026-03-04",
+        "value": 81.56
+      },
+      {
+        "date": "2026-03-03",
+        "value": 83.28
+      },
+      {
+        "date": "2026-03-02",
+        "value": 77.24
+      },
+      {
+        "date": "2026-02-27",
+        "value": 71.32
+      },
+      {
+        "date": "2026-02-26",
+        "value": 71.66
+      },
+      {
+        "date": "2026-02-25",
+        "value": 70.69
+      },
+      {
+        "date": "2026-02-24",
+        "value": 71.21
+      },
+      {
+        "date": "2026-02-23",
+        "value": 71.9
+      },
+      {
+        "date": "2026-02-20",
+        "value": 72.75
+      },
+      {
+        "date": "2026-02-19",
+        "value": 73.17
+      },
+      {
+        "date": "2026-02-18",
+        "value": 71.78
+      },
+      {
+        "date": "2026-02-17",
+        "value": 69.77
+      },
+      {
+        "date": "2026-02-16",
+        "value": 70.81
+      },
+      {
+        "date": "2026-02-13",
+        "value": 69.96
+      },
+      {
+        "date": "2026-02-12",
+        "value": 69.8
+      },
+      {
+        "date": "2026-02-11",
+        "value": 71.52
+      },
+      {
+        "date": "2026-02-10",
+        "value": 71.01
+      },
+      {
+        "date": "2026-02-09",
+        "value": 71.19
+      },
+      {
+        "date": "2026-02-06",
+        "value": 70.45
+      },
+      {
+        "date": "2026-02-05",
+        "value": 69.87
+      },
+      {
+        "date": "2026-02-04",
+        "value": 71.15
+      },
+      {
+        "date": "2026-02-03",
+        "value": 70.01
+      },
+      {
+        "date": "2026-02-02",
+        "value": 67.72
+      },
+      {
+        "date": "2026-01-30",
+        "value": 72.25
+      },
+      {
+        "date": "2026-01-29",
+        "value": 71.0
+      },
+      {
+        "date": "2026-01-28",
+        "value": 70.9
+      },
+      {
+        "date": "2026-01-27",
+        "value": 70.28
+      },
+      {
+        "date": "2026-01-26",
+        "value": 67.7
+      },
+      {
+        "date": "2026-01-23",
+        "value": 68.16
+      },
+      {
+        "date": "2026-01-22",
+        "value": 65.46
+      },
+      {
+        "date": "2026-01-21",
+        "value": 66.72
+      },
+      {
+        "date": "2026-01-20",
+        "value": 67.68
+      },
+      {
+        "date": "2026-01-19",
+        "value": 66.91
+      },
+      {
+        "date": "2026-01-16",
+        "value": 66.97
+      },
+      {
+        "date": "2026-01-15",
+        "value": 66.16
+      },
+      {
+        "date": "2026-01-14",
+        "value": 68.87
+      },
+      {
+        "date": "2026-01-13",
+        "value": 67.58
+      },
+      {
+        "date": "2026-01-12",
+        "value": 65.4
+      },
+      {
+        "date": "2026-01-09",
+        "value": 65.11
+      },
+      {
+        "date": "2026-01-08",
+        "value": 63.34
+      },
+      {
+        "date": "2026-01-07",
+        "value": 61.08
+      },
+      {
+        "date": "2026-01-06",
+        "value": 62.1
+      },
+      {
+        "date": "2026-01-05",
+        "value": 63.0
+      },
+      {
+        "date": "2026-01-02",
+        "value": 61.98
+      },
+      {
+        "date": "2025-12-31",
+        "value": 61.35
+      },
+      {
+        "date": "2025-12-30",
+        "value": 62.3
+      },
+      {
+        "date": "2025-12-29",
+        "value": 63.1
+      },
+      {
+        "date": "2025-12-24",
+        "value": 63.7
+      },
+      {
+        "date": "2025-12-23",
+        "value": 63.7
+      },
+      {
+        "date": "2025-12-22",
+        "value": 62.22
+      },
+      {
+        "date": "2025-12-19",
+        "value": 61.35
+      },
+      {
+        "date": "2025-12-18",
+        "value": 60.69
+      },
+      {
+        "date": "2025-12-17",
+        "value": 60.61
+      },
+      {
+        "date": "2025-12-16",
+        "value": 59.93
+      },
+      {
+        "date": "2025-12-15",
+        "value": 61.55
+      },
+      {
+        "date": "2025-12-12",
+        "value": 62.11
+      },
+      {
+        "date": "2025-12-11",
+        "value": 61.87
+      },
+      {
+        "date": "2025-12-10",
+        "value": 63.12
+      },
+      {
+        "date": "2025-12-09",
+        "value": 62.62
+      },
+      {
+        "date": "2025-12-08",
+        "value": 63.3
+      },
+      {
+        "date": "2025-12-05",
+        "value": 64.42
+      },
+      {
+        "date": "2025-12-04",
+        "value": 64.15
+      },
+      {
+        "date": "2025-12-03",
+        "value": 63.75
+      },
+      {
+        "date": "2025-12-02",
+        "value": 63.37
+      },
+      {
+        "date": "2025-12-01",
+        "value": 64.22
+      },
+      {
+        "date": "2025-11-28",
+        "value": 64.07
+      },
+      {
+        "date": "2025-11-27",
+        "value": 64.18
+      },
+      {
+        "date": "2025-11-26",
+        "value": 64.81
+      },
+      {
+        "date": "2025-11-25",
+        "value": 63.99
+      },
+      {
+        "date": "2025-11-24",
+        "value": 64.83
+      },
+      {
+        "date": "2025-11-21",
+        "value": 62.78
+      },
+      {
+        "date": "2025-11-20",
+        "value": 63.64
+      },
+      {
+        "date": "2025-11-19",
+        "value": 63.78
+      },
+      {
+        "date": "2025-11-18",
+        "value": 64.86
+      },
+      {
+        "date": "2025-11-17",
+        "value": 63.16
+      },
+      {
+        "date": "2025-11-14",
+        "value": 63.45
+      },
+      {
+        "date": "2025-11-13",
+        "value": 62.14
+      },
+      {
+        "date": "2025-11-12",
+        "value": 61.88
+      },
+      {
+        "date": "2025-11-11",
+        "value": 63.86
+      },
+      {
+        "date": "2025-11-10",
+        "value": 63.01
+      },
+      {
+        "date": "2025-11-07",
+        "value": 63.72
+      },
+      {
+        "date": "2025-11-06",
+        "value": 63.41
+      },
+      {
+        "date": "2025-11-05",
+        "value": 63.54
       }
     ],
     "oil_daily_chart": {
       "labels": [
+        "Mar 2",
+        "Mar 3",
+        "Mar 4",
+        "Mar 5",
+        "Mar 6",
+        "Mar 9",
+        "Mar 10",
+        "Mar 11",
+        "Mar 12",
+        "Mar 13",
+        "Mar 16",
+        "Mar 17",
+        "Mar 18",
+        "Mar 19",
+        "Mar 20",
+        "Mar 23",
+        "Mar 24",
+        "Mar 25",
+        "Mar 26",
+        "Mar 27",
+        "Mar 30",
+        "Mar 31",
+        "Apr 1",
+        "Apr 2",
+        "Apr 6",
+        "Apr 7",
+        "Apr 8",
+        "Apr 9",
+        "Apr 10",
+        "Apr 13",
+        "Apr 14",
+        "Apr 15",
+        "Apr 16",
+        "Apr 17",
+        "Apr 20",
+        "Apr 21",
+        "Apr 22",
+        "Apr 23",
+        "Apr 24",
+        "Apr 27",
+        "Apr 28",
+        "Apr 29",
+        "Apr 30",
+        "May 1",
+        "May 4",
+        "May 5",
+        "May 6",
+        "May 7",
+        "May 8",
+        "May 11",
+        "May 12",
+        "May 13",
+        "May 14",
+        "May 15",
+        "May 18",
+        "May 19",
+        "May 20",
+        "May 21",
+        "May 22",
+        "May 26",
+        "May 27",
+        "May 28",
+        "May 29",
+        "Jun 1",
+        "Jun 2",
+        "Jun 3",
+        "Jun 4",
+        "Jun 5",
+        "Jun 8",
+        "Jun 9",
+        "Jun 10",
+        "Jun 11",
+        "Jun 12",
+        "Jun 15",
+        "Jun 16",
+        "Jun 17",
+        "Jun 18",
+        "Jun 19",
         "Jun 22",
         "Jun 23",
         "Jun 24",
@@ -1535,9 +2917,92 @@
         "Sep 10",
         "Sep 11",
         "Sep 14",
-        "Sep 15"
+        "Sep 15",
+        "Sep 16",
+        "Sep 17",
+        "Sep 18",
+        "Sep 21",
+        "Sep 22"
       ],
       "wti": [
+        71.13,
+        74.48,
+        74.58,
+        80.88,
+        90.77,
+        94.65,
+        83.71,
+        86.8,
+        95.61,
+        98.48,
+        93.39,
+        96.01,
+        96.12,
+        96.11,
+        98.71,
+        89.33,
+        93.18,
+        91.51,
+        96.18,
+        101.26,
+        104.69,
+        102.86,
+        101.9,
+        113.23,
+        114.01,
+        114.58,
+        96.17,
+        99.62,
+        98.34,
+        100.72,
+        93.07,
+        93.04,
+        96.46,
+        85.91,
+        91.06,
+        93.64,
+        94.76,
+        99.27,
+        98.42,
+        99.89,
+        103.45,
+        110.47,
+        108.64,
+        105.38,
+        109.76,
+        105.66,
+        98.75,
+        98.38,
+        98.87,
+        101.56,
+        105.78,
+        104.52,
+        104.66,
+        108.99,
+        112.25,
+        112.09,
+        101.69,
+        100.2,
+        100.35,
+        97.63,
+        92.35,
+        92.65,
+        91.16,
+        95.96,
+        97.47,
+        99.76,
+        96.83,
+        94.32,
+        95.0,
+        91.9,
+        93.68,
+        91.58,
+        88.62,
+        84.65,
+        79.8,
+        80.65,
+        80.35,
+        80.35,
         78.94,
         74.62,
         71.42,
@@ -1599,10 +3064,93 @@
         103.57,
         101.27,
         102.42,
-        107.02
+        107.02,
+        103.62,
+        103.21,
+        101.44,
+        96.97,
+        96.41
       ],
       "brent": [
-        null,
+        77.24,
+        83.28,
+        81.56,
+        88.59,
+        95.74,
+        94.35,
+        89.84,
+        90.98,
+        102.38,
+        103.23,
+        101.04,
+        108.39,
+        118.09,
+        111.05,
+        118.42,
+        103.79,
+        108.42,
+        109.14,
+        113.39,
+        121.47,
+        121.88,
+        126.69,
+        119.56,
+        127.61,
+        127.61,
+        138.21,
+        122.11,
+        119.03,
+        119.07,
+        123.28,
+        118.69,
+        114.93,
+        116.63,
+        98.63,
+        103.4,
+        106.14,
+        113.44,
+        113.25,
+        111.86,
+        113.89,
+        117.62,
+        124.16,
+        124.24,
+        118.26,
+        118.26,
+        114.51,
+        103.7,
+        101.82,
+        103.48,
+        106.11,
+        111.37,
+        110.28,
+        110.91,
+        113.96,
+        116.73,
+        114.64,
+        108.93,
+        105.84,
+        106.9,
+        102.75,
+        97.11,
+        95.47,
+        92.88,
+        98.29,
+        98.49,
+        101.69,
+        98.98,
+        97.29,
+        97.46,
+        94.15,
+        95.73,
+        92.84,
+        88.64,
+        84.36,
+        80.5,
+        80.33,
+        79.35,
+        80.46,
+        76.49,
         75.69,
         72.09,
         73.74,
@@ -1663,9 +3211,92 @@
         120.98,
         118.06,
         121.25,
-        130.8
+        130.8,
+        127.84,
+        121.18,
+        119.66,
+        116.15,
+        114.89
       ],
       "notes": [
+        null,
+        "WTI surge $3.4 (4.7%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI surge $6.3 (8.4%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $9.9 (12.2%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $10.9 (11.6%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.1 (3.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $8.8 (10.1%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $2.9 (3.0%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $5.1 (5.2%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $2.6 (2.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $9.4 (9.5%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.9 (4.3%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI surge $4.7 (5.1%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $5.1 (5.3%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.4 (3.4%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $11.3 (11.1%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI drop $18.4 (16.1%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.5 (3.6%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI drop $7.7 (7.6%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI surge $3.4 (3.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $10.5 (10.9%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $5.2 (6.0%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $2.6 (2.8%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI surge $4.5 (4.8%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $3.6 (3.6%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $7.0 (6.8%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI drop $3.3 (3.0%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $4.4 (4.2%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $4.1 (3.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $6.9 (6.5%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $2.7 (2.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $4.2 (4.2%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $4.3 (4.1%) \u2014 pipeline updates this field with market headlines",
+        "WTI surge $3.3 (3.0%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI drop $10.4 (9.3%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI drop $2.7 (2.7%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $5.3 (5.4%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI surge $4.8 (5.3%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI drop $2.9 (2.9%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $2.5 (2.6%) \u2014 pipeline updates this field with market headlines",
+        null,
+        "WTI drop $3.1 (3.3%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI drop $3.0 (3.2%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $4.0 (4.5%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $4.9 (5.7%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        null,
         null,
         "WTI drop $4.3 (5.5%) \u2014 pipeline updates this field with market headlines",
         "WTI drop $3.2 (4.3%) \u2014 pipeline updates this field with market headlines",
@@ -1727,13 +3358,22 @@
         "WTI surge $6.3 (6.5%) \u2014 pipeline updates this field with market headlines",
         null,
         null,
-        "WTI surge $4.6 (4.5%) \u2014 pipeline updates this field with market headlines"
+        "WTI surge $4.6 (4.5%) \u2014 pipeline updates this field with market headlines",
+        "WTI drop $3.4 (3.2%) \u2014 pipeline updates this field with market headlines",
+        null,
+        null,
+        "WTI drop $4.5 (4.4%) \u2014 pipeline updates this field with market headlines",
+        null
       ],
       "month": "Mar\u2013Sep 2026",
-      "updated": "Sep 19 12:08 UTC",
-      "sessions": 62
+      "updated": "Sep 29 05:04 UTC",
+      "sessions": 145
     },
     "gasoline": [
+      {
+        "date": "2026-09-21",
+        "value": 4.478
+      },
       {
         "date": "2026-09-14",
         "value": 4.319
@@ -1849,13 +3489,13 @@
       {
         "date": "2026-03-02",
         "value": 3.015
-      },
-      {
-        "date": "2026-02-23",
-        "value": 2.937
       }
     ],
     "mortgage30": [
+      {
+        "date": "2026-09-24",
+        "value": 7.03
+      },
       {
         "date": "2026-09-17",
         "value": 6.95
@@ -2131,13 +3771,13 @@
       {
         "date": "2025-05-29",
         "value": 6.89
-      },
-      {
-        "date": "2025-05-22",
-        "value": 6.86
       }
     ],
     "mortgage15": [
+      {
+        "date": "2026-09-24",
+        "value": 6.42
+      },
       {
         "date": "2026-09-17",
         "value": 6.26
@@ -2413,20 +4053,20 @@
       {
         "date": "2025-05-29",
         "value": 6.03
-      },
-      {
-        "date": "2025-05-22",
-        "value": 6.01
       }
     ],
     "icsa": [
       {
+        "date": "2026-09-19",
+        "value": 197000.0
+      },
+      {
         "date": "2026-09-12",
-        "value": 196000.0
+        "value": 198000.0
       },
       {
         "date": "2026-09-05",
-        "value": 206000.0
+        "value": 207000.0
       },
       {
         "date": "2026-08-29",
@@ -3455,20 +5095,20 @@
       {
         "date": "2021-10-02",
         "value": 312000.0
-      },
-      {
-        "date": "2021-09-25",
-        "value": 375000.0
       }
     ],
     "ccsa": [
       {
+        "date": "2026-09-12",
+        "value": 1719000.0
+      },
+      {
         "date": "2026-09-05",
-        "value": 1730000.0
+        "value": 1717000.0
       },
       {
         "date": "2026-08-29",
-        "value": 1769000.0
+        "value": 1765000.0
       },
       {
         "date": "2026-08-22",
@@ -4497,10 +6137,6 @@
       {
         "date": "2021-09-25",
         "value": 2722000.0
-      },
-      {
-        "date": "2021-09-18",
-        "value": 2803000.0
       }
     ],
     "unrate": [
@@ -10668,8 +12304,8 @@
     "umcsent": [
       {
         "date": "2026-09-01",
-        "value": 47.8,
-        "status": "preliminary"
+        "value": 48.1,
+        "status": "final"
       },
       {
         "date": "2026-08-01",
@@ -10819,11 +12455,6 @@
       {
         "date": "2024-03-01",
         "value": 79.4,
-        "status": "final"
-      },
-      {
-        "date": "2024-02-01",
-        "value": 76.9,
         "status": "final"
       }
     ],
@@ -33136,7 +34767,7 @@
     "permit": [
       {
         "date": "2026-08-01",
-        "value": 1394.0
+        "value": 1403.0
       },
       {
         "date": "2026-07-01",
@@ -37539,32 +39170,36 @@
     ],
     "tdsp": [
       {
+        "date": "2026-04-01",
+        "value": 11.111439
+      },
+      {
         "date": "2026-01-01",
-        "value": 11.164138
+        "value": 11.158929
       },
       {
         "date": "2025-10-01",
-        "value": 11.322759
+        "value": 11.322763
       },
       {
         "date": "2025-07-01",
-        "value": 11.229451
+        "value": 11.229457
       },
       {
         "date": "2025-04-01",
-        "value": 11.124241
+        "value": 11.124247
       },
       {
         "date": "2025-01-01",
-        "value": 11.105381
+        "value": 11.105386
       },
       {
         "date": "2024-10-01",
-        "value": 11.122486
+        "value": 11.12249
       },
       {
         "date": "2024-07-01",
-        "value": 11.138759
+        "value": 11.138762
       },
       {
         "date": "2024-04-01",
@@ -37572,7 +39207,7 @@
       },
       {
         "date": "2024-01-01",
-        "value": 11.058904
+        "value": 11.058908
       },
       {
         "date": "2023-10-01",
@@ -37612,7 +39247,7 @@
       },
       {
         "date": "2021-07-01",
-        "value": 10.009588
+        "value": 10.009597
       },
       {
         "date": "2021-04-01",
@@ -37636,7 +39271,7 @@
       },
       {
         "date": "2020-01-01",
-        "value": 11.591159
+        "value": 11.591164
       },
       {
         "date": "2019-10-01",
@@ -37652,11 +39287,7 @@
       },
       {
         "date": "2019-01-01",
-        "value": 11.49991
-      },
-      {
-        "date": "2018-10-01",
-        "value": 11.66641
+        "value": 11.49992
       }
     ],
     "fedfunds_annual": [
@@ -38293,6 +39924,10 @@
     ],
     "ig_oas_monthly": [
       {
+        "date": "2026-09-01",
+        "value": 0.8
+      },
+      {
         "date": "2026-08-01",
         "value": 0.8
       },
@@ -38434,6 +40069,10 @@
       }
     ],
     "hy_oas_monthly": [
+      {
+        "date": "2026-09-01",
+        "value": 2.71
+      },
       {
         "date": "2026-08-01",
         "value": 2.7
