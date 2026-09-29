@@ -2,8 +2,8 @@
   "schema_version": 1,
   "month": "2026-09",
   "source_run_date": "2026-09-29",
-  "archived_at": "2026-09-29T05:19:12.036459Z",
-  "git_sha": "44f390b",
+  "archived_at": "2026-09-29T05:29:01.204141Z",
+  "git_sha": "543bdcb",
   "branch": "dev/multi-expert-improvements",
   "files": [
     "raw_data.json",
@@ -13,14 +13,14 @@
   ],
   "sizes": {
     "raw_data.json": 2224922,
-    "state.json": 40514,
+    "state.json": 40513,
     "index.html": 773236,
     "metrics.json": 3552
   },
   "sha256": {
-    "raw_data.json": "0576d1693357e291a567c7d9715deec8d621c928e6dbeb7c3c6d61b517acf763",
-    "state.json": "2c0cedd630afcdc6e12157fa9805a84db984d4d0ba533c2dd5f88b5be2061ff3",
-    "index.html": "7ca7b516aaec84e6b6def5cf8d3e9e6141a58e780380acbddf83def001c980c2",
+    "raw_data.json": "b0bab0933fdd2f908f55790668a9232699edf5a4b6b7aedc873049508ecfffc4",
+    "state.json": "511caed9bc3d96b60191d53af81341f57bd119ee82c60b5858873c2bd9ffd01d",
+    "index.html": "5317a2c847fec34e89871fe848b3aaeecb4a2af819dc248e48ecdc26c764b9e6",
     "metrics.json": "607a414189d66edc9b6f8dbe55a8f670fbd42d50781f7749d988fe9b709840c2"
   },
   "validation_status": "WARN",
@@ -28,7 +28,7 @@
     "total_checks": 703,
     "passed": 700,
     "failed": 3,
-    "skipped": 4,
+    "skipped": 3,
     "critical_divergences": 0
   },
   "ceo_grade_verdict": "FAIL"

@@ -1,11 +1,11 @@
 {
-  "validated_at": "2026-09-29T05:18:44.182238Z",
+  "validated_at": "2026-09-29T05:28:32.662859Z",
   "status": "WARN",
   "summary": {
     "total_checks": 703,
     "passed": 700,
     "failed": 3,
-    "skipped": 4,
+    "skipped": 3,
     "critical_divergences": 0
   },
   "internal_consistency": [
@@ -1139,7 +1139,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-09-29T05:17:29.613098Z",
+      "collected_at": "2026-09-29T05:26:34.661236Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -4558,8 +4558,13 @@
     {
       "check": "Cross-source: unrate (FRED vs BLS)",
       "pass": true,
-      "severity": "skipped",
-      "note": "one side unavailable (fred=False, bls=True)"
+      "severity": "ok",
+      "metric": "unrate",
+      "fred": 4.1,
+      "bls": 4.1,
+      "diff": 0.0,
+      "tol": 0.205,
+      "note": null
     },
     {
       "check": "Cross-source: cpi_all (FRED vs BLS)",
