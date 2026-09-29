@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "month": "2026-09",
-  "source_run_date": "2026-09-28",
-  "archived_at": "2026-09-28T18:42:08.366989Z",
-  "git_sha": "c8ee847",
+  "source_run_date": "2026-09-29",
+  "archived_at": "2026-09-29T03:53:17.392072Z",
+  "git_sha": "a6c82b4",
   "branch": "dev/multi-expert-improvements",
   "files": [
     "raw_data.json",
@@ -12,24 +12,24 @@
     "metrics.json"
   ],
   "sizes": {
-    "raw_data.json": 2166096,
-    "state.json": 40498,
-    "index.html": 761186,
+    "raw_data.json": 2166403,
+    "state.json": 40514,
+    "index.html": 764129,
     "metrics.json": 3552
   },
   "sha256": {
-    "raw_data.json": "56099621a83afd5b0bd4256a6d73ccdb9a6c2ee0139c7954b2cbb48886068cce",
-    "state.json": "1d7566fe7d199d98241afff846978c54fee582184c3cc540eef16719e9e85ebc",
-    "index.html": "53a5da4c507fbe0191508fd5a653c9df4ad3153f523a008474cbb7cc1b7e39e7",
-    "metrics.json": "994ac1c9a8597414eba414ebd7e57a22e5e8775e6fc90723976ae15dcd95ba71"
+    "raw_data.json": "7054b446a54495786025d328c96bc3db61bd209c4383407e614679e74add123c",
+    "state.json": "c5bd706377e2580f01df302d0be46bfd79de4a1fc4f0c2408c4c8fb4f9b74015",
+    "index.html": "c0889b4fb792d757b4e149f01adbbc6c3bb658cdd62372041ca7e9f42ea99e5c",
+    "metrics.json": "607a414189d66edc9b6f8dbe55a8f670fbd42d50781f7749d988fe9b709840c2"
   },
   "validation_status": "WARN",
   "validation_summary": {
-    "total_checks": 703,
-    "passed": 700,
-    "failed": 3,
+    "total_checks": 702,
+    "passed": 696,
+    "failed": 6,
     "skipped": 1,
-    "critical_divergences": 0
+    "critical_divergences": 2
   },
   "ceo_grade_verdict": "FAIL"
 }

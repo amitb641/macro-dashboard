@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-09-28T18:41:55.585972Z",
-  "status": "PASS",
+  "checked_at": "2026-09-29T03:53:04.645052Z",
+  "status": "WARN",
   "summary": {
-    "total_checks": 449,
-    "passed": 449,
-    "failed": 0,
+    "total_checks": 448,
+    "passed": 445,
+    "failed": 3,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -1849,12 +1849,6 @@
     },
     {
       "category": "Oil",
-      "check": "Chart canvas 3 has size",
-      "pass": true,
-      "severity": "ok"
-    },
-    {
-      "category": "Oil",
       "check": "Panel \"EXHIBIT 01\" painted body content",
       "pass": true,
       "severity": "ok"
@@ -1868,8 +1862,9 @@
     {
       "category": "Oil",
       "check": "Panel \"EXHIBIT 03\" painted body content",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "critical",
+      "detail": "EXHIBIT 03: no canvas/svg/table/text/container in body \u2014 possible hydration shadow or empty placeholder"
     },
     {
       "category": "Oil",
@@ -2089,9 +2084,10 @@
     },
     {
       "category": "global",
-      "check": "No tab build crashes (window.MD._errors tab_crash)",
-      "pass": true,
-      "severity": "ok"
+      "check": "Tab \"oil\" built without JS crash",
+      "pass": false,
+      "severity": "critical",
+      "detail": "Cannot access 'OIL_DAILY' before initialization"
     },
     {
       "category": "data",
@@ -2612,8 +2608,9 @@
     {
       "category": "data",
       "check": "SHOCK_TRACKER all 8 phase titles rendered",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "0/8 titles found"
     },
     {
       "category": "annotations",

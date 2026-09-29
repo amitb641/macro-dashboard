@@ -9,7 +9,7 @@
 // Auto cache-bust: fetch version.json (unique query string bypasses CDN),
 // compare with the version embedded at build time, reload once if stale.
 (function(){
-var BUILD_V = "2026-09-28T18:40:41Z";
+var BUILD_V = "2026-09-29T03:51:51Z";
   if(sessionStorage.getItem("_v_checked")) return; // only check once per session
   sessionStorage.setItem("_v_checked","1");
   fetch("version.json?_t=" + Date.now()).then(function(r){ return r.json(); }).then(function(d){
@@ -6789,14 +6789,33 @@ function buildPCETab(){
 function buildBanksTab(){
   if(builtTabs.banks) return; builtTabs.banks=1;
 
-  const sectorNI=BANK_RESULTS.reduce((a,b)=>a+parseFloat(b.ni25.replace(/[^0-9.]/g,"")),0).toFixed(1);
+  // Tiles used to be typed literals disconnected from any data source --
+  // found 2026-09-28: "Big 5 Trading Revenue" and "10% APR Cap Risk" had
+  // no basis anywhere in data/bank_earnings.json (Morgan Stanley isn't
+  // even a tracked bank in this dataset, so a "Big 5" claim can't be
+  // built from what we have), and Synchrony's NCO was off (5.8% typed
+  // vs the sourced 5.42%). Also: BANK_RESULTS already had a real, live
+  // net-income table sitting right above (sectorNI was computed from it
+  // but never actually used in these tiles -- dead derivation). Now
+  // pulling every number either straight from BANK_RESULTS or verbatim
+  // from data/bank_earnings.json's sourced outlook/credit fields; see
+  // Banks tab commit message for the exact source snippet per figure.
+  // ni25 mixes $M and $B units ("SYF":"$805M" vs "JPM":"$16.5B") -- a
+  // naive strip-non-digits sum (the old dead `sectorNI` derivation this
+  // replaces) treats "805M" as "805B", inflating the total 17x ($853.9B
+  // instead of the real ~$49.7B). Normalize to billions first.
+  const _niB=b=>{const m=b.ni25.match(/([\d.]+)([MB])/);if(!m)return 0;const v=parseFloat(m[1]);return m[2]==="M"?v/1000:v;};
+  const sectorNI=BANK_RESULTS.reduce((a,b)=>a+_niB(b),0).toFixed(1);
+  const _brJPM=BANK_RESULTS.find(b=>b.ticker==="JPM");
+  const _brC=BANK_RESULTS.find(b=>b.ticker==="C");
+  const _brCOF=BANK_RESULTS.find(b=>b.ticker==="COF");
   document.getElementById("bank-metrics").innerHTML = [
-    {lbl:"Big 9 Banks — Q1 2026 Net Income",val:"~$49.6B",sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1A9E5A"},
-    {lbl:"JPM Q1 2026 Revenue",            val:"$50.5B",  sub:"+10% YoY · Markets +20% to record $11.6B",   col:"#1e3a8a"},
-    {lbl:"Big 5 Q1 Trading Revenue",       val:"~$43B",   sub:"+17% YoY · Equities +26% to ~$19.9B",         col:"#8878B8"},
-    {lbl:"GS Q1 Advisory Revenue",         val:"$1.49B",  sub:"+89% YoY · M&A league tables #1",             col:"#1d4ed8"},
-    {lbl:"Synchrony NCO Rate Q1 2026",     val:"~5.8%",   sub:"Peak expected Q2 · FY guide <5.5%",           col:"#ea580c"},
-    {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#D64045"},
+    {lbl:"Big 9 Banks — Q1 2026 Net Income",val:"~$"+sectorNI+"B",sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1A9E5A"},
+    {lbl:"JPM Q1 2026 Revenue",            val:_brJPM.rev25,  sub:"EPS "+_brJPM.eps25+" · ROTCE "+_brJPM.rotce+" · Markets rev +20% (record)",   col:"#1e3a8a"},
+    {lbl:"GS Q1 2026 Advisory Revenue",    val:"$1.5B",  sub:"+89% YoY · Equities net revenue also record $5.3B",             col:"#1d4ed8"},
+    {lbl:"Citigroup Q1 2026 Net Income",   val:_brC.ni25,   sub:"+42% YoY · Markets revenue >$7B, first time in 10yrs",         col:"#0284c7"},
+    {lbl:"Synchrony NCO Rate Q1 2026",     val:"5.42%",   sub:"Improved from 6.38% prior year · FY26 guide below 5.5–6.0% range",col:"#ea580c"},
+    {lbl:"Capital One Q1 2026 Net Income", val:_brCOF.ni25, sub:"+57% YoY · adj EPS $4.42 missed $4.61 est.", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // Main comparison table — 11 cols × 9 banks is too dense to swipe
@@ -7103,11 +7122,35 @@ let SHOCK_TRACKER = null;
 function buildOilTab(){
   if(builtTabs.oil) return; builtTabs.oil=1;
 
+  // "WTI Latest"/"WTI Peak" used to be separate hardcoded strings frozen
+  // since March 2026 (label literally said "Mar'26", value $93.4) --
+  // found 2026-09-28: OIL_DAILY's own real latest entry was Sep 22 at
+  // $96.41, a >6-month-old, ~$3-wrong number sitting on the live site.
+  // Derive both from OIL_DAILY (the same real, pipeline-updated daily
+  // series the chart below renders) instead.
+  var _odN = OIL_DAILY.wti.length;
+  var _wtiLatest = OIL_DAILY.wti[_odN - 1];
+  var _wtiLatestLbl = OIL_DAILY.labels[_odN - 1];
+  var _curMonAbbr = _wtiLatestLbl.split(' ')[0];
+  var _mtdVals = [];
+  OIL_DAILY.labels.forEach(function(l, i){
+    if (l.indexOf(_curMonAbbr + ' ') === 0 && OIL_DAILY.wti[i] != null) _mtdVals.push(OIL_DAILY.wti[i]);
+  });
+  var _mtdOpen = _mtdVals.length ? _mtdVals[0] : _wtiLatest;
+  var _mtdChg = _wtiLatest - _mtdOpen;
+  var _mtdPct = _mtdOpen ? (_mtdChg / _mtdOpen * 100) : 0;
+  var _wtiAll = OIL_DAILY.wti.filter(function(v){ return v != null; });
+  var _wtiRangeLo = Math.min.apply(null, _wtiAll);
+  var _wtiRangeHi = Math.max.apply(null, _wtiAll);
+  var _wtiPeakVal = -Infinity, _wtiPeakIdx = 0;
+  OIL_DAILY.wti.forEach(function(v, i){ if (v != null && v > _wtiPeakVal) { _wtiPeakVal = v; _wtiPeakIdx = i; } });
+  var _wtiPeakLbl = OIL_DAILY.labels[_wtiPeakIdx];
+
   document.getElementById("oil-metrics").innerHTML = [
-    {lbl:"WTI Latest Mar'26",     val:"$93.4",  sub:"MoM: +31% MTD · range $71–$98 · Hormuz shock",     col:"#D64045"},
+    {lbl:"WTI Latest "+_wtiLatestLbl,     val:"$"+_wtiLatest.toFixed(1),  sub:"MoM: "+(_mtdChg>=0?"+":"")+_mtdChg.toFixed(1)+" ("+(_mtdPct>=0?"+":"")+_mtdPct.toFixed(0)+"%) MTD · range $"+_wtiRangeLo.toFixed(0)+"–"+_wtiRangeHi.toFixed(0)+" · "+OIL_DAILY.month, col:_mtdChg>=0?"#D64045":"#1A9E5A"},
     {lbl:"Full Year 2025 Avg",    val:"$65.4",  sub:"YoY: −14.6% vs $76.6 in 2024 · FRED annual avg",   col:"#1A9E5A"},
     {lbl:"Brent 2025 Avg",        val:"$69.1",  sub:"YoY: −14.2% vs $80.5 in 2024 · spread ~$3.7",     col:"#CC8A00"},
-    {lbl:"WTI Peak Mar'26",       val:"$98.5",  sub:"Mar 13 peak · +39% from $71 on Mar 2",              col:"#D64045"},
+    {lbl:"WTI Peak "+_wtiPeakLbl,       val:"$"+_wtiPeakVal.toFixed(1),  sub:_wtiPeakLbl+" peak · trailing "+OIL_DAILY.month,              col:"#D64045"},
     {lbl:"Gas Burden Current",    val:"~3.2%",  sub:"% of disposable income at $90+ WTI · BLS/EIA",     col:"#CC8A00"},
     {lbl:"Peak → Now",            val:"2022: $123",sub:"Gas burden peaked 3.8% vs 1.8% avg 2015–20",    col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
@@ -7153,7 +7196,7 @@ function buildOilTab(){
   // ── Section 2: Current Month — Daily Oil Price Chart ──
 
 // OIL_DAILY — current month daily closes (injected by daily pipeline)
-const OIL_DAILY = {"labels":["Jun 29","Jun 30","Jul 1","Jul 2","Jul 3","Jul 6","Jul 7","Jul 8","Jul 9","Jul 10","Jul 13","Jul 14","Jul 15","Jul 16","Jul 17","Jul 20","Jul 21","Jul 22","Jul 23","Jul 24","Jul 27","Jul 28","Jul 29","Jul 30","Jul 31","Aug 3","Aug 4","Aug 5","Aug 6","Aug 7","Aug 10","Aug 11","Aug 12","Aug 13","Aug 14","Aug 17","Aug 18","Aug 19","Aug 20","Aug 21","Aug 24","Aug 25","Aug 26","Aug 27","Aug 28","Aug 31","Sep 1","Sep 2","Sep 3","Sep 4","Sep 7","Sep 8","Sep 9","Sep 10","Sep 11","Sep 14","Sep 15","Sep 16","Sep 17","Sep 18","Sep 21","Sep 22"],"wti":[71.87,70.56,69.74,69.73,69.73,69.6,71.53,74.56,73.15,72.45,79.2,80.44,80.73,80.03,83.43,84.38,86.04,87.66,93.08,91.74,84.25,80.91,86.08,85.15,86.16,81.96,77.33,76.78,78.88,79.77,83.76,84.77,84.97,82.77,83.99,86.04,86.48,87.28,89.75,87.21,86.34,83.9,83.46,84.81,84.57,87.03,91.48,92.15,92.55,92.69,92.69,94.21,97.26,103.57,101.27,102.42,107.02,103.62,103.21,101.44,96.97,96.41],"brent":[null,70.46,69.24,68.53,68.68,69.56,71.78,76.5,74.46,74.34,81.62,83.69,83.08,81.23,85.01,86.99,93.85,94.12,105.32,100.31,91.82,85.51,91.95,91.91,96.95,88.9,86.47,86.65,89.65,87.62,92.74,93.26,92.52,92.03,92.02,92.43,95.29,92.37,94.0,96.92,92.71,88.24,87.77,90.18,89.75,89.75,96.02,97.59,100.52,102.24,104.47,106.12,109.51,120.98,118.06,121.25,130.8,127.84,121.18,119.66,116.15,114.89],"notes":[null,null,null,null,null,null,null,"WTI surge $3.0 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $6.8 (9.3%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $3.4 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $5.4 (6.2%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $7.5 (8.2%) \u2014 pipeline updates this field with market headlines","WTI drop $3.3 (4.0%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.2 (4.9%) \u2014 pipeline updates this field with market headlines","WTI drop $4.6 (5.6%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $4.0 (5.0%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,null,null,"WTI drop $2.5 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,"WTI surge $4.5 (5.1%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,"WTI surge $3.1 (3.2%) \u2014 pipeline updates this field with market headlines","WTI surge $6.3 (6.5%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.6 (4.5%) \u2014 pipeline updates this field with market headlines","WTI drop $3.4 (3.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.5 (4.4%) \u2014 pipeline updates this field with market headlines",null],"month":"Mar\u2013Sep 2026","updated":"Sep 28 18:40 UTC","sessions":62};
+const OIL_DAILY = {"labels":["Jun 29","Jun 30","Jul 1","Jul 2","Jul 3","Jul 6","Jul 7","Jul 8","Jul 9","Jul 10","Jul 13","Jul 14","Jul 15","Jul 16","Jul 17","Jul 20","Jul 21","Jul 22","Jul 23","Jul 24","Jul 27","Jul 28","Jul 29","Jul 30","Jul 31","Aug 3","Aug 4","Aug 5","Aug 6","Aug 7","Aug 10","Aug 11","Aug 12","Aug 13","Aug 14","Aug 17","Aug 18","Aug 19","Aug 20","Aug 21","Aug 24","Aug 25","Aug 26","Aug 27","Aug 28","Aug 31","Sep 1","Sep 2","Sep 3","Sep 4","Sep 7","Sep 8","Sep 9","Sep 10","Sep 11","Sep 14","Sep 15","Sep 16","Sep 17","Sep 18","Sep 21","Sep 22"],"wti":[71.87,70.56,69.74,69.73,69.73,69.6,71.53,74.56,73.15,72.45,79.2,80.44,80.73,80.03,83.43,84.38,86.04,87.66,93.08,91.74,84.25,80.91,86.08,85.15,86.16,81.96,77.33,76.78,78.88,79.77,83.76,84.77,84.97,82.77,83.99,86.04,86.48,87.28,89.75,87.21,86.34,83.9,83.46,84.81,84.57,87.03,91.48,92.15,92.55,92.69,92.69,94.21,97.26,103.57,101.27,102.42,107.02,103.62,103.21,101.44,96.97,96.41],"brent":[null,70.46,69.24,68.53,68.68,69.56,71.78,76.5,74.46,74.34,81.62,83.69,83.08,81.23,85.01,86.99,93.85,94.12,105.32,100.31,91.82,85.51,91.95,91.91,96.95,88.9,86.47,86.65,89.65,87.62,92.74,93.26,92.52,92.03,92.02,92.43,95.29,92.37,94.0,96.92,92.71,88.24,87.77,90.18,89.75,89.75,96.02,97.59,100.52,102.24,104.47,106.12,109.51,120.98,118.06,121.25,130.8,127.84,121.18,119.66,116.15,114.89],"notes":[null,null,null,null,null,null,null,"WTI surge $3.0 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $6.8 (9.3%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $3.4 (4.2%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $5.4 (6.2%) \u2014 pipeline updates this field with market headlines",null,"WTI drop $7.5 (8.2%) \u2014 pipeline updates this field with market headlines","WTI drop $3.3 (4.0%) \u2014 pipeline updates this field with market headlines","WTI surge $5.2 (6.4%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.2 (4.9%) \u2014 pipeline updates this field with market headlines","WTI drop $4.6 (5.6%) \u2014 pipeline updates this field with market headlines",null,null,null,"WTI surge $4.0 (5.0%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,null,null,"WTI drop $2.5 (2.8%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,null,"WTI surge $4.5 (5.1%) \u2014 pipeline updates this field with market headlines",null,null,null,null,null,"WTI surge $3.1 (3.2%) \u2014 pipeline updates this field with market headlines","WTI surge $6.3 (6.5%) \u2014 pipeline updates this field with market headlines",null,null,"WTI surge $4.6 (4.5%) \u2014 pipeline updates this field with market headlines","WTI drop $3.4 (3.2%) \u2014 pipeline updates this field with market headlines",null,null,"WTI drop $4.5 (4.4%) \u2014 pipeline updates this field with market headlines",null],"month":"Mar\u2013Sep 2026","updated":"Sep 29 03:51 UTC","sessions":62};
 
   (function buildDailyOilChart() {
     const d = OIL_DAILY;
@@ -10435,8 +10478,8 @@ function _captureAndDownload(TAB_IDS, origTabId){
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500;700&family=DM+Serif+Display:wght@400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="theme-overlay.css?v=2026-09-28T18:40:41Z">
-<script src="theme-overlay.js?v=2026-09-28T18:40:41Z"></script>
+<link rel="stylesheet" href="theme-overlay.css?v=2026-09-29T03:51:51Z">
+<script src="theme-overlay.js?v=2026-09-29T03:51:51Z"></script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
