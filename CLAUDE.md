@@ -48,6 +48,35 @@ cross-tab consistency checks pass.
 - Never create new branches without asking
 - Clean up stale remote branches after merging
 
+## ACTIVE INCIDENT: ANTHROPIC_API_KEY billing failure — every LLM call has been failing since ≥2026-07-22 (2026-09-28)
+**The CI secret `ANTHROPIC_API_KEY` (used by both `briefing.yml` and `earnings_agent.yml` on `main`) has been
+returning `400 Bad Request — "Your credit balance is too low to access the Anthropic API"` on every single call,
+every run, for at least two months.** This is a billing/account issue on whichever Anthropic account that key
+belongs to — **add credits at console.anthropic.com → Plans & Billing.** No code change fixes this.
+
+Confirmed via `gh run view <id> --log` on both workflows:
+- `earnings_agent.yml` (Agent 9): every run since 2026-07-22 (the quarter-rollover fix landing) through
+  2026-07-28 successfully fetched real Q2 2026 transcripts (50-95K chars each, from verified URLs), then hit
+  `BadRequestError: ... credit balance is too low` on all 3 retries for every bank, every day. Since a bank's
+  `status` only updates in `data/bank_earnings.json` on a *successful* extraction, nothing was ever written —
+  **`BANK_COMMENTARY` in `index.html` is still frozen at Q1 2026 (Apr dates) as of 2026-09-28**, not because of
+  a transcript-sourcing gap (that part was fixed and working), but because the extraction step itself has been
+  down the whole time.
+- `briefing.yml` (Agent 3, weekly): same 400 error on `briefing_agent.py`'s Claude call, confirmed in the
+  2026-09-26 run (2 days before this entry) — still failing today. The workflow still reports "success" because
+  a regex-based fallback patcher (`patch_kpi`-style commentary patches for U-3/NFP/Core PCE) keeps a few known
+  sentences numerically current even when the LLM call fails all 3 retries — **but genuine fresh AI commentary
+  has not been generated anywhere on the dashboard in over two months.** Agent 10's diagnostician and the
+  editorial/vision review layers are also silently no-op'ing (`No ANTHROPIC_API_KEY` / disabled messages appear
+  in the same logs) since they gate on the same key.
+- **Rule: a workflow reporting "success" does NOT mean its LLM calls succeeded** — every one of these has a
+  non-LLM fallback path that keeps the job green. When investigating "why hasn't X updated," always grep the
+  actual run log for `BadRequestError`/`400`/`credit balance`, not just the job's overall exit status.
+- Until billing is fixed: Agent 9 will keep re-fetching the same transcripts and failing extraction every
+  scheduled run (Jan/Apr/Jul/Oct 10-28); the Banks tab summary tiles were mechanically fixed 2026-09-28 (see the
+  Known Gotchas entry below) to only use verified Q1 2026 figures rather than compound the staleness with
+  further unsourced claims — they'll need a real refresh once Agent 9 can actually extract Q2/Q3 data.
+
 ## ACTIVE: Parallel-run trial (2026-05-14 → 2026-06-14)
 **Read `.claude/PARALLEL_RUN.md` before touching CI workflows, the dev
 branch, or anything in `data/parallel_compare_*` / `data/run_report_*`.**
@@ -120,6 +149,8 @@ Supporting scripts:
 - `.github/workflows/smoke-tests.yml` — PR smoke tests
 
 ## Known Gotchas
+- **Oil tab's "WTI Latest"/"WTI Peak" tiles were separate hardcoded literal strings, frozen since March 2026** (`lbl:"WTI Latest Mar'26"`, `val:"$93.4"`) — found 2026-09-28 during a full 11-tab metric-tile audit. `OIL_DAILY` (a real, pipeline-updated daily series with `wti`/`labels`/`month` fields, the same data the Oil chart below the tiles renders from) sat right there the whole time with a genuinely current last value ($96.41 on Sep 22) while the tile showed a >6-month-old, ~$3-wrong number under a wrong month label. Fixed in `buildOilTab()` (`index.html`) by deriving both tiles from `OIL_DAILY.wti`/`.labels`'s actual last entry — MTD change/%, full-series min/max range, and a real trailing-peak scan (max value + its label) — instead of typing a value by hand each time the underlying data moves. Same root-cause shape as the FFR_DATA/MORTGAGE_DATA/STARTS_DATA class above: real live data existed, a rendered tile just never read it. Tiles #2/#3 ("Full Year 2025 Avg"/"Brent 2025 Avg") and #5/#6 ("Gas Burden"/"Peak → Now") were left untouched — #2/#3 are already correctly server-patched by `pat_wti_tile`/`pat_brent_tile` in `renderer.py` (see the flagged latent year-in-regex bug below); #5/#6 weren't audited this pass.
+- **Banks tab's 6 summary tiles were typed literals with two further failure modes beyond simple staleness — fixed 2026-09-28.** (1) `"Big 5 Q1 Trading Revenue" ~$43B +17% YoY` and `"10% APR Cap Risk"` had **no basis anywhere in `data/bank_earnings.json`** — Morgan Stanley isn't even one of the 9 banks tracked in this dataset, so a "Big 5" aggregate can't be built from what the pipeline actually has, and no bank's commentary mentions an APR-cap proposal at all (grep-checked). (2) `"Synchrony NCO Rate Q1 2026" ~5.8%` was simply wrong against the sourced figure — `data/bank_earnings.json`'s `SYF.credit` field says `NCO 5.42% in Q1` (down from 6.38% prior year), not 5.8%. (3) **`BANK_RESULTS` (a separate, already-present structured array with real `rev25`/`ni25`/`eps25`/`rotce` per bank) had a dead derivation sitting right above the tile block** — `const sectorNI = BANK_RESULTS.reduce(...)` was computed every render and never used; the tiles hardcoded `~$49.6B` instead. **That dead derivation was itself buggy** — its regex strips all non-digit characters from `ni25` before summing, so Synchrony's `"$805M"` becomes `805` and gets added as if it were $805B, inflating the true ~$49.7B sector total to $853.9B (caught by actually running the derivation in Node before trusting it, not by inspection). Fixed by: normalizing `$M`/`$B` units before summing (`_niB()` helper), wiring `sectorNI`/`BANK_RESULTS.find(...)` into the tiles that have real structured data (Big-9 net income, JPM revenue, Citi net income, Capital One net income), and replacing the two unsourced tiles with Citigroup and Capital One net-income tiles pulled the same way — every remaining number is either computed from `BANK_RESULTS` or a verbatim figure from `data/bank_earnings.json`'s `outlook`/`credit` fields (GS advisory $1.5B +89% YoY; Synchrony NCO 5.42%). **All 6 tiles are still honestly labeled Q1 2026** — see the ACTIVE INCIDENT entry above for why Q2/Q3 data doesn't exist yet to replace them with. **Rule: when a `reduce`/derivation exists but its result is never referenced by the code that follows it, don't assume it's correct just because it looks intentional — a dead derivation gets zero real-world testing and can hide a live unit-mixing bug indefinitely.**
 - **Auditing FFR_DATA's fix (above) for the same bug class elsewhere found two more confirmed, currently-active instances and one latent (not-yet-triggered) one — fixed 2026-09-28 on both branches.** All three share the exact root cause: an annual-chart const built from a FRED `frequency='a'` series (or `_annual_avg()`'s equivalent, which deliberately skips the in-progress year) never gets a bucket for the *current* calendar year on its own, and a separate weekly `patch_array_last()` call — which always targets whatever the array's literal LAST element currently is — lands on whatever's actually last instead of a genuine current-year slot.
   - **`MORTGAGE_DATA`**: worse than FFR_DATA's shape, not just the same — its forecast slot (`"2027F"`) holds a real hardcoded number (`6.0`), not `null`, so `patch_array_last`'s "last numeric value" heuristic kept landing on the *forecast placeholder* instead of any real year, silently overwriting the intended `6.0` with that week's live mortgage rate every run. Confirmed via a July 2026 archive: that slot read `6.51` then, `7.03` by September — never once the intended `6.0`.
   - **`STARTS_DATA`**: same wrong-slot bug, plus an independent, compounding wrong-*metric* bug — the weekly patch used `vals['housing_starts']` (sourced from `'houst'`, TOTAL housing starts) to update the chart's `sf` (single-family-only) array. Confirmed via the same July archive: `sf`'s last value read `1465` then, `1275` by September, while `mf` (never separately patched) stayed exactly stable at `415` both times — proof the corruption was isolated to the one weekly-patched key.
