@@ -1,3 +1,32 @@
+## Repair Agent — 2026-09-29T05:05:24.533659Z
+
+- **Status**: WARN
+- **Total checks**: 702
+- **Passed**: 696
+- **Failed**: 6
+- **Critical divergences**: 2
+
+### Internal consistency
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **CPI core YoY (latest)** — 
+
+### Staleness
+_0 critical · 0 warning · 2 stale_
+
+- ⏰ **Staleness: cc_delinq** — 181d old (limit 150d)
+- ⏰ **Staleness: mtg_delinq** — 181d old (limit 150d)
+
+### Visual QA
+_2 critical · 1 warning · 0 stale_
+
+- 🔴 **Visual: Oil — Panel "EXHIBIT 03" painted body content** — 
+- 🔴 **Visual: global — Tab "oil" built without JS crash** — 
+- ⚠️ **Visual: data — SHOCK_TRACKER all 8 phase titles rendered** — 
+
+
+---
+
 ## Repair Agent — 2026-09-29T03:52:48.724269Z
 
 - **Status**: WARN
@@ -748,22 +777,6 @@ _0 critical · 0 warning · 1 stale_
 ---
 
 ## Repair Agent — 2026-07-01T13:29:22.023862Z
-
-- **Status**: WARN
-- **Total checks**: 665
-- **Passed**: 664
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 122d old (limit 120d)
-
-
----
-
-## Repair Agent — 2026-07-01T05:30:18.056521Z
 
 - **Status**: WARN
 - **Total checks**: 665

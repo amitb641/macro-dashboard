@@ -2,8 +2,8 @@
   "schema_version": 1,
   "month": "2026-09",
   "source_run_date": "2026-09-29",
-  "archived_at": "2026-09-29T03:53:17.392072Z",
-  "git_sha": "a6c82b4",
+  "archived_at": "2026-09-29T05:05:54.798582Z",
+  "git_sha": "8ee404a",
   "branch": "dev/multi-expert-improvements",
   "files": [
     "raw_data.json",
@@ -12,15 +12,15 @@
     "metrics.json"
   ],
   "sizes": {
-    "raw_data.json": 2166403,
+    "raw_data.json": 2224922,
     "state.json": 40514,
-    "index.html": 764129,
+    "index.html": 770367,
     "metrics.json": 3552
   },
   "sha256": {
-    "raw_data.json": "7054b446a54495786025d328c96bc3db61bd209c4383407e614679e74add123c",
-    "state.json": "c5bd706377e2580f01df302d0be46bfd79de4a1fc4f0c2408c4c8fb4f9b74015",
-    "index.html": "c0889b4fb792d757b4e149f01adbbc6c3bb658cdd62372041ca7e9f42ea99e5c",
+    "raw_data.json": "2927a0798773a261432007efd9ca68dc9f46aa7ab653f9f51ccc3483318e3463",
+    "state.json": "451c3f5246c8899161615702a125c8054f313986c456cb7b4dfd78e7001b86a1",
+    "index.html": "41e48deb33787d39d895103a3614cca2782b346cc1c02ed97f84c340b5f0ef7d",
     "metrics.json": "607a414189d66edc9b6f8dbe55a8f670fbd42d50781f7749d988fe9b709840c2"
   },
   "validation_status": "WARN",
