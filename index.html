@@ -5771,8 +5771,8 @@ function _mTile(m){var rgb=_mHex(m.col);var bg='rgba('+rgb[0]+','+rgb[1]+','+rgb
   var cagr = ((Math.pow(realNow/r[0], 1/(L-1))-1)*100).toFixed(1);
   document.getElementById("gdp-metrics").innerHTML = [
     {lbl:"Real GDP "+yr, val:"$"+realNow+"T", sub:"Chained 2017 dollars · BEA", col:"#1A9E5A"},
-    {lbl:"Real Growth "+yr, val:"+"+realGrowth+"%", sub:sign+delta+"pp vs "+yrP+" (+"+realGrowthPrior+"%) · advance est.", col:parseFloat(realGrowth)>=2?"#1A9E5A":"#CC8A00"},
-    {lbl:"Nominal GDP "+yr, val:"$"+nomNow+"T", sub:"Nominal growth: +"+nomGrowth+"% YoY", col:"#336BCC"},
+    {lbl:"Real Growth "+yr, val:(realGrowth>=0?"+":"")+realGrowth+"%", sub:sign+delta+"pp vs "+yrP+" ("+(realGrowthPrior>=0?"+":"")+realGrowthPrior+"%) · advance est.", col:parseFloat(realGrowth)>=2?"#1A9E5A":"#CC8A00"},
+    {lbl:"Nominal GDP "+yr, val:"$"+nomNow+"T", sub:"Nominal growth: "+(nomGrowth>=0?"+":"")+nomGrowth+"% YoY", col:"#336BCC"},
     {lbl:"2026F Consensus", val:"+1.5–2.2%", sub:"GS: 1.5% · JPM: 1.9% · MS: 2.0% · tariff drag risk", col:"#8878B8"},
     {lbl:"GDP Deflator "+yr, val:"+"+deflator+"%", sub:"Nominal − real = implied price level change", col:"#D64045"},
     {lbl:(L-1)+"yr Real CAGR", val:"+"+cagr+"%", sub:"Since 2000 · long-run trend capacity", col:"#336BCC"},
@@ -5976,8 +5976,8 @@ function buildCPITab(){
     {lbl:"CPI YoY "+CPI_MONTHLY.labels[CPI_MONTHLY.labels.length-1], val:`+${cpiLatest}%`, sub:`Core: ${_cpiCore}% ex food & energy`, col:"#CC8A00"},
     {lbl:"Full Year 2025",         val:"+"+_cpiFY+"%",  sub:"YoY: "+(_cpiFY>=_cpiFYPrior?"+":"")+(_cpiFY-_cpiFYPrior).toFixed(1)+"pp vs +"+_cpiFYPrior+"% in 2024", col:"#CC8A00"},
     {lbl:"Monthly Avg 2025",       val:cpi3mAvg!=null?`${cpi3mAvg}%`:"~2.8%",  sub:"3M smoothed avg", col:"#1A9E5A"},
-    {lbl:"Stickiest Category",     val:_cpiSticky.cat+" +"+_cpiSticky[_ck]+"%", sub:"Down from "+_cpiSticky[_ckp]+"% prior year", col:"#336BCC"},
-    {lbl:"Fastest Rising",         val:(_cpiFastest?_cpiFastest.cat+" +"+_cpiFastest[_ck]+"%":"N/A"), sub:_cpiFastest?"Up from "+_cpiFastest[_ckp]+"% prior year":"", col:"#D64045"},
+    {lbl:"Stickiest Category",     val:_cpiSticky.cat+" "+(_cpiSticky[_ck]>=0?"+":"")+_cpiSticky[_ck]+"%", sub:"Down from "+(_cpiSticky[_ckp]>=0?"+":"")+_cpiSticky[_ckp]+"% prior year", col:"#336BCC"},
+    {lbl:"Fastest Rising",         val:(_cpiFastest?_cpiFastest.cat+" "+(_cpiFastest[_ck]>=0?"+":"")+_cpiFastest[_ck]+"%":"N/A"), sub:_cpiFastest?"Up from "+(_cpiFastest[_ckp]>=0?"+":"")+_cpiFastest[_ckp]+"% prior year":"", col:"#D64045"},
     {lbl:"Peak → Now",             val:CPI_ANNUAL.labels[_cpiPeakIdx]+": "+_cpiPeak+"%",sub:"Now ~"+cpiLatest+"% · down "+((((_cpiPeak-cpiLatest)/_cpiPeak)*100)|0)+"% from peak", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -6128,7 +6128,7 @@ function buildWagesTab(){
     {lbl:"Full Year "+_wYr,         val:"+"+_wFY+"%",  sub:"YoY: "+(_wFY>=_wFYPrior?"+":"")+(_wFY-_wFYPrior).toFixed(1)+"pp vs +"+_wFYPrior+"% in "+_wYrP, col:"#CC8A00"},
     {lbl:"Monthly Avg "+_wYr,       val:"+"+_wAvg+"%", sub:"vs +"+_wFYPrior+"%/mo in "+_wYrP+" · normalizing", col:"#CC8A00"},
     {lbl:"Top Sector",             val:_shortName(_wTop.s), sub:"+"+_wTop[_wk]+"% YoY — fastest growing · "+_wYr, col:"#1A9E5A"},
-    {lbl:"Real Wages "+_wYr,        val:"+"+_wReal+"%", sub:"CPI-adj · inflation-adjusted gain",          col:"#1A9E5A"},
+    {lbl:"Real Wages "+_wYr,        val:(_wReal>=0?"+":"")+_wReal+"%", sub:"CPI-adj · inflation-adjusted "+(_wReal>=0?"gain":"loss"),          col:_wReal>=0?"#1A9E5A":"#D64045"},
     {lbl:"Peak → Now",             val:WAGE_ANNUAL.labels[_wPeakIdx]+": +"+_wPeak+"%",sub:"Now +"+_wLatest+"% · converging to ~3.5% LT avg", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
@@ -6569,8 +6569,21 @@ function buildPCETab(){
   var _savLatest = SAVING_MONTHLY.data[SAVING_MONTHLY.data.length-1];
   var _savPrior = SAVING_MONTHLY.data[SAVING_MONTHLY.data.length-2];
   var _savLbl = SAVING_MONTHLY.labels[SAVING_MONTHLY.labels.length-1];
-  var _crCardPCE = CREDIT_QUARTERLY.card[CREDIT_QUARTERLY.card.length-1];
-  var _crQlbl = CREDIT_QUARTERLY.labels[CREDIT_QUARTERLY.labels.length-1];
+  // Guarded 2026-09-29: CREDIT_QUARTERLY is a `const` declared ~425 lines
+  // below this point in the same script tag (same shape as the confirmed
+  // OIL_DAILY TDZ crash that blanked the whole Oil tab earlier today) --
+  // an unconditional unguarded read here could abort the rest of this
+  // function (savings, sentiment, PCE charts) the same way. Could not
+  // reproduce a crash on this specific reference in testing, but the Oil
+  // bug's exact trigger was never fully pinned down either, so this is
+  // hardened defensively rather than left as a second live landmine.
+  var _crCardPCE = 0, _crQlbl = "";
+  try {
+    _crCardPCE = CREDIT_QUARTERLY.card[CREDIT_QUARTERLY.card.length-1];
+    _crQlbl = CREDIT_QUARTERLY.labels[CREDIT_QUARTERLY.labels.length-1];
+  } catch(e) {
+    console.error("buildPCETab: CREDIT_QUARTERLY read failed, using fallback", e);
+  }
   var _sentLatest = UMCSENT_MONTHLY.data[UMCSENT_MONTHLY.data.length-1];
   var _sentLbl = UMCSENT_MONTHLY.labels[UMCSENT_MONTHLY.labels.length-1];
   // UMich thresholds: ≥70 healthy (green), 55–70 caution (amber), <55 stressed (red)
@@ -6755,7 +6768,14 @@ function buildPCETab(){
   });
 
   // UMich Consumer Sentiment — annual (from OIL_VS_SENTIMENT)
-  if(OIL_VS_SENTIMENT.labels.length){
+  // Guarded 2026-09-29 -- same TDZ-risk shape as CREDIT_QUARTERLY above
+  // (OIL_VS_SENTIMENT is a const declared further below in this script
+  // tag); a throw here would abort the consumer table and everything
+  // else remaining in this function, not just this one chart.
+  var _oilVsSentReady = false;
+  try { _oilVsSentReady = !!(OIL_VS_SENTIMENT && OIL_VS_SENTIMENT.labels.length); }
+  catch(e) { console.error("buildPCETab: OIL_VS_SENTIMENT read failed", e); }
+  if(_oilVsSentReady){
     new Chart(document.getElementById("c-umcsent-annual").getContext("2d"),{
       type:"bar",
       data:{labels:OIL_VS_SENTIMENT.labels,datasets:[{
@@ -8197,8 +8217,8 @@ function buildHousingTab(){
   var _hBestMetro = [...HOUSING_METROS].sort((a,b)=>parseFloat(b.y25)-parseFloat(a.y25))[0];
   var _hAfford = AFFORD_DATA.index;
   document.getElementById("housing-metrics").innerHTML = [
-    {lbl:"Home Prices "+_hLbl,     val:"+"+_hLatest+"%",  sub:"Case-Shiller national YoY · supply constrained",col:"#336BCC"},
-    {lbl:"Full Year 2025",         val:"+"+_hLatest+"%",  sub:"YoY: vs +"+_hCS[0]+"% start of period · price growth slowing", col:"#CC8A00"},
+    {lbl:"Home Prices "+_hLbl,     val:(_hLatest>=0?"+":"")+_hLatest+"%",  sub:"Case-Shiller national YoY · supply constrained",col:"#336BCC"},
+    {lbl:"Full Year 2025",         val:(_hLatest>=0?"+":"")+_hLatest+"%",  sub:"YoY: vs "+(_hCS[0]>=0?"+":"")+_hCS[0]+"% start of period · price growth slowing", col:"#CC8A00"},
     {lbl:"30yr Mortgage Sep'26"+_hLbl,   val:_hMortLatest+"%",  sub:"vs "+_hMortAvg+"% trailing avg · Freddie Mac",  col:"#D64045"},
     {lbl:"Best Metro 2025",        val:_hBestMetro.city.split(",")[0]+" "+_hBestMetro.y25, sub:"Strongest major metro YoY appreciation", col:"#1A9E5A"},
     {lbl:"Weakest Metric",         val:AFFORD_DATA.supply[AFFORD_DATA.supply.length-1]+" mo supply",sub:"Below 6-mo balanced norm · tight market", col:"#D64045"},
