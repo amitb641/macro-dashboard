@@ -2267,7 +2267,7 @@ def update_shock_tracker(html, data, vals):
              trans_pre_mma, trans_mom_ann
          ),
          "post_mom_ann": trans_mom_ann, "pre_6mma": trans_pre_mma,
-         "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_3mo_val} 3mo ago \u00b7 post-shock +{trans_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{trans_pre_mma}%"
+         "detail": (f"{_mo_lbl(trans_latest)} {data.get('cpi_transport',[{}])[0].get('value','?')} vs {trans_3mo_val} 3mo ago \u00b7 post-shock {trans_mom_ann:+}% ann. \u00b7 pre-shock 6-MMA {trans_pre_mma:+}%"
                     if trans_mom_ann is not None and trans_pre_mma is not None else
                     "Awaiting CPI Transport Services history"),
          "note": (f"CPI Transportation Services at {cpi_trans_yoy}% YoY ({_mo_lbl(cpi_trans_date)})"
@@ -2292,10 +2292,10 @@ def update_shock_tracker(html, data, vals):
              energy_pre_mma, energy_mom_ann
          ),
          "post_mom_ann": energy_mom_ann, "pre_6mma": energy_pre_mma,
-         "detail": (f"{_mo_lbl(energy_latest)} vs 3mo ago \u00b7 post-shock +{energy_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{energy_pre_mma}%"
+         "detail": (f"{_mo_lbl(energy_latest)} vs 3mo ago \u00b7 post-shock {energy_mom_ann:+}% ann. \u00b7 pre-shock 6-MMA {energy_pre_mma:+}%"
                     if energy_mom_ann is not None and energy_pre_mma is not None else
                     "Awaiting CPI Energy history"),
-         "note": f"CPI Energy at +{cpi_energy_yoy}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release",
+         "note": f"CPI Energy at {cpi_energy_yoy:+}% YoY" if cpi_energy_yoy is not None else "Awaiting post-shock CPI release",
          "commentary": (
              ("Headline energy print absorbing the full WTI + gasoline spike \u2014 "
               "single largest monthly move in the tracker. Feeds directly into April headline CPI."
@@ -2316,7 +2316,7 @@ def update_shock_tracker(html, data, vals):
              food_pre_mma, food_mom_ann
          ),
          "post_mom_ann": food_mom_ann, "pre_6mma": food_pre_mma,
-         "detail": (f"{_mo_lbl(food_latest)} vs 3mo ago \u00b7 post-shock +{food_mom_ann}% ann. \u00b7 pre-shock 6-MMA +{food_pre_mma}%"
+         "detail": (f"{_mo_lbl(food_latest)} vs 3mo ago \u00b7 post-shock {food_mom_ann:+}% ann. \u00b7 pre-shock 6-MMA {food_pre_mma:+}%"
                     if food_mom_ann is not None and food_pre_mma is not None else
                     "Awaiting CPI Food Away history"),
          "note": (f"CPI Food Away at {food_away_yoy}% YoY ({_mo_lbl(food_away_date)})"

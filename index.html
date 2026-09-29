@@ -5193,8 +5193,18 @@ const YIELD_TABLE = [
   {yr:"2023", ffr:"5.50%", action:"Peak",      nim_trend:"Peak NIM",    gs:"—",     jpm:"—",     ms:"—",     note:"5.5% peak — highest since 2001 · held Jul'23–Sep'24"},
   {yr:"2024", ffr:"4.25%", action:"Cutting",   nim_trend:"Easing",      gs:"—",     jpm:"—",     ms:"—",     note:"3 cuts Sep–Dec 2024 (−100bp) · data-dependent pivot"},
   {yr:"2025", ffr:"4.25%", action:"On hold",   nim_trend:"Stable",      gs:"—",     jpm:"—",     ms:"—",     note:"No cuts in 2025 · inflation stickiness · tariff uncertainty"},
-  {yr:"2026F",ffr:"3.50%", action:"Cutting",   nim_trend:"Expanding",   gs:"3.25%", jpm:"3.75%", ms:"3.25%", note:"GS/MS: 2 cuts · JPM: cautious pause · tariff wildcard"},
+  {yr:"2026F",ffr:"3.50%", action:"Cutting",   nim_trend:"Expanding",   gs:"3.25%", jpm:"3.75%", ms:"3.25%", note:"GS/MS: 2 cuts · JPM: cautious pause · tariff wildcard — \u26a0 forecast vintage Jan 2026, not reverified against current Wall St views"},
 ];
+// GS/JPM/MS 2026F targets above are the last figures this dashboard had a
+// real source for (Jan 2026) -- there is no live analyst-forecast feed in
+// this pipeline (see CLAUDE.md). Flagged stale 2026-09-29 after a user
+// asked whether these still hold given signs the Fed may hike rather than
+// cut; an attempt to re-verify against GS's/JPM's own pages was
+// inconclusive (403 / an internally inconsistent fetch summary), so the
+// numbers were left as-is and flagged rather than silently replaced with
+// an unverified guess. Update this row (and FFR_DATA's matching dots in
+// renderer.py) once real current targets are confirmed.
+var YIELD_TABLE_FORECAST_STALE = true;
 
 function buildYieldTab(){
   if(builtTabs.yield) return; builtTabs.yield=1;
@@ -5315,7 +5325,17 @@ function buildYieldTab(){
 
   // ── Rate history table ─────────────────────────────────────────────
   try{
-  var yHd=["Year","Fed Funds","Action","NIM Cycle","GS","JPM","MS","Note"];
+  // GS/JPM/MS columns get a "⚠ stale" header flag when
+  // YIELD_TABLE_FORECAST_STALE is set -- the last real source for these
+  // forecast figures was Jan 2026 (see comment above YIELD_TABLE); this
+  // makes the staleness visible at the column level, not just buried in
+  // one row's note text.
+  var _fcStaleTip='Forecast vintage Jan 2026 — not reverified against current Wall St views';
+  var yHd=["Year","Fed Funds","Action","NIM Cycle",
+    (typeof YIELD_TABLE_FORECAST_STALE!=="undefined"&&YIELD_TABLE_FORECAST_STALE)?'GS <span title="'+_fcStaleTip+'" style="color:#CC8A00;cursor:help">⚠</span>':"GS",
+    (typeof YIELD_TABLE_FORECAST_STALE!=="undefined"&&YIELD_TABLE_FORECAST_STALE)?'JPM <span title="'+_fcStaleTip+'" style="color:#CC8A00;cursor:help">⚠</span>':"JPM",
+    (typeof YIELD_TABLE_FORECAST_STALE!=="undefined"&&YIELD_TABLE_FORECAST_STALE)?'MS <span title="'+_fcStaleTip+'" style="color:#CC8A00;cursor:help">⚠</span>':"MS",
+    "Note"];
   var yH='<thead><tr>'+yHd.map(function(x){return '<th style="text-align:left">'+x+'</th>';}).join("")+'</tr></thead><tbody>';
   var acMap={Hiking:"#D64045",Peak:"#D64045",Emergency:"#D64045",Cutting:"#1A9E5A","On hold":"#CC8A00",Liftoff:"#CC8A00"};
   YIELD_TABLE.forEach(function(r){
