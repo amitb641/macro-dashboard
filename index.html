@@ -3786,14 +3786,33 @@ function buildPCETab(){
 function buildBanksTab(){
   if(builtTabs.banks) return; builtTabs.banks=1;
 
-  const sectorNI=BANK_RESULTS.reduce((a,b)=>a+parseFloat(b.ni25.replace(/[^0-9.]/g,"")),0).toFixed(1);
+  // Tiles used to be typed literals disconnected from any data source --
+  // found 2026-09-28: "Big 5 Trading Revenue" and "10% APR Cap Risk" had
+  // no basis anywhere in data/bank_earnings.json (Morgan Stanley isn't
+  // even a tracked bank in this dataset, so a "Big 5" claim can't be
+  // built from what we have), and Synchrony's NCO was off (5.8% typed
+  // vs the sourced 5.42%). Also: BANK_RESULTS already had a real, live
+  // net-income table sitting right above (sectorNI was computed from it
+  // but never actually used in these tiles -- dead derivation). Now
+  // pulling every number either straight from BANK_RESULTS or verbatim
+  // from data/bank_earnings.json's sourced outlook/credit fields; see
+  // Banks tab commit message for the exact source snippet per figure.
+  // ni25 mixes $M and $B units ("SYF":"$805M" vs "JPM":"$16.5B") -- a
+  // naive strip-non-digits sum (the old dead `sectorNI` derivation this
+  // replaces) treats "805M" as "805B", inflating the total 17x ($853.9B
+  // instead of the real ~$49.7B). Normalize to billions first.
+  const _niB=b=>{const m=b.ni25.match(/([\d.]+)([MB])/);if(!m)return 0;const v=parseFloat(m[1]);return m[2]==="M"?v/1000:v;};
+  const sectorNI=BANK_RESULTS.reduce((a,b)=>a+_niB(b),0).toFixed(1);
+  const _brJPM=BANK_RESULTS.find(b=>b.ticker==="JPM");
+  const _brC=BANK_RESULTS.find(b=>b.ticker==="C");
+  const _brCOF=BANK_RESULTS.find(b=>b.ticker==="COF");
   document.getElementById("bank-metrics").innerHTML = [
-    {lbl:"Big 9 Banks — Q1 2026 Net Income",val:"~$49.6B",sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1A9E5A"},
-    {lbl:"JPM Q1 2026 Revenue",            val:"$50.5B",  sub:"+10% YoY · Markets +20% to record $11.6B",   col:"#1e3a8a"},
-    {lbl:"Big 5 Q1 Trading Revenue",       val:"~$43B",   sub:"+17% YoY · Equities +26% to ~$19.9B",         col:"#8878B8"},
-    {lbl:"GS Q1 Advisory Revenue",         val:"$1.49B",  sub:"+89% YoY · M&A league tables #1",             col:"#1d4ed8"},
-    {lbl:"Synchrony NCO Rate Q1 2026",     val:"~5.8%",   sub:"Peak expected Q2 · FY guide <5.5%",           col:"#ea580c"},
-    {lbl:"10% APR Cap Risk",               val:"Pending", sub:"Trump proposal — all card issuers lobbying vs.",col:"#D64045"},
+    {lbl:"Big 9 Banks — Q1 2026 Net Income",val:"~$"+sectorNI+"B",sub:"JPM+BAC+WFC+C+GS+COF+AXP+SYF+USB combined",col:"#1A9E5A"},
+    {lbl:"JPM Q1 2026 Revenue",            val:_brJPM.rev25,  sub:"EPS "+_brJPM.eps25+" · ROTCE "+_brJPM.rotce+" · Markets rev +20% (record)",   col:"#1e3a8a"},
+    {lbl:"GS Q1 2026 Advisory Revenue",    val:"$1.5B",  sub:"+89% YoY · Equities net revenue also record $5.3B",             col:"#1d4ed8"},
+    {lbl:"Citigroup Q1 2026 Net Income",   val:_brC.ni25,   sub:"+42% YoY · Markets revenue >$7B, first time in 10yrs",         col:"#0284c7"},
+    {lbl:"Synchrony NCO Rate Q1 2026",     val:"5.42%",   sub:"Improved from 6.38% prior year · FY26 guide below 5.5–6.0% range",col:"#ea580c"},
+    {lbl:"Capital One Q1 2026 Net Income", val:_brCOF.ni25, sub:"+57% YoY · adj EPS $4.42 missed $4.61 est.", col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
 
   // Main comparison table
@@ -4068,11 +4087,35 @@ const OIL_EPISODES = [
 function buildOilTab(){
   if(builtTabs.oil) return; builtTabs.oil=1;
 
+  // "WTI Latest"/"WTI Peak" used to be separate hardcoded strings frozen
+  // since March 2026 (label literally said "Mar'26", value $93.4) --
+  // found 2026-09-28: OIL_DAILY's own real latest entry was Sep 22 at
+  // $96.41, a >6-month-old, ~$3-wrong number sitting on the live site.
+  // Derive both from OIL_DAILY (the same real, pipeline-updated daily
+  // series the chart below renders) instead.
+  var _odN = OIL_DAILY.wti.length;
+  var _wtiLatest = OIL_DAILY.wti[_odN - 1];
+  var _wtiLatestLbl = OIL_DAILY.labels[_odN - 1];
+  var _curMonAbbr = _wtiLatestLbl.split(' ')[0];
+  var _mtdVals = [];
+  OIL_DAILY.labels.forEach(function(l, i){
+    if (l.indexOf(_curMonAbbr + ' ') === 0 && OIL_DAILY.wti[i] != null) _mtdVals.push(OIL_DAILY.wti[i]);
+  });
+  var _mtdOpen = _mtdVals.length ? _mtdVals[0] : _wtiLatest;
+  var _mtdChg = _wtiLatest - _mtdOpen;
+  var _mtdPct = _mtdOpen ? (_mtdChg / _mtdOpen * 100) : 0;
+  var _wtiAll = OIL_DAILY.wti.filter(function(v){ return v != null; });
+  var _wtiRangeLo = Math.min.apply(null, _wtiAll);
+  var _wtiRangeHi = Math.max.apply(null, _wtiAll);
+  var _wtiPeakVal = -Infinity, _wtiPeakIdx = 0;
+  OIL_DAILY.wti.forEach(function(v, i){ if (v != null && v > _wtiPeakVal) { _wtiPeakVal = v; _wtiPeakIdx = i; } });
+  var _wtiPeakLbl = OIL_DAILY.labels[_wtiPeakIdx];
+
   document.getElementById("oil-metrics").innerHTML = [
-    {lbl:"WTI Latest Mar'26",     val:"$93.4",  sub:"MoM: +31% MTD · range $71–$98 · Hormuz shock",     col:"#D64045"},
+    {lbl:"WTI Latest "+_wtiLatestLbl,     val:"$"+_wtiLatest.toFixed(1),  sub:"MoM: "+(_mtdChg>=0?"+":"")+_mtdChg.toFixed(1)+" ("+(_mtdPct>=0?"+":"")+_mtdPct.toFixed(0)+"%) MTD · range $"+_wtiRangeLo.toFixed(0)+"–"+_wtiRangeHi.toFixed(0)+" · "+OIL_DAILY.month, col:_mtdChg>=0?"#D64045":"#1A9E5A"},
     {lbl:"Full Year 2025 Avg",    val:"$65.4",  sub:"YoY: −14.6% vs $76.6 in 2024 · FRED annual avg",   col:"#1A9E5A"},
     {lbl:"Brent 2025 Avg",        val:"$69.1",  sub:"YoY: −14.2% vs $80.5 in 2024 · spread ~$3.7",     col:"#CC8A00"},
-    {lbl:"WTI Peak Mar'26",       val:"$98.5",  sub:"Mar 13 peak · +39% from $71 on Mar 2",              col:"#D64045"},
+    {lbl:"WTI Peak "+_wtiPeakLbl,       val:"$"+_wtiPeakVal.toFixed(1),  sub:_wtiPeakLbl+" peak · trailing "+OIL_DAILY.month,              col:"#D64045"},
     {lbl:"Gas Burden Current",    val:"~3.2%",  sub:"% of disposable income at $90+ WTI · BLS/EIA",     col:"#CC8A00"},
     {lbl:"Peak → Now",            val:"2022: $123",sub:"Gas burden peaked 3.8% vs 1.8% avg 2015–20",    col:"#8878B8"},
   ].map(m=>_mTile(m)).join("");
