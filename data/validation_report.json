@@ -1,10 +1,10 @@
 {
-  "validated_at": "2026-09-29T05:05:35.559480Z",
+  "validated_at": "2026-09-29T05:17:11.716116Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 564,
-    "passed": 549,
-    "failed": 15,
+    "total_checks": 565,
+    "passed": 551,
+    "failed": 14,
     "skipped": 2,
     "critical_divergences": 0
   },
@@ -1121,7 +1121,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-09-29T05:03:50.375275Z",
+      "collected_at": "2026-09-29T05:15:58.551371Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -3072,6 +3072,12 @@
       "detail": ""
     },
     {
+      "check": "Visual: Oil \u2014 Chart canvas 3 has size",
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "check": "Visual: Oil \u2014 Commentary positioned above first chart",
       "severity": "ok",
       "pass": true,
@@ -3787,9 +3793,9 @@
     },
     {
       "check": "Visual: data \u2014 SHOCK_TRACKER all 8 phase titles rendered",
-      "severity": "warning",
-      "pass": false,
-      "detail": "0/8 titles found"
+      "severity": "ok",
+      "pass": true,
+      "detail": ""
     }
   ],
   "visual_review": [],
