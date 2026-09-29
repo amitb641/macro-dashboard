@@ -2110,7 +2110,7 @@ def update_shock_tracker(html, data, vals):
         if diff > 0.5 and before_window:
             return 'ahead', f'Moved +{diff:.1f}pp earlier than the expected window ({win}).'
         if diff > 1.5 and (in_window or past_window):
-            return 'confirmed', (f'Post-shock pace +{post_mma:.1f}% ann. exceeds pre-shock 6-MMA +{pre_mma:.1f}% by +{diff:.1f}pp (>1.5pp threshold). '
+            return 'confirmed', (f'Post-shock pace {post_mma:+.1f}% ann. exceeds pre-shock 6-MMA {pre_mma:+.1f}% by +{diff:.1f}pp (>1.5pp threshold). '
                                  f'We are {"in" if in_window else "past"} the expected window ({win}).')
         if diff > 0.5 and (in_window or past_window):
             return 'emerging', (f'Early signal: +{diff:.1f}pp above pre-shock pace. '
