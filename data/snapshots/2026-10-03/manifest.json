@@ -1,0 +1,33 @@
+{
+  "snapshot_date": "2026-10-03",
+  "created_at": "2026-10-03T13:28:35.274432Z",
+  "files": [
+    "raw_data.json",
+    "state.json",
+    "signals.json",
+    "validation_report.json",
+    "index.html"
+  ],
+  "sizes": {
+    "raw_data.json": 2232269,
+    "state.json": 40383,
+    "signals.json": 5656,
+    "validation_report.json": 115201,
+    "index.html": 775241
+  },
+  "sha256": {
+    "raw_data.json": "69bb1ccdf736581b7cee30e266e6ca818af1ef9fbbc573d7a3b5c5e5dc2436f3",
+    "state.json": "2237b5e3cadd5ad0c744020fcf94a5dcba9fa57b9412dfe55351cad0ce8a6dc2",
+    "signals.json": "e697395abd3af92dcaf4a5ac640a81fbdd9c3cc57795ef104a4733e077096c76",
+    "validation_report.json": "5a451e9ef5c180cfd825dad4507424699932a3460fb9223ff58824a2fc88fcc5",
+    "index.html": "860a749cc22552ccd202a3a9e36f7c6cc0175389fd3d9aaf3cc7a1c5543fee1e"
+  },
+  "validation_status": "WARN",
+  "validation_summary": {
+    "total_checks": 703,
+    "passed": 696,
+    "failed": 7,
+    "skipped": 1,
+    "critical_divergences": 0
+  }
+}
