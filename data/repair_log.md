@@ -1,3 +1,47 @@
+## Repair Agent — 2026-10-03T13:41:26.645356Z
+
+- **Status**: WARN
+- **Total checks**: 565
+- **Passed**: 546
+- **Failed**: 19
+- **Critical divergences**: 0
+
+### Internal consistency
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **CPI core YoY (latest)** — 
+
+### Staleness
+_0 critical · 0 warning · 6 stale_
+
+- ⏰ **Staleness: wage_growth_atl** — 63d old (limit 60d)
+- ⏰ **Staleness: houst** — 63d old (limit 60d)
+- ⏰ **Staleness: houst1f** — 63d old (limit 60d)
+- ⏰ **Staleness: permit** — 63d old (limit 60d)
+- ⏰ **Staleness: cc_delinq** — 185d old (limit 150d)
+- _… and 1 more_
+
+### Earnings verbatim
+_0 critical · 9 warning · 0 stale_
+
+- ⚠️ **JPM: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/JPM.txt — enforcement skipped for this bank
+- ⚠️ **BAC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/BAC.txt — enforcement skipped for this bank
+- ⚠️ **WFC: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/WFC.txt — enforcement skipped for this bank
+- ⚠️ **C: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/C.txt — enforcement skipped for this bank
+- ⚠️ **GS: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/GS.txt — enforcement skipped for this bank
+- ⚠️ **COF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/COF.txt — enforcement skipped for this bank
+- ⚠️ **AXP: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/AXP.txt — enforcement skipped for this bank
+- ⚠️ **SYF: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/SYF.txt — enforcement skipped for this bank
+- ⚠️ **USB: transcript archived for verbatim check** — no file at data/transcripts/Q1_2026/USB.txt — enforcement skipped for this bank
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: Dashboard — Commentary sentence count in [2,4]** — 
+
+
+---
+
 ## Repair Agent — 2026-09-29T05:57:47.439545Z
 
 - **Status**: WARN
