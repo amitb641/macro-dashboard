@@ -1,0 +1,272 @@
+{
+  "analyzed_at": "2026-10-17T12:04:20.340227Z",
+  "risk_level": "HIGH",
+  "alert_count": 3,
+  "watch_count": 3,
+  "flagged_count": 5,
+  "values": {
+    "ffr": 3.88,
+    "dgs2": 4.77,
+    "dgs5": 4.91,
+    "dgs10": 5.1,
+    "dgs30": 5.43,
+    "ig_oas": 84,
+    "hy_oas": 323,
+    "unrate": 4.2,
+    "u6rate": 7.6,
+    "nfp_level": 159044.0,
+    "nfp_mom": 29,
+    "icsa": 199000.0,
+    "ccsa": 1710000.0,
+    "wages_yoy": 3.9,
+    "cpi_yoy": 3.72,
+    "core_cpi_yoy": 2.57,
+    "pce_yoy": 3.42,
+    "core_pce_yoy": 3.01,
+    "saving_rate": 4.1,
+    "mortgage30": 7.4,
+    "housing_starts": 1275.0,
+    "cs_hpi_yoy": 1.93,
+    "umcsent": 46.3,
+    "atl_wage_3m": null,
+    "tdsp": 11.111439,
+    "wti": 101.91,
+    "brent": 126.55,
+    "gdp_growth_q": 2.2,
+    "cc_delinq": 2.85,
+    "spread_10_2_bp": 33
+  },
+  "signals": {
+    "ffr": {
+      "value": 3.88,
+      "delta": 0.24,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs10": {
+      "value": 5.1,
+      "delta": 0.68,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "alert"
+    },
+    "ig_oas": {
+      "value": 84,
+      "delta": 6,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "hy_oas": {
+      "value": 323,
+      "delta": 44,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "unrate": {
+      "value": 4.2,
+      "delta": -0.1,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cpi_yoy": {
+      "value": 3.72,
+      "delta": -0.06,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "alert"
+    },
+    "pce_yoy": {
+      "value": 3.42,
+      "delta": -0.08,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "nfp_mom": {
+      "value": 29,
+      "delta": -86,
+      "direction": "falling",
+      "flagged": true,
+      "alert": null
+    },
+    "wti": {
+      "value": 101.91,
+      "delta": -7.85,
+      "direction": "falling",
+      "flagged": true,
+      "alert": "alert"
+    },
+    "mortgage30": {
+      "value": 7.4,
+      "delta": 1.03,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "watch"
+    },
+    "wages_yoy": {
+      "value": 3.9,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cs_hpi_yoy": {
+      "value": 1.93,
+      "delta": 1.27,
+      "direction": "rising",
+      "flagged": true,
+      "alert": null
+    },
+    "icsa": {
+      "value": 199000.0,
+      "delta": 10000.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "umcsent": {
+      "value": 46.3,
+      "delta": -1.9,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "tdsp": {
+      "value": 11.111439,
+      "delta": -0.2117,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "watch"
+    },
+    "dgs2": {
+      "value": 4.77,
+      "delta": 0.82,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs5": {
+      "value": 4.91,
+      "delta": 0.84,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs30": {
+      "value": 5.43,
+      "delta": 0.45,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "spread_10_2_bp": {
+      "value": 33,
+      "delta": -14,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "core_cpi_yoy": {
+      "value": 2.57,
+      "delta": -0.17,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "core_pce_yoy": {
+      "value": 3.01,
+      "delta": -0.19,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "watch"
+    },
+    "u6rate": {
+      "value": 7.6,
+      "delta": -0.6,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "saving_rate": {
+      "value": 4.1,
+      "delta": 0.5,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "housing_starts": {
+      "value": 1275.0,
+      "delta": -227.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "brent": {
+      "value": 126.55,
+      "delta": 8.29,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "gdp_growth_q": {
+      "value": 2.2,
+      "delta": 0.2,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cc_delinq": {
+      "value": 2.85,
+      "delta": -0.09,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "ccsa": {
+      "value": 1710000.0,
+      "delta": -75000.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "atl_wage_3m": {
+      "value": null,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    }
+  },
+  "headlines": [
+    {
+      "key": "dgs10",
+      "line": "dgs10: 5.10 (\u25b20.68 vs prior) [ALERT]",
+      "alert": "alert"
+    },
+    {
+      "key": "nfp_mom",
+      "line": "nfp_mom: 29.00 (\u25bc86.00 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "wti",
+      "line": "wti: 101.91 (\u25bc7.85 vs prior) [ALERT]",
+      "alert": "alert"
+    },
+    {
+      "key": "mortgage30",
+      "line": "mortgage30: 7.40 (\u25b21.03 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "cs_hpi_yoy",
+      "line": "cs_hpi_yoy: 1.93 (\u25b21.27 vs prior)",
+      "alert": null
+    }
+  ],
+  "raw_errors": []
+}
