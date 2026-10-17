@@ -1,11 +1,11 @@
 {
   "month": "2026-10",
-  "obs_date": "2026-10-10",
+  "obs_date": "2026-10-17",
   "metrics": [
     {
       "series_id": "brent",
       "label": "Brent Crude",
-      "value": 125.44,
+      "value": 126.55,
       "unit": "$/bbl"
     },
     {
@@ -17,13 +17,13 @@
     {
       "series_id": "ccsa",
       "label": "Continued Jobless Claims",
-      "value": 1716000.0,
+      "value": 1710000.0,
       "unit": ""
     },
     {
       "series_id": "core_cpi_yoy",
       "label": "Core CPI YoY",
-      "value": 2.45,
+      "value": 2.57,
       "unit": "%"
     },
     {
@@ -35,7 +35,7 @@
     {
       "series_id": "cpi_yoy",
       "label": "Headline CPI YoY",
-      "value": 3.35,
+      "value": 3.72,
       "unit": "%"
     },
     {
@@ -47,25 +47,25 @@
     {
       "series_id": "dgs10",
       "label": "10Y Treasury",
-      "value": 5.22,
+      "value": 5.1,
       "unit": "%"
     },
     {
       "series_id": "dgs2",
       "label": "2Y Treasury",
-      "value": 4.75,
+      "value": 4.77,
       "unit": "%"
     },
     {
       "series_id": "dgs30",
       "label": "30Y Treasury",
-      "value": 5.6,
+      "value": 5.43,
       "unit": "%"
     },
     {
       "series_id": "dgs5",
       "label": "5Y Treasury",
-      "value": 4.99,
+      "value": 4.91,
       "unit": "%"
     },
     {
@@ -89,19 +89,19 @@
     {
       "series_id": "hy_oas",
       "label": "HY Credit Spread (OAS)",
-      "value": 315,
+      "value": 323,
       "unit": "bp"
     },
     {
       "series_id": "icsa",
       "label": "Initial Jobless Claims",
-      "value": 197000.0,
+      "value": 199000.0,
       "unit": ""
     },
     {
       "series_id": "ig_oas",
       "label": "IG Credit Spread (OAS)",
-      "value": 82,
+      "value": 84,
       "unit": "bp"
     },
     {
@@ -137,7 +137,7 @@
     {
       "series_id": "spread_10_2_bp",
       "label": "10Y-2Y Spread",
-      "value": 47,
+      "value": 33,
       "unit": "bp"
     },
     {
@@ -173,7 +173,7 @@
     {
       "series_id": "wti",
       "label": "WTI Crude",
-      "value": 96.24,
+      "value": 101.91,
       "unit": "$/bbl"
     }
   ]
