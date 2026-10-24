@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-10-17T12:09:29.841674Z",
+  "checked_at": "2026-10-24T12:10:09.724553Z",
   "status": "WARN",
   "summary": {
     "total_checks": 334,
-    "passed": 333,
-    "failed": 1,
+    "passed": 332,
+    "failed": 2,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -853,7 +853,7 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
+      "check": "Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1304,8 +1304,9 @@
     {
       "category": "Oil",
       "check": "Commentary sentence count in [2,4]",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "5 sentences (style_guide \u00a72)"
     },
     {
       "category": "Oil",
