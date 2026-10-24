@@ -1,63 +1,69 @@
 {
-  "generated_at": "2026-10-17T12:04:20Z",
-  "based_on_signals_at": "2026-10-17T12:04:20.340227Z",
+  "generated_at": "2026-10-24T12:04:29Z",
+  "based_on_signals_at": "2026-10-24T12:03:23.526308Z",
   "model": "claude-sonnet-4-6",
   "budget_hit": false,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 1,
+    "calls_used": 9,
     "anthropic_key_set": true
   },
   "rationales": {
     "dgs10": {
-      "value": 5.1,
+      "value": 4.96,
       "direction": "rising",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:dgs10) failed after retries: HTTPError(\\'400 Client Error: Bad Request for url: https://api.anthropic.com/v1/messages\\') | body: {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011Cg7n4Sh2TFJuW8Nwgmb9F\"}'))",
-      "playbook_cite": ""
+      "rationale": "The 10-year Treasury yield (`dgs10`) is flagged with a delta of 0.54 percentage points in the rising direction, which is a meaningful move in absolute terms; however, the playbook's noise-floor table (§2.3) does not include a noise-floor entry for `dgs10`, and no raw-data series was provided to ground the `pre`/`now` values or confirm the observation count. Because the playbook's known-normal baselines list a staleness ceiling of 12 days for `dgs10` (per the `staleness_age_ceiling_days` table) but provide no per-move noise floor for rate series, this rationale cannot compare the 0.54pp delta against a documented threshold to determine whether it is signal or within-noise drift. The data shows a watch-level alert has been raised, but without a playbook-defined noise floor for Treasury yields and without a confirming raw-data slice, confidence in the severity classification is low — no playbook coverage for move-magnitude thresholds on `dgs10` — flagged for human review.",
+      "playbook_cite": "§2.3"
     },
     "cpi_yoy": {
       "value": 3.72,
       "direction": "stable",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cpi_yoy) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "rationale": "The shock tracker reports `cpi_yoy` at 3.72 with a month-over-month delta of −0.06 percentage points, which falls well within the ±0.3 pp noise floor defined in §2.3 for Core CPI YoY — this move should be characterised as tracking baseline, not a meaningful directional shift. The signal is marked `direction: stable`, which is consistent with a within-noise reading, yet the record carries `alert: \"alert\"` alongside `flagged: false`, a combination that warrants scrutiny: if the alert field is driving any downstream display or notification, it may be misfiring on a move that the playbook explicitly classifies as `not_yet` territory (§2.3). No raw-data slice for `cpi_yoy` was provided in the data blob, so the underlying observation count and reference date cannot be independently verified here — no fabricated numbers have been introduced to fill that gap. The discrepancy between the within-noise delta and the active alert state does not match the playbook's expected behaviour for a stable, sub-threshold reading, and is flagged for human review to confirm whether the alert threshold logic is applying a phase-specific `move_threshold` consistent with §2.3 and §4.4.",
+      "playbook_cite": "§2.3"
     },
     "wti": {
-      "value": 101.91,
-      "direction": "falling",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:wti) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "value": 107.89,
+      "direction": "stable",
+      "rationale": "The flagged signal shows WTI at 107.89 with a week-over-week delta of −1.87, which the pipeline has labeled \"alert\" despite the `flagged: false` field — an internal inconsistency worth noting. However, the raw-data slice contains no underlying series for `wti`, so no direct numeric verification against source data is possible; per hard rule 2, no fabricated comparisons can be made. The known-normal baselines list `wti_daily` with a staleness ceiling of 12 days and `gasoline_usd_gal` with a noise floor of ±$0.10/gal (§2.3), but no analogous per-week noise floor for WTI crude itself appears in the playbook, meaning the significance of the −1.87 move cannot be assessed against a documented threshold — no playbook coverage for WTI price noise floor — flagged for human review.",
+      "playbook_cite": "§2.3"
     },
     "mortgage30": {
-      "value": 7.4,
+      "value": 7.32,
       "direction": "rising",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:mortgage30) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "rationale": "The data shows a 0.95 pp month-over-month rise in the 30-year mortgage rate to 7.32%, which is a meaningful move, but no raw_data series for `mortgage30` was provided in this run's data slice, so the `pre` value underpinning the delta cannot be independently verified against source. Per §2.3, the playbook's noise-floor table does not include a defined noise floor for `mortgage30` (only for core CPI YoY, saving rate, UMich sentiment, CC 90+ DPD, and gasoline), so a formal \"within-noise\" or \"significant\" determination cannot be made from the playbook alone. The staleness ceiling for `mortgage30` is 10 days (per the known-normal baselines, mirroring `validator.py`'s `EXPECTED_LAGS`), meaning freshness should be confirmed against the FRED monthly publish window described in §2.2 before treating the move as actionable. No playbook section directly governs the significance threshold for mortgage rate swings — flagged for human review.",
+      "playbook_cite": "§2.3"
     },
     "tdsp": {
       "value": 11.111439,
       "direction": "stable",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:tdsp) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "rationale": "The data shows `tdsp` at 11.111439 with a month-over-month delta of −0.2117, which the pipeline has tagged as \"watch\" despite a `flagged: false` status. Per §2.3, the saving rate noise floor is ±0.3pp, and while `tdsp` is a distinct debt-service series, its move of −0.2117 is directionally modest and sits within a comparable range of natural wiggle, supporting the \"stable\" direction label already assigned. Importantly, the known-baselines note (`_tdsp_note`) records that FRED itself lists \"Next Release Date: Not Available\" for this series, reflecting a genuinely irregular cadence that is not comparable to NY Fed HHDC series — so the absence of raw-data observations in the provided slice is consistent with that structural irregularity rather than a collection failure (§2.2). No raw-data series for `tdsp` was provided to verify the reported value against source, so the numeric claim cannot be independently grounded here — flagged for human review.",
+      "playbook_cite": "§2.3"
     },
     "core_pce_yoy": {
       "value": 3.01,
       "direction": "stable",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:core_pce_yoy) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "rationale": "The data shows `core_pce_yoy` at 3.01 with a month-over-month delta of −0.19 percentage points, which falls within the ±0.3 pp noise floor established for PCE-adjacent core inflation series under §2.3, meaning this move is tracking baseline rather than constituting a meaningful signal. No dedicated `core_pce_yoy` entry appears in the raw-data slice provided, so the underlying observation count and reference date cannot be verified here; the known-normal baselines do list `pce_core` with a staleness ceiling of 95 days, consistent with BEA's ~95-day observed lag (§2.2), which should be confirmed before treating the `watch` alert as actionable. The direction label \"stable\" aligns with the within-noise delta, and no regime contradiction is present. However, because no raw series for `core_pce_yoy` is visible in the data blob, full grounding of the value cannot be confirmed — no playbook coverage for this specific key — flagged for human review.",
+      "playbook_cite": "§2.3"
+    },
+    "hy_oas": {
+      "value": 340,
+      "direction": "rising",
+      "rationale": "The high-yield OAS reading shows a delta of 61 basis points in the rising direction, which is a substantial move; however, the playbook's §2.3 noise-floor table does not include a defined noise floor for `hy_oas` (only `cc_delinq_90plus`, `gasoline_usd_gal`, `core_cpi_yoy`, `saving_rate`, and `umich_sentiment` are enumerated), so no within-noise comparison can be made against a known baseline. The staleness age ceiling for `hy_oas` is listed as 12 days in the known-normal baselines, but no raw-data series values were provided in the data slice, meaning the underlying observations cannot be independently verified against the flagged value of 340. Because neither a noise floor nor source data is available to ground this signal, the magnitude of the move cannot be characterized as significant or routine — no playbook coverage — flagged for human review.",
+      "playbook_cite": "§2.3"
     },
     "nfp_mom": {
       "value": 29,
       "direction": "falling",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:nfp_mom) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "rationale": "The data shows `nfp_mom` at 29 (a delta of −86 from the prior reading), which is a substantial month-over-month decline in nonfarm payrolls; however, no corresponding raw-data series for `nfp_mom` is present in the provided slice, so the underlying observation cannot be verified against source values. BLS monthly payroll data falls under the `bls_monthly` source category (§2.2), and the `payems` staleness ceiling is 65 days, but without a raw-data entry to cross-check, it is not possible to confirm whether this reading reflects a genuine labor-market deterioration or a renderer/collector mismatch of the kind described in §3.1 Pass 1 and Pass 2. The noise-floor table (§2.3) does not include an `nfp_mom` entry, so no within-noise determination can be made — no playbook coverage for this series' move threshold — flagged for human review.",
+      "playbook_cite": "§2.2"
     },
     "cs_hpi_yoy": {
       "value": 1.93,
       "direction": "rising",
-      "rationale": "(rationale failed: RuntimeError('bounded_llm_call(explain:cs_hpi_yoy) skipped — insufficient API credits (Anthropic billing)'))",
-      "playbook_cite": ""
+      "rationale": "The shock tracker reports `cs_hpi_yoy` rising with a delta of 1.27 percentage points, which exceeds the noise-floor threshold that would apply to a comparable YoY series; however, the playbook's §2.3 noise-floor table does not list `cs_hpi_yoy` explicitly, so a direct noise-floor comparison cannot be made from the available data. The staleness ceiling for `cs_hpi` is set at 120 days (per the known-normal baselines, mirroring §2.2's Case-Shiller cadence), but no raw-data slice was provided for this series, meaning the underlying observation count and reference date cannot be verified here. Because the playbook's §2.3 noise-floor table provides no coverage for `cs_hpi_yoy` and the raw-data context is absent, the significance of the 1.27pp delta cannot be confirmed against a known-normal baseline — no playbook coverage for this series' noise floor — flagged for human review.",
+      "playbook_cite": "§2.3"
     }
   }
 }

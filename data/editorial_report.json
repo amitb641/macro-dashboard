@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-17T12:05:37Z",
+  "generated_at": "2026-10-24T12:19:18Z",
   "pieces_audited": 13,
   "llm_enabled": true,
-  "llm_calls_used": 1,
+  "llm_calls_used": 14,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 1,
+    "calls_used": 14,
     "anthropic_key_set": true
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 0,
-    "minor": 0
+    "warning": 3,
+    "minor": 1
   },
   "pieces": [
     {
       "label": "html:commentary-gdp",
-      "text_preview": "Real GDP at 2.1% annualized is above stall speed and avoids immediate recession framing, but this figure predates the current inflation re-acceleration and wage deceleration, both of which are headwin",
+      "text_preview": "Q3 real GDP growth of 2.2% annualized is above stall speed but is a lagging read; the forward-looking data — NFP at 29K, HY spreads at 340bp, and mortgage rates at 7.32% — point to a meaningful decele",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -26,7 +26,7 @@
     },
     {
       "label": "html:commentary-unemp",
-      "text_preview": "U-3 unemployment at 4.3% has moved above the Fed's longer-run neutral estimate, a threshold that historically precedes more rapid deterioration. The U-6 underemployment rate at 8.1% is the more alarmi",
+      "text_preview": "U-3 unemployment at 4.2% remains historically low but is a lagging indicator that will follow the NFP trend with a 2-3 month lag. The U-6 underemployment rate at 7.6% — a 181bp gap above U-3 — signals",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -34,7 +34,7 @@
     },
     {
       "label": "html:commentary-cpi",
-      "text_preview": "Headline CPI surged 39bp to 4.2% YoY, a sharp re-acceleration that is an unambiguous alert signal and the most alarming data point in this snapshot. Core CPI at 2.8% shows more restraint, suggesting t",
+      "text_preview": "Headline CPI at 3.7% YoY is running 170bp above the Fed's 2% target, with the gap between headline and Core CPI (2.6%) of 110bp almost entirely attributable to energy — WTI at $107.9 is a direct upsid",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -42,7 +42,7 @@
     },
     {
       "label": "html:commentary-wages",
-      "text_preview": "Wage growth decelerated 40bp to 3.5% YoY, a meaningful move that on its own would be welcomed by the Fed as a sign of labor market cooling. However, with CPI at 4.2%, real wage growth is now negative ",
+      "text_preview": "Wages at 3.9% YoY remain above the Fed's implicit ~3.0-3.5% comfort zone for a 2% inflation target, but the real wage gain against CPI of 3.7% is essentially zero (+0.2pp). Workers are not accumulatin",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -50,7 +50,7 @@
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "NFP at 172K is a respectable headline but must be contextualized against U-3 at 4.3% and U-6 at 8.1% — the gap between these measures at 380bp indicates elevated underemployment and part-time labor st",
+      "text_preview": "NFP of +29K is a near-recessionary print, down 86K from the prior reading and well below the ~100K threshold needed to absorb new labor force entrants. This is not noise — it is consistent with the cr",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -58,7 +58,7 @@
     },
     {
       "label": "html:commentary-pce",
-      "text_preview": "PCE YoY jumped 57bp to 4.1% — the largest move in this snapshot — and Core PCE at 3.0% confirms that underlying consumer price pressure is broad-based and not a statistical artifact. The savings rate ",
+      "text_preview": "Core PCE at 3.0% is the Fed's preferred gauge and is 100bp above target — this is the number that keeps the FOMC on hold or biased hawkish regardless of labor market softness. The personal saving rate",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -66,7 +66,7 @@
     },
     {
       "label": "html:commentary-banks",
-      "text_preview": "Credit card delinquencies at 2.9% are elevated and trending in a direction that will pressure bank provisioning and compress net income, particularly for consumer-focused lenders. Net Interest Income ",
+      "text_preview": "Rising credit card delinquencies at 2.9% and a near-recessionary NFP print are early warning signals for bank consumer credit books, particularly in unsecured lending and auto. Net Interest Income (NI",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,7 +82,7 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI collapsed $30.82 to $78.94 and Brent sits at $76.50, a dramatic supply-side or demand-destruction signal that is the single most significant disinflationary development in this snapshot. The magni",
+      "text_preview": "WTI at $107.9 and Brent at $115.2 represent a significant supply-side inflation shock that directly threatens the Fed's ability to declare disinflation progress. At these levels, energy is adding appr",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -90,15 +90,44 @@
     },
     {
       "label": "html:commentary-credit",
-      "text_preview": "IG OAS at 77bp and HY OAS at 283bp reflect credit markets that remain remarkably sanguine given the ELEVATED macro risk backdrop and inflation re-acceleration. HY at 283bp is historically tight for a ",
+      "text_preview": "HY OAS widening 61bp to 340bp is an alert-level move that signals deteriorating risk appetite and rising default expectations in leveraged credit. IG OAS at 89bp remains contained but will follow HY i",
       "sentence_count": 3,
-      "findings": [],
-      "llm_confidence": null,
-      "critique_confirms_critical": null
+      "findings": [
+        {
+          "rule": "style_guide §2.1",
+          "severity": "warning",
+          "detail": "Commentary is a single sentence run-on followed by two more, but the third sentence contains a semicolon joining two independent clauses, effectively creating clause-stuffing. The piece also runs long at ~3 dense sentences with multiple sub-clauses each, pushing toward a wall of text.",
+          "fixable": "Split the third sentence at the semicolon into two separate sentences to comply with 'one declarative claim per sentence'.",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.2",
+          "severity": "warning",
+          "detail": "The phrase 'will follow HY if' is a forward-looking conditional stated as our own forecast with no institutional attribution (no Goldman, Fed, or named source cited). [critic downgraded]",
+          "fixable": "Replace 'will follow HY if' with an attributed framing, e.g. 'Goldman credit strategy flags IG as vulnerable to contagion should labor deterioration accelerate and earnings guidance weaken.'",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.3",
+          "severity": "warning",
+          "detail": "The numeric '61bp' and '340bp' and '89bp' must be verified against the corresponding KPI tiles and raw data within the same render cycle. No data was supplied to confirm these figures; factual grounding is assumed but unverified.",
+          "fixable": "",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.2",
+          "severity": "minor",
+          "detail": "'tends to be' is mild hedging filler that softens a declarative claim without adding analytical value.",
+          "fixable": "Replace 'tends to be self-reinforcing' with 'is self-reinforcing' or cite a sourced mechanism.",
+          "origin": "llm_audit"
+        }
+      ],
+      "llm_confidence": "medium",
+      "critique_confirms_critical": false
     },
     {
       "label": "html:commentary-housing",
-      "text_preview": "The 30Y mortgage at 6.49% continues to lock existing homeowners in place and price out marginal buyers, keeping transaction volumes suppressed even as Housing Starts at 1,177K show builders remain act",
+      "text_preview": "The 30Y mortgage rate at 7.32% — up 95bp from the prior snapshot — is a severe affordability shock layered on top of already-stretched home prices; at this rate, the monthly payment on a median-priced",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -106,7 +135,7 @@
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y-2Y spread at 31bp reflects a curve that has re-steepened modestly but remains compressed, consistent with a market pricing in eventual Fed cuts against a still-restrictive front end at 3.63% F",
+      "text_preview": "The 10Y yield surging 54bp to 4.96% is the single most consequential move on the dashboard — it represents a sharp tightening of financial conditions that is not Fed-driven but market-driven, likely r",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
