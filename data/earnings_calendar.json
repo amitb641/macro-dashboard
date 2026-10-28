@@ -5,7 +5,7 @@
     "end": "2026-08-05"
   },
   "maintained_by": "human-in-the-loop",
-  "notes": "Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it. 2026-07-23: URLs below for GS/JPM/WFC/C/BAC/USB/COF/SYF were verified live (WebFetch-confirmed free, matching real reported figures) after discovering the prior quarter's templated guesses all 404'd -- Motley Fool's actual publish date lags the call by ~1 week, not same-day as a naive template assumes, and two banks (C, BAC) use non-obvious URL slugs ('citi' not 'citigroup', 'bank-of-america' not 'bofa'). AXP and BCS hadn't reported yet as of this edit -- expected_report_date corrected against each company's real IR calendar, transcript_url_candidates left as best-guess fallbacks (flagged below) since no real URL exists to verify yet. scripts/earnings_agent.py's fetch_transcript() now also auto-generates fool.com date-window variants (call date .. +10 days) as an additional safety net, so a wrong guess here is no longer fatal the way it was this quarter.",
+  "notes": "2026-10-28: USB Fool URL added (WebFetch-verified: full Q2 2026 call, July 16, freely readable; Fool published 07/23). CI run logs showed benzinga/seekingalpha/investing.com return HTTP 403 to GitHub runners (USB/COF/SYF) -- only fool.com has worked from CI, so prefer Fool URLs. COF/SYF/AXP: no Q2 Fool transcript found by search (AXP guessed slug 404s on every date); alternates exist on roic.ai/stockanalysis.com/equibles.com but are untested from CI. Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it. 2026-07-23: URLs below for GS/JPM/WFC/C/BAC/USB/COF/SYF were verified live (WebFetch-confirmed free, matching real reported figures) after discovering the prior quarter's templated guesses all 404'd -- Motley Fool's actual publish date lags the call by ~1 week, not same-day as a naive template assumes, and two banks (C, BAC) use non-obvious URL slugs ('citi' not 'citigroup', 'bank-of-america' not 'bofa'). AXP and BCS hadn't reported yet as of this edit -- expected_report_date corrected against each company's real IR calendar, transcript_url_candidates left as best-guess fallbacks (flagged below) since no real URL exists to verify yet. scripts/earnings_agent.py's fetch_transcript() now also auto-generates fool.com date-window variants (call date .. +10 days) as an additional safety net, so a wrong guess here is no longer fatal the way it was this quarter.",
   "banks": [
     {
       "ticker": "GS",
@@ -69,6 +69,7 @@
       "color": "#0f766e",
       "expected_report_date": "2026-07-16",
       "transcript_url_candidates": [
+        "https://www.fool.com/earnings/call-transcripts/2026/07/23/us-bancorp-usb-q2-2026-earnings-call-transcript/",
         "https://www.benzinga.com/news/26/07/60505128/u-s-bancorp-q2-2026-earnings-call-transcript",
         "https://seekingalpha.com/article/4922657-u-s-bancorp-usb-q2-2026-earnings-call-transcript"
       ]
