@@ -59,7 +59,12 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install anthropic
+          # requests: scripts/validator.py hard-exits at import without it
+          # (Pass 3c runs in-process after extraction). Latent until Oct
+          # 2026 -- every run before then died at extraction (API billing),
+          # so the validator step was never reached; once extraction worked,
+          # every run failed here and discarded its good extractions.
+          pip install anthropic requests==2.32.5
 
       - name: Configure git identity
         run: |
