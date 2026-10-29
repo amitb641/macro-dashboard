@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-28T21:49:46Z",
+  "generated_at": "2026-10-29T01:09:00Z",
   "pieces_audited": 13,
   "llm_enabled": true,
-  "llm_calls_used": 13,
+  "llm_calls_used": 14,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 13,
+    "calls_used": 14,
     "anthropic_key_set": true
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 0,
+    "warning": 4,
     "minor": 0
   },
   "pieces": [
     {
       "label": "html:commentary-gdp",
-      "text_preview": "Real GDP growth at 2.2% annualized is still positive but is almost certainly a backward-looking read that predates the full impact of the 10Y spike, the NFP collapse, and sustained energy prices. The ",
+      "text_preview": "Real GDP growth at 2.2% annualized is still positive but is a backward-looking figure that predates the 57bp surge in the 10Y yield, the 86K NFP collapse, and sustained $103+ WTI. The forward trajecto",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -26,7 +26,7 @@
     },
     {
       "label": "html:commentary-unemp",
-      "text_preview": "U-3 unemployment at 4.2% has not yet moved to alarm levels, but U-6 at 7.6% reveals meaningful underemployment and labor market slack beneath the headline. The 340bp gap between U-6 and U-3 indicates ",
+      "text_preview": "U-3 unemployment at 4.2% has not yet fully reflected the NFP deterioration, but the U-6 underemployment rate at 7.6% — a 340bp gap over U-3 — signals that labor market slack is broader and deeper than",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -34,7 +34,7 @@
     },
     {
       "label": "html:commentary-cpi",
-      "text_preview": "Headline CPI at 3.7% YoY is running 170bp above the Fed's 2% target, driven in part by energy — WTI at $103.4 ensures no near-term relief on that component. Core CPI at 2.6% is more contained but stil",
+      "text_preview": "Headline CPI at 3.7% YoY remains 110bp above core CPI at 2.6%, with the gap driven primarily by energy — a dynamic that will persist as long as Brent holds above $120. Core CPI at 2.6% is trending in ",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -50,7 +50,7 @@
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "NFP at 29K is an 86K sequential decline and represents a critical deterioration signal — this is not noise, it is a trend break. Wage growth at 3.9% YoY remains above the Fed's comfort zone, but decel",
+      "text_preview": "NFP at 29K is an 86K sequential collapse from the prior reading and is approaching the threshold where net job creation fails to absorb new labor force entrants — this is not noise. Wage growth at 3.9",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -58,7 +58,7 @@
     },
     {
       "label": "html:commentary-pce",
-      "text_preview": "Core PCE at 3.0% is the Fed's preferred inflation gauge and it remains 100bp above target — this is the binding constraint on any dovish pivot. The savings rate at 4.1% is low by historical standards,",
+      "text_preview": "Core PCE at 3.0% is the Fed's preferred inflation gauge and sits 50bp above the 2% target — this is the number that matters most for policy, and it is not cooperating. The personal saving rate at 4.1%",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -66,7 +66,7 @@
     },
     {
       "label": "html:commentary-banks",
-      "text_preview": "Net interest income faces a complex outlook: the 10Y at 4.99% supports asset yields, but a 29K NFP print and rising U-6 at 7.6% will pressure loan demand and increase provisioning requirements. Credit",
+      "text_preview": "Rising NII tailwinds from higher rates are increasingly offset by deteriorating asset quality signals — credit card delinquencies at 2.9% are climbing and will accelerate as the labor market weakens a",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,7 +82,7 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI fell $6.39 to $103.37 but remains at a level that sustains significant energy inflation pass-through into headline CPI and PCE. The Brent-WTI spread of $19.73 is abnormally wide, pointing to acute",
+      "text_preview": "WTI has pulled back $6.39 to $103.4, but the Brent-WTI spread of $19.7 is anomalously wide and signals acute international supply tightness that the WTI decline does not fully capture. Brent at $123.1",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -90,7 +90,7 @@
     },
     {
       "label": "html:commentary-credit",
-      "text_preview": "IG OAS at 88bp and HY OAS at 318bp reflect a market that has not yet fully priced the labor deterioration or the rate shock embedded in the 10Y move. HY at 318bp is not distressed, but with NFP at 29K",
+      "text_preview": "IG OAS at 88bp and HY OAS at 318bp remain historically tight relative to the macro deterioration visible in the labor and rate data — a dangerous disconnect. HY spreads at 318bp do not adequately comp",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -100,13 +100,42 @@
       "label": "html:commentary-housing",
       "text_preview": "The 30Y mortgage rate at 7.32% — up 95bp from the prior snapshot — is a severe affordability shock that is effectively locking existing homeowners in place and pricing first-time buyers out of the mar",
       "sentence_count": 3,
-      "findings": [],
-      "llm_confidence": null,
-      "critique_confirms_critical": null
+      "findings": [
+        {
+          "rule": "style_guide §2.4",
+          "severity": "warning",
+          "detail": "Case-Shiller HPI change is reported as '1.43bp' (basis points), which is the wrong unit for a home price index change. HPI changes are expressed in percentage points (pp) or as an index-level move, not basis points. '1.43bp' would be a negligible 0.0143pp move — almost certainly a unit error. [critic downgraded]",
+          "fixable": "Replace '1.43bp' with the correct unit, e.g. '1.43pp' or the appropriate index-level figure matching the raw data.",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.3",
+          "severity": "warning",
+          "detail": "'up 95bp from the prior snapshot' is a forward-looking or comparative claim that must match the corresponding KPI tile and raw data within the same render cycle. The 95bp move cannot be verified against provided data and may not be grounded in the current render cycle's raw values. [critic downgraded]",
+          "fixable": "",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.1",
+          "severity": "warning",
+          "detail": "Commentary is 3 sentences but the third sentence is directive ('do not interpret it as housing resilience'), which departs from the declarative analyst tone convention. Imperative voice directed at the reader is not standard for dashboard commentary.",
+          "fixable": "Replace with a declarative form: 'The Case-Shiller HPI uptick of [X] is a lagging artifact of constrained supply, not a signal of demand strength.'",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.3",
+          "severity": "warning",
+          "detail": "'the pipeline will thin materially as builder confidence erodes' is a forward-looking statement without explicit institutional attribution (e.g. Goldman, NAHB, Fed). Per §2.3, forward-looking statements require sourced attribution.",
+          "fixable": "Attribute to a named source, e.g. 'Per NAHB, the pipeline is expected to thin as builder confidence erodes under these financing conditions.' or recast in present tense as an observed trend.",
+          "origin": "llm_audit"
+        }
+      ],
+      "llm_confidence": "medium",
+      "critique_confirms_critical": false
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y yield at 4.99% — up 57bp from the prior snapshot — is the dominant financial conditions shock, with the 30Y mortgage now at 7.32% transmitting that pressure directly into the real economy. The",
+      "text_preview": "The 10Y yield at 4.99% — up 57bp from the prior snapshot — is the single most consequential move in this update, tightening financial conditions across mortgages, corporate borrowing, and equity valua",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
