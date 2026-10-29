@@ -372,7 +372,17 @@ def merge_bank_update(earnings, ticker, fields, actual_date, transcript_url):
             # Flat fields (match BANK_COMMENTARY schema)
             for f in FIELDS:
                 entry = (fields.get(f) or {})
-                b[f] = entry.get('text', '') or b.get(f, '')
+                # No fallback to the previous value: this entry was seeded
+                # with LAST quarter's text, so `or b.get(f, '')` relabelled
+                # stale Q1 content as Q2 whenever Claude returned nothing for
+                # a field (found 2026-10-28: GS has no card business, so
+                # cards_loans came back empty, the Q1 quote survived, and the
+                # Pass 3c verbatim gate -- correctly -- blocked the whole
+                # commit). Unquoted stale figures would have passed silently.
+                # An empty field just hides its row on the card.
+                b[f] = entry.get('text', '') or ''
+                if not b[f]:
+                    print(f'  note: no {f} content extracted for {ticker}; field cleared (not carried over from prior quarter)')
             # Source tag map
             b['src'] = {f: (fields.get(f) or {}).get('src_tag', '') for f in SRC_FIELDS}
             return True
@@ -520,7 +530,16 @@ def process_bank(calendar, earnings, bank_meta, dry_run=False):
     print(f'  local verify OK ({sum(1 for f in FIELDS if extraction[f].get("text"))} fields populated)')
 
     # Write
-    actual_date = datetime.date.today().isoformat()
+    # The card's displayed date must be the CALL date, not the day this job
+    # ran. Fool publishes ~1 week after the call and the agent can run
+    # months late (2026-10-28: Q2 banks were stamped 'Oct 29, 2026' for
+    # calls held Jul 13-28). expected_report_date is the human-maintained
+    # IR-calendar date; today is only a fallback if it is missing/invalid.
+    actual_date = bank_meta.get('expected_report_date') or ''
+    try:
+        datetime.date.fromisoformat(actual_date)
+    except ValueError:
+        actual_date = datetime.date.today().isoformat()
     if not merge_bank_update(earnings, ticker, extraction, actual_date, src_url):
         print(f'  no matching entry for {ticker} in bank_earnings.json (expected pre-seeded)')
         return False
@@ -656,6 +675,11 @@ def main():
         for f in findings:
             if f.get('severity') == 'critical' and not f.get('pass'):
                 print(f'  {f.get("check")}: {f.get("reason", "")}')
+                # Show WHICH quoted span failed -- the finding carries it, but
+                # the one-line reason alone made a failed gate undiagnosable
+                # from the CI log (2026-10-28, GS).
+                for m in f.get('mismatches', []):
+                    print(f'      - [{m.get("field")}] {m.get("quote_excerpt")!r}')
         sys.exit(1)
     print('[Agent 9] validator OK')
 
