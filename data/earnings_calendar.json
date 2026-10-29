@@ -1,21 +1,20 @@
 {
-  "quarter": "Q2 2026",
+  "quarter": "Q3 2026",
   "season": {
-    "start": "2026-07-10",
-    "end": "2026-08-05"
+    "start": "2026-10-10",
+    "end": "2026-11-05"
   },
   "maintained_by": "human-in-the-loop",
-  "notes": "2026-10-28: USB Fool URL added (WebFetch-verified: full Q2 2026 call, July 16, freely readable; Fool published 07/23). CI run logs showed benzinga/seekingalpha/investing.com return HTTP 403 to GitHub runners (USB/COF/SYF) -- only fool.com has worked from CI, so prefer Fool URLs. COF/SYF/AXP: no Q2 Fool transcript found by search (AXP guessed slug 404s on every date); alternates exist on roic.ai/stockanalysis.com/equibles.com but are untested from CI. Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URL patterns. Agent 9 reads this file on every scheduled run and never mutates it. 2026-07-23: URLs below for GS/JPM/WFC/C/BAC/USB/COF/SYF were verified live (WebFetch-confirmed free, matching real reported figures) after discovering the prior quarter's templated guesses all 404'd -- Motley Fool's actual publish date lags the call by ~1 week, not same-day as a naive template assumes, and two banks (C, BAC) use non-obvious URL slugs ('citi' not 'citigroup', 'bank-of-america' not 'bofa'). AXP and BCS hadn't reported yet as of this edit -- expected_report_date corrected against each company's real IR calendar, transcript_url_candidates left as best-guess fallbacks (flagged below) since no real URL exists to verify yet. scripts/earnings_agent.py's fetch_transcript() now also auto-generates fool.com date-window variants (call date .. +10 days) as an additional safety net, so a wrong guess here is no longer fatal the way it was this quarter.",
+  "notes": "2026-10-28: rolled Q2 -> Q3 2026. Every transcript_url below is a motley fool URL found by search and WebFetch-verified as a full transcript (prepared remarks + Q&A), freely readable. Fool is the ONLY host that has ever worked from CI -- benzinga / seekingalpha / investing.com return HTTP 403 to GitHub runner IPs (confirmed in Oct 2026 run logs), so no non-Fool fallbacks are listed. scripts/earnings_agent.py auto-tries date-shifted Fool variants (+1..+10 days), so only the slug has to be right. expected_report_date is the CALL date and is what the card displays (verified against each transcript header; two lower-confidence: C -- header weekday text garbled, date agrees with its URL and the GS/JPM cluster; BCS -- header said Wednesday but Oct 22 2026 is a Thursday, date taken from the Fool URL/publish date, may be Oct 21). Prior quarters' history: Q2 notes (2026-07-23) and the three failure modes of guessed URLs are in CLAUDE.md. Update each quarter: set expected_report_date per IR calendar, swap transcript_url_candidates to the new quarter's URLs. Agent 9 reads this file on every scheduled run and never mutates it.",
   "banks": [
     {
       "ticker": "GS",
       "bank": "Goldman Sachs",
       "ceo": "David Solomon, CEO",
       "color": "#1d4ed8",
-      "expected_report_date": "2026-07-13",
+      "expected_report_date": "2026-10-13",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/21/goldman-sachs-gs-q2-2026-earnings-call-transcript/",
-        "https://www.benzinga.com/news/26/07/60449209/goldman-sachs-group-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/13/goldman-sachs-gs-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -23,10 +22,9 @@
       "bank": "JPMorgan Chase",
       "ceo": "Jamie Dimon, CEO",
       "color": "#1e3a8a",
-      "expected_report_date": "2026-07-14",
+      "expected_report_date": "2026-10-13",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/22/jpmorgan-chase-jpm-q2-2026-earnings-call-transcript/",
-        "https://www.investing.com/news/transcripts/earnings-call-transcript-jpmorgan-chase-tops-q2-2026-forecasts-as-stock-rises-93CH-4791119"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/13/jpmorgan-chase-jpm-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -34,10 +32,9 @@
       "bank": "Wells Fargo",
       "ceo": "Charlie Scharf, CEO",
       "color": "#d97706",
-      "expected_report_date": "2026-07-14",
+      "expected_report_date": "2026-10-13",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/21/wells-fargo-wfc-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/4921990-wells-fargo-and-company-wfc-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/14/wells-fargo-wfc-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -45,10 +42,9 @@
       "bank": "Citigroup",
       "ceo": "Jane Fraser, CEO",
       "color": "#0284c7",
-      "expected_report_date": "2026-07-14",
+      "expected_report_date": "2026-10-13",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/21/citi-c-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/4922024-citigroup-inc-c-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/13/citi-c-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -56,10 +52,9 @@
       "bank": "Bank of America",
       "ceo": "Brian Moynihan, CEO",
       "color": "#D64045",
-      "expected_report_date": "2026-07-15",
+      "expected_report_date": "2026-10-14",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/21/bank-of-america-bac-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/4921951-bank-of-america-corporation-bac-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/14/bofa-bac-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -67,11 +62,9 @@
       "bank": "U.S. Bancorp",
       "ceo": "Gunjan Kedia, CEO",
       "color": "#0f766e",
-      "expected_report_date": "2026-07-16",
+      "expected_report_date": "2026-10-15",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/23/us-bancorp-usb-q2-2026-earnings-call-transcript/",
-        "https://www.benzinga.com/news/26/07/60505128/u-s-bancorp-q2-2026-earnings-call-transcript",
-        "https://seekingalpha.com/article/4922657-u-s-bancorp-usb-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/15/us-bancorp-usb-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -79,10 +72,9 @@
       "bank": "Capital One",
       "ceo": "Richard Fairbank, CEO & Founder",
       "color": "#8878B8",
-      "expected_report_date": "2026-07-21",
+      "expected_report_date": "2026-10-20",
       "transcript_url_candidates": [
-        "https://www.benzinga.com/news/26/07/60597512/transcript-capital-one-finl-q2-2026-earnings-conference-call",
-        "https://seekingalpha.com/article/4923982-capital-one-financial-corporation-cof-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/20/capital-one-cof-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -90,10 +82,9 @@
       "bank": "Synchrony",
       "ceo": "Brian Doubles, President & CEO",
       "color": "#ea580c",
-      "expected_report_date": "2026-07-21",
+      "expected_report_date": "2026-10-20",
       "transcript_url_candidates": [
-        "https://uk.investing.com/news/transcripts/earnings-call-transcript-synchrony-beats-q2-2026-eps-forecast-as-sales-hit-record-93CH-4780603",
-        "https://seekingalpha.com/article/4923770-synchrony-financial-syf-q2-2026-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/20/synchrony-syf-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -101,10 +92,9 @@
       "bank": "American Express",
       "ceo": "Stephen Squeri, Chairman & CEO",
       "color": "#059669",
-      "expected_report_date": "2026-07-24",
+      "expected_report_date": "2026-10-23",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/24/amex-axp-q2-2026-earnings-call-transcript/",
-        "https://seekingalpha.com/article/q2-2026-axp-earnings-call-transcript"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/23/amex-axp-q3-2026-earnings-call-transcript/"
       ]
     },
     {
@@ -112,10 +102,9 @@
       "bank": "Barclays US (BCUS)",
       "ceo": "C.S. Venkatakrishnan, Barclays Group CEO",
       "color": "#1E4FA3",
-      "expected_report_date": "2026-07-28",
+      "expected_report_date": "2026-10-22",
       "transcript_url_candidates": [
-        "https://www.fool.com/earnings/call-transcripts/2026/07/28/barclays-bcs-q2-2026-earnings-call-transcript/",
-        "https://home.barclays/investor-relations/results-and-reports/"
+        "https://www.fool.com/earnings/call-transcripts/2026/10/22/barclays-bcs-q3-2026-earnings-call-transcript/"
       ]
     }
   ]
