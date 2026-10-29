@@ -600,6 +600,11 @@ def main():
         for f in findings:
             if f.get('severity') == 'critical' and not f.get('pass'):
                 print(f'  {f.get("check")}: {f.get("reason", "")}')
+                # Show WHICH quoted span failed -- the finding carries it, but
+                # the one-line reason alone made a failed gate undiagnosable
+                # from the CI log (2026-10-28, GS).
+                for m in f.get('mismatches', []):
+                    print(f'      - [{m.get("field")}] {m.get("quote_excerpt")!r}')
         sys.exit(1)
     print('[Agent 9] validator OK')
 
