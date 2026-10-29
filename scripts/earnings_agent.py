@@ -321,7 +321,17 @@ def merge_bank_update(earnings, ticker, fields, actual_date, transcript_url):
             # Flat fields (match BANK_COMMENTARY schema)
             for f in FIELDS:
                 entry = (fields.get(f) or {})
-                b[f] = entry.get('text', '') or b.get(f, '')
+                # No fallback to the previous value: this entry was seeded
+                # with LAST quarter's text, so `or b.get(f, '')` relabelled
+                # stale Q1 content as Q2 whenever Claude returned nothing for
+                # a field (found 2026-10-28: GS has no card business, so
+                # cards_loans came back empty, the Q1 quote survived, and the
+                # Pass 3c verbatim gate -- correctly -- blocked the whole
+                # commit). Unquoted stale figures would have passed silently.
+                # An empty field just hides its row on the card.
+                b[f] = entry.get('text', '') or ''
+                if not b[f]:
+                    print(f'  note: no {f} content extracted for {ticker}; field cleared (not carried over from prior quarter)')
             # Source tag map
             b['src'] = {f: (fields.get(f) or {}).get('src_tag', '') for f in SRC_FIELDS}
             return True

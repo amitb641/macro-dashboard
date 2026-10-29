@@ -556,6 +556,39 @@ def test_oil_window_coverage(tmp_dir):
     )
 
 
+def test_agent9_merge_clears_stale_fields(tmp_dir):
+    """Regression guard (2026-10-28): merge_bank_update() used
+    `entry.get('text','') or b.get(f,'')`, so a field Claude returned empty
+    (GS has no card business -> cards_loans) kept LAST quarter's text,
+    relabelled as the new quarter. Pass 3c blocked the whole commit on the
+    stale Q1 quote; stale unquoted figures would have passed silently.
+    """
+    print('-- Test: Agent 9 merge does not carry over prior-quarter text --')
+    import types
+    stubbed = 'anthropic' not in sys.modules
+    if stubbed:
+        # earnings_agent sys.exit()s at import without the SDK; the merge
+        # logic under test never touches it.
+        sys.modules['anthropic'] = types.ModuleType('anthropic')
+    try:
+        import earnings_agent as ea
+        earn = {'banks': [{'ticker': 'GS',
+                           'cards_loans': 'Q1 text: Solomon: "if the resolution of the conflict drags, that probably will be a headwind"',
+                           'economy': 'old economy'}]}
+        fields = {'economy': {'text': 'new economy', 'src_tag': 'Q&A'}}  # cards_loans omitted
+        ok = ea.merge_bank_update(earn, 'GS', fields, '2026-10-29', 'http://example.invalid')
+        b = earn['banks'][0]
+        _test('merge_bank_update finds and updates the bank', ok is True, f'returned {ok!r}')
+        _test('empty extracted field is cleared, not carried over from the prior quarter',
+              b['cards_loans'] == '', f"cards_loans still {b['cards_loans']!r}")
+        _test('populated field takes the new text', b['economy'] == 'new economy', f"economy={b['economy']!r}")
+        _test('bank marked reported', b['status'] == 'reported', f"status={b.get('status')!r}")
+    finally:
+        if stubbed:
+            sys.modules.pop('anthropic', None)
+            sys.modules.pop('earnings_agent', None)
+
+
 # ═══════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════
@@ -606,6 +639,7 @@ def main():
         test_monthly_archive(tmp_dir)
         test_healthcheck_module()
         test_oil_window_coverage(tmp_dir)
+        test_agent9_merge_clears_stale_fields(tmp_dir)
         test_no_real_file_mutation(before_hashes)
 
     finally:
