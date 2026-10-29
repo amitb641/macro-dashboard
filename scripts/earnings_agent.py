@@ -479,7 +479,16 @@ def process_bank(client, calendar, earnings, bank_meta, dry_run=False):
     print(f'  local verify OK ({sum(1 for f in FIELDS if extraction[f].get("text"))} fields populated)')
 
     # Write
-    actual_date = datetime.date.today().isoformat()
+    # The card's displayed date must be the CALL date, not the day this job
+    # ran. Fool publishes ~1 week after the call and the agent can run
+    # months late (2026-10-28: Q2 banks were stamped 'Oct 29, 2026' for
+    # calls held Jul 13-28). expected_report_date is the human-maintained
+    # IR-calendar date; today is only a fallback if it is missing/invalid.
+    actual_date = bank_meta.get('expected_report_date') or ''
+    try:
+        datetime.date.fromisoformat(actual_date)
+    except ValueError:
+        actual_date = datetime.date.today().isoformat()
     if not merge_bank_update(earnings, ticker, extraction, actual_date, src_url):
         print(f'  no matching entry for {ticker} in bank_earnings.json (expected pre-seeded)')
         return False
