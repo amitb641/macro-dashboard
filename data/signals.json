@@ -1,30 +1,30 @@
 {
-  "analyzed_at": "2026-10-29T02:20:09.920294Z",
+  "analyzed_at": "2026-10-31T12:03:32.764909Z",
   "risk_level": "ELEVATED",
   "alert_count": 2,
   "watch_count": 4,
   "flagged_count": 5,
   "values": {
     "ffr": 3.88,
-    "dgs2": 4.7,
-    "dgs5": 4.82,
-    "dgs10": 4.99,
-    "dgs30": 5.3,
-    "ig_oas": 88,
-    "hy_oas": 318,
+    "dgs2": 4.61,
+    "dgs5": 4.78,
+    "dgs10": 4.98,
+    "dgs30": 5.32,
+    "ig_oas": 89,
+    "hy_oas": 326,
     "unrate": 4.2,
     "u6rate": 7.6,
     "nfp_level": 159044.0,
     "nfp_mom": 29,
     "icsa": 194000.0,
-    "ccsa": 1728000.0,
+    "ccsa": 1701000.0,
     "wages_yoy": 3.9,
     "cpi_yoy": 3.72,
     "core_cpi_yoy": 2.57,
-    "pce_yoy": 3.42,
-    "core_pce_yoy": 3.01,
-    "saving_rate": 4.1,
-    "mortgage30": 7.32,
+    "pce_yoy": 3.65,
+    "core_pce_yoy": 3.12,
+    "saving_rate": 3.8,
+    "mortgage30": 7.24,
     "housing_starts": 1221.0,
     "cs_hpi_yoy": 2.09,
     "umcsent": 48.0,
@@ -32,9 +32,9 @@
     "tdsp": 11.111439,
     "wti": 103.37,
     "brent": 123.1,
-    "gdp_growth_q": 2.2,
+    "gdp_growth_q": 3.4,
     "cc_delinq": 2.85,
-    "spread_10_2_bp": 29
+    "spread_10_2_bp": 37
   },
   "signals": {
     "ffr": {
@@ -45,22 +45,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 4.99,
-      "delta": 0.57,
+      "value": 4.98,
+      "delta": 0.56,
       "direction": "rising",
       "flagged": true,
       "alert": "watch"
     },
     "ig_oas": {
-      "value": 88,
-      "delta": 10,
+      "value": 89,
+      "delta": 11,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 318,
-      "delta": 39,
+      "value": 326,
+      "delta": 47,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -80,8 +80,8 @@
       "alert": "alert"
     },
     "pce_yoy": {
-      "value": 3.42,
-      "delta": -0.08,
+      "value": 3.65,
+      "delta": 0.15,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -101,8 +101,8 @@
       "alert": "alert"
     },
     "mortgage30": {
-      "value": 7.32,
-      "delta": 0.95,
+      "value": 7.24,
+      "delta": 0.87,
       "direction": "rising",
       "flagged": true,
       "alert": "watch"
@@ -143,29 +143,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 4.7,
-      "delta": 0.75,
+      "value": 4.61,
+      "delta": 0.66,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.82,
-      "delta": 0.75,
+      "value": 4.78,
+      "delta": 0.71,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 5.3,
-      "delta": 0.32,
+      "value": 5.32,
+      "delta": 0.34,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 29,
-      "delta": -18,
+      "value": 37,
+      "delta": -10,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -178,8 +178,8 @@
       "alert": null
     },
     "core_pce_yoy": {
-      "value": 3.01,
-      "delta": -0.19,
+      "value": 3.12,
+      "delta": -0.08,
       "direction": "stable",
       "flagged": false,
       "alert": "watch"
@@ -192,8 +192,8 @@
       "alert": null
     },
     "saving_rate": {
-      "value": 4.1,
-      "delta": 0.5,
+      "value": 3.8,
+      "delta": 0.2,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -213,8 +213,8 @@
       "alert": null
     },
     "gdp_growth_q": {
-      "value": 2.2,
-      "delta": 0.2,
+      "value": 3.4,
+      "delta": 1.4,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -227,8 +227,8 @@
       "alert": null
     },
     "ccsa": {
-      "value": 1728000.0,
-      "delta": -57000.0,
+      "value": 1701000.0,
+      "delta": -84000.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -244,7 +244,7 @@
   "headlines": [
     {
       "key": "dgs10",
-      "line": "dgs10: 4.99 (\u25b20.57 vs prior) [WATCH]",
+      "line": "dgs10: 4.98 (\u25b20.56 vs prior) [WATCH]",
       "alert": "watch"
     },
     {
@@ -259,7 +259,7 @@
     },
     {
       "key": "mortgage30",
-      "line": "mortgage30: 7.32 (\u25b20.95 vs prior) [WATCH]",
+      "line": "mortgage30: 7.24 (\u25b20.87 vs prior) [WATCH]",
       "alert": "watch"
     },
     {

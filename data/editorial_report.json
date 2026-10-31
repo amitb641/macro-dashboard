@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-10-29T02:36:40Z",
+  "generated_at": "2026-10-31T12:19:45Z",
   "pieces_audited": 13,
   "llm_enabled": true,
-  "llm_calls_used": 13,
+  "llm_calls_used": 14,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 13,
+    "calls_used": 14,
     "anthropic_key_set": true
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 0,
-    "minor": 0
+    "warning": 3,
+    "minor": 1
   },
   "pieces": [
     {
       "label": "html:commentary-gdp",
-      "text_preview": "Real GDP growth of 2.2% annualized provides a deceptively stable headline, but the composition and trajectory matter more than the level at this stage of the cycle. The simultaneous shock of a 57bp ra",
+      "text_preview": "Real GDP at 3.4% annualized is a strong backward-looking print, but the current configuration of a 56bp rate shock, 29K NFP, 7.24% mortgages, and $103 WTI makes that trajectory difficult to sustain in",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -26,7 +26,7 @@
     },
     {
       "label": "html:commentary-unemp",
-      "text_preview": "U-3 unemployment at 4.2% has not yet reached recessionary thresholds, but the 7.6% U-6 reading reveals significant underemployment and labor market slack that the headline rate obscures. The 360bp gap",
+      "text_preview": "U-3 unemployment at 4.2% remains low in absolute terms but is trending in the wrong direction, and the U-6 at 7.6% reveals meaningful underemployment and labor market slack beneath the headline. The 3",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -34,7 +34,7 @@
     },
     {
       "label": "html:commentary-cpi",
-      "text_preview": "Headline CPI at 3.7% YoY remains 170bp above the Fed's target, driven in large part by energy pass-through from WTI at $103.4, while core CPI at 2.6% shows that underlying disinflation is progressing ",
+      "text_preview": "Headline CPI at 3.7% YoY remains nearly double the Fed's target, driven in part by WTI above $100 and Brent above $120 sustaining energy pass-through. Core CPI at 2.6% is more encouraging and suggests",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -44,13 +44,42 @@
       "label": "html:commentary-wages",
       "text_preview": "Wages at 3.9% YoY remain above the Fed's implicit ~3.0-3.5% comfort zone for a 2% inflation target, but the real wage gain against CPI of 3.7% is essentially zero (+0.2pp). Workers are not accumulatin",
       "sentence_count": 3,
-      "findings": [],
-      "llm_confidence": null,
-      "critique_confirms_critical": null
+      "findings": [
+        {
+          "rule": "style_guide §2.1",
+          "severity": "warning",
+          "detail": "Commentary is 3 sentences but the third sentence contains two coordinated clauses joined by 'but', effectively stuffing two claims into one sentence ('wage-price spiral risk is diminishing' AND 'wages are not decelerating fast enough'). Rule requires one declarative claim per sentence.",
+          "fixable": "Split into: 'The wage-price spiral risk is diminishing.' 'Wages are not decelerating fast enough to give the Fed confidence to ease.'",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.2",
+          "severity": "warning",
+          "detail": "Phrase 'essentially zero' is pseudo-precision / hedging filler, prohibited by §2.2 ('No pseudo-precision: various, a number of, things, stuff') and the declarative-tone requirement. The actual figure (+0.2pp) is already stated; 'essentially zero' adds vague editorial softening. [critic downgraded]",
+          "fixable": "Remove 'essentially zero' and rewrite as: 'the real wage gain against CPI of 3.7% is +0.2pp — insufficient to build purchasing power.'",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.3",
+          "severity": "warning",
+          "detail": "The Fed's 'implicit ~3.0-3.5% comfort zone' is presented as a factual range without explicit institutional attribution (no Fed dot plot, no named Fed speech, no Goldman/RSM sourcing). Forward-looking or interpretive institutional claims require explicit attribution per §2.3.",
+          "fixable": "Add attribution, e.g.: 'Wages at 3.9% YoY remain above the range most Fed officials have cited (~3.0-3.5%) as consistent with a 2% inflation target'",
+          "origin": "llm_audit"
+        },
+        {
+          "rule": "style_guide §2.2",
+          "severity": "minor",
+          "detail": "'consumption durability' is borderline marketing/jargon language that reduces declarative precision. Preferred register is plain analyst prose.",
+          "fixable": "Replace 'consumption durability' with 'sustained consumption growth'",
+          "origin": "llm_audit"
+        }
+      ],
+      "llm_confidence": "high",
+      "critique_confirms_critical": false
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "A 29K NFP print — down 86K from the prior reading — is a hard stop signal; this is not noise, it is a trend break that warrants immediate reassessment of the soft-landing thesis. Wage growth at 3.9% Y",
+      "text_preview": "The 29K NFP print is a sharp deterioration — 86K below the prior reading — and crosses into territory that historically precedes formal labor market turning points. Wage growth at 3.9% YoY remains abo",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -58,7 +87,7 @@
     },
     {
       "label": "html:commentary-pce",
-      "text_preview": "Core PCE at 3.0% is the Fed's primary target metric and remains 100bp above the 2% mandate, confirming that the disinflation process has stalled at an uncomfortable level. The 4.1% personal saving rat",
+      "text_preview": "Core PCE at 3.1% is the Fed's preferred gauge and remains 110bp above target, confirming that underlying inflation is sticky despite goods deflation. The 3.8% personal saving rate is low by historical",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -66,7 +95,7 @@
     },
     {
       "label": "html:commentary-banks",
-      "text_preview": "Bank NII faces a complex environment: the 10Y at 4.99% supports asset yields, but a 29K NFP print and rising U-6 at 7.6% are early warning signals for credit quality deterioration in consumer and SME ",
+      "text_preview": "The 56bp surge in the 10Y to 4.98% is a double-edged signal for banks: NII benefits from higher asset yields, but unrealized losses on held-to-maturity portfolios and mark-to-market pressure on AFS se",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,7 +111,7 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI fell $6.39 to $103.4 but remains acutely elevated, and the $19.7 Brent-WTI spread at $123.1 signals severe international supply tightness that domestic production cannot offset. At these levels, e",
+      "text_preview": "WTI at $103.4 and Brent at $123.1 remain acutely elevated despite a $6.39 pullback in WTI, and the $19.7 Brent-WTI spread signals persistent supply dislocations in global crude markets. At these level",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -90,7 +119,7 @@
     },
     {
       "label": "html:commentary-credit",
-      "text_preview": "IG OAS at 88bp and HY OAS at 318bp remain relatively contained given the macro deterioration, suggesting credit markets have not yet fully priced the labor market and rate shock visible in other indic",
+      "text_preview": "IG OAS at 89bp and HY OAS at 326bp remain relatively contained given the macro backdrop, suggesting credit markets have not yet fully repriced the rate shock or the labor market deceleration. HY at 32",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -98,7 +127,7 @@
     },
     {
       "label": "html:commentary-housing",
-      "text_preview": "The 30Y mortgage rate at 7.32% — up 95bp from the prior snapshot — is a severe affordability shock that effectively locks existing homeowners in place and prices marginal buyers out of the market. Hou",
+      "text_preview": "The 30Y mortgage rate at 7.24% — up 87bp from the prior snapshot — is a direct transmission of the 10Y yield surge and represents a severe affordability shock layered on top of already-elevated home p",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -106,7 +135,7 @@
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y yield's 57bp surge to 4.99% is the dominant financial conditions shock in this snapshot, pushing the 10Y-2Y spread to a still-narrow 29bp and signaling that term premium is being repriced aggr",
+      "text_preview": "The 10Y yield's 56bp surge to 4.98% is the dominant market signal this snapshot, pushing the 10Y-2Y spread to +37bp and confirming a bear steepener driven by term premium expansion rather than growth ",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,

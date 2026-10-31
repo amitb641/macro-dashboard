@@ -1,3 +1,20 @@
+## Repair Agent — 2026-10-31T12:06:21.483324Z
+
+- **Status**: WARN
+- **Total checks**: 703
+- **Passed**: 701
+- **Failed**: 2
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 2 stale_
+
+- ⏰ **Staleness: cc_delinq** — 213d old (limit 150d)
+- ⏰ **Staleness: mtg_delinq** — 213d old (limit 150d)
+
+
+---
+
 ## Repair Agent — 2026-10-29T02:23:04.907469Z
 
 - **Status**: WARN
@@ -806,22 +823,6 @@ _2 critical · 0 warning · 0 stale_
 ---
 
 ## Repair Agent — 2026-07-02T04:46:19.174863Z
-
-- **Status**: WARN
-- **Total checks**: 665
-- **Passed**: 664
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 123d old (limit 120d)
-
-
----
-
-## Repair Agent — 2026-07-02T04:24:39.230013Z
 
 - **Status**: WARN
 - **Total checks**: 665
