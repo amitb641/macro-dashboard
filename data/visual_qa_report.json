@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-10-24T12:10:09.724553Z",
+  "checked_at": "2026-10-31T12:08:03.455501Z",
   "status": "WARN",
   "summary": {
     "total_checks": 334,
-    "passed": 332,
-    "failed": 2,
+    "passed": 333,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -877,7 +877,7 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"PCE by Component \u2014 YoY % (Aug'26 vs Jul'\" has title",
+      "check": "Panel \"PCE by Component \u2014 YoY % (Sep'26 vs Aug'\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1304,9 +1304,8 @@
     {
       "category": "Oil",
       "check": "Commentary sentence count in [2,4]",
-      "pass": false,
-      "severity": "warning",
-      "detail": "5 sentences (style_guide \u00a72)"
+      "pass": true,
+      "severity": "ok"
     },
     {
       "category": "Oil",
