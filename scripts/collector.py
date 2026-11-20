@@ -37,7 +37,7 @@ errors = []
 
 # ── FRED ──────────────────────────────────────────────────────────────
 
-def fred_obs(series_id, limit=14, freq=None):
+def fred_obs(series_id, limit=14, freq=None, units=None):
     """Return list of {date,value} newest first, no missing values.
     Retries up to 3 times with exponential backoff on 5xx and 429 (rate
     limit) errors. FRED's documented limit is 120 req/min per key; pre-flight
@@ -47,6 +47,7 @@ def fred_obs(series_id, limit=14, freq=None):
     params = {'series_id': series_id, 'api_key': FRED_KEY,
               'file_type': 'json', 'sort_order': 'desc', 'limit': limit}
     if freq: params['frequency'] = freq
+    if units: params['units'] = units   # FRED transformation, e.g. 'chg'
     last_err = None
     for attempt in range(4):  # 0, 1, 2, 3
         try:
@@ -379,10 +380,14 @@ def collect():
     data['payems']      = fred_obs('PAYEMS',     480)
     data['ahetpi']      = fred_obs('AHETPI',     480)
     # ADP National Employment Report — Total Nonfarm Private, MoM change (SA, K).
-    # FRED NPPTTL was discontinued 2022-05 after ADP methodology revamp.
-    # Fetched so renderer can detect a future series revival; renderer applies an
-    # 18-month recency filter — stale obs fall through to prior-state.json round-trip.
-    data['adp_nppttl']  = fred_obs('NPPTTL',     24)
+    # Source: FRED ADPMNUSNERSA (ADP's own series, level in persons, SA),
+    # fetched with units='chg' and converted to thousands. Replaces NPPTTL
+    # (discontinued 2022-05), whose absence left NFP_VS_ADP's history kept by
+    # array POSITION: every month the window advanced, each historical ADP
+    # value slid under the wrong month (found 2026-11-20: Apr–Jul'26 all read
+    # 109K vs ADP's published 105/122/95/44).
+    data['adp_monthly'] = [{'date': o['date'], 'value': round(o['value'] / 1000, 1)}
+                           for o in fred_obs('ADPMNUSNERSA', 26, units='chg')]
     # ADP live scrape — adpemploymentreport.com/ner_production.json returns the
     # latest monthly headline as structured JSON (no browser needed).
     # Gives one data point: current month. Historical months accumulate via

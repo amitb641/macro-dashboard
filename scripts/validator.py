@@ -175,21 +175,27 @@ def check_internal(html, data, sig_vals):
             source_nfp = round(payems[0]['value'] - payems[1]['value'])
             _check('NFP BLS MoM (latest)', html_bls[-1], source_nfp, 'jobs')
 
-        # ── ADP freshness check (NPPTTL auto-refresh) ──
-        # Warn if the ADP array has no non-null values in the last 2 months —
-        # that means NPPTTL is stale/discontinued and prior-state fallback is active.
+        # ── ADP history vs source, matched by month label ──
+        # NFP_VS_ADP's ADP values were once preserved by array position, so
+        # each month the window advanced they slid under the wrong month
+        # (found 2026-11-20). Check every month against FRED ADPMNUSNERSA.
         html_adp = nfp_vs_adp.get('adp', [])
-        if html_adp:
-            recent_adp = [v for v in html_adp[-2:] if v is not None]
-            if not recent_adp:
-                findings.append({
-                    'check': 'ADP freshness (NPPTTL)',
-                    'html_value': '0/2 recent months populated',
-                    'source_value': 'NPPTTL via FRED',
-                    'severity': 'warning',
-                    'pass': True,  # soft pass — prior-state fallback active
-                    'note': 'NPPTTL discontinued 2022-05; ADP using prior-state round-trip',
-                })
+        html_lbl = nfp_vs_adp.get('labels', [])
+        adp_src = {datetime.datetime.strptime(o['date'], '%Y-%m-%d').strftime("%b'%y"): o['value']
+                   for o in data.get('adp_monthly', []) if o.get('value') is not None}
+        if html_adp and html_lbl and adp_src:
+            for lbl, v in zip(html_lbl, html_adp):
+                if lbl in adp_src:
+                    _check(f'ADP {lbl}', v, adp_src[lbl], 'jobs')
+        elif html_adp and not adp_src:
+            findings.append({
+                'check': 'ADP source (ADPMNUSNERSA)',
+                'html_value': f'{sum(1 for v in html_adp if v is not None)}/{len(html_adp)} months populated',
+                'source_value': 'adp_monthly missing from raw_data',
+                'severity': 'warning',
+                'pass': False,
+                'note': 'ADP not collected this run; renderer kept prior values by label',
+            })
 
     # ── KPI strip values ──
     kpis_match = re.search(r'const KPIS\s*=\s*(\[[\s\S]*?\]);', html)
@@ -598,9 +604,8 @@ def check_staleness(data, collected_at):
     # `oil_daily_chart` (derived from wti_daily/brent_daily, not a raw
     # fetch), `brent_monthly`/`wti_monthly` (multi-year chart-history
     # arrays, not "latest price" — wti_daily/brent_daily cover that), and
-    # `adp_nppttl` (FRED series discontinued 2022-05 — per playbook.md
-    # principle, a check that fires on a permanently-known condition is
-    # noise, not signal; see the NPPTTL gotcha in CLAUDE.md).
+    # (`adp_nppttl` was dropped 2026-11-20 — NPPTTL discontinued 2022-05;
+    # ADP history now comes from `adp_monthly` = FRED ADPMNUSNERSA.)
     EXPECTED_LAGS = {
         # BLS Employment Situation: published 1st Fri of following month.
         # FRED reference date = 1st of reference month, so age at Saturday
@@ -671,6 +676,7 @@ def check_staleness(data, collected_at):
         # NFP; reference-month-start dating means the same "age ceiling
         # right before next release" reasoning as ffr applies.
         'adp_latest': 60,
+        'adp_monthly': 65,   # ADP NER, 1st Wed of next month; dated to 1st of ref month
 
         # Atlanta Fed Wage Growth Tracker — monthly, 3-month moving average.
         'wage_growth_atl': 60,

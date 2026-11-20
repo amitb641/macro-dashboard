@@ -866,15 +866,10 @@ def rebuild_charts(html, data):
 
     # ── NFP_VS_ADP — both sides now auto-updated ─────────────────────
     # BLS side: derived from PAYEMS MoM changes (as before).
-    # ADP side: FRED NPPTTL (Total Nonfarm Private, MoM change, SA, K).
-    #   Previously manually maintained; now auto-fetched by collector.
+    # ADP side: FRED ADPMNUSNERSA via collector key 'adp_monthly' — already a
+    #   MoM change in thousands (collector fetches units='chg'). Do NOT diff again.
     payems = data.get('payems', [])
-    # NPPTTL is a MoM *change* series (not a level) — values are already
-    # monthly employment changes in thousands. Do NOT compute a second diff.
-    # Note: FRED NPPTTL was discontinued 2022-05; filter to recent obs so stale
-    # data does not displace the prior-state.json round-trip fallback.
-    _nppttl_cutoff = (datetime.datetime.today() - datetime.timedelta(days=548)).strftime('%Y-%m-%d')
-    adp_raw = [o for o in data.get('adp_nppttl', []) if o.get('date', '') >= _nppttl_cutoff]
+    adp_raw = data.get('adp_monthly', [])  # FRED ADPMNUSNERSA, MoM change in K
     if payems and len(payems) >= 25:
         months = list(reversed(payems[:25]))  # oldest-first, 25 obs → 24 MoM changes
         nfp_labels, nfp_bls = [], []
@@ -906,28 +901,31 @@ def rebuild_charts(html, data):
             }
 
             # Build ADP array aligned to lbl_12 labels.
-            # NPPTTL values are already MoM changes — index directly by label.
+            # adp_monthly values are already MoM changes (K) — index by label.
             if adp_raw and len(adp_raw) >= 1:
                 adp_by_label = {}
                 for obs in adp_raw:
                     lbl = datetime.datetime.strptime(obs['date'], '%Y-%m-%d').strftime("%b'%y")
                     adp_by_label[lbl] = round(obs['value'])
                 adp_12 = [adp_by_label.get(l) for l in lbl_12]  # None where ADP not yet published
-                applied.append(f'NFP_VS_ADP rebuilt — ADP auto-NPPTTL ({sum(1 for v in adp_12 if v is not None)}/{len(adp_12)} months)')
+                applied.append(f'NFP_VS_ADP rebuilt — ADP from FRED ADPMNUSNERSA ({sum(1 for v in adp_12 if v is not None)}/{len(adp_12)} months)')
             else:
-                # NPPTTL stale — parse existing HTML values as baseline
-                adp_match = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*adp:\s*\[([^\]]*)\]', html)
-                adp_str = adp_match.group(1).strip() if adp_match else ''
-                try:
-                    adp_12 = json.loads('[' + adp_str + ']') if adp_str else []
-                except (json.JSONDecodeError, Exception):
-                    adp_12 = []
-                # Pad/trim to match lbl_12 length
-                adp_12 = (adp_12 + [None] * len(lbl_12))[:len(lbl_12)]
-                applied.append(f'NFP_VS_ADP.bls updated — ADP preserved (NPPTTL not collected)')
+                # ADP fetch failed this run — keep prior values, matched BY
+                # LABEL. (Position-based preservation shifted every value
+                # under the wrong month each time the window advanced.)
+                m_old = re.search(r'const NFP_VS_ADP\s*=\s*\{[^}]*?labels:\s*(\[[^\]]*\])[^}]*?adp:\s*(\[[^\]]*\])', html)
+                prev = {}
+                if m_old:
+                    try:
+                        prev = dict(zip(json.loads(m_old.group(1)), json.loads(m_old.group(2))))
+                    except (json.JSONDecodeError, ValueError):
+                        prev = {}
+                adp_12 = [prev.get(l) for l in lbl_12]
+                warnings.append('NFP_VS_ADP: ADP series not collected — prior values kept by month label')
 
-            # Patch None slots with manually-verified bootstrap values
-            adp_12 = [_ADP_VERIFIED.get(l, v) for l, v in zip(lbl_12, adp_12)]
+            # Bootstrap values only fill gaps — never override source data
+            # (they used to: "Apr'26": 109 masked ADP's revision to 105).
+            adp_12 = [v if v is not None else _ADP_VERIFIED.get(l) for l, v in zip(lbl_12, adp_12)]
 
             # Apply live-scraped ADP value (adpemploymentreport.com/ner_production.json)
             # — overwrites any prior value for the current month with ground truth.
