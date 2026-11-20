@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-11-20T06:02:48.985331Z",
+  "analyzed_at": "2026-11-20T06:10:53.975135Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 4,
-  "flagged_count": 1,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.88,
     "dgs2": 4.8,
@@ -78,9 +78,9 @@
     },
     "cpi_yoy": {
       "value": 3.72,
-      "delta": -0.36,
-      "direction": "falling",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "pce_yoy": {
@@ -176,7 +176,7 @@
     },
     "core_cpi_yoy": {
       "value": 2.57,
-      "delta": -0.3,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -245,12 +245,6 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "cpi_yoy",
-      "line": "cpi_yoy: 3.72 (\u25bc0.36 vs prior) [ALERT]",
-      "alert": "alert"
-    }
-  ],
+  "headlines": [],
   "raw_errors": []
 }

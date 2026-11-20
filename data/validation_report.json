@@ -1,9 +1,9 @@
 {
-  "validated_at": "2026-11-20T06:04:25.694615Z",
+  "validated_at": "2026-11-20T06:12:28.405690Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 562,
-    "passed": 557,
+    "total_checks": 565,
+    "passed": 560,
     "failed": 5,
     "skipped": 1,
     "critical_divergences": 0
@@ -51,6 +51,15 @@
       "source_value": 65.4,
       "difference": 0.0,
       "tolerance": 0.5,
+      "severity": "ok",
+      "pass": true
+    },
+    {
+      "check": "Case-Shiller YoY (latest)",
+      "html_value": 2.1,
+      "source_value": 2.1,
+      "difference": 0.0,
+      "tolerance": 0.05,
       "severity": "ok",
       "pass": true
     },
@@ -128,9 +137,9 @@
     },
     {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
-      "html_value": "11/13 filled",
-      "source_value": "85% (min 50%)",
-      "difference": 2,
+      "html_value": "10/13 filled",
+      "source_value": "77% (min 50%)",
+      "difference": 3,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
@@ -146,7 +155,7 @@
     },
     {
       "check": "OIL_MONTHLY.wti completeness",
-      "html_value": "442/442 filled",
+      "html_value": "443/443 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 221,
@@ -155,7 +164,7 @@
     },
     {
       "check": "OIL_MONTHLY.brent completeness",
-      "html_value": "442/442 filled",
+      "html_value": "443/443 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
       "tolerance": 221,
@@ -1094,7 +1103,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-11-20T06:02:27.738966Z",
+      "collected_at": "2026-11-20T06:10:30.260710Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1464,6 +1473,11 @@
       "severity": "ok"
     },
     {
+      "check": "Schema contract: data['brent_daily']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
       "check": "Schema contract: data['brent_monthly']",
       "pass": true,
       "severity": "ok"
@@ -1700,6 +1714,11 @@
     },
     {
       "check": "Schema contract: data['wti_annual']",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "check": "Schema contract: data['wti_daily']",
       "pass": true,
       "severity": "ok"
     },
@@ -3072,7 +3091,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Oil \u2014 Panel \"WTI & Brent \u2014 Monthly Jan 2022\u2013Feb 2026 \" has title",
+      "check": "Visual: Oil \u2014 Panel \"WTI & Brent \u2014 Monthly Averages, Jan 1990\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
