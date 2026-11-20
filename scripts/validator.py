@@ -227,7 +227,9 @@ def check_internal(html, data, sig_vals):
     housing = _extract_js_const(html, 'HOUSING_MONTHLY')
     cs_hpi = data.get('cs_hpi', [])
     if housing and cs_hpi and len(cs_hpi) >= 14:
-        html_cs = housing.get('caseShiller', [])
+        # Mortgage-only trailing months are null (Case-Shiller lags ~2 months;
+        # renderer stopped forward-filling 2026-11-20) — compare the last real point.
+        html_cs = [v for v in housing.get('caseShiller', []) if v is not None]
         if html_cs:
             source_cs = _yoy_from_index(cs_hpi, 1)
             _check('Case-Shiller YoY (latest)', html_cs[-1], source_cs, 'rate')

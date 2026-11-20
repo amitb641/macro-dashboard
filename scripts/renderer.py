@@ -133,10 +133,14 @@ def _monthly_yoy_series(monthly_series, n_months=None):
     return labels, values
 
 
-def _monthly_avg_by_month(weekly_series, n_months=None):
+def _monthly_avg_by_month(weekly_series, n_months=None, include_mtd=False):
     """Compute monthly averages from weekly data (newest-first).
     Returns (labels, avg_values) for the last n_months complete months.
-    Default n_months = MONTHLY_TREND_WINDOW."""
+    Default n_months = MONTHLY_TREND_WINDOW.
+
+    include_mtd=True appends the current (partial) month as a
+    month-to-date average labelled "Nov'26 MTD", so a chart ends on the same
+    month as the KPI tile that reads the latest weekly print."""
     if n_months is None:
         n_months = MONTHLY_TREND_WINDOW
     if not weekly_series:
@@ -151,13 +155,19 @@ def _monthly_avg_by_month(weekly_series, n_months=None):
     sorted_ym = sorted(by_ym.keys())
     # Exclude current month (may be partial)
     sorted_ym = [(y, m) for y, m in sorted_ym if (y, m) < (today.year, today.month)]
-    recent = sorted_ym[-n_months:] if len(sorted_ym) >= n_months else sorted_ym
+    cur = by_ym.get((today.year, today.month))
+    # Keep the window at n_months total: the MTD point replaces the oldest month.
+    n_full = n_months - 1 if (include_mtd and cur) else n_months
+    recent = sorted_ym[-n_full:] if len(sorted_ym) >= n_full else sorted_ym
     labels, values = [], []
     for yr, mo in recent:
         d = datetime.date(yr, mo, 1)
         avg = round(sum(by_ym[(yr, mo)]) / len(by_ym[(yr, mo)]), 2)
         labels.append(d.strftime("%b'%y"))
         values.append(avg)
+    if include_mtd and cur:
+        labels.append(datetime.date(today.year, today.month, 1).strftime("%b'%y") + ' MTD')
+        values.append(round(sum(cur) / len(cur), 2))
     return labels, values
 
 
@@ -663,7 +673,7 @@ def rebuild_charts(html, data):
     if len(cs_hpi_m) >= 25:
         cs_labels, cs_values = _monthly_yoy_series(cs_hpi_m, MONTHLY_TREND_WINDOW)
         # Get monthly-averaged mortgage rates
-        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, MONTHLY_TREND_WINDOW)
+        mtg_labels, mtg_values = _monthly_avg_by_month(mortgage30_m, MONTHLY_TREND_WINDOW, include_mtd=True)
         # Align to Case-Shiller labels (CS has pub lag, mortgage is more current)
         if cs_labels:
             # Use CS labels as base; fill mortgage where available
@@ -755,9 +765,32 @@ def rebuild_charts(html, data):
                 labels.append(d.strftime('%b'))
             wti_vals.append(round(wti_by_ym[(yr, mo)], 1))
             brent_vals.append(round(brent_by_ym[(yr, mo)], 1))
+        # Current month as a month-to-date average of daily closes, so the
+        # chart ends on the same month as the WTI/Brent "Latest" tiles. This
+        # replaces render_oil()'s patch_array_last, which overwrote the last
+        # COMPLETE month's average (e.g. Oct) with that day's spot price.
+        def _mtd(daily):
+            vals = [o['value'] for o in (daily or [])
+                    if o.get('value') is not None
+                    and (int(o['date'][:4]), int(o['date'][5:7])) == (today.year, today.month)]
+            return round(sum(vals) / len(vals), 1) if vals else None
+        w_mtd, b_mtd = _mtd(data.get('wti_daily')), _mtd(data.get('brent_daily'))
+        if labels and w_mtd is not None and b_mtd is not None:
+            labels.append(today.strftime('%b') + ' MTD')
+            wti_vals.append(w_mtd)
+            brent_vals.append(b_mtd)
         if labels:
             html = _inject_const(html, 'OIL_MONTHLY', {
                 'labels': labels, 'wti': wti_vals, 'brent': brent_vals})
+            # Panel title from the data itself (was a hand-typed
+            # "Jan 2022–Feb 2026 (Prior Month)" that never moved).
+            y0 = all_ym[0][0]
+            end = (today.strftime('%b %Y') + ' (month-to-date)') if labels[-1].endswith('MTD') \
+                else datetime.date(all_ym[-1][0], all_ym[-1][1], 1).strftime('%b %Y')
+            html, _n = re.subn(r'(<div class="panel-title">WTI &amp; Brent — Monthly )[^<]*(</div>)',
+                               lambda m: f'{m.group(1)}Averages, Jan {y0}–{end}{m.group(2)}', html, count=1)
+            if not _n:
+                warnings.append('OIL_MONTHLY panel title pattern not found')
 
     # ── OIL_VS_CPI ────────────────────────────────────────────────────
     cpiengsl = data.get('cpiengsl', [])
@@ -2016,12 +2049,10 @@ def render_oil(html, data, vals, tabs):
         else:
             wti_sub = None
         html = patch_kpi(html, 'WTI — Latest', f'${wti:.1f}', wti_sub)
-        html = patch_array_last(html, 'wti', round(wti, 1), 1, scope_var='OIL_MONTHLY')
 
     if brent is not None:
         brent_sub = f'Spread: ${brent - wti:.1f}' if wti is not None else None
         html = patch_kpi(html, 'Brent — Latest', f'${brent:.1f}', brent_sub)
-        html = patch_array_last(html, 'brent', round(brent, 1), 1, scope_var='OIL_MONTHLY')
 
     oil_daily = data.get('oil_daily_chart')
     if oil_daily:
