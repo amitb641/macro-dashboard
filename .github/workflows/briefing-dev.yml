@@ -57,7 +57,7 @@ env:
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Belt-and-suspenders gate: only run for the dev branch or explicit
     # manual / scheduled trigger. The schedule trigger defaults to the
     # repository's default branch (main) for `github.ref`; we override
