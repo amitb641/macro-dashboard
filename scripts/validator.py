@@ -1659,6 +1659,250 @@ def check_collector_errors(raw):
     return findings
 
 
+# ════════════════════════════════════════════════════════════════════════
+# PASS 3j: CHART CONTRACTS — every monthly chart point recomputed from source
+# ════════════════════════════════════════════════════════════════════════
+# Added 2026-11-20 after a run of silent corruption that every earlier pass
+# missed because they only compared the LAST value against the analyzer's
+# scalar (which shared the same bug):
+#   * a 13-month change published as "Oct'26 CPI YoY" (Oct'25 never collected)
+#     and written into the Sep'26 slot;
+#   * Case-Shiller forward-filled two months past its last real print;
+#   * Oct oil average overwritten with a November spot price;
+#   * ADP history shifted onto the wrong months by positional carry-forward.
+# Each contract names a chart series, its raw_data source and the transform
+# the renderer is supposed to apply. Every labelled point is recomputed by
+# calendar month. Failures are CRITICAL (they block publishing): a published
+# number that does not match its source is worse than a late page.
+
+_MON = {m: i for i, m in enumerate(
+    ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], 1)}
+
+# (const, key, raw_data source, transform, decimals, MTD source or None)
+# A label ending in "MTD" is checked as the month-to-date average of the MTD
+# source, and that contract then expects the chart to reach the current month.
+CHART_CONTRACTS = [
+    ('CPI_MONTHLY',     'headline',    'cpi_all',         'yoy',   1, False),
+    ('CPI_MONTHLY',     'core',        'cpi_core',        'yoy',   1, False),
+    ('PCE_MONTHLY',     'headline',    'pce',             'yoy',   1, False),
+    ('PCE_MONTHLY',     'core',        'pce_core',        'yoy',   1, False),
+    ('U_MONTHLY',       'data',        'unrate',          'level', 1, False),
+    ('WAGE_MONTHLY',    'nominal',     'wage_growth_atl', 'level', 1, False),
+    ('SAVING_MONTHLY',  'data',        'psavert',         'level', 1, False),
+    ('UMCSENT_MONTHLY', 'data',        'umcsent',         'level', 1, False),
+    ('NFP_BLS_MOM',     'bls',         'payems',          'diff',  0, False),
+    ('NFP_VS_ADP',      'bls',         'payems',          'diff',  0, False),
+    ('NFP_VS_ADP',      'adp',         'adp_monthly',     'level', 0, False),
+    ('HOUSING_MONTHLY', 'caseShiller', 'cs_hpi',          'yoy',   1, False),
+    ('HOUSING_MONTHLY', 'mortgage30',  'mortgage30',      'avg',   2, 'mortgage30'),
+    ('OIL_MONTHLY',     'wti',         'wti_monthly',     'level', 1, 'wti_daily'),
+    ('OIL_MONTHLY',     'brent',       'brent_monthly',   'level', 1, 'brent_daily'),
+]
+
+# Category bar charts → headline chart whose last two months they must show.
+CATEGORY_LINKS = [('CPI_CAT_MOM', 'CPI_MONTHLY'), ('PCE_CAT_MOM', 'PCE_MONTHLY')]
+
+# KPI strip tile (label prefix) → chart series whose LAST point it must equal.
+TILE_CHART_LINKS = [
+    ('Headline CPI',    'CPI_MONTHLY',     'headline'),
+    ('Core CPI',        'CPI_MONTHLY',     'core'),
+    ('Core PCE',        'PCE_MONTHLY',     'core'),
+    ('Unemployment',    'U_MONTHLY',       'data'),
+    ('Wage Growth',     'WAGE_MONTHLY',    'nominal'),
+    ('UMich Sentiment', 'UMCSENT_MONTHLY', 'data'),
+    ('Jobs',            'NFP_BLS_MOM',     'bls'),
+]
+
+
+def _label_ym(label, today):
+    """"Sep'26" → (2026, 9); "Nov'26 MTD" / "Nov MTD" → current (y, m);
+    "Oct" (no year) → most recent such month on or before today."""
+    if not isinstance(label, str):
+        return None
+    m = re.match(r"^([A-Z][a-z]{2})(?:'(\d{2}))?", label.strip())
+    if not m or m.group(1) not in _MON:
+        return None
+    mo = _MON[m.group(1)]
+    if m.group(2):
+        return (2000 + int(m.group(2)), mo)
+    return (today.year if mo <= today.month else today.year - 1, mo)
+
+
+def _by_month(series):
+    out = {}
+    for o in series or []:
+        if not isinstance(o, dict) or o.get('value') is None or not o.get('date'):
+            continue
+        y, mo = int(o['date'][:4]), int(o['date'][5:7])
+        out.setdefault((y, mo), []).append(float(o['value']))
+    return out
+
+
+def _contract_value(bym, ym, transform, mtd_ok):
+    """Expected value for month ym, or None if the source cannot support it."""
+    prev = (ym[0], ym[1] - 1) if ym[1] > 1 else (ym[0] - 1, 12)
+    if transform == 'level':
+        return bym[ym][0] if ym in bym else None
+    if transform == 'avg':
+        return sum(bym[ym]) / len(bym[ym]) if ym in bym else None
+    if transform == 'yoy':
+        ya = (ym[0] - 1, ym[1])
+        if ym in bym and ya in bym and bym[ya][0]:
+            return (bym[ym][0] - bym[ya][0]) / bym[ya][0] * 100
+        return None
+    if transform == 'diff':
+        if ym in bym and prev in bym:
+            return bym[ym][0] - bym[prev][0]
+        return None
+    return None
+
+
+def _latest_supported(bym, transform, today, expects_mtd):
+    """Newest COMPLETE (y, m) the source can support under this transform
+    (the in-progress month is covered separately by the MTD point)."""
+    for ym in sorted(bym, reverse=True):
+        if transform == 'avg' and ym == (today.year, today.month):
+            continue
+        if _contract_value(bym, ym, transform, expects_mtd) is not None:
+            return ym
+    return None
+
+
+def check_chart_contracts(html, data, today=None):
+    findings = []
+    today = today or datetime.date.today()
+
+    def fail(check, note, **kw):
+        findings.append({'check': check, 'pass': False, 'severity': 'critical', 'note': note, **kw})
+
+    for const, key, src, transform, dp, mtd_src in CHART_CONTRACTS:
+        expects_mtd = bool(mtd_src)
+        name = f'Chart contract: {const}.{key}'
+        obj = _extract_js_const(html, const)
+        series = data.get(src)
+        if not isinstance(obj, dict) or key not in obj or 'labels' not in obj:
+            fail(name, f'{const}.{key} not found in index.html')
+            continue
+        if not isinstance(series, list) or not series:
+            findings.append({'check': name, 'pass': True, 'severity': 'skipped',
+                             'note': f"source '{src}' not in raw_data — not checkable this run"})
+            continue
+        bym = _by_month(series)
+        if src == 'adp_monthly':
+            # The renderer writes the live-scraped ADP headline into its month;
+            # on a run between ADP's release and FRED's update that month is
+            # not in FRED yet, so accept the scrape as its source.
+            al = data.get('adp_latest')
+            if isinstance(al, dict) and al.get('label') and al.get('value') is not None:
+                ym = _label_ym(al['label'], today)
+                if ym and ym not in bym:
+                    bym[ym] = [float(al['value'])]
+        mtd_bym = _by_month(data.get(mtd_src)) if mtd_src else {}
+        labels, vals = obj['labels'], obj[key]
+        # Year-less labels ("Oct", "Nov MTD"): check the trailing 13 points and
+        # infer each year by walking back from the last label (month number
+        # rising while walking back means the year rolled over).
+        yms = None
+        if labels and not re.search(r"'\d{2}", str(labels[-2] if len(labels) > 1 else labels[-1])):
+            labels, vals = labels[-13:], vals[-13:]
+            yms, nxt = [], None
+            for lbl in reversed(labels):
+                ym = _label_ym(lbl, today)
+                if ym and nxt:
+                    y = nxt[0] if ym[1] < nxt[1] else nxt[0] - 1
+                    ym = (y, ym[1])
+                yms.append(ym); nxt = ym or nxt
+            yms.reverse()
+        tol = 0.6 * 10 ** (-dp) if dp else 1.0
+        bad, unsupported = [], []
+        for i, (lbl, v) in enumerate(zip(labels, vals)):
+            if v is None:
+                continue
+            ym = yms[i] if yms else _label_ym(lbl, today)
+            if ym is None:
+                bad.append(f'{lbl}: unparseable label')
+                continue
+            if str(lbl).rstrip().endswith('MTD'):
+                cur = (today.year, today.month)
+                exp = (sum(mtd_bym[cur]) / len(mtd_bym[cur])) if (mtd_src and cur in mtd_bym and ym == cur) else None
+            else:
+                exp = _contract_value(bym, ym, transform, expects_mtd)
+            if exp is None:
+                unsupported.append(f'{lbl}={v}')
+            elif abs(float(v) - exp) > tol:
+                bad.append(f'{lbl}: chart {v} vs source {exp:.{max(dp, 1)}f}')
+        if unsupported:
+            fail(name + ' — values without source data', 
+                 'chart shows values for months the source cannot support '
+                 '(forward-fill, positional year-ago, or a carried-forward array): '
+                 + ', '.join(unsupported[:6]))
+        if bad:
+            fail(name + ' — values disagree with source', '; '.join(bad[:6]))
+        # Chart must reach the newest month the source supports.
+        newest = _latest_supported(bym, transform, today, expects_mtd)
+        last_ym = next(((yms[i] if yms else _label_ym(labels[i], today))
+                        for i in range(len(labels) - 1, -1, -1) if vals[i] is not None), None)
+        cur = (today.year, today.month)
+        if mtd_src and cur in mtd_bym:
+            newest = cur          # current month has data → an MTD point is expected
+        behind = bool(newest and last_ym and last_ym < newest)
+        if behind:
+            fail(name + ' — chart behind source',
+                 f'last charted month {last_ym[0]}-{last_ym[1]:02d}, source supports '
+                 f'{newest[0]}-{newest[1]:02d}')
+        if not unsupported and not bad and not behind:
+            findings.append({'check': name, 'pass': True, 'severity': 'ok',
+                             'note': f'{sum(v is not None for v in vals)} points match {src} ({transform})'})
+
+    # Category charts must show the same two months as their headline chart
+    # (a skipped rebuild used to leave last month's categories in place).
+    for cat_const, head_const in CATEGORY_LINKS:
+        cats, head = _extract_js_const(html, cat_const), _extract_js_const(html, head_const)
+        name = f'Category months: {cat_const} ↔ {head_const}'
+        if not isinstance(cats, list) or not cats or not isinstance(head, dict):
+            fail(name, 'const not found')
+            continue
+        want = set()
+        for l in head['labels'][-2:]:
+            ym = _label_ym(l, today)
+            if ym:
+                want.add(datetime.date(ym[0], ym[1], 1).strftime('%b%y').lower())
+        have = {k for k in cats[0] if re.fullmatch(r'[a-z]{3}\d{2}', k)}
+        if have == want:
+            findings.append({'check': name, 'pass': True, 'severity': 'ok',
+                             'note': f'{sorted(have)}'})
+        else:
+            fail(name, f'{cat_const} months {sorted(have)} vs {head_const} last two {sorted(want)}')
+
+    # KPI tile month + value must equal the last point of its chart.
+    kpis = _extract_js_const(html, 'KPIS') or []
+    for prefix, const, key in TILE_CHART_LINKS:
+        tile = next((t for t in kpis if isinstance(t, dict)
+                     and str(t.get('lbl', '')).startswith(prefix + ' ')), None)
+        obj = _extract_js_const(html, const)
+        name = f'Tile↔chart: {prefix} ↔ {const}.{key}'
+        if not tile or not isinstance(obj, dict) or key not in obj:
+            fail(name, 'tile or chart series not found')
+            continue
+        pts = [(l, v) for l, v in zip(obj['labels'], obj[key]) if v is not None]
+        if not pts:
+            fail(name, 'chart series empty')
+            continue
+        c_lbl, c_val = pts[-1]
+        t_ym = _label_ym(re.search(r"[A-Z][a-z]{2}'\d{2}", tile['lbl']).group(0), today) \
+            if re.search(r"[A-Z][a-z]{2}'\d{2}", tile['lbl']) else None
+        num = re.search(r'[-+]?\d+(?:\.\d+)?', str(tile.get('val', '')).replace(',', ''))
+        t_val = float(num.group(0)) if num else None
+        ok_month = t_ym == _label_ym(c_lbl, today)
+        ok_val = t_val is not None and abs(t_val - float(c_val)) <= 0.051 + (0.5 if key == 'bls' else 0)
+        if ok_month and ok_val:
+            findings.append({'check': name, 'pass': True, 'severity': 'ok',
+                             'note': f"{tile['lbl']} {tile['val']} = {c_lbl} {c_val}"})
+        else:
+            fail(name, f"tile '{tile['lbl']}' {tile.get('val')} vs chart last point {c_lbl} {c_val}")
+    return findings
+
+
 def check_cross_source(data):
     """Pass 3i — Cross-source agreement check.
 
@@ -1732,7 +1976,7 @@ def check_cross_source(data):
     return findings
 
 
-def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None):
+def build_report(internal, sources, staleness, visual=None, vision_review=None, shock_tracker=None, earnings=None, panel_data=None, metric_consistency=None, schema_contract=None, collector_errors=None, seed_drift=None, cross_source=None, chart_contracts=None):
     """Compile all findings into a validation report."""
     if visual is None:
         visual = []
@@ -1754,10 +1998,12 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         seed_drift = []
     if cross_source is None:
         cross_source = []
+    if chart_contracts is None:
+        chart_contracts = []
     all_findings = (internal + sources + staleness + visual + vision_review +
                     shock_tracker + earnings + panel_data + metric_consistency +
                     schema_contract + collector_errors + seed_drift +
-                    cross_source)
+                    cross_source + chart_contracts)
 
     n_pass = sum(1 for f in all_findings if f.get('pass'))
     n_fail = sum(1 for f in all_findings if not f.get('pass') and f.get('severity') != 'skipped')
@@ -1765,7 +2011,17 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
     n_critical = sum(1 for f in all_findings if f.get('severity') in ('critical', 'divergence'))
 
     status = 'PASS'
-    if n_critical >= CRITICAL_THRESHOLD:
+    # A single chart-contract failure blocks publishing on its own: it means a
+    # number on the page (and in the subscriber email) disagrees with its
+    # source. Other passes keep the CRITICAL_THRESHOLD tolerance.
+    contract_fail = any(not f.get('pass') and f.get('severity') == 'critical'
+                        for f in chart_contracts)
+    # Same for a JS error raised while building a tab: the tab then shows
+    # fallback values (Oil tiles sat on hard-coded Mar'26 numbers for 2 months).
+    tab_js_fail = any(not f.get('pass') and f.get('severity') == 'critical'
+                      and 'after visiting every tab' in f.get('check', '')
+                      for f in visual)
+    if n_critical >= CRITICAL_THRESHOLD or contract_fail or tab_js_fail:
         status = 'FAIL'
     elif n_fail > 0:
         status = 'WARN'
@@ -1793,6 +2049,7 @@ def build_report(internal, sources, staleness, visual=None, vision_review=None, 
         'visual_qa': visual,
         'visual_review': vision_review,
         'cross_source': cross_source,
+        'chart_contracts': chart_contracts,
     }
     return report
 
@@ -1813,6 +2070,10 @@ def validate():
     html = HTML_FILE.read_text(encoding='utf-8')
     raw = json.loads(RAW_FILE.read_text())
     data = raw.get('data', {})
+    # Same manual overrides the renderer drew with (data/overrides.json next to
+    # raw_data.json), so every check compares the page to identical inputs.
+    from _overrides import apply_overrides
+    apply_overrides(data, RAW_FILE.parent / 'overrides.json')
     collected_at = raw.get('collected_at', '')
 
     sig_vals = {}
@@ -1890,6 +2151,17 @@ def validate():
     cs_skip = sum(1 for f in cross_source if f.get('severity') == 'skipped')
     print(f'  {cs_pass} passed, {cs_fail} failed, {cs_skip} skipped')
 
+    # Pass 3j: Chart contracts (every monthly point vs source; tile ↔ chart)
+    print('\n  ── Pass 3j: Chart Contracts (monthly points vs source) ──')
+    chart_contracts = check_chart_contracts(html, data)
+    cc_pass = sum(1 for f in chart_contracts if f.get('pass') and f.get('severity') != 'skipped')
+    cc_fail = sum(1 for f in chart_contracts if not f.get('pass'))
+    cc_skip = sum(1 for f in chart_contracts if f.get('severity') == 'skipped')
+    print(f'  {cc_pass} passed, {cc_fail} failed, {cc_skip} skipped')
+    for f in chart_contracts:
+        if not f.get('pass'):
+            print(f"    🔴 {f['check']}: {f.get('note', '')}")
+
     # Pass 3c: Earnings commentary factuality (JSON structure + verbatim enforcement)
     print('\n  ── Pass 3c: Earnings Commentary Factuality ──')
     earnings = check_earnings_verbatim()
@@ -1921,7 +2193,7 @@ def validate():
         print(f'  {vr_pass} passed, {vr_fail} failed')
 
     # Build and save report
-    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source)
+    report = build_report(internal, sources, staleness, visual, vision_review, shock_tracker, earnings, panel_data, metric_consistency, schema_contract, collector_errors, seed_drift, cross_source, chart_contracts)
     RPT_FILE.write_text(json.dumps(report, indent=2), encoding='utf-8')
 
     # Summary
@@ -1941,7 +2213,8 @@ def validate():
                                    ('MetricConsistency', metric_consistency),
                                    ('SchemaContract', schema_contract),
                                    ('CollectorErrors', collector_errors),
-                                   ('SeedDrift', seed_drift)]:
+                                   ('SeedDrift', seed_drift),
+                                   ('ChartContracts', chart_contracts)]:
         for f in section:
             if not f.get('pass') and f.get('severity') != 'skipped':
                 print(f'  → [{section_name}] {f["check"]}: {f.get("severity", "fail")}')

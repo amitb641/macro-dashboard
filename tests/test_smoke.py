@@ -186,6 +186,10 @@ def generate_fixture_data():
             'u6rate': _make_monthly_series(yr - 3, 1, 36, 7.0, 0.03),
             'payems': payems,
             'ahetpi': ahetpi,
+            # Atlanta Fed Wage Growth Tracker (feeds WAGE_MONTHLY + the wage tile).
+            # Without it the tile falls back to AHETPI while the chart keeps the
+            # repo's Atlanta Fed data — a tile/chart split Pass 3j rightly fails.
+            'wage_growth_atl': _make_monthly_series(yr - 3, 1, 36, 4.2, -0.01),
             'jolts': _make_monthly_series(yr - 3, 1, 36, 8500.0, -20.0),
             'umcsent': _make_monthly_series(yr - 3, 1, 36, 65.0, -0.2),
             'bls_sectors': bls_sectors,
@@ -196,6 +200,12 @@ def generate_fixture_data():
             'pce_core': pce_core,
             'psavert': _make_monthly_series(yr - 3, 1, 36, 4.5, 0.05),
             'cpi_shelter': _make_monthly_series(yr - 3, 1, 36, 340.0, 1.2),
+            # PCE components (PCE_CAT_MOM). Without them that rebuild is skipped
+            # and Pass 3j correctly flags stale category months.
+            'pce_goods':    _make_monthly_series(yr - 3, 1, 36, 110.0, 0.15),
+            'pce_services': _make_monthly_series(yr - 3, 1, 36, 125.0, 0.30),
+            'pce_food':     _make_monthly_series(yr - 3, 1, 36, 118.0, 0.20),
+            'pce_energy':   _make_monthly_series(yr - 3, 1, 36, 105.0, 0.25),
             'cpi_food_away': _make_monthly_series(yr - 3, 1, 36, 360.0, 1.0),
             'cpi_transport': _make_monthly_series(yr - 3, 1, 36, 270.0, 0.5),
             'cpi_medical': _make_monthly_series(yr - 3, 1, 36, 550.0, 0.7),
@@ -306,10 +316,11 @@ def test_renderer(tmp_dir):
         _test('Has </html> tag', '</html>' in html)
         _test('Has <body> tag', '<body' in html)
 
-    # Check renderer error count
-    hard_errors = [e for e in renderer.errors if 'missing' in e.lower() or 'ERROR' in e]
-    _test(f'No hard renderer errors', len(hard_errors) == 0,
-          f'{len(hard_errors)} errors: {hard_errors[:3]}')
+    # Every renderer error counts. The old filter ('missing'/'ERROR' only)
+    # ignored "not found" — the exact signature of a regex patch that silently
+    # stopped matching — so 12 such errors ran on every pipeline run unnoticed.
+    _test('Renderer reports zero errors', len(renderer.errors) == 0,
+          f'{len(renderer.errors)} errors: {renderer.errors[:3]}')
 
 
 def test_validator_offline(tmp_dir):
@@ -556,6 +567,113 @@ def test_oil_window_coverage(tmp_dir):
     )
 
 
+def test_chart_contracts():
+    """Pass 3j fixture test: a correct chart passes; each of this year's
+    corruption shapes fails CRITICAL (forward-fill, 13-month "YoY" in a gap,
+    last slot overwritten, chart behind source, tile/chart month mismatch)."""
+    print('\n── Test: Chart Contracts (Pass 3j) ──')
+    import datetime as _dt, json as _json
+    import validator
+    today = _dt.date(2026, 11, 20)
+    # CPI-like index with Oct'25 missing (shutdown); +1.0/month.
+    months = [(2025, m) for m in range(1, 13) if m != 10] + [(2026, m) for m in range(1, 11)]
+    idx = {ym: 300.0 + i for i, ym in enumerate(months)}
+    cpi = [{'date': f'{y}-{m:02d}-01', 'value': v} for (y, m), v in sorted(idx.items(), reverse=True)]
+    def yoy(y, m): return round((idx[(y, m)] - idx[(y - 1, m)]) / idx[(y - 1, m)] * 100, 1)
+    lbls = [f"{_dt.date(2026, m, 1):%b'%y}" for m in range(1, 10)]          # Jan..Sep'26
+    good = [yoy(2026, m) for m in range(1, 10)]
+    def page(head, tile_lbl, tile_val):
+        cm = {'labels': lbls, 'headline': head, 'core': head}
+        kp = [{'lbl': tile_lbl, 'val': tile_val}, {'lbl': tile_lbl.replace('Headline', 'Core'), 'val': tile_val}]
+        return f'const CPI_MONTHLY = {_json.dumps(cm)};\nconst KPIS = {_json.dumps(kp)};'
+    data = {'cpi_all': cpi, 'cpi_core': cpi}
+    old = validator.CHART_CONTRACTS, validator.TILE_CHART_LINKS, validator.CATEGORY_LINKS
+    validator.CATEGORY_LINKS = []
+    validator.CHART_CONTRACTS = [('CPI_MONTHLY', 'headline', 'cpi_all', 'yoy', 1, None)]
+    validator.TILE_CHART_LINKS = [('Headline CPI', 'CPI_MONTHLY', 'headline')]
+    try:
+        def crit(html):
+            return [f for f in validator.check_chart_contracts(html, data, today)
+                    if not f['pass'] and f['severity'] == 'critical']
+        ok = page(good, "Headline CPI Sep'26", f'{good[-1]}%')
+        _test('3j: correct chart + tile pass', not crit(ok), str(crit(ok))[:200])
+        thirteen = round((idx[(2026, 10)] - idx[(2025, 9)]) / idx[(2025, 9)] * 100, 1)
+        bad_slot = page(good[:-1] + [thirteen], "Headline CPI Sep'26", f'{thirteen}%')
+        _test('3j: last slot overwritten with 13-month change → critical', bool(crit(bad_slot)))
+        ffill = {'labels': lbls + ["Oct'26"], 'headline': good + [good[-1]], 'core': good + [good[-1]]}
+        ff = f'const CPI_MONTHLY = {_json.dumps(ffill)};\nconst KPIS = {_json.dumps([{"lbl": "Headline CPI Oct\'26", "val": "1%"}])};'
+        _test('3j: value for a month with no year-ago (forward-fill/positional) → critical', bool(crit(ff)))
+        behind = page(good[:-1], "Headline CPI Aug'26", f'{good[-2]}%')
+        behind = behind.replace(_json.dumps(lbls), _json.dumps(lbls[:-1]))
+        _test('3j: chart stops before newest supported month → critical', bool(crit(behind)))
+        tile = page(good, "Headline CPI Oct'26", f'{good[-1]}%')
+        _test('3j: tile month ≠ chart last month → critical', bool(crit(tile)))
+    finally:
+        validator.CHART_CONTRACTS, validator.TILE_CHART_LINKS, validator.CATEGORY_LINKS = old
+
+
+def test_no_tdz_in_tab_builders():
+    """Static guard (2026-11-20): inside each top-level JS function in
+    index.html, a const/let must not be referenced above its own declaration.
+    That is a guaranteed ReferenceError (temporal dead zone) every time the
+    function runs. buildOilTab() had one for two months; a try/catch hid it
+    and the tiles showed hard-coded March fallback values."""
+    print('\n── Test: No TDZ use-before-declare in index.html functions ──')
+    import re as _re
+    html = (ROOT / 'index.html').read_text(encoding='utf-8')
+    starts = [m.start() for m in _re.finditer(r'(?m)^function\s+\w+\s*\(', html)]
+    problems = []
+    for i, a in enumerate(starts):
+        b = starts[i + 1] if i + 1 < len(starts) else len(html)
+        body = html[a:b]
+        fname = _re.match(r'function\s+(\w+)', body).group(1)
+        # strip // comments and string literals so names in prose don't count
+        code = _re.sub(r'//[^\n]*', '', body)
+        code = _re.sub(r'"(?:\\.|[^"\\\n])*"|\'(?:\\.|[^\'\\\n])*\'', '""', code)
+        # Scoped to ALL_CAPS data consts (OIL_DAILY, SHOCK_TRACKER, …) — the
+        # renderer-injected names this bug class involves. Lower-case locals
+        # hit comma-lists, arrow params and block scopes a regex can't model.
+        for d in _re.finditer(r'\b(?:const|let)\s+([A-Z][A-Z0-9_]{2,})\s*=', code):
+            name = d.group(1)
+            # Only names declared once in this function (shadowing in inner
+            # scopes is legal and would produce false positives).
+            if len(_re.findall(r'\b(?:const|let|var)\s+' + _re.escape(name) + r'\b', code)) != 1:
+                continue
+            before = code[:d.start()]
+            if _re.search(r'(?<![\w$.])' + _re.escape(name) + r'(?![\w$])', before):
+                problems.append(f'{fname}: {name}')
+    _test('No const/let used before its declaration in any function',
+          not problems, f'{problems[:5]}')
+
+
+def test_no_positional_patching():
+    """Static guard (2026-11-20). Bans the code shapes behind this year's
+    silent data corruption so they cannot be reintroduced:
+      * patch_array_last / patch_kpi / patch_kpi_full — overwrote "the array's
+        last element" or fuzzy-matched tile labels (FFR/MORTGAGE/STARTS/CPI/OIL
+        last slots, a JS label rewritten to "Nov'26Oct'26").
+      * year-ago by row offset (series[12], [i+12]) — a missing month (Oct'25,
+        shutdown) turns it into a 13-month change published as YoY.
+      * carrying an array forward by position across runs (ADP history).
+    Rebuild from source and match by calendar month / label instead."""
+    print('\n── Test: No Positional Patching / Positional Year-Ago ──')
+    import re as _re
+    scripts = ROOT / 'scripts'
+    banned = [
+        (r'\bdef\s+patch_array_last\b|\bpatch_array_last\s*\(', 'patch_array_last'),
+        (r'\bdef\s+patch_kpi(_full)?\b|\bpatch_kpi(_full)?\s*\(', 'patch_kpi / patch_kpi_full'),
+        (r"\[\s*1[23]\s*\]\s*\[\s*['\"]value['\"]\s*\]", "series[12]['value'] year-ago by row"),
+        (r"\[\s*\w+\s*\+\s*1[23]\s*\]\s*\[\s*['\"]value['\"]\s*\]", "series[i+12]['value'] year-ago by row"),
+        (r"\+\s*\[None\]\s*\*\s*len\([^)]*\)\)\s*\[\s*:\s*len\(", 'array carried forward by position'),
+    ]
+    for py in sorted(scripts.glob('*.py')):
+        src = py.read_text(encoding='utf-8')
+        code = '\n'.join(l for l in src.splitlines() if not l.lstrip().startswith('#'))
+        for pat, name in banned:
+            hits = [m.group(0) for m in _re.finditer(pat, code)]
+            _test(f'{py.name}: no {name}', not hits, f'found {hits[:2]}')
+
+
 def test_yoy_missing_year_ago():
     """Regression guard (fixed 2026-11-20): Oct 2025 CPI was never collected
     (shutdown), so Oct 2026 has no year-ago index and BLS published no 12-month
@@ -669,6 +787,9 @@ def main():
         test_healthcheck_module()
         test_oil_window_coverage(tmp_dir)
         test_yoy_missing_year_ago()
+        test_no_positional_patching()
+        test_chart_contracts()
+        test_no_tdz_in_tab_builders()
         test_agent9_merge_clears_stale_fields(tmp_dir)
         test_no_real_file_mutation(before_hashes)
 

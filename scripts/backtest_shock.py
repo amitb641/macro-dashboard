@@ -222,16 +222,18 @@ def run_phase_for_shock(phase, shock, all_series):
                         'chg': round((now - pre) * sign, 2) if pre is not None else None,
                         'status': status})
         elif phase['kind'] == 'yoy':
-            # 12-month YoY from monthly index
-            yoy = None
-            if len(as_of) >= 13 and as_of[12]['value']:
-                yoy = round((as_of[0]['value'] - as_of[12]['value']) / as_of[12]['value'] * 100, 1)
+            # 12-month YoY from monthly index — year-ago matched by calendar
+            # month, never by row offset (a missing month shifts rows; see
+            # CLAUDE.md "Oct 2025 CPI was never collected").
+            def _ya(obs):
+                key = f"{int(obs['date'][:4]) - 1}{obs['date'][4:7]}"
+                return next((o for o in as_of if o['date'][:7] == key and o.get('value')), None)
+            def _yoy_of(obs):
+                ya = _ya(obs) if obs else None
+                return round((obs['value'] - ya['value']) / ya['value'] * 100, 1) if ya else None
+            yoy = _yoy_of(as_of[0]) if as_of else None
             pre_obs = next((o for o in as_of if o['date'] < shock['shock_date']), None)
-            pre_yoy = None
-            if pre_obs:
-                idx = next((i for i, o in enumerate(as_of) if o['date'] == pre_obs['date']), None)
-                if idx is not None and len(as_of) >= idx + 13 and as_of[idx + 12]['value']:
-                    pre_yoy = round((pre_obs['value'] - as_of[idx + 12]['value']) / as_of[idx + 12]['value'] * 100, 1)
+            pre_yoy = _yoy_of(pre_obs)
             status = 'not_yet'
             if yoy is not None and pre_yoy is not None and data_is_post_shock:
                 chg = yoy - pre_yoy  # SIGNED — only confirm on acceleration, not deflation

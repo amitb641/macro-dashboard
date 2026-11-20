@@ -27,6 +27,23 @@ When work touches any visible surface, re-run `python scripts/visual_qa.py`
 and verify the `Commentary positioned above first chart` plus all
 cross-tab consistency checks pass.
 
+## Data Pipeline Invariants (enforced — added 2026-11-20)
+Every rule below exists because breaking it put a wrong number on the live page *and* in the subscriber email with a green run. Each is enforced by a check that fails the build; do not weaken the check to get a run through — fix the data path.
+
+| # | Invariant | Enforced by |
+|---|---|---|
+| 1 | **Rebuild, never patch.** Every chart const is rebuilt in full from source in `rebuild_charts()`. No writing into "the array's last element", no fuzzy label patching. `patch_array_last`/`patch_kpi`/`patch_kpi_full` are deleted. | `test_no_positional_patching` (static ban) |
+| 2 | **Year-ago and prior-month by calendar month, never by row offset.** A missing month (Oct'25, shutdown) turns `series[12]` into a 13-month change. No YoY exists for a month whose year-ago obs is missing — show the latest month that has one, labelled as such. | `test_no_positional_patching`, `test_yoy_missing_year_ago`, Pass 3j |
+| 3 | **Carry data across runs by label, never by position.** | `test_no_positional_patching`, Pass 3j |
+| 4 | **No forward-fill.** A month with no observation is `null` on the chart, not a copy of the last value. | Pass 3j ("values without source data") |
+| 5 | **Every charted point equals its source.** Pass 3j (`CHART_CONTRACTS` in `validator.py`) recomputes every monthly point of CPI, PCE, U-3, wages, saving, UMich, NFP, ADP, Case-Shiller, mortgage and oil from `raw_data.json` and fails CRITICAL on any mismatch, unsupported value, or a chart that stops before the newest month the source supports. **Add a contract when you add a monthly chart.** | Pass 3j — a single failure sets status FAIL and halts publish + email |
+| 6 | **A KPI tile shows the same month and value as the last point of its chart**, and category charts show the same two months as their headline chart. | Pass 3j `TILE_CHART_LINKS`, `CATEGORY_LINKS` |
+| 7 | **Renderer and validator see identical inputs** (`data/overrides.json` is merged by the shared `scripts/_overrides.py`). | Pass 3j would flag every overridden point |
+| 8 | **Zero renderer errors.** A regex that stops matching is an error, not noise; dead patch calls get deleted, not tolerated. | `test_renderer` ("Renderer reports zero errors") |
+| 9 | **No JS errors while building any tab**, including caught ones logged with `console.error` (a silent fallback is still a wrong page). Data consts declared inside a tab builder go at the top of that function. | `visual_qa.py` "after visiting every tab" (blocks publish), `test_no_tdz_in_tab_builders` |
+
+Verifying a new guard: run it against the last known-bad page (`git show <sha>:index.html`) and confirm it fails there and passes on the fix — every guard above was checked this way against the 2026-11-20 morning build.
+
 ## Branch Strategy
 - **Production branch**: `main` — small targeted fixes (1-2 file changes) go directly here
 - For small fixes, commit and push straight to `main`. Don't create feature branches for minor fixes — it creates unnecessary merge/rebase overhead.
@@ -203,12 +220,12 @@ Rules:
 - **`_latest_mom_ann()`'s "post-shock pace" is a 3-month annualized run-rate, not a single month's** (changed 2026-07-29, ported from dev commit `e5f4b13`). A single-month annualized figure is much noisier than the 6-month baseline it's compared against — CPI Energy Prints flipped `confirmed` → `not_yet` on one soft print despite YoY staying at +15.5% and the multi-month trend not reversing. Now follows the standard "3-month annualized core CPI" convention: `(V[t]/V[t-3])^4 - 1`. Pre-shock side stays a 6-month baseline.
 
 ## Testing
-- Run `python tests/test_smoke.py` before pushing — must be 43/43 pass
-- Run `python scripts/visual_qa.py` for DOM-based visual checks (224 checks)
+- Run `python tests/test_smoke.py` before pushing — must be all-pass (205/205 as of 2026-11-20); includes the invariant guards above
+- Run `python scripts/visual_qa.py` for DOM-based visual checks (336 checks as of 2026-11-20; compare the total, not just pass/fail)
 - Run `python scripts/visual_review.py` for AI vision-based chart review (requires ANTHROPIC_API_KEY)
 - Run `python scripts/renderer.py` to verify no hard errors
 - Validator is a build gate — critical divergences block publishing
-- Validator runs 10 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), earnings commentary (verbatim), visual QA, vision review
+- Validator runs 10 passes: internal consistency, source verification, staleness, shock tracker, panel-data consistency, metric consistency, **schema contract** (3f), **seed drift** (3g), **collector errors** (3h), **cross-source agreement** (3i — FRED vs BLS for shared anchor metrics), **chart contracts** (3j — every monthly point vs source; one failure = FAIL), earnings commentary (verbatim), visual QA, vision review
 - CEO-grade gate (`python scripts/ceo_grade_gate.py`) aggregates the verdicts into a single PASS/WARN/FAIL/SKIP decision and writes `data/ceo_grade_verdict.json` — this is the publish-readiness contract
 
 ## Commit Conventions

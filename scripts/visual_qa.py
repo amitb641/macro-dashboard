@@ -330,6 +330,26 @@ def run_visual_qa(take_screenshots=False):
                 screenshot_path = SCREEN_DIR / f'{tab_id}.png'
                 page.screenshot(path=str(screenshot_path), full_page=True)
 
+        # ── Errors raised while building tabs ───────────────────────
+        # The global console/exception checks above run before any tab is
+        # clicked, but tab builders run ON CLICK. buildOilTab() logged a
+        # caught TDZ error on every load for two months (tiles silently fell
+        # back to hard-coded Mar'26 values) and this suite never saw it.
+        # Re-check after every tab has been visited. (2026-11-20)
+        tab_console = [e for e in console_errors
+                       if e['type'] == 'error'
+                       and 'favicon' not in e['text'].lower()
+                       and 'net::ERR_FILE_NOT_FOUND' not in e['text']
+                       and 'net::ERR_FAILED' not in e['text']
+                       and 'Access to fetch' not in e['text']]
+        _check('global', 'No console errors after visiting every tab',
+               len(tab_console) == 0,
+               f'{len(tab_console)} errors: {[e["text"][:100] for e in tab_console[:3]]}',
+               severity='critical')
+        _check('global', 'No JS exceptions after visiting every tab',
+               len(js_errors) == 0,
+               f'{len(js_errors)} errors: {js_errors[:3]}', severity='critical')
+
         # ── Data integrity checks (in browser) ─────────────────────
         print('\n  ── Data Integrity Checks ──')
 

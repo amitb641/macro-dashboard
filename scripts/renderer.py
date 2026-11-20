@@ -1167,74 +1167,12 @@ def rebuild_charts(html, data):
 
 # ── HELPERS ───────────────────────────────────────────────────────────
 
-def patch_array_last(html, js_key, new_val, precision=2, scope_var=None):
-    fmt = str(round(new_val, precision)) if new_val is not None else 'null'
-    # If scope_var is given, only patch within that variable's declaration
-    if scope_var:
-        var_pat = rf'((?:const|let|var)\s+{re.escape(scope_var)}\s*=\s*)'
-        m = re.search(var_pat, html)
-        if not m:
-            errors.append(f'patch_array_last: scope var {scope_var} not found')
-            return html
-        start = m.start()
-        end = html.find(';', start)
-        if end < 0: end = len(html)
-        chunk = html[start:end + 1]
-        pattern = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+((\s*)\])'
-        new_chunk, n = re.subn(pattern, rf'\g<1>{fmt}\g<3>]', chunk, count=1, flags=re.DOTALL)
-        if not n:
-            pattern2 = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+(\s*,\s*(?:null\s*,?\s*)*\])'
-            new_chunk, n = re.subn(pattern2, rf'\g<1>{fmt}\2', chunk, count=1, flags=re.DOTALL)
-        if n:
-            applied.append(f'{scope_var}.{js_key}[-1]={fmt}')
-            return html[:start] + new_chunk + html[end + 1:]
-        else:
-            errors.append(f'patch_array_last: {js_key} not found in {scope_var}')
-            return html
-    # Match both unquoted JS keys (key: [...]) and quoted JSON keys ("key":[...])
-    # First try: replace last numeric value before ]
-    pattern = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+((\s*)\])'
-    new_html, n = re.subn(pattern, rf'\g<1>{fmt}\g<3>]', html, count=1, flags=re.DOTALL)
-    if not n:
-        # Second try: last numeric value before trailing nulls and ]
-        pattern2 = rf'("?{re.escape(js_key)}"?:\s*\[[^\]]*,\s*)[\d\.\-]+(\s*,\s*(?:null\s*,?\s*)*\])'
-        new_html, n = re.subn(pattern2, rf'\g<1>{fmt}\2', html, count=1, flags=re.DOTALL)
-    if n: applied.append(f'{js_key}[-1]={fmt}')
-    else: errors.append(f'patch_array_last: {js_key} not found')
-    return new_html
-
-
-def patch_kpi(html, label, val, sub=None):
-    pat = rf'(\{{lbl:"{re.escape(label)}"[^}}]*?val:")[^"]*(")'
-    new_html, n = re.subn(pat, rf'\g<1>{val}\2', html)
-    if n:
-        applied.append(f'kpi.{label}={val}')
-        if sub:
-            pat2 = rf'(lbl:"{re.escape(label)}"[^}}]*?sub:")[^"]*(")'
-            new_html, _ = re.subn(pat2, rf'\g<1>{sub}\2', new_html)
-    else:
-        errors.append(f'patch_kpi: "{label}" not found')
-    return new_html
-
-
-def patch_kpi_full(html, old_label, new_label, val, sub=None):
-    """Update both the label text AND value of a KPI card in one pass."""
-    # Extract base prefix (e.g. "Core PCE" from "Core PCE Dec 2025")
-    # Try exact match first, then fuzzy match on base prefix
-    pat = rf'(\{{lbl:"){re.escape(old_label)}(")'
-    new_html, n = re.subn(pat, rf'\g<1>{new_label}\2', html)
-    if not n:
-        # Fuzzy: match any label starting with the same base words
-        # e.g. "Core PCE Dec 2025" base = "Core PCE" matches "Core PCE Dec'25"
-        base = re.split(r'\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|\d{4})', old_label)[0].strip()
-        if base and len(base) > 3:
-            fuzzy_pat = rf'(\{{lbl:"){re.escape(base)}[^"]*(")'
-            new_html, n = re.subn(fuzzy_pat, rf'\g<1>{new_label}\2', html, count=1)
-    if n:
-        applied.append(f'kpi.rename → "{new_label}"')
-    # Then patch the value using the new label
-    return patch_kpi(new_html, new_label, val, sub)
-
+# patch_array_last / patch_kpi / patch_kpi_full were removed 2026-11-20.
+# They guessed at "the array's last element" or fuzzy-matched tile labels and
+# silently corrupted data (FFR/MORTGAGE/STARTS/CPI/OIL last slots; a JS label
+# rewritten to "Nov'26Oct'26"). Every chart const is now rebuilt in full from
+# source in rebuild_charts(); tests/test_smoke.py::test_no_positional_patching
+# fails if any of these names come back.
 
 def patch_commentary(html, tab_id, text):
     marker = f'id="commentary-{tab_id}"'
@@ -1315,18 +1253,8 @@ def inject_oil_daily(html, oil_daily):
     else:
         errors.append('inject_oil_daily: OIL_DAILY const not found')
 
-    # Also patch the static panel title so it reflects the current month
-    month = oil_daily.get('month', '')
-    if month:
-        new_html, m = re.subn(
-            r'(<div class="panel-title">)\w+ \d{4} — Daily Closes \(Live\)(</div>)',
-            lambda x: x.group(1) + month + ' — Daily Closes (Live)' + x.group(2),
-            new_html, count=1
-        )
-        if m:
-            applied.append('oil panel title → %s' % month)
-        else:
-            warnings.append('inject_oil_daily: panel title pattern not found')
+    # (The panel title is static now; its date-range subtitle is computed in
+    # buildOilTab() from OIL_DAILY, so there is no title to patch.)
 
     return new_html
 
@@ -1659,52 +1587,17 @@ def rebuild_oil_prod_spread(html, data):
 # ── SECTION RENDERERS ─────────────────────────────────────────────────
 
 def render_rates(html, data, vals, tabs):
-    ffr   = vals.get('ffr')
-    dgs10 = vals.get('dgs10')
-    dgs2  = vals.get('dgs2')
-    spr   = vals.get('spread_10_2_bp')
-
-    ffr_s   = data.get('ffr')
-    dgs10_s = data.get('dgs10')
-    if ffr is not None and ffr_s:
-        # No patch_array_last('actual', ...) here anymore -- rebuild_charts()
-        # (runs earlier, every render) already sets FFR_DATA's current-year
-        # bucket correctly and fresh from the same data['ffr']. This weekly
-        # patch was fully redundant with that, and relied on a "last
-        # numeric value" heuristic that broke for the sibling MORTGAGE_DATA
-        # fix below (its forecast slot holds a real number, not null) --
-        # removed here too for the same reason, before it could ever cause
-        # the identical failure if FFR_DATA's forecast convention changes.
-        ffr_lbl = f"Fed Funds Rate ({month_label(ffr_s['date'])})"
-        html = patch_kpi_full(html, "Fed Funds Rate (Jan '26)", ffr_lbl, f'{ffr:.2f}%')
-
-    if dgs10 is not None and dgs10_s:
-        t10_lbl = f"10Y Treasury {month_label(dgs10_s['date'])}"
-        html = patch_kpi_full(html, '10Y Treasury Feb 2026', t10_lbl, f'{dgs10:.2f}%',
-                         f"2Y: {dgs2:.2f}% · Spread: {spr:+d}bp" if dgs2 and spr else None)
-
+    # FFR_DATA / TREASURY_DATA and the Fed Funds / 10Y tiles are rebuilt from
+    # source in rebuild_charts() + render_kpis(). No string patching here.
     txt = tabs.get('yield', '')
     if txt: html = patch_commentary(html, 'yield', txt)
     return html
 
 
 def render_spreads(html, data, vals, tabs):
-    ig = vals.get('ig_oas')
-    hy = vals.get('hy_oas')
-
-    if ig is not None:
-        html = patch_array_last(html, 'ig', round(ig), 0)
-        # IG/HY OAS not in KPI strip — skip patch_kpi
-
-    if hy is not None:
-        html = patch_array_last(html, 'hy', round(hy), 0)
-
-    if ig is not None:
-        label = datetime.date.today().strftime("%b'%y")
-        html = re.sub(
-            r'(SPREADS_DATA\s*=\s*\{[^}]*?"?labels"?:\s*\[[^\]]*,\s*)"[^"]+"',
-            rf'\1"{label}"', html, count=1, flags=re.DOTALL
-        )
+    # SPREADS_DATA (incl. its current-month point) is fully rebuilt in
+    # rebuild_charts(); the old unscoped patch_array_last('ig'/'hy') + label
+    # overwrite were redundant and could hit any const with an "ig" key.
 
     txt = tabs.get('credit', '')
     if txt: html = patch_commentary(html, 'credit', txt)
@@ -1712,43 +1605,13 @@ def render_spreads(html, data, vals, tabs):
 
 
 def render_labor(html, data, vals, tabs):
-    unrate = vals.get('unrate')
-    u6     = vals.get('u6rate')
-    nfp    = vals.get('nfp_mom')
-    wages  = vals.get('wages_yoy')
-
-    if unrate is not None:
-        html = patch_array_last(html, 'data', unrate, 1, scope_var='U_MONTHLY')
-        unemp_date = data.get('unrate', [{}])[0].get('date','') if data.get('unrate') else ''
-        u_lbl = f"Unemployment {month_label(unemp_date)}" if unemp_date else 'Unemployment'
-        html = patch_kpi_full(html, 'Unemployment 2025', u_lbl, f'{unrate:.1f}%')
-
-    if u6 is not None:
-        u6_date = data.get('u6rate', [{}])[0].get('date','') if data.get('u6rate') else ''
-        u6_lbl = f"U-6 Broad Rate {month_label(u6_date)}" if u6_date else 'U-6 Broad Rate'
-        html = patch_kpi_full(html, "U-6 Broad Rate Dec '25", u6_lbl, f'{u6:.1f}%')
-
-    if nfp is not None:
-        payems_s = data.get('payems')
-        jobs_date = payems_s[0].get('date','') if payems_s else ''
-        jobs_lbl = f"{month_label(jobs_date)} Jobs" if jobs_date else 'NFP Jobs'
-        html = patch_kpi_full(html, 'Jan 2026 Jobs', jobs_lbl, f'{nfp:+.0f}K')
-
-    if wages is not None:
-        html = patch_array_last(html, 'nominal', wages, 1, scope_var='WAGE_MONTHLY')
-        # Prefer Atlanta Fed WGT date when available; AHETPI fallback otherwise.
-        atl = data.get('wage_growth_atl') or []
-        fallback = data.get('ahetpi') or []
-        wages_date = (atl[0] if atl else (fallback[0] if fallback else {})).get('date', '')
-        wages_lbl = f"Nominal Wage Growth {month_label(wages_date)}" if wages_date else 'Nominal Wage Growth'
-        html = patch_kpi_full(html, 'Nominal Wage Growth 2025', wages_lbl, f'{wages:+.1f}%')
-
-    icsa_val = vals.get('icsa')
-    if icsa_val is not None:
-        icsa_s = data.get('icsa', [])
-        icsa_date = icsa_s[0].get('date', '') if icsa_s else ''
-        icsa_lbl = f"Initial Claims {month_label(icsa_date)}" if icsa_date else 'Initial Claims'
-        html = patch_kpi_full(html, 'Initial Claims', icsa_lbl, f'{icsa_val/1000:.0f}K')
+    nfp      = vals.get('nfp_mom')
+    payems_s = data.get('payems')
+    icsa_s   = data.get('icsa', [])
+    # U_MONTHLY / WAGE_MONTHLY and the labour KPI tiles are rebuilt from
+    # source in rebuild_charts() + render_kpis(). The former last-slot patches
+    # here were redundant, and the wage one could write AHETPI (a different
+    # metric) into the Atlanta Fed series. Removed 2026-11-20.
 
     # ── Auto-update Unemployment tab month references ──────────────
     # The Unemployment-by-Sector chart panel title/chips are gated on
@@ -1884,14 +1747,8 @@ def render_inflation(html, data, vals, tabs):
     # FFR/MORTGAGE/STARTS patches removed 2026-09-28. (The 'CPI All Items'
     # patch_kpi_full call targeted a tile that no longer exists.)
 
-    if pce is not None:
-        html = patch_array_last(html, 'headline', pce, 1, scope_var='PCE_MONTHLY')
-
-    # Core PCE tile is fully dynamic — reads from PCE_MONTHLY.core at runtime
-    # No patch_kpi needed; renderer updates the JS constant via patch_array_last above
-
-    if save is not None:
-        html = patch_array_last(html, 'data', save, 1, scope_var='SAVING_MONTHLY')
+    # PCE_MONTHLY / SAVING_MONTHLY are rebuilt from source in rebuild_charts();
+    # the Core PCE tile reads PCE_MONTHLY.core at runtime.
 
     # ── Auto-update CPI tab month references ────────────────────────
     # Gated on rebuild_cpi_cat_mom succeeding, so title and data always roll
@@ -2030,27 +1887,7 @@ def render_oil(html, data, vals, tabs):
     wti   = vals.get('wti')
     brent = vals.get('brent')
 
-    if wti is not None:
-        # Auto-generate WTI sub-line from current month's daily data
-        oil_chart = data.get('oil_daily_chart', {})
-        wti_vals  = [v for v in oil_chart.get('wti', []) if v is not None]
-        mon_label = oil_chart.get('month', '')
-        if len(wti_vals) >= 2:
-            mon_high = max(wti_vals)
-            mon_low  = min(wti_vals)
-            mon_open = wti_vals[0]
-            mtd_chg  = wti - mon_open
-            mtd_pct  = mtd_chg / mon_open * 100
-            sign     = '+' if mtd_chg >= 0 else ''
-            wti_sub  = (f'{sign}{mtd_chg:.1f} ({sign}{mtd_pct:.1f}%) MTD'
-                        f' · Range ${mon_low:.0f}–${mon_high:.0f} · {mon_label}')
-        else:
-            wti_sub = None
-        html = patch_kpi(html, 'WTI — Latest', f'${wti:.1f}', wti_sub)
-
-    if brent is not None:
-        brent_sub = f'Spread: ${brent - wti:.1f}' if wti is not None else None
-        html = patch_kpi(html, 'Brent — Latest', f'${brent:.1f}', brent_sub)
+    # WTI/Brent tiles are derived in buildOilTab() from OIL_DAILY at render time.
 
     oil_daily = data.get('oil_daily_chart')
     if oil_daily:
@@ -2498,9 +2335,8 @@ def render_outlook(html, ana):
     regime  = kpis.get('macro_regime', 'Expansion')
     fed     = kpis.get('fed_bias',     'On Hold')
 
-    html = patch_kpi(html, 'Risk Posture', posture)
-    html = patch_kpi(html, 'Macro Regime', regime)
-    html = patch_kpi(html, 'Fed Bias',     fed)
+    # Posture/regime/bias are rendered from the briefing agent's output in
+    # the page itself; the old patch_kpi targets no longer exist.
 
     # NB: outlook_body is generated by the briefing agent but no longer patched
     # onto the dashboard. The only class="stk-lead" element is the architecture
@@ -2731,9 +2567,10 @@ def rebuild_kpi_strip(html, data, vals):
     umcsent = data.get('umcsent', [])
     if umcsent and len(umcsent) >= 2:
         cur_s, prev_s, chg_s, d_s = _mom(umcsent)
-        yoy_s = None
-        if len(umcsent) >= MONTHLY_TREND_WINDOW:
-            yoy_s = round(cur_s - umcsent[12]['value'], 1)
+        # Year-ago by calendar month, never umcsent[12] (a gap shifts rows).
+        _ya_d = f"{int(umcsent[0]['date'][:4]) - 1}{umcsent[0]['date'][4:7]}"
+        _ya = next((o for o in umcsent if o['date'][:7] == _ya_d and o.get('value') is not None), None)
+        yoy_s = round(cur_s - _ya['value'], 1) if _ya else None
         lbl = f"UMich Sentiment {_mlbl(umcsent[0]['date'])}"
         yoy_str = f" · YoY: {yoy_s:+.1f}" if yoy_s is not None else ""
         # Surface prelim/final flag from UMich direct feed so the KPI can badge it.
@@ -2886,22 +2723,11 @@ def render():
     vals = sig.get('values', {})
     tabs = ana.get('tabs', {})
 
-    # Merge manual overrides (for data not yet on FRED)
-    if OVR_FILE.exists():
-        ovr = json.loads(OVR_FILE.read_text())
-        for key, entries in ovr.items():
-            series = data.get(key, [])
-            existing_dates = {e['date'] for e in series}
-            added = 0
-            for entry in entries:
-                if entry['date'] not in existing_dates:
-                    series.insert(0, entry)
-                    added += 1
-            if added:
-                # Re-sort descending by date
-                series.sort(key=lambda e: e['date'], reverse=True)
-                data[key] = series
-                print(f'  ✅ Override: added {added} entry(ies) to {key}')
+    # Merge manual overrides (for data not yet on FRED). Shared with the
+    # validator so both see identical inputs.
+    from _overrides import apply_overrides
+    for key, n in apply_overrides(data, OVR_FILE).items():
+        print(f'  ✅ Override: added {n} entry(ies) to {key}')
 
     # Rebuild all chart arrays from historical data (2000+)
     try:
