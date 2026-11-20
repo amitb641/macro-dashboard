@@ -50,26 +50,41 @@ LEVEL_ALERTS = {
 }
 
 
-def yoy(series):
-    """YoY % change from list of {date,value} newest-first.
-    Matches by calendar month 12 months prior (not by index position),
-    so gaps in monthly data (e.g. gov't shutdown) don't shift the comparison.
+# Reference date behind each YoY value (filled by compute_values; see yoy_with_date).
+VALUE_DATES = {}
+
+
+def yoy_with_date(series, max_lookback=3):
+    """(YoY %, date) for the most recent month that has a real year-ago
+    observation, matched by calendar month (never by index position).
+
+    If the latest month's year-ago value is missing (e.g. BLS never
+    collected Oct 2025 CPI because of the shutdown), this walks back to the
+    newest month that DOES have one rather than comparing against whatever
+    sits 12 slots down the list. That positional fallback silently produced
+    a 13-month change (Oct'26 vs Sep'25) and published it as "Oct'26 YoY" —
+    a figure BLS itself declined to publish (fixed 2026-11-20).
     """
-    if not series or len(series) < 13: return None
-    latest = series[0]
-    v = latest['value']
-    d0 = datetime.datetime.strptime(latest['date'], '%Y-%m-%d')
-    target_yr, target_mo = d0.year - 1, d0.month
-    v0 = None
+    if not series or len(series) < 13:
+        return None, None
+    by_ym = {}
     for obs in series:
+        if obs.get('value') is None:
+            continue
         od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
-        if od.year == target_yr and od.month == target_mo:
-            v0 = obs['value']
-            break
-    if v0 is None:
-        # Fallback to index [12] if exact month not found
-        v0 = series[12]['value'] if len(series) > 12 else None
-    return round((v - v0) / abs(v0) * 100, 2) if v0 else None
+        by_ym.setdefault((od.year, od.month), obs['value'])
+    for obs in series[:max_lookback + 1]:
+        od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+        v0 = by_ym.get((od.year - 1, od.month))
+        if v0 and obs.get('value') is not None:
+            return round((obs['value'] - v0) / abs(v0) * 100, 2), obs['date']
+    return None, None
+
+
+def yoy(series):
+    """YoY % for the most recent month with a real year-ago match.
+    See yoy_with_date() for why there is no positional fallback."""
+    return yoy_with_date(series)[0]
 
 
 def latest(x):
@@ -143,8 +158,11 @@ def analyze():
     # the new series hasn't been fetched yet (first run after this change).
     _atl_wgt = data.get('wage_growth_atl', [])
     v['wages_yoy']    = _atl_wgt[0]['value'] if _atl_wgt else yoy(data.get('ahetpi', []))
-    v['cpi_yoy']      = yoy(data.get('cpi_all', []))
-    v['core_cpi_yoy'] = yoy(data.get('cpi_core', []))
+    # Dates live in VALUE_DATES (written as signals.json 'value_dates'), not in
+    # v: everything in v is a numeric metric that monthly_archive/thresholds
+    # iterate over generically.
+    v['cpi_yoy'], VALUE_DATES['cpi_yoy']           = yoy_with_date(data.get('cpi_all', []))
+    v['core_cpi_yoy'], VALUE_DATES['core_cpi_yoy'] = yoy_with_date(data.get('cpi_core', []))
     v['pce_yoy']      = yoy(data.get('pce', []))
     v['core_pce_yoy'] = yoy(data.get('pce_core', []))
 
@@ -233,6 +251,7 @@ def analyze():
         'watch_count':   watch_n,
         'flagged_count': flag_n,
         'values':        v,
+        'value_dates':   VALUE_DATES,
         'signals':       sigs,
         'headlines':     headlines,
         'raw_errors':    raw.get('errors', []),

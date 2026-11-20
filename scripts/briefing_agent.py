@@ -105,9 +105,28 @@ def build_prompt(sig: dict, changed_tabs: list) -> str:
     hl   = sig.get('headlines', [])
     today = datetime.date.today().strftime('%B %d, %Y')
 
+    vd   = sig.get('value_dates', {}) or {}
+
     def fv(k, dec=2, sfx=''):
         val = v.get(k)
-        return f'{val:.{dec}f}{sfx}' if val is not None else 'N/A'
+        if val is None:
+            return 'N/A'
+        out = f'{val:.{dec}f}{sfx}'
+        # Tag the reference month where the analyzer recorded one, so the
+        # model can't present (e.g.) a Sep'26 CPI YoY as October's.
+        if vd.get(k):
+            try:
+                out += ' (' + datetime.datetime.strptime(vd[k], '%Y-%m-%d').strftime('%b %Y') + ')'
+            except ValueError:
+                pass
+        return out
+
+    # Oct 2025 CPI was never collected (shutdown) so BLS published no Oct 2026
+    # 12-month change. Remind the model while that month is still current news.
+    cpi_gap_note = ('NOTE: BLS published NO 12-month CPI change for October 2026 '
+                    '(October 2025 was never collected). Never state an October 2026 '
+                    'CPI YoY figure; cite the months shown above.\n'
+                    if datetime.date.today() < datetime.date(2027, 1, 15) else '')
 
     headline_block = '\n'.join(h['line'] for h in hl) if hl else 'No major changes vs prior snapshot.'
 
@@ -138,7 +157,7 @@ IG OAS: {fv('ig_oas',0,'bp')}  |  HY OAS: {fv('hy_oas',0,'bp')}
 Unemployment U-3: {fv('unrate',1,'%')}  |  U-6: {fv('u6rate',1,'%')}
 NFP MoM: {fv('nfp_mom',0,'K')}  |  Wages YoY: {fv('wages_yoy',1,'%')}
 CPI YoY: {fv('cpi_yoy',1,'%')}  |  Core CPI: {fv('core_cpi_yoy',1,'%')}
-PCE YoY: {fv('pce_yoy',1,'%')}  |  Core PCE: {fv('core_pce_yoy',1,'%')}
+{cpi_gap_note}PCE YoY: {fv('pce_yoy',1,'%')}  |  Core PCE: {fv('core_pce_yoy',1,'%')}
 Saving Rate: {fv('saving_rate',1,'%')}
 30Y Mortgage: {fv('mortgage30',2,'%')}  |  Housing Starts: {fv('housing_starts',0,'K')}
 WTI: ${fv('wti',1)}  |  Brent: ${fv('brent',1)}

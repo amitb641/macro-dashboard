@@ -556,6 +556,35 @@ def test_oil_window_coverage(tmp_dir):
     )
 
 
+def test_yoy_missing_year_ago():
+    """Regression guard (fixed 2026-11-20): Oct 2025 CPI was never collected
+    (shutdown), so Oct 2026 has no year-ago index and BLS published no 12-month
+    change. analyzer.yoy() used to fall back to series[12] (Sep'25) and report a
+    13-month change as "Oct'26 YoY" (4.1% vs the real Sep'26 3.7%). It must now
+    anchor to the newest month with a real year-ago match."""
+    print('\n── Test: YoY With Missing Year-Ago Month ──')
+    import analyzer
+    # Newest-first monthly index, Oct'25 absent, +0.3/month, Oct'26 jumps.
+    months = [(2026, m) for m in range(10, 0, -1)] + [(2025, 12), (2025, 11)] + \
+             [(2025, m) for m in range(9, 0, -1)]
+    series, v = [], 300.0
+    for y, m in reversed(months):
+        v += 1.0
+        series.append({'date': f'{y}-{m:02d}-01', 'value': v})
+    series.reverse()
+    series[0]['value'] += 5.0           # Oct'26 spike that a 13-mo compare would inflate
+    val, date = analyzer.yoy_with_date(series)
+    _test('yoy anchors to latest month with real year-ago data (Sep\'26)', date == '2026-09-01',
+          f'got date={date}')
+    sep26 = next(o for o in series if o['date'] == '2026-09-01')['value']
+    sep25 = next(o for o in series if o['date'] == '2025-09-01')['value']
+    _test('yoy value is the true Sep\'26/Sep\'25 change, not a 13-month change',
+          val == round((sep26 - sep25) / sep25 * 100, 2), f'got {val}')
+    full = [o for o in series if o['date'] != '2026-10-01']
+    _test('yoy unchanged behaviour when latest month has a year-ago match',
+          analyzer.yoy_with_date(full)[1] == '2026-09-01')
+
+
 def test_agent9_merge_clears_stale_fields(tmp_dir):
     """Regression guard (2026-10-28): merge_bank_update() used
     `entry.get('text','') or b.get(f,'')`, so a field Claude returned empty
@@ -639,6 +668,7 @@ def main():
         test_monthly_archive(tmp_dir)
         test_healthcheck_module()
         test_oil_window_coverage(tmp_dir)
+        test_yoy_missing_year_ago()
         test_agent9_merge_clears_stale_fields(tmp_dir)
         test_no_real_file_mutation(before_hashes)
 

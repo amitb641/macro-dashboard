@@ -671,7 +671,10 @@ def rebuild_charts(html, data):
             # If CS is shorter than mortgage, extend with mortgage-only months
             extra_mtg_labels = [l for l in mtg_labels if l not in cs_labels]
             combined_labels = cs_labels + extra_mtg_labels
-            combined_cs = cs_values + [cs_values[-1]] * len(extra_mtg_labels)
+            # Mortgage-only months get null, not a copy of the last Case-Shiller
+            # print: forward-filling made the tile read "Home Prices Oct'26" for
+            # Aug'26 data (CS publishes ~2 months behind). MC skips nulls.
+            combined_cs = cs_values + [None] * len(extra_mtg_labels)
             combined_mtg = [mtg_by_lbl.get(l, None) for l in cs_labels] + \
                            [mtg_by_lbl[l] for l in extra_mtg_labels]
             # Filter out entries where mortgage is None (alignment gap)
@@ -1408,6 +1411,10 @@ def rebuild_u_sector_mom(html, data):
     return html
 
 
+# Reference dates of the two months rebuild_cpi_cat_mom actually used.
+CPI_CAT_MONTHS = {}
+
+
 def rebuild_cpi_cat_mom(html, data):
     """Rebuild CPI_CAT_MOM from FRED CPI category index series."""
     CPI_CATS = [
@@ -1423,20 +1430,38 @@ def rebuild_cpi_cat_mom(html, data):
         ('Used Cars and Trucks', 'cpi_used_cars', '#00C9A7'),
     ]
 
-    entries = []
-    short = []
+    # Per-category YoY by month, exact calendar-month matching over the
+    # latest 6 obs. Then pick the two newest months that most categories can
+    # support. Previously only series[0]/[1] were tried, so when Oct'25 was
+    # never collected (shutdown) every category failed for Oct'26 and the
+    # whole rebuild was skipped, leaving last run's data in place.
+    per_cat = []
     for cat_name, data_key, color in CPI_CATS:
         series = data.get(data_key, [])
-        yoys = _yoy_from_index(series, 2)
-        if len(yoys) >= 2:
-            entries.append({
-                'cat': cat_name,
-                yoys[1]['month_key']: yoys[1]['yoy'],  # prior month
-                yoys[0]['month_key']: yoys[0]['yoy'],  # current month
-                'color': color,
-            })
-        else:
-            short.append(f'{data_key}(n={len(series)})')
+        pts = {y['month_key']: y['yoy'] for y in _yoy_from_index(series, 6)}
+        per_cat.append((cat_name, data_key, color, pts, len(series)))
+    month_counts = {}
+    month_dates = {}
+    for _, data_key, _, _, _ in per_cat:
+        for y in _yoy_from_index(data.get(data_key, []), 6):
+            month_counts[y['month_key']] = month_counts.get(y['month_key'], 0) + 1
+            month_dates[y['month_key']] = y['date']
+    usable = sorted((k for k, c in month_counts.items() if c >= 8),
+                    key=lambda k: month_dates[k], reverse=True)
+
+    entries = []
+    short = []
+    if len(usable) >= 2:
+        cur_k, prv_k = usable[0], usable[1]
+        CPI_CAT_MONTHS['cur'], CPI_CAT_MONTHS['prv'] = month_dates[cur_k], month_dates[prv_k]
+        for cat_name, data_key, color, pts, n in per_cat:
+            if cur_k in pts and prv_k in pts:
+                entries.append({'cat': cat_name, prv_k: pts[prv_k],
+                                cur_k: pts[cur_k], 'color': color})
+            else:
+                short.append(f'{data_key}(n={n})')
+    else:
+        short = [f'{dk}(n={n})' for _, dk, _, _, n in per_cat]
 
     if len(entries) >= 8:
         new_json = json.dumps(entries, separators=(', ', ':'))
@@ -1449,8 +1474,8 @@ def rebuild_cpi_cat_mom(html, data):
     else:
         warnings.append(
             f'CPI_CAT_MOM rebuild SKIPPED — only {len(entries)}/10 cats had '
-            f'>=13 obs for YoY (need >=8). Insufficient: {", ".join(short)}. '
-            f'Chart will display stale Jan/Feb data while title auto-updates.'
+            f'a YoY for the same two recent months (need >=8). Missing: {", ".join(short)}. '
+            f'Chart keeps its previous data.'
         )
 
     return html
@@ -1820,15 +1845,13 @@ def render_inflation(html, data, vals, tabs):
     core_pce = vals.get('core_pce_yoy')
     save     = vals.get('saving_rate')
 
-    if cpi is not None:
-        html = patch_array_last(html, 'headline', cpi, 1, scope_var='CPI_MONTHLY')
-        cpi_s2 = data.get('cpi_all')
-        cpi_date = cpi_s2[0].get('date','') if cpi_s2 else ''
-        cpi_lbl = f"CPI All Items {month_label(cpi_date)}" if cpi_date else 'CPI All Items'
-        html = patch_kpi_full(html, 'CPI All Items 2025', cpi_lbl, f'{cpi:+.1f}%')
-
-    if core_cpi is not None:
-        html = patch_array_last(html, 'core', core_cpi, 1, scope_var='CPI_MONTHLY')
+    # No patch_array_last on CPI_MONTHLY: rebuild_charts() already builds it
+    # from the same index data with exact calendar-month YoY matching. The
+    # weekly patch wrote the analyzer's latest value into whatever slot was
+    # last — on 2026-11-20 that put a (13-month) "Oct" 4.1%/2.9% into the
+    # Sep'26 slot, whose real values are 3.7%/2.6%. Same bug class as the
+    # FFR/MORTGAGE/STARTS patches removed 2026-09-28. (The 'CPI All Items'
+    # patch_kpi_full call targeted a tile that no longer exists.)
 
     if pce is not None:
         html = patch_array_last(html, 'headline', pce, 1, scope_var='PCE_MONTHLY')
@@ -1843,11 +1866,13 @@ def render_inflation(html, data, vals, tabs):
     # Gated on rebuild_cpi_cat_mom succeeding, so title and data always roll
     # together. If the rebuild was skipped (insufficient obs), title stays put
     # so it can't drift past the data const.
+    # Months come from the rebuilt const itself (CPI_CAT_MONTHS), not from
+    # cpi_all[0]/[1]: those can be newer than the latest month with a
+    # publishable YoY (Oct'26 had none), which would title Sep/Aug data as
+    # "Oct'26 vs Sep'26".
     cpi_rebuilt = any(s.startswith('CPI_CAT_MOM rebuilt') for s in applied)
-    cpi_s = data.get('cpi_all', [])
-    if cpi_rebuilt and cpi_s and len(cpi_s) >= 2:
-        cpi_cur = cpi_s[0].get('date', '')
-        cpi_prev = cpi_s[1].get('date', '')
+    if cpi_rebuilt and CPI_CAT_MONTHS.get('cur') and CPI_CAT_MONTHS.get('prv'):
+        cpi_cur, cpi_prev = CPI_CAT_MONTHS['cur'], CPI_CAT_MONTHS['prv']
         if cpi_cur and cpi_prev:
             c_cur = month_label(cpi_cur)
             c_prv = month_label(cpi_prev)
@@ -1942,8 +1967,10 @@ def render_housing(html, data, vals, tabs):
     if mtg is not None:
         mtg_s = data.get('mortgage30')
         mtg_date = mtg_s[0].get('date','') if mtg_s else ''
-        mtg_lbl = f"30yr Mortgage {month_label(mtg_date)}" if mtg_date else '30yr Mortgage'
-        html = patch_kpi_full(html, '30yr Mortgage 2025', mtg_lbl, f'{mtg:.2f}%')
+        # No patch_kpi_full here: the Housing tile label is built in JS
+        # ("30yr Mortgage "+_hLbl). That call's fuzzy base-prefix match found
+        # the JS string literal and rewrote it to "30yr Mortgage Nov'26"+_hLbl,
+        # so the tile rendered "30yr Mortgage Nov'26Oct'26" (fixed 2026-11-20).
         # No patch_array_last('rate30', ...) here anymore -- rebuild_charts()
         # already sets MORTGAGE_DATA's current-year bucket correctly and
         # fresh every render. This weekly patch used to be actively
@@ -2486,28 +2513,50 @@ def rebuild_kpi_strip(html, data, vals):
         sign = '+' if d > 0 else ''
         return cur, prev, f'{sign}{d}', d
 
+    def _yoy_points(series, n=2, max_scan=6):
+        """Newest-first list of {date, yoy} for the first n months (within
+        the latest max_scan obs) that have a REAL year-ago observation,
+        matched by calendar month. No positional fallback: when a year-ago
+        month is missing (Oct 2025 CPI was never collected), comparing
+        against series[12] gives a 13-month change mislabelled as YoY —
+        exactly what put a fake "Headline CPI Oct'26 4.1%" on the strip
+        (BLS published no Oct'26 12-month change). Fixed 2026-11-20."""
+        if not series or len(series) < 13:
+            return []
+        by_ym = {}
+        for obs in series:
+            if obs.get('value') is None:
+                continue
+            od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+            by_ym.setdefault((od.year, od.month), obs['value'])
+        out = []
+        for obs in series[:max_scan]:
+            od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
+            ya = by_ym.get((od.year - 1, od.month))
+            if ya and obs.get('value') is not None:
+                out.append({'date': obs['date'],
+                            'yoy': round((obs['value'] - ya) / ya * 100, 2)})
+                if len(out) == n:
+                    break
+        return out
+
     def _yoy_pair(series):
-        """Return (latest_yoy, prior_month_yoy) from index series.
-        Matches by calendar month (not index position) to handle gaps.
-        """
-        if not series or len(series) < 14:
+        """(latest_yoy, prior_yoy) over months that have real year-ago data."""
+        pts = _yoy_points(series, 2)
+        if len(pts) < 2:
             return None, None
-        def _find_month(yr, mo):
-            for obs in series:
-                od = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
-                if od.year == yr and od.month == mo:
-                    return obs['value']
-            return None
-        d0 = datetime.datetime.strptime(series[0]['date'], '%Y-%m-%d')
-        d1 = datetime.datetime.strptime(series[1]['date'], '%Y-%m-%d')
-        v0, v12 = series[0]['value'], _find_month(d0.year - 1, d0.month)
-        v1, v13 = series[1]['value'], _find_month(d1.year - 1, d1.month)
-        # Fallback to index position if exact month not found
-        if v12 is None: v12 = series[12]['value'] if len(series) > 12 else None
-        if v13 is None: v13 = series[13]['value'] if len(series) > 13 else None
-        yoy_cur  = round((v0 - v12) / v12 * 100, 2) if v12 else None
-        yoy_prev = round((v1 - v13) / v13 * 100, 2) if v13 else None
-        return yoy_cur, yoy_prev
+        return pts[0]['yoy'], pts[1]['yoy']
+
+    def _gap_note(series, anchor_date):
+        """Sub-line note when the newest index month has no publishable YoY."""
+        if not series or series[0]['date'] == anchor_date:
+            return ''
+        mom = None
+        if len(series) >= 2 and series[1]['value']:
+            mom = (series[0]['value'] - series[1]['value']) / series[1]['value'] * 100
+        m = _mlbl(series[0]['date'])
+        mom_s = f"{m}: {mom:+.2f}% MoM, " if mom is not None else f"{m}: "
+        return f"{mom_s}12-mo change not published (no year-ago index) · "
 
     cards = []
 
@@ -2592,38 +2641,32 @@ def rebuild_kpi_strip(html, data, vals):
                           'delta': d, 'chg': f'{sign}{d:.1f}pp',
                           'sub': f"Prior: {yoy_prev:.1f}% ({_mlbl(ahetpi[1]['date'])}) · BLS AHETPI"})
 
-    # 5. CPI YoY — with 3M avg + MoM + YoY in sub
+    # 5. CPI YoY — anchored to the latest month with a real year-ago value.
+    # If the newest index month has none (Oct'26: Oct'25 never collected),
+    # the tile shows the latest publishable YoY under ITS month and notes the
+    # newer month's MoM instead of inventing a 12-month figure.
     cpi = data.get('cpi_all', [])
     if cpi and len(cpi) >= 14:
-        yoy_cur, yoy_prev = _yoy_pair(cpi)
-        # MoM % change (index level)
-        mom_pct = None
-        if len(cpi) >= 2 and cpi[1]['value']:
-            mom_pct = round((cpi[0]['value'] - cpi[1]['value']) / cpi[1]['value'] * 100, 2)
-        # 3-month average of monthly YoY (match by calendar month, not index)
-        avg3m = None
-        if len(cpi) >= 15:
-            _cpi_ym = {}
-            for obs in cpi:
-                _d = datetime.datetime.strptime(obs['date'], '%Y-%m-%d')
-                _cpi_ym[(_d.year, _d.month)] = obs['value']
-            yoys = []
-            for i in range(3):
-                _d = datetime.datetime.strptime(cpi[i]['date'], '%Y-%m-%d')
-                yr_ago = _cpi_ym.get((_d.year - 1, _d.month))
-                if yr_ago and yr_ago != 0:
-                    yoys.append(round((cpi[i]['value'] - yr_ago) / yr_ago * 100, 2))
-            if yoys:
-                avg3m = round(sum(yoys) / len(yoys), 1)
-        if yoy_cur is not None and yoy_prev is not None:
+        pts = _yoy_points(cpi, 3)
+        if len(pts) >= 2:
+            yoy_cur, yoy_prev = pts[0]['yoy'], pts[1]['yoy']
+            anchor = pts[0]['date']
+            ai = next(i for i, o in enumerate(cpi) if o['date'] == anchor)
+            mom_pct = None
+            if ai + 1 < len(cpi) and cpi[ai + 1]['value']:
+                mom_pct = round((cpi[ai]['value'] - cpi[ai + 1]['value']) / cpi[ai + 1]['value'] * 100, 2)
+            avg3m = round(sum(p['yoy'] for p in pts) / len(pts), 1) if len(pts) == 3 else None
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
-            lbl = f"Headline CPI {_mlbl(cpi[0]['date'])}"
-            mom_str = f"MoM: {mom_pct:+.2f}% · " if mom_pct is not None else ""
+            lbl = f"Headline CPI {_mlbl(anchor)}"
+            gap = _gap_note(cpi, anchor)
+            # With a gap note the newest month's MoM is already shown; a second
+            # (anchor-month) MoM would just be confusing.
+            mom_str = f"MoM: {mom_pct:+.2f}% · " if (mom_pct is not None and not gap) else ""
             avg3m_str = f" · 3M avg: {avg3m:.1f}%" if avg3m is not None else ""
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'cpi',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
-                          'sub': f"{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(cpi[1]['date'])})"})
+                          'sub': f"{gap}{mom_str}YoY: {yoy_cur:.1f}%{avg3m_str} · Prior: {yoy_prev:.1f}% ({_mlbl(pts[1]['date'])})"})
 
     # 6. Core CPI YoY (ex Food & Energy, FRED CPILFESL)  (up = bad)
     # Replaced Core PCE here: Core CPI prints ~30 days earlier than Core PCE
@@ -2631,14 +2674,15 @@ def rebuild_kpi_strip(html, data, vals):
     # making the headline/core split immediately comparable on the strip.
     cpi_core = data.get('cpi_core', [])
     if cpi_core and len(cpi_core) >= 14:
-        yoy_cur, yoy_prev = _yoy_pair(cpi_core)
-        if yoy_cur is not None and yoy_prev is not None:
+        pts = _yoy_points(cpi_core, 2)
+        if len(pts) >= 2:
+            yoy_cur, yoy_prev = pts[0]['yoy'], pts[1]['yoy']
             d = round(yoy_cur - yoy_prev, 2)
             sign = '+' if d > 0 else ''
-            lbl = f"Core CPI {_mlbl(cpi_core[0]['date'])}"
+            lbl = f"Core CPI {_mlbl(pts[0]['date'])}"
             cards.append({'lbl': lbl, 'val': f'{yoy_cur:.1f}%', 'metric': 'cpi',
                           'delta': d, 'chg': f'{sign}{d:.1f}pp', 'inv': True,
-                          'sub': f"Ex Food & Energy · Prior: {yoy_prev:.1f}% ({_mlbl(cpi_core[1]['date'])})"})
+                          'sub': f"{_gap_note(cpi_core, pts[0]['date'])}Ex Food & Energy · Prior: {yoy_prev:.1f}% ({_mlbl(pts[1]['date'])})"})
 
     # 7. Core PCE YoY (FRED PCEPILFE — Fed's 2% target gauge)  (up = bad)
     # Both core measures shown side-by-side: CPI (slot 6) prints faster;
