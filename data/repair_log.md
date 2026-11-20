@@ -1,3 +1,26 @@
+## Repair Agent — 2026-11-20T05:42:39.413078Z
+
+- **Status**: WARN
+- **Total checks**: 563
+- **Passed**: 558
+- **Failed**: 5
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 3 stale_
+
+- ⏰ **Staleness: wage_growth_atl** — 80d old (limit 60d)
+- ⏰ **Staleness: cc_delinq** — 233d old (limit 150d)
+- ⏰ **Staleness: mtg_delinq** — 233d old (limit 150d)
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: Dashboard — Commentary sentence count in [2,4]** — 
+
+
+---
+
 ## Repair Agent — 2026-11-20T04:57:28.264029Z
 
 - **Status**: WARN

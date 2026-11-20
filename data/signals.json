@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-11-20T04:55:56.232286Z",
+  "analyzed_at": "2026-11-20T05:41:08.617670Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 4,
-  "flagged_count": 3,
+  "flagged_count": 0,
   "values": {
     "ffr": 3.88,
     "dgs2": 4.8,
@@ -46,37 +46,37 @@
     },
     "dgs10": {
       "value": 5.07,
-      "delta": 0.09,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": "alert"
     },
     "ig_oas": {
       "value": 93,
-      "delta": 4,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
       "value": 347,
-      "delta": 21,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "unrate": {
       "value": 4.1,
-      "delta": -0.1,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "cpi_yoy": {
       "value": 4.08,
-      "delta": 0.36,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "alert"
     },
     "pce_yoy": {
@@ -88,21 +88,21 @@
     },
     "nfp_mom": {
       "value": 165,
-      "delta": 136,
-      "direction": "rising",
-      "flagged": true,
+      "delta": 0,
+      "direction": "stable",
+      "flagged": false,
       "alert": null
     },
     "wti": {
       "value": 89.53,
-      "delta": -13.84,
-      "direction": "falling",
-      "flagged": true,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
       "alert": "watch"
     },
     "mortgage30": {
       "value": 7.28,
-      "delta": 0.04,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": "watch"
@@ -123,14 +123,14 @@
     },
     "icsa": {
       "value": 203000.0,
-      "delta": 9000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "umcsent": {
       "value": 51.0,
-      "delta": 3.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": "alert"
@@ -144,35 +144,35 @@
     },
     "dgs2": {
       "value": 4.8,
-      "delta": 0.19,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
       "value": 4.89,
-      "delta": 0.11,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
       "value": 5.41,
-      "delta": 0.09,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
       "value": 27,
-      "delta": -10,
+      "delta": 0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "core_cpi_yoy": {
       "value": 2.87,
-      "delta": 0.3,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -186,7 +186,7 @@
     },
     "u6rate": {
       "value": 7.9,
-      "delta": 0.3,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -200,14 +200,14 @@
     },
     "housing_starts": {
       "value": 1309.0,
-      "delta": 88.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "brent": {
       "value": 92.94,
-      "delta": -30.16,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -228,7 +228,7 @@
     },
     "ccsa": {
       "value": 1763000.0,
-      "delta": 62000.0,
+      "delta": 0.0,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,22 +241,6 @@
       "alert": null
     }
   },
-  "headlines": [
-    {
-      "key": "cpi_yoy",
-      "line": "cpi_yoy: 4.08 (\u25b20.36 vs prior) [ALERT]",
-      "alert": "alert"
-    },
-    {
-      "key": "nfp_mom",
-      "line": "nfp_mom: 165.00 (\u25b2136.00 vs prior)",
-      "alert": null
-    },
-    {
-      "key": "wti",
-      "line": "wti: 89.53 (\u25bc13.84 vs prior) [WATCH]",
-      "alert": "watch"
-    }
-  ],
+  "headlines": [],
   "raw_errors": []
 }
