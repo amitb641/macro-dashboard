@@ -601,7 +601,8 @@ def test_chart_contracts():
         bad_slot = page(good[:-1] + [thirteen], "Headline CPI Sep'26", f'{thirteen}%')
         _test('3j: last slot overwritten with 13-month change → critical', bool(crit(bad_slot)))
         ffill = {'labels': lbls + ["Oct'26"], 'headline': good + [good[-1]], 'core': good + [good[-1]]}
-        ff = f'const CPI_MONTHLY = {_json.dumps(ffill)};\nconst KPIS = {_json.dumps([{"lbl": "Headline CPI Oct\'26", "val": "1%"}])};'
+        ff_kpis = _json.dumps([{'lbl': "Headline CPI Oct'26", 'val': '1%'}])
+        ff = 'const CPI_MONTHLY = ' + _json.dumps(ffill) + ';\nconst KPIS = ' + ff_kpis + ';'
         _test('3j: value for a month with no year-ago (forward-fill/positional) → critical', bool(crit(ff)))
         behind = page(good[:-1], "Headline CPI Aug'26", f'{good[-2]}%')
         behind = behind.replace(_json.dumps(lbls), _json.dumps(lbls[:-1]))
