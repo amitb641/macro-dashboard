@@ -55,7 +55,7 @@ jobs:
           echo "Resolved branch: $(grep '^branch=' $GITHUB_OUTPUT | tail -1)"
 
       - name: Checkout dev branch (artifact destination)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: dev/multi-expert-improvements
           fetch-depth: 0
