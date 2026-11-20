@@ -15,7 +15,7 @@ Output: data/visual_qa_report.json + screenshots in data/screenshots/
 Usage: python scripts/visual_qa.py [--screenshots]
 """
 
-import json, sys, datetime, os
+import json, sys, datetime, os, functools, http.server, threading
 from pathlib import Path
 
 try:
@@ -66,6 +66,27 @@ def _check(category, name, condition, detail='', severity='warning'):
         print(f'  FAIL  [{category}] {name} — {detail}')
 
 
+class _QuietHandler(http.server.SimpleHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+
+def _start_static_server(directory):
+    """Serve `directory` on 127.0.0.1 (ephemeral port) in a daemon thread.
+
+    The dashboard fetches runtime JSON (data/validation_report.json,
+    version.json, ...). Loading index.html over file:// made those fetches
+    depend on browser file-scheme quirks: old Chromium blocked them with CORS
+    (worked around by page.route interception); newer Chromium (Playwright
+    >= ~1.6x) rejects fetch() of file:// before Playwright can intercept it,
+    so checks failed and ~6 silently stopped running. Serving over http://
+    matches how GitHub Pages serves the page and needs no workaround."""
+    handler = functools.partial(_QuietHandler, directory=str(directory))
+    server = http.server.ThreadingHTTPServer(('127.0.0.1', 0), handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    return server
+
+
 def run_visual_qa(take_screenshots=False):
     global PASS, FAIL, findings
     PASS = 0
@@ -111,25 +132,11 @@ def run_visual_qa(take_screenshots=False):
         js_errors = []
         page.on('pageerror', lambda err: js_errors.append(str(err)))
 
-        # Browsers block fetch() from file:// origins (CORS). Route JSON
-        # data-blob fetches through Playwright and serve them from disk so
-        # post-v1.0.3 runtime-fetched data (VALIDATION_REPORT, etc.) can be
-        # verified in the visual-QA harness the same way it works on Pages.
-        data_dir = HTML_FILE.parent / 'data'
-        def _route_data(route, req):
-            import os
-            fname = os.path.basename(req.url.split('?')[0])
-            fpath = data_dir / fname
-            if fpath.exists():
-                route.fulfill(status=200, content_type='application/json',
-                              body=fpath.read_text(encoding='utf-8'))
-            else:
-                route.fulfill(status=404, body=f'Not found: {fname}')
-        page.route('**/data/*.json', _route_data)
-
-        # Load page
-        file_url = f'file://{HTML_FILE.resolve()}'
-        page.goto(file_url, wait_until='networkidle')
+        # Load the page over http:// (like GitHub Pages) so runtime-fetched
+        # JSON (VALIDATION_REPORT, etc.) works — see _start_static_server.
+        server = _start_static_server(HTML_FILE.parent)
+        page_url = f'http://127.0.0.1:{server.server_address[1]}/{HTML_FILE.name}'
+        page.goto(page_url, wait_until='networkidle')
         page.wait_for_timeout(1000)  # Let charts render
 
         # ── Global checks ──────────────────────────────────────────
@@ -490,6 +497,8 @@ def run_visual_qa(take_screenshots=False):
                    severity='warning')
 
         browser.close()
+        server.shutdown()
+        server.server_close()
 
     # ── Build report ───────────────────────────────────────────────
     report = {
