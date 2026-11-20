@@ -1,9 +1,9 @@
 {
-  "analyzed_at": "2026-11-20T05:41:08.617670Z",
+  "analyzed_at": "2026-11-20T06:02:48.985331Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 4,
-  "flagged_count": 0,
+  "flagged_count": 1,
   "values": {
     "ffr": 3.88,
     "dgs2": 4.8,
@@ -19,8 +19,8 @@
     "icsa": 203000.0,
     "ccsa": 1763000.0,
     "wages_yoy": 3.9,
-    "cpi_yoy": 4.08,
-    "core_cpi_yoy": 2.87,
+    "cpi_yoy": 3.72,
+    "core_cpi_yoy": 2.57,
     "pce_yoy": 3.65,
     "core_pce_yoy": 3.12,
     "saving_rate": 3.8,
@@ -35,6 +35,10 @@
     "gdp_growth_q": 3.4,
     "cc_delinq": 2.85,
     "spread_10_2_bp": 27
+  },
+  "value_dates": {
+    "cpi_yoy": "2026-09-01",
+    "core_cpi_yoy": "2026-09-01"
   },
   "signals": {
     "ffr": {
@@ -73,10 +77,10 @@
       "alert": null
     },
     "cpi_yoy": {
-      "value": 4.08,
-      "delta": 0.0,
-      "direction": "stable",
-      "flagged": false,
+      "value": 3.72,
+      "delta": -0.36,
+      "direction": "falling",
+      "flagged": true,
       "alert": "alert"
     },
     "pce_yoy": {
@@ -171,8 +175,8 @@
       "alert": null
     },
     "core_cpi_yoy": {
-      "value": 2.87,
-      "delta": 0.0,
+      "value": 2.57,
+      "delta": -0.3,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -241,6 +245,12 @@
       "alert": null
     }
   },
-  "headlines": [],
+  "headlines": [
+    {
+      "key": "cpi_yoy",
+      "line": "cpi_yoy: 3.72 (\u25bc0.36 vs prior) [ALERT]",
+      "alert": "alert"
+    }
+  ],
   "raw_errors": []
 }
