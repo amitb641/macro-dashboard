@@ -1,0 +1,84 @@
+name: Pipeline Watchdog
+
+# Independent of the pipeline itself: checks that the *published* dashboard is
+# fresh. Catches every way the weekly run can fail silently — a broken step,
+# a runner-image change, a disabled schedule, a blocked publish gate.
+# (Nov 2026: two weekly runs failed on an unsupported runner OS and the site
+# sat on Oct 31's data for two weeks with nobody noticing.)
+
+on:
+  schedule:
+    - cron: '0 15 * * *'   # daily, 15:00 UTC (the weekly pipeline runs Sat 12:00 UTC)
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    env:
+      MAX_AGE_DAYS: '8'    # weekly cadence + 1 day of slack
+    steps:
+      - name: Read Last-Modified of the live site
+        id: site
+        run: |
+          URL="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+          LM=$(curl -sI --max-time 30 --retry 3 "$URL" | tr -d '\r' | awk -F': ' 'tolower($1)=="last-modified"{print $2}')
+          if [ -z "$LM" ]; then
+            echo "::error::Could not read Last-Modified from $URL"
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+            echo "age_days=unknown" >> "$GITHUB_OUTPUT"
+            echo "last_modified=unreadable" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          AGE=$(( ( $(date -u +%s) - $(date -u -d "$LM" +%s) ) / 86400 ))
+          echo "Site last modified: $LM ($AGE day(s) ago, limit $MAX_AGE_DAYS)"
+          if [ "$AGE" -gt "$MAX_AGE_DAYS" ]; then echo "stale=true" >> "$GITHUB_OUTPUT"; else echo "stale=false" >> "$GITHUB_OUTPUT"; fi
+          echo "age_days=$AGE" >> "$GITHUB_OUTPUT"
+          echo "last_modified=$LM" >> "$GITHUB_OUTPUT"
+
+      - name: Open or close the staleness issue
+        uses: actions/github-script@v7
+        env:
+          STALE: ${{ steps.site.outputs.stale }}
+          AGE_DAYS: ${{ steps.site.outputs.age_days }}
+          LAST_MODIFIED: ${{ steps.site.outputs.last_modified }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const label = 'pipeline-stale';
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'open', labels: label, per_page: 100,
+            });
+            if (process.env.STALE === 'true') {
+              if (open.length) return;   // already flagged — don't comment daily
+              await github.rest.issues.create({
+                owner, repo,
+                title: `Dashboard is stale: last published ${process.env.LAST_MODIFIED}`,
+                body: [
+                  '## Stale Dashboard Alert',
+                  '',
+                  `The live site was last published **${process.env.LAST_MODIFIED}** (${process.env.AGE_DAYS} days ago; limit ${process.env.MAX_AGE_DAYS || 8}).`,
+                  'The weekly pipeline should have republished it. Check the latest',
+                  '"Weekly Macro Update" run, and that scheduled workflows are still enabled.',
+                  '',
+                  `Detected by: [watchdog run ${context.runId}](${runUrl})`,
+                  'This issue closes itself once the site is fresh again.',
+                ].join('\n'),
+                labels: [label],
+                assignees: [owner],
+              });
+            } else {
+              for (const issue of open) {
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number: issue.number,
+                  body: `Resolved — site last published ${process.env.LAST_MODIFIED}. Closing.`,
+                });
+                await github.rest.issues.update({
+                  owner, repo, issue_number: issue.number,
+                  state: 'closed', state_reason: 'completed',
+                });
+              }
+            }

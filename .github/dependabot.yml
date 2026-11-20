@@ -1,0 +1,19 @@
+# Keep the pinned toolchain moving deliberately, via PRs that smoke-tests.yml
+# validates (on the pinned runner), instead of discovering drift when a
+# scheduled run breaks. Playwright in particular must be bumped to support
+# newer runner images — see .github/workflows/runner-canary.yml.
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3

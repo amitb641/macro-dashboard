@@ -1,0 +1,92 @@
+name: Runner Canary
+
+# Early warning for GitHub runner-image changes. The production pipeline pins
+# its runner (ubuntu-24.04) so it can't break overnight; this canary
+# deliberately runs on UNPINNED ubuntu-latest and performs the exact install
+# the pipeline does. If a new default image breaks Playwright, this fails on
+# Tuesday — days before the Saturday publish — and opens an issue.
+# (Nov 2026: ubuntu-latest moved to 26.04; Playwright 1.52.0 doesn't support
+# it; two weekly publishes failed before anyone noticed.)
+
+on:
+  schedule:
+    - cron: '0 13 * * 2'   # Tuesdays, 13:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest   # intentionally NOT pinned — that is the point
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Report runner image
+        run: head -3 /etc/os-release
+
+      - name: Install dependencies exactly as the pipeline does
+        run: |
+          pip install -r requirements.txt
+          playwright install --with-deps chromium
+
+      - name: Open an issue if the canary failed
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const label = 'runner-canary';
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'open', labels: label, per_page: 100,
+            });
+            if (open.length) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: open[0].number,
+                body: `Still failing — canary run [${context.runId}](${runUrl}).`,
+              });
+              return;
+            }
+            await github.rest.issues.create({
+              owner, repo,
+              title: 'Runner canary failed: new ubuntu-latest image breaks the pipeline install',
+              body: [
+                '## Runner Canary Failure',
+                '',
+                'The unpinned `ubuntu-latest` image failed the pipeline\'s dependency install',
+                `(\`pip install -r requirements.txt\` + \`playwright install --with-deps chromium\`): [run ${context.runId}](${runUrl}).`,
+                '',
+                'Production is unaffected for now — its jobs are pinned to `ubuntu-24.04`.',
+                'Likely fix: bump `playwright` in `requirements.txt` to a release that supports the',
+                'new image, then (once smoke tests pass) move the pinned `runs-on` forward.',
+                'This issue closes itself when the canary passes again.',
+              ].join('\n'),
+              labels: [label],
+              assignees: [owner],
+            });
+
+      - name: Close the canary issue once it passes
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const open = await github.paginate(github.rest.issues.listForRepo, {
+              owner, repo, state: 'open', labels: 'runner-canary', per_page: 100,
+            });
+            for (const issue of open) {
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: issue.number,
+                body: `Resolved — canary passed in run ${context.runId}. Closing.`,
+              });
+              await github.rest.issues.update({
+                owner, repo, issue_number: issue.number,
+                state: 'closed', state_reason: 'completed',
+              });
+            }
