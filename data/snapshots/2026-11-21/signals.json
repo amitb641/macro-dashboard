@@ -1,0 +1,287 @@
+{
+  "analyzed_at": "2026-11-21T12:03:35.695115Z",
+  "risk_level": "HIGH",
+  "alert_count": 3,
+  "watch_count": 4,
+  "flagged_count": 8,
+  "values": {
+    "ffr": 3.88,
+    "dgs2": 4.76,
+    "dgs5": 4.86,
+    "dgs10": 5.04,
+    "dgs30": 5.4,
+    "ig_oas": 94,
+    "hy_oas": 352,
+    "unrate": 4.1,
+    "u6rate": 7.9,
+    "nfp_level": 159293.0,
+    "nfp_mom": 165,
+    "icsa": 203000.0,
+    "ccsa": 1763000.0,
+    "wages_yoy": 3.9,
+    "cpi_yoy": 4.08,
+    "core_cpi_yoy": 2.87,
+    "pce_yoy": 3.65,
+    "core_pce_yoy": 3.12,
+    "saving_rate": 3.8,
+    "mortgage30": 7.28,
+    "housing_starts": 1309.0,
+    "cs_hpi_yoy": 2.09,
+    "umcsent": 51.5,
+    "atl_wage_3m": null,
+    "tdsp": 11.111439,
+    "wti": 89.53,
+    "brent": 92.94,
+    "gdp_growth_q": 3.4,
+    "cc_delinq": 2.85,
+    "spread_10_2_bp": 28
+  },
+  "signals": {
+    "ffr": {
+      "value": 3.88,
+      "delta": 0.24,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs10": {
+      "value": 5.04,
+      "delta": 0.62,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "alert"
+    },
+    "ig_oas": {
+      "value": 94,
+      "delta": 16,
+      "direction": "rising",
+      "flagged": true,
+      "alert": null
+    },
+    "hy_oas": {
+      "value": 352,
+      "delta": 73,
+      "direction": "rising",
+      "flagged": true,
+      "alert": null
+    },
+    "unrate": {
+      "value": 4.1,
+      "delta": -0.2,
+      "direction": "falling",
+      "flagged": true,
+      "alert": null
+    },
+    "cpi_yoy": {
+      "value": 4.08,
+      "delta": 0.3,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "alert"
+    },
+    "pce_yoy": {
+      "value": 3.65,
+      "delta": 0.15,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "nfp_mom": {
+      "value": 165,
+      "delta": 50,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "wti": {
+      "value": 89.53,
+      "delta": -20.23,
+      "direction": "falling",
+      "flagged": true,
+      "alert": "watch"
+    },
+    "mortgage30": {
+      "value": 7.28,
+      "delta": 0.91,
+      "direction": "rising",
+      "flagged": true,
+      "alert": "watch"
+    },
+    "wages_yoy": {
+      "value": 3.9,
+      "delta": 0.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cs_hpi_yoy": {
+      "value": 2.09,
+      "delta": 1.43,
+      "direction": "rising",
+      "flagged": true,
+      "alert": null
+    },
+    "icsa": {
+      "value": 203000.0,
+      "delta": 14000.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "umcsent": {
+      "value": 51.5,
+      "delta": 3.3,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "alert"
+    },
+    "tdsp": {
+      "value": 11.111439,
+      "delta": -0.2117,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "watch"
+    },
+    "dgs2": {
+      "value": 4.76,
+      "delta": 0.81,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs5": {
+      "value": 4.86,
+      "delta": 0.79,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "dgs30": {
+      "value": 5.4,
+      "delta": 0.42,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "spread_10_2_bp": {
+      "value": 28,
+      "delta": -19,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "core_cpi_yoy": {
+      "value": 2.87,
+      "delta": 0.13,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "core_pce_yoy": {
+      "value": 3.12,
+      "delta": -0.08,
+      "direction": "stable",
+      "flagged": false,
+      "alert": "watch"
+    },
+    "u6rate": {
+      "value": 7.9,
+      "delta": -0.3,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "saving_rate": {
+      "value": 3.8,
+      "delta": 0.2,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "housing_starts": {
+      "value": 1309.0,
+      "delta": -193.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "brent": {
+      "value": 92.94,
+      "delta": -25.32,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "gdp_growth_q": {
+      "value": 3.4,
+      "delta": 1.4,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "cc_delinq": {
+      "value": 2.85,
+      "delta": -0.09,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "ccsa": {
+      "value": 1763000.0,
+      "delta": -22000.0,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    },
+    "atl_wage_3m": {
+      "value": null,
+      "delta": null,
+      "direction": "stable",
+      "flagged": false,
+      "alert": null
+    }
+  },
+  "headlines": [
+    {
+      "key": "dgs10",
+      "line": "dgs10: 5.04 (\u25b20.62 vs prior) [ALERT]",
+      "alert": "alert"
+    },
+    {
+      "key": "ig_oas",
+      "line": "ig_oas: 94.00 (\u25b216.00 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "hy_oas",
+      "line": "hy_oas: 352.00 (\u25b273.00 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "unrate",
+      "line": "unrate: 4.10 (\u25bc0.20 vs prior)",
+      "alert": null
+    },
+    {
+      "key": "cpi_yoy",
+      "line": "cpi_yoy: 4.08 (\u25b20.30 vs prior) [ALERT]",
+      "alert": "alert"
+    },
+    {
+      "key": "wti",
+      "line": "wti: 89.53 (\u25bc20.23 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "mortgage30",
+      "line": "mortgage30: 7.28 (\u25b20.91 vs prior) [WATCH]",
+      "alert": "watch"
+    },
+    {
+      "key": "cs_hpi_yoy",
+      "line": "cs_hpi_yoy: 2.09 (\u25b21.43 vs prior)",
+      "alert": null
+    }
+  ],
+  "raw_errors": []
+}

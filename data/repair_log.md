@@ -1,3 +1,31 @@
+## Repair Agent — 2026-11-21T12:06:29.070177Z
+
+- **Status**: WARN
+- **Total checks**: 700
+- **Passed**: 695
+- **Failed**: 5
+- **Critical divergences**: 0
+
+### Staleness
+_0 critical · 0 warning · 3 stale_
+
+- ⏰ **Staleness: wage_growth_atl** — 81d old (limit 60d)
+- ⏰ **Staleness: cc_delinq** — 234d old (limit 150d)
+- ⏰ **Staleness: mtg_delinq** — 234d old (limit 150d)
+
+### Panel data
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Energy and transport categories are pulling the basket higher: data const CPI_CAT_MOM extractable** — Could not parse CPI_CAT_MOM from HTML or state.json
+
+### Visual QA
+_0 critical · 1 warning · 0 stale_
+
+- ⚠️ **Visual: global — Hydration: all Tier-1 keys present** — 
+
+
+---
+
 ## Repair Agent — 2026-10-31T12:06:21.483324Z
 
 - **Status**: WARN
@@ -818,22 +846,6 @@ _2 critical · 0 warning · 0 stale_
 
 - 🔴 **Hiring is now concentrated in healthcare and leisure: title months match SECTOR_MOM keys** — 
 - 🔴 **Unemployment is rising broadly across sectors: title months match U_SECTOR_MOM keys** — 
-
-
----
-
-## Repair Agent — 2026-07-02T04:46:19.174863Z
-
-- **Status**: WARN
-- **Total checks**: 665
-- **Passed**: 664
-- **Failed**: 1
-- **Critical divergences**: 0
-
-### Staleness
-_0 critical · 0 warning · 1 stale_
-
-- ⏰ **Staleness: cs_hpi** — 123d old (limit 120d)
 
 
 ---

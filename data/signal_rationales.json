@@ -1,62 +1,74 @@
 {
-  "generated_at": "2026-10-31T12:04:29Z",
-  "based_on_signals_at": "2026-10-31T12:03:32.764909Z",
+  "generated_at": "2026-11-21T12:04:44Z",
+  "based_on_signals_at": "2026-11-21T12:03:35.695115Z",
   "model": "claude-sonnet-4-6",
   "budget_hit": false,
   "guardrails": {
     "disabled": false,
     "diagnostician_enabled": false,
     "max_llm_calls": 20,
-    "calls_used": 8,
+    "calls_used": 10,
     "anthropic_key_set": true
   },
   "rationales": {
     "dgs10": {
-      "value": 4.98,
+      "value": 5.04,
       "direction": "rising",
-      "rationale": "The 10-year Treasury yield (`dgs10`) is flagged with a delta of 0.56 percentage points in the rising direction, which is a meaningful move in absolute terms; however, the playbook's §2.3 noise-floor table does not include a defined noise floor for `dgs10`, and no raw-data series was provided to ground the `pre`/`now` values or confirm the observation count. Because the playbook does not supply a per-period wiggle threshold for this series against which to judge whether 0.56pp constitutes signal or noise, a definitive \"significant vs. tracking baseline\" determination cannot be made from the available context. The staleness ceiling for `dgs10` is listed as 12 days in the known-normal baselines, so the next step for a human reviewer is to confirm the reference date of the underlying observation falls within that window and to assess the delta against any regime-specific rate-move thresholds — no playbook coverage for yield move magnitude — flagged for human review.",
+      "rationale": "The 10-year Treasury yield (`dgs10`) is flagged at 5.04% with a delta of +0.62, which is a substantial move in absolute terms; however, the raw-data slice provided contains no underlying observations for this series, so the pre/now values driving that delta cannot be independently verified against source data. The playbook's noise-floor table (§2.3) does not include a noise floor for `dgs10`, and no shock-tracker phase is defined for this series in the known-normal baselines, meaning there is no playbook-defined threshold against which to judge whether +0.62pp constitutes signal or noise. The staleness ceiling for `dgs10` is 12 days (per the `staleness_age_ceiling_days` table), so freshness is not the concern here — the concern is that the magnitude of the move cannot be contextualized within playbook norms, and the absence of raw observations prevents Pass 1 or Pass 2 style corroboration of the reported value. No playbook coverage for yield move thresholds — flagged for human review.",
       "playbook_cite": "§2.3"
     },
     "cpi_yoy": {
-      "value": 3.72,
-      "direction": "stable",
-      "rationale": "The shock tracker reports `cpi_yoy` at 3.72 with a month-over-month delta of −0.06 percentage points, which falls well within the ±0.3 pp noise floor defined for core CPI YoY in §2.3, meaning this move should be characterised as tracking baseline rather than a directionally significant shift. The `alert` flag on a `flagged: false` signal is therefore inconsistent — per §3.2, a within-noise move does not meet the threshold for an alert designation. No raw-data series for `cpi_yoy` was provided in the data slice, so the underlying observation count and reference date cannot be verified here; the absence of source data prevents confirming whether the renderer is drawing from a live series or a hardcoded baseline (a silent-bug risk described in §4.2). This gap in the raw-data context is flagged for human review.",
+      "value": 4.08,
+      "direction": "rising",
+      "rationale": "The shock tracker reports `cpi_yoy` rising by 0.3pp, which sits exactly at the Core CPI YoY noise floor of ±0.3pp defined in §2.3 — a move of this magnitude should return `not_yet` rather than trigger an alert, making this flag a likely noise-floor confusion instance matching the pattern described in §4.4. No raw-data series for `cpi_yoy` is present in the provided data slice, so the reported value of 4.08 and delta of 0.3 cannot be independently verified against source observations — this absence itself warrants attention, as the shock tracker may be reading from a hardcoded baseline rather than live data (§4.2). If the delta were confirmed above the noise floor, the direction (rising CPI) would be consistent with a shock-regime signal, so there is no directional contradiction with playbook expectations; however, the at-floor magnitude means the current status should track as baseline, not alert. This signal is flagged for human review pending confirmation that the underlying raw series is populated and that the per-phase `move_threshold` matches §2.3.",
       "playbook_cite": "§2.3"
     },
     "wti": {
-      "value": 103.37,
+      "value": 89.53,
       "direction": "falling",
-      "rationale": "The WTI signal shows a delta of −$6.39, which is a substantial single-period move; however, the raw-data slice provided contains no underlying series observations for 'wti', so the specific reference dates, prior value, and observation count cannot be verified against source data. The playbook's noise-floor table (§2.3) does not list a noise floor for WTI spot price directly — only for gasoline at ±$0.10/gal — meaning a move of this magnitude cannot be formally benchmarked against a known-normal threshold from the playbook. The staleness ceiling for `wti_daily` and `brent_daily` is 12 days (per the known-normal baselines), but without the raw series present, staleness cannot be assessed either. No playbook coverage for WTI price-move thresholds — flagged for human review.",
-      "playbook_cite": "§2.3"
+      "rationale": "The signal shows WTI crude falling with a delta of -20.23, which is a substantial move in absolute terms; however, the raw-data slice contains no underlying series observations for `wti`, so the specific `pre` and `now` values driving this delta cannot be independently verified against source data. The known-normal baselines reference `wti_daily` and `brent_daily` with a staleness ceiling of 12 days (§2.2), but no noise floor for WTI price moves is defined in §2.3 or the `noise_floor_pp` table, meaning there is no playbook-grounded threshold against which to judge whether a -$20.23 move is signal or noise. Because the raw data is absent and no applicable noise floor exists to confirm or dismiss the magnitude, this cannot be assessed as \"tracking baseline\" with confidence — no playbook coverage for WTI price move thresholds — flagged for human review.",
+      "playbook_cite": "§2.2"
     },
     "mortgage30": {
-      "value": 7.24,
+      "value": 7.28,
       "direction": "rising",
-      "rationale": "The data shows a 30-year fixed mortgage rate of 7.24%, with a reported delta of 0.87 — however, no underlying raw_data series for `mortgage30` was provided in the data slice, so the delta's reference point and period cannot be independently verified against source values. Per §2.3, the playbook's noise-floor table does not include a defined noise floor for `mortgage30` (only for core CPI, saving rate, UMich sentiment, CC delinquency, and gasoline), meaning a determination of whether this move is within normal wiggle or genuinely significant cannot be grounded in playbook thresholds. The staleness ceiling for `mortgage30` is 10 days per the known-normal baselines, so freshness should be confirmed against that limit, but without the raw series present this cannot be assessed here. No playbook coverage for mortgage rate move thresholds — flagged for human review.",
+      "rationale": "The `mortgage30` signal shows a delta of 0.91 with a rising direction, which is notable, but the raw-data slice provided contains no underlying series observations for this metric, meaning the delta cannot be independently verified against source values. Per §2.3, the playbook's noise-floor table does not include a defined noise floor for `mortgage30` (only core CPI, saving rate, UMich sentiment, CC delinquency, and gasoline are covered), so a determination of whether this move is within normal weekly wiggle cannot be made from the playbook alone. The staleness ceiling for `mortgage30` is set at 10 days in the known-normal baselines (§2.2), and without a raw-data series present it is unclear whether the value of 7.28 reflects a current observation or a stale one — this gap warrants human inspection. No playbook section directly governs the magnitude threshold for a 30-year mortgage rate move of this size — flagged for human review.",
+      "playbook_cite": "§2.3"
+    },
+    "umcsent": {
+      "value": 51.5,
+      "direction": "stable",
+      "rationale": "The UMich Sentiment reading of 51.5 shows a month-over-month delta of 3.3 points, which exceeds the ±0.5 pt noise floor defined in §2.3, meaning this move is not within baseline and warrants attention rather than being reported as \"tracking baseline.\" However, the signal metadata carries `direction: \"stable\"` alongside `alert: \"alert\"`, which is internally contradictory — a 3.3 pt move that clears the noise floor should not be characterized as stable, and this directional mismatch is not explained by any pattern in §4.1–§4.4. No raw data for `umcsent` was provided in the data slice, so the pre/now values underlying the delta cannot be independently verified against the shock tracker's expected keys — no playbook coverage for this specific contradiction between direction label and alert state — flagged for human review.",
       "playbook_cite": "§2.3"
     },
     "tdsp": {
       "value": 11.111439,
       "direction": "stable",
-      "rationale": "The total debt service payments ratio (`tdsp`) shows a delta of −0.2117 from its prior reading of approximately 11.32, landing at 11.11 — a move that exceeds the saving-rate noise floor of ±0.3pp cited in §2.3 only marginally, and no dedicated noise floor for `tdsp` is defined in the playbook, so direct noise-floor comparison is not possible here. The known-normal baselines note that `tdsp` is a Federal Reserve Board series with a genuinely irregular cadence (\"Next Release Date: Not Available\" on FRED), and its staleness ceiling is set at 270 days (§ baselines `staleness_age_ceiling_days`), reflecting that this series does not follow a predictable publish schedule comparable to NY Fed HHDC data. No raw-data slice was provided for this series, so the underlying observation count and reference date cannot be verified against the pipeline's own records. Because no playbook section defines a move threshold or directional regime expectation for `tdsp` specifically, this signal is tracked as informational — no playbook coverage — flagged for human review.",
+      "rationale": "The data shows `tdsp` carrying a delta of -0.2117 percentage points against a current value of 11.111439, with the pipeline classifying direction as \"stable\" and status as \"watch.\" Per §2.3 and the known-normal baselines, no noise floor is defined for `tdsp` in the `noise_floor_pp` table, so a formal within-noise comparison cannot be made here. The baselines do note that `tdsp` is a Federal Reserve Board series with a genuinely irregular cadence (\"Next Release Date: Not Available\" on FRED), making it structurally incomparable to quarterly NY Fed household-debt series, and its staleness ceiling is set at 270 days to reflect that irregularity. No raw-data slice was provided for this series, so the underlying observation count and reference date cannot be verified — no playbook coverage for the noise-floor comparison of this specific metric — flagged for human review.",
       "playbook_cite": "§2.3"
     },
     "core_pce_yoy": {
       "value": 3.12,
       "direction": "stable",
-      "rationale": "The data shows a core PCE YoY reading of 3.12% with a month-over-month delta of −0.08 percentage points; per §2.3, the noise floor for the saving rate is ±0.3pp, and while no explicit noise floor for core PCE YoY is listed in the playbook, the closest analogue (core CPI YoY) carries a ±0.3pp noise floor — a move of −0.08pp falls well within that band and is consistent with a \"tracking baseline\" characterization rather than a directional signal. The signal is flagged as \"watch\" with direction \"stable,\" which aligns with this within-noise reading. However, no raw_data series for `core_pce_yoy` was provided in the data slice, meaning the underlying observation cannot be independently verified against the source, and the staleness ceiling for `pce_core` is 95 days per the known-normal baselines — no playbook coverage exists for validating this specific metric's freshness without the raw series present — flagged for human review.",
+      "rationale": "The data shows a core PCE YoY reading of 3.12% with a month-over-month delta of −0.08 percentage points, which falls within the ±0.3pp noise floor defined in §2.3 for saving-rate-adjacent PCE series — a move of this magnitude should be characterized as tracking baseline rather than a directional signal. No raw-data series for `core_pce_yoy` is present in the provided data slice, which means the underlying `pre`/`now` values cannot be independently verified against source observations; this absence is itself worth noting, as §3.1 Pass 3d exists precisely to catch cases where a shock-tracker phase reads from a missing or insufficient key. The `alert: watch` flag is consistent with the value sitting above the Fed's 2% target but moving in a disinflationary direction, yet without a traceable raw-data key the confidence in the reported delta is limited — no playbook section directly governs `core_pce_yoy` as a named shock-tracker phase, so this signal is flagged for human review pending confirmation that the underlying series key is correctly wired to the renderer.",
       "playbook_cite": "§2.3"
     },
-    "nfp_mom": {
-      "value": 29,
-      "direction": "falling",
-      "rationale": "The data shows `nfp_mom` at 29 (a delta of −86 from the prior reading), which is a substantial month-over-month decline in nonfarm payrolls; however, the raw-data slice contains no underlying series entry for `nfp_mom`, so the reported value cannot be verified against a source observation. NFP falls under the BLS monthly category (§2.2), where a publish lag of up to 14 days is normal and staleness within that window would be informational rather than actionable, but the absence of any raw series here goes beyond a lag question — there is no number to ground-truth the signal against. Because the playbook's noise-floor table (§2.3) does not include a noise-floor entry for `nfp_mom`, and no raw key is present to confirm the delta of −86, confidence in this signal's accuracy is low — no playbook coverage for the specific metric's noise floor — flagged for human review.",
-      "playbook_cite": "§2.2"
-    },
-    "cs_hpi_yoy": {
-      "value": 2.09,
+    "ig_oas": {
+      "value": 94,
       "direction": "rising",
-      "rationale": "The shock tracker shows `cs_hpi_yoy` rising with a delta of 1.43 percentage points, which is a meaningful move in absolute terms, but no raw-data series for `cs_hpi_yoy` is present in the provided data slice, so the underlying `pre` and `now` observations cannot be independently verified against source values. The `cs_hpi` series carries a staleness age ceiling of 120 days per §2.3 / the known-normal baselines, consistent with Case-Shiller's typical multi-month publication lag, and without the raw series it is not possible to confirm whether the delta reflects a genuine recent shift or a renderer fallthrough to a hardcoded baseline of the kind described in §4.2. Because the noise floor for this series is not enumerated in §2.3's table, there is no playbook-defined threshold against which to judge whether a 1.43pp delta clears \"significant\" — no playbook coverage for `cs_hpi_yoy` noise floor — flagged for human review.",
+      "rationale": "The investment-grade OAS reading shows a delta of 16 basis points in the rising direction, which is a meaningful move; however, the playbook's §2.3 noise-floor table does not include a defined noise floor for `ig_oas` (only the five series listed there carry explicit thresholds), so this move cannot be formally benchmarked against a known-normal wiggle before declaring it significant — no playbook coverage for noise-floor comparison on this series. The staleness age ceiling for `ig_oas` is defined as 12 days in §2.2 baselines, but no raw-data slice was provided for this series, meaning the underlying observation cannot be verified against that ceiling or confirmed as current. Because the raw-data context is absent, no numeric claim about the source value can be made beyond what the signal itself reports (value: 94, delta: 16) — no playbook coverage — flagged for human review.",
+      "playbook_cite": "§2.3"
+    },
+    "hy_oas": {
+      "value": 352,
+      "direction": "rising",
+      "rationale": "The high-yield OAS reading shows a value of 352 with a delta of +73, a move that is directionally consistent with credit-stress widening, but the raw-data slice provided contains no underlying series observations for `hy_oas` against which to verify this figure or anchor a noise-floor comparison. The playbook's §2.3 noise-floor table does not enumerate a per-period wiggle for `hy_oas` (only `ig_oas` and `hy_oas` staleness ceilings of 12 days appear in the known-normal baselines), so the magnitude of the +73 basis-point move cannot be assessed against a documented threshold. Because no playbook section establishes what constitutes a significant versus within-noise move for this series, and because the raw-data context is absent, this signal cannot be confirmed or dismissed with confidence — no playbook coverage for noise-floor assessment — flagged for human review.",
+      "playbook_cite": "§2.3"
+    },
+    "unrate": {
+      "value": 4.1,
+      "direction": "falling",
+      "rationale": "The unemployment rate (`unrate`) shows a month-over-month move of −0.2pp, which is the magnitude being assessed for significance. The known-normal baselines do not include a noise floor entry for `unrate` in the `noise_floor_pp` table (§2.3 lists only core CPI, saving rate, UMich sentiment, CC delinquency, and gasoline), so a direct noise-floor comparison cannot be made from the playbook alone. The staleness ceiling for `unrate` is set at 65 days (per the `staleness_age_ceiling_days` table), but no raw-data series slice was provided to confirm the reference date or validate the reported value of 4.1 against source data — meaning Pass 2 (source verification) and Pass 1 (internal consistency) cannot be confirmed here. No playbook coverage exists for the directional significance threshold of a −0.2pp unemployment move — flagged for human review.",
       "playbook_cite": "§2.3"
     }
   }

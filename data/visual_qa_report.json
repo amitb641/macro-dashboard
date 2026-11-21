@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-10-31T12:07:08.778346Z",
-  "status": "PASS",
+  "checked_at": "2026-11-21T12:08:06.114463Z",
+  "status": "WARN",
   "summary": {
     "total_checks": 449,
-    "passed": 449,
-    "failed": 0,
+    "passed": 448,
+    "failed": 1,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -2084,8 +2084,9 @@
     {
       "category": "global",
       "check": "Hydration: all Tier-1 keys present",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "missing keys: ['CPI_CAT_MOM']"
     },
     {
       "category": "global",
