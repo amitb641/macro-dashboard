@@ -1,17 +1,17 @@
 {
-  "analyzed_at": "2026-11-20T06:10:53.975135Z",
+  "analyzed_at": "2026-11-21T12:06:52.502148Z",
   "risk_level": "HIGH",
   "alert_count": 3,
   "watch_count": 4,
   "flagged_count": 0,
   "values": {
     "ffr": 3.88,
-    "dgs2": 4.8,
-    "dgs5": 4.89,
-    "dgs10": 5.07,
-    "dgs30": 5.41,
-    "ig_oas": 93,
-    "hy_oas": 347,
+    "dgs2": 4.76,
+    "dgs5": 4.86,
+    "dgs10": 5.04,
+    "dgs30": 5.4,
+    "ig_oas": 94,
+    "hy_oas": 352,
     "unrate": 4.1,
     "u6rate": 7.9,
     "nfp_level": 159293.0,
@@ -27,14 +27,14 @@
     "mortgage30": 7.28,
     "housing_starts": 1309.0,
     "cs_hpi_yoy": 2.09,
-    "umcsent": 51.0,
+    "umcsent": 51.5,
     "atl_wage_3m": null,
     "tdsp": 11.111439,
     "wti": 89.53,
     "brent": 92.94,
     "gdp_growth_q": 3.4,
     "cc_delinq": 2.85,
-    "spread_10_2_bp": 27
+    "spread_10_2_bp": 28
   },
   "value_dates": {
     "cpi_yoy": "2026-09-01",
@@ -49,22 +49,22 @@
       "alert": null
     },
     "dgs10": {
-      "value": 5.07,
-      "delta": 0.0,
+      "value": 5.04,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": "alert"
     },
     "ig_oas": {
-      "value": 93,
-      "delta": 0,
+      "value": 94,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "hy_oas": {
-      "value": 347,
-      "delta": 0,
+      "value": 352,
+      "delta": 5,
       "direction": "stable",
       "flagged": false,
       "alert": null
@@ -133,8 +133,8 @@
       "alert": null
     },
     "umcsent": {
-      "value": 51.0,
-      "delta": 0.0,
+      "value": 51.5,
+      "delta": 0.5,
       "direction": "stable",
       "flagged": false,
       "alert": "alert"
@@ -147,29 +147,29 @@
       "alert": "watch"
     },
     "dgs2": {
-      "value": 4.8,
-      "delta": 0.0,
+      "value": 4.76,
+      "delta": -0.04,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs5": {
-      "value": 4.89,
-      "delta": 0.0,
+      "value": 4.86,
+      "delta": -0.03,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "dgs30": {
-      "value": 5.41,
-      "delta": 0.0,
+      "value": 5.4,
+      "delta": -0.01,
       "direction": "stable",
       "flagged": false,
       "alert": null
     },
     "spread_10_2_bp": {
-      "value": 27,
-      "delta": 0,
+      "value": 28,
+      "delta": 1,
       "direction": "stable",
       "flagged": false,
       "alert": null

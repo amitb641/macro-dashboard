@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-11-20T06:12:28.402278Z",
+  "checked_at": "2026-11-21T12:07:57.231434Z",
   "status": "WARN",
   "summary": {
-    "total_checks": 334,
-    "passed": 333,
+    "total_checks": 336,
+    "passed": 335,
     "failed": 1,
     "js_errors": 0,
     "console_errors": 0
@@ -853,7 +853,7 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"Consumer Sentiment \u2014 Last 13 MonthsPRELI\" has title",
+      "check": "Panel \"Consumer Sentiment \u2014 Last 13 MonthsFINAL\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1491,6 +1491,18 @@
     {
       "category": "Validator",
       "check": "Panel \"Pass 3h: Collector Errors\" has title",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "No console errors after visiting every tab",
+      "pass": true,
+      "severity": "ok"
+    },
+    {
+      "category": "global",
+      "check": "No JS exceptions after visiting every tab",
       "pass": true,
       "severity": "ok"
     },
