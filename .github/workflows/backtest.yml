@@ -55,7 +55,7 @@ jobs:
           echo "=== Full report + JSON uploaded as artifacts ==="
 
       - name: Upload report artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backtest-results
           path: |
