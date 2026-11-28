@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-11-21T12:20:27Z",
+  "generated_at": "2026-11-28T12:21:09Z",
   "overall": "FAIL",
   "strict": true,
-  "headline": "❌ CEO-grade gate FAILED — 6 critical finding(s) block publish.",
+  "headline": "❌ CEO-grade gate FAILED — 7 critical finding(s) block publish.",
   "totals": {
-    "critical": 6,
-    "warning": 56
+    "critical": 7,
+    "warning": 53
   },
   "missing": [],
   "layers": {
@@ -28,22 +28,22 @@
       "layer": "visual_qa"
     },
     "vision_review": {
-      "critical": 6,
-      "warning": 47,
+      "critical": 7,
+      "warning": 43,
       "skipped": 0,
       "ok": 6,
-      "total": 59,
+      "total": 56,
       "status": "FAIL",
       "layer": "vision_review"
     },
     "editorial": {
       "critical": 0,
-      "warning": 0,
+      "warning": 1,
       "skipped": 0,
       "ok": 0,
-      "total": 0,
+      "total": 1,
       "pieces_audited": 13,
-      "status": "PASS",
+      "status": "WARN",
       "layer": "editorial"
     },
     "repair_incident": {
@@ -53,7 +53,7 @@
       "warning": 3,
       "skipped": 0,
       "total": 3,
-      "note": "today's incident report: data/incident_reports/2026-11-21.md"
+      "note": "today's incident report: data/incident_reports/2026-11-28.md"
     }
   }
 }

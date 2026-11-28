@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21T12:20:27Z",
+  "generated_at": "2026-11-28T12:21:09Z",
   "pieces_audited": 13,
   "llm_enabled": true,
   "llm_calls_used": 13,
@@ -12,13 +12,13 @@
   },
   "severity_counts": {
     "critical": 0,
-    "warning": 0,
+    "warning": 1,
     "minor": 0
   },
   "pieces": [
     {
       "label": "html:commentary-gdp",
-      "text_preview": "Real GDP at 3.4% annualized is a strong print that creates a misleading picture of macro resilience given the simultaneous tightening in financial conditions, credit spreads, and consumer balance shee",
+      "text_preview": "Real GDP at 4.3% annualized is a strong print, but it is a backward-looking figure that predates the current spike in yields, mortgage rates, and credit spreads. The simultaneous tightening of financi",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -26,7 +26,7 @@
     },
     {
       "label": "html:commentary-unemp",
-      "text_preview": "U-3 at 4.1% (-20bp) appears benign, but U-6 at 7.9% reveals meaningful underemployment and labor market slack that the headline rate obscures. The 380bp gap between U-6 and U-3 is wide and suggests a ",
+      "text_preview": "U-3 unemployment declined 20bp to 4.1%, which on its face is a positive labor market signal, but U-6 at 7.9% reveals meaningful underemployment and slack beneath the headline. The 380bp gap between U-",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -34,7 +34,7 @@
     },
     {
       "label": "html:commentary-cpi",
-      "text_preview": "CPI re-accelerating 30bp to 4.1% YoY is an ALERT-level development that directly challenges the Fed's disinflation narrative and forecloses any near-term rate cut optionality. Core CPI at 2.9% remains",
+      "text_preview": "CPI YoY re-accelerated 30bp to 4.1%, a clear reversal of the disinflation trend and the most consequential data point in this snapshot. Core CPI at 2.9% is more contained but still above target, and t",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -50,7 +50,7 @@
     },
     {
       "label": "html:commentary-jobs",
-      "text_preview": "NFP at 165K MoM is solid on its face but represents a labor market that is decelerating from prior cycle peaks, and wage growth at 3.9% YoY remains above levels consistent with 2% inflation. The unemp",
+      "text_preview": "NFP at 165K is solid but not exceptional, and the prior unemployment rate decline of 20bp to 4.1% suggests the labor market is still absorbing workers rather than shedding them. However, NFP is a lagg",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -58,7 +58,7 @@
     },
     {
       "label": "html:commentary-pce",
-      "text_preview": "Core PCE at 3.1% and headline PCE at 3.6% confirm that inflation remains well above the Fed's 2% target across both preferred measures, with no meaningful convergence visible. The personal saving rate",
+      "text_preview": "PCE YoY rose 34bp to 3.84% and Core PCE sits at 3.3%, both moving in the wrong direction and confirming that the CPI re-acceleration is not a measurement artifact. The personal saving rate at 4.1% is ",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -66,7 +66,7 @@
     },
     {
       "label": "html:commentary-banks",
-      "text_preview": "The 62bp surge in the 10Y to 5.04% is a double-edged sword for bank NII: asset repricing benefits are real, but the 73bp HY spread widening and rising CC delinquencies at 2.9% signal that credit quali",
+      "text_preview": "Rising rates and a steeper effective funding cost environment will pressure bank NII on the liability side as deposit repricing catches up, even as asset yields benefit from the 10Y at 4.85%. Credit c",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -82,15 +82,22 @@
     },
     {
       "label": "html:commentary-oil",
-      "text_preview": "WTI has fallen $20.23 to $89.53 and Brent sits at $92.9, a sharp decline that is disinflationary at the margin but insufficient to offset the CPI re-acceleration already in the data. The $3.37 Brent-W",
-      "sentence_count": 3,
-      "findings": [],
+      "text_preview": "WTI fell sharply by $27.52 to $82.24 while Brent holds at $91.8, a $9.56 Brent-WTI spread that is unusually wide and signals either logistical dislocations or divergent regional demand dynamics. The W",
+      "sentence_count": 6,
+      "findings": [
+        {
+          "rule": "style_guide §2 — commentary 2–4 sentences",
+          "severity": "warning",
+          "detail": "sentence_count=6 (band [2,4])",
+          "fixable": "rewrite to 2-4 declarative sentences"
+        }
+      ],
       "llm_confidence": null,
       "critique_confirms_critical": null
     },
     {
       "label": "html:commentary-credit",
-      "text_preview": "HY OAS widening of 73bp to 352bp in a single snapshot is a high-conviction stress signal — this magnitude of move typically precedes either a credit event or a sustained risk-off repricing across leve",
+      "text_preview": "HY OAS widened 98bp to 377bp and IG OAS widened 21bp to 99bp in a single snapshot — this is not a gradual drift but an abrupt repricing of credit risk that warrants immediate attention. At 377bp, HY s",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -98,7 +105,7 @@
     },
     {
       "label": "html:commentary-housing",
-      "text_preview": "The 30Y mortgage rate surging 91bp to 7.28% is a WATCH-level development that effectively locks existing homeowners in place and prices out marginal buyers, creating a severe affordability constraint.",
+      "text_preview": "The 30Y mortgage rate jumped 84bp to 7.21% in a single snapshot interval — this is a shock-level move that will immediately suppress purchase applications and further freeze existing home inventory as",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
@@ -106,7 +113,7 @@
     },
     {
       "label": "html:commentary-yield",
-      "text_preview": "The 10Y yield's 62bp surge to 5.04% is the dominant macro signal this snapshot, pushing the term premium back into focus and reflecting both fiscal supply concerns and inflation re-acceleration. The 1",
+      "text_preview": "The 10Y yield surged 43bp to 4.85%, the single largest move flagged in this snapshot, driving the 10Y-2Y spread to just 24bp — a curve that remains historically flat and offers no meaningful term prem",
       "sentence_count": 3,
       "findings": [],
       "llm_confidence": null,
