@@ -1,18 +1,18 @@
 {
-  "validated_at": "2026-11-21T12:07:57.235164Z",
+  "validated_at": "2026-11-28T12:08:05.069404Z",
   "status": "WARN",
   "summary": {
     "total_checks": 604,
-    "passed": 599,
-    "failed": 5,
+    "passed": 597,
+    "failed": 7,
     "skipped": 1,
     "critical_divergences": 0
   },
   "internal_consistency": [
     {
       "check": "PCE headline YoY (latest)",
-      "html_value": 3.6,
-      "source_value": 3.6,
+      "html_value": 3.8,
+      "source_value": 3.8,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -20,8 +20,8 @@
     },
     {
       "check": "PCE core YoY (latest)",
-      "html_value": 3.1,
-      "source_value": 3.1,
+      "html_value": 3.3,
+      "source_value": 3.3,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -254,9 +254,9 @@
     },
     {
       "check": "HOUSING_MONTHLY.caseShiller completeness",
-      "html_value": "10/13 filled",
-      "source_value": "77% (min 50%)",
-      "difference": 3,
+      "html_value": "11/13 filled",
+      "source_value": "85% (min 50%)",
+      "difference": 2,
       "tolerance": 6,
       "severity": "ok",
       "pass": true
@@ -407,28 +407,28 @@
     },
     {
       "check": "OIL_DAILY.wti completeness",
-      "html_value": "185/185 filled",
+      "html_value": "190/190 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 92,
+      "tolerance": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.brent completeness",
-      "html_value": "185/185 filled",
+      "html_value": "190/190 filled",
       "source_value": "100% (min 50%)",
       "difference": 0,
-      "tolerance": 92,
+      "tolerance": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "OIL_DAILY.notes completeness",
-      "html_value": "83/185 filled",
+      "html_value": "85/190 filled",
       "source_value": "45% (min 0%)",
-      "difference": 102,
-      "tolerance": 92,
+      "difference": 105,
+      "tolerance": 95,
       "severity": "ok",
       "pass": true
     },
@@ -715,8 +715,8 @@
     },
     {
       "check": "FRED PCEPI (PCE index)",
-      "raw_data_value": 132.257,
-      "fresh_api_value": 132.257,
+      "raw_data_value": 132.703,
+      "fresh_api_value": 132.703,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -724,8 +724,8 @@
     },
     {
       "check": "FRED PCEPILFE (core PCE index)",
-      "raw_data_value": 130.902,
-      "fresh_api_value": 130.902,
+      "raw_data_value": 131.312,
+      "fresh_api_value": 131.312,
       "difference": 0.0,
       "tolerance": 0.5,
       "severity": "ok",
@@ -733,8 +733,8 @@
     },
     {
       "check": "FRED DGS10 (10Y yield)",
-      "raw_data_value": 5.04,
-      "fresh_api_value": 5.04,
+      "raw_data_value": 4.85,
+      "fresh_api_value": 4.85,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -760,8 +760,8 @@
     },
     {
       "check": "FRED MORTGAGE30US",
-      "raw_data_value": 7.28,
-      "fresh_api_value": 7.28,
+      "raw_data_value": 7.21,
+      "fresh_api_value": 7.21,
       "difference": 0.0,
       "tolerance": 0.05,
       "severity": "ok",
@@ -781,7 +781,7 @@
     {
       "check": "Staleness: unrate",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -789,7 +789,7 @@
     {
       "check": "Staleness: cpi_all",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -797,23 +797,23 @@
     {
       "check": "Staleness: cpi_core",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_core",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -821,23 +821,23 @@
     {
       "check": "Staleness: payems",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: cs_hpi",
-      "latest_date": "2026-08-01",
-      "age_days": 112,
+      "latest_date": "2026-09-01",
+      "age_days": 88,
       "max_lag_days": 120,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: mortgage30",
-      "latest_date": "2026-11-19",
-      "age_days": 2,
+      "latest_date": "2026-11-25",
+      "age_days": 3,
       "max_lag_days": 10,
       "severity": "ok",
       "pass": true
@@ -845,7 +845,7 @@
     {
       "check": "Staleness: umcsent",
       "latest_date": "2026-11-01",
-      "age_days": 20,
+      "age_days": 27,
       "max_lag_days": 35,
       "severity": "ok",
       "pass": true
@@ -853,7 +853,7 @@
     {
       "check": "Staleness: u6rate",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -861,7 +861,7 @@
     {
       "check": "Staleness: bls_sectors",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -869,7 +869,7 @@
     {
       "check": "Staleness: bls_unemp_sectors",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -877,14 +877,14 @@
     {
       "check": "Staleness: ahetpi",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: icsa",
-      "latest_date": "2026-11-14",
+      "latest_date": "2026-11-21",
       "age_days": 7,
       "max_lag_days": 14,
       "severity": "ok",
@@ -892,7 +892,7 @@
     },
     {
       "check": "Staleness: ccsa",
-      "latest_date": "2026-11-07",
+      "latest_date": "2026-11-14",
       "age_days": 14,
       "max_lag_days": 21,
       "severity": "ok",
@@ -900,7 +900,7 @@
     },
     {
       "check": "Staleness: gasoline",
-      "latest_date": "2026-11-16",
+      "latest_date": "2026-11-23",
       "age_days": 5,
       "max_lag_days": 14,
       "severity": "ok",
@@ -908,15 +908,15 @@
     },
     {
       "check": "Staleness: mortgage15",
-      "latest_date": "2026-11-19",
-      "age_days": 2,
+      "latest_date": "2026-11-25",
+      "age_days": 3,
       "max_lag_days": 14,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: dff",
-      "latest_date": "2026-11-19",
+      "latest_date": "2026-11-26",
       "age_days": 2,
       "max_lag_days": 12,
       "severity": "ok",
@@ -924,39 +924,39 @@
     },
     {
       "check": "Staleness: dgs2",
-      "latest_date": "2026-11-19",
-      "age_days": 2,
+      "latest_date": "2026-11-25",
+      "age_days": 3,
       "max_lag_days": 12,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: dgs5",
-      "latest_date": "2026-11-19",
-      "age_days": 2,
+      "latest_date": "2026-11-25",
+      "age_days": 3,
       "max_lag_days": 12,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: dgs10",
-      "latest_date": "2026-11-19",
-      "age_days": 2,
+      "latest_date": "2026-11-25",
+      "age_days": 3,
       "max_lag_days": 12,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: dgs30",
-      "latest_date": "2026-11-19",
-      "age_days": 2,
+      "latest_date": "2026-11-25",
+      "age_days": 3,
       "max_lag_days": 12,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: ig_oas",
-      "latest_date": "2026-11-19",
+      "latest_date": "2026-11-26",
       "age_days": 2,
       "max_lag_days": 12,
       "severity": "ok",
@@ -964,7 +964,7 @@
     },
     {
       "check": "Staleness: hy_oas",
-      "latest_date": "2026-11-19",
+      "latest_date": "2026-11-26",
       "age_days": 2,
       "max_lag_days": 12,
       "severity": "ok",
@@ -972,7 +972,7 @@
     },
     {
       "check": "Staleness: wti_daily",
-      "latest_date": "2026-11-17",
+      "latest_date": "2026-11-24",
       "age_days": 4,
       "max_lag_days": 12,
       "severity": "ok",
@@ -980,7 +980,7 @@
     },
     {
       "check": "Staleness: brent_daily",
-      "latest_date": "2026-11-17",
+      "latest_date": "2026-11-24",
       "age_days": 4,
       "max_lag_days": 12,
       "severity": "ok",
@@ -988,7 +988,7 @@
     },
     {
       "check": "Staleness: ffr",
-      "latest_date": "2026-11-19",
+      "latest_date": "2026-11-26",
       "age_days": 2,
       "max_lag_days": 12,
       "severity": "ok",
@@ -997,7 +997,7 @@
     {
       "check": "Staleness: jolts",
       "latest_date": "2026-09-01",
-      "age_days": 81,
+      "age_days": 88,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -1005,7 +1005,7 @@
     {
       "check": "Staleness: adp_latest",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 60,
       "severity": "ok",
       "pass": true
@@ -1013,7 +1013,7 @@
     {
       "check": "Staleness: adp_monthly",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -1021,15 +1021,15 @@
     {
       "check": "Staleness: wage_growth_atl",
       "latest_date": "2026-09-01",
-      "age_days": 81,
+      "age_days": 88,
       "max_lag_days": 60,
       "severity": "stale",
       "pass": false
     },
     {
       "check": "Staleness: psavert",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -1037,7 +1037,7 @@
     {
       "check": "Staleness: cpiengsl",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1045,7 +1045,7 @@
     {
       "check": "Staleness: cpi_shelter",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1053,7 +1053,7 @@
     {
       "check": "Staleness: cpi_food_away",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1061,7 +1061,7 @@
     {
       "check": "Staleness: cpi_transport",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1069,7 +1069,7 @@
     {
       "check": "Staleness: cpi_medical",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1077,7 +1077,7 @@
     {
       "check": "Staleness: cpi_food_home",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1085,7 +1085,7 @@
     {
       "check": "Staleness: cpi_new_veh",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1093,7 +1093,7 @@
     {
       "check": "Staleness: cpi_apparel",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
@@ -1101,39 +1101,39 @@
     {
       "check": "Staleness: cpi_used_cars",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 75,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_goods",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_services",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_food",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: pce_energy",
-      "latest_date": "2026-09-01",
-      "age_days": 81,
+      "latest_date": "2026-10-01",
+      "age_days": 58,
       "max_lag_days": 95,
       "severity": "ok",
       "pass": true
@@ -1141,7 +1141,7 @@
     {
       "check": "Staleness: houst",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 60,
       "severity": "ok",
       "pass": true
@@ -1149,7 +1149,7 @@
     {
       "check": "Staleness: houst1f",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 60,
       "severity": "ok",
       "pass": true
@@ -1157,7 +1157,7 @@
     {
       "check": "Staleness: permit",
       "latest_date": "2026-10-01",
-      "age_days": 51,
+      "age_days": 58,
       "max_lag_days": 60,
       "severity": "ok",
       "pass": true
@@ -1165,7 +1165,7 @@
     {
       "check": "Staleness: gdpc1",
       "latest_date": "2026-07-01",
-      "age_days": 143,
+      "age_days": 150,
       "max_lag_days": 220,
       "severity": "ok",
       "pass": true
@@ -1173,7 +1173,7 @@
     {
       "check": "Staleness: gdp_growth",
       "latest_date": "2026-07-01",
-      "age_days": 143,
+      "age_days": 150,
       "max_lag_days": 220,
       "severity": "ok",
       "pass": true
@@ -1181,7 +1181,7 @@
     {
       "check": "Staleness: cc_delinq",
       "latest_date": "2026-04-01",
-      "age_days": 234,
+      "age_days": 241,
       "max_lag_days": 150,
       "severity": "stale",
       "pass": false
@@ -1189,7 +1189,7 @@
     {
       "check": "Staleness: mtg_delinq",
       "latest_date": "2026-04-01",
-      "age_days": 234,
+      "age_days": 241,
       "max_lag_days": 150,
       "severity": "stale",
       "pass": false
@@ -1197,23 +1197,23 @@
     {
       "check": "Staleness: tdsp",
       "latest_date": "2026-04-01",
-      "age_days": 234,
+      "age_days": 241,
       "max_lag_days": 270,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: ig_oas_monthly",
-      "latest_date": "2026-10-01",
-      "age_days": 51,
+      "latest_date": "2026-11-01",
+      "age_days": 27,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
     },
     {
       "check": "Staleness: hy_oas_monthly",
-      "latest_date": "2026-10-01",
-      "age_days": 51,
+      "latest_date": "2026-11-01",
+      "age_days": 27,
       "max_lag_days": 65,
       "severity": "ok",
       "pass": true
@@ -1228,7 +1228,7 @@
     },
     {
       "check": "Collection recency",
-      "collected_at": "2026-11-21T12:06:35.332410Z",
+      "collected_at": "2026-11-28T12:06:13.251133Z",
       "age_hours": 0.0,
       "severity": "ok",
       "pass": true
@@ -1352,11 +1352,11 @@
     {
       "check": "PCE by Component \u2014 YoY %: title months match PCE_CAT_MOM keys",
       "title_months": [
-        "aug",
+        "oct",
         "sep"
       ],
       "data_keys": [
-        "aug",
+        "oct",
         "sep"
       ],
       "severity": "ok",
@@ -1364,14 +1364,14 @@
     },
     {
       "check": "PCE by Component \u2014 YoY %: prior-month chip matches title",
-      "expected_prior": "Aug'26",
+      "expected_prior": "Sep'26",
       "chips_found": [
+        "Oct'26",
         "Sep'26",
-        "Aug'26",
-        "Sep'26",
-        "Sep'26",
-        "Sep'26",
-        "Aug'26"
+        "Oct'26",
+        "Oct'26",
+        "Oct'26",
+        "Sep'26"
       ],
       "severity": "ok",
       "pass": true
@@ -1465,10 +1465,10 @@
     },
     {
       "check": "Core PCE YoY latest (%): surfaces agree within \u00b10.15 (ref: PCE_MONTHLY.core[-1])",
-      "reference": 3.1,
+      "reference": 3.3,
       "surfaces": {
-        "PCE_MONTHLY.core[-1]": 3.1,
-        "KPIS Core PCE": 3.1
+        "PCE_MONTHLY.core[-1]": 3.3,
+        "KPIS Core PCE": 3.3
       },
       "severity": "ok",
       "pass": true
@@ -1495,10 +1495,10 @@
     },
     {
       "check": "10Y Treasury latest (%): surfaces agree within \u00b10.05 (ref: KPIS 10Y Treasury)",
-      "reference": 5.04,
+      "reference": 4.85,
       "surfaces": {
-        "KPIS 10Y Treasury": 5.04,
-        "data[\"dgs10\"]": 5.04
+        "KPIS 10Y Treasury": 4.85,
+        "data[\"dgs10\"]": 4.85
       },
       "severity": "ok",
       "pass": true
@@ -2204,9 +2204,9 @@
     },
     {
       "check": "Visual: GDP \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "severity": "warning",
+      "pass": false,
+      "detail": "5 sentences (style_guide \u00a72)"
     },
     {
       "check": "Visual: GDP \u2014 Commentary color matches palette",
@@ -2761,7 +2761,7 @@
       "detail": ""
     },
     {
-      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Sep'26 vs Aug'\" has title",
+      "check": "Visual: Consumer & PCE \u2014 Panel \"PCE by Component \u2014 YoY % (Oct'26 vs Sep'\" has title",
       "severity": "ok",
       "pass": true,
       "detail": ""
@@ -3188,9 +3188,9 @@
     },
     {
       "check": "Visual: Oil \u2014 Commentary sentence count in [2,4]",
-      "severity": "ok",
-      "pass": true,
-      "detail": ""
+      "severity": "warning",
+      "pass": false,
+      "detail": "5 sentences (style_guide \u00a72)"
     },
     {
       "check": "Visual: Oil \u2014 Commentary color matches palette",
@@ -4020,7 +4020,7 @@
       "check": "Chart contract: HOUSING_MONTHLY.caseShiller",
       "pass": true,
       "severity": "ok",
-      "note": "10 points match cs_hpi (yoy)"
+      "note": "11 points match cs_hpi (yoy)"
     },
     {
       "check": "Chart contract: HOUSING_MONTHLY.mortgage30",
@@ -4050,7 +4050,7 @@
       "check": "Category months: PCE_CAT_MOM \u2194 PCE_MONTHLY",
       "pass": true,
       "severity": "ok",
-      "note": "['aug26', 'sep26']"
+      "note": "['oct26', 'sep26']"
     },
     {
       "check": "Tile\u2194chart: Headline CPI \u2194 CPI_MONTHLY.headline",
@@ -4068,7 +4068,7 @@
       "check": "Tile\u2194chart: Core PCE \u2194 PCE_MONTHLY.core",
       "pass": true,
       "severity": "ok",
-      "note": "Core PCE Sep'26 3.1% = Sep'26 3.1"
+      "note": "Core PCE Oct'26 3.3% = Oct'26 3.3"
     },
     {
       "check": "Tile\u2194chart: Unemployment \u2194 U_MONTHLY.data",

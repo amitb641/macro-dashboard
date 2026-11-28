@@ -1,10 +1,10 @@
 {
-  "checked_at": "2026-11-21T12:07:57.231434Z",
+  "checked_at": "2026-11-28T12:08:05.064676Z",
   "status": "WARN",
   "summary": {
     "total_checks": 336,
-    "passed": 335,
-    "failed": 1,
+    "passed": 333,
+    "failed": 3,
     "js_errors": 0,
     "console_errors": 0
   },
@@ -320,8 +320,9 @@
     {
       "category": "GDP",
       "check": "Commentary sentence count in [2,4]",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "5 sentences (style_guide \u00a72)"
     },
     {
       "category": "GDP",
@@ -877,7 +878,7 @@
     },
     {
       "category": "Consumer & PCE",
-      "check": "Panel \"PCE by Component \u2014 YoY % (Sep'26 vs Aug'\" has title",
+      "check": "Panel \"PCE by Component \u2014 YoY % (Oct'26 vs Sep'\" has title",
       "pass": true,
       "severity": "ok"
     },
@@ -1304,8 +1305,9 @@
     {
       "category": "Oil",
       "check": "Commentary sentence count in [2,4]",
-      "pass": true,
-      "severity": "ok"
+      "pass": false,
+      "severity": "warning",
+      "detail": "5 sentences (style_guide \u00a72)"
     },
     {
       "category": "Oil",
